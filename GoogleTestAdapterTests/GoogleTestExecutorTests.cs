@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestExecutorTests
+    public class GoogleTestExecutorTests : AbstractGoogleTestExtensionTests
     {
         private readonly Mock<IRunContext> runContext = new Mock<IRunContext>();
         private GoogleTestExecutor executor;

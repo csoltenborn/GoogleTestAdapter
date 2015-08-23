@@ -60,6 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AbstractGoogleTestExtensionTests.cs" />
     <Compile Include="GoogleTestConsoleOutputParserTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="GoogleTestExecutorTests.cs" />

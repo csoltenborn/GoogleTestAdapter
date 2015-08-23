@@ -151,8 +151,11 @@ namespace GoogleTestAdapter
                 {
                     logger.SendMessage(TestMessageLevel.Informational, Message);
                 }
-                MessageBox.Show(Message + ". Attach debugger if necessary, then click ok.",
-                    "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                if (!Constants.UNIT_TEST_MODE)
+                {
+                    MessageBox.Show(Message + ". Attach debugger if necessary, then click ok.",
+                        "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                }
             }
         }
 

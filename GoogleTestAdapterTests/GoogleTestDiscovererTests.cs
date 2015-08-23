@@ -7,7 +7,7 @@ namespace GoogleTestAdapter
 {
 
     [TestClass]
-    public class GoogleTestDiscovererTests
+    public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
     {
         private readonly IMessageLogger Logger = new ConsoleLogger();
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestConsoleOutputParserTests
+    public class GoogleTestConsoleOutputParserTests : AbstractGoogleTestExtensionTests
     {
 
         private readonly string[] CONSOLE_OUTPUT_1 = {
