@@ -45,14 +45,14 @@ namespace GoogleTestAdapter
 
             if (CurrentLineIndex >= ConsoleOutput.Count)
             {
-                return CreateFailedTestResult(testcase, CRASH_TEXT);
+                return CreateFailedTestResult(testcase, CRASH_TEXT, 0);
             }
 
             Line = ConsoleOutput[CurrentLineIndex++];
 
             if (IsPassedLine(Line))
             {
-                return CreatePassedTestResult(testcase);
+                return CreatePassedTestResult(testcase, ParseDuration(Line, QualifiedTestname));
             }
             else 
             {
@@ -64,34 +64,57 @@ namespace GoogleTestAdapter
                 }
                 if (IsFailedLine(Line))
                 {
-                    return CreateFailedTestResult(testcase, ErrorMsg);
+                    return CreateFailedTestResult(testcase, ErrorMsg, ParseDuration(Line, QualifiedTestname));
                 }
                 else
                 {
                     string AppendedMessage = ErrorMsg == "" ? "" : "\n\n" + ErrorMsg;
-                    return CreateFailedTestResult(testcase, CRASH_TEXT + AppendedMessage);
+                    return CreateFailedTestResult(testcase, CRASH_TEXT + AppendedMessage, 0);
                 }
             }
 
         }
 
-        private TestResult CreatePassedTestResult(TestCase testCase)
+        private int ParseDuration(string line, string qualifiedName)
+        {
+            line = RemovePrefix(line);
+            line = line.Replace(qualifiedName, "");
+            line = line.Trim();
+            line = line.Substring(1, line.Length - 2);
+            if (line.Contains("ms"))
+            {
+                line = line.Replace("ms", "");
+                line = line.Trim();
+                return int.Parse(line);
+            }
+            if (line.Contains("s"))
+            {
+                line = line.Replace("s", "");
+                line = line.Trim();
+                return int.Parse(line) * 1000;
+            }
+            throw new Exception("Can't deal with duration: " + line);
+        }
+
+        private TestResult CreatePassedTestResult(TestCase testCase, int duration)
         {
             return new TestResult(testCase)
             {
                 ComputerName = System.Environment.MachineName,
                 Outcome = TestOutcome.Passed,
-                ErrorMessage = ""
+                ErrorMessage = "",
+                Duration = TimeSpan.FromMilliseconds(duration)
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, string errorMessage)
+        private TestResult CreateFailedTestResult(TestCase testCase, string errorMessage, int duration)
         {
             return new TestResult(testCase)
             {
                 ComputerName = System.Environment.MachineName,
                 Outcome = TestOutcome.Failed,
-                ErrorMessage = errorMessage
+                ErrorMessage = errorMessage,
+                Duration = TimeSpan.FromMilliseconds(duration)
             };
         }
 

@@ -61,7 +61,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
-    <Compile Include="GoogleTestConsoleOutputParserTests.cs" />
+    <Compile Include="GoogleTestResultStandardOutputParserTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="GoogleTestExecutorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestConsoleOutputParserTests : AbstractGoogleTestExtensionTests
+    public class GoogleTestResultStandardOutputParserTests : AbstractGoogleTestExtensionTests
     {
 
         private readonly string[] CONSOLE_OUTPUT_1 = {
@@ -68,14 +68,17 @@ namespace GoogleTestAdapter
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
             Assert.IsFalse(results[2].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(9), results[2].Duration);
         }
 
         [TestMethod]
@@ -88,10 +91,12 @@ namespace GoogleTestAdapter
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[1].Outcome);
             Assert.IsTrue(results[1].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
         }
 
         [TestMethod]
@@ -104,14 +109,17 @@ namespace GoogleTestAdapter
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
             Assert.IsTrue(results[2].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
+            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[2].Duration);
         }
 
         private List<TestResult> ComputeResults(List<string> consoleOutput)
