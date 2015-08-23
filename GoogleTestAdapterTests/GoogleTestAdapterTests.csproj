@@ -6,7 +6,7 @@
     <ProjectGuid>{B06C696E-E458-490A-AC44-9E4F460DBAFE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GoogleTestAdapterTests</RootNamespace>
+    <RootNamespace>GoogleTestAdapter</RootNamespace>
     <AssemblyName>GoogleTestAdapterTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
