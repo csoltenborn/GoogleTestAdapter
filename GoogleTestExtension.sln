@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapter", "GoogleTestAdapter\GoogleTestAdapter.csproj", "{44C04E51-D543-4155-A57E-BBEB73D3F8E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A} = {EE2AC2B3-53E0-48DF-9813-2B6E3594083A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterVSIX", "GoogleTestAdapterVSIX\GoogleTestAdapterVSIX.csproj", "{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A} = {EE2AC2B3-53E0-48DF-9813-2B6E3594083A}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterTests", "GoogleTestAdapterTests\GoogleTestAdapterTests.csproj", "{B06C696E-E458-490A-AC44-9E4F460DBAFE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44C04E51-D543-4155-A57E-BBEB73D3F8E5} = {44C04E51-D543-4155-A57E-BBEB73D3F8E5}
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A} = {EE2AC2B3-53E0-48DF-9813-2B6E3594083A}
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DiaMemoryStream", "DiaMemoryStream\DiaMemoryStream.fsproj", "{EE2AC2B3-53E0-48DF-9813-2B6E3594083A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44C04E51-D543-4155-A57E-BBEB73D3F8E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C04E51-D543-4155-A57E-BBEB73D3F8E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C04E51-D543-4155-A57E-BBEB73D3F8E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C04E51-D543-4155-A57E-BBEB73D3F8E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06C696E-E458-490A-AC44-9E4F460DBAFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06C696E-E458-490A-AC44-9E4F460DBAFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06C696E-E458-490A-AC44-9E4F460DBAFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06C696E-E458-490A-AC44-9E4F460DBAFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE2AC2B3-53E0-48DF-9813-2B6E3594083A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

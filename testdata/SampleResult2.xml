@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="2" failures="1" disabled="0" errors="0" timestamp="2013-08-29T09:55:33" time="0.009" name="AllTests">
+  <testsuite name="GoogleTestSuiteName1" tests="2" failures="0" disabled="0" errors="0" time="0.001">
+    <testcase name="TestMethod_001" status="run" time="0" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_002" status="run" time="0" classname="GoogleTestSuiteName1" />
+  </testsuite>
+  <testsuite name="FooTest" tests="2" failures="1" disabled="0" errors="0" time="0.005">
+    <testcase name="MethodBarDoesAbc" status="run" time="0.002" classname="FooTest">
+      <failure message="c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:40&#x0A;Value of: output_filepath&#x0A;  Actual: &quot;this/package/testdata/myoutputfile.dat&quot;&#x0A;Expected: input_filepath&#x0A;Which is: &quot;this/package/testdata/myinputfile.dat&quot;&#x0A;Something&apos;s not right!!" type="">
+        <![CDATA[c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:40
+Value of: output_filepath
+  Actual: "this/package/testdata/myoutputfile.dat"
+Expected: input_filepath
+Which is: "this/package/testdata/myinputfile.dat"
+Something's not right!!]]>
+      </failure>
+      <failure message="c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:41&#x0A;Value of: 56456&#x0A;Expected: 12312&#x0A;Something&apos;s wrong :(" type="">
+        <![CDATA[c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:41
+Value of: 56456
+Expected: 12312
+Something's wrong :(]]>
+      </failure>
+    </testcase>
+    <testcase name="DoesXyz" status="run" time="0" classname="FooTest" />
+  </testsuite>
+</testsuites>
