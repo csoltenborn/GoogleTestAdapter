@@ -146,6 +146,7 @@ namespace GoogleTestAdapter
         {
             if (Constants.DEBUG_MODE)
             {
+                #pragma warning disable 0162
                 string Message = codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
                 if (logger != null)
                 {
@@ -156,6 +157,7 @@ namespace GoogleTestAdapter
                     MessageBox.Show(Message + ". Attach debugger if necessary, then click ok.",
                         "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
+                #pragma warning restore 0162
             }
         }
 

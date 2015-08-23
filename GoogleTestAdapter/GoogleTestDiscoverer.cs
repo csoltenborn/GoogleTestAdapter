@@ -49,7 +49,9 @@ namespace GoogleTestAdapter
                 result.Add(ToTestCase(executable, testcase, logger, sourceFileLocations));
                 if (Constants.DEBUG_MODE)
                 {
+                    #pragma warning disable 0162
                     logger.SendMessage(TestMessageLevel.Informational, "Added testcase" + testcase.testsuite + "." + testcase.testcase);
+                    #pragma warning restore 0162
                 }
             }
             return result;
@@ -125,8 +127,10 @@ namespace GoogleTestAdapter
             bool matches = TEST_FINDER_REGEX.IsMatch(executable);
             if (Constants.DEBUG_MODE)
             {
+                #pragma warning disable 0162
                 logger.SendMessage(TestMessageLevel.Informational,
                     "My GoogleTestAdapter: Does " + executable + " match " + TEST_FINDER_REGEX.ToString() + ": " + matches);
+                #pragma warning restore 0162
             }
             return matches;
         }
