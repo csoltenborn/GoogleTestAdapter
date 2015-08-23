@@ -77,20 +77,15 @@ namespace GoogleTestAdapter
 
         private int ParseDuration(string line, string qualifiedName)
         {
-            line = RemovePrefix(line);
-            line = line.Replace(qualifiedName, "");
-            line = line.Trim();
-            line = line.Substring(1, line.Length - 2);
-            if (line.Contains("ms"))
+            line = RemovePrefix(line).Replace(qualifiedName, "").Trim().Substring(1, line.Length - 2);
+            if (line.EndsWith("ms"))
             {
-                line = line.Replace("ms", "");
-                line = line.Trim();
+                line = line.Replace("ms", "").Trim();
                 return int.Parse(line);
             }
             if (line.Contains("s"))
             {
-                line = line.Replace("s", "");
-                line = line.Trim();
+                line = line.Replace("s", "").Trim();
                 return int.Parse(line) * 1000;
             }
             throw new Exception("Can't deal with duration: " + line);
