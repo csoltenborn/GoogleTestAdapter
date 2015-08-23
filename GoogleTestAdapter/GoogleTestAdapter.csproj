@@ -73,6 +73,7 @@
     <Compile Include="GoogleTestResultXmlParser.cs" />
     <Compile Include="Helpers\VsSolutionHelper.cs" />
     <Compile Include="Native.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />

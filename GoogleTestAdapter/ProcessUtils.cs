@@ -46,7 +46,15 @@ namespace GoogleTestAdapter
                 Process process = Process.Start(processStartInfo);
                 try
                 {
-                    ReadTheStream(throwIfError, process, output);
+                    if (Options.PrintTestOutput())
+                    {
+                        logger.SendMessage(TestMessageLevel.Informational, ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
+                    }
+                    ReadTheStream(throwIfError, process, output, logger);
+                    if (Options.PrintTestOutput())
+                    {
+                        logger.SendMessage(TestMessageLevel.Informational, "<<<<<<<<<<<<<<< End of Output");
+                    }
                 }
                 finally
                 {
@@ -61,22 +69,22 @@ namespace GoogleTestAdapter
             return output;
         }
 
-        private static List<string> ReadTheStream(bool throwIfError, Process process, List<string> streamContent)
+        private static List<string> ReadTheStream(bool throwIfError, Process process, List<string> streamContent, IMessageLogger logger)
         {
             while (!process.StandardOutput.EndOfStream)
             {
-                streamContent.Add(process.StandardOutput.ReadLine());
+                string Line = process.StandardOutput.ReadLine();
+                streamContent.Add(Line);
+                if (Options.PrintTestOutput())
+                {
+                    logger.SendMessage(TestMessageLevel.Informational, Line);
+                }
             }
             if ((!throwIfError ? false : process.ExitCode != 0))
             {
                 throw new Exception("Process exited with return code " + process.ExitCode);
             }
             return streamContent;
-        }
-
-        public static void RunCommand(string wd, string command, string param)
-        {
-            GetOutputOfCommand(new ConsoleLogger(), wd, command, param);
         }
 
     }
