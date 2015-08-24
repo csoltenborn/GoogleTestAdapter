@@ -108,7 +108,7 @@ namespace GoogleTestAdapter
             string OutputPath = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
             string Arguments = new GoogleTestCommandLine(runAll, allCases, cases, OutputPath, handle).GetCommandLine();
-            List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments);
+            List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments, Options.PrintTestOutput, false);
 
             foreach (TestResult testResult in CollectTestResults(OutputPath, cases, ConsoleOutput, handle))
             {

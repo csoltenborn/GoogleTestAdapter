@@ -51,17 +51,17 @@ namespace GoogleTestAdapter
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return Options.RunDisabledTests() ? " --gtest_also_run_disabled_tests" : "";
+            return Options.RunDisabledTests ? " --gtest_also_run_disabled_tests" : "";
         }
 
         private string GetShuffleTestsParameter()
         {
-            return Options.ShuffleTests() ? " --gtest_shuffle" : "";
+            return Options.ShuffleTests ? " --gtest_shuffle" : "";
         }
 
         private string GetTestsRepetitionsParameter()
         {
-            int NrOfRepetitions = Options.NrOfTestRepetitions();
+            int NrOfRepetitions = Options.NrOfTestRepetitions;
             if (NrOfRepetitions == 1)
             {
                 return "";

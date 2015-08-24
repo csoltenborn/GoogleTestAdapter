@@ -38,7 +38,7 @@ namespace GoogleTestAdapter
 
         public List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
-            List<string> output = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false);
+            List<string> output = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false, false);
             List<SuiteCasePair> testcases = ParseTestCases(output);
             testcases.Reverse();
             logger.SendMessage(TestMessageLevel.Informational, "Found " + testcases.Count + " tests, resolving symbols...");
@@ -135,7 +135,7 @@ namespace GoogleTestAdapter
 
         public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger)
         {
-            string CustomRegex = Options.TestDiscoveryRegex();
+            string CustomRegex = Options.TestDiscoveryRegex;
             bool matches;
             string regexUsed;
             if (string.IsNullOrWhiteSpace(CustomRegex))
