@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Linq;
+using System.Globalization;
 
 namespace GoogleTestAdapter
 {
     public class GoogleTestResultXmlParser
     {
         private const string ERROR_MSG_NO_XML_FILE = "Output file does not exist, did your tests crash?";
+
+        private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
         private readonly IMessageLogger Logger;
 
@@ -74,7 +77,7 @@ namespace GoogleTestAdapter
             testresult.ComputerName = Environment.MachineName;
 
             string duration = testcaseNode.Attributes["time"].InnerText;
-            testresult.Duration = TimeSpan.FromSeconds(Double.Parse(duration));
+            testresult.Duration = ParseDuration(duration);
 
             string testcaseStatus = testcaseNode.Attributes["status"].InnerText;
             switch (testcaseStatus)
@@ -111,6 +114,12 @@ namespace GoogleTestAdapter
                 errorMessages.Add(failureNode.InnerText);
             }
             return string.Join("\n\n", errorMessages);
+        }
+
+        private TimeSpan ParseDuration(string duration)
+        {
+            double Duration = double.Parse(duration, NumberFormatInfo);
+            return TimeSpan.FromSeconds(Duration);
         }
 
     }
