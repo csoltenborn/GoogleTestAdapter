@@ -63,7 +63,7 @@ namespace GoogleTestAdapter
                 }
                 if (!HasCommonSuite)
                 {
-                    CasesNotHavingCommonSuite.Add(testcase.FullyQualifiedName);
+                    CasesNotHavingCommonSuite.Add(GetTestcaseNameForFiltering(testcase.FullyQualifiedName));
                 }
             }
             return string.Join(":", CasesNotHavingCommonSuite);
@@ -110,6 +110,16 @@ namespace GoogleTestAdapter
         private string TestsuiteNameFromCase(TestCase testcase)
         {
             return testcase.FullyQualifiedName.Split(new char[] { '.' })[0];
+        }
+
+        private string GetTestcaseNameForFiltering(string fullname)
+        {
+            int index = fullname.IndexOf(' ');
+            if (index < 0)
+            {
+                return fullname;
+            }
+            return fullname.Substring(0, index);
         }
 
     }
