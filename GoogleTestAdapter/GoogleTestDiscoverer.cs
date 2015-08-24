@@ -95,7 +95,18 @@ namespace GoogleTestAdapter
 
         private string GoogleTestCombinedName(SuiteCasePair pair)
         {
-            return pair.testsuite + "_" + pair.testcase + "_Test" + Constants.gtestTestBodySignature;
+            if (!pair.testcase.Contains("# GetParam()"))
+            {
+                return pair.testsuite + "_" + pair.testcase + "_Test" + Constants.gtestTestBodySignature;
+            }
+
+            int Index = pair.testsuite.IndexOf('/');
+            string suite = Index < 0 ? pair.testsuite : pair.testsuite.Substring(Index + 1);
+
+            Index = pair.testcase.IndexOf('/');
+            string testname = Index < 0 ? pair.testcase : pair.testcase.Substring(0, Index);
+
+            return suite + "_" + testname + "_Test" + Constants.gtestTestBodySignature;
         }
 
         private TestCase ToTestCase(string executable, SuiteCasePair testcase, IMessageLogger logger, List<SourceFileLocation> sourceFileLocations)
