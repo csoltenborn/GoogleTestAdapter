@@ -4,6 +4,8 @@
     <Identity Id="GoogleTestAdapterVSIX.Company.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.3" Language="en-US" Publisher="Christian Soltenborn" />
     <DisplayName>Google Test Adapter</DisplayName>
     <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
+    <License>ApacheLicense.txt</License>
+    <Icon>gtest-logo.gif</Icon>
     <Tags>Unit Test, C++, Google Test, GTest, Test Explorer, Testing</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
