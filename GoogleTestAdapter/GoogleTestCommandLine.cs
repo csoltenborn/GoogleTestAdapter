@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.Collections.Generic;
 
 namespace GoogleTestAdapter
@@ -11,18 +12,24 @@ namespace GoogleTestAdapter
         private IEnumerable<TestCase> AllCases;
         private IEnumerable<TestCase> Cases;
         private string OutputPath;
+        private IMessageLogger Logger;
 
-        public GoogleTestCommandLine(bool runAll, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath)
+        public GoogleTestCommandLine(bool runAll, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath, IMessageLogger logger)
         {
             this.RunAll = runAll;
             this.AllCases = allCases;
             this.Cases = cases;
             this.OutputPath = outputPath;
+            this.Logger = logger;
         }
 
         public string GetCommandLine()
         {
-            return string.Join(" ", GetOutputpathParameter(), GetFilterParameter());
+            string CommandLine = string.Join(" ", GetOutputpathParameter(), GetFilterParameter());
+            CommandLine += GetAlsoRunDisabledTestsParameter();
+            CommandLine += GetShuffleTestsParameter();
+            CommandLine += GetTestsRepetitionsParameter();
+            return CommandLine;
         }
 
         private string GetOutputpathParameter()
@@ -40,6 +47,33 @@ namespace GoogleTestAdapter
             List<string> SuitesRunningAllTests = GetSuitesRunningAllTests();
             return "--gtest_filter=" + GetFilterForSuitesRunningAllTests(SuitesRunningAllTests) 
                 + GetFilterForSuitesRunningIndividualTests(SuitesRunningAllTests);
+        }
+
+        private string GetAlsoRunDisabledTestsParameter()
+        {
+            return Options.RunDisabledTests() ? " --gtest_also_run_disabled_tests" : "";
+        }
+
+        private string GetShuffleTestsParameter()
+        {
+            return Options.ShuffleTests() ? " --gtest_shuffle" : "";
+        }
+
+        private string GetTestsRepetitionsParameter()
+        {
+            int NrOfRepetitions = Options.NrOfTestRepetitions();
+            if (NrOfRepetitions == 1)
+            {
+                return "";
+            }
+            if (NrOfRepetitions == 0 || NrOfRepetitions < -1)
+            {
+                Logger.SendMessage(TestMessageLevel.Error,
+                    "Test level repetitions configured under Options/Google Test Adapter is " +
+                    NrOfRepetitions + ", should be -1 (infinite) or > 0. Ignoring value.");
+                return "";
+            }
+            return " --gtest_repeat=" + NrOfRepetitions;
         }
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)

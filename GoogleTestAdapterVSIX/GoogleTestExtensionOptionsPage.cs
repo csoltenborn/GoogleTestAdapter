@@ -39,7 +39,7 @@ namespace GoogleTestAdapterVSIX
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
-    [Guid(GoogleTestExtensionOptionsPage.PackageGuidString)]
+    [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideOptionPage(typeof(OptionPageGrid), Options.CATEGORY_NAME, Options.PAGE_NAME, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
@@ -88,6 +88,10 @@ namespace GoogleTestAdapterVSIX
     public class OptionPageGrid : DialogPage
     {
         private bool printTestOutput = false;
+        private string testDiscoveryRegex = "";
+        private bool runDisabledTests = false;
+        private int nrOfTestRepetitions = 1;
+        private bool shuffleTests = false;
 
         [Category(Options.CATEGORY_NAME)]
         [DisplayName("Print test output")]
@@ -96,6 +100,42 @@ namespace GoogleTestAdapterVSIX
         {
             get { return printTestOutput; }
             set { printTestOutput = value; }
+        }
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName("Regex for test discovery")]
+        [Description("If non-empty, this regex will be used to discover the executables containing your tests.")]
+        public string TestDiscoveryRegex
+        {
+            get { return testDiscoveryRegex; }
+            set { testDiscoveryRegex = value; }
+        }
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName("Also run disabled tests")]
+        [Description("If true, all (selected) tests will be run, even if they have been disabled.")]
+        public bool RunDisabledTests
+        {
+            get { return runDisabledTests; }
+            set { runDisabledTests = value; }
+        }
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName("# of test repetitions")]
+        [Description("Tests will be run for the selected number of times (-1: infinite).")]
+        public int NrOfTestRepetitions
+        {
+            get { return nrOfTestRepetitions; }
+            set { nrOfTestRepetitions = value; }
+        }
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName("Shuffle tests during execution")]
+        [Description("If true, tests will be executed in random order.")]
+        public bool ShuffleTests
+        {
+            get { return shuffleTests; }
+            set { shuffleTests = value; }
         }
 
     }

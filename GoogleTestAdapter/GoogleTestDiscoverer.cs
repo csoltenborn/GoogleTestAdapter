@@ -12,7 +12,7 @@ namespace GoogleTestAdapter
     [FileExtension(".exe")]
     public class GoogleTestDiscoverer : ITestDiscoverer
     {
-        private static Regex TEST_FINDER_REGEX = new Regex(@"[Tt]est[s]{0,1}.*.exe", RegexOptions.Compiled);
+        private static Regex COMPILED_TEST_FINDER_REGEX = new Regex(Constants.TEST_FINDER_REGEX, RegexOptions.Compiled);
 
         private static bool ProcessIdShown = false;
 
@@ -135,14 +135,43 @@ namespace GoogleTestAdapter
 
         public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger)
         {
-            bool matches = TEST_FINDER_REGEX.IsMatch(executable);
+            string CustomRegex = Options.TestDiscoveryRegex();
+            bool matches;
+            string regexUsed;
+            if (string.IsNullOrWhiteSpace(CustomRegex))
+            {
+                regexUsed = Constants.TEST_FINDER_REGEX;
+                matches = COMPILED_TEST_FINDER_REGEX.IsMatch(executable);
+            }
+            else
+            {
+                regexUsed = CustomRegex;
+                try
+                {
+                    matches = Regex.IsMatch(executable, CustomRegex);
+                }
+                catch (ArgumentException e)
+                {
+                    logger.SendMessage(TestMessageLevel.Error,
+                        "Google Test Adapter: Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                    matches = false;
+                }
+                catch (RegexMatchTimeoutException e)
+                {
+                    logger.SendMessage(TestMessageLevel.Error,
+                        "Google Test Adapter: Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                    matches = false;
+                }
+            }
+
             if (Constants.DEBUG_MODE)
             {
                 #pragma warning disable 0162
                 logger.SendMessage(TestMessageLevel.Informational,
-                    "My GoogleTestAdapter: Does " + executable + " match " + TEST_FINDER_REGEX.ToString() + ": " + matches);
+                    "GoogleTestAdapter: Does " + executable + " match " + regexUsed + ": " + matches);
                 #pragma warning restore 0162
             }
+
             return matches;
         }
 
