@@ -209,6 +209,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="ReadMe.txt" />
     <Content Include="Resources\GoogleTestExtensionOptionsPage.ico" />
   </ItemGroup>
   <ItemGroup>
