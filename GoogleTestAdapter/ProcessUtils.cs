@@ -46,12 +46,12 @@ namespace GoogleTestAdapter
                 Process process = Process.Start(processStartInfo);
                 try
                 {
-                    if (Options.PrintTestOutput)
+                    if (printTestOutput)
                     {
                         logger.SendMessage(TestMessageLevel.Informational, ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
                     }
                     ReadTheStream(throwIfError, process, output, logger, printTestOutput);
-                    if (Options.PrintTestOutput)
+                    if (printTestOutput)
                     {
                         logger.SendMessage(TestMessageLevel.Informational, "<<<<<<<<<<<<<<< End of Output");
                     }
