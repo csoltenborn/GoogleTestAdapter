@@ -88,11 +88,11 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="GoogleTestResultStandardOutputParser.cs" />
-    <Compile Include="Helpers\DTEProvider.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="DiaResolver.cs" />
     <Compile Include="GoogleTestCommandLine.cs" />
     <Compile Include="GoogleTestResultXmlParser.cs" />
+    <Compile Include="Helpers\RegistryReader.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="ProcessUtils.cs" />
