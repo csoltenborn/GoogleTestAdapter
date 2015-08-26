@@ -73,7 +73,7 @@ namespace GoogleTestAdapter
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
+            Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
@@ -114,7 +114,7 @@ namespace GoogleTestAdapter
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(GoogleTestResultStandardOutputParser.CRASH_TEXT));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
+            Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
             Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
@@ -130,7 +130,7 @@ namespace GoogleTestAdapter
             Cases.Add(new TestCase("TestMath.Crash", Uri, "SomeSource.cpp"));
             Cases.Add(new TestCase("TestMath.AddPasses", Uri, "SomeSource.cpp"));
 
-            GoogleTestResultStandardOutputParser parser = new GoogleTestResultStandardOutputParser(consoleOutput, Cases);
+            GoogleTestResultStandardOutputParser parser = new GoogleTestResultStandardOutputParser(consoleOutput, Cases, new ConsoleLogger());
             List<TestResult> results = parser.GetTestResults();
             return results;
         }

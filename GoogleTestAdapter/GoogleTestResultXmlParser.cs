@@ -75,6 +75,7 @@ namespace GoogleTestAdapter
             TestResult testresult = new TestResult(TestCases.FindTestcase(qualifiedName));
 
             testresult.ComputerName = Environment.MachineName;
+            testresult.DisplayName = " ";
 
             string duration = testcaseNode.Attributes["time"].InnerText;
             testresult.Duration = ParseDuration(duration);
@@ -119,6 +120,10 @@ namespace GoogleTestAdapter
         private TimeSpan ParseDuration(string duration)
         {
             double Duration = double.Parse(duration, NumberFormatInfo);
+            if (Duration <= 0.001)
+            {
+                Duration = 0.001;
+            }
             return TimeSpan.FromSeconds(Duration);
         }
 

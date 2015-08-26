@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
@@ -16,11 +17,15 @@ namespace GoogleTestAdapter
 
         private readonly List<string> ConsoleOutput;
         private readonly List<TestCase> Cases;
+        private readonly IMessageLogger Logger;
 
-        public GoogleTestResultStandardOutputParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases)
+        public TestCase CrashedTestCase { get; private set; }
+
+        public GoogleTestResultStandardOutputParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.Cases = cases.ToList();
+            this.Logger = logger;
         }
 
         public List<TestResult> GetTestResults()
@@ -45,7 +50,7 @@ namespace GoogleTestAdapter
 
             if (CurrentLineIndex >= ConsoleOutput.Count)
             {
-                return CreateFailedTestResult(testcase, CRASH_TEXT, 0);
+                return CreateFailedTestResult(testcase, CRASH_TEXT, TimeSpan.FromMilliseconds(0), true);
             }
 
             Line = ConsoleOutput[CurrentLineIndex++];
@@ -64,57 +69,72 @@ namespace GoogleTestAdapter
                 }
                 if (IsFailedLine(Line))
                 {
-                    return CreateFailedTestResult(testcase, ErrorMsg, ParseDuration(Line, QualifiedTestname));
+                    return CreateFailedTestResult(testcase, ErrorMsg, ParseDuration(Line, QualifiedTestname), false);
                 }
                 else
                 {
                     string AppendedMessage = ErrorMsg == "" ? "" : "\n\n" + ErrorMsg;
-                    return CreateFailedTestResult(testcase, CRASH_TEXT + AppendedMessage, 0);
+                    return CreateFailedTestResult(testcase, CRASH_TEXT + AppendedMessage, TimeSpan.FromMilliseconds(0), true);
                 }
             }
 
         }
 
-        private int ParseDuration(string line, string qualifiedName)
+        private TimeSpan ParseDuration(string line, string qualifiedName)
         {
-            line = RemovePrefix(line);
-            line = line.Replace(qualifiedName, "");
-            line = line.Trim();
-            line = line.Substring(1, line.Length - 2);
-            if (line.Contains("ms"))
+            string TheString = line;
+            int Result = 0;
+            try
             {
-                line = line.Replace("ms", "");
-                line = line.Trim();
-                return int.Parse(line);
+                int indexOpeningBracket = line.LastIndexOf('(');
+                int length = line.Length - indexOpeningBracket - 2;
+                TheString = line.Substring(indexOpeningBracket + 1, length);
+                if (TheString.Contains("ms"))
+                {
+                    TheString = TheString.Replace("ms", "");
+                    TheString = TheString.Trim();
+                    Result = int.Parse(TheString);
+                }
+                if (TheString.Contains("s"))
+                {
+                    TheString = TheString.Replace("s", "");
+                    TheString = TheString.Trim();
+                    Result = int.Parse(TheString) * 1000;
+                }
             }
-            if (line.Contains("s"))
+            catch (Exception)
             {
-                line = line.Replace("s", "");
-                line = line.Trim();
-                return int.Parse(line) * 1000;
+                Logger.SendMessage(TestMessageLevel.Warning, "Could not parse duration in line '" + line + "'");
             }
-            throw new Exception("Can't deal with duration: " + line);
+            return TimeSpan.FromMilliseconds(Math.Max(1, Result));
         }
 
-        private TestResult CreatePassedTestResult(TestCase testCase, int duration)
+        private TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
         {
             return new TestResult(testCase)
             {
-                ComputerName = System.Environment.MachineName,
+                ComputerName = Environment.MachineName,
+                DisplayName = " ",
                 Outcome = TestOutcome.Passed,
                 ErrorMessage = "",
-                Duration = TimeSpan.FromMilliseconds(duration)
+                Duration = duration
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, string errorMessage, int duration)
+        private TestResult CreateFailedTestResult(TestCase testCase, string errorMessage, TimeSpan duration, bool crashed)
         {
+            string TheDisplayName = !crashed ? " " : "because it CRASHED!";
+            if (crashed)
+            {
+                CrashedTestCase = testCase;
+            }
             return new TestResult(testCase)
             {
-                ComputerName = System.Environment.MachineName,
+                ComputerName = Environment.MachineName,
+                DisplayName = TheDisplayName,
                 Outcome = TestOutcome.Failed,
                 ErrorMessage = errorMessage,
-                Duration = TimeSpan.FromMilliseconds(duration)
+                Duration = duration
             };
         }
 

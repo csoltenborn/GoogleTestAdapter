@@ -125,24 +125,26 @@ namespace GoogleTestAdapter
 
             if (TestResults.Count < cases.Count())
             {
-                GoogleTestResultStandardOutputParser ConsoleParser = new GoogleTestResultStandardOutputParser(consoleOutput, cases);
+                GoogleTestResultStandardOutputParser ConsoleParser = new GoogleTestResultStandardOutputParser(consoleOutput, cases, handle);
                 List<TestResult> ConsoleResults = ConsoleParser.GetTestResults();
                 foreach (TestResult testResult in ConsoleResults.Where(tr => !TestResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
                 {
                     TestResults.Add(testResult);
                 }
-            }
 
-            if (TestResults.Count < cases.Count())
-            {
-                foreach (TestCase testcase in cases.Where(c => !TestResults.Exists(tr => tr.TestCase.FullyQualifiedName == c.FullyQualifiedName)))
+                if (TestResults.Count < cases.Count())
                 {
-                    TestResults.Add(new TestResult(testcase)
+                    foreach (TestCase testcase in cases.Where(c => !TestResults.Exists(tr => tr.TestCase.FullyQualifiedName == c.FullyQualifiedName)))
                     {
-                        ComputerName = System.Environment.MachineName,
-                        Outcome = TestOutcome.NotFound,
-                        ErrorMessage = ""
-                    });
+                        string ErrorMsg = ConsoleParser.CrashedTestCase == null ? ""
+                            : "probably crash of test " + ConsoleParser.CrashedTestCase.DisplayName;
+                        TestResults.Add(new TestResult(testcase)
+                        {
+                            ComputerName = Environment.MachineName,
+                            Outcome = TestOutcome.NotFound,
+                            ErrorMessage = ErrorMsg
+                        });
+                    }
                 }
             }
 
