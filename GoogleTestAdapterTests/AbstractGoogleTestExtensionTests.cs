@@ -1,7 +1,9 @@
 ﻿
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 
 namespace GoogleTestAdapter
 {
@@ -21,7 +23,10 @@ namespace GoogleTestAdapter
             MockLogger.Reset();
         }
 
-
+        protected static TestCase ToTestCase(string name)
+        {
+            return new TestCase(name, new Uri("http://none"), "ff.exe");
+        }
 
     }
 

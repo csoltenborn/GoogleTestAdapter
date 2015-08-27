@@ -12,8 +12,10 @@ namespace GoogleTestAdapter
         private GoogleTestExecutor executor;
 
         [TestInitialize]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             executor = new GoogleTestExecutor();
         }
 

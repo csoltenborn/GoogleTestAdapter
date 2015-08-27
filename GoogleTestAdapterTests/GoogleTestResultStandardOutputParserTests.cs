@@ -47,8 +47,10 @@ namespace GoogleTestAdapter
         private List<string> Complete;
 
         [TestInitialize]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             CrashesImmediately = new List<string>(CONSOLE_OUTPUT_1);
 
             CrashesAfterErrorMsg = new List<string>(CONSOLE_OUTPUT_1);

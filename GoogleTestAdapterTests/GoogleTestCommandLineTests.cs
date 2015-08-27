@@ -77,10 +77,5 @@ namespace GoogleTestAdapter
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", CommandLine);
         }
 
-        internal static TestCase ToTestCase(string name)
-        {
-            return new TestCase(name, new Uri("http://none"), "ff.exe");
-        }
-
     }
 }

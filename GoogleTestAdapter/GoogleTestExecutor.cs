@@ -121,7 +121,7 @@ namespace GoogleTestAdapter
             List<TestResult> TestResults = new List<TestResult>();
 
             GoogleTestResultXmlParser XmlParser = new GoogleTestResultXmlParser(outputPath, cases, handle);
-            TestResults.AddRange(XmlParser.getTestResults());
+            TestResults.AddRange(XmlParser.GetTestResults());
 
             if (TestResults.Count < cases.Count())
             {

@@ -27,7 +27,7 @@ namespace GoogleTestAdapter
             this.TestCases = testCases.ToList();
         }
 
-        public List<TestResult> getTestResults()
+        public List<TestResult> GetTestResults()
         {
             if (File.Exists(XmlResultFile))
             {
@@ -53,7 +53,11 @@ namespace GoogleTestAdapter
                     XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
                     foreach (XmlNode testcaseNode in testcaseNodes)
                     {
-                        results.Add(ParseTestResult(testcaseNode));
+                        TestResult Result = ParseTestResult(testcaseNode);
+                        if (Result != null)
+                        {
+                            results.Add(Result);
+                        }
                     }
                 }
 
@@ -72,7 +76,12 @@ namespace GoogleTestAdapter
             string testcaseName = testcaseNode.Attributes["name"].InnerText;
             string qualifiedName = className + "." + testcaseName;
 
-            TestResult testresult = new TestResult(TestCases.FindTestcase(qualifiedName));
+            TestCase TestCase = TestCases.FindTestcase(qualifiedName);
+            if (TestCase == null)
+            {
+                return null;
+            }
+            TestResult testresult = new TestResult(TestCase);
 
             testresult.ComputerName = Environment.MachineName;
             testresult.DisplayName = " ";
