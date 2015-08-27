@@ -1,8 +1,4 @@
 ﻿
-using EnvDTE;
-using System;
-using System.Windows.Forms;
-
 namespace GoogleTestAdapter
 {
 
