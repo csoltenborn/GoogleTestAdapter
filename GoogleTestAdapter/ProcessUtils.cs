@@ -27,12 +27,6 @@ namespace GoogleTestAdapter
         public static List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError)
         {
             List<string> output = new List<string>();
-            if (!File.Exists(command))
-            {
-                logger.SendMessage(TestMessageLevel.Error, "Ignoring executable because it does not exist: " + command);
-                return output;
-            }
-
             try
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
