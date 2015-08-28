@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using Dia;
 
 namespace GoogleTestAdapter
 {
@@ -49,7 +48,7 @@ namespace GoogleTestAdapter
     }
 
 
-    unsafe static class Native
+    unsafe public static class Native
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern unsafe bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
