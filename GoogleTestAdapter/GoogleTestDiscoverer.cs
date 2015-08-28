@@ -10,7 +10,7 @@ namespace GoogleTestAdapter
 {
     [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]
-    public class GoogleTestDiscoverer : ITestDiscoverer
+    public class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
     {
         private static Regex COMPILED_TEST_FINDER_REGEX = new Regex(Constants.TEST_FINDER_REGEX, RegexOptions.Compiled);
 
@@ -133,9 +133,8 @@ namespace GoogleTestAdapter
             };
         }
 
-        public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger)
+        public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string CustomRegex = "")
         {
-            string CustomRegex = Options.TestDiscoveryRegex;
             bool matches;
             string regexUsed;
             if (string.IsNullOrWhiteSpace(CustomRegex))
@@ -178,7 +177,7 @@ namespace GoogleTestAdapter
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables, IMessageLogger logger)
         {
             List<string> googleTestExecutables = new List<string>();
-            foreach (string executable in allExecutables.Where(e => IsGoogleTestExecutable(e, logger)))
+            foreach (string executable in allExecutables.Where(e => IsGoogleTestExecutable(e, logger, Options.TestDiscoveryRegex)))
             {
                  googleTestExecutables.Add(executable);
             }

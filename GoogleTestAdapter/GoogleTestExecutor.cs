@@ -10,7 +10,7 @@ using System.IO;
 namespace GoogleTestAdapter
 {
     [ExtensionUri(ExecutorUriString)]
-    public class GoogleTestExecutor : ITestExecutor
+    public class GoogleTestExecutor : AbstractGoogleTestAdapterClass, ITestExecutor
     {
         public const string ExecutorUriString = Constants.identifierUri;
         public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
@@ -107,7 +107,7 @@ namespace GoogleTestAdapter
 
             string OutputPath = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
-            string Arguments = new GoogleTestCommandLine(runAll, allCases, cases, OutputPath, handle).GetCommandLine();
+            string Arguments = new GoogleTestCommandLine(runAll, allCases, cases, OutputPath, handle, Options).GetCommandLine();
             List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments, Options.PrintTestOutput, false);
 
             foreach (TestResult testResult in CollectTestResults(OutputPath, cases, ConsoleOutput, handle))

@@ -15,7 +15,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string CommandLine = new GoogleTestCommandLine(true, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object).GetCommandLine();
+            string CommandLine = new GoogleTestCommandLine(true, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object).GetCommandLine();
 
             Assert.AreEqual("--gtest_output=\"xml:\" ", CommandLine);
         }
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter
             string[] TestsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
             IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
 
-            string CommandLine = new GoogleTestCommandLine(false, TestCases, TestCases, "", MockLogger.Object)
+            string CommandLine = new GoogleTestCommandLine(false, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLine();
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", CommandLine);
@@ -39,9 +39,9 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
             IEnumerable<TestCase> TestCasesBackwards = TestCases.Reverse();
 
-            string CommandLine = new GoogleTestCommandLine(false, TestCases, TestCases, "", MockLogger.Object)
+            string CommandLine = new GoogleTestCommandLine(false, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLine();
-            string CommandLineFromBackwards = new GoogleTestCommandLine(false, TestCasesBackwards, TestCasesBackwards, "", MockLogger.Object)
+            string CommandLineFromBackwards = new GoogleTestCommandLine(false, TestCasesBackwards, TestCasesBackwards, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLine();
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
@@ -57,7 +57,7 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithDifferentSuite.Select(ToTestCase);
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
 
-            string CommandLine = new GoogleTestCommandLine(false, AllTestCases, TestCases, "", MockLogger.Object)
+            string CommandLine = new GoogleTestCommandLine(false, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLine();
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", CommandLine);
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithDifferentSuite.Select(ToTestCase);
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
 
-            string CommandLine = new GoogleTestCommandLine(false, AllTestCases, TestCases, "", MockLogger.Object)
+            string CommandLine = new GoogleTestCommandLine(false, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLine();
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", CommandLine);

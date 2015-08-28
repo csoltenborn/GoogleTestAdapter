@@ -11,6 +11,7 @@ namespace GoogleTestAdapter
     {
 
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
+        protected readonly Mock<IOptions> MockOptions = new Mock<IOptions>();
 
         internal AbstractGoogleTestExtensionTests()
         {

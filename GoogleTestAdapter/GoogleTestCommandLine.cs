@@ -13,14 +13,16 @@ namespace GoogleTestAdapter
         private IEnumerable<TestCase> Cases;
         private string OutputPath;
         private IMessageLogger Logger;
+        private IOptions Options;
 
-        public GoogleTestCommandLine(bool runAll, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath, IMessageLogger logger)
+        public GoogleTestCommandLine(bool runAll, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath, IMessageLogger logger, IOptions options)
         {
             this.RunAll = runAll;
             this.AllCases = allCases;
             this.Cases = cases;
             this.OutputPath = outputPath;
             this.Logger = logger;
+            this.Options = options;
         }
 
         public string GetCommandLine()

@@ -2,7 +2,37 @@
 namespace GoogleTestAdapter
 {
 
-    public static class Options
+    public interface IOptions
+    {
+        bool PrintTestOutput
+        {
+            get;
+        }
+
+        string TestDiscoveryRegex
+        {
+            get;
+        }
+
+        bool RunDisabledTests
+        {
+            get;
+        }
+
+        int NrOfTestRepetitions
+        {
+            get;
+        }
+
+        bool ShuffleTests
+        {
+            get;
+        }
+
+    }
+
+
+    public class Options : IOptions
     {
         public const string CATEGORY_NAME = "Google Test Adapter";
         public const string PAGE_NAME = "General";
@@ -28,7 +58,7 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_NR_OF_TEST_REPETITIONS = "NrOfTestRepetitions";
         private const string REG_OPTION_SHUFFLE_TESTS = "ShuffleTests";
 
-        public static bool PrintTestOutput
+        public bool PrintTestOutput
         {
             get
             {
@@ -36,7 +66,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        public static string TestDiscoveryRegex
+        public string TestDiscoveryRegex
         {
             get
             {
@@ -44,7 +74,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        public static bool RunDisabledTests
+        public bool RunDisabledTests
         {
             get
             {
@@ -52,7 +82,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        public static int NrOfTestRepetitions
+        public int NrOfTestRepetitions
         {
             get
             {
@@ -60,7 +90,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        public static bool ShuffleTests
+        public bool ShuffleTests
         {
             get
             {

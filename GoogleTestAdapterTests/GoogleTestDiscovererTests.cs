@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using Moq;
 
 namespace GoogleTestAdapter
 {
@@ -9,7 +10,23 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
     {
-        private readonly IMessageLogger Logger = new ConsoleLogger();
+        class MockedGoogleTestDiscoverer : GoogleTestDiscoverer
+        {
+            private readonly Mock<IOptions> MockedOptions;
+
+            internal MockedGoogleTestDiscoverer(Mock<IOptions> mockedOptions) : base()
+            {
+                this.MockedOptions = mockedOptions;
+            }
+
+            protected override IOptions Options
+            {
+                get
+                {
+                    return MockedOptions.Object;
+                }
+            }
+        }
 
         public const string x86staticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
         public const string x86externallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
@@ -21,20 +38,20 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void MatchesTestExecutableName()
         {
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTests.exe", Logger));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTest.exe", Logger));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("mygoogletests.exe", Logger));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("mygoogletest.exe", Logger));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTes.exe", Logger));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TotallyWrong.exe", Logger));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("TestStuff.exe", Logger));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("TestLibrary.exe", Logger));
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object));
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTest.exe", MockLogger.Object));
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("mygoogletests.exe", MockLogger.Object));
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("mygoogletest.exe", MockLogger.Object));
+            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTes.exe", MockLogger.Object));
+            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TotallyWrong.exe", MockLogger.Object));
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("TestStuff.exe", MockLogger.Object));
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("TestLibrary.exe", MockLogger.Object));
         }
 
         private void FindStaticallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer();
-            var Tests = Discoverer.GetTestsFromExecutable(Logger, location);
+            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            var Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, location);
             Assert.AreEqual(2, Tests.Count);
             Assert.AreEqual("FooTest.DoesXyz", Tests[0].DisplayName);
             Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", Tests[0].CodeFilePath);
@@ -59,8 +76,8 @@ namespace GoogleTestAdapter
 
         private void FindExternallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer();
-            var Tests = Discoverer.GetTestsFromExecutable(Logger, location);
+            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            var Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, location);
 
             Assert.AreEqual(2, Tests.Count);
 

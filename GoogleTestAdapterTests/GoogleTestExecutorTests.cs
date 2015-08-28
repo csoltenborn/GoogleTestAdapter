@@ -8,15 +8,22 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestExecutorTests : AbstractGoogleTestExtensionTests
     {
-        private readonly Mock<IRunContext> runContext = new Mock<IRunContext>();
-        private GoogleTestExecutor executor;
-
-        [TestInitialize]
-        public override void SetUp()
+        class MockedGoogleTestExecutor : GoogleTestExecutor
         {
-            base.SetUp();
+            private readonly Mock<IOptions> MockedOptions;
 
-            executor = new GoogleTestExecutor();
+            internal MockedGoogleTestExecutor(Mock<IOptions> mockedOptions) : base()
+            {
+                this.MockedOptions = mockedOptions;
+            }
+
+            protected override IOptions Options
+            {
+                get
+                {
+                    return MockedOptions.Object;
+                }
+            }
         }
 
         [TestMethod]
@@ -57,17 +64,19 @@ namespace GoogleTestAdapter
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
-            Mock<IFrameworkHandle> handle = new Mock<IFrameworkHandle>();
+            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
 
-            executor.RunTests(executable.Yield(), runContext.Object, handle.Object);
+            GoogleTestExecutor Executor = new MockedGoogleTestExecutor(MockOptions);
+            Executor.RunTests(executable.Yield(), MockRunContext.Object, MockHandle.Object);
 
-            handle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
                 Times.Exactly(nrOfPassedTests));
-            handle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed)),
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed)),
                 Times.Exactly(nrOfFailedTests));
-            handle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
-            handle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.NotFound)),
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.NotFound)),
                 Times.Exactly(nrOfNotFoundTests));
         }
 
