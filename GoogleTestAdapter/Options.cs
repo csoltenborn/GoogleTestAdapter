@@ -4,31 +4,11 @@ namespace GoogleTestAdapter
 
     public interface IOptions
     {
-        bool PrintTestOutput
-        {
-            get;
-        }
-
-        string TestDiscoveryRegex
-        {
-            get;
-        }
-
-        bool RunDisabledTests
-        {
-            get;
-        }
-
-        int NrOfTestRepetitions
-        {
-            get;
-        }
-
-        bool ShuffleTests
-        {
-            get;
-        }
-
+        bool PrintTestOutput { get; }
+        string TestDiscoveryRegex { get; }
+        bool RunDisabledTests { get; }
+        int NrOfTestRepetitions { get; }
+        bool ShuffleTests { get; }
     }
 
 
@@ -37,8 +17,8 @@ namespace GoogleTestAdapter
         public const string CATEGORY_NAME = "Google Test Adapter";
         public const string PAGE_NAME = "General";
 
-        private const string REG_OPTION_BASE_ = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
-        private const string REG_OPTION_BASE = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
+        private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
+        private const string REG_OPTION_BASE_DEBUGGING = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
 
         public const string OPTION_PRINT_TEST_OUTPUT = "Print test output";
         public const string OPTION_TEST_DISCOVERY_REGEX = "Regex for test discovery";
@@ -62,7 +42,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                return RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
+                return RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
             }
         }
 
@@ -70,7 +50,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                return RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);
+                return RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);
             }
         }
 
@@ -78,7 +58,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                return RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_RUN_DISABLED_TESTS, OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE);
+                return RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_RUN_DISABLED_TESTS, OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE);
             }
         }
 
@@ -86,7 +66,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                return RegistryReader.ReadInt(REG_OPTION_BASE, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
+                return RegistryReader.ReadInt(REG_OPTION_BASE_DEBUGGING, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
             }
         }
 
@@ -94,7 +74,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                return RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
+                return RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
             }
         }
 
