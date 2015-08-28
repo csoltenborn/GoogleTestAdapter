@@ -118,12 +118,14 @@ namespace GoogleTestAdapter
             {
                 if (location.symbol.Contains(symbolName))
                 {
-                    return new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+                    TestCase TestCase = new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
                     {
                         DisplayName = displayName,
                         CodeFilePath = location.sourcefile,
                         LineNumber = (int) location.line
                     };
+                    TestCase.Traits.AddRange(location.traits);
+                    return TestCase;
                 }
             }
             logger.SendMessage(TestMessageLevel.Warning, "Could not find source location for test " + displayName);
@@ -196,6 +198,7 @@ namespace GoogleTestAdapter
             public string symbol;
             public string sourcefile;
             public uint line;
+            public List<Trait> traits;
         }
 
     }

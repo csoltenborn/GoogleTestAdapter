@@ -5,6 +5,7 @@ using Dia;
 using System;
 using System.Diagnostics;
 using static GoogleTestAdapter.Native;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter
 {
@@ -18,6 +19,9 @@ namespace GoogleTestAdapter
 
     class DiaResolver
     {
+
+        private const string TRAIT_SEPARATOR = "__GTA__";
+        private const string TRAIT_APPENDIX = "_GTA_TRAIT";
 
         internal static List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString, IMessageLogger logger)
         {
@@ -54,11 +58,12 @@ namespace GoogleTestAdapter
                 diaDataSource.openSession(out diaSession);
                 try
                 {
-                    List<NativeSourceFileLocation> allSymbols = ExecutableSymbols(diaSession, symbolFilterString);
+                    List<NativeSourceFileLocation> allTestMethodSymbols = ExecutableSymbols(diaSession, symbolFilterString);
+                    List<NativeSourceFileLocation> allTraitSymbols = ExecutableSymbols(diaSession, "*_TRAIT");
                     List<NativeSourceFileLocation> foundSymbols = new List<NativeSourceFileLocation>();
-                    foreach (NativeSourceFileLocation symbol in allSymbols)
+                    foreach (string s in symbols)
                     {
-                        foreach (string s in symbols)
+                        foreach (NativeSourceFileLocation symbol in allTestMethodSymbols)
                         {
                             if (symbol.symbol.Contains(s))
                             {
@@ -70,7 +75,7 @@ namespace GoogleTestAdapter
                     List<GoogleTestDiscoverer.SourceFileLocation> SourceFileLocations = new List<GoogleTestDiscoverer.SourceFileLocation>();
                     foreach (NativeSourceFileLocation symbol in foundSymbols)
                     {
-                        SourceFileLocations.Add(GetSourceFileLocation(diaSession, logger, executable, symbol));
+                        SourceFileLocations.Add(GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols));
                     }
                     logger.SendMessage(TestMessageLevel.Informational, "From " + executable + ", found " + foundSymbols.Count + " symbols");
                     return SourceFileLocations;
@@ -88,28 +93,31 @@ namespace GoogleTestAdapter
             }
         }
 
-        private static GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, IMessageLogger logger, string executable, NativeSourceFileLocation symbol)
+        private static GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, IMessageLogger logger, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
         {
-            IDiaEnumLineNumbers lineNumbers = diaSession.GetLineNumbers(symbol.addressSection, symbol.addressOffset, symbol.length);
+            List<Trait> Traits = GetTraits(nativeSymbol, allTraitSymbols);
+            IDiaEnumLineNumbers lineNumbers = diaSession.GetLineNumbers(nativeSymbol.addressSection, nativeSymbol.addressOffset, nativeSymbol.length);
             try
             {
                 if (lineNumbers.count > 0)
                 {
                     return new GoogleTestDiscoverer.SourceFileLocation()
                     {
-                        symbol = symbol.symbol,
+                        symbol = nativeSymbol.symbol,
                         sourcefile = lineNumbers.Item(0).sourceFile.fileName,
-                        line = lineNumbers.Item(0).lineNumber
+                        line = lineNumbers.Item(0).lineNumber,
+                        traits = Traits
                     };
                 }
                 else
                 {
-                    logger.SendMessage(TestMessageLevel.Error, "Failed to locate line number for " + symbol);
+                    logger.SendMessage(TestMessageLevel.Error, "Failed to locate line number for " + nativeSymbol);
                     return new GoogleTestDiscoverer.SourceFileLocation()
                     {
                         symbol = executable,
                         sourcefile = "",
-                        line = 0
+                        line = 0,
+                        traits = Traits
                     };
                 }
             }
@@ -117,6 +125,24 @@ namespace GoogleTestAdapter
             {
                 ReleaseCom(lineNumbers);
             }
+        }
+
+        private static List<Trait> GetTraits(NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        {
+            List<Trait> Traits = new List<Trait>();
+            foreach (NativeSourceFileLocation nativeTraitSymbol in allTraitSymbols)
+            {
+                int IndexOfColons = nativeTraitSymbol.symbol.LastIndexOf("::");
+                string TestIdentifier = nativeTraitSymbol.symbol.Substring(0, IndexOfColons);
+                if (nativeSymbol.symbol.StartsWith(TestIdentifier))
+                {
+                    string Trait = nativeTraitSymbol.symbol.Substring(IndexOfColons + 2, nativeTraitSymbol.symbol.Length - IndexOfColons - TRAIT_APPENDIX.Length - 2);
+                    string[] Data = Trait.Split(new string[] { TRAIT_SEPARATOR }, StringSplitOptions.None);
+                    Traits.Add(new Trait(Data[0], Data[1]));
+                }
+            }
+
+            return Traits;
         }
 
         private static List<NativeSourceFileLocation> ExecutableSymbols(IDiaSession diaSession, string symbolFilterString)
