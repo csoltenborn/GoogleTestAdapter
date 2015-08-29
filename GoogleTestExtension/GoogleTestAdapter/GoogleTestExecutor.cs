@@ -107,12 +107,13 @@ namespace GoogleTestAdapter
 
             string OutputPath = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
-            string Arguments = new GoogleTestCommandLine(runAll, allCases, cases, OutputPath, handle, Options).GetCommandLine();
-            List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments, Options.PrintTestOutput, false);
-
-            foreach (TestResult testResult in CollectTestResults(OutputPath, cases, ConsoleOutput, handle))
+            foreach(string Arguments in new GoogleTestCommandLine(runAll, executable.Length, allCases, cases, OutputPath, handle, Options).GetCommandLines())
             {
-                handle.RecordResult(testResult);
+                List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments, Options.PrintTestOutput, false);
+                foreach (TestResult testResult in CollectTestResults(OutputPath, cases, ConsoleOutput, handle))
+                {
+                    handle.RecordResult(testResult);
+                }
             }
         }
 

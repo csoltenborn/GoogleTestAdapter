@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.Collections.Generic;
+using System;
 
 namespace GoogleTestAdapter
 {
@@ -8,16 +9,20 @@ namespace GoogleTestAdapter
     public class GoogleTestCommandLine
     {
 
+        public const int MAX_COMMAND_LENGTH = 8191;
+
         private bool RunAll;
+        private int LengthOfExecutable;
         private IEnumerable<TestCase> AllCases;
         private IEnumerable<TestCase> Cases;
         private string OutputPath;
         private IMessageLogger Logger;
         private IOptions Options;
 
-        public GoogleTestCommandLine(bool runAll, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath, IMessageLogger logger, IOptions options)
+        public GoogleTestCommandLine(bool runAll, int lengthOfExecutable, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath, IMessageLogger logger, IOptions options)
         {
             this.RunAll = runAll;
+            this.LengthOfExecutable = lengthOfExecutable;
             this.AllCases = allCases;
             this.Cases = cases;
             this.OutputPath = outputPath;
@@ -25,30 +30,75 @@ namespace GoogleTestAdapter
             this.Options = options;
         }
 
-        public string GetCommandLine()
+        public IEnumerable<string> GetCommandLines()
         {
-            string CommandLine = string.Join(" ", GetOutputpathParameter(), GetFilterParameter());
-            CommandLine += GetAlsoRunDisabledTestsParameter();
-            CommandLine += GetShuffleTestsParameter();
-            CommandLine += GetTestsRepetitionsParameter();
-            return CommandLine;
+            string BaseCommand = GetOutputpathParameter();
+            BaseCommand += GetAlsoRunDisabledTestsParameter();
+            BaseCommand += GetShuffleTestsParameter();
+            BaseCommand += GetTestsRepetitionsParameter();
+
+            List<string> Commands = new List<string>();
+            Commands.AddRange(GetFinalCommands(BaseCommand));
+            return Commands;
         }
 
-        private string GetOutputpathParameter()
+        private IEnumerable<string> GetFinalCommands(string baseCommand)
         {
-            return "--gtest_output=\"xml:" + OutputPath + "\"";
-        }
-
-        private string GetFilterParameter()
-        {
+            List<string> Commands = new List<string>();
             if (RunAll)
+            {
+                Commands.Add(baseCommand + " ");
+                return Commands;
+            }
+
+            List<string> SuitesRunningAllTests = GetSuitesRunningAllTests();
+            string BaseFilter = " --gtest_filter=" + GetFilterForSuitesRunningAllTests(SuitesRunningAllTests);
+            string BaseCommand = baseCommand + BaseFilter;
+
+            List<string> TestsWithoutCommonSuite = GetCasesNotHavingCommonSuite(SuitesRunningAllTests);
+            if (TestsWithoutCommonSuite.Count == 0)
+            {
+                Commands.Add(BaseCommand);
+                return Commands;
+            }
+            while (TestsWithoutCommonSuite.Count > 0)
+            {
+                Commands.Add(BaseCommand + GetJoinOfMaxLength(TestsWithoutCommonSuite, MAX_COMMAND_LENGTH - BaseCommand.Length - LengthOfExecutable - 1));
+                BaseCommand = baseCommand + " --gtest_filter=";
+            }
+
+            return Commands;
+        }
+
+        private string GetJoinOfMaxLength(List<string> tests, int maxLength)
+        {
+            if (tests.Count == 0)
             {
                 return "";
             }
 
-            List<string> SuitesRunningAllTests = GetSuitesRunningAllTests();
-            return "--gtest_filter=" + GetFilterForSuitesRunningAllTests(SuitesRunningAllTests) 
-                + GetFilterForSuitesRunningIndividualTests(SuitesRunningAllTests);
+            string Result = "";
+            string NextTest = tests[0];
+            if (NextTest.Length > maxLength)
+            {
+                throw new Exception();
+            }
+
+            while (Result.Length + NextTest.Length <= maxLength && tests.Count > 0)
+            {
+                Result += NextTest;
+                tests.RemoveAt(0);
+                if (tests.Count > 0)
+                {
+                    NextTest = ":" + tests[0];
+                }
+            }
+            return Result;
+        } 
+
+        private string GetOutputpathParameter()
+        {
+            return "--gtest_output=\"xml:" + OutputPath + "\"";
         }
 
         private string GetAlsoRunDisabledTestsParameter()
@@ -83,7 +133,7 @@ namespace GoogleTestAdapter
             return string.Join(".*:", suitesRunningAllTests).AppendIfNotEmpty(".*:");
         }
 
-        private string GetFilterForSuitesRunningIndividualTests(List<string> suitesRunningAllTests)
+        private List<string> GetCasesNotHavingCommonSuite(List<string> suitesRunningAllTests)
         {
             List<string> CasesNotHavingCommonSuite = new List<string>();
             foreach (TestCase testcase in Cases)
@@ -102,7 +152,7 @@ namespace GoogleTestAdapter
                     CasesNotHavingCommonSuite.Add(GetTestcaseNameForFiltering(testcase.FullyQualifiedName));
                 }
             }
-            return string.Join(":", CasesNotHavingCommonSuite);
+            return CasesNotHavingCommonSuite;
         }
 
         private List<string> GetSuitesRunningAllTests()
@@ -135,7 +185,7 @@ namespace GoogleTestAdapter
             List<TestCase> AllMatchingCases = new List<TestCase>();
             foreach(TestCase testcase in cases)
             {
-                if (testcase.FullyQualifiedName.StartsWith(suite))
+                if (suite == TestsuiteNameFromCase(testcase))
                 {
                     AllMatchingCases.Add(testcase);
                 }

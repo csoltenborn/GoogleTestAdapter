@@ -15,7 +15,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string CommandLine = new GoogleTestCommandLine(true, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object).GetCommandLine();
+            string CommandLine = new GoogleTestCommandLine(true, EXECUTABLE.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object).GetCommandLines().First();
 
             Assert.AreEqual("--gtest_output=\"xml:\" ", CommandLine);
         }
@@ -26,8 +26,8 @@ namespace GoogleTestAdapter
             string[] TestsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
             IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
 
-            string CommandLine = new GoogleTestCommandLine(false, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLine();
+            string CommandLine = new GoogleTestCommandLine(false, EXECUTABLE.Length, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().First();
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", CommandLine);
         }
@@ -39,10 +39,10 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
             IEnumerable<TestCase> TestCasesBackwards = TestCases.Reverse();
 
-            string CommandLine = new GoogleTestCommandLine(false, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLine();
-            string CommandLineFromBackwards = new GoogleTestCommandLine(false, TestCasesBackwards, TestCasesBackwards, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLine();
+            string CommandLine = new GoogleTestCommandLine(false, EXECUTABLE.Length, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().First();
+            string CommandLineFromBackwards = new GoogleTestCommandLine(false, EXECUTABLE.Length, TestCasesBackwards, TestCasesBackwards, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().First();
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
             Assert.AreEqual(ExpectedCommandLine, CommandLine);
@@ -57,8 +57,8 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithDifferentSuite.Select(ToTestCase);
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
 
-            string CommandLine = new GoogleTestCommandLine(false, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLine();
+            string CommandLine = new GoogleTestCommandLine(false, EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().First();
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", CommandLine);
         }
@@ -71,10 +71,87 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithDifferentSuite.Select(ToTestCase);
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
 
-            string CommandLine = new GoogleTestCommandLine(false, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLine();
+            string CommandLine = new GoogleTestCommandLine(false, EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().First();
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", CommandLine);
+        }
+
+        [TestMethod]
+        public void BreaksUpLongCommandLinesCorrectly()
+        {
+            List<string> AllTests = new List<string>();
+            List<string> TestsToExecute = new List<string>();
+            for (int i = 0; i < 1000; i++)
+            {
+                AllTests.Add("MyTestSuite" + i + ".MyTest");
+                TestsToExecute.Add("MyTestSuite" + i + ".MyTest");
+                AllTests.Add("MyTestSuite" + i + ".MyTest2");
+            }
+            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
+            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase);
+
+            List<string> Commands = new GoogleTestCommandLine(false, EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().ToList();
+
+            Assert.AreEqual(3, Commands.Count);
+
+            int LengthOfLongestTestname = AllTests.Max(S => S.Length);
+
+            string CommandLine = Commands[0];
+            Assert.IsTrue(CommandLine.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - EXECUTABLE.Length);
+            Assert.IsTrue(CommandLine.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - EXECUTABLE.Length - 1);
+            Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite0.MyTest:"));
+
+            CommandLine = Commands[1];
+            Assert.IsTrue(CommandLine.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - EXECUTABLE.Length);
+            Assert.IsTrue(CommandLine.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - EXECUTABLE.Length - 1);
+            Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+
+            CommandLine = Commands[2];
+            Assert.IsTrue(CommandLine.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - EXECUTABLE.Length);
+            Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+        }
+
+        [TestMethod]
+        public void BreaksUpLongCommandLinesWithSuitesCorrectly()
+        {
+            List<string> AllTests = new List<string>();
+            List<string> TestsToExecute = new List<string>();
+            for (int i = 0; i < 1000; i++)
+            {
+                AllTests.Add("MyTestSuite" + i + ".MyTest");
+                TestsToExecute.Add("MyTestSuite" + i + ".MyTest");
+                AllTests.Add("MyTestSuite" + i + ".MyTest2");
+            }
+            TestsToExecute.Add("MyTestSuite1.MyTest2");
+            TestsToExecute.Add("MyTestSuite5.MyTest2");
+
+            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
+            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase);
+
+            List<string> Commands = new GoogleTestCommandLine(false, EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+                .GetCommandLines().ToList();
+
+            Assert.AreEqual(3, Commands.Count);
+
+            int LengthOfLongestTestname = AllTests.Max(S => S.Length);
+
+            string Command = Commands[0];
+            Assert.IsTrue(Command.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - EXECUTABLE.Length);
+            Assert.IsTrue(Command.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - EXECUTABLE.Length - 1);
+            Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:MyTestSuite0.MyTest:"));
+
+            Command = Commands[1];
+            Assert.IsTrue(Command.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - EXECUTABLE.Length);
+            Assert.IsTrue(Command.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - EXECUTABLE.Length - 1);
+            Assert.IsFalse(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
+            Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+
+            Command = Commands[2];
+            Assert.IsTrue(Command.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - EXECUTABLE.Length);
+            Assert.IsFalse(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
+            Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
         }
 
     }
