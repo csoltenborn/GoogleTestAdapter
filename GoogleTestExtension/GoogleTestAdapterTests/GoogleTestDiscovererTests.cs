@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GoogleTestAdapter
 {
@@ -13,10 +14,11 @@ namespace GoogleTestAdapter
         public const string x86staticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
         public const string x86externallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
         public const string x86crashingTests = @"..\..\..\testdata\_x86\CrashingGoogleTests\CrashingGoogleTests.exe";
-        public const string x86traitsTests = @"..\..\..\testdata\_x86\Traits\ConsoleApplication1Tests.exe";
         public const string x64staticallyLinkedTests = @"..\..\..\testdata\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
         public const string x64externallyLinkedTests = @"..\..\..\testdata\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
         public const string x64crashingTests = @"..\..\..\testdata\_x64\CrashingGoogleTests\CrashingGoogleTests.exe";
+
+        public const string x86traitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
 
         class MockedGoogleTestDiscoverer : GoogleTestDiscoverer
         {
@@ -104,57 +106,83 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void FindsTestWithOneTrait()
+        public void FindsMathTestWithOneTrait()
         {
-            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
-            List<TestCase> Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, x86traitsTests);
-
-            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == 1);
-            Assert.IsNotNull(TestCase);
-
-            Trait trait = TestCase.Traits.ToArray()[0];
-            Assert.AreEqual("Type", trait.Name);
-            Assert.AreEqual("Small", trait.Value);
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            FindsTestWithTraits("TestMath", Traits);
         }
 
         [TestMethod]
-        public void FindsTestWithTwoTraits()
+        public void FindsMathTestWithTwoTraits()
         {
-            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
-            List<TestCase> Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, x86traitsTests);
-
-            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == 2);
-            Assert.IsNotNull(TestCase);
-
-            Trait trait = TestCase.Traits.ToArray()[0];
-            Assert.AreEqual("Type", trait.Name);
-            Assert.AreEqual("Small", trait.Value);
-
-            trait = TestCase.Traits.ToArray()[1];
-            Assert.AreEqual("Author", trait.Name);
-            Assert.AreEqual("CSO", trait.Value);
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            FindsTestWithTraits("TestMath", Traits);
         }
 
         [TestMethod]
-        public void FindsTestWithThreeTraits()
+        public void FindsMathTestWithThreeTraits()
         {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            FindsTestWithTraits("TestMath", Traits);
+        }
+
+        [TestMethod]
+        public void FindsFixtureTestWithOneTrait()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            FindsTestWithTraits("TheFixture", Traits);
+        }
+
+        [TestMethod]
+        public void FindsFixtureTestWithTwoTraits()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            FindsTestWithTraits("TheFixture", Traits);
+        }
+
+        [TestMethod]
+        public void FindsFixtureTestWithThreeTraits()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            FindsTestWithTraits("TheFixture", Traits);
+        }
+
+        [TestMethod]
+        public void FindsParameterizedTestWithOneTrait()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            FindsTestWithTraits("InstantiationName/ParameterizedTests", Traits);
+        }
+
+        [TestMethod]
+        public void FindsParameterizedTestWithTwoTraits()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            FindsTestWithTraits("InstantiationName/ParameterizedTests", Traits);
+        }
+
+        [TestMethod]
+        public void FindsParameterizedTestWithThreeTraits()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
+            FindsTestWithTraits("InstantiationName/ParameterizedTests", Traits);
+        }
+
+        private void FindsTestWithTraits(string testPrefix, Trait[] traits)
+        {
+            Assert.IsTrue(File.Exists(x86traitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
+
             GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
             List<TestCase> Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, x86traitsTests);
 
-            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == 3);
+            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName.StartsWith(testPrefix));
             Assert.IsNotNull(TestCase);
 
-            Trait trait = TestCase.Traits.ToArray()[2];
-            Assert.AreEqual("Type", trait.Name);
-            Assert.AreEqual("Medium", trait.Value);
-
-            trait = TestCase.Traits.ToArray()[1];
-            Assert.AreEqual("Author", trait.Name);
-            Assert.AreEqual("MSI", trait.Value);
-
-            trait = TestCase.Traits.ToArray()[0];
-            Assert.AreEqual("Category", trait.Name);
-            Assert.AreEqual("Integration", trait.Value);
+            foreach (Trait Trait in traits)
+            {
+                Trait FoundTrait = TestCase.Traits.FirstOrDefault(T => Trait.Name == T.Name && Trait.Value == T.Value);
+                Assert.IsNotNull(FoundTrait, "Didn't find trait: (" + Trait.Name + ", " + Trait.Value + ")");
+            }
         }
 
     }
