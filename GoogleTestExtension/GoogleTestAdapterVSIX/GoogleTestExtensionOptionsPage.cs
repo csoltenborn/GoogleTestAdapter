@@ -77,15 +77,6 @@ namespace GoogleTestAdapterVSIX
 
         #endregion
 
-        public bool PrintTestOutput
-        {
-            get
-            {
-                OptionPageGrid Page = (OptionPageGrid) GetDialogPage(typeof(OptionPageGrid));
-                return Page.PrintTestOutput;
-            }
-        }
-
     }
 
     public class OptionPageGrid : DialogPage
@@ -107,7 +98,7 @@ namespace GoogleTestAdapterVSIX
 
         [Category(Options.CATEGORY_NAME)]
         [DisplayName(Options.OPTION_TEST_DISCOVERY_REGEX)]
-        [Description("If non-empty, this regex will be used to discover the executables containing your tests.")]
+        [Description(@"If non-empty, this regex will be used to discover the executables containing your tests. Default regex: " + GoogleTestAdapter.Constants.TEST_FINDER_REGEX)]
         public string TestDiscoveryRegex
         {
             get { return testDiscoveryRegex; }

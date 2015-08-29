@@ -10,7 +10,7 @@ namespace GoogleTestAdapter
         public const string gtestListTests = "--gtest_list_tests";
         public const string gtestTestBodySignature = "::TestBody";
 
-        public const string TEST_FINDER_REGEX = @"[Tt]est[s]{0,1}.*.exe";
+        public const string TEST_FINDER_REGEX = @"[Tt]est[s]?\.exe";
 
     }
 }
