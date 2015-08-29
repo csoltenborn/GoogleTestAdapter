@@ -204,7 +204,6 @@
   <ItemGroup>
     <Content Include="ApacheLicense.txt" />
     <Content Include="gtest-logo.gif" />
-    <Content Include="ReadMe.txt" />
     <Content Include="Resources\GoogleTestExtensionOptionsPage.ico" />
   </ItemGroup>
   <ItemGroup>
