@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "../ConsoleApplication1/ConsoleApplication1.h"
-#include "TraitsDefines.h"
+#include "../../GoogleTestExtension/GTA_Traits.h"
 
 using std::string;
 

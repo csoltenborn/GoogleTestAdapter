@@ -24,12 +24,15 @@
     <ClCompile Include="ParameterizedTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FixtureTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TraitsDefines.h">
+    <ClInclude Include="..\..\GoogleTestExtension\GTA_Traits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

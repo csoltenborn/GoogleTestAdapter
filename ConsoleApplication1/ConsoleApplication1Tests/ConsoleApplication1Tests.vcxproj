@@ -69,15 +69,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\chris\Documents\Visual Studio 2015\Projects\ConsoleApplication1\gtest-1.7.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\chris\Documents\Visual Studio 2015\Projects\ConsoleApplication1\gtest-1.7.0\msvc\gtest-md\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)gtest-1.7.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)gtest-1.7.0\msvc\gtest-md\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\chris\Documents\Visual Studio 2015\Projects\ConsoleApplication1\gtest-1.7.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)gtest-1.7.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FixtureTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="BasicTests.cpp" />
     <ClCompile Include="ParameterizedTests.cpp" />
@@ -136,8 +137,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\GoogleTestExtension\GTA_Traits.h" />
     <ClInclude Include="Main.h" />
-    <ClInclude Include="TraitsDefines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

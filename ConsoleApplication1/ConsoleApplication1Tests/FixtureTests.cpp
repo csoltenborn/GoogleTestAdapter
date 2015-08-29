@@ -37,5 +37,3 @@ TEST_F_TRAITS3(TheFixture, AddPassesWithTraits3, Type, Small, Author, CSO, Categ
 {
 	EXPECT_EQ(20, Add(10, 10));
 }
-
-
