@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter
 {
@@ -50,6 +51,38 @@ namespace GoogleTestAdapter
             Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TotallyWrong.exe", MockLogger.Object));
             Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TestStuff.exe", MockLogger.Object));
             Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TestLibrary.exe", MockLogger.Object));
+        }
+
+        [TestMethod]
+        public void MatchesCustomRegex()
+        {
+            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("SomeWeirdExpression", MockLogger.Object, "Some.*Expression"));
+            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("SomeWeirdOtherThing", MockLogger.Object, "Some.*Expression"));
+            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object, "Some.*Expression"));
+        }
+
+        [TestMethod]
+        public void RegistersFoundTestsAtDiscoverySink()
+        {
+            CheckForDiscoverySinkCalls(2);
+        }
+
+        [TestMethod]
+        public void MatchesCustomRegexIfSetInOptions()
+        {
+            CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
+        }
+
+        private void CheckForDiscoverySinkCalls(int expectedNrOfTests, string customRegex = null)
+        {
+            Mock<IDiscoveryContext> MockDiscoveryContext = new Mock<IDiscoveryContext>();
+            Mock<ITestCaseDiscoverySink> MockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
+            MockOptions.Setup(O => O.TestDiscoveryRegex).Returns(() => customRegex);
+
+            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            Discoverer.DiscoverTests(x86staticallyLinkedTests.Yield(), MockDiscoveryContext.Object, MockLogger.Object, MockDiscoverySink.Object);
+
+            MockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
         }
 
         private void FindStaticallyLinkedTests(string location)

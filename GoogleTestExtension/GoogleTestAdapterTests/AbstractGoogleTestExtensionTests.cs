@@ -22,6 +22,7 @@ namespace GoogleTestAdapter
         virtual public void SetUp()
         {
             MockLogger.Reset();
+            MockOptions.Reset();
         }
 
         protected static TestCase ToTestCase(string name)
