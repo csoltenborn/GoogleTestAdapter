@@ -4,17 +4,10 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 using GoogleTestAdapter;
 using System.ComponentModel;
 
@@ -135,7 +128,15 @@ namespace GoogleTestAdapterVSIX
 
         [Category(Options.CATEGORY_NAME)]
         [DisplayName(Options.OPTION_TRAITS_REGEXES)]
-        [Description("If true, tests will be executed in random order.")]
+        [Description("Allows to override/add traits for testcases matching a regex. " 
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + " separates the regex from the traits, the trait's name and value are separated by " 
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + ", and each pair of regex and trait is separated by " 
+            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + ".\nExample: " + @"MySuite\.*" 
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type" 
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Small" 
+            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + @"MySuite2\.*|MySuite3\.*" 
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type" 
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Medium")]
         public string TraitsRegexes
         {
             get { return traitsRegexes; }

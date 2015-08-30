@@ -42,7 +42,7 @@ namespace GoogleTestAdapter
         public const string OPTION_RUN_DISABLED_TESTS = "Also run disabled tests";
         public const string OPTION_NR_OF_TEST_REPETITIONS = "Number of test repetitions";
         public const string OPTION_SHUFFLE_TESTS = "Shuffle tests per execution";
-        public const string OPTION_TRAITS_REGEXES = "Regex for setting test traits. Syntax: TODO";
+        public const string OPTION_TRAITS_REGEXES = "Regex for setting test traits";
 
         public const bool OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE = false;
         public const string OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE = "";
@@ -58,9 +58,9 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_SHUFFLE_TESTS = "ShuffleTests";
         private const string REG_OPTION_TRAITS_REGEXES = "TraitsRegexes";
 
-        private const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
-        private const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
-        private const string TRAITS_REGEXES_TRAIT_SEPARATOR = ",";
+        public const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
+        public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
+        public const string TRAITS_REGEXES_TRAIT_SEPARATOR = ",";
 
         public bool PrintTestOutput
         {
