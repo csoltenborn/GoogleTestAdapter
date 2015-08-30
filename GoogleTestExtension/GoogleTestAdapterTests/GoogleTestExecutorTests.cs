@@ -12,18 +12,12 @@ namespace GoogleTestAdapter
         {
             private readonly Mock<IOptions> MockedOptions;
 
-            internal MockedGoogleTestExecutor(Mock<IOptions> mockedOptions) : base()
+            internal MockedGoogleTestExecutor(Mock<IOptions> mockedOptions)
             {
                 this.MockedOptions = mockedOptions;
             }
 
-            protected override IOptions Options
-            {
-                get
-                {
-                    return MockedOptions.Object;
-                }
-            }
+            protected override IOptions Options => MockedOptions.Object;
         }
 
         [TestMethod]

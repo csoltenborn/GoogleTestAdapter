@@ -57,7 +57,7 @@ namespace GoogleTestAdapter
 
             if (IsPassedLine(Line))
             {
-                return CreatePassedTestResult(testcase, ParseDuration(Line, QualifiedTestname));
+                return CreatePassedTestResult(testcase, ParseDuration(Line));
             }
             else 
             {
@@ -69,7 +69,7 @@ namespace GoogleTestAdapter
                 }
                 if (IsFailedLine(Line))
                 {
-                    return CreateFailedTestResult(testcase, ErrorMsg, ParseDuration(Line, QualifiedTestname), false);
+                    return CreateFailedTestResult(testcase, ErrorMsg, ParseDuration(Line), false);
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace GoogleTestAdapter
 
         }
 
-        private TimeSpan ParseDuration(string line, string qualifiedName)
+        private TimeSpan ParseDuration(string line)
         {
             string TheString = line;
             int Result = 0;

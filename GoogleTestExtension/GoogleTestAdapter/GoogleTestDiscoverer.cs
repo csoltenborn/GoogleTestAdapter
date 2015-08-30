@@ -5,15 +5,14 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
     [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]
-    public class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
+    public sealed class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
     {
-        private static Regex COMPILED_TEST_FINDER_REGEX = new Regex(Constants.TEST_FINDER_REGEX, RegexOptions.Compiled);
+        private static readonly Regex COMPILED_TEST_FINDER_REGEX = new Regex(Constants.TEST_FINDER_REGEX, RegexOptions.Compiled);
 
         private static bool ProcessIdShown = false;
 
@@ -67,21 +66,21 @@ namespace GoogleTestAdapter
         {
             List<SuiteCasePair> Result = new List<SuiteCasePair>();
             string currentSuite = "";
-            for (int i = 0; i < output.Count; i++)
+            foreach (string Line in output)
             {
-                string currentLine = output[i].Trim('.', '\n', '\r');
-                if (currentLine.StartsWith("  "))
+                string TrimmedLine = Line.Trim('.', '\n', '\r');
+                if (TrimmedLine.StartsWith("  "))
                 {
                     Result.Add(new SuiteCasePair
                     {
                         testsuite = currentSuite,
-                        testcase = currentLine.Substring(2)
+                        testcase = TrimmedLine.Substring(2)
                     });
                 }
                 else
                 {
-                    string[] split = currentLine.Split(new string[] { ".  # TypeParam" }, StringSplitOptions.RemoveEmptyEntries);
-                    currentSuite = split.Length > 0 ? split[0] : currentLine;
+                    string[] split = TrimmedLine.Split(new[] { ".  # TypeParam" }, StringSplitOptions.RemoveEmptyEntries);
+                    currentSuite = split.Length > 0 ? split[0] : TrimmedLine;
                 }
             }
 
@@ -90,11 +89,7 @@ namespace GoogleTestAdapter
 
         private List<SourceFileLocation> GetSourceFileLocations(string executable, IMessageLogger logger, List<SuiteCasePair> testcases)
         {
-            List<string> symbols = new List<string>();
-            foreach (SuiteCasePair pair in testcases)
-            {
-                symbols.Add(GoogleTestCombinedName(pair));
-            }
+            List<string> symbols = testcases.Select(GoogleTestCombinedName).ToList();
             string symbolFilterString = "*" + Constants.gtestTestBodySignature;
             return DiaResolver.ResolveAllMethods(executable, symbols, symbolFilterString, logger);
         }
@@ -201,12 +196,7 @@ namespace GoogleTestAdapter
 
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables, IMessageLogger logger)
         {
-            List<string> googleTestExecutables = new List<string>();
-            foreach (string executable in allExecutables.Where(e => IsGoogleTestExecutable(e, logger, Options.TestDiscoveryRegex)))
-            {
-                 googleTestExecutables.Add(executable);
-            }
-            return googleTestExecutables;
+            return allExecutables.AsParallel().Where(e => IsGoogleTestExecutable(e, logger, Options.TestDiscoveryRegex)).ToList();
         }
 
 

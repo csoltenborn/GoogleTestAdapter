@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml;
 using System.Linq;
@@ -38,6 +39,8 @@ namespace GoogleTestAdapter
             return new List<TestResult>();
         }
 
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private List<TestResult> ParseTestResults()
         {
             List<TestResult> results = new List<TestResult>();
@@ -51,18 +54,14 @@ namespace GoogleTestAdapter
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
                 {
                     XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
-                    foreach (XmlNode testcaseNode in testcaseNodes)
-                    {
-                        TestResult Result = ParseTestResult(testcaseNode);
-                        if (Result != null)
-                        {
-                            results.Add(Result);
-                        }
-                    }
+                    results.AddRange(testcaseNodes.Cast<XmlNode>().Select(ParseTestResult).Where(Result => Result != null));
                 }
-
             }
             catch (XmlException e)
+            {
+                Logger.SendMessage(TestMessageLevel.Warning, "Test result file could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+            }
+            catch (NullReferenceException e)
             {
                 Logger.SendMessage(TestMessageLevel.Warning, "Test result file could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
@@ -70,6 +69,7 @@ namespace GoogleTestAdapter
             return results;
         }
 
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private TestResult ParseTestResult(XmlNode testcaseNode)
         {
             string className = testcaseNode.Attributes["classname"].InnerText;
@@ -81,10 +81,12 @@ namespace GoogleTestAdapter
             {
                 return null;
             }
-            TestResult testresult = new TestResult(TestCase);
 
-            testresult.ComputerName = Environment.MachineName;
-            testresult.DisplayName = " ";
+            TestResult testresult = new TestResult(TestCase)
+            {
+                ComputerName = Environment.MachineName,
+                DisplayName = " "
+            };
 
             string duration = testcaseNode.Attributes["time"].InnerText;
             testresult.Duration = ParseDuration(duration);
@@ -118,11 +120,7 @@ namespace GoogleTestAdapter
 
         private string CreateErrorMessage(XmlNodeList failureNodes)
         {
-            List<string> errorMessages = new List<string>();
-            foreach (XmlNode failureNode in failureNodes)
-            {
-                errorMessages.Add(failureNode.InnerText);
-            }
+            IEnumerable<string> errorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText);
             return string.Join("\n\n", errorMessages);
         }
 

@@ -202,8 +202,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApacheLicense.txt" />
-    <Content Include="gtest-logo.gif" />
+    <Content Include="ApacheLicense.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="gtest-logo.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\GoogleTestExtensionOptionsPage.ico" />
   </ItemGroup>
   <ItemGroup>

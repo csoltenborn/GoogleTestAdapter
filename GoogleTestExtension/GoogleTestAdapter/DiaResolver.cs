@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Dia;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using static GoogleTestAdapter.Native;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
@@ -34,10 +36,13 @@ namespace GoogleTestAdapter
                 List<string> FoundSymbols = Parser.Imports;
                 foreach (string symbol in FoundSymbols)
                 {
-                    string symbolFileName = Path.Combine(ModuleDirectory, symbol);
-                    if (File.Exists(symbolFileName))
+                    if (ModuleDirectory != null)
                     {
-                        foundSymbols.AddRange(FindSymbolsFromExecutable(symbols, symbolFilterString, logger, symbolFileName));
+                        string symbolFileName = Path.Combine(ModuleDirectory, symbol);
+                        if (File.Exists(symbolFileName))
+                        {
+                            foundSymbols.AddRange(FindSymbolsFromExecutable(symbols, symbolFilterString, logger, symbolFileName));
+                        }
                     }
                 }
             }
@@ -47,7 +52,7 @@ namespace GoogleTestAdapter
         private static List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromExecutable(List<string> symbols, string symbolFilterString, IMessageLogger logger, string executable)
         {
             DiaSourceClass diaDataSource = new DiaSourceClass();
-            string path = DiaResolver.ReplaceExtension(executable, ".pdb");
+            string path = ReplaceExtension(executable, ".pdb");
             logger.SendMessage(TestMessageLevel.Informational, "Loading PDB: " + path);
             try
             {
@@ -63,20 +68,10 @@ namespace GoogleTestAdapter
                     List<NativeSourceFileLocation> foundSymbols = new List<NativeSourceFileLocation>();
                     foreach (string s in symbols)
                     {
-                        foreach (NativeSourceFileLocation symbol in allTestMethodSymbols)
-                        {
-                            if (symbol.symbol.Contains(s))
-                            {
-                                foundSymbols.Add(symbol);
-                            }
-                        }
+                        foundSymbols.AddRange(allTestMethodSymbols.Where(symbol => symbol.symbol.Contains(s)));
                     }
 
-                    List<GoogleTestDiscoverer.SourceFileLocation> SourceFileLocations = new List<GoogleTestDiscoverer.SourceFileLocation>();
-                    foreach (NativeSourceFileLocation symbol in foundSymbols)
-                    {
-                        SourceFileLocations.Add(GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols));
-                    }
+                    List<GoogleTestDiscoverer.SourceFileLocation> SourceFileLocations = foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols)).ToList();
                     logger.SendMessage(TestMessageLevel.Informational, "From " + executable + ", found " + foundSymbols.Count + " symbols");
                     return SourceFileLocations;
                 }
@@ -130,14 +125,15 @@ namespace GoogleTestAdapter
         private static List<Trait> GetTraits(NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> Traits = new List<Trait>();
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (NativeSourceFileLocation nativeTraitSymbol in allTraitSymbols)
             {
-                int IndexOfColons = nativeTraitSymbol.symbol.LastIndexOf("::");
+                int IndexOfColons = nativeTraitSymbol.symbol.LastIndexOf("::", StringComparison.Ordinal);
                 string TestIdentifier = nativeTraitSymbol.symbol.Substring(0, IndexOfColons);
                 if (nativeSymbol.symbol.StartsWith(TestIdentifier))
                 {
                     string Trait = nativeTraitSymbol.symbol.Substring(IndexOfColons + 2, nativeTraitSymbol.symbol.Length - IndexOfColons - TRAIT_APPENDIX.Length - 2);
-                    string[] Data = Trait.Split(new string[] { TRAIT_SEPARATOR }, StringSplitOptions.None);
+                    string[] Data = Trait.Split(new[] { TRAIT_SEPARATOR }, StringSplitOptions.None);
                     Traits.Add(new Trait(Data[0], Data[1]));
                 }
             }
@@ -158,6 +154,7 @@ namespace GoogleTestAdapter
             }
         }
 
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private static string ReplaceExtension(string executable, string newExtension)
         {
             return Path.Combine(Path.GetDirectoryName(executable),

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace GoogleTestAdapter
@@ -13,13 +14,13 @@ namespace GoogleTestAdapter
         public const int MAX_COMMAND_LENGTH = 8191;
         private static readonly char[] SPLIT_SUITE = new char[] { '.' };
 
-        private bool RunAll;
-        private int LengthOfExecutable;
-        private IEnumerable<TestCase> AllCases;
-        private IEnumerable<TestCase> Cases;
-        private string OutputPath;
-        private IMessageLogger Logger;
-        private IOptions Options;
+        private readonly bool RunAll;
+        private readonly int LengthOfExecutable;
+        private readonly IEnumerable<TestCase> AllCases;
+        private readonly IEnumerable<TestCase> Cases;
+        private readonly string OutputPath;
+        private readonly IMessageLogger Logger;
+        private readonly IOptions Options;
 
         public GoogleTestCommandLine(bool runAll, int lengthOfExecutable, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, string outputPath, IMessageLogger logger, IOptions options)
         {
@@ -138,17 +139,10 @@ namespace GoogleTestAdapter
         private List<string> GetCasesNotHavingCommonSuite(List<string> suitesRunningAllTests)
         {
             List<string> CasesNotHavingCommonSuite = new List<string>();
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (TestCase testcase in Cases)
             {
-                bool HasCommonSuite = false;
-                foreach (string Suite in suitesRunningAllTests)
-                {
-                    if (Suite == TestsuiteNameFromCase(testcase))
-                    {
-                        HasCommonSuite = true;
-                        break;
-                    }
-                }
+                bool HasCommonSuite = suitesRunningAllTests.Any(Suite => Suite == TestsuiteNameFromCase(testcase));
                 if (!HasCommonSuite)
                 {
                     CasesNotHavingCommonSuite.Add(GetTestcaseNameForFiltering(testcase.FullyQualifiedName));
@@ -160,6 +154,7 @@ namespace GoogleTestAdapter
         private List<string> GetSuitesRunningAllTests()
         {
             List<string> SuitesRunningAllTests = new List<string>();
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string Suite in GetDifferentSuites())
             {
                 List<TestCase> AllMatchingCasesToBeRun = GetAllMatchingCases(Cases, Suite);
@@ -174,20 +169,18 @@ namespace GoogleTestAdapter
 
         private List<string> GetDifferentSuites()
         {
-            return Cases.AsParallel().Select(C => TestsuiteNameFromCase(C)).Distinct().ToList();
+            // TODO remove debug code
+            Stopwatch Stopwatch = new Stopwatch();
+            Stopwatch.Start();
+            List<string> Result = Cases.AsParallel().Select(TestsuiteNameFromCase).Distinct().ToList();
+            Stopwatch.Stop();
+            Logger.SendMessage(TestMessageLevel.Informational, "Duration fo GetDifferentSuites(): " + Stopwatch.Elapsed);
+            return Result;
         }
 
         private List<TestCase> GetAllMatchingCases(IEnumerable<TestCase> cases, string suite)
         {
-            List<TestCase> AllMatchingCases = new List<TestCase>();
-            foreach(TestCase testcase in cases)
-            {
-                if (suite == TestsuiteNameFromCase(testcase))
-                {
-                    AllMatchingCases.Add(testcase);
-                }
-            }
-            return AllMatchingCases;
+            return cases.Where(testcase => suite == TestsuiteNameFromCase(testcase)).ToList();
         }
 
         private string TestsuiteNameFromCase(TestCase testcase)

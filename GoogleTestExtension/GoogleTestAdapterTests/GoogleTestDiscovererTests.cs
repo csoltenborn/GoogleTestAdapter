@@ -192,7 +192,7 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(O => O.TraitsRegexes).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
 
-            Traits = new Trait[] { new Trait("Type", "SomeNewType") };
+            Traits = new[] { new Trait("Type", "SomeNewType") };
             FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
         }
 
@@ -204,7 +204,7 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(O => O.TraitsRegexes).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
 
-            Traits = new Trait[] { new Trait("Type", "SomeNewType") };
+            Traits = new[] { new Trait("Type", "SomeNewType") };
             FindsTestWithTraits("TestMath.AddPasses", Traits);
         }
 

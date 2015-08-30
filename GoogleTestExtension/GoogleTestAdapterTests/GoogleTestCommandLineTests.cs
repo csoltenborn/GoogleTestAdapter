@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace GoogleTestAdapter
@@ -18,6 +19,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void TestCombinesCommonTestsInSuite()
         {
             string[] TestsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
@@ -30,6 +32,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void CombinesCommonTestsInSuiteInDifferentOrder()
         {
             string[] TestsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb" };

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 
 namespace GoogleTestAdapter
 {
@@ -52,18 +51,19 @@ namespace GoogleTestAdapter
                 }
                 finally
                 {
-                    process.Dispose();
+                    process?.Dispose();
                 }
             }
             catch (Win32Exception e)
             {
-                logger.SendMessage(TestMessageLevel.Error, "Error occured during process start, message: " + e.ToString());
+                logger.SendMessage(TestMessageLevel.Error, "Error occured during process start, message: " + e);
             }
 
             return output;
         }
 
-        private static List<string> ReadTheStream(bool throwIfError, Process process, List<string> streamContent, IMessageLogger logger, bool printTestOutput)
+        // ReSharper disable once UnusedParameter.Local
+        private static void ReadTheStream(bool throwIfError, Process process, List<string> streamContent, IMessageLogger logger, bool printTestOutput)
         {
             while (!process.StandardOutput.EndOfStream)
             {
@@ -74,11 +74,10 @@ namespace GoogleTestAdapter
                     logger.SendMessage(TestMessageLevel.Informational, Line);
                 }
             }
-            if ((!throwIfError ? false : process.ExitCode != 0))
+            if ((throwIfError && process.ExitCode != 0))
             {
                 throw new Exception("Process exited with return code " + process.ExitCode);
             }
-            return streamContent;
         }
 
     }
