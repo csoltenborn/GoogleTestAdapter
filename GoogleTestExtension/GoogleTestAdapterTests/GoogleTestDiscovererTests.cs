@@ -124,85 +124,116 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void FindsMathTestWithOneTrait()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            Trait[] Traits = { new Trait("Type", "Small") };
             FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithTwoTraits()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
             FindsTestWithTraits("TestMath.AddPassesWithTraits2", Traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithThreeTraits()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
             FindsTestWithTraits("TestMath.AddPassesWithTraits3", Traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithOneTrait()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            Trait[] Traits = { new Trait("Type", "Small") };
             FindsTestWithTraits("TheFixture.AddPassesWithTraits", Traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithTwoTraits()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
             FindsTestWithTraits("TheFixture.AddPassesWithTraits2", Traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithThreeTraits()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
             FindsTestWithTraits("TheFixture.AddPassesWithTraits3", Traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithOneTrait()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            Trait[] Traits = { new Trait("Type", "Small") };
             FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)", Traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithTwoTraits()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
             FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0  # GetParam() = (1,)", Traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithThreeTraits()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
+            Trait[] Traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
             FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0  # GetParam() = (1,)", Traits);
         }
 
         [TestMethod]
-        public void CustomTraitOverridesTestTrait()
+        public void CustomTraitBeforeAddsTraitIfNotAlreadyExisting()
         {
-            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            Trait[] Traits = { };
+            FindsTestWithTraits("TestMath.AddPasses", Traits);
+
+            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+
+            Traits = new[] { new Trait("Type", "SomeNewType") };
+            FindsTestWithTraits("TestMath.AddPasses", Traits);
+        }
+
+        [TestMethod]
+        public void CustomTraitBeforeIsOverridenByTraitOfTest()
+        {
+            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+
+            Trait[] Traits = { new Trait("Type", "Small") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+        }
+
+        [TestMethod]
+        public void CustomTraitBeforeIsOverridenByCustomTraitAfter()
+        {
+            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "BeforeType").Yield().ToList());
+            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "AfterType").Yield().ToList());
+
+            Trait[] Traits = { new Trait("Type", "AfterType") };
+            FindsTestWithTraits("TestMath.AddPasses", Traits);
+        }
+
+        [TestMethod]
+        public void CustomTraitAfterOverridesTraitOfTest()
+        {
+            Trait[] Traits = { new Trait("Type", "Small") };
             FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
 
-            MockOptions.Setup(O => O.TraitsRegexes).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
 
             Traits = new[] { new Trait("Type", "SomeNewType") };
             FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
         }
 
         [TestMethod]
-        public void CustomTraitAddsTraitIfNotAlreadyExisting()
+        public void CustomTraitAfterAddsTraitIfNotAlreadyExisting()
         {
-            Trait[] Traits = new Trait[] { };
+            Trait[] Traits = { };
             FindsTestWithTraits("TestMath.AddPasses", Traits);
 
-            MockOptions.Setup(O => O.TraitsRegexes).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
 
             Traits = new[] { new Trait("Type", "SomeNewType") };
             FindsTestWithTraits("TestMath.AddPasses", Traits);

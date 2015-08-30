@@ -14,7 +14,8 @@ namespace GoogleTestAdapter
         bool RunDisabledTests { get; }
         int NrOfTestRepetitions { get; }
         bool ShuffleTests { get; }
-        List<RegexTraitPair> TraitsRegexes { get; }
+        List<RegexTraitPair> TraitsRegexesBefore { get; }
+        List<RegexTraitPair> TraitsRegexesAfter { get; }
     }
 
     public class RegexTraitPair
@@ -44,7 +45,8 @@ namespace GoogleTestAdapter
         public const string OPTION_RUN_DISABLED_TESTS = "Also run disabled tests";
         public const string OPTION_NR_OF_TEST_REPETITIONS = "Number of test repetitions";
         public const string OPTION_SHUFFLE_TESTS = "Shuffle tests per execution";
-        public const string OPTION_TRAITS_REGEXES = "Regex for setting test traits";
+        public const string OPTION_TRAITS_REGEXES_BEFORE = "Regex for setting test traits before test execution";
+        public const string OPTION_TRAITS_REGEXES_AFTER = "Regex for setting test traits after test execution";
 
         public const bool OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE = false;
         public const string OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE = "";
@@ -58,7 +60,8 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_RUN_DISABLED_TESTS = "RunDisabledTests";
         private const string REG_OPTION_NR_OF_TEST_REPETITIONS = "NrOfTestRepetitions";
         private const string REG_OPTION_SHUFFLE_TESTS = "ShuffleTests";
-        private const string REG_OPTION_TRAITS_REGEXES = "TraitsRegexes";
+        private const string REG_OPTION_TRAITS_REGEXES_BEFORE = "TraitsRegexesBefore";
+        private const string REG_OPTION_TRAITS_REGEXES_AFTER = "TraitsRegexesAfter";
 
         public const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
         public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
@@ -74,11 +77,20 @@ namespace GoogleTestAdapter
 
         public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
 
-        public  List<RegexTraitPair> TraitsRegexes
+        public List<RegexTraitPair> TraitsRegexesBefore
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TRAITS_REGEXES, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                string Option = RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                return ParseTraitsRegexesString(Option);
+            }
+        }
+
+        public List<RegexTraitPair> TraitsRegexesAfter
+        {
+            get
+            {
+                string Option = RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
                 return ParseTraitsRegexesString(Option);
             }
         }

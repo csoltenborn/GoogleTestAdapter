@@ -102,17 +102,30 @@ namespace GoogleTestAdapterVSIX
         public bool ShuffleTests { get; set; } = Options.OPTION_SHUFFLE_TESTS_DEFAULT_VALUE;
 
         [Category(Options.CATEGORY_NAME)]
-        [DisplayName(Options.OPTION_TRAITS_REGEXES)]
-        [Description("Allows to override/add traits for testcases matching a regex. " 
-            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + " separates the regex from the traits, the trait's name and value are separated by " 
-            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + ", and each pair of regex and trait is separated by " 
-            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + ".\nExample: " + @"MySuite\.*" 
-            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type" 
-            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Small" 
-            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + @"MySuite2\.*|MySuite3\.*" 
-            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type" 
+        [DisplayName(Options.OPTION_TRAITS_REGEXES_BEFORE)]
+        [Description("Allows to add traits to testcases matching a regex. "
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + " separates the regex from the traits, the trait's name and value are separated by "
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + ", and each pair of regex and trait is separated by "
+            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + ".\nExample: " + @"MySuite\.*"
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type"
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Small"
+            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + @"MySuite2\.*|MySuite3\.*"
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type"
             + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Medium")]
-        public string TraitsRegexes { get; set; } = Options.OPTION_TRAITS_REGEXES_DEFAULT_VALUE;
+        public string TraitsRegexesBefore { get; set; } = Options.OPTION_TRAITS_REGEXES_DEFAULT_VALUE;
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_TRAITS_REGEXES_AFTER)]
+        [Description("Allows to override/add traits for testcases matching a regex. "
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + " separates the regex from the traits, the trait's name and value are separated by "
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + ", and each pair of regex and trait is separated by "
+            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + ".\nExample: " + @"MySuite\.*"
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type"
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Small"
+            + Options.TRAITS_REGEXES_PAIR_SEPARATOR + @"MySuite2\.*|MySuite3\.*"
+            + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type"
+            + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Medium")]
+        public string TraitsRegexesAfter { get; set; } = Options.OPTION_TRAITS_REGEXES_DEFAULT_VALUE;
 
     }
 

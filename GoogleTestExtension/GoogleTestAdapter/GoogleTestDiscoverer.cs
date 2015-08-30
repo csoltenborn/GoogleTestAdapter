@@ -132,7 +132,15 @@ namespace GoogleTestAdapter
 
         private IEnumerable<Trait> GetTraits(string fullyQualifiedName, List<Trait> traits)
         {
-            foreach (RegexTraitPair Pair in Options.TraitsRegexes.Where(P => Regex.IsMatch(fullyQualifiedName, P.Regex)))
+            foreach (RegexTraitPair Pair in Options.TraitsRegexesBefore.Where(P => Regex.IsMatch(fullyQualifiedName, P.Regex)))
+            {
+                if (!traits.Exists(T => T.Name == Pair.Trait.Name))
+                {
+                    traits.Add(Pair.Trait);
+                }
+            }
+
+            foreach (RegexTraitPair Pair in Options.TraitsRegexesAfter.Where(P => Regex.IsMatch(fullyQualifiedName, P.Regex)))
             {
                 bool ReplacedTrait = false;
                 foreach (Trait TraitToModify in traits.ToArray().Where(T => T.Name == Pair.Trait.Name))
