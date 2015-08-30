@@ -74,6 +74,7 @@
     <Compile Include="AbstractGoogleTestAdapterClass.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="GoogleTestResultStandardOutputParser.cs" />
+    <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="DiaResolver.cs" />
     <Compile Include="GoogleTestCommandLine.cs" />

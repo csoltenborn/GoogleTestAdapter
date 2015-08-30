@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -57,12 +58,7 @@ namespace GoogleTestAdapter
             foreach (SuiteCasePair testcase in testcases)
             {
                 result.Add(ToTestCase(executable, testcase, logger, sourceFileLocations));
-                if (Constants.DEBUG_MODE)
-                {
-                    #pragma warning disable 0162
-                    logger.SendMessage(TestMessageLevel.Informational, "Added testcase" + testcase.testsuite + "." + testcase.testcase);
-                    #pragma warning restore 0162
-                }
+                DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational, "Added testcase" + testcase.testsuite + "." + testcase.testcase);
             }
             return result;
         }
@@ -197,13 +193,8 @@ namespace GoogleTestAdapter
                 }
             }
 
-            if (Constants.DEBUG_MODE)
-            {
-                #pragma warning disable 0162
-                logger.SendMessage(TestMessageLevel.Informational,
+            DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational,
                     "GoogleTestAdapter: Does " + executable + " match " + regexUsed + ": " + matches);
-                #pragma warning restore 0162
-            }
 
             return matches;
         }

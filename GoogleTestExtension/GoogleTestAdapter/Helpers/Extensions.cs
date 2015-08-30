@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dia;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using System.Windows.Forms;
-using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter
@@ -32,16 +31,8 @@ namespace GoogleTestAdapter
 
         public static TestCase FindTestcase(this IEnumerable<TestCase> testcases, string qualifiedName)
         {
-            foreach (TestCase testcase in testcases)
-            {
-                if (testcase.FullyQualifiedName.Split(' ')[0] == qualifiedName)
-                {
-                    return testcase;
-                }
-            }
-            return null;
+            return testcases.FirstOrDefault(testcase => testcase.FullyQualifiedName.Split(' ')[0] == qualifiedName);
         }
-
     }
 
     public static class StringExtensions
@@ -109,56 +100,9 @@ namespace GoogleTestAdapter
 
         public static IDiaEnumLineNumbers GetLineNumbers(this IDiaSession session, uint addressSection, uint addressOffset, uint length)
         {
-            List<Location> locations = new List<Location>();
             IDiaEnumLineNumbers linenumbers;
             session.findLinesByAddr(addressSection, addressOffset, length, out linenumbers);
-            if (linenumbers.count > 0)
-            {
-                foreach (IDiaLineNumber linenumber in linenumbers)
-                {
-                    locations.Add(new Location()
-                    {
-                        sourcefile = linenumber.sourceFile.fileName,
-                        linenumner = linenumber.lineNumber
-                    });
-                    Native.ReleaseCom(linenumber);
-                }
-            }
             return linenumbers;
-        }
-
-    }
-
-    public static class DebugUtils
-    {
-
-        public static void CheckDebugModeForExecutionCode(IMessageLogger logger = null)
-        {
-            CheckDebugMode("Test execution code", logger);
-        }
-
-        public static void CheckDebugModeForDiscoverageCode(IMessageLogger logger = null)
-        {
-            CheckDebugMode("Test discoverage code", logger);
-        }
-
-        private static void CheckDebugMode(string codeType, IMessageLogger logger = null)
-        {
-            if (Constants.DEBUG_MODE)
-            {
-                #pragma warning disable 0162
-                string Message = codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
-                if (logger != null)
-                {
-                    logger.SendMessage(TestMessageLevel.Informational, Message);
-                }
-                if (!Constants.UNIT_TEST_MODE)
-                {
-                    MessageBox.Show(Message + ". Attach debugger if necessary, then click ok.",
-                        "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                }
-                #pragma warning restore 0162
-            }
         }
 
     }

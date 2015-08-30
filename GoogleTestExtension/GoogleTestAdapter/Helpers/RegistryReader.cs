@@ -29,7 +29,7 @@ namespace GoogleTestAdapter
         private static object ReadObject(string keyName, string valueName, object defaultValue)
         {
             object Result = Registry.GetValue(keyName, valueName, null);
-            return Result != null ? Result : defaultValue;
+            return Result ?? defaultValue;
         }
 
     }

@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Linq;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 
