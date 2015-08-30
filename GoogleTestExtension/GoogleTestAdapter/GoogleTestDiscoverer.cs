@@ -16,7 +16,9 @@ namespace GoogleTestAdapter
 
         private static bool ProcessIdShown = false;
 
-        public GoogleTestDiscoverer(IOptions options = null)
+        public GoogleTestDiscoverer() : this(null) {}
+
+        public GoogleTestDiscoverer(IOptions options)
         {
             if(options != null)
             {
