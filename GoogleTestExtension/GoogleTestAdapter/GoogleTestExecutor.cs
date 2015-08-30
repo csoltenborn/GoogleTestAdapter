@@ -8,11 +8,11 @@ using System.IO;
 
 namespace GoogleTestAdapter
 {
-    [ExtensionUri(ExecutorUriString)]
+    [ExtensionUri(EXECUTOR_URI_STRING)]
     public class GoogleTestExecutor : AbstractGoogleTestAdapterClass, ITestExecutor
     {
-        public const string ExecutorUriString = Constants.identifierUri;
-        public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
+        public const string EXECUTOR_URI_STRING = Constants.identifierUri;
+        public static readonly Uri EXECUTOR_URI = new Uri(EXECUTOR_URI_STRING);
 
         private bool Canceled = false;
 
@@ -32,7 +32,7 @@ namespace GoogleTestAdapter
             DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
 
             Canceled = false;
-            foreach (string executable in sources)
+            foreach (string Executable in sources)
             {
                 if (Canceled)
                 {
@@ -40,20 +40,20 @@ namespace GoogleTestAdapter
                 }
 
                 GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(Options);
-                List<TestCase> AllCases = Discoverer.GetTestsFromExecutable(frameworkHandle, executable);
+                List<TestCase> AllCases = Discoverer.GetTestsFromExecutable(frameworkHandle, Executable);
                 RunTests(true, AllCases, AllCases, runContext, frameworkHandle);
             }
         }
 
-        public void RunTests(IEnumerable<TestCase> tests, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
 
             Canceled = false;
             List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
             HashSet<string> Executables = new HashSet<string>();
-            var TestCases = tests as TestCase[] ?? tests.ToArray();
-            foreach (TestCase TestCase in TestCases)
+            TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+            foreach (TestCase TestCase in TestCasesToRun)
             {
                 Executables.Add(TestCase.Source);
             }
@@ -62,29 +62,29 @@ namespace GoogleTestAdapter
             {
                 AllTestCasesInAllExecutables.AddRange(new GoogleTestDiscoverer(Options).GetTestsFromExecutable(frameworkHandle, Executable));
             }
-            RunTests(false, AllTestCasesInAllExecutables, TestCases, runContext, frameworkHandle);
+            RunTests(false, AllTestCasesInAllExecutables, TestCasesToRun, runContext, frameworkHandle);
         }
 
-        private void RunTests(bool runAll, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, IRunContext runContext, IFrameworkHandle handle)
+        private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
-            Dictionary<string, List<TestCase>> groupedCases = new Dictionary<string, List<TestCase>>();
-            foreach (TestCase testcase in cases)
+            Dictionary<string, List<TestCase>> GroupedTestCases = new Dictionary<string, List<TestCase>>();
+            foreach (TestCase TestCase in testCasesToRun)
             {
-                List<TestCase> group;
-                if (groupedCases.ContainsKey(testcase.Source))
+                List<TestCase> Group;
+                if (GroupedTestCases.ContainsKey(TestCase.Source))
                 {
-                    group = groupedCases[testcase.Source];
+                    Group = GroupedTestCases[TestCase.Source];
                 }
                 else
                 {
-                    group = new List<TestCase>();
-                    groupedCases.Add(testcase.Source, group);
+                    Group = new List<TestCase>();
+                    GroupedTestCases.Add(TestCase.Source, Group);
                 }
-                group.Add(testcase);
+                Group.Add(TestCase);
             }
 
-            TestCase[] AllCasesAsArray = allCases.ToArray();
-            foreach (string executable in groupedCases.Keys)
+            TestCase[] AllTestCases = allTestCases.ToArray();
+            foreach (string Executable in GroupedTestCases.Keys)
             {
                 if (Canceled)
                 {
@@ -92,7 +92,7 @@ namespace GoogleTestAdapter
                 }
                 try
                 {
-                    RunTestsFromExecutable(runAll, executable, AllCasesAsArray, groupedCases[executable], runContext, handle);
+                    RunTestsFromExecutable(runAllTestCases, Executable, AllTestCases, GroupedTestCases[Executable], runContext, handle);
                 }
                 catch (Exception e)
                 {
@@ -104,50 +104,50 @@ namespace GoogleTestAdapter
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void RunTestsFromExecutable(bool runAll, string executable, IEnumerable<TestCase> allCases, IEnumerable<TestCase> cases, IRunContext runContext, IFrameworkHandle handle)
+        private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
-            var testCases = cases as TestCase[] ?? cases.ToArray();
-            foreach (TestCase testcase in testCases)
+            TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+            foreach (TestCase TestCase in TestCasesToRun)
             {
-                handle.RecordStart(testcase);
+                handle.RecordStart(TestCase);
             }
 
             string ResultXmlFile = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
-            foreach(string Arguments in new GoogleTestCommandLine(runAll, executable.Length, allCases, testCases, ResultXmlFile, handle, Options).GetCommandLines())
+            foreach(string Arguments in new GoogleTestCommandLine(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options).GetCommandLines())
             {
                 List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments, Options.PrintTestOutput, false);
-                foreach (TestResult testResult in CollectTestResults(ResultXmlFile, ConsoleOutput, testCases, handle))
+                foreach (TestResult TestResult in CollectTestResults(ResultXmlFile, ConsoleOutput, TestCasesToRun, handle))
                 {
-                    handle.RecordResult(testResult);
+                    handle.RecordResult(TestResult);
                 }
             }
         }
 
-        private List<TestResult> CollectTestResults(string resultXmlFile, List<string> consoleOutput, IEnumerable<TestCase> cases, IFrameworkHandle handle)
+        private List<TestResult> CollectTestResults(string resultXmlFile, List<string> consoleOutput, IEnumerable<TestCase> testCasesRun, IFrameworkHandle handle)
         {
             List<TestResult> TestResults = new List<TestResult>();
 
-            var TestCases = cases as TestCase[] ?? cases.ToArray();
-            GoogleTestResultXmlParser XmlParser = new GoogleTestResultXmlParser(resultXmlFile, TestCases, handle);
+            TestCase[] TestCasesRun = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
+            GoogleTestResultXmlParser XmlParser = new GoogleTestResultXmlParser(resultXmlFile, TestCasesRun, handle);
             TestResults.AddRange(XmlParser.GetTestResults());
 
-            if (TestResults.Count < TestCases.Length)
+            if (TestResults.Count < TestCasesRun.Length)
             {
-                GoogleTestResultStandardOutputParser ConsoleParser = new GoogleTestResultStandardOutputParser(consoleOutput, TestCases, handle);
+                GoogleTestResultStandardOutputParser ConsoleParser = new GoogleTestResultStandardOutputParser(consoleOutput, TestCasesRun, handle);
                 List<TestResult> ConsoleResults = ConsoleParser.GetTestResults();
-                foreach (TestResult testResult in ConsoleResults.Where(tr => !TestResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
+                foreach (TestResult TestResult in ConsoleResults.Where(TR => !TestResults.Exists(TR2 => TR.TestCase.FullyQualifiedName == TR2.TestCase.FullyQualifiedName)))
                 {
-                    TestResults.Add(testResult);
+                    TestResults.Add(TestResult);
                 }
 
-                if (TestResults.Count < TestCases.Length)
+                if (TestResults.Count < TestCasesRun.Length)
                 {
-                    foreach (TestCase testcase in TestCases.Where(c => !TestResults.Exists(tr => tr.TestCase.FullyQualifiedName == c.FullyQualifiedName)))
+                    foreach (TestCase TestCase in TestCasesRun.Where(TC => !TestResults.Exists(TR => TR.TestCase.FullyQualifiedName == TC.FullyQualifiedName)))
                     {
                         string ErrorMsg = ConsoleParser.CrashedTestCase == null ? ""
                             : "probably crash of test " + ConsoleParser.CrashedTestCase.DisplayName;
-                        TestResults.Add(new TestResult(testcase)
+                        TestResults.Add(new TestResult(TestCase)
                         {
                             ComputerName = Environment.MachineName,
                             Outcome = TestOutcome.NotFound,

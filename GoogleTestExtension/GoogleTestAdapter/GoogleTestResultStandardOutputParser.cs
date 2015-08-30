@@ -8,7 +8,6 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestResultStandardOutputParser
     {
-
         private const string RUN    = "[ RUN      ]";
         private const string FAILED = "[  FAILED  ]";
         private const string PASSED = "[       OK ]";
@@ -16,7 +15,7 @@ namespace GoogleTestAdapter
         public const string CRASH_TEXT = "!! This is probably the test that crashed !!";
 
         private readonly List<string> ConsoleOutput;
-        private readonly List<TestCase> Cases;
+        private readonly List<TestCase> TestCasesRun;
         private readonly IMessageLogger Logger;
 
         public TestCase CrashedTestCase { get; private set; }
@@ -24,20 +23,20 @@ namespace GoogleTestAdapter
         public GoogleTestResultStandardOutputParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger)
         {
             this.ConsoleOutput = consoleOutput.ToList();
-            this.Cases = cases.ToList();
+            this.TestCasesRun = cases.ToList();
             this.Logger = logger;
         }
 
         public List<TestResult> GetTestResults()
         {
-            List<TestResult> results = new List<TestResult>();
+            List<TestResult> TestResults = new List<TestResult>();
             int IndexOfNextTestcase = FindIndexOfNextTestcase(0);
             while (IndexOfNextTestcase >= 0)
             {
-                results.Add(CreateTestResult(IndexOfNextTestcase));
+                TestResults.Add(CreateTestResult(IndexOfNextTestcase));
                 IndexOfNextTestcase = FindIndexOfNextTestcase(IndexOfNextTestcase + 1);
             }
-            return results;
+            return TestResults;
         }
 
         private TestResult CreateTestResult(int indexOfTestcase)
@@ -46,67 +45,62 @@ namespace GoogleTestAdapter
 
             string Line = ConsoleOutput[CurrentLineIndex++];
             string QualifiedTestname = RemovePrefix(Line).Trim();
-            TestCase testcase = FindTestcase(QualifiedTestname);
+            TestCase TestCase = FindTestcase(QualifiedTestname);
 
             if (CurrentLineIndex >= ConsoleOutput.Count)
             {
-                return CreateFailedTestResult(testcase, CRASH_TEXT, TimeSpan.FromMilliseconds(0), true);
+                return CreateFailedTestResult(TestCase, true, CRASH_TEXT, TimeSpan.FromMilliseconds(0));
             }
 
             Line = ConsoleOutput[CurrentLineIndex++];
 
             if (IsPassedLine(Line))
             {
-                return CreatePassedTestResult(testcase, ParseDuration(Line));
-            }
-            else 
-            {
-                string ErrorMsg = "";
-                while (!IsFailedLine(Line) && CurrentLineIndex < ConsoleOutput.Count)
-                {
-                    ErrorMsg += Line + "\n";
-                    Line = ConsoleOutput[CurrentLineIndex++];
-                }
-                if (IsFailedLine(Line))
-                {
-                    return CreateFailedTestResult(testcase, ErrorMsg, ParseDuration(Line), false);
-                }
-                else
-                {
-                    string AppendedMessage = ErrorMsg == "" ? "" : "\n\n" + ErrorMsg;
-                    return CreateFailedTestResult(testcase, CRASH_TEXT + AppendedMessage, TimeSpan.FromMilliseconds(0), true);
-                }
+                return CreatePassedTestResult(TestCase, ParseDuration(Line));
             }
 
+            string ErrorMsg = "";
+            while (!IsFailedLine(Line) && CurrentLineIndex < ConsoleOutput.Count)
+            {
+                ErrorMsg += Line + "\n";
+                Line = ConsoleOutput[CurrentLineIndex++];
+            }
+            if (IsFailedLine(Line))
+            {
+                return CreateFailedTestResult(TestCase, false, ErrorMsg, ParseDuration(Line));
+            }
+
+            string AppendedMessage = ErrorMsg == "" ? "" : "\n\n" + ErrorMsg;
+            return CreateFailedTestResult(TestCase, true, CRASH_TEXT + AppendedMessage, TimeSpan.FromMilliseconds(0));
         }
 
         private TimeSpan ParseDuration(string line)
         {
-            string TheString = line;
-            int Result = 0;
+            int DurationInMs = 1;
             try
             {
-                int indexOpeningBracket = line.LastIndexOf('(');
-                int length = line.Length - indexOpeningBracket - 2;
-                TheString = line.Substring(indexOpeningBracket + 1, length);
-                if (TheString.Contains("ms"))
+                int IndexOfOpeningBracket = line.LastIndexOf('(');
+                int LengthOfDurationPart = line.Length - IndexOfOpeningBracket - 2;
+                string DurationPart = line.Substring(IndexOfOpeningBracket + 1, LengthOfDurationPart);
+                if (DurationPart.Contains("ms"))
                 {
-                    TheString = TheString.Replace("ms", "");
-                    TheString = TheString.Trim();
-                    Result = int.Parse(TheString);
+                    DurationPart = DurationPart.Replace("ms", "");
+                    DurationPart = DurationPart.Trim();
+                    DurationInMs = int.Parse(DurationPart);
                 }
-                if (TheString.Contains("s"))
+                if (DurationPart.Contains("s"))
                 {
-                    TheString = TheString.Replace("s", "");
-                    TheString = TheString.Trim();
-                    Result = int.Parse(TheString) * 1000;
+                    DurationPart = DurationPart.Replace("s", "");
+                    DurationPart = DurationPart.Trim();
+                    DurationInMs = int.Parse(DurationPart) * 1000;
                 }
             }
             catch (Exception)
             {
                 Logger.SendMessage(TestMessageLevel.Warning, "Could not parse duration in line '" + line + "'");
             }
-            return TimeSpan.FromMilliseconds(Math.Max(1, Result));
+
+            return TimeSpan.FromMilliseconds(Math.Max(1, DurationInMs));
         }
 
         private TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
@@ -121,9 +115,8 @@ namespace GoogleTestAdapter
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, string errorMessage, TimeSpan duration, bool crashed)
+        private TestResult CreateFailedTestResult(TestCase testCase, bool crashed, string errorMessage, TimeSpan duration)
         {
-            string TheDisplayName = !crashed ? " " : "because it CRASHED!";
             if (crashed)
             {
                 CrashedTestCase = testCase;
@@ -131,7 +124,7 @@ namespace GoogleTestAdapter
             return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
-                DisplayName = TheDisplayName,
+                DisplayName = crashed ? "because it CRASHED!" : " ",
                 Outcome = TestOutcome.Failed,
                 ErrorMessage = errorMessage,
                 Duration = duration
@@ -154,7 +147,7 @@ namespace GoogleTestAdapter
 
         private TestCase FindTestcase(string qualifiedTestname)
         {
-            return Cases.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
+            return TestCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
         }
 
         private bool IsRunLine(string line)
@@ -176,7 +169,6 @@ namespace GoogleTestAdapter
         {
             return line.Substring(RUN.Length);
         }
-
 
     }
 

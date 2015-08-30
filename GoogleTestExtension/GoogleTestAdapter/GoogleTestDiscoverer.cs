@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace GoogleTestAdapter
 {
-    [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
+    [DefaultExecutorUri(GoogleTestExecutor.EXECUTOR_URI_STRING)]
     [FileExtension(".exe")]
     public class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
     {
@@ -113,7 +113,7 @@ namespace GoogleTestAdapter
             {
                 if (Location.Symbol.Contains(SymbolName))
                 {
-                    TestCase TestCase = new TestCase(DisplayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+                    TestCase TestCase = new TestCase(DisplayName, new Uri(GoogleTestExecutor.EXECUTOR_URI_STRING), executable)
                     {
                         DisplayName = DisplayName,
                         CodeFilePath = Location.Sourcefile,
@@ -124,7 +124,7 @@ namespace GoogleTestAdapter
                 }
             }
             logger.SendMessage(TestMessageLevel.Warning, "Could not find source location for test " + DisplayName);
-            return new TestCase(DisplayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+            return new TestCase(DisplayName, new Uri(GoogleTestExecutor.EXECUTOR_URI_STRING), executable)
             {
                 DisplayName = DisplayName
             };
