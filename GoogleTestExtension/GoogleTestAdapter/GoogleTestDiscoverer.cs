@@ -29,104 +29,104 @@ namespace GoogleTestAdapter
                 DebugUtils.CheckDebugModeForDiscoverageCode(logger);
             }
 
-            List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables, logger);
-            foreach (string executable in googleTestExecutables)
+            List<string> GoogleTestExecutables = GetAllGoogleTestExecutables(executables, logger);
+            foreach (string Executable in GoogleTestExecutables)
             {
-                List<TestCase> googleTestTests = GetTestsFromExecutable(logger, executable);
-                foreach (TestCase test in googleTestTests)
+                List<TestCase> GoogleTestTests = GetTestsFromExecutable(logger, Executable);
+                foreach (TestCase TestCase in GoogleTestTests)
                 {
-                    discoverySink.SendTestCase(test);
+                    discoverySink.SendTestCase(TestCase);
                 }
             }
         }
 
         public List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
-            List<string> output = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false, false);
-            List<SuiteCasePair> testcases = ParseTestCases(output);
-            testcases.Reverse();
-            logger.SendMessage(TestMessageLevel.Informational, "Found " + testcases.Count + " tests, resolving symbols...");
-            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, logger, testcases);
-            List<TestCase> result = new List<TestCase>();
-            foreach (SuiteCasePair testcase in testcases)
+            List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false, false);
+            List<SuiteCasePair> SuiteCasePairs = ParseTestCases(ConsoleOutput);
+            SuiteCasePairs.Reverse();
+            logger.SendMessage(TestMessageLevel.Informational, "Found " + SuiteCasePairs.Count + " tests, resolving symbols...");
+            List<SourceFileLocation> SourceFileLocations = GetSourceFileLocations(executable, logger, SuiteCasePairs);
+            List<TestCase> TestCases = new List<TestCase>();
+            foreach (SuiteCasePair SuiteCasePair in SuiteCasePairs)
             {
-                result.Add(ToTestCase(executable, testcase, logger, sourceFileLocations));
-                DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational, "Added testcase" + testcase.testsuite + "." + testcase.testcase);
+                TestCases.Add(ToTestCase(executable, SuiteCasePair, logger, SourceFileLocations));
+                DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational, "Added testcase" + SuiteCasePair.TestSuite + "." + SuiteCasePair.TestCase);
             }
-            return result;
+            return TestCases;
         }
 
         private List<SuiteCasePair> ParseTestCases(List<string> output)
         {
-            List<SuiteCasePair> Result = new List<SuiteCasePair>();
-            string currentSuite = "";
+            List<SuiteCasePair> SuiteCasePairs = new List<SuiteCasePair>();
+            string CurrentSuite = "";
             foreach (string Line in output)
             {
                 string TrimmedLine = Line.Trim('.', '\n', '\r');
                 if (TrimmedLine.StartsWith("  "))
                 {
-                    Result.Add(new SuiteCasePair
+                    SuiteCasePairs.Add(new SuiteCasePair
                     {
-                        testsuite = currentSuite,
-                        testcase = TrimmedLine.Substring(2)
+                        TestSuite = CurrentSuite,
+                        TestCase = TrimmedLine.Substring(2)
                     });
                 }
                 else
                 {
-                    string[] split = TrimmedLine.Split(new[] { ".  # TypeParam" }, StringSplitOptions.RemoveEmptyEntries);
-                    currentSuite = split.Length > 0 ? split[0] : TrimmedLine;
+                    string[] Split = TrimmedLine.Split(new[] { ".  # TypeParam" }, StringSplitOptions.RemoveEmptyEntries);
+                    CurrentSuite = Split.Length > 0 ? Split[0] : TrimmedLine;
                 }
             }
 
-            return Result;
+            return SuiteCasePairs;
         }
 
         private List<SourceFileLocation> GetSourceFileLocations(string executable, IMessageLogger logger, List<SuiteCasePair> testcases)
         {
-            List<string> symbols = testcases.Select(GoogleTestCombinedName).ToList();
-            string symbolFilterString = "*" + Constants.gtestTestBodySignature;
-            return DiaResolver.ResolveAllMethods(executable, symbols, symbolFilterString, logger);
+            List<string> Symbols = testcases.Select(GetGoogleTestCombinedName).ToList();
+            string SymbolFilterString = "*" + Constants.gtestTestBodySignature;
+            return DiaResolver.ResolveAllMethods(executable, Symbols, SymbolFilterString, logger);
         }
 
-        private string GoogleTestCombinedName(SuiteCasePair pair)
+        private string GetGoogleTestCombinedName(SuiteCasePair pair)
         {
-            if (!pair.testcase.Contains("# GetParam()"))
+            if (!pair.TestCase.Contains("# GetParam()"))
             {
-                return pair.testsuite + "_" + pair.testcase + "_Test" + Constants.gtestTestBodySignature;
+                return pair.TestSuite + "_" + pair.TestCase + "_Test" + Constants.gtestTestBodySignature;
             }
 
-            int Index = pair.testsuite.IndexOf('/');
-            string suite = Index < 0 ? pair.testsuite : pair.testsuite.Substring(Index + 1);
+            int Index = pair.TestSuite.IndexOf('/');
+            string Suite = Index < 0 ? pair.TestSuite : pair.TestSuite.Substring(Index + 1);
 
-            Index = pair.testcase.IndexOf('/');
-            string testname = Index < 0 ? pair.testcase : pair.testcase.Substring(0, Index);
+            Index = pair.TestCase.IndexOf('/');
+            string TestName = Index < 0 ? pair.TestCase : pair.TestCase.Substring(0, Index);
 
-            return suite + "_" + testname + "_Test" + Constants.gtestTestBodySignature;
+            return Suite + "_" + TestName + "_Test" + Constants.gtestTestBodySignature;
         }
 
-        private TestCase ToTestCase(string executable, SuiteCasePair testcase, IMessageLogger logger, List<SourceFileLocation> sourceFileLocations)
+        private TestCase ToTestCase(string executable, SuiteCasePair suiteCasePair, IMessageLogger logger, List<SourceFileLocation> sourceFileLocations)
         {
-            string displayName = testcase.testsuite + "." + testcase.testcase;
-            string symbolName = GoogleTestCombinedName(testcase);
+            string DisplayName = suiteCasePair.TestSuite + "." + suiteCasePair.TestCase;
+            string SymbolName = GetGoogleTestCombinedName(suiteCasePair);
 
-            foreach (SourceFileLocation location in sourceFileLocations)
+            foreach (SourceFileLocation Location in sourceFileLocations)
             {
-                if (location.symbol.Contains(symbolName))
+                if (Location.Symbol.Contains(SymbolName))
                 {
-                    TestCase TestCase = new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+                    TestCase TestCase = new TestCase(DisplayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
                     {
-                        DisplayName = displayName,
-                        CodeFilePath = location.sourcefile,
-                        LineNumber = (int) location.line
+                        DisplayName = DisplayName,
+                        CodeFilePath = Location.Sourcefile,
+                        LineNumber = (int) Location.Line
                     };
-                    TestCase.Traits.AddRange(GetTraits(TestCase.FullyQualifiedName, location.traits));
+                    TestCase.Traits.AddRange(GetTraits(TestCase.FullyQualifiedName, Location.Traits));
                     return TestCase;
                 }
             }
-            logger.SendMessage(TestMessageLevel.Warning, "Could not find source location for test " + displayName);
-            return new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+            logger.SendMessage(TestMessageLevel.Warning, "Could not find source location for test " + DisplayName);
+            return new TestCase(DisplayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
             {
-                DisplayName = displayName
+                DisplayName = DisplayName
             };
         }
 
@@ -154,38 +154,38 @@ namespace GoogleTestAdapter
 
         public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string CustomRegex = "")
         {
-            bool matches;
-            string regexUsed;
+            bool Matches;
+            string RegexUsed;
             if (string.IsNullOrWhiteSpace(CustomRegex))
             {
-                regexUsed = Constants.TEST_FINDER_REGEX;
-                matches = COMPILED_TEST_FINDER_REGEX.IsMatch(executable);
+                RegexUsed = Constants.TEST_FINDER_REGEX;
+                Matches = COMPILED_TEST_FINDER_REGEX.IsMatch(executable);
             }
             else
             {
-                regexUsed = CustomRegex;
+                RegexUsed = CustomRegex;
                 try
                 {
-                    matches = Regex.IsMatch(executable, CustomRegex);
+                    Matches = Regex.IsMatch(executable, CustomRegex);
                 }
                 catch (ArgumentException e)
                 {
                     logger.SendMessage(TestMessageLevel.Error,
-                        "Google Test Adapter: Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
-                    matches = false;
+                        "Google Test Adapter: Regex '" + RegexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                    Matches = false;
                 }
                 catch (RegexMatchTimeoutException e)
                 {
                     logger.SendMessage(TestMessageLevel.Error,
-                        "Google Test Adapter: Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
-                    matches = false;
+                        "Google Test Adapter: Regex '" + RegexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                    Matches = false;
                 }
             }
 
             DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational,
-                    "GoogleTestAdapter: Does " + executable + " match " + regexUsed + ": " + matches);
+                    "GoogleTestAdapter: Does " + executable + " match " + RegexUsed + ": " + Matches);
 
-            return matches;
+            return Matches;
         }
 
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables, IMessageLogger logger)
@@ -196,16 +196,16 @@ namespace GoogleTestAdapter
 
         class SuiteCasePair
         {
-            public string testsuite;
-            public string testcase;
+            public string TestSuite;
+            public string TestCase;
         }
 
         public class SourceFileLocation
         {
-            public string symbol;
-            public string sourcefile;
-            public uint line;
-            public List<Trait> traits;
+            public string Symbol;
+            public string Sourcefile;
+            public uint Line;
+            public List<Trait> Traits;
         }
 
     }

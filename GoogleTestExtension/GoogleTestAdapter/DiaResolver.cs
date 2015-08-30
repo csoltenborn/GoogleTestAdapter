@@ -98,10 +98,10 @@ namespace GoogleTestAdapter
                 {
                     return new GoogleTestDiscoverer.SourceFileLocation()
                     {
-                        symbol = nativeSymbol.symbol,
-                        sourcefile = lineNumbers.Item(0).sourceFile.fileName,
-                        line = lineNumbers.Item(0).lineNumber,
-                        traits = Traits
+                        Symbol = nativeSymbol.symbol,
+                        Sourcefile = lineNumbers.Item(0).sourceFile.fileName,
+                        Line = lineNumbers.Item(0).lineNumber,
+                        Traits = Traits
                     };
                 }
                 else
@@ -109,10 +109,10 @@ namespace GoogleTestAdapter
                     logger.SendMessage(TestMessageLevel.Error, "Failed to locate line number for " + nativeSymbol);
                     return new GoogleTestDiscoverer.SourceFileLocation()
                     {
-                        symbol = executable,
-                        sourcefile = "",
-                        line = 0,
-                        traits = Traits
+                        Symbol = executable,
+                        Sourcefile = "",
+                        Line = 0,
+                        Traits = Traits
                     };
                 }
             }
