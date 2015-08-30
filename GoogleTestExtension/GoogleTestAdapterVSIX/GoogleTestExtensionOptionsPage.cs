@@ -86,6 +86,7 @@ namespace GoogleTestAdapterVSIX
         private bool runDisabledTests = Options.OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE;
         private int nrOfTestRepetitions = Options.OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE;
         private bool shuffleTests = Options.OPTION_SHUFFLE_TESTS_DEFAULT_VALUE;
+        private string traitsRegexes = Options.OPTION_TRAITS_REGEXES_DEFAULT_VALUE;
 
         [Category(Options.CATEGORY_NAME)]
         [DisplayName(Options.OPTION_PRINT_TEST_OUTPUT)]
@@ -130,6 +131,15 @@ namespace GoogleTestAdapterVSIX
         {
             get { return shuffleTests; }
             set { shuffleTests = value; }
+        }
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_TRAITS_REGEXES)]
+        [Description("If true, tests will be executed in random order.")]
+        public string TraitsRegexes
+        {
+            get { return traitsRegexes; }
+            set { traitsRegexes = value; }
         }
 
     }

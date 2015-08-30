@@ -21,24 +21,6 @@ namespace GoogleTestAdapter
 
         public const string x86traitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
 
-        class MockedGoogleTestDiscoverer : GoogleTestDiscoverer
-        {
-            private readonly Mock<IOptions> MockedOptions;
-
-            internal MockedGoogleTestDiscoverer(Mock<IOptions> mockedOptions) : base()
-            {
-                this.MockedOptions = mockedOptions;
-            }
-
-            protected override IOptions Options
-            {
-                get
-                {
-                    return MockedOptions.Object;
-                }
-            }
-        }
-
         [TestMethod]
         public void MatchesTestExecutableName()
         {
@@ -79,7 +61,7 @@ namespace GoogleTestAdapter
             Mock<ITestCaseDiscoverySink> MockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
             MockOptions.Setup(O => O.TestDiscoveryRegex).Returns(() => customRegex);
 
-            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
             Discoverer.DiscoverTests(x86staticallyLinkedTests.Yield(), MockDiscoveryContext.Object, MockLogger.Object, MockDiscoverySink.Object);
 
             MockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
@@ -87,7 +69,7 @@ namespace GoogleTestAdapter
 
         private void FindStaticallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
             var Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, location);
             Assert.AreEqual(2, Tests.Count);
             Assert.AreEqual("FooTest.DoesXyz", Tests[0].DisplayName);
@@ -113,7 +95,7 @@ namespace GoogleTestAdapter
 
         private void FindExternallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
             var Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, location);
 
             Assert.AreEqual(2, Tests.Count);
@@ -143,73 +125,97 @@ namespace GoogleTestAdapter
         public void FindsMathTestWithOneTrait()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath", Traits);
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithTwoTraits()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("TestMath", Traits);
+            FindsTestWithTraits("TestMath.AddPassesWithTraits2", Traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithThreeTraits()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("TestMath", Traits);
+            FindsTestWithTraits("TestMath.AddPassesWithTraits3", Traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithOneTrait()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
-            FindsTestWithTraits("TheFixture", Traits);
+            FindsTestWithTraits("TheFixture.AddPassesWithTraits", Traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithTwoTraits()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("TheFixture", Traits);
+            FindsTestWithTraits("TheFixture.AddPassesWithTraits2", Traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithThreeTraits()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("TheFixture", Traits);
+            FindsTestWithTraits("TheFixture.AddPassesWithTraits3", Traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithOneTrait()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests", Traits);
+            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)", Traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithTwoTraits()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests", Traits);
+            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0  # GetParam() = (1,)", Traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithThreeTraits()
         {
             Trait[] Traits = new Trait[] { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests", Traits);
+            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0  # GetParam() = (1,)", Traits);
         }
 
-        private void FindsTestWithTraits(string testPrefix, Trait[] traits)
+        [TestMethod]
+        public void CustomTraitOverridesTestTrait()
+        {
+            Trait[] Traits = new Trait[] { new Trait("Type", "Small") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+
+            MockOptions.Setup(O => O.TraitsRegexes).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+
+            Traits = new Trait[] { new Trait("Type", "SomeNewType") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+        }
+
+        [TestMethod]
+        public void CustomTraitAddsTraitIfNotAlreadyExisting()
+        {
+            Trait[] Traits = new Trait[] { };
+            FindsTestWithTraits("TestMath.AddPasses", Traits);
+
+            MockOptions.Setup(O => O.TraitsRegexes).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+
+            Traits = new Trait[] { new Trait("Type", "SomeNewType") };
+            FindsTestWithTraits("TestMath.AddPasses", Traits);
+        }
+
+        private void FindsTestWithTraits(string fullyQualifiedName, Trait[] traits)
         {
             Assert.IsTrue(File.Exists(x86traitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
-            GoogleTestDiscoverer Discoverer = new MockedGoogleTestDiscoverer(MockOptions);
+            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
             List<TestCase> Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, x86traitsTests);
 
-            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName.StartsWith(testPrefix));
+            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
             Assert.IsNotNull(TestCase);
 
             foreach (Trait Trait in traits)

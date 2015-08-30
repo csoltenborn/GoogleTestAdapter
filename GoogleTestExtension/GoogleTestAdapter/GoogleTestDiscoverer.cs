@@ -16,6 +16,14 @@ namespace GoogleTestAdapter
 
         private static bool ProcessIdShown = false;
 
+        public GoogleTestDiscoverer(IOptions options = null)
+        {
+            if(options != null)
+            {
+                this.Options = options;
+            }
+        }
+
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext, 
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
@@ -124,7 +132,7 @@ namespace GoogleTestAdapter
                         CodeFilePath = location.sourcefile,
                         LineNumber = (int) location.line
                     };
-                    TestCase.Traits.AddRange(location.traits);
+                    TestCase.Traits.AddRange(GetTraits(TestCase.FullyQualifiedName, location.traits));
                     return TestCase;
                 }
             }
@@ -133,6 +141,28 @@ namespace GoogleTestAdapter
             {
                 DisplayName = displayName
             };
+        }
+
+        private IEnumerable<Trait> GetTraits(string fullyQualifiedName, List<Trait> traits)
+        {
+            foreach (RegexTraitPair Pair in Options.TraitsRegexes.Where(P => Regex.IsMatch(fullyQualifiedName, P.Regex)))
+            {
+                bool ReplacedTrait = false;
+                foreach (Trait TraitToModify in traits.ToArray().Where(T => T.Name == Pair.Trait.Name))
+                {
+                    ReplacedTrait = true;
+                    traits.Remove(TraitToModify);
+                    if (!traits.Contains(Pair.Trait))
+                    {
+                        traits.Add(Pair.Trait);
+                    }
+                }
+                if (!ReplacedTrait)
+                {
+                    traits.Add(Pair.Trait);
+                }
+            }
+            return traits;
         }
 
         public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string CustomRegex = "")

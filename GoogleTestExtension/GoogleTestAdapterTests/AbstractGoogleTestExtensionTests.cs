@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections.Generic;
 
 namespace GoogleTestAdapter
 {
@@ -24,6 +25,8 @@ namespace GoogleTestAdapter
         {
             MockLogger.Reset();
             MockOptions.Reset();
+
+            MockOptions.Setup(O => O.TraitsRegexes).Returns(new List<RegexTraitPair>());
         }
 
         protected static TestCase ToTestCase(string name)

@@ -67,6 +67,7 @@
     <Compile Include="GoogleTestExecutorTests.cs" />
     <Compile Include="GoogleTestResultXmlParserTests.cs" />
     <Compile Include="ImportsParserTests.cs" />
+    <Compile Include="OptionsTests.cs" />
     <Compile Include="ProcessUtilsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

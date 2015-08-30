@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
                     break;
                 }
 
-                GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer();
+                GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(Options);
                 List<TestCase> AllCases = Discoverer.GetTestsFromExecutable(frameworkHandle, executable);
                 RunTests(AllCases, AllCases, runContext, frameworkHandle, true);
             }
