@@ -15,7 +15,7 @@ namespace GoogleTestAdapter
         {
             string CommandLine = new GoogleTestCommandLine(true, EXECUTABLE.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object).GetCommandLines().First();
 
-            Assert.AreEqual("--gtest_output=\"xml:\" ", CommandLine);
+            Assert.AreEqual("--gtest_output=\"xml:\"", CommandLine);
         }
 
         [TestMethod]
