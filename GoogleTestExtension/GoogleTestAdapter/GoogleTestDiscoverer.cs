@@ -10,7 +10,7 @@ namespace GoogleTestAdapter
 {
     [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]
-    public sealed class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
+    public class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
     {
         private static readonly Regex COMPILED_TEST_FINDER_REGEX = new Regex(Constants.TEST_FINDER_REGEX, RegexOptions.Compiled);
 
@@ -18,13 +18,7 @@ namespace GoogleTestAdapter
 
         public GoogleTestDiscoverer() : this(null) {}
 
-        public GoogleTestDiscoverer(IOptions options)
-        {
-            if(options != null)
-            {
-                this.Options = options;
-            }
-        }
+        public GoogleTestDiscoverer(IOptions options) : base(options) {}
 
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext, 
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)

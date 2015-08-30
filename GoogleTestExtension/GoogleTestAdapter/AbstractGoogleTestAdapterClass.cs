@@ -4,7 +4,16 @@ namespace GoogleTestAdapter
 
     public class AbstractGoogleTestAdapterClass
     {
-        protected virtual IOptions Options { get; set; } = new Options();
+        protected IOptions Options { get; private set; } = new Options();
+
+        protected AbstractGoogleTestAdapterClass(IOptions options)
+        {
+            if (options != null)
+            {
+                this.Options = options;
+            }
+        }
+
     }
 
 }

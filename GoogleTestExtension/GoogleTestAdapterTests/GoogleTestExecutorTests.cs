@@ -8,18 +8,6 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestExecutorTests : AbstractGoogleTestExtensionTests
     {
-        class MockedGoogleTestExecutor : GoogleTestExecutor
-        {
-            private readonly Mock<IOptions> MockedOptions;
-
-            internal MockedGoogleTestExecutor(Mock<IOptions> mockedOptions)
-            {
-                this.MockedOptions = mockedOptions;
-            }
-
-            protected override IOptions Options => MockedOptions.Object;
-        }
-
         [TestMethod]
         public void RunsExternallyLinkedX86TestsWithResult()
         {
@@ -61,7 +49,7 @@ namespace GoogleTestAdapter
             Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
             Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
 
-            GoogleTestExecutor Executor = new MockedGoogleTestExecutor(MockOptions);
+            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
             Executor.RunTests(executable.Yield(), MockRunContext.Object, MockHandle.Object);
 
             MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),

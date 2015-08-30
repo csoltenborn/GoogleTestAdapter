@@ -16,6 +16,10 @@ namespace GoogleTestAdapter
 
         private bool Canceled = false;
 
+        public GoogleTestExecutor() : this(null) { }
+
+        public GoogleTestExecutor(IOptions options) : base(options) {}
+
         public void Cancel()
         {
             DebugUtils.CheckDebugModeForExecutionCode();
@@ -56,7 +60,7 @@ namespace GoogleTestAdapter
 
             foreach (string Executable in Executables)
             {
-                AllTestCasesInAllExecutables.AddRange(new GoogleTestDiscoverer().GetTestsFromExecutable(frameworkHandle, Executable));
+                AllTestCasesInAllExecutables.AddRange(new GoogleTestDiscoverer(Options).GetTestsFromExecutable(frameworkHandle, Executable));
             }
             RunTests(false, AllTestCasesInAllExecutables, TestCases, runContext, frameworkHandle);
         }
