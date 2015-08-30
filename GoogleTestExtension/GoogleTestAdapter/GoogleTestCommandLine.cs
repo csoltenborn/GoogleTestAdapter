@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace GoogleTestAdapter
 {
@@ -10,6 +11,7 @@ namespace GoogleTestAdapter
     {
 
         public const int MAX_COMMAND_LENGTH = 8191;
+        private static readonly char[] SPLIT_SUITE = new char[] { '.' };
 
         private bool RunAll;
         private int LengthOfExecutable;
@@ -170,14 +172,9 @@ namespace GoogleTestAdapter
             return SuitesRunningAllTests;
         }
 
-        private HashSet<string> GetDifferentSuites()
+        private List<string> GetDifferentSuites()
         {
-            HashSet<string> Suites = new HashSet<string>();
-            foreach (TestCase Testcase in Cases)
-            {
-                Suites.Add(TestsuiteNameFromCase(Testcase));
-            }
-            return Suites;
+            return Cases.AsParallel().Select(C => TestsuiteNameFromCase(C)).Distinct().ToList();
         }
 
         private List<TestCase> GetAllMatchingCases(IEnumerable<TestCase> cases, string suite)
@@ -195,7 +192,7 @@ namespace GoogleTestAdapter
 
         private string TestsuiteNameFromCase(TestCase testcase)
         {
-            return testcase.FullyQualifiedName.Split(new char[] { '.' })[0];
+            return testcase.FullyQualifiedName.Split(SPLIT_SUITE)[0];
         }
 
         private string GetTestcaseNameForFiltering(string fullname)
