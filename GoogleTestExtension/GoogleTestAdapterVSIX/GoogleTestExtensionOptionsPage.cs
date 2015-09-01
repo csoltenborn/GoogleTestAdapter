@@ -102,6 +102,11 @@ namespace GoogleTestAdapterVSIX
         public bool ShuffleTests { get; set; } = Options.OPTION_SHUFFLE_TESTS_DEFAULT_VALUE;
 
         [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_USER_DEBUG_MODE)]
+        [Description("If true, debug output will be printed to the test console.")]
+        public bool UserDebugMode { get; set; } = Options.OPTION_USER_DEBUG_MODE_DEFAULT_VALUE;
+
+        [Category(Options.CATEGORY_NAME)]
         [DisplayName(Options.OPTION_TRAITS_REGEXES_BEFORE)]
         [Description("Allows to add traits to testcases matching a regex. "
             + Options.TRAITS_REGEXES_REGEX_SEPARATOR + " separates the regex from the traits, the trait's name and value are separated by "

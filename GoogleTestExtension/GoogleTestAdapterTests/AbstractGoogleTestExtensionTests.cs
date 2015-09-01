@@ -10,7 +10,7 @@ namespace GoogleTestAdapter
 {
     public class AbstractGoogleTestExtensionTests
     {
-        protected const string EXECUTABLE = "ff.exe";
+        protected const string DUMMY_EXECUTABLE = "ff.exe";
 
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
         protected readonly Mock<IOptions> MockOptions = new Mock<IOptions>();
@@ -32,7 +32,7 @@ namespace GoogleTestAdapter
 
         protected static TestCase ToTestCase(string name)
         {
-            return new TestCase(name, new Uri("http://none"), EXECUTABLE);
+            return new TestCase(name, new Uri("http://none"), DUMMY_EXECUTABLE);
         }
 
     }

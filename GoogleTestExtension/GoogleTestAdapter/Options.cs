@@ -16,6 +16,7 @@ namespace GoogleTestAdapter
         bool ShuffleTests { get; }
         List<RegexTraitPair> TraitsRegexesBefore { get; }
         List<RegexTraitPair> TraitsRegexesAfter { get; }
+        bool UserDebugMode { get; }
     }
 
     public class RegexTraitPair
@@ -48,6 +49,7 @@ namespace GoogleTestAdapter
         public const string OPTION_SHUFFLE_TESTS = "Shuffle tests per execution";
         public const string OPTION_TRAITS_REGEXES_BEFORE = "Regex for setting test traits before test execution";
         public const string OPTION_TRAITS_REGEXES_AFTER = "Regex for setting test traits after test execution";
+        public const string OPTION_USER_DEBUG_MODE = "Debug mode";
 
         public const bool OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE = false;
         public const string OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE = "";
@@ -55,6 +57,7 @@ namespace GoogleTestAdapter
         public const int OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE = 1;
         public const bool OPTION_SHUFFLE_TESTS_DEFAULT_VALUE = false;
         public const string OPTION_TRAITS_REGEXES_DEFAULT_VALUE = "";
+        public const bool OPTION_USER_DEBUG_MODE_DEFAULT_VALUE = false;
 
         private const string REG_OPTION_PRINT_TEST_OUTPUT = "PrintTestOutput";
         private const string REG_OPTION_TEST_DISCOVERY_REGEX = "TestDiscoveryRegex";
@@ -63,6 +66,7 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_SHUFFLE_TESTS = "ShuffleTests";
         private const string REG_OPTION_TRAITS_REGEXES_BEFORE = "TraitsRegexesBefore";
         private const string REG_OPTION_TRAITS_REGEXES_AFTER = "TraitsRegexesAfter";
+        private const string REG_OPTION_USER_DEBUG_MODE = "UserDebugMode";
 
         public const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
         public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
@@ -77,6 +81,8 @@ namespace GoogleTestAdapter
         public int NrOfTestRepetitions => RegistryReader.ReadInt(REG_OPTION_BASE, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
 
         public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
+
+        public bool UserDebugMode => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_USER_DEBUG_MODE, OPTION_USER_DEBUG_MODE_DEFAULT_VALUE);
 
         public List<RegexTraitPair> TraitsRegexesBefore
         {
