@@ -39,6 +39,7 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
         // ReSharper disable once UnusedMember.Local
         private const string REG_OPTION_BASE_DEBUGGING = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
+        private const string REG_OPTION_BASE = REG_OPTION_BASE_PRODUCTION;
 
         public const string OPTION_PRINT_TEST_OUTPUT = "Print test output";
         public const string OPTION_TEST_DISCOVERY_REGEX = "Regex for test discovery";
@@ -67,21 +68,21 @@ namespace GoogleTestAdapter
         public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
         public const string TRAITS_REGEXES_TRAIT_SEPARATOR = ",";
 
-        public bool PrintTestOutput => RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
+        public bool PrintTestOutput => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
 
-        public string TestDiscoveryRegex => RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);
+        public string TestDiscoveryRegex => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);
 
-        public bool RunDisabledTests => RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_RUN_DISABLED_TESTS, OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE);
+        public bool RunDisabledTests => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_RUN_DISABLED_TESTS, OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE);
 
-        public int NrOfTestRepetitions => RegistryReader.ReadInt(REG_OPTION_BASE_DEBUGGING, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
+        public int NrOfTestRepetitions => RegistryReader.ReadInt(REG_OPTION_BASE, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
 
-        public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_BASE_DEBUGGING, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
+        public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
 
         public List<RegexTraitPair> TraitsRegexesBefore
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                string Option = RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
                 return ParseTraitsRegexesString(Option);
             }
         }
@@ -90,7 +91,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_BASE_DEBUGGING, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                string Option = RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
                 return ParseTraitsRegexesString(Option);
             }
         }
