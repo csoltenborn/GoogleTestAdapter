@@ -56,7 +56,8 @@ namespace GoogleTestAdapter
             logger.SendMessage(TestMessageLevel.Informational, "Loading PDB: " + path);
             try
             {
-                IStream memoryStream = new DiaUtils.DiaMemoryStream(path);
+                Stream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                IStream memoryStream = new Helpers.DiaMemoryStream(fileStream);
                 diaDataSource.loadDataFromIStream(memoryStream);
 
                 IDiaSession diaSession = null;
@@ -79,6 +80,7 @@ namespace GoogleTestAdapter
                 {
                     ReleaseCom(diaSession);
                     ReleaseCom(diaDataSource);
+                    fileStream.Close();
                 }
             }
             catch (Exception e)
