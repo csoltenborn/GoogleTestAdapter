@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace GoogleTestAdapter
 {
@@ -120,6 +121,7 @@ namespace GoogleTestAdapter
                 foreach (TestResult TestResult in CollectTestResults(ResultXmlFile, ConsoleOutput, TestCasesToRun, handle))
                 {
                     handle.RecordResult(TestResult);
+                    Thread.Sleep(1);
                 }
             }
         }
