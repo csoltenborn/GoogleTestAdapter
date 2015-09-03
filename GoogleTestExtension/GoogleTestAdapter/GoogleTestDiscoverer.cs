@@ -42,7 +42,7 @@ namespace GoogleTestAdapter
 
         public List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
-            List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false, false);
+            List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false, false, null, null);
             List<SuiteCasePair> SuiteCasePairs = ParseTestCases(ConsoleOutput);
             SuiteCasePairs.Reverse();
             logger.SendMessage(TestMessageLevel.Informational, "Found " + SuiteCasePairs.Count + " tests, resolving symbols...");

@@ -3,55 +3,59 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter
 {
     public static class ProcessUtils
     {
 
-        /*
-                    if (runContext.IsBeingDebugged)
-            {
-                handle.SendMessage(TestMessageLevel.Informational, "Attaching debugger to " + executable);
-                Process.GetProcessById(handle.LaunchProcessWithDebuggerAttached(executable, WorkingDir, Arguments, null)).WaitForExit();
-    }
-            else
-            {
-                handle.SendMessage(TestMessageLevel.Informational, "In " + WorkingDir + ", running: " + executable + " " + Arguments);
-                consoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments);
-            }
-            */
 
-
-        public static List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError)
+        public static List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
         {
             List<string> output = new List<string>();
             try
             {
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
+                Process process;
+                if (runContext != null && handle != null && runContext.IsBeingDebugged)
                 {
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = false,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    WorkingDirectory = workingDirectory
-                };
-                Process process = Process.Start(processStartInfo);
-                try
-                {
+                    logger.SendMessage(TestMessageLevel.Informational, "Attaching debugger to " + command);
                     if (printTestOutput)
                     {
-                        logger.SendMessage(TestMessageLevel.Informational, ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
+                        logger.SendMessage(TestMessageLevel.Informational, "Note that because of restrictions of the VS Unit Test framework, the test executable's output can not be displayed in the test console when debugging tests!");
                     }
-                    ReadTheStream(throwIfError, process, output, logger, printTestOutput);
-                    if (printTestOutput)
-                    {
-                        logger.SendMessage(TestMessageLevel.Informational, "<<<<<<<<<<<<<<< End of Output");
-                    }
+                    process =
+                        Process.GetProcessById(handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param,
+                            null));
+                    process.WaitForExit();
                 }
-                finally
+                else
                 {
-                    process?.Dispose();
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
+                    {
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = false,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        WorkingDirectory = workingDirectory
+                    };
+                    process = Process.Start(processStartInfo);
+                    try
+                    {
+                        if (printTestOutput)
+                        {
+                            logger.SendMessage(TestMessageLevel.Informational, ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
+                        }
+                        ReadTheStream(throwIfError, process, output, logger, printTestOutput);
+                        if (printTestOutput)
+                        {
+                            logger.SendMessage(TestMessageLevel.Informational, "<<<<<<<<<<<<<<< End of Output");
+                        }
+                    }
+                    finally
+                    {
+                        process?.Dispose();
+                    }
                 }
             }
             catch (Win32Exception e)
