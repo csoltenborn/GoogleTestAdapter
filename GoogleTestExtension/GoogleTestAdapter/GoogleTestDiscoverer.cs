@@ -51,7 +51,7 @@ namespace GoogleTestAdapter
             foreach (SuiteCasePair SuiteCasePair in SuiteCasePairs)
             {
                 TestCases.Add(ToTestCase(executable, SuiteCasePair, logger, SourceFileLocations));
-                DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational, "Added testcase" + SuiteCasePair.TestSuite + "." + SuiteCasePair.TestCase);
+                DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational, "Added testcase " + SuiteCasePair.TestSuite + "." + SuiteCasePair.TestCase);
             }
             return TestCases;
         }
