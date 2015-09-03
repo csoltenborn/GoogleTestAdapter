@@ -19,10 +19,15 @@ namespace GoogleTestAdapter
                 // Windows 7
                 Assert.AreEqual(24, Imports.Count);
             }
-            else if (Version.Major == 6 && Version.Minor == 2)
+            else if (Version.Major == 6 && Version.Minor == 2 && Version.Build < 9200)
             {
                 // Windows 8
                 Assert.AreEqual(49, Imports.Count);
+            }
+            else if (Version.Major == 6 && Version.Minor == 2)
+            {
+                // Windows 10?
+                Assert.AreEqual(62, Imports.Count);
             }
             else
             {
