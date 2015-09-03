@@ -88,8 +88,8 @@ namespace GoogleTestAdapter
                 TestsToExecute.Add("MyTestSuite" + i + ".MyTest");
                 AllTests.Add("MyTestSuite" + i + ".MyTest2");
             }
-            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
-            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase);
+            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase).ToList();
+            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase).ToList();
 
             List<string> Commands = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().ToList();
@@ -127,8 +127,8 @@ namespace GoogleTestAdapter
             TestsToExecute.Add("MyTestSuite1.MyTest2");
             TestsToExecute.Add("MyTestSuite5.MyTest2");
 
-            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
-            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase);
+            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase).ToList();
+            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase).ToList();
 
             List<string> Commands = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().ToList();
