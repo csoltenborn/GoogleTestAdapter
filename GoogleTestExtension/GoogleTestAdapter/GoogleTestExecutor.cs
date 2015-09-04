@@ -148,11 +148,11 @@ namespace GoogleTestAdapter
                     foreach (TestCase TestCase in TestCasesRun.Where(TC => !TestResults.Exists(TR => TR.TestCase.FullyQualifiedName == TC.FullyQualifiedName)))
                     {
                         string ErrorMsg = ConsoleParser.CrashedTestCase == null ? ""
-                            : "probably crash of test " + ConsoleParser.CrashedTestCase.DisplayName;
+                            : "reason is probably a crash of test " + ConsoleParser.CrashedTestCase.DisplayName;
                         TestResults.Add(new TestResult(TestCase)
                         {
                             ComputerName = Environment.MachineName,
-                            Outcome = TestOutcome.NotFound,
+                            Outcome = TestOutcome.Skipped,
                             ErrorMessage = ErrorMsg
                         });
                     }

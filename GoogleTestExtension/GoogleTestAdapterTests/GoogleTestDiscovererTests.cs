@@ -20,6 +20,7 @@ namespace GoogleTestAdapter
         public const string x64crashingTests = @"..\..\..\testdata\_x64\CrashingGoogleTests\CrashingGoogleTests.exe";
 
         public const string x86traitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
+        public const string x86hardcrashingTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1CrashingTests.exe";
 
         [TestMethod]
         public void MatchesTestExecutableName()

@@ -44,6 +44,25 @@ namespace GoogleTestAdapter
             RunAndVerifyTests(GoogleTestDiscovererTests.x86crashingTests, 0, 1, 0, 1);
         }
 
+        [TestMethod]
+        public void RunsHardCrashingX86TestsWithoutResult()
+        {
+            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
+
+            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
+            Executor.RunTests(GoogleTestDiscovererTests.x86hardcrashingTests.Yield(), MockRunContext.Object, MockHandle.Object);
+
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
+                Times.Exactly(0));
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed && tr.ErrorMessage == "!! This is probably the test that crashed !!")),
+                Times.Exactly(1));
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
+                Times.Exactly(0));
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped && tr.ErrorMessage == "reason is probably a crash of test Crashing.TheCrash")),
+                Times.Exactly(2));
+        }
+
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
             Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
@@ -58,7 +77,7 @@ namespace GoogleTestAdapter
                 Times.Exactly(nrOfFailedTests));
             MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.NotFound)),
+            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
                 Times.Exactly(nrOfNotFoundTests));
         }
 
