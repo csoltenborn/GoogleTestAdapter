@@ -13,7 +13,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string CommandLine = new GoogleTestCommandLine(true, DUMMY_EXECUTABLE.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object).GetCommandLines().First();
+            string CommandLine = new GoogleTestCommandLine(true, DUMMY_EXECUTABLE.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object).GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\"", CommandLine);
         }
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
 
             string CommandLine = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLines().First();
+                .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", CommandLine);
         }
@@ -40,9 +40,9 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> TestCasesBackwards = TestCases.Reverse();
 
             string CommandLine = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLines().First();
+                .GetCommandLines().First().CommandLine;
             string CommandLineFromBackwards = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, TestCasesBackwards, TestCasesBackwards, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLines().First();
+                .GetCommandLines().First().CommandLine;
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
             Assert.AreEqual(ExpectedCommandLine, CommandLine);
@@ -58,7 +58,7 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
 
             string CommandLine = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLines().First();
+                .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", CommandLine);
         }
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
 
             string CommandLine = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
-                .GetCommandLines().First();
+                .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", CommandLine);
         }
@@ -91,26 +91,35 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase).ToList();
             IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase).ToList();
 
-            List<string> Commands = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+            List<GoogleTestCommandLine.Args> Commands = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().ToList();
 
             Assert.AreEqual(3, Commands.Count);
 
             int LengthOfLongestTestname = AllTests.Max(S => S.Length);
 
-            string CommandLine = Commands[0];
+            string CommandLine = Commands[0].CommandLine;
             Assert.IsTrue(CommandLine.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
             Assert.IsTrue(CommandLine.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
             Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite0.MyTest:"));
 
-            CommandLine = Commands[1];
+            CommandLine = Commands[1].CommandLine;
             Assert.IsTrue(CommandLine.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
             Assert.IsTrue(CommandLine.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
             Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            CommandLine = Commands[2];
+            CommandLine = Commands[2].CommandLine;
             Assert.IsTrue(CommandLine.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
             Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+
+            HashSet<TestCase> TestsAsSet = new HashSet<TestCase>(TestCases);
+            HashSet<TestCase> SplittedTestsAsSet = new HashSet<TestCase>(Commands[0].TestCases.Union(Commands[1].TestCases).Union(Commands[2].TestCases));
+
+            Assert.AreEqual(TestsAsSet.Count, SplittedTestsAsSet.Count);
+            foreach (TestCase testCase in TestsAsSet)
+            {
+                Assert.IsTrue(SplittedTestsAsSet.Contains(testCase));
+            }
         }
 
         [TestMethod]
@@ -130,29 +139,39 @@ namespace GoogleTestAdapter
             IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase).ToList();
             IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase).ToList();
 
-            List<string> Commands = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
+            List<GoogleTestCommandLine.Args> Commands = new GoogleTestCommandLine(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().ToList();
 
             Assert.AreEqual(3, Commands.Count);
 
             int LengthOfLongestTestname = AllTests.Max(S => S.Length);
 
-            string Command = Commands[0];
+            string Command = Commands[0].CommandLine;
             Assert.IsTrue(Command.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
             Assert.IsTrue(Command.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
             Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:MyTestSuite0.MyTest:"));
 
-            Command = Commands[1];
+            Command = Commands[1].CommandLine;
             Assert.IsTrue(Command.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
             Assert.IsTrue(Command.Length >= GoogleTestCommandLine.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
             Assert.IsFalse(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
             Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            Command = Commands[2];
+            Command = Commands[2].CommandLine;
             Assert.IsTrue(Command.Length < GoogleTestCommandLine.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
             Assert.IsFalse(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
             Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+
+            HashSet<TestCase> TestsAsSet = new HashSet<TestCase>(TestCases);
+            HashSet<TestCase> SplittedTestsAsSet = new HashSet<TestCase>(Commands[0].TestCases.Union(Commands[1].TestCases).Union(Commands[2].TestCases));
+
+            Assert.AreEqual(TestsAsSet.Count, SplittedTestsAsSet.Count);
+            foreach (TestCase testCase in TestsAsSet)
+            {
+                Assert.IsTrue(SplittedTestsAsSet.Contains(testCase));
+            }
         }
 
     }
+
 }

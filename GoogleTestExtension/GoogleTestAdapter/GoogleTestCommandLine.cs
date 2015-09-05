@@ -10,6 +10,19 @@ namespace GoogleTestAdapter
 
     public class GoogleTestCommandLine
     {
+        public class Args
+        {
+            public List<TestCase> TestCases { get; }
+            public string CommandLine { get; }
+
+            public Args(List<TestCase> testCases, string commandLine)
+            {
+                this.TestCases = testCases ?? new List<TestCase>();
+                this.CommandLine = commandLine ?? "";
+            }
+        }
+
+
         public const int MAX_COMMAND_LENGTH = 8191;
 
         private readonly bool RunAllTestCases;
@@ -31,24 +44,24 @@ namespace GoogleTestAdapter
             this.Options = options;
         }
 
-        public IEnumerable<string> GetCommandLines()
+        public IEnumerable<Args> GetCommandLines()
         {
             string BaseCommandLine = GetOutputpathParameter();
             BaseCommandLine += GetAlsoRunDisabledTestsParameter();
             BaseCommandLine += GetShuffleTestsParameter();
             BaseCommandLine += GetTestsRepetitionsParameter();
 
-            List<string> CommandLines = new List<string>();
+            List<Args> CommandLines = new List<Args>();
             CommandLines.AddRange(GetFinalCommandLines(BaseCommandLine));
             return CommandLines;
         }
 
-        private IEnumerable<string> GetFinalCommandLines(string baseCommandLine)
+        private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
-            List<string> CommandLines = new List<string>();
+            List<Args> CommandLines = new List<Args>();
             if (RunAllTestCases)
             {
-                CommandLines.Add(baseCommandLine);
+                CommandLines.Add(new Args(CasesToRun.ToList(), baseCommandLine));
                 return CommandLines;
             }
 
@@ -56,33 +69,45 @@ namespace GoogleTestAdapter
             string BaseFilter = " --gtest_filter=" + GetFilterForSuitesRunningAllTests(SuitesRunningAllTests);
             string BaseCommandLine = baseCommandLine + BaseFilter;
 
-            List<string> TestsNotRunBySuite = GetCasesNotRunBySuite(SuitesRunningAllTests);
+            List<TestCase> TestsNotRunBySuite = GetCasesNotRunBySuite(SuitesRunningAllTests);
+            List<TestCase> TestsRunBySuite = CasesToRun.Where(TC => !TestsNotRunBySuite.Contains(TC)).ToList();
             if (TestsNotRunBySuite.Count == 0)
             {
-                CommandLines.Add(BaseCommandLine);
+                CommandLines.Add(new Args(CasesToRun.ToList(), BaseCommandLine));
                 return CommandLines;
             }
 
-            CommandLines.Add(BaseCommandLine + JoinTestsUpToMaxLength(TestsNotRunBySuite, MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - 1));
+            List<TestCase> IncludedTestCases;
+            string CommandLine = BaseCommandLine +
+                                 JoinTestsUpToMaxLength(TestsNotRunBySuite,
+                                     MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - 1,
+                                     out IncludedTestCases);
+            IncludedTestCases.AddRange(TestsRunBySuite);
+            CommandLines.Add(new Args(IncludedTestCases, CommandLine));
             BaseCommandLine = baseCommandLine + " --gtest_filter="; // only add suites to first command line
 
             while (TestsNotRunBySuite.Count > 0)
             {
-                CommandLines.Add(BaseCommandLine + JoinTestsUpToMaxLength(TestsNotRunBySuite, MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - 1));
+                CommandLine = BaseCommandLine +
+                              JoinTestsUpToMaxLength(TestsNotRunBySuite,
+                                  MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - 1,
+                                  out IncludedTestCases);
+                CommandLines.Add(new Args(IncludedTestCases, CommandLine));
             }
 
             return CommandLines;
         }
 
-        private string JoinTestsUpToMaxLength(List<string> tests, int maxLength)
+        private string JoinTestsUpToMaxLength(List<TestCase> tests, int maxLength, out List<TestCase> includedTestCases)
         {
+            includedTestCases = new List<TestCase>();
             if (tests.Count == 0)
             {
                 return "";
             }
 
             string Result = "";
-            string NextTest = tests[0];
+            string NextTest = GetTestcaseNameForFiltering(tests[0].FullyQualifiedName);
             if (NextTest.Length > maxLength)
             {
                 throw new Exception("I can not deal with this case :-(");
@@ -91,10 +116,11 @@ namespace GoogleTestAdapter
             while (Result.Length + NextTest.Length <= maxLength && tests.Count > 0)
             {
                 Result += NextTest;
+                includedTestCases.Add(tests[0]);
                 tests.RemoveAt(0);
                 if (tests.Count > 0)
                 {
-                    NextTest = ":" + tests[0];
+                    NextTest = ":" + GetTestcaseNameForFiltering(tests[0].FullyQualifiedName);
                 }
             }
             return Result;
@@ -137,16 +163,16 @@ namespace GoogleTestAdapter
             return string.Join(".*:", suitesRunningAllTests).AppendIfNotEmpty(".*:");
         }
 
-        private List<string> GetCasesNotRunBySuite(List<string> suitesRunningAllTests)
+        private List<TestCase> GetCasesNotRunBySuite(List<string> suitesRunningAllTests)
         {
-            List<string> CasesNotRunBySuite = new List<string>();
+            List<TestCase> CasesNotRunBySuite = new List<TestCase>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (TestCase TestCase in CasesToRun)
             {
                 bool IsRunBySuite = suitesRunningAllTests.Any(Suite => Suite == GetTestsuiteNameFromCase(TestCase));
                 if (!IsRunBySuite)
                 {
-                    CasesNotRunBySuite.Add(GetTestcaseNameForFiltering(TestCase.FullyQualifiedName));
+                    CasesNotRunBySuite.Add(TestCase);
                 }
             }
             return CasesNotRunBySuite;

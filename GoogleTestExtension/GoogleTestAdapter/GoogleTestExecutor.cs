@@ -115,10 +115,10 @@ namespace GoogleTestAdapter
 
             string ResultXmlFile = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
-            foreach(string Arguments in new GoogleTestCommandLine(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options).GetCommandLines())
+            foreach(GoogleTestCommandLine.Args Arguments in new GoogleTestCommandLine(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options).GetCommandLines())
             {
-                List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments, Options.PrintTestOutput, false, runContext, handle);
-                foreach (TestResult TestResult in CollectTestResults(ResultXmlFile, ConsoleOutput, TestCasesToRun, handle))
+                List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments.CommandLine, Options.PrintTestOutput, false, runContext, handle);
+                foreach (TestResult TestResult in CollectTestResults(ResultXmlFile, ConsoleOutput, Arguments.TestCases, handle))
                 {
                     handle.RecordResult(TestResult);
                     Thread.Sleep(1);
