@@ -1,18 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using Dia;
 
 namespace GoogleTestAdapter.Helpers
 {
     class DiaMemoryStream : IStream
     {
+        private readonly Stream pdbFile;
+
         public DiaMemoryStream(Stream pdbFile)
         {
             this.pdbFile = pdbFile;
         }
-
-        private Stream pdbFile;
 
         unsafe void IStream.RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
         {
@@ -35,8 +34,13 @@ namespace GoogleTestAdapter.Helpers
 
         void IStream.Stat(out tagSTATSTG pstatstg, uint grfStatFlag)
         {
-            pstatstg = new tagSTATSTG();
-            pstatstg.cbSize.QuadPart = (ulong)pdbFile.Length;
+            pstatstg = new tagSTATSTG
+            {
+                cbSize = new _ULARGE_INTEGER
+                {
+                    QuadPart = (ulong) pdbFile.Length
+                }
+            };
         }
 
 
@@ -91,5 +95,7 @@ namespace GoogleTestAdapter.Helpers
         {
             throw new NotImplementedException();
         }
+
     }
+
 }
