@@ -88,6 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
+    <Compile Include="TestResultReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
