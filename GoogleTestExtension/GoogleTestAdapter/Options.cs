@@ -1,5 +1,4 @@
-﻿
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +16,12 @@ namespace GoogleTestAdapter
         List<RegexTraitPair> TraitsRegexesBefore { get; }
         List<RegexTraitPair> TraitsRegexesAfter { get; }
         bool UserDebugMode { get; }
+
+        bool ParallelTestExecution { get; }
+        int MaxNrOfThreads { get; }
+        string TestSetupBatch { get; }
+        string TestTeardownBatch { get; }
+        string AdditionalTestExecutionParam { get; }
     }
 
     public class RegexTraitPair
@@ -34,7 +39,8 @@ namespace GoogleTestAdapter
     public class Options : IOptions
     {
         public const string CATEGORY_NAME = "Google Test Adapter";
-        public const string PAGE_NAME = "General";
+        public const string PAGE_GENERAL_NAME = "General";
+        public const string PAGE_PARALLELIZATION_NAME = "Parallelization (experimental)";
 
         // ReSharper disable once UnusedMember.Local
         private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
@@ -50,6 +56,11 @@ namespace GoogleTestAdapter
         public const string OPTION_TRAITS_REGEXES_BEFORE = "Regex for setting test traits before test execution";
         public const string OPTION_TRAITS_REGEXES_AFTER = "Regex for setting test traits after test execution";
         public const string OPTION_USER_DEBUG_MODE = "Debug mode";
+        public const string OPTION_ENABLE_PARALLEL_TEST_EXECUTION = "Enable parallel test execution";
+        public const string OPTION_MAX_NR_OF_THREADS = "Maximum number of threads to be used";
+        public const string OPTION_TEST_SETUP_BATCH = "Batch file for test setup";
+        public const string OPTION_TEST_TEARDOWN_BATCH = "Batch file for test teardown";
+        public const string OPTION_ADDITIONAL_TEST_EXECUTION_PARAM = "Additional parameters for parallel test execution";
 
         public const bool OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE = false;
         public const string OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE = "";
@@ -58,6 +69,11 @@ namespace GoogleTestAdapter
         public const bool OPTION_SHUFFLE_TESTS_DEFAULT_VALUE = false;
         public const string OPTION_TRAITS_REGEXES_DEFAULT_VALUE = "";
         public const bool OPTION_USER_DEBUG_MODE_DEFAULT_VALUE = false;
+        public const bool OPTION_ENABLE_PARALLEL_TEST_EXECUTION_DEFAULT_VALUE = false;
+        public const int OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE = 0;
+        public const string OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE = "";
+        public const string OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE = "";
+        public const string OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE = "";
 
         private const string REG_OPTION_PRINT_TEST_OUTPUT = "PrintTestOutput";
         private const string REG_OPTION_TEST_DISCOVERY_REGEX = "TestDiscoveryRegex";
@@ -67,6 +83,11 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_TRAITS_REGEXES_BEFORE = "TraitsRegexesBefore";
         private const string REG_OPTION_TRAITS_REGEXES_AFTER = "TraitsRegexesAfter";
         private const string REG_OPTION_USER_DEBUG_MODE = "UserDebugMode";
+        private const string REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION = "EnableParallelTestExecution";
+        private const string REG_OPTION_MAX_NR_OF_THREADS = "MaximumNumberOfThreads";
+        private const string REG_OPTION_TEST_SETUP_BATCH = "TestSetupBatch";
+        private const string REG_OPTION_TEST_TEARDOWN_BATCH = "TestTeardownBatch";
+        private const string REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM = "AdditionalTestExecutionParameter";
 
         public const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
         public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
@@ -83,6 +104,16 @@ namespace GoogleTestAdapter
         public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
 
         public bool UserDebugMode => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_USER_DEBUG_MODE, OPTION_USER_DEBUG_MODE_DEFAULT_VALUE);
+
+        public bool ParallelTestExecution => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION, OPTION_ENABLE_PARALLEL_TEST_EXECUTION_DEFAULT_VALUE);
+
+        public string TestSetupBatch => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_SETUP_BATCH, OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE);
+
+        public string TestTeardownBatch => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_TEARDOWN_BATCH, OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE);
+
+        public string AdditionalTestExecutionParam => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM, OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE);
+
+        public int MaxNrOfThreads => RegistryReader.ReadInt(REG_OPTION_BASE, REG_OPTION_MAX_NR_OF_THREADS, OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE);
 
         public List<RegexTraitPair> TraitsRegexesBefore
         {

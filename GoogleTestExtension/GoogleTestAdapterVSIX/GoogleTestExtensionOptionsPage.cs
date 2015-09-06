@@ -34,7 +34,8 @@ namespace GoogleTestAdapterVSIX
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(OptionPageGrid), Options.CATEGORY_NAME, Options.PAGE_NAME, 0, 0, true)]
+    [ProvideOptionPage(typeof(OptionPageGrid), Options.CATEGORY_NAME, Options.PAGE_GENERAL_NAME, 0, 0, true)]
+    [ProvideOptionPage(typeof(ParallelizationPageGrid), Options.CATEGORY_NAME, Options.PAGE_PARALLELIZATION_NAME, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     public sealed class GoogleTestExtensionOptionsPage : Package
     {
@@ -131,6 +132,36 @@ namespace GoogleTestAdapterVSIX
             + Options.TRAITS_REGEXES_REGEX_SEPARATOR + "Type"
             + Options.TRAITS_REGEXES_TRAIT_SEPARATOR + "Medium")]
         public string TraitsRegexesAfter { get; set; } = Options.OPTION_TRAITS_REGEXES_DEFAULT_VALUE;
+
+    }
+
+    public class ParallelizationPageGrid : DialogPage
+    {
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_ENABLE_PARALLEL_TEST_EXECUTION)]
+        [Description("Enable parallel test execution (experimental!)")]
+        public bool PrintTestOutput { get; set; } = Options.OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE;
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_MAX_NR_OF_THREADS)]
+        [Description("Maximum number of threads used for test execution. 0 = all available threads.")]
+        public int MaxNrOfThreads { get; set; } = Options.OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE;
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_TEST_SETUP_BATCH)]
+        [Description("Batch file to be executed before each parallel test execution. TODO place holders")]
+        public string BatchForTestSetup { get; set; } = Options.OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE;
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_TEST_TEARDOWN_BATCH)]
+        [Description("Batch file to be executed after each parallel test execution. TODO place holders")]
+        public string BatchForTestTeardown { get; set; } = Options.OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE;
+
+        [Category(Options.CATEGORY_NAME)]
+        [DisplayName(Options.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM)]
+        [Description("Additional parameters for Google Test executable. TODO place holders")]
+        public string AdditionalTestExecutionParams { get; set; } = Options.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE;
 
     }
 
