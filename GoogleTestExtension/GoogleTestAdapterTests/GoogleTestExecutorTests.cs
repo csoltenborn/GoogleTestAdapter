@@ -61,6 +61,15 @@ namespace GoogleTestAdapter
                 Times.Exactly(0));
             MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped && tr.ErrorMessage == "reason is probably a crash of test Crashing.TheCrash")),
                 Times.Exactly(2));
+
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+                Times.Exactly(0));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+                Times.Exactly(1));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.None)),
+                Times.Exactly(0));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Skipped)),
+                Times.Exactly(2));
         }
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
@@ -78,6 +87,15 @@ namespace GoogleTestAdapter
             MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
             MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
+                Times.Exactly(nrOfNotFoundTests));
+
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+                Times.Exactly(nrOfPassedTests));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+                Times.Exactly(nrOfFailedTests));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.None)),
+                Times.Exactly(nrOfUnexecutedTests));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Skipped)),
                 Times.Exactly(nrOfNotFoundTests));
         }
 

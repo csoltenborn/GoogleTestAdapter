@@ -121,7 +121,7 @@ namespace GoogleTestAdapter
                 foreach (TestResult TestResult in CollectTestResults(ResultXmlFile, ConsoleOutput, Arguments.TestCases, handle))
                 {
                     handle.RecordResult(TestResult);
-                    Thread.Sleep(1);
+                    handle.RecordEnd(TestResult.TestCase, TestResult.Outcome);
                 }
             }
         }
