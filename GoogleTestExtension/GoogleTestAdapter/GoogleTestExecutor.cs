@@ -122,6 +122,7 @@ namespace GoogleTestAdapter
                 {
                     handle.RecordResult(TestResult);
                     handle.RecordEnd(TestResult.TestCase, TestResult.Outcome);
+                    Thread.Sleep(1);
                 }
             }
         }
