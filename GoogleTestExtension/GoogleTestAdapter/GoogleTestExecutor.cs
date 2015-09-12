@@ -66,10 +66,10 @@ namespace GoogleTestAdapter
             RunTests(false, AllTestCasesInAllExecutables, TestCasesToRun, runContext, frameworkHandle);
         }
 
-        private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        public static IDictionary<string, List<TestCase>> GroupTestcasesByExecutable(IEnumerable<TestCase> testcases)
         {
             Dictionary<string, List<TestCase>> GroupedTestCases = new Dictionary<string, List<TestCase>>();
-            foreach (TestCase TestCase in testCasesToRun)
+            foreach (TestCase TestCase in testcases)
             {
                 List<TestCase> Group;
                 if (GroupedTestCases.ContainsKey(TestCase.Source))
@@ -83,7 +83,12 @@ namespace GoogleTestAdapter
                 }
                 Group.Add(TestCase);
             }
+            return GroupedTestCases;
+        }
 
+        private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        {
+            IDictionary<string, List<TestCase>> GroupedTestCases = GroupTestcasesByExecutable(testCasesToRun);
             TestCase[] AllTestCases = allTestCases.ToArray();
             foreach (string Executable in GroupedTestCases.Keys)
             {
