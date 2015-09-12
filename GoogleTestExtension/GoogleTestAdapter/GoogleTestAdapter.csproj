@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="AbstractGoogleTestAdapterClass.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Scheduling\DurationBasedTestsSplitter.cs" />
     <Compile Include="GoogleTestResultStandardOutputParser.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
@@ -82,12 +83,15 @@
     <Compile Include="GoogleTestResultXmlParser.cs" />
     <Compile Include="Helpers\RegistryReader.cs" />
     <Compile Include="Helpers\DiaMemoryStream.cs" />
+    <Compile Include="Scheduling\ITestsSplitter.cs" />
     <Compile Include="Native.cs" />
+    <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
+    <Compile Include="Scheduling\TestDurationSerializer.cs" />
     <Compile Include="TestResultReporter.cs" />
   </ItemGroup>
   <ItemGroup>

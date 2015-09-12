@@ -22,6 +22,8 @@ namespace GoogleTestAdapter
         private void ReportTestResult(TestResult testResult)
         {
             FrameworkHandle.RecordResult(testResult);
+            FrameworkHandle.RecordEnd(testResult.TestCase, testResult.Outcome);
+
             NrOfReportedResults++;
             if (NrOfReportedResults % NR_OF_TEST_RESULTS_BEFORE_WAITING == 0)
             {
