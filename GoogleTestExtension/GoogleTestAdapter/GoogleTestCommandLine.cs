@@ -22,7 +22,6 @@ namespace GoogleTestAdapter
             }
         }
 
-
         public const int MAX_COMMAND_LENGTH = 8191;
 
         private readonly bool RunAllTestCases;
@@ -31,17 +30,24 @@ namespace GoogleTestAdapter
         private readonly IEnumerable<TestCase> CasesToRun;
         private readonly string ResultXmlFile;
         private readonly IMessageLogger Logger;
-        private readonly IOptions Options;
+        private readonly IOptions options;
+        private readonly string testDirectory;
 
-        public GoogleTestCommandLine(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, IOptions options)
+        public GoogleTestCommandLine(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, IOptions options, string testDirectory)
         {
+            if (testDirectory == null)
+            {
+                throw new ArgumentNullException("testDirectory");
+            }
+
             this.RunAllTestCases = runAllTestCases;
             this.LengthOfExecutableString = lengthOfExecutableString;
             this.AllCases = allCases;
             this.CasesToRun = casesToRun;
             this.ResultXmlFile = resultXmlFile;
             this.Logger = logger;
-            this.Options = options;
+            this.options = options;
+            this.testDirectory = testDirectory;
         }
 
         public IEnumerable<Args> GetCommandLines()
@@ -59,9 +65,10 @@ namespace GoogleTestAdapter
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
             List<Args> CommandLines = new List<Args>();
+            string userParam = GetAdditionalUserParameter();
             if (RunAllTestCases)
             {
-                CommandLines.Add(new Args(CasesToRun.ToList(), baseCommandLine));
+                CommandLines.Add(new Args(CasesToRun.ToList(), baseCommandLine + userParam));
                 return CommandLines;
             }
 
@@ -73,26 +80,26 @@ namespace GoogleTestAdapter
             List<TestCase> TestsRunBySuite = CasesToRun.Where(TC => !TestsNotRunBySuite.Contains(TC)).ToList();
             if (TestsNotRunBySuite.Count == 0)
             {
-                CommandLines.Add(new Args(CasesToRun.ToList(), BaseCommandLine));
+                CommandLines.Add(new Args(CasesToRun.ToList(), BaseCommandLine + userParam));
                 return CommandLines;
             }
 
             List<TestCase> IncludedTestCases;
             string CommandLine = BaseCommandLine +
                                  JoinTestsUpToMaxLength(TestsNotRunBySuite,
-                                     MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - 1,
+                                     MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - userParam.Length - 1,
                                      out IncludedTestCases);
             IncludedTestCases.AddRange(TestsRunBySuite);
-            CommandLines.Add(new Args(IncludedTestCases, CommandLine));
+            CommandLines.Add(new Args(IncludedTestCases, CommandLine + userParam));
             BaseCommandLine = baseCommandLine + " --gtest_filter="; // only add suites to first command line
 
             while (TestsNotRunBySuite.Count > 0)
             {
                 CommandLine = BaseCommandLine +
                               JoinTestsUpToMaxLength(TestsNotRunBySuite,
-                                  MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - 1,
+                                  MAX_COMMAND_LENGTH - BaseCommandLine.Length - LengthOfExecutableString - userParam.Length - 1,
                                   out IncludedTestCases);
-                CommandLines.Add(new Args(IncludedTestCases, CommandLine));
+                CommandLines.Add(new Args(IncludedTestCases, CommandLine + userParam));
             }
 
             return CommandLines;
@@ -124,7 +131,13 @@ namespace GoogleTestAdapter
                 }
             }
             return Result;
-        } 
+        }
+
+        private string GetAdditionalUserParameter()
+        {
+            string userParam = Options.ReplacePlaceholders(options.AdditionalTestExecutionParam, testDirectory).Trim();
+            return userParam.Length == 0 ? "" : " " + userParam;
+        }
 
         private string GetOutputpathParameter()
         {
@@ -133,17 +146,17 @@ namespace GoogleTestAdapter
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return Options.RunDisabledTests ? " --gtest_also_run_disabled_tests" : "";
+            return options.RunDisabledTests ? " --gtest_also_run_disabled_tests" : "";
         }
 
         private string GetShuffleTestsParameter()
         {
-            return Options.ShuffleTests ? " --gtest_shuffle" : "";
+            return options.ShuffleTests ? " --gtest_shuffle" : "";
         }
 
         private string GetTestsRepetitionsParameter()
         {
-            int NrOfRepetitions = Options.NrOfTestRepetitions;
+            int NrOfRepetitions = options.NrOfTestRepetitions;
             if (NrOfRepetitions == 1)
             {
                 return "";

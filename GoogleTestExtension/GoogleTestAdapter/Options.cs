@@ -42,13 +42,12 @@ namespace GoogleTestAdapter
         public const string PAGE_GENERAL_NAME = "General";
         public const string PAGE_PARALLELIZATION_NAME = "Parallelization (experimental)";
 
-
         // ReSharper disable once UnusedMember.Local
         private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
         // ReSharper disable once UnusedMember.Local
         private const string REG_OPTION_BASE_DEBUGGING = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
-        private const string REG_OPTION_GENERAL_BASE = REG_OPTION_BASE_DEBUGGING + @"\OptionPageGrid";
-        private const string REG_OPTION_PARALLELIZATION_BASE = REG_OPTION_BASE_DEBUGGING + @"\ParallelizationPageGrid";
+        private const string REG_OPTION_GENERAL_BASE = REG_OPTION_BASE_PRODUCTION + @"\OptionPageGrid";
+        private const string REG_OPTION_PARALLELIZATION_BASE = REG_OPTION_BASE_PRODUCTION + @"\ParallelizationPageGrid";
 
         //\OptionPageGrid
         public const string OPTION_PRINT_TEST_OUTPUT = "Print test output";
@@ -95,6 +94,12 @@ namespace GoogleTestAdapter
         public const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
         public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
         public const string TRAITS_REGEXES_TRAIT_SEPARATOR = ",";
+
+        public static string ReplacePlaceholders(string source, string testDirectory)
+        {
+            string result = source.Replace("${TestDirectory}", testDirectory);
+            return result;
+        }
 
         public bool PrintTestOutput => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
 

@@ -15,8 +15,13 @@ namespace GoogleTestAdapter
 
         public GoogleTestRunner(IOptions options) : base(options) { }
 
-        public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
+            if (testDirectory == null)
+            {
+                throw new ArgumentNullException("testDirectory");
+            }
+
             IDictionary<string, List<TestCase>> GroupedTestCases = GoogleTestExecutor.GroupTestcasesByExecutable(testCasesToRun);
             TestCase[] AllTestCases = allTestCases.ToArray();
             foreach (string Executable in GroupedTestCases.Keys)
@@ -27,7 +32,7 @@ namespace GoogleTestAdapter
                 }
                 try
                 {
-                    RunTestsFromExecutable(runAllTestCases, Executable, AllTestCases, GroupedTestCases[Executable], runContext, handle);
+                    RunTestsFromExecutable(runAllTestCases, Executable, AllTestCases, GroupedTestCases[Executable], runContext, handle, testDirectory);
                 }
                 catch (Exception e)
                 {
@@ -39,7 +44,7 @@ namespace GoogleTestAdapter
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
             TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             foreach (TestCase TestCase in TestCasesToRun)
@@ -50,7 +55,7 @@ namespace GoogleTestAdapter
             string ResultXmlFile = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
             TestResultReporter Reporter = new TestResultReporter(handle);
-            foreach (GoogleTestCommandLine.Args Arguments in new GoogleTestCommandLine(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options).GetCommandLines())
+            foreach (GoogleTestCommandLine.Args Arguments in new GoogleTestCommandLine(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options, testDirectory).GetCommandLines())
             {
                 List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> Results = CollectTestResults(ResultXmlFile, ConsoleOutput, Arguments.TestCases,

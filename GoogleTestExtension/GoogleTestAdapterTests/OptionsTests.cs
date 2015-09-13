@@ -8,6 +8,22 @@ namespace GoogleTestAdapter
     {
 
         [TestMethod]
+        public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
+        {
+            string source = "${TestDirectory}";
+            string result = Options.ReplacePlaceholders(source, "mydir");
+            Assert.AreEqual("mydir", result);
+
+            source = "${TestDirectory} ${TestDirectory}";
+            result = Options.ReplacePlaceholders(source, "mydir");
+            Assert.AreEqual("mydir mydir", result);
+
+            source = "${testdirectory}";
+            result = Options.ReplacePlaceholders(source, "mydir");
+            Assert.AreEqual("${testdirectory}", result);
+        }
+
+        [TestMethod]
         public void TraitsRegexOptionsFailsNicelyIfInvokedWithUnparsableString()
         {
             PrivateObject OptionsAccessor = new PrivateObject(new Options());

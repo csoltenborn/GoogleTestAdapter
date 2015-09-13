@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace GoogleTestAdapter
 {
@@ -19,6 +21,16 @@ namespace GoogleTestAdapter
                 Times.Exactly(nrOfUnexecutedTests));
         }
 
+        class CollectingTestDiscoverySink : ITestCaseDiscoverySink
+        {
+            public List<TestCase> TestCases = new List<TestCase>();
+
+            public void SendTestCase(TestCase discoveredTest)
+            {
+                TestCases.Add(discoveredTest);
+            }
+        }
+
         [TestInitialize]
         override public void SetUp()
         {
@@ -26,6 +38,40 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(O => O.ParallelTestExecution).Returns(ParallelTestExecution);
             MockOptions.Setup(O => O.MaxNrOfThreads).Returns(MaxNrOfThreads);
+        }
+
+        [TestMethod]
+        public void CheckThatTestDirectoryIsPassedViaCommandLineArg()
+        {
+            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
+            Mock<IDiscoveryContext> MockDiscoveryContext = new Mock<IDiscoveryContext>();
+            CollectingTestDiscoverySink sink = new CollectingTestDiscoverySink();
+
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            discoverer.DiscoverTests(GoogleTestDiscovererTests.x86traitsTests.Yield(), MockDiscoveryContext.Object, MockHandle.Object, sink);
+
+            TestCase testcase = sink.TestCases.Where(TC => TC.FullyQualifiedName.Contains("CommandArgs.TestDirectoryIsSet")).FirstOrDefault();
+            Assert.IsNotNull(testcase);
+
+            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
+            Executor.RunTests(testcase.Yield(), MockRunContext.Object, MockHandle.Object);
+
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+                Times.Exactly(0));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+                Times.Exactly(1));
+
+            MockHandle.Reset();
+            MockOptions.Setup(O => O.AdditionalTestExecutionParam).Returns("-testdirectory=\"${TestDirectory}\"");
+
+            Executor = new GoogleTestExecutor(MockOptions.Object);
+            Executor.RunTests(testcase.Yield(), MockRunContext.Object, MockHandle.Object);
+
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+                Times.Exactly(1));
+            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+                Times.Exactly(0));
         }
 
         [TestMethod]

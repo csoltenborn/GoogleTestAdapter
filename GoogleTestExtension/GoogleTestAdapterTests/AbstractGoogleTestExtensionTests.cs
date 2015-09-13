@@ -28,6 +28,7 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
+            MockOptions.Setup(O => O.AdditionalTestExecutionParam).Returns("");
         }
 
         protected static TestCase ToTestCase(string name)

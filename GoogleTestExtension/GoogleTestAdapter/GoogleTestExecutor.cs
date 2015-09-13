@@ -86,15 +86,18 @@ namespace GoogleTestAdapter
         private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
             IGoogleTestRunner runner;
+            string testDirectory;
             if (Options.ParallelTestExecution)
             {
                 runner = new ParallelGoogleTestRunner(Options);
+                testDirectory = null;
             }
             else
             {
                 runner = new GoogleTestRunner(Options);
+                testDirectory = Utils.GetTempDirectory();
             }
-            runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle);
+            runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
         }
 
     }
