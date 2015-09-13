@@ -42,12 +42,15 @@ namespace GoogleTestAdapter
         public const string PAGE_GENERAL_NAME = "General";
         public const string PAGE_PARALLELIZATION_NAME = "Parallelization (experimental)";
 
-        // ReSharper disable once UnusedMember.Local
-        private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
-        // ReSharper disable once UnusedMember.Local
-        private const string REG_OPTION_BASE_DEBUGGING = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX\OptionPageGrid";
-        private const string REG_OPTION_BASE = REG_OPTION_BASE_PRODUCTION;
 
+        // ReSharper disable once UnusedMember.Local
+        private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
+        // ReSharper disable once UnusedMember.Local
+        private const string REG_OPTION_BASE_DEBUGGING = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
+        private const string REG_OPTION_GENERAL_BASE = REG_OPTION_BASE_DEBUGGING + @"\OptionPageGrid";
+        private const string REG_OPTION_PARALLELIZATION_BASE = REG_OPTION_BASE_DEBUGGING + @"\ParallelizationPageGrid";
+
+        //\OptionPageGrid
         public const string OPTION_PRINT_TEST_OUTPUT = "Print test output";
         public const string OPTION_TEST_DISCOVERY_REGEX = "Regex for test discovery";
         public const string OPTION_RUN_DISABLED_TESTS = "Also run disabled tests";
@@ -84,42 +87,53 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_TRAITS_REGEXES_AFTER = "TraitsRegexesAfter";
         private const string REG_OPTION_USER_DEBUG_MODE = "UserDebugMode";
         private const string REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION = "EnableParallelTestExecution";
-        private const string REG_OPTION_MAX_NR_OF_THREADS = "MaximumNumberOfThreads";
-        private const string REG_OPTION_TEST_SETUP_BATCH = "TestSetupBatch";
-        private const string REG_OPTION_TEST_TEARDOWN_BATCH = "TestTeardownBatch";
-        private const string REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM = "AdditionalTestExecutionParameter";
+        private const string REG_OPTION_MAX_NR_OF_THREADS = "MaxNumberOfThreads";
+        private const string REG_OPTION_TEST_SETUP_BATCH = "BatchForTestSetup";
+        private const string REG_OPTION_TEST_TEARDOWN_BATCH = "BatchForTestTeardown";
+        private const string REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM = "AdditionalTestExecutionParams";
 
         public const string TRAITS_REGEXES_PAIR_SEPARATOR = "//||//";
         public const string TRAITS_REGEXES_REGEX_SEPARATOR = "///";
         public const string TRAITS_REGEXES_TRAIT_SEPARATOR = ",";
 
-        public bool PrintTestOutput => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
+        public bool PrintTestOutput => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
 
-        public string TestDiscoveryRegex => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);
+        public string TestDiscoveryRegex => RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);
 
-        public bool RunDisabledTests => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_RUN_DISABLED_TESTS, OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE);
+        public bool RunDisabledTests => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_RUN_DISABLED_TESTS, OPTION_RUN_DISABLED_TESTS_DEFAULT_VALUE);
 
-        public int NrOfTestRepetitions => RegistryReader.ReadInt(REG_OPTION_BASE, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
+        public int NrOfTestRepetitions => RegistryReader.ReadInt(REG_OPTION_GENERAL_BASE, REG_OPTION_NR_OF_TEST_REPETITIONS, OPTION_NR_OF_TEST_REPETITIONS_DEFAULT_VALUE);
 
-        public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
+        public bool ShuffleTests => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_SHUFFLE_TESTS, OPTION_SHUFFLE_TESTS_DEFAULT_VALUE);
 
-        public bool UserDebugMode => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_USER_DEBUG_MODE, OPTION_USER_DEBUG_MODE_DEFAULT_VALUE);
+        public bool UserDebugMode => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_USER_DEBUG_MODE, OPTION_USER_DEBUG_MODE_DEFAULT_VALUE);
 
-        public bool ParallelTestExecution => RegistryReader.ReadBool(REG_OPTION_BASE, REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION, OPTION_ENABLE_PARALLEL_TEST_EXECUTION_DEFAULT_VALUE);
+        public bool ParallelTestExecution => RegistryReader.ReadBool(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION, OPTION_ENABLE_PARALLEL_TEST_EXECUTION_DEFAULT_VALUE);
 
-        public string TestSetupBatch => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_SETUP_BATCH, OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE);
+        public string TestSetupBatch => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_TEST_SETUP_BATCH, OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE);
 
-        public string TestTeardownBatch => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TEST_TEARDOWN_BATCH, OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE);
+        public string TestTeardownBatch => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_TEST_TEARDOWN_BATCH, OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE);
 
-        public string AdditionalTestExecutionParam => RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM, OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE);
+        public string AdditionalTestExecutionParam => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM, OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE);
 
-        public int MaxNrOfThreads => RegistryReader.ReadInt(REG_OPTION_BASE, REG_OPTION_MAX_NR_OF_THREADS, OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE);
+        public int MaxNrOfThreads
+        {
+            get
+            {
+                int result = RegistryReader.ReadInt(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_MAX_NR_OF_THREADS, OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE);
+                if (result <= 0 || result > Environment.ProcessorCount)
+                {
+                    result = Environment.ProcessorCount;
+                }
+                return result;
+            }
+        }
 
         public List<RegexTraitPair> TraitsRegexesBefore
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                string Option = RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
                 return ParseTraitsRegexesString(Option);
             }
         }
@@ -128,7 +142,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_BASE, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                string Option = RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
                 return ParseTraitsRegexesString(Option);
             }
         }

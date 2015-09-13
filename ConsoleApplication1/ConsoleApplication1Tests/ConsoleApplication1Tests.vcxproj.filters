@@ -30,6 +30,9 @@
     <ClCompile Include="..\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LongRunningTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">

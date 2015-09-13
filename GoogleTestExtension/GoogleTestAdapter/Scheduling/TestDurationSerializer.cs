@@ -32,6 +32,7 @@ namespace GoogleTestAdapter.Scheduling
 
     public class TestDurationSerializer
     {
+        private static readonly object LOCK = new object();
         private static readonly SerializableKeyValuePair<string, int> DEFAULT = new SerializableKeyValuePair<string, int>();
 
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(TestDurationsContainer));
@@ -52,7 +53,11 @@ namespace GoogleTestAdapter.Scheduling
             IDictionary<string, List<TestResult>> GroupedTestcases = GroupTestResultsByExecutable(testResults);
             foreach (string executable in GroupedTestcases.Keys)
             {
-                UpdateTestDurations(executable, GroupedTestcases[executable]);
+                lock (LOCK)
+                {
+                    // TODO lock on file base
+                    UpdateTestDurations(executable, GroupedTestcases[executable]);
+                }
             }
         }
 
@@ -140,7 +145,7 @@ namespace GoogleTestAdapter.Scheduling
 
         private string GetDurationsFile(string executable)
         {
-            return executable + ".gtatestdurations";
+            return executable + Constants.FILE_ENDING_TEST_DURATIONS;
         }
 
     }

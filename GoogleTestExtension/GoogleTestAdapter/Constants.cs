@@ -5,6 +5,8 @@ namespace GoogleTestAdapter
     {
         public static bool UNIT_TEST_MODE = false;
 
+        public const string FILE_ENDING_TEST_DURATIONS = ".gta_testdurations";
+
         public const string identifierUri = "executor://GoogleTestRunner/v1";
         public const string gtestListTests = "--gtest_list_tests";
         public const string gtestTestBodySignature = "::TestBody";

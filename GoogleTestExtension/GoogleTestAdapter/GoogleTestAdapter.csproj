@@ -74,6 +74,9 @@
   <ItemGroup>
     <Compile Include="AbstractGoogleTestAdapterClass.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="GoogleTestRunner.cs" />
+    <Compile Include="IGoogleTestRunner.cs" />
+    <Compile Include="ParallelGoogleTestRunner.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitter.cs" />
     <Compile Include="GoogleTestResultStandardOutputParser.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />

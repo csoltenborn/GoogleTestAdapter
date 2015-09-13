@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="..\gtest-1.7.0\fused-src\gtest\gtest-all.cc" />
     <ClCompile Include="FixtureTests.cpp" />
+    <ClCompile Include="LongRunningTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="BasicTests.cpp" />
     <ClCompile Include="ParameterizedTests.cpp" />

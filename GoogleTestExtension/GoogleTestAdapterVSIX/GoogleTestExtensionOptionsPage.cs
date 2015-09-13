@@ -141,7 +141,7 @@ namespace GoogleTestAdapterVSIX
         [Category(Options.CATEGORY_NAME)]
         [DisplayName(Options.OPTION_ENABLE_PARALLEL_TEST_EXECUTION)]
         [Description("Enable parallel test execution (experimental!)")]
-        public bool PrintTestOutput { get; set; } = Options.OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE;
+        public bool EnableParallelTestExecution { get; set; } = Options.OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE;
 
         [Category(Options.CATEGORY_NAME)]
         [DisplayName(Options.OPTION_MAX_NR_OF_THREADS)]

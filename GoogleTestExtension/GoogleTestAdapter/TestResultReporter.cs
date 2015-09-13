@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -10,6 +9,8 @@ namespace GoogleTestAdapter
     {
         private const int NR_OF_TEST_RESULTS_BEFORE_WAITING = 1;
         private const int WAITING_TIME = 1;
+
+        private static readonly object LOCK = new object();
 
         private readonly IFrameworkHandle FrameworkHandle;
         private int NrOfReportedResults = 0;
@@ -31,12 +32,14 @@ namespace GoogleTestAdapter
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ReportTestResults(IEnumerable<TestResult> testResults)
         {
-            foreach (TestResult testResult in testResults)
+            lock(LOCK)
             {
-                ReportTestResult(testResult);
+                foreach (TestResult testResult in testResults)
+                {
+                    ReportTestResult(testResult);
+                }
             }
         }
 
