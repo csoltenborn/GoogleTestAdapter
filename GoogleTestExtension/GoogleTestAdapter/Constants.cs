@@ -1,6 +1,6 @@
-﻿
-namespace GoogleTestAdapter
+﻿namespace GoogleTestAdapter
 {
+
     public class Constants
     {
         public static bool UNIT_TEST_MODE = false;
@@ -12,6 +12,6 @@ namespace GoogleTestAdapter
         public const string gtestTestBodySignature = "::TestBody";
 
         public const string TEST_FINDER_REGEX = @"[Tt]est[s]?\.exe";
-
     }
+
 }

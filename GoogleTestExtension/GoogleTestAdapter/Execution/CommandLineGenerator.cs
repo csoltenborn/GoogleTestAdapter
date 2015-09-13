@@ -8,7 +8,7 @@ using System.Linq;
 namespace GoogleTestAdapter
 {
 
-    public class GoogleTestCommandLine
+    public class CommandLineGenerator
     {
         public class Args
         {
@@ -33,7 +33,7 @@ namespace GoogleTestAdapter
         private readonly IOptions options;
         private readonly string testDirectory;
 
-        public GoogleTestCommandLine(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, IOptions options, string testDirectory)
+        public CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, IOptions options, string testDirectory)
         {
             if (testDirectory == null)
             {
@@ -135,7 +135,7 @@ namespace GoogleTestAdapter
 
         private string GetAdditionalUserParameter()
         {
-            string userParam = Options.ReplacePlaceholders(options.AdditionalTestExecutionParam, testDirectory).Trim();
+            string userParam = GoogleTestAdapterOptions.ReplacePlaceholders(options.AdditionalTestExecutionParam, testDirectory).Trim();
             return userParam.Length == 0 ? "" : " " + userParam;
         }
 

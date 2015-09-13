@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace GoogleTestAdapter
 {
-    public class GoogleTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    public class SequentialTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         public bool Canceled { get; set; } = false;
 
-        public GoogleTestRunner(IOptions options) : base(options) { }
+        public SequentialTestRunner(IOptions options) : base(options) { }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter
             string ResultXmlFile = Path.GetTempFileName();
             string WorkingDir = Path.GetDirectoryName(executable);
             TestResultReporter Reporter = new TestResultReporter(handle);
-            foreach (GoogleTestCommandLine.Args Arguments in new GoogleTestCommandLine(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options, testDirectory).GetCommandLines())
+            foreach (CommandLineGenerator.Args Arguments in new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options, testDirectory).GetCommandLines())
             {
                 List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> Results = CollectTestResults(ResultXmlFile, ConsoleOutput, Arguments.TestCases,
@@ -72,12 +72,12 @@ namespace GoogleTestAdapter
             List<TestResult> TestResults = new List<TestResult>();
 
             TestCase[] TestCasesRun = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            GoogleTestResultXmlParser XmlParser = new GoogleTestResultXmlParser(resultXmlFile, TestCasesRun, handle);
+            XmlTestResultParser XmlParser = new XmlTestResultParser(resultXmlFile, TestCasesRun, handle);
             TestResults.AddRange(XmlParser.GetTestResults());
 
             if (TestResults.Count < TestCasesRun.Length)
             {
-                GoogleTestResultStandardOutputParser ConsoleParser = new GoogleTestResultStandardOutputParser(consoleOutput, TestCasesRun, handle);
+                StandardOutputTestResultParser ConsoleParser = new StandardOutputTestResultParser(consoleOutput, TestCasesRun, handle);
                 List<TestResult> ConsoleResults = ConsoleParser.GetTestResults();
                 foreach (TestResult TestResult in ConsoleResults.Where(TR => !TestResults.Exists(TR2 => TR.TestCase.FullyQualifiedName == TR2.TestCase.FullyQualifiedName)))
                 {

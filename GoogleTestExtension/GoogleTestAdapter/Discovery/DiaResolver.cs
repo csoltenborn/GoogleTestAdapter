@@ -1,16 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using Dia;
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using static GoogleTestAdapter.Native;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using Dia;
+
+using static GoogleTestAdapter.Native;
 
 namespace GoogleTestAdapter
 {
+
     public class NativeSourceFileLocation
     {
         public string symbol;
@@ -164,4 +166,5 @@ namespace GoogleTestAdapter
         }
 
     }
+
 }

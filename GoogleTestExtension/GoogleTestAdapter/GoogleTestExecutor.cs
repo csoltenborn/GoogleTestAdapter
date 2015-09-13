@@ -1,11 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
 
 namespace GoogleTestAdapter
 {
@@ -89,12 +86,12 @@ namespace GoogleTestAdapter
             string testDirectory;
             if (Options.ParallelTestExecution)
             {
-                runner = new ParallelGoogleTestRunner(Options);
+                runner = new ParallelTestRunner(Options);
                 testDirectory = null;
             }
             else
             {
-                runner = new GoogleTestRunner(Options);
+                runner = new SequentialTestRunner(Options);
                 testDirectory = Utils.GetTempDirectory();
             }
             runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);

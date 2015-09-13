@@ -4,29 +4,29 @@ using System.Collections.Generic;
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class OptionsTests : AbstractGoogleTestExtensionTests
+    public class GoogleTestAdapterOptionsTests : AbstractGoogleTestExtensionTests
     {
 
         [TestMethod]
         public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
         {
             string source = "${TestDirectory}";
-            string result = Options.ReplacePlaceholders(source, "mydir");
+            string result = GoogleTestAdapterOptions.ReplacePlaceholders(source, "mydir");
             Assert.AreEqual("mydir", result);
 
             source = "${TestDirectory} ${TestDirectory}";
-            result = Options.ReplacePlaceholders(source, "mydir");
+            result = GoogleTestAdapterOptions.ReplacePlaceholders(source, "mydir");
             Assert.AreEqual("mydir mydir", result);
 
             source = "${testdirectory}";
-            result = Options.ReplacePlaceholders(source, "mydir");
+            result = GoogleTestAdapterOptions.ReplacePlaceholders(source, "mydir");
             Assert.AreEqual("${testdirectory}", result);
         }
 
         [TestMethod]
         public void TraitsRegexOptionsFailsNicelyIfInvokedWithUnparsableString()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new Options());
+            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
             List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", "vrr<erfwe") as List<RegexTraitPair>;
 
             Assert.IsNotNull(Result);
@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfEmpty()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new Options());
+            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
             List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", "") as List<RegexTraitPair>;
 
             Assert.IsNotNull(Result);
@@ -46,7 +46,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new Options());
+            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
             string OptionsString = "MyTest*///Type,Small";
             List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
 
@@ -60,7 +60,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfTwo()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new Options());
+            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
             string OptionsString = "MyTest*///Type,Small//||//*MyOtherTest*///Category,Integration";
             List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
 

@@ -9,13 +9,13 @@ using System.Linq;
 
 namespace GoogleTestAdapter
 {
-    public class PreparingGoogleTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    public class PreparingTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         private readonly IGoogleTestRunner innerTestRunner;
 
         public bool Canceled { get; set; } = false;
 
-        public PreparingGoogleTestRunner(IGoogleTestRunner innerTestrunner, IOptions options) : base(options) {
+        public PreparingTestRunner(IGoogleTestRunner innerTestrunner, IOptions options) : base(options) {
             this.innerTestRunner = innerTestrunner;
         }
 

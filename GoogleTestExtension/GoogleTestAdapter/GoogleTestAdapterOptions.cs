@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter
 {
@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
         }
     }
 
-    public class Options : IOptions
+    public class GoogleTestAdapterOptions : IOptions
     {
         public const string CATEGORY_NAME = "Google Test Adapter";
         public const string PAGE_GENERAL_NAME = "General";

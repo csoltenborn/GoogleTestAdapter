@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Scheduling;
-using System;
 
 namespace GoogleTestAdapter
 {
-    public class ParallelGoogleTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    public class ParallelTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         public bool Canceled { get; set; }
 
-        public ParallelGoogleTestRunner(IOptions options) : base(options) { }
+        public ParallelTestRunner(IOptions options) : base(options) { }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
@@ -37,7 +37,7 @@ namespace GoogleTestAdapter
             List<Thread> threads = new List<Thread>();
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                IGoogleTestRunner runner = new PreparingGoogleTestRunner(new GoogleTestRunner(Options), Options);
+                IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options);
                 Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, runContext, handle, null));
                 thread.Start();
                 threads.Add(thread);
