@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Scheduling;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
@@ -18,7 +19,7 @@ namespace GoogleTestAdapter
         {
             if (testDirectory != null)
             {
-                throw new ArgumentException("testDirectory should be null");
+                throw new ArgumentException("testDirectory must be null");
             }
 
             TestDurationSerializer serializer = new TestDurationSerializer();
@@ -27,14 +28,17 @@ namespace GoogleTestAdapter
             if (durations.Count < testCasesToRun.Count())
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun);
+                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on number of tests");
             }
             else
             {
                 splitter = new DurationBasedTestsSplitter(durations);
+                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on test durations");
             }
 
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
             List<Thread> threads = new List<Thread>();
+            handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing " + testCasesToRun.Count() + " tests on " + splittedTestCasesToRun.Count + " threads");
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
                 IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options);

@@ -55,7 +55,6 @@ namespace GoogleTestAdapter
         {
             DiaSourceClass diaDataSource = new DiaSourceClass();
             string path = ReplaceExtension(executable, ".pdb");
-            logger.SendMessage(TestMessageLevel.Informational, "Loading PDB: " + path);
             try
             {
                 Stream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -75,7 +74,7 @@ namespace GoogleTestAdapter
                     }
 
                     List<GoogleTestDiscoverer.SourceFileLocation> SourceFileLocations = foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols)).ToList();
-                    logger.SendMessage(TestMessageLevel.Informational, "From " + executable + ", found " + foundSymbols.Count + " symbols");
+                    DebugUtils.LogUserDebugMessage(logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "GTA: found " + foundSymbols.Count + " symbols in executable " + executable);
                     return SourceFileLocations;
                 }
                 finally

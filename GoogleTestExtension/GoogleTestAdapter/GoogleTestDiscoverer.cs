@@ -45,8 +45,8 @@ namespace GoogleTestAdapter
             List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.gtestListTests, false, false, null, null);
             List<SuiteCasePair> SuiteCasePairs = ParseTestCases(ConsoleOutput);
             SuiteCasePairs.Reverse();
-            logger.SendMessage(TestMessageLevel.Informational, "Found " + SuiteCasePairs.Count + " tests, resolving symbols...");
             List<SourceFileLocation> SourceFileLocations = GetSourceFileLocations(executable, logger, SuiteCasePairs);
+            logger.SendMessage(TestMessageLevel.Informational, "GTA: Found " + SuiteCasePairs.Count + " tests in executable " + executable);
             List<TestCase> TestCases = new List<TestCase>();
             foreach (SuiteCasePair SuiteCasePair in SuiteCasePairs)
             {
@@ -123,7 +123,7 @@ namespace GoogleTestAdapter
                     return TestCase;
                 }
             }
-            logger.SendMessage(TestMessageLevel.Warning, "Could not find source location for test " + DisplayName);
+            logger.SendMessage(TestMessageLevel.Warning, "GTA: Could not find source location for test " + DisplayName);
             return new TestCase(DisplayName, new Uri(GoogleTestExecutor.EXECUTOR_URI_STRING), executable)
             {
                 DisplayName = DisplayName
@@ -179,19 +179,19 @@ namespace GoogleTestAdapter
                 catch (ArgumentException e)
                 {
                     logger.SendMessage(TestMessageLevel.Error,
-                        "Google Test Adapter: Regex '" + RegexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                        "GTA: Regex '" + RegexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
                     Matches = false;
                 }
                 catch (RegexMatchTimeoutException e)
                 {
                     logger.SendMessage(TestMessageLevel.Error,
-                        "Google Test Adapter: Regex '" + RegexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                        "GTA: Regex '" + RegexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
                     Matches = false;
                 }
             }
 
-            DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational,
-                    "GoogleTestAdapter: Does " + executable + " match " + RegexUsed + ": " + Matches);
+            DebugUtils.LogUserDebugMessage(logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational,
+                    "GTA: " + executable + (Matches ? " matches " : " does not match ") + "regex '" + RegexUsed + "'");
 
             return Matches;
         }

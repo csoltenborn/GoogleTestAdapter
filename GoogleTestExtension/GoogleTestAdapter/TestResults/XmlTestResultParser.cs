@@ -48,7 +48,7 @@ namespace GoogleTestAdapter
             {
                 XmlDocument XmlDocument = new XmlDocument();
                 XmlDocument.Load(XmlResultFile);
-                Logger.SendMessage(TestMessageLevel.Informational, "Opened results from " + XmlResultFile);
+                DebugUtils.LogUserDebugMessage(Logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "Loaded test results from " + XmlResultFile);
 
                 XmlNodeList TestsuiteNodes = XmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode TestsuiteNode in TestsuiteNodes)

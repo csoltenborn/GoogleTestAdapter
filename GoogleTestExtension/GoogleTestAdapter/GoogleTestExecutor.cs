@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
@@ -60,6 +61,24 @@ namespace GoogleTestAdapter
             RunTests(false, AllTestCasesInAllExecutables, TestCasesToRun, runContext, frameworkHandle);
         }
 
+        private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        {
+            IGoogleTestRunner runner;
+            string testDirectory;
+            if (Options.ParallelTestExecution)
+            {
+                runner = new ParallelTestRunner(Options);
+                testDirectory = null;
+            }
+            else
+            {
+                runner = new SequentialTestRunner(Options);
+                testDirectory = Utils.GetTempDirectory();
+            }
+            runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
+            handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
+        }
+
         public static IDictionary<string, List<TestCase>> GroupTestcasesByExecutable(IEnumerable<TestCase> testcases)
         {
             Dictionary<string, List<TestCase>> GroupedTestCases = new Dictionary<string, List<TestCase>>();
@@ -78,23 +97,6 @@ namespace GoogleTestAdapter
                 Group.Add(TestCase);
             }
             return GroupedTestCases;
-        }
-
-        private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
-        {
-            IGoogleTestRunner runner;
-            string testDirectory;
-            if (Options.ParallelTestExecution)
-            {
-                runner = new ParallelTestRunner(Options);
-                testDirectory = null;
-            }
-            else
-            {
-                runner = new SequentialTestRunner(Options);
-                testDirectory = Utils.GetTempDirectory();
-            }
-            runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
         }
 
     }

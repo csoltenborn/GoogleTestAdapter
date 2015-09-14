@@ -20,14 +20,22 @@ namespace GoogleTestAdapter
             }
         }
 
+        public static void LogUserDebugMessage(IMessageLogger logger, IOptions options, TestMessageLevel level, string message)
+        {
+            if (options.UserDebugMode)
+            {
+                logger.SendMessage(level, message);
+            }
+        }
+
         public static void CheckDebugModeForExecutionCode(IMessageLogger logger = null)
         {
-            CheckDebugMode("Test execution code", logger);
+            CheckDebugMode("GTA: Test execution code", logger);
         }
 
         public static void CheckDebugModeForDiscoverageCode(IMessageLogger logger = null)
         {
-            CheckDebugMode("Test discoverage code", logger);
+            CheckDebugMode("GTA: Test discoverage code", logger);
         }
 
         private static void CheckDebugMode(string codeType, IMessageLogger logger = null)

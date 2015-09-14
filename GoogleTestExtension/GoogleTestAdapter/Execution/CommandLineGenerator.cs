@@ -209,12 +209,7 @@ namespace GoogleTestAdapter
 
         private List<string> GetAllSuitesOfTestCasesToRun()
         {
-            // TODO remove debug code
-            Stopwatch Stopwatch = new Stopwatch();
-            Stopwatch.Start();
             List<string> Result = CasesToRun.Select(GetTestsuiteNameFromCase).Distinct().ToList();
-            Stopwatch.Stop();
-            Logger.SendMessage(TestMessageLevel.Informational, "Duration for GetAllSuitesOfTestCasesToRun(): " + Stopwatch.Elapsed);
             return Result;
         }
 

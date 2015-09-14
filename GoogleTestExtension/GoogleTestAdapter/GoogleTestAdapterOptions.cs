@@ -46,8 +46,8 @@ namespace GoogleTestAdapter
         private const string REG_OPTION_BASE_PRODUCTION = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
         // ReSharper disable once UnusedMember.Local
         private const string REG_OPTION_BASE_DEBUGGING = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
-        private const string REG_OPTION_GENERAL_BASE = REG_OPTION_BASE_PRODUCTION + @"\OptionPageGrid";
-        private const string REG_OPTION_PARALLELIZATION_BASE = REG_OPTION_BASE_PRODUCTION + @"\ParallelizationPageGrid";
+        private const string REG_OPTION_GENERAL_BASE = REG_OPTION_BASE_PRODUCTION + @"\GeneralOptionsDialogPage";
+        private const string REG_OPTION_PARALLELIZATION_BASE = REG_OPTION_BASE_PRODUCTION + @"\ParallelizationOptionsDialogPage";
 
         //\OptionPageGrid
         public const string OPTION_PRINT_TEST_OUTPUT = "Print test output";

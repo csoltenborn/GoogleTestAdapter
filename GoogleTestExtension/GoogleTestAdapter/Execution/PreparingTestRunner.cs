@@ -23,18 +23,18 @@ namespace GoogleTestAdapter
         {
             if (testDirectory != null)
             {
-                throw new ArgumentException("testDirectory should be null");
+                throw new ArgumentException("testDirectory must be null");
             }
 
-            string tempFolder = Utils.GetTempDirectory();
+            testDirectory = Utils.GetTempDirectory();
 
             // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 
-            innerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, tempFolder);
+            innerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
 
             // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 
-            Directory.Delete(tempFolder);
+            Directory.Delete(testDirectory);
         }
 
     }
