@@ -1,10 +1,27 @@
-﻿Implement execution of setup/teardown batches
-move settings into XML file to be saved into solution dir
-more placeholders for batches and execution params
-code review
-end-to-end tests
-performance optimizations
-docs
-change target VS version to >= VS2015
-move more constants to Constants.cs
-refactor Helpers
+﻿Before release:
+	code review
+	implement execution of setup/teardown batches
+	move settings into XML file to be saved into solution dir
+	more placeholders for batches and execution params
+	improve logging
+	move more constants to Constants.cs
+	refactor Helpers
+	reduce visibilities where possible
+	more unit tests
+	more integration tests
+	end-to-end tests
+	change target VS version to >= VS2015
+	docs
+	fix test stability of test ParallelGoogleTestExecutorTests.RunsHardCrashingX86TestsWithoutResult
+		fails occasionally, probably because of distribution of tests to invocations of executable
+	fix "not all test results are shown" bug
+		goal: remove waiting in TestResultsReporter
+	fix "error message if run automatically after build" bug
+		goal: should work :-)
+
+For next release:
+	performance optimizations
+		scheduling
+		parallel test discovery
+	smarter scheduling
+		e.g. reduce number of times executables are invoked

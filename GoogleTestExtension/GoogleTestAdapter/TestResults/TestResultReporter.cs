@@ -20,6 +20,17 @@ namespace GoogleTestAdapter
             this.FrameworkHandle = frameworkHandle;
         }
 
+        public void ReportTestResults(IEnumerable<TestResult> testResults)
+        {
+            lock (LOCK)
+            {
+                foreach (TestResult testResult in testResults)
+                {
+                    ReportTestResult(testResult);
+                }
+            }
+        }
+
         private void ReportTestResult(TestResult testResult)
         {
             FrameworkHandle.RecordResult(testResult);
@@ -29,17 +40,6 @@ namespace GoogleTestAdapter
             if (NrOfReportedResults % NR_OF_TEST_RESULTS_BEFORE_WAITING == 0)
             {
                 Thread.Sleep(WAITING_TIME);
-            }
-        }
-
-        public void ReportTestResults(IEnumerable<TestResult> testResults)
-        {
-            lock(LOCK)
-            {
-                foreach (TestResult testResult in testResults)
-                {
-                    ReportTestResult(testResult);
-                }
             }
         }
 
