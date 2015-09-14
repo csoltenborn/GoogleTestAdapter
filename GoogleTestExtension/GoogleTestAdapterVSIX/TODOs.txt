@@ -11,6 +11,7 @@
 	more integration tests
 	end-to-end tests
 	change target VS version to >= VS2015
+	change code style to follow C# conventions
 	docs
 	fix test stability of test ParallelGoogleTestExecutorTests.RunsHardCrashingX86TestsWithoutResult
 		fails occasionally, probably because of distribution of tests to invocations of executable
