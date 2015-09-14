@@ -204,6 +204,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\GoogleTestExtensionOptionsPage.ico" />
+    <Content Include="TODOs.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\VSPackage.resx">

@@ -87,7 +87,7 @@
     <Compile Include="Execution\CommandLineGenerator.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
     <Compile Include="Helpers\RegistryReader.cs" />
-    <Compile Include="Helpers\DiaMemoryStream.cs" />
+    <Compile Include="Discovery\DiaMemoryStream.cs" />
     <Compile Include="Scheduling\ITestsSplitter.cs" />
     <Compile Include="Discovery\Native.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />

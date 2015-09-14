@@ -1,0 +1,10 @@
+﻿Implement execution of setup/teardown batches
+move settings into XML file to be saved into solution dir
+more placeholders for batches and execution params
+code review
+end-to-end tests
+performance optimizations
+docs
+change target VS version to >= VS2015
+move more constants to Constants.cs
+refactor Helpers
