@@ -12,8 +12,8 @@ namespace GoogleTestAdapterVSIX
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(OptionPageGrid), GoogleTestAdapterOptions.CATEGORY_NAME, GoogleTestAdapterOptions.PAGE_GENERAL_NAME, 0, 0, true)]
-    [ProvideOptionPage(typeof(ParallelizationPageGrid), GoogleTestAdapterOptions.CATEGORY_NAME, GoogleTestAdapterOptions.PAGE_PARALLELIZATION_NAME, 0, 0, true)]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), GoogleTestAdapterOptions.CATEGORY_NAME, GoogleTestAdapterOptions.PAGE_GENERAL_NAME, 0, 0, true)]
+    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), GoogleTestAdapterOptions.CATEGORY_NAME, GoogleTestAdapterOptions.PAGE_PARALLELIZATION_NAME, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     public sealed class GoogleTestExtensionOptionsPage : Package
     {
@@ -23,15 +23,15 @@ namespace GoogleTestAdapterVSIX
         {
             base.Initialize();
 
-            DialogPage Page = (DialogPage)GetDialogPage(typeof(OptionPageGrid));
+            DialogPage Page = GetDialogPage(typeof(GeneralOptionsDialogPage));
             Page.SaveSettingsToStorage();
-            Page = (DialogPage)GetDialogPage(typeof(ParallelizationPageGrid));
+            Page = GetDialogPage(typeof(ParallelizationOptionsDialogPage));
             Page.SaveSettingsToStorage();
         }
 
     }
 
-    public class OptionPageGrid : DialogPage
+    public class GeneralOptionsDialogPage : DialogPage
     {
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
@@ -90,9 +90,14 @@ namespace GoogleTestAdapterVSIX
             + GoogleTestAdapterOptions.TRAITS_REGEXES_TRAIT_SEPARATOR + "Medium")]
         public string TraitsRegexesAfter { get; set; } = GoogleTestAdapterOptions.OPTION_TRAITS_REGEXES_DEFAULT_VALUE;
 
+        [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
+        [DisplayName(GoogleTestAdapterOptions.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM)]
+        [Description("Additional parameters for Google Test executable. TODO place holders")]
+        public string AdditionalTestExecutionParams { get; set; } = GoogleTestAdapterOptions.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE;
+
     }
 
-    public class ParallelizationPageGrid : DialogPage
+    public class ParallelizationOptionsDialogPage : DialogPage
     {
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
@@ -114,11 +119,6 @@ namespace GoogleTestAdapterVSIX
         [DisplayName(GoogleTestAdapterOptions.OPTION_TEST_TEARDOWN_BATCH)]
         [Description("Batch file to be executed after each parallel test execution. TODO place holders")]
         public string BatchForTestTeardown { get; set; } = GoogleTestAdapterOptions.OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE;
-
-        [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
-        [DisplayName(GoogleTestAdapterOptions.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM)]
-        [Description("Additional parameters for Google Test executable. TODO place holders")]
-        public string AdditionalTestExecutionParams { get; set; } = GoogleTestAdapterOptions.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE;
 
     }
 

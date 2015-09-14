@@ -62,7 +62,7 @@ namespace GoogleTestAdapter
         public const string OPTION_MAX_NR_OF_THREADS = "Maximum number of threads to be used";
         public const string OPTION_TEST_SETUP_BATCH = "Batch file for test setup";
         public const string OPTION_TEST_TEARDOWN_BATCH = "Batch file for test teardown";
-        public const string OPTION_ADDITIONAL_TEST_EXECUTION_PARAM = "Additional parameters for parallel test execution";
+        public const string OPTION_ADDITIONAL_TEST_EXECUTION_PARAM = "Additional test execution parameters";
 
         public const bool OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE = false;
         public const string OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE = "";
@@ -113,26 +113,7 @@ namespace GoogleTestAdapter
 
         public bool UserDebugMode => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_USER_DEBUG_MODE, OPTION_USER_DEBUG_MODE_DEFAULT_VALUE);
 
-        public bool ParallelTestExecution => RegistryReader.ReadBool(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION, OPTION_ENABLE_PARALLEL_TEST_EXECUTION_DEFAULT_VALUE);
-
-        public string TestSetupBatch => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_TEST_SETUP_BATCH, OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE);
-
-        public string TestTeardownBatch => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_TEST_TEARDOWN_BATCH, OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE);
-
-        public string AdditionalTestExecutionParam => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM, OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE);
-
-        public int MaxNrOfThreads
-        {
-            get
-            {
-                int result = RegistryReader.ReadInt(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_MAX_NR_OF_THREADS, OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE);
-                if (result <= 0 || result > Environment.ProcessorCount)
-                {
-                    result = Environment.ProcessorCount;
-                }
-                return result;
-            }
-        }
+        public string AdditionalTestExecutionParam => RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_ADDITIONAL_TEST_EXECUTION_PARAM, OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE);
 
         public List<RegexTraitPair> TraitsRegexesBefore
         {
@@ -151,6 +132,27 @@ namespace GoogleTestAdapter
                 return ParseTraitsRegexesString(Option);
             }
         }
+
+
+        public bool ParallelTestExecution => RegistryReader.ReadBool(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_ENABLE_PARALLEL_TEST_EXECUTION, OPTION_ENABLE_PARALLEL_TEST_EXECUTION_DEFAULT_VALUE);
+
+        public string TestSetupBatch => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_TEST_SETUP_BATCH, OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE);
+
+        public string TestTeardownBatch => RegistryReader.ReadString(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_TEST_TEARDOWN_BATCH, OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE);
+
+        public int MaxNrOfThreads
+        {
+            get
+            {
+                int result = RegistryReader.ReadInt(REG_OPTION_PARALLELIZATION_BASE, REG_OPTION_MAX_NR_OF_THREADS, OPTION_MAX_NR_OF_THREADS_DEFAULT_VALUE);
+                if (result <= 0 || result > Environment.ProcessorCount)
+                {
+                    result = Environment.ProcessorCount;
+                }
+                return result;
+            }
+        }
+
 
         private List<RegexTraitPair> ParseTraitsRegexesString(string option)
         {
