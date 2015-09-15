@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -132,7 +133,7 @@ namespace GoogleTestAdapter
             Cases.Add(new TestCase("TestMath.Crash", Uri, "SomeSource.cpp"));
             Cases.Add(new TestCase("TestMath.AddPasses", Uri, "SomeSource.cpp"));
 
-            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(consoleOutput, Cases, new ConsoleLogger());
+            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(consoleOutput, Cases, MockLogger.Object);
             List<TestResult> results = parser.GetTestResults();
             return results;
         }

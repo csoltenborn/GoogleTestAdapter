@@ -2,19 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dia;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter
 {
-
-    public class ConsoleLogger : IMessageLogger
-    {
-        public void SendMessage(TestMessageLevel testMessageLevel, string message)
-        {
-            Console.WriteLine(testMessageLevel.ToString() + ": " + message);
-        }
-    }
 
     enum NameSearchOptions : uint
     {
