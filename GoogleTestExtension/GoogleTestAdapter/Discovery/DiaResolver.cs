@@ -34,7 +34,7 @@ namespace GoogleTestAdapter
             {
                 ImportsParser Parser = new ImportsParser(executable, logger);
                 string ModuleDirectory = Path.GetDirectoryName(executable);
-                logger.SendMessage(TestMessageLevel.Warning, "Couldn't find " + symbols.Count + " symbols in " + executable + ", looking from DllImports in module directory " + ModuleDirectory);
+                logger.SendMessage(TestMessageLevel.Warning, "GTA: Couldn't find " + symbols.Count + " symbols in " + executable + ", looking from DllImports in module directory " + ModuleDirectory);
                 List<string> FoundSymbols = Parser.Imports;
                 foreach (string symbol in FoundSymbols)
                 {
@@ -109,7 +109,7 @@ namespace GoogleTestAdapter
                 }
                 else
                 {
-                    logger.SendMessage(TestMessageLevel.Error, "Failed to locate line number for " + nativeSymbol);
+                    logger.SendMessage(TestMessageLevel.Error, "GTA: Failed to locate line number for " + nativeSymbol);
                     return new GoogleTestDiscoverer.SourceFileLocation()
                     {
                         Symbol = executable,

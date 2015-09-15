@@ -43,7 +43,7 @@ namespace GoogleTestAdapter
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (DEBUG_MODE)
             {
-                string Message = codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
+                string Message = "GTA: " + codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
                 logger?.SendMessage(TestMessageLevel.Informational, Message);
                 if (!Constants.UNIT_TEST_MODE)
                 {
