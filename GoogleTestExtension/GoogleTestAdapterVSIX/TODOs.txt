@@ -4,6 +4,7 @@
 	implement execution of setup/teardown batches
 	move settings into XML file to be saved into solution dir
 	more placeholders for batches and execution params
+	factor out placeholder values in container class to be passed around
 	move more constants to Constants.cs
 	refactor Helpers
 	reduce visibilities where possible

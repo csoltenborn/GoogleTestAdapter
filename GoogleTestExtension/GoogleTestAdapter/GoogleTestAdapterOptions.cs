@@ -101,6 +101,8 @@ namespace GoogleTestAdapter
             return result;
         }
 
+        public const string DESCRIPTION_OF_PLACEHOLDERS = "${TestDirectory} - path of a directory which can be used by the tests";
+
         public bool PrintTestOutput => RegistryReader.ReadBool(REG_OPTION_GENERAL_BASE, REG_OPTION_PRINT_TEST_OUTPUT, OPTION_PRINT_TEST_OUTPUT_DEFAULT_VALUE);
 
         public string TestDiscoveryRegex => RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TEST_DISCOVERY_REGEX, OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE);

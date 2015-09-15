@@ -92,7 +92,7 @@ namespace GoogleTestAdapterVSIX
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
         [DisplayName(GoogleTestAdapterOptions.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM)]
-        [Description("Additional parameters for Google Test executable. TODO place holders")]
+        [Description("Additional parameters for Google Test executable.\n" + GoogleTestAdapterOptions.DESCRIPTION_OF_PLACEHOLDERS)]
         public string AdditionalTestExecutionParams { get; set; } = GoogleTestAdapterOptions.OPTION_ADDITIONAL_TEST_EXECUTION_PARAM_DEFAULT_VALUE;
 
     }
@@ -112,12 +112,12 @@ namespace GoogleTestAdapterVSIX
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
         [DisplayName(GoogleTestAdapterOptions.OPTION_TEST_SETUP_BATCH)]
-        [Description("Batch file to be executed before each parallel test execution. TODO place holders")]
+        [Description("Batch file to be executed before each parallel test execution.\n" + GoogleTestAdapterOptions.DESCRIPTION_OF_PLACEHOLDERS)]
         public string BatchForTestSetup { get; set; } = GoogleTestAdapterOptions.OPTION_TEST_SETUP_BATCH_DEFAULT_VALUE;
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
         [DisplayName(GoogleTestAdapterOptions.OPTION_TEST_TEARDOWN_BATCH)]
-        [Description("Batch file to be executed after each parallel test execution. TODO place holders")]
+        [Description("Batch file to be executed after each parallel test execution.\n" + GoogleTestAdapterOptions.DESCRIPTION_OF_PLACEHOLDERS)]
         public string BatchForTestTeardown { get; set; } = GoogleTestAdapterOptions.OPTION_TEST_TEARDOWN_BATCH_DEFAULT_VALUE;
 
     }
