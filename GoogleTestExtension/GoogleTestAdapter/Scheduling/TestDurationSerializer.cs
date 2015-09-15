@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.Scheduling
             TestDurationsContainer container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new TestDurationsContainer();
             container.Executable = executable;
 
-            foreach (TestResult testResult in testresults)
+            foreach (TestResult testResult in testresults.Where(TR => TR.Outcome == TestOutcome.Passed || TR.Outcome == TestOutcome.Failed))
             {
                 SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(P => P.Key == testResult.TestCase.FullyQualifiedName);
                 if (!pair.Equals(DEFAULT))

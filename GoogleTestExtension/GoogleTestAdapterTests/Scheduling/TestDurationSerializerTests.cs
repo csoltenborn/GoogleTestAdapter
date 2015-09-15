@@ -18,7 +18,13 @@ namespace GoogleTestAdapter.Scheduling
             string tempFile = Path.GetTempFileName();
             testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
             {
-                Duration = TimeSpan.FromMilliseconds(3)
+                Duration = TimeSpan.FromMilliseconds(3),
+                Outcome = TestOutcome.Passed
+            });
+            testResults.Add(new TestResult(new TestCase("TestSuite1.SkippedTest", new Uri("http://nothing"), tempFile))
+            {
+                Duration = TimeSpan.FromMilliseconds(1),
+                Outcome = TestOutcome.Skipped
             });
 
             TestDurationSerializer serializer = new TestDurationSerializer();
@@ -31,6 +37,7 @@ namespace GoogleTestAdapter.Scheduling
             Assert.AreEqual(1, durations.Count);
             Assert.IsTrue(durations.ContainsKey(testResults[0].TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
+            Assert.IsFalse(durations.ContainsKey(testResults[1].TestCase));
 
             File.Delete(durationsFile);
         }
@@ -42,12 +49,14 @@ namespace GoogleTestAdapter.Scheduling
             string tempFile = Path.GetTempFileName();
             testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
             {
-                Duration = TimeSpan.FromMilliseconds(3)
+                Duration = TimeSpan.FromMilliseconds(3),
+                Outcome = TestOutcome.Passed
             });
             string tempFile2 = Path.GetTempFileName();
             testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile2))
             {
-                Duration = TimeSpan.FromMilliseconds(4)
+                Duration = TimeSpan.FromMilliseconds(4),
+                Outcome = TestOutcome.Failed
             });
 
             TestDurationSerializer serializer = new TestDurationSerializer();
@@ -76,7 +85,8 @@ namespace GoogleTestAdapter.Scheduling
             string tempFile = Path.GetTempFileName();
             testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
             {
-                Duration = TimeSpan.FromMilliseconds(3)
+                Duration = TimeSpan.FromMilliseconds(3),
+                Outcome = TestOutcome.Passed
             });
 
             TestDurationSerializer serializer = new TestDurationSerializer();
