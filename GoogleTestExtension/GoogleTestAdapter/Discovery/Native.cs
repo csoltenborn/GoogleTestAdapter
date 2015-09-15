@@ -89,13 +89,9 @@ namespace GoogleTestAdapter
                             directoryEntryPtr++;
                             directoryEntry = *directoryEntryPtr;
                         }
-                        if (UnMapAndLoad(ref loadedImage))
+                        if (!UnMapAndLoad(ref loadedImage))
                         {
-                            logger.SendMessage(TestMessageLevel.Informational, "UnMapAndLoad succeeded");
-                        }
-                        else
-                        {
-                            logger.SendMessage(TestMessageLevel.Error, "UnMapAndLoad failed!");
+                            logger.SendMessage(TestMessageLevel.Error, "GTA: UnMapAndLoad failed!");
                         }
                     }
                 }

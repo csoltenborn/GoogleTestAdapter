@@ -28,37 +28,52 @@ namespace GoogleTestAdapter
 
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
-
-            Canceled = false;
-            List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(Options);
-            foreach (string Executable in sources)
+            try
             {
-                if (Canceled)
-                {
-                    break;
-                }
+                DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
 
-                AllTestCasesInAllExecutables.AddRange(Discoverer.GetTestsFromExecutable(frameworkHandle, Executable));
+                Canceled = false;
+
+                List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
+                GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(Options);
+                foreach (string Executable in sources)
+                {
+                    if (Canceled)
+                    {
+                        break;
+                    }
+
+                    AllTestCasesInAllExecutables.AddRange(Discoverer.GetTestsFromExecutable(frameworkHandle, Executable));
+                }
+                RunTests(true, AllTestCasesInAllExecutables, AllTestCasesInAllExecutables, runContext, frameworkHandle);
             }
-            RunTests(true, AllTestCasesInAllExecutables, AllTestCasesInAllExecutables, runContext, frameworkHandle);
+            catch (Exception e)
+            {
+                frameworkHandle.SendMessage(TestMessageLevel.Error, "GTA: Exception while running tests: " + e);
+            }
         }
 
         public void RunTests(IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
-
-            Canceled = false;
-            List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
-            TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(Options);
-            foreach (string Executable in testCasesToRun.Select(TC => TC.Source).Distinct())
+            try
             {
-                AllTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(frameworkHandle, Executable));
+                DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
+
+                Canceled = false;
+                List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
+                TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+
+                GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(Options);
+                foreach (string Executable in testCasesToRun.Select(TC => TC.Source).Distinct())
+                {
+                    AllTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(frameworkHandle, Executable));
+                }
+                RunTests(false, AllTestCasesInAllExecutables, TestCasesToRun, runContext, frameworkHandle);
             }
-            RunTests(false, AllTestCasesInAllExecutables, TestCasesToRun, runContext, frameworkHandle);
+            catch (Exception e)
+            {
+                frameworkHandle.SendMessage(TestMessageLevel.Error, "GTA: Exception while running tests: " + e);
+            }
         }
 
         private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)

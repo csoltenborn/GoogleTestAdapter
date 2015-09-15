@@ -30,15 +30,7 @@ namespace GoogleTestAdapter
                 {
                     break;
                 }
-                try
-                {
-                    RunTestsFromExecutable(runAllTestCases, Executable, AllTestCases, GroupedTestCases[Executable], runContext, handle, testDirectory);
-                }
-                catch (Exception e)
-                {
-                    handle.SendMessage(TestMessageLevel.Error, e.Message);
-                    handle.SendMessage(TestMessageLevel.Error, e.StackTrace);
-                }
+                RunTestsFromExecutable(runAllTestCases, Executable, AllTestCases, GroupedTestCases[Executable], runContext, handle, testDirectory);
             }
 
         }

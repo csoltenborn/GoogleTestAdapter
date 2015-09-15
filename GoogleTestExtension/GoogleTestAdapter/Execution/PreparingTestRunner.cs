@@ -21,20 +21,27 @@ namespace GoogleTestAdapter
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
-            if (testDirectory != null)
+            try
             {
-                throw new ArgumentException("testDirectory must be null");
+                if (testDirectory != null)
+                {
+                    throw new ArgumentException("testDirectory must be null");
+                }
+
+                testDirectory = Utils.GetTempDirectory();
+
+                // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
+
+                innerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
+
+                // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
+
+                Directory.Delete(testDirectory);
             }
-
-            testDirectory = Utils.GetTempDirectory();
-
-            // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
-
-            innerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
-
-            // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
-
-            Directory.Delete(testDirectory);
+            catch (Exception e)
+            {
+                handle.SendMessage(TestMessageLevel.Error, "GTA: Exception while running tests: " + e);
+            }
         }
 
     }
