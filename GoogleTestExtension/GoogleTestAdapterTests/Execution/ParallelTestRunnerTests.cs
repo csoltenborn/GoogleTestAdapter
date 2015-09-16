@@ -39,9 +39,9 @@ namespace GoogleTestAdapter.Execution
             stopwatch.Stop();
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 
-            Assert.IsTrue(sequentialDuration > 6000); // 3 long tests, 2 seconds per test
-            Assert.IsTrue(parallelDuration > 2000); 
-            Assert.IsTrue(parallelDuration < 3000); // 2 seconds per long test + some time for the rest
+            Assert.IsTrue(sequentialDuration > 6000, sequentialDuration.ToString()); // 3 long tests, 2 seconds per test
+            Assert.IsTrue(parallelDuration > 2000, parallelDuration.ToString()); 
+            Assert.IsTrue(parallelDuration < 3000, parallelDuration.ToString()); // 2 seconds per long test + some time for the rest
         }
 
     }

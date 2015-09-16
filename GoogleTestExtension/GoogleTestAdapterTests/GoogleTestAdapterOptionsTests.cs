@@ -10,17 +10,25 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
         {
-            string source = "${TestDirectory}";
-            string result = GoogleTestAdapterOptions.ReplacePlaceholders(source, "mydir");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("${TestDirectory}");
+            string result = MockOptions.Object.GetUserParameters("mydir", 0);
             Assert.AreEqual("mydir", result);
 
-            source = "${TestDirectory} ${TestDirectory}";
-            result = GoogleTestAdapterOptions.ReplacePlaceholders(source, "mydir");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("${TestDirectory} ${TestDirectory}");
+            result = MockOptions.Object.GetUserParameters("mydir", 0);
             Assert.AreEqual("mydir mydir", result);
 
-            source = "${testdirectory}";
-            result = GoogleTestAdapterOptions.ReplacePlaceholders(source, "mydir");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("${testdirectory}");
+            result = MockOptions.Object.GetUserParameters("mydir", 0);
             Assert.AreEqual("${testdirectory}", result);
+
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("${ThreadId}");
+            result = MockOptions.Object.GetUserParameters("mydir", 4711);
+            Assert.AreEqual("4711", result);
+
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("${TestDirectory}, ${ThreadId}");
+            result = MockOptions.Object.GetUserParameters("mydir", 4711);
+            Assert.AreEqual("mydir, 4711", result);
         }
 
         [TestMethod]

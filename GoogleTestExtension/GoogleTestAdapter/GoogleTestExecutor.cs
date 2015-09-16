@@ -19,7 +19,7 @@ namespace GoogleTestAdapter
 
         public GoogleTestExecutor() : this(null) { }
 
-        public GoogleTestExecutor(IOptions options) : base(options) {}
+        public GoogleTestExecutor(AbstractOptions options) : base(options) {}
 
         public void Cancel()
         {
@@ -81,18 +81,18 @@ namespace GoogleTestAdapter
         private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
             IGoogleTestRunner runner;
-            string testDirectory;
+            string userParameters;
             if (Options.ParallelTestExecution)
             {
                 runner = new ParallelTestRunner(Options);
-                testDirectory = null;
+                userParameters = null;
             }
             else
             {
                 runner = new SequentialTestRunner(Options);
-                testDirectory = Utils.GetTempDirectory();
+                userParameters = Options.GetUserParameters(Utils.GetTempDirectory(), 0);
             }
-            runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
+            runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
         }
 

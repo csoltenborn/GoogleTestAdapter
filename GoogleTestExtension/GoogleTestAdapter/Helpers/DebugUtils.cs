@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        public static void LogUserDebugMessage(IMessageLogger logger, IOptions options, TestMessageLevel level, string message)
+        public static void LogUserDebugMessage(IMessageLogger logger, AbstractOptions options, TestMessageLevel level, string message)
         {
             if (options.UserDebugMode)
             {

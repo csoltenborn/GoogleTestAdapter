@@ -30,14 +30,14 @@ namespace GoogleTestAdapter.Execution
         private IEnumerable<TestCase> CasesToRun { get; }
         private string ResultXmlFile { get; }
         private IMessageLogger Logger { get; }
-        private IOptions Options { get; }
-        private string TestDirectory { get; }
+        private AbstractOptions Options { get; }
+        private string UserParameters { get; }
 
-        public CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, IOptions options, string testDirectory)
+        public CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, AbstractOptions options, string userParameters)
         {
-            if (testDirectory == null)
+            if (userParameters == null)
             {
-                throw new ArgumentNullException("testDirectory");
+                throw new ArgumentNullException(nameof(userParameters));
             }
 
             this.RunAllTestCases = runAllTestCases;
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.Execution
             this.ResultXmlFile = resultXmlFile;
             this.Logger = logger;
             this.Options = options;
-            this.TestDirectory = testDirectory;
+            this.UserParameters = userParameters;
         }
 
         public IEnumerable<Args> GetCommandLines()
@@ -135,8 +135,7 @@ namespace GoogleTestAdapter.Execution
 
         private string GetAdditionalUserParameter()
         {
-            string userParam = GoogleTestAdapterOptions.ReplacePlaceholders(Options.AdditionalTestExecutionParam, TestDirectory).Trim();
-            return userParam.Length == 0 ? "" : " " + userParam;
+            return UserParameters.Length == 0 ? "" : " " + UserParameters;
         }
 
         private string GetOutputpathParameter()

@@ -4,9 +4,9 @@ namespace GoogleTestAdapter.Helpers
 
     public class AbstractGoogleTestAdapterClass
     {
-        protected IOptions Options { get; private set; } = new GoogleTestAdapterOptions();
+        protected AbstractOptions Options { get; private set; } = new GoogleTestAdapterOptions();
 
-        protected AbstractGoogleTestAdapterClass(IOptions options)
+        protected AbstractGoogleTestAdapterClass(AbstractOptions options)
         {
             if (options != null)
             {

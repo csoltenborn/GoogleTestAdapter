@@ -14,7 +14,7 @@ namespace GoogleTestAdapter.Execution
     {
         public bool Canceled { get; set; }
 
-        public ParallelTestRunner(IOptions options) : base(options) { }
+        public ParallelTestRunner(AbstractOptions options) : base(options) { }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
@@ -41,9 +41,10 @@ namespace GoogleTestAdapter.Execution
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
             List<Thread> threads = new List<Thread>();
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing " + testcasesToRun.Length + " tests on " + splittedTestCasesToRun.Count + " threads");
+            int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options);
+                IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options, threadId++);
                 Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, runContext, handle, null));
                 thread.Start();
                 threads.Add(thread);

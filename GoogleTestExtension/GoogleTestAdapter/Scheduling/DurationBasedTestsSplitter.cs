@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.Scheduling
 
         public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations) : this(testcaseDurations, null) { }
 
-        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, IOptions options) : base(options)
+        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, AbstractOptions options) : base(options)
         {
             this.TestcaseDurations = testcaseDurations;
             this.OverallDuration = testcaseDurations.Values.Sum();

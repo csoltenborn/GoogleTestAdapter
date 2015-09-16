@@ -11,11 +11,13 @@ namespace GoogleTestAdapter.Execution
     public class PreparingTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         private IGoogleTestRunner InnerTestRunner { get; }
+        private int ThreadId { get; }
 
         public bool Canceled { get; set; } = false;
 
-        public PreparingTestRunner(IGoogleTestRunner innerTestrunner, IOptions options) : base(options) {
+        public PreparingTestRunner(IGoogleTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
             this.InnerTestRunner = innerTestrunner;
+            this.ThreadId = threadId;
         }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
@@ -28,10 +30,11 @@ namespace GoogleTestAdapter.Execution
                 }
 
                 testDirectory = Utils.GetTempDirectory();
+                string userParameters = Options.GetUserParameters(testDirectory, ThreadId);
 
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 
-                InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
+                InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
 
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 

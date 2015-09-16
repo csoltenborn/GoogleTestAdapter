@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.Scheduling
 
         public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun) : this(testcasesToRun, null) { }
 
-        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, IOptions options) : base(options)
+        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, AbstractOptions options) : base(options)
         {
             this.TestcasesToRun = testcasesToRun;
         }

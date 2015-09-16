@@ -14,13 +14,13 @@ namespace GoogleTestAdapter.Execution
     {
         public bool Canceled { get; set; } = false;
 
-        public SequentialTestRunner(IOptions options) : base(options) { }
+        public SequentialTestRunner(AbstractOptions options) : base(options) { }
 
-        public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
+        public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
         {
-            if (testDirectory == null)
+            if (userParameters == null)
             {
-                throw new ArgumentNullException("testDirectory");
+                throw new ArgumentNullException(nameof(userParameters));
             }
 
             IDictionary<string, List<TestCase>> groupedTestCases = GoogleTestExecutor.GroupTestcasesByExecutable(testCasesToRun);
@@ -31,13 +31,13 @@ namespace GoogleTestAdapter.Execution
                 {
                     break;
                 }
-                RunTestsFromExecutable(runAllTestCases, executable, allTestCasesAsArray, groupedTestCases[executable], runContext, handle, testDirectory);
+                RunTestsFromExecutable(runAllTestCases, executable, allTestCasesAsArray, groupedTestCases[executable], runContext, handle, userParameters);
             }
 
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
+        private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             foreach (TestCase testCase in testCasesToRunAsArray)
@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.Execution
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
             TestResultReporter reporter = new TestResultReporter(handle);
-            foreach (CommandLineGenerator.Args arguments in new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, testCasesToRunAsArray, resultXmlFile, handle, Options, testDirectory).GetCommandLines())
+            foreach (CommandLineGenerator.Args arguments in new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, testCasesToRunAsArray, resultXmlFile, handle, Options, userParameters).GetCommandLines())
             {
                 List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(resultXmlFile, consoleOutput, arguments.TestCases,

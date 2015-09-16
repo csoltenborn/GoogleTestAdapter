@@ -13,7 +13,7 @@ namespace GoogleTestAdapter
         protected static string DummyExecutable { get; } = "ff.exe";
 
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
-        protected readonly Mock<IOptions> MockOptions = new Mock<IOptions>();
+        protected readonly Mock<AbstractOptions> MockOptions = new Mock<AbstractOptions>() { CallBase = true };
 
         internal AbstractGoogleTestExtensionTests()
         {
@@ -23,12 +23,16 @@ namespace GoogleTestAdapter
         [TestInitialize]
         virtual public void SetUp()
         {
-            MockLogger.Reset();
-            MockOptions.Reset();
-
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("");
+        }
+
+        [TestCleanup]
+        virtual public void TearDown()
+        {
+            MockLogger.Reset();
+            MockOptions.Reset();
         }
 
         protected static TestCase ToTestCase(string name)
