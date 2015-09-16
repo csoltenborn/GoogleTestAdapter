@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Execution
 {
     public interface IGoogleTestRunner
     {

@@ -5,16 +5,16 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 // ReSharper disable HeuristicUnreachableCode
 #pragma warning disable 162
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Helpers
 {
     public static class DebugUtils
     {
-        private const bool DEBUG_MODE = false;
+        private const bool DebugMode = false;
 
         public static void LogDebugMessage(IMessageLogger logger, TestMessageLevel level, string message)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (DEBUG_MODE)
+            if (DebugMode)
             {
                 logger.SendMessage(level, message);
             }
@@ -41,13 +41,13 @@ namespace GoogleTestAdapter
         private static void CheckDebugMode(string codeType, IMessageLogger logger = null)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (DEBUG_MODE)
+            if (DebugMode)
             {
-                string Message = "GTA: " + codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
-                logger?.SendMessage(TestMessageLevel.Informational, Message);
-                if (!Constants.UNIT_TEST_MODE)
+                string message = "GTA: " + codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
+                logger?.SendMessage(TestMessageLevel.Informational, message);
+                if (!Constants.UnitTestMode)
                 {
-                    MessageBox.Show(Message + ". Attach debugger if necessary, then click ok.",
+                    MessageBox.Show(message + ". Attach debugger if necessary, then click ok.",
                         "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
             }

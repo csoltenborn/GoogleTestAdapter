@@ -10,33 +10,33 @@ namespace GoogleTestAdapter
     public class ParallelGoogleTestExecutorTests : AbstractGoogleTestExecutorTests
     {
 
-        override protected bool ParallelTestExecution { get { return true; } }
+        override protected bool ParallelTestExecution => true;
 
-        override protected int MaxNrOfThreads { get { return Environment.ProcessorCount; } }
+        override protected int MaxNrOfThreads => Environment.ProcessorCount;
 
-        override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests, Mock<IFrameworkHandle> MockHandle)
+        override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests, Mock<IFrameworkHandle> mockHandle)
         {
-            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests, MockHandle);
+            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests, mockHandle);
 
             if (nrOfPassedTests > 0)
             {
-                MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
+                mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
                     Times.AtLeast(nrOfPassedTests));
-                MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+                mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                     Times.AtLeast(nrOfPassedTests));
             }
 
             if (nrOfFailedTests > 0)
             {
-                MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed)),
+                mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed)),
                     Times.AtLeast(nrOfFailedTests));
-                MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+                mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
                     Times.AtLeast(nrOfFailedTests));
             }
 
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
+            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
                 Times.AtMost(nrOfNotFoundTests));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Skipped)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
                 Times.AtMost(nrOfNotFoundTests));
         }
 

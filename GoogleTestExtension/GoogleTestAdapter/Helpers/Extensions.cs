@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dia;
+using GoogleTestAdapter.Discovery;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Helpers
 {
 
     enum NameSearchOptions : uint
     {
-        nsNone = 0x0u,
-        nsfCaseSensitive = 0x1u,
-        nsfCaseInsensitive = 0x2u,
-        nsfFNameExt = 0x4u,
-        nsfRegularExpression = 0x8u,
-        nsfUndecoratedName = 0x10u
+        NsNone = 0x0u,
+        NsfCaseSensitive = 0x1u,
+        NsfCaseInsensitive = 0x2u,
+        NsfFNameExt = 0x4u,
+        NsfRegularExpression = 0x8u,
+        NsfUndecoratedName = 0x10u
     }
 
     public static class AllKindsOfExtensions
@@ -47,13 +48,13 @@ namespace GoogleTestAdapter
 
     }
 
-    public static class IDiaSessionExtensions
+    public static class DiaSessionExtensions
     {
         /// Find all symbols from session's global scope which are tagged as functions
         public static IDiaEnumSymbols FindFunctions(this IDiaSession session)
         {
             IDiaEnumSymbols result;
-            session.findChildren(session.globalScope, SymTagEnum.SymTagFunction, null, (uint)NameSearchOptions.nsNone, out result);
+            session.findChildren(session.globalScope, SymTagEnum.SymTagFunction, null, (uint)NameSearchOptions.NsNone, out result);
             return result;
         }
 
@@ -61,7 +62,7 @@ namespace GoogleTestAdapter
         public static IDiaEnumSymbols FindFunctionsByRegex(this IDiaSession session, string pattern)
         {
             IDiaEnumSymbols result;
-            session.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.nsfRegularExpression, out result);
+            session.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.NsfRegularExpression, out result);
             return result;
         }
 
@@ -73,20 +74,14 @@ namespace GoogleTestAdapter
             {
                 locations.Add(new NativeSourceFileLocation()
                 {
-                    symbol = diaSymbol.name,
-                    addressSection = diaSymbol.addressSection,
-                    addressOffset = diaSymbol.addressOffset,
-                    length = (UInt32)diaSymbol.length
+                    Symbol = diaSymbol.name,
+                    AddressSection = diaSymbol.addressSection,
+                    AddressOffset = diaSymbol.addressOffset,
+                    Length = (UInt32)diaSymbol.length
                 });
                 Native.ReleaseCom(diaSymbol);
             }
             return locations;
-        }
-
-        public class Location
-        {
-            public string sourcefile;
-            public uint linenumner;
         }
 
         public static IDiaEnumLineNumbers GetLineNumbers(this IDiaSession session, uint addressSection, uint addressOffset, uint length)

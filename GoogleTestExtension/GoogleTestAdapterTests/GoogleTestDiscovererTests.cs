@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using System.Collections.Generic;
 using System.IO;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter
@@ -12,15 +13,15 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
     {
-        public const string x86staticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        public const string x86externallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        public const string x86crashingTests = @"..\..\..\testdata\_x86\CrashingGoogleTests\CrashingGoogleTests.exe";
-        public const string x64staticallyLinkedTests = @"..\..\..\testdata\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        public const string x64externallyLinkedTests = @"..\..\..\testdata\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        public const string x64crashingTests = @"..\..\..\testdata\_x64\CrashingGoogleTests\CrashingGoogleTests.exe";
+        public const string X86StaticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
+        public const string X86ExternallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
+        public const string X86CrashingTests = @"..\..\..\testdata\_x86\CrashingGoogleTests\CrashingGoogleTests.exe";
+        public const string X64StaticallyLinkedTests = @"..\..\..\testdata\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
+        public const string X64ExternallyLinkedTests = @"..\..\..\testdata\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
+        public const string X64CrashingTests = @"..\..\..\testdata\_x64\CrashingGoogleTests\CrashingGoogleTests.exe";
 
-        public const string x86traitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
-        public const string x86hardcrashingTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1CrashingTests.exe";
+        public const string X86TraitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
+        public const string X86HardcrashingTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1CrashingTests.exe";
 
         [TestMethod]
         public void MatchesTestExecutableName()
@@ -58,202 +59,202 @@ namespace GoogleTestAdapter
 
         private void CheckForDiscoverySinkCalls(int expectedNrOfTests, string customRegex = null)
         {
-            Mock<IDiscoveryContext> MockDiscoveryContext = new Mock<IDiscoveryContext>();
-            Mock<ITestCaseDiscoverySink> MockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
-            MockOptions.Setup(O => O.TestDiscoveryRegex).Returns(() => customRegex);
+            Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
+            Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
+            MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
 
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            Discoverer.DiscoverTests(x86staticallyLinkedTests.Yield(), MockDiscoveryContext.Object, MockLogger.Object, MockDiscoverySink.Object);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockLogger.Object, mockDiscoverySink.Object);
 
-            MockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
+            mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
         }
 
         private void FindStaticallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            var Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, location);
-            Assert.AreEqual(2, Tests.Count);
-            Assert.AreEqual("FooTest.DoesXyz", Tests[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", Tests[0].CodeFilePath);
-            Assert.AreEqual(45, Tests[0].LineNumber);
-            Assert.AreEqual("FooTest.MethodBarDoesAbc", Tests[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", Tests[1].CodeFilePath);
-            Assert.AreEqual(36, Tests[1].LineNumber);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            var tests = discoverer.GetTestsFromExecutable(MockLogger.Object, location);
+            Assert.AreEqual(2, tests.Count);
+            Assert.AreEqual("FooTest.DoesXyz", tests[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", tests[0].CodeFilePath);
+            Assert.AreEqual(45, tests[0].LineNumber);
+            Assert.AreEqual("FooTest.MethodBarDoesAbc", tests[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", tests[1].CodeFilePath);
+            Assert.AreEqual(36, tests[1].LineNumber);
         }
 
         [TestMethod]
         public void FindsTestsFromStaticallyLinkedX86ExecutableWithSourceFileLocation()
         {
-            FindStaticallyLinkedTests(x86staticallyLinkedTests);
+            FindStaticallyLinkedTests(X86StaticallyLinkedTests);
         }
 
         [TestMethod]
         public void FindsTestsFromStaticallyLinkedX64ExecutableWithSourceFileLocation()
         {
-            FindStaticallyLinkedTests(x64staticallyLinkedTests);
+            FindStaticallyLinkedTests(X64StaticallyLinkedTests);
         }
 
 
         private void FindExternallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            var Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, location);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            var tests = discoverer.GetTestsFromExecutable(MockLogger.Object, location);
 
-            Assert.AreEqual(2, Tests.Count);
+            Assert.AreEqual(2, tests.Count);
 
-            Assert.AreEqual("BarTest.DoesXyz", Tests[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", Tests[0].CodeFilePath);
-            Assert.AreEqual(44, Tests[0].LineNumber);
+            Assert.AreEqual("BarTest.DoesXyz", tests[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", tests[0].CodeFilePath);
+            Assert.AreEqual(44, tests[0].LineNumber);
 
-            Assert.AreEqual("BarTest.MethodBarDoesAbc", Tests[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", Tests[1].CodeFilePath);
-            Assert.AreEqual(36, Tests[1].LineNumber);
+            Assert.AreEqual("BarTest.MethodBarDoesAbc", tests[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", tests[1].CodeFilePath);
+            Assert.AreEqual(36, tests[1].LineNumber);
         }
 
         [TestMethod]
         public void FindsTestsFromExternallyLinkedX86ExecutableWithSourceFileLocation()
         {
-            FindExternallyLinkedTests(x86externallyLinkedTests);
+            FindExternallyLinkedTests(X86ExternallyLinkedTests);
         }
 
         [TestMethod]
         public void FindsTestsFromExternallyLinkedX64ExecutableWithSourceFileLocation()
         {
-            FindExternallyLinkedTests(x64externallyLinkedTests);
+            FindExternallyLinkedTests(X64ExternallyLinkedTests);
         }
 
         [TestMethod]
         public void FindsMathTestWithOneTrait()
         {
-            Trait[] Traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+            Trait[] traits = { new Trait("Type", "Small") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithTwoTraits()
         {
-            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits2", Traits);
+            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithThreeTraits()
         {
-            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits3", Traits);
+            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithOneTrait()
         {
-            Trait[] Traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TheFixture.AddPassesWithTraits", Traits);
+            Trait[] traits = { new Trait("Type", "Small") };
+            FindsTestWithTraits("TheFixture.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithTwoTraits()
         {
-            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("TheFixture.AddPassesWithTraits2", Traits);
+            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            FindsTestWithTraits("TheFixture.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithThreeTraits()
         {
-            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("TheFixture.AddPassesWithTraits3", Traits);
+            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            FindsTestWithTraits("TheFixture.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithOneTrait()
         {
-            Trait[] Traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)", Traits);
+            Trait[] traits = { new Trait("Type", "Small") };
+            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithTwoTraits()
         {
-            Trait[] Traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0  # GetParam() = (1,)", Traits);
+            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0  # GetParam() = (1,)", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithThreeTraits()
         {
-            Trait[] Traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0  # GetParam() = (1,)", Traits);
+            Trait[] traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
+            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0  # GetParam() = (1,)", traits);
         }
 
         [TestMethod]
         public void CustomTraitBeforeAddsTraitIfNotAlreadyExisting()
         {
-            Trait[] Traits = { };
-            FindsTestWithTraits("TestMath.AddPasses", Traits);
+            Trait[] traits = { };
+            FindsTestWithTraits("TestMath.AddPasses", traits);
 
-            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
 
-            Traits = new[] { new Trait("Type", "SomeNewType") };
-            FindsTestWithTraits("TestMath.AddPasses", Traits);
+            traits = new[] { new Trait("Type", "SomeNewType") };
+            FindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         [TestMethod]
         public void CustomTraitBeforeIsOverridenByTraitOfTest()
         {
-            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
 
-            Trait[] Traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+            Trait[] traits = { new Trait("Type", "Small") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void CustomTraitBeforeIsOverridenByCustomTraitAfter()
         {
-            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "BeforeType").Yield().ToList());
-            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "AfterType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "BeforeType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "AfterType").Yield().ToList());
 
-            Trait[] Traits = { new Trait("Type", "AfterType") };
-            FindsTestWithTraits("TestMath.AddPasses", Traits);
+            Trait[] traits = { new Trait("Type", "AfterType") };
+            FindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         [TestMethod]
         public void CustomTraitAfterOverridesTraitOfTest()
         {
-            Trait[] Traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+            Trait[] traits = { new Trait("Type", "Small") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
 
-            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
 
-            Traits = new[] { new Trait("Type", "SomeNewType") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", Traits);
+            traits = new[] { new Trait("Type", "SomeNewType") };
+            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void CustomTraitAfterAddsTraitIfNotAlreadyExisting()
         {
-            Trait[] Traits = { };
-            FindsTestWithTraits("TestMath.AddPasses", Traits);
+            Trait[] traits = { };
+            FindsTestWithTraits("TestMath.AddPasses", traits);
 
-            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
 
-            Traits = new[] { new Trait("Type", "SomeNewType") };
-            FindsTestWithTraits("TestMath.AddPasses", Traits);
+            traits = new[] { new Trait("Type", "SomeNewType") };
+            FindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         private void FindsTestWithTraits(string fullyQualifiedName, Trait[] traits)
         {
-            Assert.IsTrue(File.Exists(x86traitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
+            Assert.IsTrue(File.Exists(X86TraitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
-            GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            List<TestCase> Tests = Discoverer.GetTestsFromExecutable(MockLogger.Object, x86traitsTests);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(MockLogger.Object, X86TraitsTests);
 
-            TestCase TestCase = Tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
-            Assert.IsNotNull(TestCase);
+            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
+            Assert.IsNotNull(testCase);
 
-            foreach (Trait Trait in traits)
+            foreach (Trait trait in traits)
             {
-                Trait FoundTrait = TestCase.Traits.FirstOrDefault(T => Trait.Name == T.Name && Trait.Value == T.Value);
-                Assert.IsNotNull(FoundTrait, "Didn't find trait: (" + Trait.Name + ", " + Trait.Value + ")");
+                Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
+                Assert.IsNotNull(foundTrait, "Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
         }
 

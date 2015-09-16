@@ -1,27 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter.Scheduling
 {
     public class DurationBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
     {
-        private readonly int overallDuration;
-        private readonly IDictionary<TestCase, int> testcaseDurations;
+        private int OverallDuration { get; }
+        private IDictionary<TestCase, int> TestcaseDurations { get; }
 
         public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations) : this(testcaseDurations, null) { }
 
         public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, IOptions options) : base(options)
         {
-            this.testcaseDurations = testcaseDurations;
-            this.overallDuration = testcaseDurations.Values.Sum();
+            this.TestcaseDurations = testcaseDurations;
+            this.OverallDuration = testcaseDurations.Values.Sum();
         }
 
         public List<List<TestCase>> SplitTestcases()
         {
-            List<TestCase> sortedTestcases = testcaseDurations.Keys.OrderByDescending(TC => testcaseDurations[TC]).ToList();
+            List<TestCase> sortedTestcases = TestcaseDurations.Keys.OrderByDescending(tc => TestcaseDurations[tc]).ToList();
             int nrOfThreadsToUse = Options.MaxNrOfThreads;
-            int targetDuration = overallDuration / nrOfThreadsToUse;
+            int targetDuration = OverallDuration / nrOfThreadsToUse;
 
             List<List<TestCase>> splitTestcases = new List<List<TestCase>>();
             List<TestCase> currentList = new List<TestCase>();
@@ -34,8 +35,8 @@ namespace GoogleTestAdapter.Scheduling
 
                     sortedTestcases.RemoveAt(0);
                     currentList.Add(testcase);
-                    currentDuration += testcaseDurations[testcase];
-                } while (sortedTestcases.Count > 0 && currentDuration + testcaseDurations[sortedTestcases[0]] <= targetDuration);
+                    currentDuration += TestcaseDurations[testcase];
+                } while (sortedTestcases.Count > 0 && currentDuration + TestcaseDurations[sortedTestcases[0]] <= targetDuration);
                        
                 splitTestcases.Add(currentList);
                 currentList = new List<TestCase>();
@@ -60,7 +61,7 @@ namespace GoogleTestAdapter.Scheduling
             for (int i = 0; i < splitTestcases.Count; i++)
             {
                 List<TestCase> testcases = splitTestcases[i];
-                int duration = testcases.Sum(TC => testcaseDurations[TC]);
+                int duration = testcases.Sum(tc => TestcaseDurations[tc]);
                 if (duration < minDuration)
                 {
                     minDuration = duration;

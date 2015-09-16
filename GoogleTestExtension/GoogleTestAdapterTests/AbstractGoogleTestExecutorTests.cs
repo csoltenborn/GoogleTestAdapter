@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -13,17 +14,17 @@ namespace GoogleTestAdapter
         protected abstract bool ParallelTestExecution { get; }
         protected abstract int MaxNrOfThreads { get; }
 
-        protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests, Mock<IFrameworkHandle> MockHandle)
+        protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests, Mock<IFrameworkHandle> mockHandle)
         {
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
+            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.None)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
         }
 
         class CollectingTestDiscoverySink : ITestCaseDiscoverySink
         {
-            public List<TestCase> TestCases = new List<TestCase>();
+            public List<TestCase> TestCases { get; } = new List<TestCase>();
 
             public void SendTestCase(TestCase discoveredTest)
             {
@@ -36,117 +37,117 @@ namespace GoogleTestAdapter
         {
             base.SetUp();
 
-            MockOptions.Setup(O => O.ParallelTestExecution).Returns(ParallelTestExecution);
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(MaxNrOfThreads);
+            MockOptions.Setup(o => o.ParallelTestExecution).Returns(ParallelTestExecution);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(MaxNrOfThreads);
         }
 
         [TestMethod]
         public void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
-            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
-            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
-            Mock<IDiscoveryContext> MockDiscoveryContext = new Mock<IDiscoveryContext>();
+            Mock<IFrameworkHandle> mockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> mockRunContext = new Mock<IRunContext>();
+            Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
             CollectingTestDiscoverySink sink = new CollectingTestDiscoverySink();
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            discoverer.DiscoverTests(GoogleTestDiscovererTests.x86traitsTests.Yield(), MockDiscoveryContext.Object, MockHandle.Object, sink);
+            discoverer.DiscoverTests(GoogleTestDiscovererTests.X86TraitsTests.Yield(), mockDiscoveryContext.Object, mockHandle.Object, sink);
 
-            TestCase testcase = sink.TestCases.Where(TC => TC.FullyQualifiedName.Contains("CommandArgs.TestDirectoryIsSet")).FirstOrDefault();
+            TestCase testcase = sink.TestCases.FirstOrDefault(tc => tc.FullyQualifiedName.Contains("CommandArgs.TestDirectoryIsSet"));
             Assert.IsNotNull(testcase);
 
-            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
-            Executor.RunTests(testcase.Yield(), MockRunContext.Object, MockHandle.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            executor.RunTests(testcase.Yield(), mockRunContext.Object, mockHandle.Object);
 
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(0));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
                 Times.Exactly(1));
 
-            MockHandle.Reset();
-            MockOptions.Setup(O => O.AdditionalTestExecutionParam).Returns("-testdirectory=\"${TestDirectory}\"");
+            mockHandle.Reset();
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"${TestDirectory}\"");
 
-            Executor = new GoogleTestExecutor(MockOptions.Object);
-            Executor.RunTests(testcase.Yield(), MockRunContext.Object, MockHandle.Object);
+            executor = new GoogleTestExecutor(MockOptions.Object);
+            executor.RunTests(testcase.Yield(), mockRunContext.Object, mockHandle.Object);
 
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(1));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
                 Times.Exactly(0));
         }
 
         [TestMethod]
         public void RunsExternallyLinkedX86TestsWithResult()
         {
-            RunAndVerifyTests(GoogleTestDiscovererTests.x86externallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(GoogleTestDiscovererTests.X86ExternallyLinkedTests, 2, 0, 0);
         }
 
         [TestMethod]
         public void RunsStaticallyLinkedX86TestsWithResult()
         {
-            RunAndVerifyTests(GoogleTestDiscovererTests.x86staticallyLinkedTests, 1, 1, 0);
+            RunAndVerifyTests(GoogleTestDiscovererTests.X86StaticallyLinkedTests, 1, 1, 0);
         }
 
         [TestMethod]
         public void RunsExternallyLinkedX64TestsWithResult()
         {
-            RunAndVerifyTests(GoogleTestDiscovererTests.x64externallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(GoogleTestDiscovererTests.X64ExternallyLinkedTests, 2, 0, 0);
         }
 
         [TestMethod]
         public void RunsStaticallyLinkedX64TestsWithResult()
         {
-            RunAndVerifyTests(GoogleTestDiscovererTests.x64staticallyLinkedTests, 1, 1, 0);
+            RunAndVerifyTests(GoogleTestDiscovererTests.X64StaticallyLinkedTests, 1, 1, 0);
         }
 
         [TestMethod]
         public void RunsCrashingX64TestsWithoutResult()
         {
-            RunAndVerifyTests(GoogleTestDiscovererTests.x64crashingTests, 0, 1, 0, 1);
+            RunAndVerifyTests(GoogleTestDiscovererTests.X64CrashingTests, 0, 1, 0, 1);
         }
 
         [TestMethod]
         public void RunsCrashingX86TestsWithoutResult()
         {
-            RunAndVerifyTests(GoogleTestDiscovererTests.x86crashingTests, 0, 1, 0, 1);
+            RunAndVerifyTests(GoogleTestDiscovererTests.X86CrashingTests, 0, 1, 0, 1);
         }
 
         [TestMethod]
         public void RunsHardCrashingX86TestsWithoutResult()
         {
-            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
-            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
+            Mock<IFrameworkHandle> mockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> mockRunContext = new Mock<IRunContext>();
 
-            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
-            Executor.RunTests(GoogleTestDiscovererTests.x86hardcrashingTests.Yield(), MockRunContext.Object, MockHandle.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            executor.RunTests(GoogleTestDiscovererTests.X86HardcrashingTests.Yield(), mockRunContext.Object, mockHandle.Object);
 
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
+            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
                 Times.Exactly(0));
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed && tr.ErrorMessage == "!! This is probably the test that crashed !!")),
+            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed && tr.ErrorMessage == "!! This is probably the test that crashed !!")),
                 Times.Exactly(1));
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
+            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
                 Times.Exactly(0));
-            MockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped && tr.ErrorMessage == "reason is probably a crash of test Crashing.TheCrash")),
+            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped && tr.ErrorMessage == "reason is probably a crash of test Crashing.TheCrash")),
                 Times.Exactly(2));
 
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Passed)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(0));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Failed)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
                 Times.Exactly(1));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.None)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.None)),
                 Times.Exactly(0));
-            MockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(TO => TO == TestOutcome.Skipped)),
+            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
                 Times.Exactly(2));
         }
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
-            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
-            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
+            Mock<IFrameworkHandle> mockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> mockRunContext = new Mock<IRunContext>();
 
-            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
-            Executor.RunTests(executable.Yield(), MockRunContext.Object, MockHandle.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            executor.RunTests(executable.Yield(), mockRunContext.Object, mockHandle.Object);
 
-            CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests, MockHandle);
+            CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests, mockHandle);
         }
 
     }

@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Xml;
-using System.Linq;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Xml;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.TestResults
 {
     public class XmlTestResultParser
     {
-        private const string ERROR_MSG_NO_XML_FILE = "Output file does not exist, did your tests crash?";
+        private const string ErrorMsgNoXmlFile = "Output file does not exist, did your tests crash?";
 
-        private static readonly NumberFormatInfo NUMBER_FORMAT_INFO = new CultureInfo("en-US").NumberFormat;
+        private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
-        private readonly IMessageLogger Logger;
+        private IMessageLogger Logger { get; }
 
-        private readonly string XmlResultFile;
-        private readonly List<TestCase> TestCasesRun;
+        private string XmlResultFile { get; }
+        private List<TestCase> TestCasesRun { get; }
 
         public XmlTestResultParser(string xmlResultFile, IEnumerable<TestCase> testCases, IMessageLogger logger)
         {
@@ -35,7 +36,7 @@ namespace GoogleTestAdapter
                 return ParseTestResults();
             }
 
-            Logger.SendMessage(TestMessageLevel.Warning, ERROR_MSG_NO_XML_FILE);
+            Logger.SendMessage(TestMessageLevel.Warning, ErrorMsgNoXmlFile);
             return new List<TestResult>();
         }
 
@@ -43,95 +44,95 @@ namespace GoogleTestAdapter
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private List<TestResult> ParseTestResults()
         {
-            List<TestResult> TestResults = new List<TestResult>();
+            List<TestResult> testResults = new List<TestResult>();
             try
             {
-                XmlDocument XmlDocument = new XmlDocument();
-                XmlDocument.Load(XmlResultFile);
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(XmlResultFile);
                 DebugUtils.LogUserDebugMessage(Logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "Loaded test results from " + XmlResultFile);
 
-                XmlNodeList TestsuiteNodes = XmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
-                foreach (XmlNode TestsuiteNode in TestsuiteNodes)
+                XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
+                foreach (XmlNode testsuiteNode in testsuiteNodes)
                 {
-                    XmlNodeList TestcaseNodes = TestsuiteNode.SelectNodes("testcase");
-                    TestResults.AddRange(TestcaseNodes.Cast<XmlNode>().Select(ParseTestResult).Where(Result => Result != null));
+                    XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
+                    testResults.AddRange(testcaseNodes.Cast<XmlNode>().Select(ParseTestResult).Where(result => result != null));
                 }
             }
             catch (XmlException e)
             {
-                Logger.SendMessage(TestMessageLevel.Warning, "Test result file could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                Logger.SendMessage(TestMessageLevel.Warning, "GTA: Test result file could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
             catch (NullReferenceException e)
             {
-                Logger.SendMessage(TestMessageLevel.Warning, "Test result file could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                Logger.SendMessage(TestMessageLevel.Warning, "GTA: Test result file could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
 
-            return TestResults;
+            return testResults;
         }
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private TestResult ParseTestResult(XmlNode testcaseNode)
         {
-            string ClassName = testcaseNode.Attributes["classname"].InnerText;
-            string TestCaseName = testcaseNode.Attributes["name"].InnerText;
-            string QualifiedName = ClassName + "." + TestCaseName;
+            string className = testcaseNode.Attributes["classname"].InnerText;
+            string testCaseName = testcaseNode.Attributes["name"].InnerText;
+            string qualifiedName = className + "." + testCaseName;
 
-            TestCase TestCase = TestCasesRun.FindTestcase(QualifiedName);
-            if (TestCase == null)
+            TestCase testCase = TestCasesRun.FindTestcase(qualifiedName);
+            if (testCase == null)
             {
                 return null;
             }
 
-            TestResult TestResult = new TestResult(TestCase)
+            TestResult testResult = new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = " "
             };
 
-            string Duration = testcaseNode.Attributes["time"].InnerText;
-            TestResult.Duration = ParseDuration(Duration);
+            string duration = testcaseNode.Attributes["time"].InnerText;
+            testResult.Duration = ParseDuration(duration);
 
-            string TestCaseStatus = testcaseNode.Attributes["status"].InnerText;
-            switch (TestCaseStatus)
+            string testCaseStatus = testcaseNode.Attributes["status"].InnerText;
+            switch (testCaseStatus)
             {
                 case "run":
-                    XmlNodeList FailureNodes = testcaseNode.SelectNodes("failure");
-                    if (FailureNodes.Count == 0)
+                    XmlNodeList failureNodes = testcaseNode.SelectNodes("failure");
+                    if (failureNodes.Count == 0)
                     {
-                        TestResult.Outcome = TestOutcome.Passed;
+                        testResult.Outcome = TestOutcome.Passed;
                     }
                     else
                     {
-                        TestResult.Outcome = TestOutcome.Failed;
-                        TestResult.ErrorMessage = CreateErrorMessage(FailureNodes);
+                        testResult.Outcome = TestOutcome.Failed;
+                        testResult.ErrorMessage = CreateErrorMessage(failureNodes);
                     }
                     break;
                 case "notrun":
-                    TestResult.Outcome = TestOutcome.Skipped;
+                    testResult.Outcome = TestOutcome.Skipped;
                     break;
                 default:
-                    string Msg = "Unknown testcase status: " + TestCaseStatus + ". Please send this information to the developer.";
-                    Logger.SendMessage(TestMessageLevel.Error, Msg);
-                    throw new Exception(Msg);
+                    string msg = "Unknown testcase status: " + testCaseStatus + ". Please send this information to the developer.";
+                    Logger.SendMessage(TestMessageLevel.Error, msg);
+                    throw new Exception(msg);
             }
 
-            return TestResult;
+            return testResult;
         }
 
         private string CreateErrorMessage(XmlNodeList failureNodes)
         {
-            IEnumerable<string> ErrorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText);
-            return string.Join("\n\n", ErrorMessages);
+            IEnumerable<string> errorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText);
+            return string.Join("\n\n", errorMessages);
         }
 
-        private TimeSpan ParseDuration(string duration)
+        private TimeSpan ParseDuration(string durationString)
         {
-            double Duration = double.Parse(duration, NUMBER_FORMAT_INFO);
-            if (Duration <= 0.001)
+            double duration = double.Parse(durationString, NumberFormatInfo);
+            if (duration <= 0.001)
             {
-                Duration = 0.001;
+                duration = 0.001;
             }
-            return TimeSpan.FromSeconds(Duration);
+            return TimeSpan.FromSeconds(duration);
         }
 
     }

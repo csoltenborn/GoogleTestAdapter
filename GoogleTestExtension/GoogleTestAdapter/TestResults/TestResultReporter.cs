@@ -3,17 +3,17 @@ using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.TestResults
 {
     public class TestResultReporter
     {
-        private const int NR_OF_TEST_RESULTS_BEFORE_WAITING = 1;
-        private const int WAITING_TIME = 1;
+        private const int NrOfTestResultsBeforeWaiting = 1;
+        private const int WaitingTime = 1;
 
-        private static readonly object LOCK = new object();
+        private static readonly object Lock = new object();
 
-        private readonly IFrameworkHandle FrameworkHandle;
-        private int NrOfReportedResults = 0;
+        private IFrameworkHandle FrameworkHandle { get; }
+        private int NrOfReportedResults { get; set; } = 0;
 
         public TestResultReporter(IFrameworkHandle frameworkHandle)
         {
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter
 
         public void ReportTestResults(IEnumerable<TestResult> testResults)
         {
-            lock (LOCK)
+            lock (Lock)
             {
                 foreach (TestResult testResult in testResults)
                 {
@@ -37,9 +37,9 @@ namespace GoogleTestAdapter
             FrameworkHandle.RecordEnd(testResult.TestCase, testResult.Outcome);
 
             NrOfReportedResults++;
-            if (NrOfReportedResults % NR_OF_TEST_RESULTS_BEFORE_WAITING == 0)
+            if (NrOfReportedResults % NrOfTestResultsBeforeWaiting == 0)
             {
-                Thread.Sleep(WAITING_TIME);
+                Thread.Sleep(WaitingTime);
             }
         }
 

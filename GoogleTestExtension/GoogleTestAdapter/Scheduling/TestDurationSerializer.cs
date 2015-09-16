@@ -8,18 +8,18 @@ using System.Xml.Serialization;
 namespace GoogleTestAdapter.Scheduling
 {
     [Serializable]
-    public struct SerializableKeyValuePair<K, V>
+    public struct SerializableKeyValuePair<TK, TV>
     {
-        public SerializableKeyValuePair(K key, V value)
+        public SerializableKeyValuePair(TK key, TV value)
         {
             Key = key;
             Value = value;
         }
 
-        public K Key
+        public TK Key
         { get; set; }
 
-        public V Value
+        public TV Value
         { get; set; }
     }
 
@@ -32,31 +32,32 @@ namespace GoogleTestAdapter.Scheduling
 
     public class TestDurationSerializer
     {
-        private static readonly object LOCK = new object();
-        private static readonly SerializableKeyValuePair<string, int> DEFAULT = new SerializableKeyValuePair<string, int>();
+        private static object Lock { get; } = new object();
+        private static readonly SerializableKeyValuePair<string, int> Default = new SerializableKeyValuePair<string, int>();
 
-        private readonly XmlSerializer serializer = new XmlSerializer(typeof(TestDurationsContainer));
+        private XmlSerializer Serializer { get; } = new XmlSerializer(typeof (TestDurationsContainer));
 
         public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
-            IDictionary<string, List<TestCase>> GroupedTestcases = GoogleTestExecutor.GroupTestcasesByExecutable(testcases);
+            IDictionary<string, List<TestCase>> groupedTestcases = GoogleTestExecutor.GroupTestcasesByExecutable(testcases);
             IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
-            foreach (string executable in GroupedTestcases.Keys)
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (string executable in groupedTestcases.Keys)
             {
-                durations = durations.Union(ReadTestDurations(executable, GroupedTestcases[executable])).ToDictionary(KVP => KVP.Key, KVP => KVP.Value);
+                durations = durations.Union(ReadTestDurations(executable, groupedTestcases[executable])).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             return durations;
         }
 
         public void UpdateTestDurations(IEnumerable<TestResult> testResults)
         {
-            IDictionary<string, List<TestResult>> GroupedTestcases = GroupTestResultsByExecutable(testResults);
-            foreach (string executable in GroupedTestcases.Keys)
+            IDictionary<string, List<TestResult>> groupedTestcases = GroupTestResultsByExecutable(testResults);
+            foreach (string executable in groupedTestcases.Keys)
             {
-                lock (LOCK)
+                lock (Lock)
                 {
                     // TODO lock on file base
-                    UpdateTestDurations(executable, GroupedTestcases[executable]);
+                    UpdateTestDurations(executable, groupedTestcases[executable]);
                 }
             }
         }
@@ -74,8 +75,8 @@ namespace GoogleTestAdapter.Scheduling
 
             foreach (TestCase testcase in testcases)
             {
-                SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(P => P.Key == testcase.FullyQualifiedName);
-                if (!pair.Equals(DEFAULT))
+                SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(p => p.Key == testcase.FullyQualifiedName);
+                if (!pair.Equals(Default))
                 {
                     durations.Add(testcase, pair.Value);
                 }
@@ -90,10 +91,10 @@ namespace GoogleTestAdapter.Scheduling
             TestDurationsContainer container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new TestDurationsContainer();
             container.Executable = executable;
 
-            foreach (TestResult testResult in testresults.Where(TR => TR.Outcome == TestOutcome.Passed || TR.Outcome == TestOutcome.Failed))
+            foreach (TestResult testResult in testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
             {
-                SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(P => P.Key == testResult.TestCase.FullyQualifiedName);
-                if (!pair.Equals(DEFAULT))
+                SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(p => p.Key == testResult.TestCase.FullyQualifiedName);
+                if (!pair.Equals(Default))
                 {
                     container.TestDurations.Remove(pair);
                 }
@@ -106,7 +107,7 @@ namespace GoogleTestAdapter.Scheduling
         private TestDurationsContainer LoadTestDurations(string durationsFile)
         {
             FileStream fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            TestDurationsContainer container = serializer.Deserialize(fileStream) as TestDurationsContainer;
+            TestDurationsContainer container = Serializer.Deserialize(fileStream) as TestDurationsContainer;
             fileStream.Close();
             return container;
         }
@@ -114,7 +115,7 @@ namespace GoogleTestAdapter.Scheduling
         private void SaveTestDurations(TestDurationsContainer durations, string durationsFile)
         {
             TextWriter fileStream = new StreamWriter(durationsFile);
-            serializer.Serialize(fileStream, durations);
+            Serializer.Serialize(fileStream, durations);
             fileStream.Close();
         }
 
@@ -145,7 +146,7 @@ namespace GoogleTestAdapter.Scheduling
 
         private string GetDurationsFile(string executable)
         {
-            return executable + Constants.FILE_ENDING_TEST_DURATIONS;
+            return executable + Constants.FileEndingTestDurations;
         }
 
     }

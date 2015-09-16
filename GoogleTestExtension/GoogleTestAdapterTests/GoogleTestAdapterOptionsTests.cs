@@ -26,54 +26,54 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsFailsNicelyIfInvokedWithUnparsableString()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
-            List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", "vrr<erfwe") as List<RegexTraitPair>;
+            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", "vrr<erfwe") as List<RegexTraitPair>;
 
-            Assert.IsNotNull(Result);
-            Assert.AreEqual(0, Result.Count);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfEmpty()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
-            List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", "") as List<RegexTraitPair>;
+            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", "") as List<RegexTraitPair>;
 
-            Assert.IsNotNull(Result);
-            Assert.AreEqual(0, Result.Count);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
             string OptionsString = "MyTest*///Type,Small";
-            List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
+            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
 
-            Assert.IsNotNull(Result);
-            Assert.AreEqual(1, Result.Count);
-            Assert.AreEqual("MyTest*", Result[0].Regex);
-            Assert.AreEqual("Type", Result[0].Trait.Name);
-            Assert.AreEqual("Small", Result[0].Trait.Value);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("MyTest*", result[0].Regex);
+            Assert.AreEqual("Type", result[0].Trait.Name);
+            Assert.AreEqual("Small", result[0].Trait.Value);
         }
 
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfTwo()
         {
-            PrivateObject OptionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
-            string OptionsString = "MyTest*///Type,Small//||//*MyOtherTest*///Category,Integration";
-            List<RegexTraitPair> Result = OptionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
+            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            string optionsString = "MyTest*///Type,Small//||//*MyOtherTest*///Category,Integration";
+            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", optionsString) as List<RegexTraitPair>;
 
-            Assert.IsNotNull(Result);
-            Assert.AreEqual(2, Result.Count);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
 
-            Assert.AreEqual("MyTest*", Result[0].Regex);
-            Assert.AreEqual("Type", Result[0].Trait.Name);
-            Assert.AreEqual("Small", Result[0].Trait.Value);
+            Assert.AreEqual("MyTest*", result[0].Regex);
+            Assert.AreEqual("Type", result[0].Trait.Name);
+            Assert.AreEqual("Small", result[0].Trait.Value);
 
-            Assert.AreEqual("*MyOtherTest*", Result[1].Regex);
-            Assert.AreEqual("Category", Result[1].Trait.Name);
-            Assert.AreEqual("Integration", Result[1].Trait.Value);
+            Assert.AreEqual("*MyOtherTest*", result[1].Regex);
+            Assert.AreEqual("Category", result[1].Trait.Name);
+            Assert.AreEqual("Integration", result[1].Trait.Value);
         }
 
     }

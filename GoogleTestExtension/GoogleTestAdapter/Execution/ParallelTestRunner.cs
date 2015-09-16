@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Scheduling;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using GoogleTestAdapter.Scheduling;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Execution
 {
     public class ParallelTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
@@ -23,11 +24,12 @@ namespace GoogleTestAdapter
             }
 
             TestDurationSerializer serializer = new TestDurationSerializer();
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
+            TestCase[] testcasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testcasesToRun);
             ITestsSplitter splitter;
-            if (durations.Count < testCasesToRun.Count())
+            if (durations.Count < testcasesToRun.Length)
             {
-                splitter = new NumberBasedTestsSplitter(testCasesToRun);
+                splitter = new NumberBasedTestsSplitter(testcasesToRun);
                 DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on number of tests");
             }
             else
@@ -38,7 +40,7 @@ namespace GoogleTestAdapter
 
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
             List<Thread> threads = new List<Thread>();
-            handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing " + testCasesToRun.Count() + " tests on " + splittedTestCasesToRun.Count + " threads");
+            handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing " + testcasesToRun.Length + " tests on " + splittedTestCasesToRun.Count + " threads");
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
                 IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options);

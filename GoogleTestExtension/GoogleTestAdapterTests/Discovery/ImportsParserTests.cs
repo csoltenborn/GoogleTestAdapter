@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Discovery
 {
     [TestClass]
     public class ImportsParserTests : AbstractGoogleTestExtensionTests
@@ -11,27 +11,27 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void ReadsImports()
         {
-            Native.ImportsParser Parser = new Native.ImportsParser(@"kernel32.dll", MockLogger.Object);
-            List<string> Imports = Parser.Imports;
-            Version Version = Environment.OSVersion.Version;
-            if (Version.Major == 6 && Version.Minor == 1)
+            Native.ImportsParser parser = new Native.ImportsParser(@"kernel32.dll", MockLogger.Object);
+            List<string> imports = parser.Imports;
+            Version version = Environment.OSVersion.Version;
+            if (version.Major == 6 && version.Minor == 1)
             {
                 // Windows 7
-                Assert.AreEqual(24, Imports.Count);
+                Assert.AreEqual(24, imports.Count);
             }
-            else if (Version.Major == 6 && Version.Minor == 2 && Version.Build < 9200)
+            else if (version.Major == 6 && version.Minor == 2 && version.Build < 9200)
             {
                 // Windows 8
-                Assert.AreEqual(49, Imports.Count);
+                Assert.AreEqual(49, imports.Count);
             }
-            else if (Version.Major == 6 && Version.Minor == 2)
+            else if (version.Major == 6 && version.Minor == 2)
             {
                 // Windows 10?
-                Assert.AreEqual(62, Imports.Count);
+                Assert.AreEqual(62, imports.Count);
             }
             else
             {
-                throw new Exception("Unknown Windows version, Major: " + Version.Major + ", Minor: " + Version.Minor);
+                throw new Exception("Unknown Windows version, Major: " + version.Major + ", Minor: " + version.Minor);
             }
         }
 

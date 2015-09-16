@@ -2,15 +2,15 @@
 using System.IO;
 using Dia;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.Discovery
 {
     class DiaMemoryStream : IStream
     {
-        private readonly Stream pdbFile;
+        private Stream PdbFile { get; }
 
         public DiaMemoryStream(Stream pdbFile)
         {
-            this.pdbFile = pdbFile;
+            this.PdbFile = pdbFile;
         }
 
         unsafe void IStream.RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.Helpers
             {
                 for(bytesRead = 0; bytesRead < bufferSize; bytesRead++)
                 {
-                    var nextByte = pdbFile.ReadByte();
+                    var nextByte = PdbFile.ReadByte();
                     if (nextByte == -1)
                         return;
                     addressOfBuffer[bytesRead] = (byte)nextByte;
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Helpers
 
         void IStream.RemoteSeek(_LARGE_INTEGER offset, uint seekOrigin, out _ULARGE_INTEGER newPosition)
         {
-            newPosition.QuadPart = (ulong)pdbFile.Seek(offset.QuadPart, (SeekOrigin)seekOrigin);
+            newPosition.QuadPart = (ulong)PdbFile.Seek(offset.QuadPart, (SeekOrigin)seekOrigin);
         }
 
         void IStream.Stat(out tagSTATSTG pstatstg, uint grfStatFlag)
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.Helpers
             {
                 cbSize = new _ULARGE_INTEGER
                 {
-                    QuadPart = (ulong) pdbFile.Length
+                    QuadPart = (ulong) PdbFile.Length
                 }
             };
         }

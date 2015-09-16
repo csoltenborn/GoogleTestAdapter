@@ -1,5 +1,5 @@
 ﻿
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Helpers
 {
 
     public class AbstractGoogleTestAdapterClass

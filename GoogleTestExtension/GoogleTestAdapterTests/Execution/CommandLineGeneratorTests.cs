@@ -1,196 +1,195 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Execution
 {
     [TestClass]
     public class CommandLineGeneratorTests : AbstractGoogleTestExtensionTests
     {
-
-        private string testDirectory;
+        private string TestDirectory { get; set; }
 
         [TestInitialize]
         public override void SetUp()
         {
             base.SetUp();
 
-            testDirectory = Utils.GetTempDirectory();
+            TestDirectory = Utils.GetTempDirectory();
         }
 
 
         [TestMethod]
         public void AppendsAdditionalArgumentsCorrectly()
         {
-            MockOptions.Setup(O => O.AdditionalTestExecutionParam).Returns("-testdirectory=\"${TestDirectory}\"");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"${TestDirectory}\"");
 
-            string CommandLine = new CommandLineGenerator(true, DUMMY_EXECUTABLE.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object, "MyTestDirectory").GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(true, DummyExecutable.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object, "MyTestDirectory").GetCommandLines().First().CommandLine;
 
-            Assert.IsTrue(CommandLine.EndsWith(" -testdirectory=\"MyTestDirectory\""));
+            Assert.IsTrue(commandLine.EndsWith(" -testdirectory=\"MyTestDirectory\""));
         }
 
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string CommandLine = new CommandLineGenerator(true, DUMMY_EXECUTABLE.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object, testDirectory).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(true, DummyExecutable.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object, TestDirectory).GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\"", CommandLine);
+            Assert.AreEqual("--gtest_output=\"xml:\"", commandLine);
         }
 
         [TestMethod]
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void TestCombinesCommonTestsInSuite()
         {
-            string[] TestsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
-            IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
+            string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
+            IEnumerable<TestCase> testCases = testsWithCommonSuite.Select(ToTestCase);
 
-            string CommandLine = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCases, testCases, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", CommandLine);
+            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", commandLine);
         }
 
         [TestMethod]
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void CombinesCommonTestsInSuiteInDifferentOrder()
         {
-            string[] TestsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb" };
-            IEnumerable<TestCase> TestCases = TestsWithCommonSuite.Select(ToTestCase);
-            IEnumerable<TestCase> TestCasesBackwards = TestCases.Reverse();
+            string[] testsWithCommonSuite = { "FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb" };
+            IEnumerable<TestCase> testCases = testsWithCommonSuite.Select(ToTestCase);
+            IEnumerable<TestCase> testCasesBackwards = testCases.Reverse();
 
-            string CommandLine = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, TestCases, TestCases, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCases, testCases, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().First().CommandLine;
-            string CommandLineFromBackwards = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, TestCasesBackwards, TestCasesBackwards, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            string commandLineFromBackwards = new CommandLineGenerator(false, DummyExecutable.Length, testCasesBackwards, testCasesBackwards, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().First().CommandLine;
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
-            Assert.AreEqual(ExpectedCommandLine, CommandLine);
-            Assert.AreEqual(ExpectedCommandLine, CommandLineFromBackwards);
+            Assert.AreEqual(ExpectedCommandLine, commandLine);
+            Assert.AreEqual(ExpectedCommandLine, commandLineFromBackwards);
         }
 
         [TestMethod]
         public void DoesNotCombineTestsNotHavingCommonSuite()
         {
-            string[] TestsWithDifferentSuite = new string[] { "FooSuite.BarTest", "BarSuite.BazTest1" };
-            string[] AllTests = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest1", "BarSuite.BazTest2" };
-            IEnumerable<TestCase> TestCases = TestsWithDifferentSuite.Select(ToTestCase);
-            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
+            string[] testsWithDifferentSuite = new string[] { "FooSuite.BarTest", "BarSuite.BazTest1" };
+            string[] allTests = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest1", "BarSuite.BazTest2" };
+            IEnumerable<TestCase> testCases = testsWithDifferentSuite.Select(ToTestCase);
+            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase);
 
-            string CommandLine = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", CommandLine);
+            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", commandLine);
         }
 
         [TestMethod]
         public void DoesNotCombineTestsNotHavingCommonSuite_InDifferentOrder()
         {
-            string[] TestsWithDifferentSuite = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest" };
-            string[] AllTests = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2" };
-            IEnumerable<TestCase> TestCases = TestsWithDifferentSuite.Select(ToTestCase);
-            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase);
+            string[] testsWithDifferentSuite = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest" };
+            string[] allTests = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2" };
+            IEnumerable<TestCase> testCases = testsWithDifferentSuite.Select(ToTestCase);
+            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase);
 
-            string CommandLine = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", CommandLine);
+            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", commandLine);
         }
 
         [TestMethod]
         public void BreaksUpLongCommandLinesCorrectly()
         {
-            List<string> AllTests = new List<string>();
-            List<string> TestsToExecute = new List<string>();
+            List<string> allTests = new List<string>();
+            List<string> testsToExecute = new List<string>();
             for (int i = 0; i < 1000; i++)
             {
-                AllTests.Add("MyTestSuite" + i + ".MyTest");
-                TestsToExecute.Add("MyTestSuite" + i + ".MyTest");
-                AllTests.Add("MyTestSuite" + i + ".MyTest2");
+                allTests.Add("MyTestSuite" + i + ".MyTest");
+                testsToExecute.Add("MyTestSuite" + i + ".MyTest");
+                allTests.Add("MyTestSuite" + i + ".MyTest2");
             }
-            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase).ToList();
-            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase).ToList();
+            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
+            IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> Commands = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().ToList();
 
-            Assert.AreEqual(3, Commands.Count);
+            Assert.AreEqual(3, commands.Count);
 
-            int LengthOfLongestTestname = AllTests.Max(S => S.Length);
+            int lengthOfLongestTestname = allTests.Max(s => s.Length);
 
-            string CommandLine = Commands[0].CommandLine;
-            Assert.IsTrue(CommandLine.Length < CommandLineGenerator.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
-            Assert.IsTrue(CommandLine.Length >= CommandLineGenerator.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
-            Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite0.MyTest:"));
+            string commandLine = commands[0].CommandLine;
+            Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
+            Assert.IsTrue(commandLine.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
+            Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite0.MyTest:"));
 
-            CommandLine = Commands[1].CommandLine;
-            Assert.IsTrue(CommandLine.Length < CommandLineGenerator.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
-            Assert.IsTrue(CommandLine.Length >= CommandLineGenerator.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
-            Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            commandLine = commands[1].CommandLine;
+            Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
+            Assert.IsTrue(commandLine.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
+            Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            CommandLine = Commands[2].CommandLine;
-            Assert.IsTrue(CommandLine.Length < CommandLineGenerator.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
-            Assert.IsTrue(CommandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            commandLine = commands[2].CommandLine;
+            Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
+            Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            HashSet<TestCase> TestsAsSet = new HashSet<TestCase>(TestCases);
-            HashSet<TestCase> SplittedTestsAsSet = new HashSet<TestCase>(Commands[0].TestCases.Union(Commands[1].TestCases).Union(Commands[2].TestCases));
+            HashSet<TestCase> testsAsSet = new HashSet<TestCase>(testCases);
+            HashSet<TestCase> splittedTestsAsSet = new HashSet<TestCase>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
 
-            Assert.AreEqual(TestsAsSet.Count, SplittedTestsAsSet.Count);
-            foreach (TestCase testCase in TestsAsSet)
+            Assert.AreEqual(testsAsSet.Count, splittedTestsAsSet.Count);
+            foreach (TestCase testCase in testsAsSet)
             {
-                Assert.IsTrue(SplittedTestsAsSet.Contains(testCase));
+                Assert.IsTrue(splittedTestsAsSet.Contains(testCase));
             }
         }
 
         [TestMethod]
         public void BreaksUpLongCommandLinesWithSuitesCorrectly()
         {
-            List<string> AllTests = new List<string>();
-            List<string> TestsToExecute = new List<string>();
+            List<string> allTests = new List<string>();
+            List<string> testsToExecute = new List<string>();
             for (int i = 0; i < 1000; i++)
             {
-                AllTests.Add("MyTestSuite" + i + ".MyTest");
-                TestsToExecute.Add("MyTestSuite" + i + ".MyTest");
-                AllTests.Add("MyTestSuite" + i + ".MyTest2");
+                allTests.Add("MyTestSuite" + i + ".MyTest");
+                testsToExecute.Add("MyTestSuite" + i + ".MyTest");
+                allTests.Add("MyTestSuite" + i + ".MyTest2");
             }
-            TestsToExecute.Add("MyTestSuite1.MyTest2");
-            TestsToExecute.Add("MyTestSuite5.MyTest2");
+            testsToExecute.Add("MyTestSuite1.MyTest2");
+            testsToExecute.Add("MyTestSuite5.MyTest2");
 
-            IEnumerable<TestCase> AllTestCases = AllTests.Select(ToTestCase).ToList();
-            IEnumerable<TestCase> TestCases = TestsToExecute.Select(ToTestCase).ToList();
+            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
+            IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> Commands = new CommandLineGenerator(false, DUMMY_EXECUTABLE.Length, AllTestCases, TestCases, "", MockLogger.Object, MockOptions.Object, testDirectory)
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, TestDirectory)
                 .GetCommandLines().ToList();
 
-            Assert.AreEqual(3, Commands.Count);
+            Assert.AreEqual(3, commands.Count);
 
-            int LengthOfLongestTestname = AllTests.Max(S => S.Length);
+            int lengthOfLongestTestname = allTests.Max(s => s.Length);
 
-            string Command = Commands[0].CommandLine;
-            Assert.IsTrue(Command.Length < CommandLineGenerator.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
-            Assert.IsTrue(Command.Length >= CommandLineGenerator.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
-            Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:MyTestSuite0.MyTest:"));
+            string command = commands[0].CommandLine;
+            Assert.IsTrue(command.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
+            Assert.IsTrue(command.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
+            Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:MyTestSuite0.MyTest:"));
 
-            Command = Commands[1].CommandLine;
-            Assert.IsTrue(Command.Length < CommandLineGenerator.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
-            Assert.IsTrue(Command.Length >= CommandLineGenerator.MAX_COMMAND_LENGTH - LengthOfLongestTestname - DUMMY_EXECUTABLE.Length - 1);
-            Assert.IsFalse(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
-            Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            command = commands[1].CommandLine;
+            Assert.IsTrue(command.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
+            Assert.IsTrue(command.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
+            Assert.IsFalse(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
+            Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            Command = Commands[2].CommandLine;
-            Assert.IsTrue(Command.Length < CommandLineGenerator.MAX_COMMAND_LENGTH - DUMMY_EXECUTABLE.Length);
-            Assert.IsFalse(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
-            Assert.IsTrue(Command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            command = commands[2].CommandLine;
+            Assert.IsTrue(command.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
+            Assert.IsFalse(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
+            Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            HashSet<TestCase> TestsAsSet = new HashSet<TestCase>(TestCases);
-            HashSet<TestCase> SplittedTestsAsSet = new HashSet<TestCase>(Commands[0].TestCases.Union(Commands[1].TestCases).Union(Commands[2].TestCases));
+            HashSet<TestCase> testsAsSet = new HashSet<TestCase>(testCases);
+            HashSet<TestCase> splittedTestsAsSet = new HashSet<TestCase>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
 
-            Assert.AreEqual(TestsAsSet.Count, SplittedTestsAsSet.Count);
-            foreach (TestCase testCase in TestsAsSet)
+            Assert.AreEqual(testsAsSet.Count, splittedTestsAsSet.Count);
+            foreach (TestCase testCase in testsAsSet)
             {
-                Assert.IsTrue(SplittedTestsAsSet.Contains(testCase));
+                Assert.IsTrue(splittedTestsAsSet.Contains(testCase));
             }
         }
 

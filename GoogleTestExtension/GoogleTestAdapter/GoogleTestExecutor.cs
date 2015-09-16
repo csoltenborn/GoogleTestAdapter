@@ -3,17 +3,19 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using GoogleTestAdapter.Execution;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
-    [ExtensionUri(EXECUTOR_URI_STRING)]
+    [ExtensionUri(ExecutorUriString)]
     public class GoogleTestExecutor : AbstractGoogleTestAdapterClass, ITestExecutor
     {
-        public const string EXECUTOR_URI_STRING = Constants.identifierUri;
-        public static readonly Uri EXECUTOR_URI = new Uri(EXECUTOR_URI_STRING);
+        public const string ExecutorUriString = Constants.IdentifierUri;
+        public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
-        private bool Canceled = false;
+        private bool Canceled { get; set; } = false;
 
         public GoogleTestExecutor() : this(null) { }
 
@@ -34,18 +36,18 @@ namespace GoogleTestAdapter
 
                 Canceled = false;
 
-                List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
-                GoogleTestDiscoverer Discoverer = new GoogleTestDiscoverer(Options);
-                foreach (string Executable in sources)
+                List<TestCase> allTestCasesInAllExecutables = new List<TestCase>();
+                GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(Options);
+                foreach (string executable in sources)
                 {
                     if (Canceled)
                     {
                         break;
                     }
 
-                    AllTestCasesInAllExecutables.AddRange(Discoverer.GetTestsFromExecutable(frameworkHandle, Executable));
+                    allTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(frameworkHandle, executable));
                 }
-                RunTests(true, AllTestCasesInAllExecutables, AllTestCasesInAllExecutables, runContext, frameworkHandle);
+                RunTests(true, allTestCasesInAllExecutables, allTestCasesInAllExecutables, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
@@ -60,15 +62,15 @@ namespace GoogleTestAdapter
                 DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
 
                 Canceled = false;
-                List<TestCase> AllTestCasesInAllExecutables = new List<TestCase>();
-                TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+                List<TestCase> allTestCasesInAllExecutables = new List<TestCase>();
+                TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
                 GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(Options);
-                foreach (string Executable in testCasesToRun.Select(TC => TC.Source).Distinct())
+                foreach (string executable in testCasesToRunAsArray.Select(tc => tc.Source).Distinct())
                 {
-                    AllTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(frameworkHandle, Executable));
+                    allTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(frameworkHandle, executable));
                 }
-                RunTests(false, AllTestCasesInAllExecutables, TestCasesToRun, runContext, frameworkHandle);
+                RunTests(false, allTestCasesInAllExecutables, testCasesToRunAsArray, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
@@ -96,22 +98,22 @@ namespace GoogleTestAdapter
 
         public static IDictionary<string, List<TestCase>> GroupTestcasesByExecutable(IEnumerable<TestCase> testcases)
         {
-            Dictionary<string, List<TestCase>> GroupedTestCases = new Dictionary<string, List<TestCase>>();
-            foreach (TestCase TestCase in testcases)
+            Dictionary<string, List<TestCase>> groupedTestCases = new Dictionary<string, List<TestCase>>();
+            foreach (TestCase testCase in testcases)
             {
-                List<TestCase> Group;
-                if (GroupedTestCases.ContainsKey(TestCase.Source))
+                List<TestCase> group;
+                if (groupedTestCases.ContainsKey(testCase.Source))
                 {
-                    Group = GroupedTestCases[TestCase.Source];
+                    group = groupedTestCases[testCase.Source];
                 }
                 else
                 {
-                    Group = new List<TestCase>();
-                    GroupedTestCases.Add(TestCase.Source, Group);
+                    group = new List<TestCase>();
+                    groupedTestCases.Add(testCase.Source, group);
                 }
-                Group.Add(TestCase);
+                group.Add(testCase);
             }
-            return GroupedTestCases;
+            return groupedTestCases;
         }
 
     }

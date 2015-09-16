@@ -10,14 +10,14 @@ namespace GoogleTestAdapter
 {
     public class AbstractGoogleTestExtensionTests
     {
-        protected const string DUMMY_EXECUTABLE = "ff.exe";
+        protected static string DummyExecutable { get; } = "ff.exe";
 
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
         protected readonly Mock<IOptions> MockOptions = new Mock<IOptions>();
 
         internal AbstractGoogleTestExtensionTests()
         {
-            Constants.UNIT_TEST_MODE = true;
+            Constants.UnitTestMode = true;
         }
 
         [TestInitialize]
@@ -26,14 +26,14 @@ namespace GoogleTestAdapter
             MockLogger.Reset();
             MockOptions.Reset();
 
-            MockOptions.Setup(O => O.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
-            MockOptions.Setup(O => O.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
-            MockOptions.Setup(O => O.AdditionalTestExecutionParam).Returns("");
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("");
         }
 
         protected static TestCase ToTestCase(string name)
         {
-            return new TestCase(name, new Uri("http://none"), DUMMY_EXECUTABLE);
+            return new TestCase(name, new Uri("http://none"), DummyExecutable);
         }
 
     }

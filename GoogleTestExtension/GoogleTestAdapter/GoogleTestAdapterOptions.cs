@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter
@@ -121,8 +122,8 @@ namespace GoogleTestAdapter
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
-                return ParseTraitsRegexesString(Option);
+                string option = RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TRAITS_REGEXES_BEFORE, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                return ParseTraitsRegexesString(option);
             }
         }
 
@@ -130,8 +131,8 @@ namespace GoogleTestAdapter
         {
             get
             {
-                string Option = RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
-                return ParseTraitsRegexesString(Option);
+                string option = RegistryReader.ReadString(REG_OPTION_GENERAL_BASE, REG_OPTION_TRAITS_REGEXES_AFTER, OPTION_TRAITS_REGEXES_DEFAULT_VALUE);
+                return ParseTraitsRegexesString(option);
             }
         }
 
@@ -158,25 +159,25 @@ namespace GoogleTestAdapter
 
         private List<RegexTraitPair> ParseTraitsRegexesString(string option)
         {
-            List<RegexTraitPair> Result = new List<RegexTraitPair>();
-            string[] Pairs = option.Split(new[] { TRAITS_REGEXES_PAIR_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string Pair in Pairs)
+            List<RegexTraitPair> result = new List<RegexTraitPair>();
+            string[] pairs = option.Split(new[] { TRAITS_REGEXES_PAIR_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string pair in pairs)
             {
                 try
                 {
-                    string[] Values = Pair.Split(new[] { TRAITS_REGEXES_REGEX_SEPARATOR }, StringSplitOptions.None);
-                    string[] Trait = Values[1].Split(new[] { TRAITS_REGEXES_TRAIT_SEPARATOR }, StringSplitOptions.None);
-                    string Regex = Values[0];
-                    string TraitName = Trait[0];
-                    string TraitValue = Trait[1];
-                    Result.Add(new RegexTraitPair(Regex, TraitName, TraitValue));
+                    string[] values = pair.Split(new[] { TRAITS_REGEXES_REGEX_SEPARATOR }, StringSplitOptions.None);
+                    string[] trait = values[1].Split(new[] { TRAITS_REGEXES_TRAIT_SEPARATOR }, StringSplitOptions.None);
+                    string regex = values[0];
+                    string traitName = trait[0];
+                    string traitValue = trait[1];
+                    result.Add(new RegexTraitPair(regex, traitName, traitValue));
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("Could not parse pair '" + Pair + "', exception message: " + e.Message);
+                    Debug.WriteLine("Could not parse pair '" + pair + "', exception message: " + e.Message);
                 }
             }
-            return Result;
+            return result;
         }
 
     }

@@ -1,22 +1,21 @@
-﻿using GoogleTestAdapter.Scheduling;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Execution
 {
     public class PreparingTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
-        private readonly IGoogleTestRunner innerTestRunner;
+        private IGoogleTestRunner InnerTestRunner { get; }
 
         public bool Canceled { get; set; } = false;
 
         public PreparingTestRunner(IGoogleTestRunner innerTestrunner, IOptions options) : base(options) {
-            this.innerTestRunner = innerTestrunner;
+            this.InnerTestRunner = innerTestrunner;
         }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
@@ -32,7 +31,7 @@ namespace GoogleTestAdapter
 
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 
-                innerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
+                InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, testDirectory);
 
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 

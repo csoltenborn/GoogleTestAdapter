@@ -3,15 +3,15 @@
 
     public class Constants
     {
-        public static bool UNIT_TEST_MODE = false;
+        public static bool UnitTestMode = false;
 
-        public const string FILE_ENDING_TEST_DURATIONS = ".gta_testdurations";
+        public const string FileEndingTestDurations = ".gta_testdurations";
 
-        public const string identifierUri = "executor://GoogleTestRunner/v1";
-        public const string gtestListTests = "--gtest_list_tests";
-        public const string gtestTestBodySignature = "::TestBody";
+        public const string IdentifierUri = "executor://GoogleTestRunner/v1";
+        public const string GtestListTests = "--gtest_list_tests";
+        public const string GtestTestBodySignature = "::TestBody";
 
-        public const string TEST_FINDER_REGEX = @"[Tt]est[s]?\.exe";
+        public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
     }
 
 }

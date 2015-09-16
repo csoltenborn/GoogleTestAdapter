@@ -2,23 +2,24 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {
     public class NumberBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
     {
-        private readonly IEnumerable<TestCase> testcasesToRun;
+        private IEnumerable<TestCase> TestcasesToRun { get; }
 
         public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun) : this(testcasesToRun, null) { }
 
         public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, IOptions options) : base(options)
         {
-            this.testcasesToRun = testcasesToRun;
+            this.TestcasesToRun = testcasesToRun;
         }
 
         public List<List<TestCase>> SplitTestcases()
         {
-            int nrOfThreadsToUse = Math.Min(Options.MaxNrOfThreads, testcasesToRun.Count());
+            int nrOfThreadsToUse = Math.Min(Options.MaxNrOfThreads, TestcasesToRun.Count());
             List<TestCase>[] splitTestCases = new List<TestCase>[nrOfThreadsToUse];
             for (int i = 0; i < nrOfThreadsToUse; i++)
             {
@@ -26,7 +27,7 @@ namespace GoogleTestAdapter.Scheduling
             }
 
             int testcaseCounter = 0;
-            foreach (TestCase testCase in testcasesToRun)
+            foreach (TestCase testCase in TestcasesToRun)
             {
                 splitTestCases[testcaseCounter++ % nrOfThreadsToUse].Add(testCase);
             }

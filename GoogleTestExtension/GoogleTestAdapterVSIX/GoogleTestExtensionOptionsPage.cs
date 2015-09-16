@@ -23,10 +23,10 @@ namespace GoogleTestAdapterVSIX
         {
             base.Initialize();
 
-            DialogPage Page = GetDialogPage(typeof(GeneralOptionsDialogPage));
-            Page.SaveSettingsToStorage();
-            Page = GetDialogPage(typeof(ParallelizationOptionsDialogPage));
-            Page.SaveSettingsToStorage();
+            DialogPage page = GetDialogPage(typeof(GeneralOptionsDialogPage));
+            page.SaveSettingsToStorage();
+            page = GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            page.SaveSettingsToStorage();
         }
 
     }
@@ -41,7 +41,7 @@ namespace GoogleTestAdapterVSIX
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]
         [DisplayName(GoogleTestAdapterOptions.OPTION_TEST_DISCOVERY_REGEX)]
-        [Description(@"If non-empty, this regex will be used to discover the executables containing your tests. Default regex: " + GoogleTestAdapter.Constants.TEST_FINDER_REGEX)]
+        [Description(@"If non-empty, this regex will be used to discover the executables containing your tests. Default regex: " + GoogleTestAdapter.Constants.TestFinderRegex)]
         public string TestDiscoveryRegex { get; set; } = GoogleTestAdapterOptions.OPTION_TEST_DISCOVERY_REGEX_DEFAULT_VALUE;
 
         [Category(GoogleTestAdapterOptions.CATEGORY_NAME)]

@@ -1,13 +1,14 @@
-﻿using GoogleTestAdapter.Scheduling;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Scheduling;
+using GoogleTestAdapter.TestResults;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Execution
 {
     public class SequentialTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
@@ -22,15 +23,15 @@ namespace GoogleTestAdapter
                 throw new ArgumentNullException("testDirectory");
             }
 
-            IDictionary<string, List<TestCase>> GroupedTestCases = GoogleTestExecutor.GroupTestcasesByExecutable(testCasesToRun);
-            TestCase[] AllTestCases = allTestCases.ToArray();
-            foreach (string Executable in GroupedTestCases.Keys)
+            IDictionary<string, List<TestCase>> groupedTestCases = GoogleTestExecutor.GroupTestcasesByExecutable(testCasesToRun);
+            TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
+            foreach (string executable in groupedTestCases.Keys)
             {
                 if (Canceled)
                 {
                     break;
                 }
-                RunTestsFromExecutable(runAllTestCases, Executable, AllTestCases, GroupedTestCases[Executable], runContext, handle, testDirectory);
+                RunTestsFromExecutable(runAllTestCases, executable, allTestCasesAsArray, groupedTestCases[executable], runContext, handle, testDirectory);
             }
 
         }
@@ -38,61 +39,61 @@ namespace GoogleTestAdapter
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {
-            TestCase[] TestCasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            foreach (TestCase TestCase in TestCasesToRun)
+            TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+            foreach (TestCase testCase in testCasesToRunAsArray)
             {
-                handle.RecordStart(TestCase);
+                handle.RecordStart(testCase);
             }
 
-            string ResultXmlFile = Path.GetTempFileName();
-            string WorkingDir = Path.GetDirectoryName(executable);
-            TestResultReporter Reporter = new TestResultReporter(handle);
-            foreach (CommandLineGenerator.Args Arguments in new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, TestCasesToRun, ResultXmlFile, handle, Options, testDirectory).GetCommandLines())
+            string resultXmlFile = Path.GetTempFileName();
+            string workingDir = Path.GetDirectoryName(executable);
+            TestResultReporter reporter = new TestResultReporter(handle);
+            foreach (CommandLineGenerator.Args arguments in new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, testCasesToRunAsArray, resultXmlFile, handle, Options, testDirectory).GetCommandLines())
             {
-                List<string> ConsoleOutput = ProcessUtils.GetOutputOfCommand(handle, WorkingDir, executable, Arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
-                IEnumerable<TestResult> Results = CollectTestResults(ResultXmlFile, ConsoleOutput, Arguments.TestCases,
+                List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
+                IEnumerable<TestResult> results = CollectTestResults(resultXmlFile, consoleOutput, arguments.TestCases,
                     handle);
-                Reporter.ReportTestResults(Results);
+                reporter.ReportTestResults(results);
 
                 TestDurationSerializer serializer = new TestDurationSerializer();
-                serializer.UpdateTestDurations(Results);
+                serializer.UpdateTestDurations(results);
             }
         }
 
         private List<TestResult> CollectTestResults(string resultXmlFile, List<string> consoleOutput, IEnumerable<TestCase> testCasesRun, IFrameworkHandle handle)
         {
-            List<TestResult> TestResults = new List<TestResult>();
+            List<TestResult> testResults = new List<TestResult>();
 
-            TestCase[] TestCasesRun = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            XmlTestResultParser XmlParser = new XmlTestResultParser(resultXmlFile, TestCasesRun, handle);
-            TestResults.AddRange(XmlParser.GetTestResults());
+            var testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
+            XmlTestResultParser xmlParser = new XmlTestResultParser(resultXmlFile, testCasesRunAsArray, handle);
+            testResults.AddRange(xmlParser.GetTestResults());
 
-            if (TestResults.Count < TestCasesRun.Length)
+            if (testResults.Count < testCasesRunAsArray.Length)
             {
-                StandardOutputTestResultParser ConsoleParser = new StandardOutputTestResultParser(consoleOutput, TestCasesRun, handle);
-                List<TestResult> ConsoleResults = ConsoleParser.GetTestResults();
-                foreach (TestResult TestResult in ConsoleResults.Where(TR => !TestResults.Exists(TR2 => TR.TestCase.FullyQualifiedName == TR2.TestCase.FullyQualifiedName)))
+                StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(consoleOutput, testCasesRunAsArray, handle);
+                List<TestResult> consoleResults = consoleParser.GetTestResults();
+                foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
                 {
-                    TestResults.Add(TestResult);
+                    testResults.Add(testResult);
                 }
 
-                if (TestResults.Count < TestCasesRun.Length)
+                if (testResults.Count < testCasesRunAsArray.Length)
                 {
-                    foreach (TestCase TestCase in TestCasesRun.Where(TC => !TestResults.Exists(TR => TR.TestCase.FullyQualifiedName == TC.FullyQualifiedName)))
+                    foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
                     {
-                        string ErrorMsg = ConsoleParser.CrashedTestCase == null ? ""
-                            : "reason is probably a crash of test " + ConsoleParser.CrashedTestCase.DisplayName;
-                        TestResults.Add(new TestResult(TestCase)
+                        string errorMsg = consoleParser.CrashedTestCase == null ? ""
+                            : "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
+                        testResults.Add(new TestResult(testCase)
                         {
                             ComputerName = Environment.MachineName,
                             Outcome = TestOutcome.Skipped,
-                            ErrorMessage = ErrorMsg
+                            ErrorMessage = errorMsg
                         });
                     }
                 }
             }
 
-            return TestResults;
+            return testResults;
         }
 
     }

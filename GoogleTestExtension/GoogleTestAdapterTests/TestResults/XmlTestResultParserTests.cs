@@ -1,130 +1,130 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
     public class XmlTestResultParserTests : AbstractGoogleTestExtensionTests
     {
 
-        private const string XML_FILE_1 = @"..\..\..\testdata\SampleResult1.xml";
-        private const string XML_FILE_2 = @"..\..\..\testdata\SampleResult2.xml";
-        private const string XML_FILE_BROKEN = @"..\..\..\testdata\SampleResult1_Broken.xml";
+        private const string XmlFile1 = @"..\..\..\testdata\SampleResult1.xml";
+        private const string XmlFile2 = @"..\..\..\testdata\SampleResult2.xml";
+        private const string XmlFileBroken = @"..\..\..\testdata\SampleResult1_Broken.xml";
 
         [TestMethod]
         public void FailsNicelyIfFileDoesNotExist()
         {
-            string[] Tests = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser("somefile", TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser("somefile", testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(0, Results.Count);
-            MockLogger.Verify(L => L.SendMessage(It.Is<TestMessageLevel>(Tml => Tml == TestMessageLevel.Warning), It.IsAny<string>()),
+            Assert.AreEqual(0, results.Count);
+            MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
                             Times.Exactly(1));
         }
 
         [TestMethod]
         public void FailsNicelyIfFileIsInvalid()
         {
-            string[] Tests = new string[] { "GoogleTestSuiteName1.TestMethod_001", "GoogleTestSuiteName1.TestMethod_002" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "GoogleTestSuiteName1.TestMethod_001", "GoogleTestSuiteName1.TestMethod_002" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_BROKEN, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFileBroken, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(0, Results.Count);
-            MockLogger.Verify(L => L.SendMessage(It.Is<TestMessageLevel>(Tml => Tml == TestMessageLevel.Warning), It.IsAny<string>()),
+            Assert.AreEqual(0, results.Count);
+            MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
                             Times.Exactly(1));
         }
 
         [TestMethod]
         public void FindsSuccessfulResultsInSample1()
         {
-            string[] Tests = new string[] { "GoogleTestSuiteName1.TestMethod_001" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "GoogleTestSuiteName1.TestMethod_001" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_1, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFile1, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, Results.Count);
-            AssertTestResultIsPassed(Results[0]);
+            Assert.AreEqual(1, results.Count);
+            AssertTestResultIsPassed(results[0]);
         }
 
         [TestMethod]
         public void FindsSuccessfulParameterizedResultInSample1()
         {
-            string[] Tests = new string[] { "ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_1, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFile1, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, Results.Count);
-            AssertTestResultIsPassed(Results[0]);
+            Assert.AreEqual(1, results.Count);
+            AssertTestResultIsPassed(results[0]);
         }
 
         [TestMethod]
         public void FindsFailureResultInSample1()
         {
-            string[] Tests = new string[] { "AnimalsTest.testGetEnoughAnimals" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "AnimalsTest.testGetEnoughAnimals" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_1, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFile1, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, Results.Count);
+            Assert.AreEqual(1, results.Count);
             string ErrorMsg = @"x:\prod\company\util\util.cpp:67
 Value of: animals.size()
   Actual: 1
 Expected: 3
 Should get three animals";
-            AssertTestResultIsFailure(Results[0], ErrorMsg);
+            AssertTestResultIsFailure(results[0], ErrorMsg);
         }
 
         [TestMethod]
         public void FindsParamterizedFailureResultInSample1()
         {
-            string[] Tests = new string[] { "ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_1, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFile1, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, Results.Count);
-            string ErrorMsg = @"someSimpleParameterizedTest.cpp:61
+            Assert.AreEqual(1, results.Count);
+            string errorMsg = @"someSimpleParameterizedTest.cpp:61
 Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0";
-            AssertTestResultIsFailure(Results[0], ErrorMsg);
+            AssertTestResultIsFailure(results[0], errorMsg);
         }
 
         [TestMethod]
         public void FindsSuccessfulResultInSample2()
         {
-            string[] Tests = new string[] { "FooTest.DoesXyz" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "FooTest.DoesXyz" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_2, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFile2, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, Results.Count);
-            AssertTestResultIsPassed(Results[0]);
+            Assert.AreEqual(1, results.Count);
+            AssertTestResultIsPassed(results[0]);
         }
 
         [TestMethod]
         public void FindsFailureResultInSample2()
         {
-            string[] Tests = new string[] { "FooTest.MethodBarDoesAbc" };
-            IEnumerable<TestCase> TestCases = Tests.Select(ToTestCase);
+            string[] tests = { "FooTest.MethodBarDoesAbc" };
+            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
 
-            XmlTestResultParser Parser = new XmlTestResultParser(XML_FILE_2, TestCases, MockLogger.Object);
-            List<TestResult> Results = Parser.GetTestResults();
+            XmlTestResultParser parser = new XmlTestResultParser(XmlFile2, testCases, MockLogger.Object);
+            List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, Results.Count);
+            Assert.AreEqual(1, results.Count);
             string ErrorMsg = @"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:40
 Value of: output_filepath
   Actual: ""this/package/testdata/myoutputfile.dat""
@@ -136,7 +136,7 @@ c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:41
 Value of: 56456
 Expected: 12312
 Something's wrong :(";
-            AssertTestResultIsFailure(Results[0], ErrorMsg);
+            AssertTestResultIsFailure(results[0], ErrorMsg);
         }
 
         private void AssertTestResultIsPassed(TestResult testResult)

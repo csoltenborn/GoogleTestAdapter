@@ -11,10 +11,10 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void SameNumberOfTestsAsThreads_TestsAreDistributedEvenly()
         {
-            string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
+            string[] testsWithCommonSuite = { "FooSuite.BarTest", "FooSuite.BazTest" };
             IEnumerable<TestCase> testcases = testsWithCommonSuite.Select(ToTestCase);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(2);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             NumberBasedTestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.Scheduling
             string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest" };
             IEnumerable<TestCase> testcases = testsWithCommonSuite.Select(ToTestCase);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(2);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             NumberBasedTestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.Scheduling
                 testcases.Add(ToTestCase("TestSuite.Test" + i));
             }
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(8);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
             NumberBasedTestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.Scheduling
             string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
             IEnumerable<TestCase> testcases = testsWithCommonSuite.Select(ToTestCase);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(8);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
             NumberBasedTestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();

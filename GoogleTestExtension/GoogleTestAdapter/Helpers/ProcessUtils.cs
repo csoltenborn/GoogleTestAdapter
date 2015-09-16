@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Helpers
 {
     public static class ProcessUtils
     {
@@ -71,11 +71,11 @@ namespace GoogleTestAdapter
         {
             while (!process.StandardOutput.EndOfStream)
             {
-                string Line = process.StandardOutput.ReadLine();
-                streamContent.Add(Line);
+                string line = process.StandardOutput.ReadLine();
+                streamContent.Add(line);
                 if (printTestOutput)
                 {
-                    logger.SendMessage(TestMessageLevel.Informational, Line);
+                    logger.SendMessage(TestMessageLevel.Informational, line);
                 }
             }
             if ((throwIfError && process.ExitCode != 0))

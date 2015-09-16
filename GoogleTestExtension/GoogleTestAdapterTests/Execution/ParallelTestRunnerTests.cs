@@ -1,10 +1,11 @@
-﻿using Moq;
-using System;
+﻿using System;
+using System.Diagnostics;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
+using Moq;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Execution
 {
     [TestClass]
     public class ParallelTestRunnerTests : AbstractGoogleTestExtensionTests
@@ -18,23 +19,23 @@ namespace GoogleTestAdapter
                 Assert.Inconclusive("This test is designed for machines with at least 4 cores");
             }
 
-            string executable = GoogleTestDiscovererTests.x86traitsTests;
-            Mock<IFrameworkHandle> MockHandle = new Mock<IFrameworkHandle>();
-            Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
+            string executable = GoogleTestDiscovererTests.X86TraitsTests;
+            Mock<IFrameworkHandle> mockHandle = new Mock<IFrameworkHandle>();
+            Mock<IRunContext> mockRunContext = new Mock<IRunContext>();
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            GoogleTestExecutor Executor = new GoogleTestExecutor(MockOptions.Object);
-            Executor.RunTests(executable.Yield(), MockRunContext.Object, MockHandle.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            executor.RunTests(executable.Yield(), mockRunContext.Object, mockHandle.Object);
             stopwatch.Stop();
             long sequentialDuration = stopwatch.ElapsedMilliseconds;
 
-            MockOptions.Setup(O => O.ParallelTestExecution).Returns(true);
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(Environment.ProcessorCount);
+            MockOptions.Setup(o => o.ParallelTestExecution).Returns(true);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
             stopwatch.Restart();
-            Executor = new GoogleTestExecutor(MockOptions.Object);
-            Executor.RunTests(executable.Yield(), MockRunContext.Object, MockHandle.Object);
+            executor = new GoogleTestExecutor(MockOptions.Object);
+            executor.RunTests(executable.Yield(), mockRunContext.Object, mockHandle.Object);
             stopwatch.Stop();
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 

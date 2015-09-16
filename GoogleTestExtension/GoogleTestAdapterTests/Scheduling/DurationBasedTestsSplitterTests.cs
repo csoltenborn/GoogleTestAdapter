@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.Scheduling
             durations.Add(ToTestCase("LongTest"), 3);
             durations.Add(ToTestCase("ShortTest3"), 1);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(2);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             DurationBasedTestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.Scheduling
             durations.Add(ToTestCase("LongTest"), 3);
             durations.Add(ToTestCase("ShortTest3"), 1);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(3);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
             DurationBasedTestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
@@ -57,7 +57,7 @@ namespace GoogleTestAdapter.Scheduling
             durations.Add(ToTestCase("ShortTest1"), 1);
             durations.Add(ToTestCase("LongTest"), 5);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(3);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
             DurationBasedTestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
@@ -80,23 +80,23 @@ namespace GoogleTestAdapter.Scheduling
         {
             IDictionary<TestCase, int> durations = CreateRandomTestResults(nrOfTests, maxRandomDuration);
 
-            MockOptions.Setup(O => O.MaxNrOfThreads).Returns(nrOfThreads);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(nrOfThreads);
 
             DurationBasedTestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(nrOfThreads, result.Count);
-            Assert.AreEqual(nrOfTests, result.Select(L => L.Count).Sum());
+            Assert.AreEqual(nrOfTests, result.Select(l => l.Count).Sum());
 
-            int sumOfAllDurations = durations.Select(KVP => KVP.Value).Sum();
-            int maxDuration = durations.Select(KVP => KVP.Value).Max();
+            int sumOfAllDurations = durations.Select(kvp => kvp.Value).Sum();
+            int maxDuration = durations.Select(kvp => kvp.Value).Max();
 
             int targetDuration = sumOfAllDurations / nrOfThreads;
 
             HashSet<TestCase> foundTestcases = new HashSet<TestCase>();
             foreach (List<TestCase> testcases in result)
             {
-                int sum = testcases.Select(TC => durations[TC]).Sum();
+                int sum = testcases.Select(tc => durations[tc]).Sum();
                 Assert.IsTrue(sum < targetDuration + maxDuration / 2);
                 Assert.IsTrue(sum > targetDuration - maxDuration / 2);
 

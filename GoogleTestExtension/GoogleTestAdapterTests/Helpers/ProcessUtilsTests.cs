@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
     public class ProcessUtilsTests : AbstractGoogleTestExtensionTests
@@ -11,10 +11,10 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void ReturnsOutputOfCommand()
         {
-            List<string> Output = ProcessUtils.GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"echo 2\"", false, false, null, null);
+            List<string> output = ProcessUtils.GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"echo 2\"", false, false, null, null);
 
-            Assert.AreEqual(1, Output.Count);
-            Assert.AreEqual("2", Output[0]);
+            Assert.AreEqual(1, output.Count);
+            Assert.AreEqual("2", output[0]);
         }
 
         [TestMethod]

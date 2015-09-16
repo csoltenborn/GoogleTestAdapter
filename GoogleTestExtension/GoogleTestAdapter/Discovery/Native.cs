@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Discovery
 {
 
     [StructLayout(LayoutKind.Sequential)]
-    unsafe struct LOADED_IMAGE
+    // ReSharper disable once InconsistentNaming
+    struct LOADED_IMAGE
     {
         public IntPtr ModuleName;
         public IntPtr hFile;
@@ -30,7 +31,8 @@ namespace GoogleTestAdapter
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    unsafe struct IMAGE_IMPORT_DESCRIPTOR
+    // ReSharper disable once InconsistentNaming
+    struct IMAGE_IMPORT_DESCRIPTOR
     {
         [FieldOffset(0)]
         public uint Characteristics;
@@ -51,13 +53,13 @@ namespace GoogleTestAdapter
     unsafe public static class Native
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
-        private static extern unsafe bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
+        private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
 
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern bool UnMapAndLoad(ref LOADED_IMAGE loadedImage);
 
         [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
-        private static extern unsafe IMAGE_IMPORT_DESCRIPTOR* ImageDirectoryEntryToData(IntPtr pBase, bool mappedAsImage, ushort directoryEntry, uint* size);
+        private static extern IMAGE_IMPORT_DESCRIPTOR* ImageDirectoryEntryToData(IntPtr pBase, bool mappedAsImage, ushort directoryEntry, uint* size);
 
         [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern IntPtr ImageRvaToVa(IntPtr pNtHeaders, IntPtr pBase, uint rva, IntPtr pLastRvaSection);
@@ -69,14 +71,13 @@ namespace GoogleTestAdapter
 
         public class ImportsParser
         {
-            private LOADED_IMAGE loadedImage = new LOADED_IMAGE();
+            private LOADED_IMAGE _loadedImage = new LOADED_IMAGE();
 
-            private List<string> imports = new List<string>();
-            public List<string> Imports { get { return imports; } }
+            public List<string> Imports { get; } = new List<string>();
 
             public ImportsParser(string fileName, IMessageLogger logger)
             {
-                fixed (LOADED_IMAGE* fixedLoadedImage = &loadedImage)
+                fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {
                     if (MapAndLoad(fileName, null, fixedLoadedImage, true, true))
                     {
@@ -85,11 +86,11 @@ namespace GoogleTestAdapter
                         IMAGE_IMPORT_DESCRIPTOR directoryEntry = *directoryEntryPtr;
                         while (directoryEntry.OriginalFirstThunk != 0u)
                         {
-                            imports.Add(GetString(directoryEntry.Name));
+                            Imports.Add(GetString(directoryEntry.Name));
                             directoryEntryPtr++;
                             directoryEntry = *directoryEntryPtr;
                         }
-                        if (!UnMapAndLoad(ref loadedImage))
+                        if (!UnMapAndLoad(ref _loadedImage))
                         {
                             logger.SendMessage(TestMessageLevel.Error, "GTA: UnMapAndLoad failed!");
                         }
@@ -99,7 +100,7 @@ namespace GoogleTestAdapter
 
             private string GetString(uint name)
             {
-                IntPtr stringPtr = ImageRvaToVa(loadedImage.FileHeader, loadedImage.MappedAddress, name, IntPtr.Zero);
+                IntPtr stringPtr = ImageRvaToVa(_loadedImage.FileHeader, _loadedImage.MappedAddress, name, IntPtr.Zero);
                 return Marshal.PtrToStringAnsi(stringPtr);
             }
         }

@@ -1,19 +1,19 @@
 ﻿using Microsoft.Win32;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapter.Helpers
 {
     public static class RegistryReader
     {
 
         public static string ReadString(string keyName, string valueName, string defaultValue)
         {
-            string TypedValue = (string) ReadObject(keyName, valueName, defaultValue);
-            if (TypedValue == defaultValue)
+            string typedValue = (string) ReadObject(keyName, valueName, defaultValue);
+            if (typedValue == defaultValue)
             {
-                return TypedValue;
+                return typedValue;
             }
-            int IndexOfLastStar = TypedValue.LastIndexOf('*');
-            return TypedValue.Substring(IndexOfLastStar + 1).Trim();
+            int indexOfLastStar = typedValue.LastIndexOf('*');
+            return typedValue.Substring(indexOfLastStar + 1).Trim();
         }
 
         public static bool ReadBool(string keyName, string valueName, bool defaultValue)
@@ -28,8 +28,8 @@ namespace GoogleTestAdapter
 
         private static object ReadObject(string keyName, string valueName, object defaultValue)
         {
-            object Result = Registry.GetValue(keyName, valueName, null);
-            return Result ?? defaultValue;
+            object result = Registry.GetValue(keyName, valueName, null);
+            return result ?? defaultValue;
         }
 
     }

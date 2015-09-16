@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {
@@ -33,7 +34,7 @@ namespace GoogleTestAdapter.Scheduling
             string durationsFile = GetDurationsFile(serializer, tempFile);
             Assert.IsTrue(File.Exists(durationsFile));
 
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(TR => TR.TestCase));
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(1, durations.Count);
             Assert.IsTrue(durations.ContainsKey(testResults[0].TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
@@ -67,7 +68,7 @@ namespace GoogleTestAdapter.Scheduling
             string durationsFile2 = GetDurationsFile(serializer, tempFile2);
             Assert.IsTrue(File.Exists(durationsFile2));
 
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(TR => TR.TestCase));
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(2, durations.Count);
             Assert.IsTrue(durations.ContainsKey(testResults[0].TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
@@ -91,12 +92,12 @@ namespace GoogleTestAdapter.Scheduling
 
             TestDurationSerializer serializer = new TestDurationSerializer();
             serializer.UpdateTestDurations(testResults);
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(TR => TR.TestCase));
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
 
             testResults[0].Duration = TimeSpan.FromMilliseconds(4);
             serializer.UpdateTestDurations(testResults);
-            durations = serializer.ReadTestDurations(testResults.Select(TR => TR.TestCase));
+            durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(1, durations.Count);
             Assert.IsTrue(durations.ContainsKey(testResults[0].TestCase));
             Assert.AreEqual(4, durations[testResults[0].TestCase]);
