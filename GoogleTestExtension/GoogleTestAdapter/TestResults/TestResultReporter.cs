@@ -7,13 +7,13 @@ namespace GoogleTestAdapter.TestResults
 {
     public class TestResultReporter
     {
-        private const int NrOfTestResultsBeforeWaiting = 1;
+        private const int NrOfTestResultsBeforeWaiting = 3;
         private const int WaitingTime = 1;
 
         private static readonly object Lock = new object();
 
         private IFrameworkHandle FrameworkHandle { get; }
-        private int NrOfReportedResults { get; set; } = 0;
+        private static int NrOfReportedResults { get; set; } = 0;
 
         public TestResultReporter(IFrameworkHandle frameworkHandle)
         {
