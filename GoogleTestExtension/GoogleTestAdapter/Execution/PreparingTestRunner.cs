@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.Execution
                 }
 
                 testDirectory = Utils.GetTempDirectory();
-                string userParameters = Options.GetUserParameters(testDirectory, ThreadId);
+                string userParameters = Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 

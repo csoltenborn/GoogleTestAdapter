@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.TestResults
 {
     public class XmlTestResultParser
     {
-        private const string ErrorMsgNoXmlFile = "Output file does not exist, did your tests crash?";
+        private const string ErrorMsgNoXmlFile = "GTA: Output file does not exist, did your tests crash?";
 
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(XmlResultFile);
-                DebugUtils.LogUserDebugMessage(Logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "Loaded test results from " + XmlResultFile);
+                DebugUtils.LogUserDebugMessage(Logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "GTA: Loaded test results from " + XmlResultFile);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
@@ -111,7 +111,7 @@ namespace GoogleTestAdapter.TestResults
                     testResult.Outcome = TestOutcome.Skipped;
                     break;
                 default:
-                    string msg = "Unknown testcase status: " + testCaseStatus + ". Please send this information to the developer.";
+                    string msg = "GTA: Unknown testcase status: " + testCaseStatus;
                     Logger.SendMessage(TestMessageLevel.Error, msg);
                     throw new Exception(msg);
             }

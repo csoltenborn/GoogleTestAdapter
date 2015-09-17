@@ -90,7 +90,7 @@ namespace GoogleTestAdapter
             else
             {
                 runner = new SequentialTestRunner(Options);
-                userParameters = Options.GetUserParameters(Utils.GetTempDirectory(), 0);
+                userParameters = Options.GetUserParameters(runContext.SolutionDirectory, Utils.GetTempDirectory(), 0);
             }
             runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
