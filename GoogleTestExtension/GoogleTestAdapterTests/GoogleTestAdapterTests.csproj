@@ -61,7 +61,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -69,6 +71,7 @@
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
     <Compile Include="Execution\CommandLineGeneratorTests.cs" />
     <Compile Include="Execution\ParallelTestRunnerTests.cs" />
+    <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="AbstractGoogleTestExecutorTests.cs" />

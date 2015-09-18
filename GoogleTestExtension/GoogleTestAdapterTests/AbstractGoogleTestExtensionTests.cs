@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -14,6 +15,7 @@ namespace GoogleTestAdapter
 
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
         protected readonly Mock<AbstractOptions> MockOptions = new Mock<AbstractOptions>() { CallBase = true };
+        protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
 
         internal AbstractGoogleTestExtensionTests()
         {
@@ -33,6 +35,7 @@ namespace GoogleTestAdapter
         {
             MockLogger.Reset();
             MockOptions.Reset();
+            MockRunContext.Reset();
         }
 
         protected static TestCase ToTestCase(string name)

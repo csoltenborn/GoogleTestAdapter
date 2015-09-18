@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using Moq;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -18,6 +20,17 @@ namespace GoogleTestAdapter.TestResults
             @"Expected: 1000",
             @"[  FAILED  ] TestMath.AddFails (3 ms)",
             @"[ RUN      ] TestMath.AddPasses"
+        };
+
+        private string[] ConsoleOutput1_InvalidDuration { get; } = {
+            @"[==========] Running 3 tests from 1 test case.",
+            @"[----------] Global test environment set-up.",
+            @"[----------] 3 tests from TestMath",
+            @"[ RUN      ] TestMath.AddFails",
+            @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp(6): error: Value of: Add(10, 10)",
+            @"  Actual: 20",
+            @"Expected: 1000",
+            @"[  FAILED  ] TestMath.AddFails (3 s)"
         };
 
         private string[] ConsoleOutput2 { get; } = {
@@ -44,6 +57,7 @@ namespace GoogleTestAdapter.TestResults
         private List<string> CrashesImmediately { get; set; }
         private List<string> CrashesAfterErrorMsg { get; set; }
         private List<string> Complete { get; set; }
+        private List<string> WrongDurationUnit { get; set; }
 
         [TestInitialize]
         public override void SetUp()
@@ -51,6 +65,8 @@ namespace GoogleTestAdapter.TestResults
             base.SetUp();
 
             CrashesImmediately = new List<string>(ConsoleOutput1);
+
+            WrongDurationUnit = new List<string>(ConsoleOutput1_InvalidDuration);
 
             CrashesAfterErrorMsg = new List<string>(ConsoleOutput1);
             CrashesAfterErrorMsg.AddRange(ConsoleOutput2);
@@ -121,6 +137,20 @@ namespace GoogleTestAdapter.TestResults
             Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
             Assert.IsTrue(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[2].Duration);
+        }
+
+        [TestMethod]
+        public void TestOutputWithInvalidDurationUnit()
+        {
+            List<TestResult> results = ComputeResults(WrongDurationUnit);
+
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
+            Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[0].Duration);
+
+            MockLogger.Verify(h => h.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), 
+                It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }
 
         private List<TestResult> ComputeResults(List<string> consoleOutput)

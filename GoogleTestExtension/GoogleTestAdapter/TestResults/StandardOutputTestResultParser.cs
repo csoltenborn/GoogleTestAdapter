@@ -82,18 +82,9 @@ namespace GoogleTestAdapter.TestResults
                 int indexOfOpeningBracket = line.LastIndexOf('(');
                 int lengthOfDurationPart = line.Length - indexOfOpeningBracket - 2;
                 string durationPart = line.Substring(indexOfOpeningBracket + 1, lengthOfDurationPart);
-                if (durationPart.Contains("ms"))
-                {
-                    durationPart = durationPart.Replace("ms", "");
-                    durationPart = durationPart.Trim();
-                    durationInMs = int.Parse(durationPart);
-                }
-                if (durationPart.Contains("s"))
-                {
-                    durationPart = durationPart.Replace("s", "");
-                    durationPart = durationPart.Trim();
-                    durationInMs = int.Parse(durationPart) * 1000;
-                }
+                durationPart = durationPart.Replace("ms", "");
+                durationPart = durationPart.Trim();
+                durationInMs = int.Parse(durationPart);
             }
             catch (Exception)
             {

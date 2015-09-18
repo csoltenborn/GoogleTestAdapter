@@ -6,8 +6,10 @@
 		project?
 		name of executable?
 	move more constants to Constants.cs
-	more unit tests
-	more integration tests
+	more test coverage
+		GoogleTestDiscoverer: Error cases
+		GoogleTEstExecutor: Error cases, Canceled()
+		Options: Several
 	end-to-end tests
 	change target VS version to >= VS2015
 	docs and/or improved option descriptions

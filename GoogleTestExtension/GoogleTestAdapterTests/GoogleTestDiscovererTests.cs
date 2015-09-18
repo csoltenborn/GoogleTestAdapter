@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
@@ -239,6 +240,18 @@ namespace GoogleTestAdapter
 
             traits = new[] { new Trait("Type", "SomeNewType") };
             FindsTestWithTraits("TestMath.AddPasses", traits);
+        }
+
+        [TestMethod]
+        public void UnparseableRegexProducesErrorMessage()
+        {
+            bool result = GoogleTestDiscoverer.IsGoogleTestExecutable("my.exe", MockLogger.Object, "d[ddd[");
+
+            Assert.IsFalse(result);
+            MockLogger.Verify(h => h.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
+                It.Is<string>(s => s.Contains("'d[ddd['"))), 
+                Times.Exactly(1));
         }
 
         private void FindsTestWithTraits(string fullyQualifiedName, Trait[] traits)

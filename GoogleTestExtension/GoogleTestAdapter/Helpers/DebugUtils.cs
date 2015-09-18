@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.Helpers
 {
     static class DebugUtils
     {
-        private const bool DebugMode = false;
+        private static bool DebugMode = false;
 
         internal static void LogDebugMessage(IMessageLogger logger, TestMessageLevel level, string message)
         {

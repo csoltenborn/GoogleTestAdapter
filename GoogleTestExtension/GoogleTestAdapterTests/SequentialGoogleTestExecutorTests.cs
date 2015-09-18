@@ -33,6 +33,67 @@ namespace GoogleTestAdapter
                 Times.Exactly(nrOfNotFoundTests));
         }
 
+        // for now, to get test coverage
+        [TestMethod]
+        public override void CheckThatTestDirectoryIsPassedViaCommandLineArg()
+        {
+            base.CheckThatTestDirectoryIsPassedViaCommandLineArg();
+        }
+
+        [TestMethod]
+        public override void RunsExternallyLinkedX86TestsWithResult()
+        {
+            base.RunsExternallyLinkedX86TestsWithResult();
+        }
+
+        [TestMethod]
+        public override void RunsStaticallyLinkedX86TestsWithResult()
+        {
+            base.RunsStaticallyLinkedX86TestsWithResult();
+        }
+
+        [TestMethod]
+        public override void RunsExternallyLinkedX64TestsWithResult()
+        {
+            base.RunsExternallyLinkedX64TestsWithResult();
+        }
+
+        [TestMethod]
+        public override void RunsStaticallyLinkedX64TestsWithResult()
+        {
+            base.RunsStaticallyLinkedX64TestsWithResult();
+        }
+
+        [TestMethod]
+        public override void RunsCrashingX64TestsWithoutResult()
+        {
+            base.RunsCrashingX64TestsWithoutResult();
+        }
+
+        [TestMethod]
+        public override void RunsCrashingX86TestsWithoutResult()
+        {
+            base.RunsCrashingX86TestsWithoutResult();
+        }
+
+        [TestMethod]
+        public override void RunsHardCrashingX86TestsWithoutResult()
+        {
+            base.RunsHardCrashingX86TestsWithoutResult();
+        }
+
+        [TestMethod]
+        public override void CancelingSetsCanceledProperty()
+        {
+            base.CancelingSetsCanceledProperty();
+        }
+
+        [TestMethod]
+        public override void RunsExternallyLinkedX86TestsWithResultInDebugMode()
+        {
+            base.RunsExternallyLinkedX86TestsWithResultInDebugMode();
+        }
+
     }
 
 }
