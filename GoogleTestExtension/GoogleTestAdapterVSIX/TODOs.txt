@@ -11,7 +11,6 @@
 		GoogleTEstExecutor: Error cases, Canceled()
 		Options: Several
 	end-to-end tests
-	change target VS version to >= VS2015
 	docs and/or improved option descriptions
 	fix "error message if run automatically after build" bug
 		goal: should work :-)
