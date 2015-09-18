@@ -10,11 +10,11 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter.Execution
 {
-    public class SequentialTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    class SequentialTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         public bool Canceled { get; set; } = false;
 
-        public SequentialTestRunner(AbstractOptions options) : base(options) { }
+        internal SequentialTestRunner(AbstractOptions options) : base(options) { }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
         {

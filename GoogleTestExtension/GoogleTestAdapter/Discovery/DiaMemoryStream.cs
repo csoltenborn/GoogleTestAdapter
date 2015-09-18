@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.Discovery
     {
         private Stream PdbFile { get; }
 
-        public DiaMemoryStream(Stream pdbFile)
+        internal DiaMemoryStream(Stream pdbFile)
         {
             this.PdbFile = pdbFile;
         }

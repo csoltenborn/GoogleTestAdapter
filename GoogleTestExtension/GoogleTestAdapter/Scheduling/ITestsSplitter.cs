@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    interface ITestsSplitter
+    internal interface ITestsSplitter
     {
         List<List<TestCase>> SplitTestcases();
     }

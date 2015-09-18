@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter.Execution
 {
-    public interface IGoogleTestRunner
+    interface IGoogleTestRunner
     {
         bool Canceled { get; set; }
 

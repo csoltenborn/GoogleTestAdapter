@@ -2,12 +2,10 @@
 	code review
 	improve logging
 	implement execution of setup/teardown batches
-	move settings into XML file to be saved into solution dir
 	more placeholders for batches and execution params
-	factor out placeholder values in container class to be passed around
+		project?
+		name of executable?
 	move more constants to Constants.cs
-	refactor Helpers
-	reduce visibilities where possible
 	more unit tests
 	more integration tests
 	end-to-end tests
@@ -21,6 +19,7 @@
 		goal: remove waiting in TestResultsReporter
 
 For next release:
+	move settings into XML file to be saved into solution dir
 	performance optimizations
 		scheduling
 		parallel test discovery
@@ -29,3 +28,5 @@ For next release:
 	refactor TestDurationSerializer
 		XML format
 		date, time?
+	factor out placeholder values in container class to be passed around?
+	refactor Helpers

@@ -3,13 +3,13 @@
 
     public class Constants
     {
-        public static bool UnitTestMode = false;
+        internal static bool UnitTestMode = false;
 
-        public const string FileEndingTestDurations = ".gta_testdurations";
+        internal const string FileEndingTestDurations = ".gta_testdurations";
 
-        public const string IdentifierUri = "executor://GoogleTestRunner/v1";
-        public const string GtestListTests = "--gtest_list_tests";
-        public const string GtestTestBodySignature = "::TestBody";
+        internal const string IdentifierUri = "executor://GoogleTestRunner/v1";
+        internal const string GtestListTests = "--gtest_list_tests";
+        internal const string GtestTestBodySignature = "::TestBody";
 
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
     }

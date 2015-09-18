@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter.TestResults
 {
-    public class TestResultReporter
+    class TestResultReporter
     {
         private const int NrOfTestResultsBeforeWaiting = 3;
         private const int WaitingTime = 1;
@@ -15,12 +15,12 @@ namespace GoogleTestAdapter.TestResults
         private IFrameworkHandle FrameworkHandle { get; }
         private static int NrOfReportedResults { get; set; } = 0;
 
-        public TestResultReporter(IFrameworkHandle frameworkHandle)
+        internal TestResultReporter(IFrameworkHandle frameworkHandle)
         {
             this.FrameworkHandle = frameworkHandle;
         }
 
-        public void ReportTestResults(IEnumerable<TestResult> testResults)
+        internal void ReportTestResults(IEnumerable<TestResult> testResults)
         {
             lock (Lock)
             {

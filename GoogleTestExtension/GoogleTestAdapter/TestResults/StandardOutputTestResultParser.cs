@@ -6,28 +6,28 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    public class StandardOutputTestResultParser
+    class StandardOutputTestResultParser
     {
         private const string Run    = "[ RUN      ]";
         private const string Failed = "[  FAILED  ]";
         private const string Passed = "[       OK ]";
 
-        public const string CrashText = "!! This is probably the test that crashed !!";
+        internal const string CrashText = "!! This is probably the test that crashed !!";
 
         private List<string> ConsoleOutput { get; }
         private List<TestCase> TestCasesRun { get; }
         private IMessageLogger Logger { get; }
 
-        public TestCase CrashedTestCase { get; private set; }
+        internal TestCase CrashedTestCase { get; private set; }
 
-        public StandardOutputTestResultParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger)
+        internal StandardOutputTestResultParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = cases.ToList();
             this.Logger = logger;
         }
 
-        public List<TestResult> GetTestResults()
+        internal List<TestResult> GetTestResults()
         {
             List<TestResult> testResults = new List<TestResult>();
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);

@@ -42,7 +42,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        public List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
+        internal List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
             List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.GtestListTests, false, false, null, null);
             List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
@@ -162,7 +162,7 @@ namespace GoogleTestAdapter
             return traits;
         }
 
-        public static bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string customRegex = "")
+        internal static bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string customRegex = "")
         {
             bool matches;
             string regexUsed;

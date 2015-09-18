@@ -5,14 +5,14 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    public class DurationBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
+    class DurationBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
     {
         private int OverallDuration { get; }
         private IDictionary<TestCase, int> TestcaseDurations { get; }
 
-        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations) : this(testcaseDurations, null) { }
+        internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations) : this(testcaseDurations, null) { }
 
-        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, AbstractOptions options) : base(options)
+        internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, AbstractOptions options) : base(options)
         {
             this.TestcaseDurations = testcaseDurations;
             this.OverallDuration = testcaseDurations.Values.Sum();

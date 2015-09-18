@@ -30,14 +30,14 @@ namespace GoogleTestAdapter.Scheduling
         public List<SerializableKeyValuePair<string, int>> TestDurations { get; set; } = new List<SerializableKeyValuePair<string, int>>();
     }
 
-    public class TestDurationSerializer
+    internal class TestDurationSerializer
     {
         private static object Lock { get; } = new object();
         private static readonly SerializableKeyValuePair<string, int> Default = new SerializableKeyValuePair<string, int>();
 
         private XmlSerializer Serializer { get; } = new XmlSerializer(typeof (TestDurationsContainer));
 
-        public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
+        internal IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
             IDictionary<string, List<TestCase>> groupedTestcases = GoogleTestExecutor.GroupTestcasesByExecutable(testcases);
             IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.Scheduling
             return durations;
         }
 
-        public void UpdateTestDurations(IEnumerable<TestResult> testResults)
+        internal void UpdateTestDurations(IEnumerable<TestResult> testResults)
         {
             IDictionary<string, List<TestResult>> groupedTestcases = GroupTestResultsByExecutable(testResults);
             foreach (string executable in groupedTestcases.Keys)

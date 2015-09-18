@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Discovery
 {
 
-    public class NativeSourceFileLocation
+    class NativeSourceFileLocation
     {
         public string Symbol;
         public uint AddressSection;

@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Discovery
     }
 
 
-    unsafe public static class Native
+    unsafe internal static class Native
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
@@ -64,18 +64,18 @@ namespace GoogleTestAdapter.Discovery
         [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern IntPtr ImageRvaToVa(IntPtr pNtHeaders, IntPtr pBase, uint rva, IntPtr pLastRvaSection);
 
-        public static void ReleaseCom(object obj)
+        internal static void ReleaseCom(object obj)
         {
             Marshal.FinalReleaseComObject(obj);
         }
 
-        public class ImportsParser
+        internal class ImportsParser
         {
             private LOADED_IMAGE _loadedImage = new LOADED_IMAGE();
 
-            public List<string> Imports { get; } = new List<string>();
+            internal List<string> Imports { get; } = new List<string>();
 
-            public ImportsParser(string fileName, IMessageLogger logger)
+            internal ImportsParser(string fileName, IMessageLogger logger)
             {
                 fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {

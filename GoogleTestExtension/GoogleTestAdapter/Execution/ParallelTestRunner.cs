@@ -10,11 +10,11 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Execution
 {
-    public class ParallelTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    class ParallelTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         public bool Canceled { get; set; }
 
-        public ParallelTestRunner(AbstractOptions options) : base(options) { }
+        internal ParallelTestRunner(AbstractOptions options) : base(options) { }
 
         public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
         {

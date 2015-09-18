@@ -34,3 +34,10 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: InternalsVisibleTo("GoogleTestAdapterTests,PublicKey=" +
+"0024000004800000940000000602000000240000525341310004000001000100c53284440c91c7" +
+"021cc8e08e21c6fdb0d9b6ec0b5642aa343c4bb9f2bf219658b1158fba78e61d0e18d056c99d66" +
+"b13f90466abd9eeb491b430d2c3ebdfcf41e3a57634dda8c4c4516434b050db89fd95036ab757e" +
+"e29d92ebfe66ee453fa0b300d56a6f8d41c45606ba478b757e1f4ec2ea1e2c08d8db3982a53e64" +
+"f110f7ec")]

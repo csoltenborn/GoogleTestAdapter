@@ -2,10 +2,10 @@
 
 namespace GoogleTestAdapter.Helpers
 {
-    public static class RegistryReader
+    static class RegistryReader
     {
 
-        public static string ReadString(string keyName, string valueName, string defaultValue)
+        internal static string ReadString(string keyName, string valueName, string defaultValue)
         {
             string typedValue = (string) ReadObject(keyName, valueName, defaultValue);
             if (typedValue == defaultValue)
@@ -16,12 +16,12 @@ namespace GoogleTestAdapter.Helpers
             return typedValue.Substring(indexOfLastStar + 1).Trim();
         }
 
-        public static bool ReadBool(string keyName, string valueName, bool defaultValue)
+        internal static bool ReadBool(string keyName, string valueName, bool defaultValue)
         {
             return bool.Parse(ReadString(keyName, valueName, defaultValue.ToString()));
         }
 
-        public static int ReadInt(string keyName, string valueName, int defaultValue)
+        internal static int ReadInt(string keyName, string valueName, int defaultValue)
         {
             return int.Parse(ReadString(keyName, valueName, defaultValue.ToString()));
         }

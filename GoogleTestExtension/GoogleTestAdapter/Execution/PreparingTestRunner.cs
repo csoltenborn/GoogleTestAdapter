@@ -8,14 +8,14 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Execution
 {
-    public class PreparingTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    class PreparingTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
     {
         private IGoogleTestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
         public bool Canceled { get; set; } = false;
 
-        public PreparingTestRunner(IGoogleTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
+        internal PreparingTestRunner(IGoogleTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
             this.InnerTestRunner = innerTestrunner;
             this.ThreadId = threadId;
         }

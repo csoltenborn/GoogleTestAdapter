@@ -7,11 +7,11 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Helpers
 {
-    public static class DebugUtils
+    static class DebugUtils
     {
         private const bool DebugMode = false;
 
-        public static void LogDebugMessage(IMessageLogger logger, TestMessageLevel level, string message)
+        internal static void LogDebugMessage(IMessageLogger logger, TestMessageLevel level, string message)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (DebugMode)
@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        public static void LogUserDebugMessage(IMessageLogger logger, AbstractOptions options, TestMessageLevel level, string message)
+        internal static void LogUserDebugMessage(IMessageLogger logger, AbstractOptions options, TestMessageLevel level, string message)
         {
             if (options.UserDebugMode)
             {
@@ -28,12 +28,12 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        public static void CheckDebugModeForExecutionCode(IMessageLogger logger = null)
+        internal static void CheckDebugModeForExecutionCode(IMessageLogger logger = null)
         {
             CheckDebugMode("GTA: Test execution code", logger);
         }
 
-        public static void CheckDebugModeForDiscoverageCode(IMessageLogger logger = null)
+        internal static void CheckDebugModeForDiscoverageCode(IMessageLogger logger = null)
         {
             CheckDebugMode("GTA: Test discoverage code", logger);
         }

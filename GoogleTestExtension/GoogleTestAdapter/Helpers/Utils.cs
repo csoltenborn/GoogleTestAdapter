@@ -2,10 +2,10 @@
 
 namespace GoogleTestAdapter.Helpers
 {
-    public static class Utils
+    static class Utils
     {
 
-        public static string GetTempDirectory()
+        internal static string GetTempDirectory()
         {
             string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDirectory);

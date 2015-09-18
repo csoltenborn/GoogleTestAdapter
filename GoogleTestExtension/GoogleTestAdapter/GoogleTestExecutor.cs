@@ -12,14 +12,14 @@ namespace GoogleTestAdapter
     [ExtensionUri(ExecutorUriString)]
     public class GoogleTestExecutor : AbstractGoogleTestAdapterClass, ITestExecutor
     {
-        public const string ExecutorUriString = Constants.IdentifierUri;
-        public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
+        internal const string ExecutorUriString = Constants.IdentifierUri;
+        internal static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
         private bool Canceled { get; set; } = false;
 
         public GoogleTestExecutor() : this(null) { }
 
-        public GoogleTestExecutor(AbstractOptions options) : base(options) {}
+        internal GoogleTestExecutor(AbstractOptions options) : base(options) {}
 
         public void Cancel()
         {
@@ -96,7 +96,7 @@ namespace GoogleTestAdapter
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
         }
 
-        public static IDictionary<string, List<TestCase>> GroupTestcasesByExecutable(IEnumerable<TestCase> testcases)
+        internal static IDictionary<string, List<TestCase>> GroupTestcasesByExecutable(IEnumerable<TestCase> testcases)
         {
             Dictionary<string, List<TestCase>> groupedTestCases = new Dictionary<string, List<TestCase>>();
             foreach (TestCase testCase in testcases)

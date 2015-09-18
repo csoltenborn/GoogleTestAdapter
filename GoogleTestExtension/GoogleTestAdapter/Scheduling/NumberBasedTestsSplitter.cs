@@ -6,13 +6,13 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    public class NumberBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
+    class NumberBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
     {
         private IEnumerable<TestCase> TestcasesToRun { get; }
 
-        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun) : this(testcasesToRun, null) { }
+        internal NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun) : this(testcasesToRun, null) { }
 
-        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, AbstractOptions options) : base(options)
+        internal NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, AbstractOptions options) : base(options)
         {
             this.TestcasesToRun = testcasesToRun;
         }

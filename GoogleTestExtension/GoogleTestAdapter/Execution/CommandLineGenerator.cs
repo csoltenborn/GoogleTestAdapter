@@ -8,21 +8,21 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Execution
 {
 
-    public class CommandLineGenerator
+    class CommandLineGenerator
     {
-        public class Args
+        internal class Args
         {
-            public List<TestCase> TestCases { get; }
-            public string CommandLine { get; }
+            internal List<TestCase> TestCases { get; }
+            internal string CommandLine { get; }
 
-            public Args(List<TestCase> testCases, string commandLine)
+            internal Args(List<TestCase> testCases, string commandLine)
             {
                 this.TestCases = testCases ?? new List<TestCase>();
                 this.CommandLine = commandLine ?? "";
             }
         }
 
-        public const int MaxCommandLength = 8191;
+        internal const int MaxCommandLength = 8191;
 
         private bool RunAllTestCases { get; }
         private int LengthOfExecutableString { get; }
@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.Execution
         private AbstractOptions Options { get; }
         private string UserParameters { get; }
 
-        public CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, AbstractOptions options, string userParameters)
+        internal CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, AbstractOptions options, string userParameters)
         {
             if (userParameters == null)
             {
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Execution
             this.UserParameters = userParameters;
         }
 
-        public IEnumerable<Args> GetCommandLines()
+        internal IEnumerable<Args> GetCommandLines()
         {
             string baseCommandLine = GetOutputpathParameter();
             baseCommandLine += GetAlsoRunDisabledTestsParameter();

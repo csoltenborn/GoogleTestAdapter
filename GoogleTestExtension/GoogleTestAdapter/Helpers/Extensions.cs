@@ -18,16 +18,16 @@ namespace GoogleTestAdapter.Helpers
         NsfUndecoratedName = 0x10u
     }
 
-    public static class AllKindsOfExtensions
+    static class AllKindsOfExtensions
     {
 
-        public static TestCase FindTestcase(this IEnumerable<TestCase> testcases, string qualifiedName)
+        internal static TestCase FindTestcase(this IEnumerable<TestCase> testcases, string qualifiedName)
         {
             return testcases.FirstOrDefault(testcase => testcase.FullyQualifiedName.Split(' ')[0] == qualifiedName);
         }
     }
 
-    public static class StringExtensions
+    static class StringExtensions
     {
         /// <summary>
         /// Wraps this object instance into an IEnumerable&lt;T&gt;
@@ -36,22 +36,22 @@ namespace GoogleTestAdapter.Helpers
         /// <typeparam name="T"> Type of the object. </typeparam>
         /// <param name="item"> The instance that will be wrapped. </param>
         /// <returns> An IEnumerable&lt;T&gt; consisting of a single item. </returns>
-        public static IEnumerable<T> Yield<T>(this T item)
+        internal static IEnumerable<T> Yield<T>(this T item)
         {
             yield return item;
         }
 
-        public static string AppendIfNotEmpty(this string theString, string appendix)
+        internal static string AppendIfNotEmpty(this string theString, string appendix)
         {
             return string.IsNullOrWhiteSpace(theString) ? theString : theString + appendix;
         }
 
     }
 
-    public static class DiaSessionExtensions
+    static class DiaSessionExtensions
     {
         /// Find all symbols from session's global scope which are tagged as functions
-        public static IDiaEnumSymbols FindFunctions(this IDiaSession session)
+        internal static IDiaEnumSymbols FindFunctions(this IDiaSession session)
         {
             IDiaEnumSymbols result;
             session.findChildren(session.globalScope, SymTagEnum.SymTagFunction, null, (uint)NameSearchOptions.NsNone, out result);
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         /// Find all symbols matching from session's global scope which are tagged as functions
-        public static IDiaEnumSymbols FindFunctionsByRegex(this IDiaSession session, string pattern)
+        internal static IDiaEnumSymbols FindFunctionsByRegex(this IDiaSession session, string pattern)
         {
             IDiaEnumSymbols result;
             session.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.NsfRegularExpression, out result);
@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         /// From given symbol enumeration, extract name, section, offset and length
-        public static List<NativeSourceFileLocation> GetSymbolNamesAndAddresses(this IDiaSession session, IDiaEnumSymbols diaSymbols)
+        internal static List<NativeSourceFileLocation> GetSymbolNamesAndAddresses(this IDiaSession session, IDiaEnumSymbols diaSymbols)
         {
             List<NativeSourceFileLocation> locations = new List<NativeSourceFileLocation>();
             foreach (IDiaSymbol diaSymbol in diaSymbols)
@@ -84,7 +84,7 @@ namespace GoogleTestAdapter.Helpers
             return locations;
         }
 
-        public static IDiaEnumLineNumbers GetLineNumbers(this IDiaSession session, uint addressSection, uint addressOffset, uint length)
+        internal static IDiaEnumLineNumbers GetLineNumbers(this IDiaSession session, uint addressSection, uint addressOffset, uint length)
         {
             IDiaEnumLineNumbers linenumbers;
             session.findLinesByAddr(addressSection, addressOffset, length, out linenumbers);
