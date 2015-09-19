@@ -9,24 +9,18 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.Scheduling
 {
     [TestClass]
-    public class TestDurationSerializerTests
+    public class TestDurationSerializerTests : AbstractGoogleTestExtensionTests
     {
 
         [TestMethod]
         public void TestDurationIsWrittenAndReadCorrectly()
         {
-            List<TestResult> testResults = new List<TestResult>();
             string tempFile = Path.GetTempFileName();
-            testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
+            List<TestResult> testResults = new List<TestResult>
             {
-                Duration = TimeSpan.FromMilliseconds(3),
-                Outcome = TestOutcome.Passed
-            });
-            testResults.Add(new TestResult(new TestCase("TestSuite1.SkippedTest", new Uri("http://nothing"), tempFile))
-            {
-                Duration = TimeSpan.FromMilliseconds(1),
-                Outcome = TestOutcome.Skipped
-            });
+                ToTestResult("TestSuite1.Test1", TestOutcome.Passed, 3, tempFile),
+                ToTestResult("TestSuite1.SkippedTest", TestOutcome.Skipped, 1, tempFile)
+            };
 
             TestDurationSerializer serializer = new TestDurationSerializer();
             serializer.UpdateTestDurations(testResults);
@@ -46,19 +40,13 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void SameTestsInDifferentExecutables()
         {
-            List<TestResult> testResults = new List<TestResult>();
             string tempFile = Path.GetTempFileName();
-            testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
-            {
-                Duration = TimeSpan.FromMilliseconds(3),
-                Outcome = TestOutcome.Passed
-            });
             string tempFile2 = Path.GetTempFileName();
-            testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile2))
+            List<TestResult> testResults = new List<TestResult>
             {
-                Duration = TimeSpan.FromMilliseconds(4),
-                Outcome = TestOutcome.Failed
-            });
+                ToTestResult("TestSuite1.Test1", TestOutcome.Passed, 3, tempFile),
+                ToTestResult("TestSuite1.Test1", TestOutcome.Failed, 4, tempFile2)
+            };
 
             TestDurationSerializer serializer = new TestDurationSerializer();
             serializer.UpdateTestDurations(testResults);
@@ -82,13 +70,11 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void TestDurationIsUpdatedCorrectly()
         {
-            List<TestResult> testResults = new List<TestResult>();
             string tempFile = Path.GetTempFileName();
-            testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
+            List<TestResult> testResults = new List<TestResult>
             {
-                Duration = TimeSpan.FromMilliseconds(3),
-                Outcome = TestOutcome.Passed
-            });
+                ToTestResult("TestSuite1.Test1", TestOutcome.Passed, 3, tempFile)
+            };
 
             TestDurationSerializer serializer = new TestDurationSerializer();
             serializer.UpdateTestDurations(testResults);
@@ -111,7 +97,7 @@ namespace GoogleTestAdapter.Scheduling
             string tempFile = Path.GetTempFileName();
 
             TestDurationSerializer serializer = new TestDurationSerializer();
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile).Yield());
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(ToTestCase("TestSuite1.Test1", tempFile).Yield());
 
             Assert.IsNotNull(durations);
             Assert.AreEqual(0, durations.Count);
@@ -120,12 +106,11 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void DurationFileWithoutCurrentTestResultsInEmptyDictionary()
         {
-            List<TestResult> testResults = new List<TestResult>();
             string tempFile = Path.GetTempFileName();
-            testResults.Add(new TestResult(new TestCase("TestSuite1.Test1", new Uri("http://nothing"), tempFile))
+            List<TestResult> testResults = new List<TestResult>
             {
-                Duration = TimeSpan.FromMilliseconds(3)
-            });
+                ToTestResult("TestSuite1.Test1", TestOutcome.None, 3, tempFile)
+            };
 
             TestDurationSerializer serializer = new TestDurationSerializer();
             serializer.UpdateTestDurations(testResults);

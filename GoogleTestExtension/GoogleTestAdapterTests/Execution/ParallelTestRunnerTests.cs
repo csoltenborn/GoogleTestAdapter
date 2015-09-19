@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace GoogleTestAdapter.Execution
 {
@@ -19,14 +17,12 @@ namespace GoogleTestAdapter.Execution
                 Assert.Inconclusive("This test is designed for machines with at least 4 cores");
             }
 
-            string executable = GoogleTestDiscovererTests.X86TraitsTests;
-            Mock<IFrameworkHandle> mockHandle = new Mock<IFrameworkHandle>();
-            Mock<IRunContext> mockRunContext = new Mock<IRunContext>();
+            string executable = X86TraitsTests;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
-            executor.RunTests(executable.Yield(), mockRunContext.Object, mockHandle.Object);
+            executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long sequentialDuration = stopwatch.ElapsedMilliseconds;
 
@@ -35,7 +31,7 @@ namespace GoogleTestAdapter.Execution
 
             stopwatch.Restart();
             executor = new GoogleTestExecutor(MockOptions.Object);
-            executor.RunTests(executable.Yield(), mockRunContext.Object, mockHandle.Object);
+            executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 

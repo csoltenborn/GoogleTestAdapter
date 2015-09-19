@@ -1,6 +1,5 @@
 ﻿Before release:
 	code review
-	improve logging
 	implement execution of setup/teardown batches
 	more placeholders for batches and execution params
 		project?

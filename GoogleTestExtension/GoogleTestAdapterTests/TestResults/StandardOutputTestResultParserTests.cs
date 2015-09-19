@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.TestResults
             @"[ RUN      ] TestMath.AddPasses"
         };
 
-        private string[] ConsoleOutput1_InvalidDuration { get; } = {
+        private string[] ConsoleOutput1WithInvalidDuration { get; } = {
             @"[==========] Running 3 tests from 1 test case.",
             @"[----------] Global test environment set-up.",
             @"[----------] 3 tests from TestMath",
@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.TestResults
 
             CrashesImmediately = new List<string>(ConsoleOutput1);
 
-            WrongDurationUnit = new List<string>(ConsoleOutput1_InvalidDuration);
+            WrongDurationUnit = new List<string>(ConsoleOutput1WithInvalidDuration);
 
             CrashesAfterErrorMsg = new List<string>(ConsoleOutput1);
             CrashesAfterErrorMsg.AddRange(ConsoleOutput2);
@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void TestCompleteOutput()
         {
-            List<TestResult> results = ComputeResults(Complete);
+            List<TestResult> results = ComputeTestResults(Complete);
 
             Assert.AreEqual(3, results.Count);
 
@@ -101,7 +101,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void TestOutputWithImmediateCrash()
         {
-            List<TestResult> results = ComputeResults(CrashesImmediately);
+            List<TestResult> results = ComputeTestResults(CrashesImmediately);
 
             Assert.AreEqual(2, results.Count);
 
@@ -119,7 +119,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void TestOutputWithCrashAfterErrorMessage()
         {
-            List<TestResult> results = ComputeResults(CrashesAfterErrorMsg);
+            List<TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
             Assert.AreEqual(3, results.Count);
 
@@ -142,7 +142,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void TestOutputWithInvalidDurationUnit()
         {
-            List<TestResult> results = ComputeResults(WrongDurationUnit);
+            List<TestResult> results = ComputeTestResults(WrongDurationUnit);
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
@@ -153,17 +153,11 @@ namespace GoogleTestAdapter.TestResults
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }
 
-        private List<TestResult> ComputeResults(List<string> consoleOutput)
+        private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {
-            List<TestCase> cases = new List<TestCase>();
-            Uri uri = new Uri("http://nothing");
-            cases.Add(new TestCase("TestMath.AddFails", uri, "SomeSource.cpp"));
-            cases.Add(new TestCase("TestMath.Crash", uri, "SomeSource.cpp"));
-            cases.Add(new TestCase("TestMath.AddPasses", uri, "SomeSource.cpp"));
-
+            List<TestCase> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
             StandardOutputTestResultParser parser = new StandardOutputTestResultParser(consoleOutput, cases, MockLogger.Object);
-            List<TestResult> results = parser.GetTestResults();
-            return results;
+            return parser.GetTestResults();
         }
 
     }

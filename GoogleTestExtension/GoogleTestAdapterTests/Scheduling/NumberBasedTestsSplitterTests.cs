@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GoogleTestAdapter.Scheduling
 {
@@ -11,12 +10,10 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void SameNumberOfTestsAsThreads_TestsAreDistributedEvenly()
         {
-            string[] testsWithCommonSuite = { "FooSuite.BarTest", "FooSuite.BazTest" };
-            IEnumerable<TestCase> testcases = testsWithCommonSuite.Select(ToTestCase);
-
+            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
@@ -27,12 +24,10 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void MoreTestsThanThreads_TestsAreDistributedEvenly()
         {
-            string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest" };
-            IEnumerable<TestCase> testcases = testsWithCommonSuite.Select(ToTestCase);
-
+            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
@@ -48,7 +43,6 @@ namespace GoogleTestAdapter.Scheduling
             {
                 testcases.Add(ToTestCase("TestSuite.Test" + i));
             }
-
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
@@ -68,12 +62,10 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void MoreThreadsThanTests_TestsAreDistributedEvenly()
         {
-            string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
-            IEnumerable<TestCase> testcases = testsWithCommonSuite.Select(ToTestCase);
-
+            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, MockOptions.Object);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);

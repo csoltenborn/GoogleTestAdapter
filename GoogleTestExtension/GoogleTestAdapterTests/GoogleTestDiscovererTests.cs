@@ -1,9 +1,9 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
-using System.Collections.Generic;
-using System.IO;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -14,16 +14,6 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
     {
-        public const string X86StaticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        public const string X86ExternallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        public const string X86CrashingTests = @"..\..\..\testdata\_x86\CrashingGoogleTests\CrashingGoogleTests.exe";
-        public const string X64StaticallyLinkedTests = @"..\..\..\testdata\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        public const string X64ExternallyLinkedTests = @"..\..\..\testdata\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        public const string X64CrashingTests = @"..\..\..\testdata\_x64\CrashingGoogleTests\CrashingGoogleTests.exe";
-
-        public const string X86TraitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
-        public const string X86HardcrashingTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1CrashingTests.exe";
-
         [TestMethod]
         public void MatchesTestExecutableName()
         {
@@ -123,6 +113,7 @@ namespace GoogleTestAdapter
         {
             FindExternallyLinkedTests(X64ExternallyLinkedTests);
         }
+
 
         [TestMethod]
         public void FindsMathTestWithOneTrait()

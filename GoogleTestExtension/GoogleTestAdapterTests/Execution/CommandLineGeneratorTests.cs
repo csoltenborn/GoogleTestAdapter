@@ -32,10 +32,9 @@ namespace GoogleTestAdapter.Execution
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void TestCombinesCommonTestsInSuite()
         {
-            string[] testsWithCommonSuite = new string[] { "FooSuite.BarTest", "FooSuite.BazTest" };
-            IEnumerable<TestCase> testCases = testsWithCommonSuite.Select(ToTestCase);
+            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCases, testCases, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCasesWithCommonSuite, testCasesWithCommonSuite, "", MockLogger.Object, MockOptions.Object, "")
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", commandLine);
@@ -45,13 +44,13 @@ namespace GoogleTestAdapter.Execution
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void CombinesCommonTestsInSuiteInDifferentOrder()
         {
-            string[] testsWithCommonSuite = { "FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb" };
-            IEnumerable<TestCase> testCases = testsWithCommonSuite.Select(ToTestCase);
-            IEnumerable<TestCase> testCasesBackwards = testCases.Reverse();
+            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest",
+                "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb");
+            IEnumerable<TestCase> testCasesReversed = testCasesWithCommonSuite.Reverse();
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCases, testCases, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCasesWithCommonSuite, testCasesWithCommonSuite, "", MockLogger.Object, MockOptions.Object, "")
                 .GetCommandLines().First().CommandLine;
-            string commandLineFromBackwards = new CommandLineGenerator(false, DummyExecutable.Length, testCasesBackwards, testCasesBackwards, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLineFromBackwards = new CommandLineGenerator(false, DummyExecutable.Length, testCasesReversed, testCasesReversed, "", MockLogger.Object, MockOptions.Object, "")
                 .GetCommandLines().First().CommandLine;
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
@@ -62,12 +61,10 @@ namespace GoogleTestAdapter.Execution
         [TestMethod]
         public void DoesNotCombineTestsNotHavingCommonSuite()
         {
-            string[] testsWithDifferentSuite = new string[] { "FooSuite.BarTest", "BarSuite.BazTest1" };
-            string[] allTests = new string[] { "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest1", "BarSuite.BazTest2" };
-            IEnumerable<TestCase> testCases = testsWithDifferentSuite.Select(ToTestCase);
-            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase);
+            IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
+            IEnumerable<TestCase> allTestCases = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest1", "BarSuite.BazTest2");
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCasesWithDifferentSuite, "", MockLogger.Object, MockOptions.Object, "")
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", commandLine);
@@ -76,12 +73,10 @@ namespace GoogleTestAdapter.Execution
         [TestMethod]
         public void DoesNotCombineTestsNotHavingCommonSuite_InDifferentOrder()
         {
-            string[] testsWithDifferentSuite = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest" };
-            string[] allTests = new string[] { "BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2" };
-            IEnumerable<TestCase> testCases = testsWithDifferentSuite.Select(ToTestCase);
-            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase);
+            IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
+            IEnumerable<TestCase> allTestCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2");
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCasesWithDifferentSuite, "", MockLogger.Object, MockOptions.Object, "")
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", commandLine);
