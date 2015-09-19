@@ -120,17 +120,6 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public virtual void CancelingSetsCanceledProperty()
-        {
-            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
-            PrivateObject accessor = new PrivateObject(executor);
-            Assert.IsFalse((bool)accessor.GetFieldOrProperty("Canceled"));
-
-            executor.Cancel();
-            Assert.IsTrue((bool)accessor.GetFieldOrProperty("Canceled"));
-        }
-
-        [TestMethod]
         public virtual void RunsHardCrashingX86TestsWithoutResult()
         {
             Mock<IFrameworkHandle> mockHandle = new Mock<IFrameworkHandle>();
@@ -138,23 +127,7 @@ namespace GoogleTestAdapter
             GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
             executor.RunTests(GoogleTestDiscovererTests.X86HardcrashingTests.Yield(), MockRunContext.Object, mockHandle.Object);
 
-            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
-                Times.Exactly(0));
-            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed && tr.ErrorMessage == "!! This is probably the test that crashed !!")),
-                Times.Exactly(1));
-            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.None)),
-                Times.Exactly(0));
-            mockHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped && tr.ErrorMessage == "reason is probably a crash of test Crashing.TheCrash")),
-                Times.Exactly(2));
-
-            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
-                Times.Exactly(0));
-            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
-                Times.Exactly(1));
-            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.None)),
-                Times.Exactly(0));
-            mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
-                Times.Exactly(2));
+            CheckMockInvocations(0, 1, 0, 3, mockHandle);
         }
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)

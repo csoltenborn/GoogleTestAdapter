@@ -15,18 +15,11 @@ namespace GoogleTestAdapter
         internal const string ExecutorUriString = Constants.IdentifierUri;
         internal static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
-        private bool Canceled { get; set; } = false;
+        private IGoogleTestRunner Runner { get; set; }
 
         public GoogleTestExecutor() : this(null) { }
 
         internal GoogleTestExecutor(AbstractOptions options) : base(options) {}
-
-        public void Cancel()
-        {
-            DebugUtils.CheckDebugModeForExecutionCode();
-
-            Canceled = true;
-        }
 
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
@@ -34,17 +27,10 @@ namespace GoogleTestAdapter
             {
                 DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
 
-                Canceled = false;
-
                 List<TestCase> allTestCasesInAllExecutables = new List<TestCase>();
                 GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(Options);
                 foreach (string executable in sources)
                 {
-                    if (Canceled)
-                    {
-                        break;
-                    }
-
                     allTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(frameworkHandle, executable));
                 }
                 RunTests(true, allTestCasesInAllExecutables, allTestCasesInAllExecutables, runContext, frameworkHandle);
@@ -61,7 +47,6 @@ namespace GoogleTestAdapter
             {
                 DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
 
-                Canceled = false;
                 List<TestCase> allTestCasesInAllExecutables = new List<TestCase>();
                 TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
@@ -78,6 +63,13 @@ namespace GoogleTestAdapter
             }
         }
 
+        public void Cancel()
+        {
+            DebugUtils.CheckDebugModeForExecutionCode();
+
+            Runner.Cancel();
+        }
+
         private void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
             IGoogleTestRunner runner;
@@ -92,6 +84,7 @@ namespace GoogleTestAdapter
                 runner = new SequentialTestRunner(Options);
                 userParameters = Options.GetUserParameters(runContext.SolutionDirectory, Utils.GetTempDirectory(), 0);
             }
+
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Running " + testCasesToRun.Count() + " tests...");
             runner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");

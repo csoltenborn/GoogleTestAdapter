@@ -91,12 +91,6 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public override void CancelingSetsCanceledProperty()
-        {
-            base.CancelingSetsCanceledProperty();
-        }
-
-        [TestMethod]
         public override void RunsExternallyLinkedX86TestsWithResultInDebugMode()
         {
             base.RunsExternallyLinkedX86TestsWithResultInDebugMode();

@@ -13,29 +13,22 @@ namespace GoogleTestAdapter.Execution
         private IGoogleTestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
-        public bool Canceled { get; set; } = false;
-
         internal PreparingTestRunner(IGoogleTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
             this.InnerTestRunner = innerTestrunner;
             this.ThreadId = threadId;
         }
 
-        public void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string testDirectory)
+        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
         {
+            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
+
             try
             {
-                if (testDirectory != null)
-                {
-                    throw new ArgumentException("testDirectory must be null");
-                }
-
-                testDirectory = Utils.GetTempDirectory();
-                string userParameters = Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
+                string testDirectory = Utils.GetTempDirectory();
+                userParameters = Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
-
                 InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
-
                 // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
 
                 Directory.Delete(testDirectory);
@@ -44,6 +37,11 @@ namespace GoogleTestAdapter.Execution
             {
                 handle.SendMessage(TestMessageLevel.Error, "GTA: Exception while running tests: " + e);
             }
+        }
+
+        void IGoogleTestRunner.Cancel()
+        {
+            InnerTestRunner.Cancel();
         }
 
     }

@@ -16,6 +16,22 @@ namespace GoogleTestAdapter
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
         protected readonly Mock<AbstractOptions> MockOptions = new Mock<AbstractOptions>() { CallBase = true };
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
+        protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
+
+        private List<TestCase> _AllTestCasesOfConsoleApplication1 = null;
+        protected List<TestCase> AllTestCasesOfConsoleApplication1 {
+            get
+            {
+                if (_AllTestCasesOfConsoleApplication1 == null)
+                {
+                    _AllTestCasesOfConsoleApplication1 = new List<TestCase>();
+                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+                    _AllTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(MockLogger.Object, GoogleTestDiscovererTests.X86TraitsTests));
+                    _AllTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(MockLogger.Object, GoogleTestDiscovererTests.X86HardcrashingTests));
+                }
+                return _AllTestCasesOfConsoleApplication1;
+            }
+        }
 
         internal AbstractGoogleTestExtensionTests()
         {
@@ -36,6 +52,25 @@ namespace GoogleTestAdapter
             MockLogger.Reset();
             MockOptions.Reset();
             MockRunContext.Reset();
+            MockFrameworkHandle.Reset();
+            _AllTestCasesOfConsoleApplication1 = null;
+        }
+
+        protected List<TestCase> GetTestCasesOfConsoleApplication1(params string[] qualifiedNames)
+        {
+            List<TestCase> result = new List<TestCase>();
+            foreach (TestCase testCase in AllTestCasesOfConsoleApplication1)
+            {
+                foreach (string qualifiedName in qualifiedNames)
+                {
+                    if (testCase.FullyQualifiedName.Contains(qualifiedName))
+                    {
+                        result.Add(testCase);
+                        break;
+                    }
+                }
+            }
+            return result;
         }
 
         protected static TestCase ToTestCase(string name)

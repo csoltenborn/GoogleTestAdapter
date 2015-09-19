@@ -1,7 +1,11 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using GoogleTestAdapter.Execution;
 
 namespace GoogleTestAdapter
 {
@@ -31,6 +35,27 @@ namespace GoogleTestAdapter
                 Times.Exactly(nrOfNotFoundTests));
             mockHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
                 Times.Exactly(nrOfNotFoundTests));
+        }
+
+        [TestMethod]
+        public void TestCancelingRunnerStopsTestExecution()
+        {
+            List<TestCase> allTestCases = AllTestCasesOfConsoleApplication1;
+            List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
+
+            Stopwatch stopwatch = new Stopwatch();
+            IGoogleTestRunner runner = new SequentialTestRunner(MockOptions.Object);
+            Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testCasesToRun, MockRunContext.Object, MockFrameworkHandle.Object, ""));
+
+            stopwatch.Start();
+            thread.Start();
+            Thread.Sleep(1000);
+            runner.Cancel();
+            thread.Join();
+            stopwatch.Stop();
+
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds > 2000); // 1st test should be executed
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 3000); // 2nd test should not be executed 
         }
 
         // for now, to get test coverage
@@ -80,12 +105,6 @@ namespace GoogleTestAdapter
         public override void RunsHardCrashingX86TestsWithoutResult()
         {
             base.RunsHardCrashingX86TestsWithoutResult();
-        }
-
-        [TestMethod]
-        public override void CancelingSetsCanceledProperty()
-        {
-            base.CancelingSetsCanceledProperty();
         }
 
         [TestMethod]

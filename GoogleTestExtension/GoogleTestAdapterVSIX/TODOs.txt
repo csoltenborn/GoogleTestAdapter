@@ -1,24 +1,18 @@
 ﻿Before release:
 	code review
-	add cancel support
 	improve logging
 	implement execution of setup/teardown batches
 	more placeholders for batches and execution params
 		project?
 		name of executable?
 	move more constants to Constants.cs
-	more test coverage
-		GoogleTestDiscoverer: Error cases
-		GoogleTEstExecutor: Error cases, Canceled()
-		Options: Several
 	end-to-end tests
 	docs and/or improved option descriptions
 	fix "error message if run automatically after build" bug
 		goal: should work :-)
-	fix test stability of test ParallelGoogleTestExecutorTests.RunsHardCrashingX86TestsWithoutResult
-		fails occasionally, probably because of distribution of tests to invocations of executable
 	fix "not all test results are shown" bug
 		goal: remove waiting in TestResultsReporter
+	more test coverage?
 
 For next release:
 	move settings into XML file to be saved into solution dir

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="GoogleTestAdapterVSIX.Company.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.6.2" Language="en-US" Publisher="Christian Soltenborn, Jonas Gefele" />
+    <Identity Id="GoogleTestAdapterVSIX.Company.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.6.3" Language="en-US" Publisher="Christian Soltenborn, Jonas Gefele" />
     <DisplayName>Google Test Adapter</DisplayName>
     <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
     <License>Resources\ApacheLicense.txt</License>

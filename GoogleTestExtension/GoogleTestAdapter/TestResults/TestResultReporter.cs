@@ -20,6 +20,17 @@ namespace GoogleTestAdapter.TestResults
             this.FrameworkHandle = frameworkHandle;
         }
 
+        internal void ReportTestsStarted(IEnumerable<TestCase> testCases)
+        {
+            lock (Lock)
+            {
+                foreach (TestCase testCase in testCases)
+                {
+                    FrameworkHandle.RecordStart(testCase);
+                }
+            }
+        }
+
         internal void ReportTestResults(IEnumerable<TestResult> testResults)
         {
             lock (Lock)

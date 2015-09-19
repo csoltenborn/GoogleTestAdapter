@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
@@ -50,6 +51,22 @@ namespace GoogleTestAdapter.Helpers
                     MessageBox.Show(message + ". Attach debugger if necessary, then click ok.",
                         "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
+            }
+        }
+
+        internal static void AssertIsNotNull(object parameter, string parameterName)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(parameterName);
+            }
+        }
+
+        internal static void AssertIsNull(object parameter, string parameterName)
+        {
+            if (parameter != null)
+            {
+                throw new ArgumentException(parameterName + " must be null");
             }
         }
 
