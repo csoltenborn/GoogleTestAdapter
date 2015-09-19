@@ -97,7 +97,7 @@
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
     <Compile Include="Scheduling\TestDurationSerializer.cs" />
-    <Compile Include="TestResults\TestResultReporter.cs" />
+    <Compile Include="VsTestFrameworkReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Key.snk" />

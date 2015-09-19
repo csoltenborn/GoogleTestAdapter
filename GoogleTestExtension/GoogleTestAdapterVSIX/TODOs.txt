@@ -25,3 +25,4 @@ For next release:
 		date, time?
 	factor out placeholder values in container class to be passed around?
 	refactor Helpers
+	improve canceling time by actively killing test processes?

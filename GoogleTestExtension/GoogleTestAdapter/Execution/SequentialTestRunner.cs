@@ -7,6 +7,7 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Execution
 {
@@ -42,7 +43,7 @@ namespace GoogleTestAdapter.Execution
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
-            TestResultReporter reporter = new TestResultReporter(handle);
+            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
             TestDurationSerializer serializer = new TestDurationSerializer();
 
             CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, testCasesToRun, resultXmlFile, handle, Options, userParameters);
@@ -53,13 +54,14 @@ namespace GoogleTestAdapter.Execution
                     break;
                 }
 
-                reporter.ReportTestsStarted(arguments.TestCases);
+                reporter.ReportTestsStarted(handle, arguments.TestCases);
 
+                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(resultXmlFile, consoleOutput, arguments.TestCases,
                     handle);
 
-                reporter.ReportTestResults(results);
+                reporter.ReportTestResults(handle, results);
                 serializer.UpdateTestDurations(results);
             }
         }

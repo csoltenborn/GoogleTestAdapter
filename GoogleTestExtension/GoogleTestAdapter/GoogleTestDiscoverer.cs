@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Discovery;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.TestResults;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -32,13 +33,11 @@ namespace GoogleTestAdapter
             }
 
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables, logger);
+            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
             foreach (string executable in googleTestExecutables)
             {
                 List<TestCase> testCases = GetTestsFromExecutable(logger, executable);
-                foreach (TestCase testCase in testCases)
-                {
-                    discoverySink.SendTestCase(testCase);
-                }
+                reporter.ReportTestsFound(discoverySink, testCases);
             }
         }
 
