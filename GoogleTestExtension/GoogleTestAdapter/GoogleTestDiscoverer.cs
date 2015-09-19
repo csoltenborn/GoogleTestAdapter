@@ -20,7 +20,7 @@ namespace GoogleTestAdapter
 
         public GoogleTestDiscoverer() : this(null) {}
 
-        public GoogleTestDiscoverer(AbstractOptions options) : base(options) {}
+        internal GoogleTestDiscoverer(AbstractOptions options) : base(options) {}
 
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext, 
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)

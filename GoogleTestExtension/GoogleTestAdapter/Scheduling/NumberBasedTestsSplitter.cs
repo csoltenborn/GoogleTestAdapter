@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.Scheduling
             this.TestcasesToRun = testcasesToRun;
         }
 
-        public List<List<TestCase>> SplitTestcases()
+        List<List<TestCase>> ITestsSplitter.SplitTestcases()
         {
             int nrOfThreadsToUse = Math.Min(Options.MaxNrOfThreads, TestcasesToRun.Count());
             List<TestCase>[] splitTestCases = new List<TestCase>[nrOfThreadsToUse];
