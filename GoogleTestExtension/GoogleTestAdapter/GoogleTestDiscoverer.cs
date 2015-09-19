@@ -34,8 +34,8 @@ namespace GoogleTestAdapter
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables, logger);
             foreach (string executable in googleTestExecutables)
             {
-                List<TestCase> googleTestTests = GetTestsFromExecutable(logger, executable);
-                foreach (TestCase testCase in googleTestTests)
+                List<TestCase> testCases = GetTestsFromExecutable(logger, executable);
+                foreach (TestCase testCase in testCases)
                 {
                     discoverySink.SendTestCase(testCase);
                 }
@@ -48,7 +48,9 @@ namespace GoogleTestAdapter
             List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
             suiteCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, logger, suiteCasePairs);
+
             logger.SendMessage(TestMessageLevel.Informational, "GTA: Found " + suiteCasePairs.Count + " tests in executable " + executable);
+
             List<TestCase> testCases = new List<TestCase>();
             foreach (SuiteCasePair suiteCasePair in suiteCasePairs)
             {
@@ -200,7 +202,7 @@ namespace GoogleTestAdapter
 
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables, IMessageLogger logger)
         {
-            return allExecutables.AsParallel().Where(e => IsGoogleTestExecutable(e, logger, Options.TestDiscoveryRegex)).ToList();
+            return allExecutables.Where(e => IsGoogleTestExecutable(e, logger, Options.TestDiscoveryRegex)).ToList();
         }
 
 

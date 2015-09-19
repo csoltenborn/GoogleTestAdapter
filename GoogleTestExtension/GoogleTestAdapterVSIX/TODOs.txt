@@ -1,5 +1,6 @@
 ﻿Before release:
 	code review
+	add cancel support
 	improve logging
 	implement execution of setup/teardown batches
 	more placeholders for batches and execution params

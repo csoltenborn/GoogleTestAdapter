@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Execution
                 throw new ArgumentNullException(nameof(userParameters));
             }
 
-            IDictionary<string, List<TestCase>> groupedTestCases = GoogleTestExecutor.GroupTestcasesByExecutable(testCasesToRun);
+            IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {

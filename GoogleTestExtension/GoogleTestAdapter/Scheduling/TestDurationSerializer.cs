@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using GoogleTestAdapter.Helpers;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +40,7 @@ namespace GoogleTestAdapter.Scheduling
 
         internal IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
-            IDictionary<string, List<TestCase>> groupedTestcases = GoogleTestExecutor.GroupTestcasesByExecutable(testcases);
+            IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
             IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string executable in groupedTestcases.Keys)

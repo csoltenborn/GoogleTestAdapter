@@ -40,7 +40,10 @@ namespace GoogleTestAdapter.Execution
 
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
             List<Thread> threads = new List<Thread>();
-            handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing " + testcasesToRun.Length + " tests on " + splittedTestCasesToRun.Count + " threads");
+
+            handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing tests on " + splittedTestCasesToRun.Count + " threads");
+            DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Note that no test output will be shown on the test console when executing tests concurrently!");
+
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
