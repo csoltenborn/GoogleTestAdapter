@@ -1,10 +1,8 @@
 ﻿Before release:
 	code review
 	implement execution of setup/teardown batches
-	more placeholders for batches and execution params
-		project?
-		name of executable?
-	move more constants to Constants.cs
+	parse param value from test name, print into TestResult
+	move more constants to Constants.cs etc.
 	end-to-end tests
 	docs and/or improved option descriptions
 	fix "error message if run automatically after build" bug
@@ -15,6 +13,9 @@
 
 For next release:
 	move settings into XML file to be saved into solution dir
+	more placeholders for batches and execution params
+		project?
+		name of executable?
 	performance optimizations
 		scheduling
 		parallel test discovery

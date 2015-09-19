@@ -29,6 +29,7 @@ namespace GoogleTestAdapter.Discovery
         internal static List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString, IMessageLogger logger)
         {
             List<GoogleTestDiscoverer.SourceFileLocation> foundSourceFileLocations = FindSymbolsFromExecutable(symbols, symbolFilterString, logger, executable);
+
             if (foundSourceFileLocations.Count == 0)
             {
                 Native.ImportsParser parser = new Native.ImportsParser(executable, logger);
@@ -65,7 +66,7 @@ namespace GoogleTestAdapter.Discovery
                 try
                 {
                     List<NativeSourceFileLocation> allTestMethodSymbols = ExecutableSymbols(diaSession, symbolFilterString);
-                    List<NativeSourceFileLocation> allTraitSymbols = ExecutableSymbols(diaSession, "*_TRAIT");
+                    List<NativeSourceFileLocation> allTraitSymbols = ExecutableSymbols(diaSession, "*" + TraitAppendix);
                     List<NativeSourceFileLocation> foundSymbols = new List<NativeSourceFileLocation>();
                     foreach (string s in symbols)
                     {

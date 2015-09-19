@@ -73,7 +73,7 @@ namespace GoogleTestAdapter.Execution
             }
 
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
-            string baseFilter = " --gtest_filter=" + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
+            string baseFilter = GoogleTestConstants.FilterOption + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
             string baseCommandLineWithFilter = baseCommandLine + baseFilter;
 
             List<TestCase> testsNotRunBySuite = GetCasesNotRunBySuite(suitesRunningAllTests);
@@ -91,7 +91,7 @@ namespace GoogleTestAdapter.Execution
                                      out includedTestCases);
             includedTestCases.AddRange(testsRunBySuite);
             commandLines.Add(new Args(includedTestCases, commandLine + userParam));
-            baseCommandLineWithFilter = baseCommandLine + " --gtest_filter="; // only add suites to first command line
+            baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption; // only add suites to first command line
 
             while (testsNotRunBySuite.Count > 0)
             {
@@ -140,17 +140,17 @@ namespace GoogleTestAdapter.Execution
 
         private string GetOutputpathParameter()
         {
-            return "--gtest_output=\"xml:" + ResultXmlFile + "\"";
+            return GoogleTestConstants.GetResultXmlFileOption(ResultXmlFile);
         }
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return Options.RunDisabledTests ? " --gtest_also_run_disabled_tests" : "";
+            return Options.RunDisabledTests ? GoogleTestConstants.AlsoRunDisabledTestsOption : "";
         }
 
         private string GetShuffleTestsParameter()
         {
-            return Options.ShuffleTests ? " --gtest_shuffle" : "";
+            return Options.ShuffleTests ? GoogleTestConstants.ShuffleTestsOption : "";
         }
 
         private string GetTestsRepetitionsParameter()
@@ -167,7 +167,7 @@ namespace GoogleTestAdapter.Execution
                     nrOfRepetitions + ", should be -1 (infinite) or > 0. Ignoring value.");
                 return "";
             }
-            return " --gtest_repeat=" + nrOfRepetitions;
+            return GoogleTestConstants.NrOfRepetitionsOption + nrOfRepetitions;
         }
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Discovery;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.TestResults;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -43,7 +42,7 @@ namespace GoogleTestAdapter
 
         internal List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
-            List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, Constants.GtestListTests, false, false, null, null);
+            List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
             List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
             suiteCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, logger, suiteCasePairs);
@@ -76,7 +75,7 @@ namespace GoogleTestAdapter
                 }
                 else
                 {
-                    string[] split = trimmedLine.Split(new[] { ".  # TypeParam" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] split = trimmedLine.Split(new[] { GoogleTestConstants.ParameterValueMarker }, StringSplitOptions.RemoveEmptyEntries);
                     currentSuite = split.Length > 0 ? split[0] : trimmedLine;
                 }
             }
@@ -87,15 +86,15 @@ namespace GoogleTestAdapter
         private List<SourceFileLocation> GetSourceFileLocations(string executable, IMessageLogger logger, List<SuiteCasePair> testcases)
         {
             List<string> symbols = testcases.Select(GetGoogleTestCombinedName).ToList();
-            string SymbolFilterString = "*" + Constants.GtestTestBodySignature;
+            string SymbolFilterString = "*" + GoogleTestConstants.TestBodySignature;
             return DiaResolver.ResolveAllMethods(executable, symbols, SymbolFilterString, logger);
         }
 
         private string GetGoogleTestCombinedName(SuiteCasePair pair)
         {
-            if (!pair.TestCase.Contains("# GetParam()"))
+            if (!pair.TestCase.Contains(GoogleTestConstants.ParameterizedTestMarker))
             {
-                return pair.TestSuite + "_" + pair.TestCase + "_Test" + Constants.GtestTestBodySignature;
+                return GoogleTestConstants.GetTestMethodSignature(pair.TestSuite, pair.TestCase);
             }
 
             int index = pair.TestSuite.IndexOf('/');
@@ -104,7 +103,7 @@ namespace GoogleTestAdapter
             index = pair.TestCase.IndexOf('/');
             string testName = index < 0 ? pair.TestCase : pair.TestCase.Substring(0, index);
 
-            return suite + "_" + testName + "_Test" + Constants.GtestTestBodySignature;
+            return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
         private TestCase ToTestCase(string executable, SuiteCasePair suiteCasePair, IMessageLogger logger, List<SourceFileLocation> sourceFileLocations)

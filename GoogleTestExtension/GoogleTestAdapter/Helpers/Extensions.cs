@@ -21,6 +21,11 @@ namespace GoogleTestAdapter.Helpers
     static class AllKindsOfExtensions
     {
 
+        internal static IEnumerable<T> Yield<T>(this T item)
+        {
+            yield return item;
+        }
+
         internal static TestCase FindTestcase(this IEnumerable<TestCase> testcases, string qualifiedName)
         {
             return testcases.FirstOrDefault(testcase => testcase.FullyQualifiedName.Split(' ')[0] == qualifiedName);
@@ -51,17 +56,6 @@ namespace GoogleTestAdapter.Helpers
 
     static class StringExtensions
     {
-        /// <summary>
-        /// Wraps this object instance into an IEnumerable&lt;T&gt;
-        /// consisting of a single item.
-        /// </summary>
-        /// <typeparam name="T"> Type of the object. </typeparam>
-        /// <param name="item"> The instance that will be wrapped. </param>
-        /// <returns> An IEnumerable&lt;T&gt; consisting of a single item. </returns>
-        internal static IEnumerable<T> Yield<T>(this T item)
-        {
-            yield return item;
-        }
 
         internal static string AppendIfNotEmpty(this string theString, string appendix)
         {
