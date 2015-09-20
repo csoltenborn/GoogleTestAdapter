@@ -2,6 +2,7 @@
 	code review
 	move more constants to Constants.cs etc.
 	end-to-end tests
+	fixing warnings from static analysis
 	reduce # of known issues if possible :-)
 
 Release:
