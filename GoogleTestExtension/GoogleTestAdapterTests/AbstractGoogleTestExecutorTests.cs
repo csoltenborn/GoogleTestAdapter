@@ -32,7 +32,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg() // TODO depends on real options
+        public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
             IEnumerable<TestCase> testcase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet");
 
@@ -137,7 +137,7 @@ namespace GoogleTestAdapter
             CheckMockInvocations(0, 1, 0, 3);
         }
 
-        private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)  // TODO depends on real options
+        private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
             GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);

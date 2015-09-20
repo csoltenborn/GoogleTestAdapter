@@ -1,15 +1,11 @@
 ﻿Before release:
 	code review
-	parse param value from test name, print into TestResult
 	move more constants to Constants.cs etc.
 	end-to-end tests
-	fix "error message if run automatically after build" bug
-		goal: should work :-)
-	fix "not all test results are shown" bug
-		goal: remove waiting in TestResultsReporter
-	more test coverage?
+	reduce # of known issues if possible :-)
 
-For next release:
+For next releases:
+	parse param value from test name, print into TestResult
 	move settings into XML file to be saved into solution dir
 	more placeholders for batches and execution params
 		project?
@@ -17,6 +13,8 @@ For next release:
 	performance optimizations
 		scheduling
 		parallel test discovery
+		improve canceling time by actively killing test processes
+		lock duration files on file base
 	smarter scheduling
 		e.g. reduce number of times executables are invoked
 	refactor TestDurationSerializer
@@ -24,4 +22,11 @@ For next release:
 		date, time?
 	factor out placeholder values in container class to be passed around?
 	refactor Helpers
-	improve canceling time by actively killing test processes?
+	more test coverage
+
+Known Issues
+	"error message if run automatically after build" bug
+	"not all test results are shown" bug
+		debug branch has option to change waiting time through UI
+	exceptions after debugging
+	

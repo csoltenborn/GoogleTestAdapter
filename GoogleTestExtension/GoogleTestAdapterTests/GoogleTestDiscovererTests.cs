@@ -15,7 +15,7 @@ namespace GoogleTestAdapter
     public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
     {
         [TestMethod]
-        public void MatchesTestExecutableName() // TODO depends on real options
+        public void MatchesTestExecutableName()
         {
             Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object));
             Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTest.exe", MockLogger.Object));
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void MatchesCustomRegex() // TODO depends on real options
+        public void MatchesCustomRegex()
         {
             Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("SomeWeirdExpression", MockLogger.Object, "Some.*Expression"));
             Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("SomeWeirdOtherThing", MockLogger.Object, "Some.*Expression"));
@@ -37,13 +37,13 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void RegistersFoundTestsAtDiscoverySink() // TODO depends on real options
+        public void RegistersFoundTestsAtDiscoverySink()
         {
             CheckForDiscoverySinkCalls(2);
         }
 
         [TestMethod]
-        public void MatchesCustomRegexIfSetInOptions() // TODO depends on real options
+        public void MatchesCustomRegexIfSetInOptions()
         {
             CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
         }
@@ -234,14 +234,14 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void UnparseableRegexProducesErrorMessage() // TODO depends on real options
+        public void UnparseableRegexProducesErrorMessage()
         {
             bool result = new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("my.exe", MockLogger.Object, "d[ddd[");
 
             Assert.IsFalse(result);
             MockLogger.Verify(h => h.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
-                It.Is<string>(s => s.Contains("'d[ddd['"))), 
+                It.Is<string>(s => s.Contains("'d[ddd['"))),
                 Times.Exactly(1));
         }
 
