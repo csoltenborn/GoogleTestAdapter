@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using GoogleTestAdapter.DIa;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter.Discovery
+namespace GoogleTestAdapter.Dia
 {
     [TestClass]
     public class ImportsParserTests : AbstractGoogleTestExtensionTests
     {
-        
+
         [TestMethod]
         public void ReadsImports()
         {

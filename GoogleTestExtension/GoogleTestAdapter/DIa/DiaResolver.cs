@@ -5,11 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Dia;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.Discovery
+namespace GoogleTestAdapter.DIa
 {
 
     class NativeSourceFileLocation

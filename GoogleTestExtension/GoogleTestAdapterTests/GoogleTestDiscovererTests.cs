@@ -63,7 +63,7 @@ namespace GoogleTestAdapter
         private void FindStaticallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            var tests = discoverer.GetTestsFromExecutable(MockLogger.Object, location);
+            var tests = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
             Assert.AreEqual(2, tests.Count);
             Assert.AreEqual("FooTest.DoesXyz", tests[0].DisplayName);
             Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", tests[0].CodeFilePath);
@@ -89,7 +89,7 @@ namespace GoogleTestAdapter
         private void FindExternallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            var tests = discoverer.GetTestsFromExecutable(MockLogger.Object, location);
+            var tests = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
 
             Assert.AreEqual(2, tests.Count);
 
@@ -250,7 +250,7 @@ namespace GoogleTestAdapter
             Assert.IsTrue(File.Exists(X86TraitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            List<TestCase> tests = discoverer.GetTestsFromExecutable(MockLogger.Object, X86TraitsTests);
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(X86TraitsTests, MockLogger.Object);
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
             Assert.IsNotNull(testCase);

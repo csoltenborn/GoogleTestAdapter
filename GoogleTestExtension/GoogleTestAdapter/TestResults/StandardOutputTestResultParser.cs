@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.TestResults
 {
     class StandardOutputTestResultParser : AbstractOptionsProvider
     {
-        private const string Run    = "[ RUN      ]";
+        private const string Run = "[ RUN      ]";
         private const string Failed = "[  FAILED  ]";
         private const string Passed = "[       OK ]";
 
@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.TestResults
 
         internal TestCase CrashedTestCase { get; private set; }
 
-        internal StandardOutputTestResultParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger, AbstractOptions options) : base(options)
+        internal StandardOutputTestResultParser(IEnumerable<TestCase> cases, IEnumerable<string> consoleOutput, IMessageLogger logger, AbstractOptions options) : base(options)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = cases.ToList();
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.TestResults
 
             if (currentLineIndex >= ConsoleOutput.Count)
             {
-                return CreateFailedTestResult(testCase, true, CrashText, TimeSpan.FromMilliseconds(0));
+                return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), true, CrashText);
             }
 
             line = ConsoleOutput[currentLineIndex++];
@@ -68,11 +68,11 @@ namespace GoogleTestAdapter.TestResults
             }
             if (IsFailedLine(line))
             {
-                return CreateFailedTestResult(testCase, false, errorMsg, ParseDuration(line));
+                return CreateFailedTestResult(testCase, ParseDuration(line), false, errorMsg);
             }
 
             string appendedMessage = errorMsg == "" ? "" : "\n\n" + errorMsg;
-            return CreateFailedTestResult(testCase, true, CrashText + appendedMessage, TimeSpan.FromMilliseconds(0));
+            return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), true, CrashText + appendedMessage);
         }
 
         private TimeSpan ParseDuration(string line)
@@ -107,7 +107,7 @@ namespace GoogleTestAdapter.TestResults
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, bool crashed, string errorMessage, TimeSpan duration)
+        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, bool crashed, string errorMessage)
         {
             if (crashed)
             {

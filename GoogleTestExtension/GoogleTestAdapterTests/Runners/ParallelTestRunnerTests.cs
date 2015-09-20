@@ -3,7 +3,7 @@ using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter.Execution
+namespace GoogleTestAdapter.Runners
 {
     [TestClass]
     public class ParallelTestRunnerTests : AbstractGoogleTestExtensionTests
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Execution
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 
             Assert.IsTrue(sequentialDuration > 6000, sequentialDuration.ToString()); // 3 long tests, 2 seconds per test
-            Assert.IsTrue(parallelDuration > 2000, parallelDuration.ToString()); 
+            Assert.IsTrue(parallelDuration > 2000, parallelDuration.ToString());
             Assert.IsTrue(parallelDuration < 3000, parallelDuration.ToString()); // 2 seconds per long test + some time for the rest
         }
 

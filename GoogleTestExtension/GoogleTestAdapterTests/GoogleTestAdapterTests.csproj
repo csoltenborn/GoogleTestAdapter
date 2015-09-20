@@ -71,13 +71,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
-    <Compile Include="Execution\CommandLineGeneratorTests.cs" />
-    <Compile Include="Execution\ParallelTestRunnerTests.cs" />
+    <Compile Include="Runners\CommandLineGeneratorTests.cs" />
+    <Compile Include="Runners\ParallelTestRunnerTests.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="AbstractGoogleTestExecutorTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
-    <Compile Include="Discovery\ImportsParserTests.cs" />
+    <Compile Include="Dia\ImportsParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
     <Compile Include="GoogleTestAdapterOptionsTests.cs" />

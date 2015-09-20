@@ -3,8 +3,8 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using GoogleTestAdapter.Execution;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Runners;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
@@ -17,11 +17,11 @@ namespace GoogleTestAdapter
 
         private bool Canceled { get; set; } = false;
         private IGoogleTestRunner Runner { get; set; }
-        private List<TestCase> AllTestCasesInAllExecutables { get; } = new List<TestCase>(); 
+        private List<TestCase> AllTestCasesInAllExecutables { get; } = new List<TestCase>();
 
         public GoogleTestExecutor() : this(null) { }
 
-        internal GoogleTestExecutor(AbstractOptions options) : base(options) {}
+        internal GoogleTestExecutor(AbstractOptions options) : base(options) { }
 
         public void RunTests(IEnumerable<string> executables, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
@@ -77,7 +77,7 @@ namespace GoogleTestAdapter
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Running " + testCasesToRunAsArray.Length + " tests...");
-            Runner.RunTests(runAllTestCases, AllTestCasesInAllExecutables, testCasesToRunAsArray, runContext, handle, null);
+            Runner.RunTests(runAllTestCases, AllTestCasesInAllExecutables, testCasesToRunAsArray, null, runContext, handle);
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
         }
 
@@ -89,11 +89,11 @@ namespace GoogleTestAdapter
             }
             else
             {
-                Runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options, 0);
+                Runner = new PreparingTestRunner(new SequentialTestRunner(Options), 0, Options);
                 if (Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
-                    DebugUtils.LogUserDebugMessage(logger, Options, 
-                        TestMessageLevel.Informational, 
+                    DebugUtils.LogUserDebugMessage(logger, Options,
+                        TestMessageLevel.Informational,
                         "GTA: Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
                 }
             }
@@ -112,7 +112,7 @@ namespace GoogleTestAdapter
                     break;
                 }
 
-                AllTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(logger, executable));
+                AllTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(executable, logger));
             }
         }
 

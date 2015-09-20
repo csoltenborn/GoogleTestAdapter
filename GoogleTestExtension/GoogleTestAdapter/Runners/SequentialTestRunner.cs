@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.Execution
+namespace GoogleTestAdapter.Runners
 {
     class SequentialTestRunner : AbstractOptionsProvider, IGoogleTestRunner
     {
@@ -17,7 +17,8 @@ namespace GoogleTestAdapter.Execution
 
         internal SequentialTestRunner(AbstractOptions options) : base(options) { }
 
-        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
+        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+            string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
@@ -29,7 +30,7 @@ namespace GoogleTestAdapter.Execution
                 {
                     break;
                 }
-                RunTestsFromExecutable(runAllTestCases, executable, allTestCasesAsArray, groupedTestCases[executable], runContext, handle, userParameters);
+                RunTestsFromExecutable(runAllTestCases, executable, allTestCasesAsArray, groupedTestCases[executable], userParameters, runContext, handle);
             }
         }
 
@@ -39,14 +40,16 @@ namespace GoogleTestAdapter.Execution
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void RunTestsFromExecutable(bool runAllTestCases, string executable, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
+        private void RunTestsFromExecutable(bool runAllTestCases, string executable,
+            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string userParameters,
+            IRunContext runContext, IFrameworkHandle handle)
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
             TestDurationSerializer serializer = new TestDurationSerializer(Options);
 
-            CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, testCasesToRun, resultXmlFile, handle, Options, userParameters);
+            CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, handle, Options);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (Canceled)
@@ -58,21 +61,21 @@ namespace GoogleTestAdapter.Execution
 
                 DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new ProcessLauncher(Options).GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
-                IEnumerable<TestResult> results = CollectTestResults(resultXmlFile, consoleOutput, arguments.TestCases,
-                    handle);
+                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases,
+                    resultXmlFile, consoleOutput, handle);
 
                 reporter.ReportTestResults(handle, results);
                 serializer.UpdateTestDurations(results);
             }
         }
 
-        private List<TestResult> CollectTestResults(string resultXmlFile, List<string> consoleOutput, IEnumerable<TestCase> testCasesRun, IFrameworkHandle handle)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, IFrameworkHandle handle)
         {
             List<TestResult> testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            XmlTestResultParser xmlParser = new XmlTestResultParser(resultXmlFile, testCasesRunAsArray, handle, Options);
-            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(consoleOutput, testCasesRunAsArray, handle, Options);
+            XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, handle, Options);
+            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, handle, Options);
 
             testResults.AddRange(xmlParser.GetTestResults());
 

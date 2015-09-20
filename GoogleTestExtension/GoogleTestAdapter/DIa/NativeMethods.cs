@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.Discovery
+namespace GoogleTestAdapter.DIa
 {
 
     [StructLayout(LayoutKind.Sequential)]
@@ -47,6 +47,16 @@ namespace GoogleTestAdapter.Discovery
         public uint Name;
         [FieldOffset(16)]
         public uint FirstThunk;
+    }
+
+    enum NameSearchOptions : uint
+    {
+        NsNone = 0x0u,
+        NsfCaseSensitive = 0x1u,
+        NsfCaseInsensitive = 0x2u,
+        NsfFNameExt = 0x4u,
+        NsfRegularExpression = 0x8u,
+        NsfUndecoratedName = 0x10u
     }
 
 

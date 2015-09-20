@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.TestResults
         private string XmlResultFile { get; }
         private List<TestCase> TestCasesRun { get; }
 
-        internal XmlTestResultParser(string xmlResultFile, IEnumerable<TestCase> testCases, IMessageLogger logger, AbstractOptions options) : base(options)
+        internal XmlTestResultParser(IEnumerable<TestCase> testCases, string xmlResultFile, IMessageLogger logger, AbstractOptions options) : base(options)
         {
             this.Logger = logger;
             this.XmlResultFile = xmlResultFile;

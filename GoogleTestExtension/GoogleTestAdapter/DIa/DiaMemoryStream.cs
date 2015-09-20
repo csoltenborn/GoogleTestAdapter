@@ -2,7 +2,7 @@
 using System.IO;
 using Dia;
 
-namespace GoogleTestAdapter.Discovery
+namespace GoogleTestAdapter.DIa
 {
     class DiaMemoryStream : IStream
     {
@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.Discovery
         {
             fixed (byte* addressOfBuffer = &buffer)
             {
-                for(bytesRead = 0; bytesRead < bufferSize; bytesRead++)
+                for (bytesRead = 0; bytesRead < bufferSize; bytesRead++)
                 {
                     var nextByte = PdbFile.ReadByte();
                     if (nextByte == -1)
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.Discovery
             {
                 cbSize = new _ULARGE_INTEGER
                 {
-                    QuadPart = (ulong) PdbFile.Length
+                    QuadPart = (ulong)PdbFile.Length
                 }
             };
         }

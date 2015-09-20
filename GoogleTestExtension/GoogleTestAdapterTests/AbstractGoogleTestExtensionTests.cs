@@ -39,8 +39,8 @@ namespace GoogleTestAdapter
                 {
                     _allTestCasesOfConsoleApplication1 = new List<TestCase>();
                     GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(MockLogger.Object, X86TraitsTests));
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(MockLogger.Object, X86HardcrashingTests));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests, MockLogger.Object));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests, MockLogger.Object));
                 }
                 return _allTestCasesOfConsoleApplication1;
             }

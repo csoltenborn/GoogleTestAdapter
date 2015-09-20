@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.Execution
+namespace GoogleTestAdapter.Runners
 {
     class ParallelTestRunner : AbstractOptionsProvider, IGoogleTestRunner
     {
@@ -15,14 +15,15 @@ namespace GoogleTestAdapter.Execution
 
         private List<IGoogleTestRunner> TestRunners { get; } = new List<IGoogleTestRunner>();
 
-        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
+        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+            string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
             List<Thread> threads = new List<Thread>();
             lock (this)
             {
-                DoRunTests(allTestCases, testCasesToRun, runContext, handle, threads);
+                DoRunTests(allTestCases, testCasesToRun, threads, runContext, handle);
             }
 
             foreach (Thread thread in threads)
@@ -42,13 +43,13 @@ namespace GoogleTestAdapter.Execution
             }
         }
 
-        private void DoRunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, List<Thread> threads)
+        private void DoRunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, List<Thread> threads, IRunContext runContext, IFrameworkHandle handle)
         {
             TestDurationSerializer serializer = new TestDurationSerializer(Options);
             TestCase[] testcasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testcasesToRun);
 
-            ITestsSplitter splitter = GetTestsSplitter(handle, testcasesToRun, durations);
+            ITestsSplitter splitter = GetTestsSplitter(testcasesToRun, durations, handle);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing tests on " + splittedTestCasesToRun.Count + " threads");
@@ -57,15 +58,15 @@ namespace GoogleTestAdapter.Execution
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options, threadId++);
-                Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, runContext, handle, null));
+                IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), threadId++, Options);
+                Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, null, runContext, handle));
                 thread.Start();
                 threads.Add(thread);
                 TestRunners.Add(runner);
             }
         }
 
-        private ITestsSplitter GetTestsSplitter(IFrameworkHandle handle, TestCase[] testCasesToRun, IDictionary<TestCase, int> durations)
+        private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun, IDictionary<TestCase, int> durations, IFrameworkHandle handle)
         {
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)

@@ -5,7 +5,7 @@ using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.Execution
+namespace GoogleTestAdapter.Runners
 {
 
     class CommandLineGenerator : AbstractOptionsProvider
@@ -32,7 +32,10 @@ namespace GoogleTestAdapter.Execution
         private IMessageLogger Logger { get; }
         private string UserParameters { get; }
 
-        internal CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, AbstractOptions options, string userParameters) : base(options)
+        internal CommandLineGenerator(
+            bool runAllTestCases, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun,
+            int lengthOfExecutableString, string userParameters, string resultXmlFile,
+            IMessageLogger logger, AbstractOptions options) : base(options)
         {
             if (userParameters == null)
             {
@@ -71,7 +74,8 @@ namespace GoogleTestAdapter.Execution
             }
 
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
-            string baseFilter = GoogleTestConstants.FilterOption + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
+            string baseFilter =
+                GoogleTestConstants.FilterOption + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
             string baseCommandLineWithFilter = baseCommandLine + baseFilter;
 
             List<TestCase> testsNotRunBySuite = GetCasesNotRunBySuite(suitesRunningAllTests);
@@ -115,7 +119,8 @@ namespace GoogleTestAdapter.Execution
             string nextTest = GetTestcaseNameForFiltering(tests[0].FullyQualifiedName);
             if (nextTest.Length > maxLength)
             {
-                throw new Exception("I can not deal with this case :-(");
+                throw new Exception("CommandLineGenerator: I can not deal with this case :-( - maxLength=" + maxLength +
+                    ", includedTestCases.Count=" + includedTestCases.Count + ", nextTest.Length=" + nextTest.Length);
             }
 
             while (result.Length + nextTest.Length <= maxLength && tests.Count > 0)
@@ -160,7 +165,7 @@ namespace GoogleTestAdapter.Execution
             }
             if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
             {
-                Logger.SendMessage(TestMessageLevel.Error,
+                Logger.SendMessage(TestMessageLevel.Warning,
                     "Test level repetitions configured under Options/Google Test Adapter is " +
                     nrOfRepetitions + ", should be -1 (infinite) or > 0. Ignoring value.");
                 return "";

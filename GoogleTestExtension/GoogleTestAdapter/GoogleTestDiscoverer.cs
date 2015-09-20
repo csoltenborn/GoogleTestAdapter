@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using GoogleTestAdapter.Discovery;
+using GoogleTestAdapter.DIa;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -18,11 +18,11 @@ namespace GoogleTestAdapter
 
         private static bool ProcessIdShown { get; set; } = false;
 
-        public GoogleTestDiscoverer() : this(null) {}
+        public GoogleTestDiscoverer() : this(null) { }
 
-        internal GoogleTestDiscoverer(AbstractOptions options) : base(options) {}
+        internal GoogleTestDiscoverer(AbstractOptions options) : base(options) { }
 
-        public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext, 
+        public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
             if (!ProcessIdShown)
@@ -35,24 +35,24 @@ namespace GoogleTestAdapter
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
             foreach (string executable in googleTestExecutables)
             {
-                List<TestCase> testCases = GetTestsFromExecutable(logger, executable);
+                List<TestCase> testCases = GetTestsFromExecutable(executable, logger);
                 reporter.ReportTestsFound(discoverySink, testCases);
             }
         }
 
-        internal List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
+        internal List<TestCase> GetTestsFromExecutable(string executable, IMessageLogger logger)
         {
             List<string> consoleOutput = new ProcessLauncher(Options).GetOutputOfCommand(logger, "", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
             List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
             suiteCasePairs.Reverse();
-            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, logger, suiteCasePairs);
+            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteCasePairs, logger);
 
             logger.SendMessage(TestMessageLevel.Informational, "GTA: Found " + suiteCasePairs.Count + " tests in executable " + executable);
 
             List<TestCase> testCases = new List<TestCase>();
             foreach (SuiteCasePair suiteCasePair in suiteCasePairs)
             {
-                testCases.Add(ToTestCase(executable, suiteCasePair, logger, sourceFileLocations));
+                testCases.Add(ToTestCase(executable, suiteCasePair, sourceFileLocations, logger));
                 DebugUtils.LogDebugMessage(logger, TestMessageLevel.Informational, "GTA: Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase);
             }
             return testCases;
@@ -83,7 +83,7 @@ namespace GoogleTestAdapter
             return suiteCasePairs;
         }
 
-        private List<SourceFileLocation> GetSourceFileLocations(string executable, IMessageLogger logger, List<SuiteCasePair> testcases)
+        private List<SourceFileLocation> GetSourceFileLocations(string executable, List<SuiteCasePair> testcases, IMessageLogger logger)
         {
             List<string> symbols = testcases.Select(GetGoogleTestCombinedName).ToList();
             string SymbolFilterString = "*" + GoogleTestConstants.TestBodySignature;
@@ -106,7 +106,7 @@ namespace GoogleTestAdapter
             return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
-        private TestCase ToTestCase(string executable, SuiteCasePair suiteCasePair, IMessageLogger logger, List<SourceFileLocation> sourceFileLocations)
+        private TestCase ToTestCase(string executable, SuiteCasePair suiteCasePair, List<SourceFileLocation> sourceFileLocations, IMessageLogger logger)
         {
             string displayName = suiteCasePair.TestSuite + "." + suiteCasePair.TestCase;
             string symbolName = GetGoogleTestCombinedName(suiteCasePair);
@@ -119,7 +119,7 @@ namespace GoogleTestAdapter
                     {
                         DisplayName = displayName,
                         CodeFilePath = location.Sourcefile,
-                        LineNumber = (int) location.Line
+                        LineNumber = (int)location.Line
                     };
                     testCase.Traits.AddRange(GetTraits(testCase.FullyQualifiedName, location.Traits));
                     return testCase;
@@ -219,4 +219,5 @@ namespace GoogleTestAdapter
         }
 
     }
+
 }

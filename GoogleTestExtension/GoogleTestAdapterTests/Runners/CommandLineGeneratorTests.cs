@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter.Execution
+namespace GoogleTestAdapter.Runners
 {
     [TestClass]
     public class CommandLineGeneratorTests : AbstractGoogleTestExtensionTests
@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.Execution
         {
             string userParameters = "-testdirectory=\"MyTestDirectory\"";
 
-            string commandLine = new CommandLineGenerator(true, DummyExecutable.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object, userParameters).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(true, new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, userParameters, "", MockLogger.Object, MockOptions.Object).GetCommandLines().First().CommandLine;
 
             Assert.IsTrue(commandLine.EndsWith(" -testdirectory=\"MyTestDirectory\""));
         }
@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Execution
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string commandLine = new CommandLineGenerator(true, DummyExecutable.Length, new List<TestCase>(), new List<TestCase>(), "", MockLogger.Object, MockOptions.Object, "").GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(true, new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object).GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\"", commandLine);
         }
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Execution
         {
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCasesWithCommonSuite, testCasesWithCommonSuite, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, testCasesWithCommonSuite, testCasesWithCommonSuite, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", commandLine);
@@ -48,9 +48,9 @@ namespace GoogleTestAdapter.Execution
                 "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb");
             IEnumerable<TestCase> testCasesReversed = testCasesWithCommonSuite.Reverse();
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, testCasesWithCommonSuite, testCasesWithCommonSuite, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, testCasesWithCommonSuite, testCasesWithCommonSuite, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().First().CommandLine;
-            string commandLineFromBackwards = new CommandLineGenerator(false, DummyExecutable.Length, testCasesReversed, testCasesReversed, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLineFromBackwards = new CommandLineGenerator(false, testCasesReversed, testCasesReversed, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().First().CommandLine;
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.Execution
             IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
             IEnumerable<TestCase> allTestCases = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest1", "BarSuite.BazTest2");
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCasesWithDifferentSuite, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", commandLine);
@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.Execution
             IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
             IEnumerable<TestCase> allTestCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2");
 
-            string commandLine = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCasesWithDifferentSuite, "", MockLogger.Object, MockOptions.Object, "")
+            string commandLine = new CommandLineGenerator(false, allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", commandLine);
@@ -96,7 +96,7 @@ namespace GoogleTestAdapter.Execution
             IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
             IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, "")
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, allTestCases, testCases, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().ToList();
 
             Assert.AreEqual(3, commands.Count);
@@ -144,7 +144,7 @@ namespace GoogleTestAdapter.Execution
             IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
             IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, DummyExecutable.Length, allTestCases, testCases, "", MockLogger.Object, MockOptions.Object, "")
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, allTestCases, testCases, DummyExecutable.Length, "", "", MockLogger.Object, MockOptions.Object)
                 .GetCommandLines().ToList();
 
             Assert.AreEqual(3, commands.Count);

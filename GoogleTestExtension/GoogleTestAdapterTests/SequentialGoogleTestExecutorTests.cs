@@ -4,7 +4,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using GoogleTestAdapter.Execution;
+using GoogleTestAdapter.Runners;
 
 namespace GoogleTestAdapter
 {
@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
 
             Stopwatch stopwatch = new Stopwatch();
             IGoogleTestRunner runner = new SequentialTestRunner(MockOptions.Object);
-            Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testCasesToRun, MockRunContext.Object, MockFrameworkHandle.Object, ""));
+            Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testCasesToRun, "", MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();
             thread.Start();

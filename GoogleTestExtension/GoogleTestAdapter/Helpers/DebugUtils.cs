@@ -31,12 +31,12 @@ namespace GoogleTestAdapter.Helpers
 
         internal static void CheckDebugModeForExecutionCode(IMessageLogger logger = null)
         {
-            CheckDebugMode("GTA: Test execution code", logger);
+            CheckDebugMode("Test execution code", logger);
         }
 
         internal static void CheckDebugModeForDiscoverageCode(IMessageLogger logger = null)
         {
-            CheckDebugMode("GTA: Test discoverage code", logger);
+            CheckDebugMode("Test discoverage code", logger);
         }
 
         private static void CheckDebugMode(string codeType, IMessageLogger logger = null)

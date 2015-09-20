@@ -6,19 +6,21 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.Execution
+namespace GoogleTestAdapter.Runners
 {
     class PreparingTestRunner : AbstractOptionsProvider, IGoogleTestRunner
     {
         private IGoogleTestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
-        internal PreparingTestRunner(SequentialTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
+        internal PreparingTestRunner(SequentialTestRunner innerTestrunner, int threadId, AbstractOptions options) : base(options)
+        {
             this.InnerTestRunner = innerTestrunner;
             this.ThreadId = threadId;
         }
 
-        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, string userParameters)
+        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+            string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
@@ -28,12 +30,12 @@ namespace GoogleTestAdapter.Execution
                 userParameters = Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
                 string batch = Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
-                ExecuteBatch(runContext, handle, batch, "Test setup");
+                ExecuteBatch("Test setup", batch, runContext, handle);
 
-                InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
+                InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, userParameters, runContext, handle);
 
                 batch = Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
-                ExecuteBatch(runContext, handle, batch, "Test teardown");
+                ExecuteBatch("Test teardown", batch, runContext, handle);
 
                 Directory.Delete(testDirectory);
             }
@@ -48,7 +50,7 @@ namespace GoogleTestAdapter.Execution
             InnerTestRunner.Cancel();
         }
 
-        private void ExecuteBatch(IRunContext runContext, IFrameworkHandle handle, string batch, string batchType)
+        private void ExecuteBatch(string batchType, string batch, IRunContext runContext, IFrameworkHandle handle)
         {
             if (string.IsNullOrEmpty(batch))
             {
