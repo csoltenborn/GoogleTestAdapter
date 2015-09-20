@@ -57,7 +57,7 @@ namespace GoogleTestAdapter.Execution
                 reporter.ReportTestsStarted(handle, arguments.TestCases);
 
                 DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.");
-                List<string> consoleOutput = new ProcessUtils(Options).GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
+                List<string> consoleOutput = new ProcessLauncher(Options).GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(resultXmlFile, consoleOutput, arguments.TestCases,
                     handle);
 

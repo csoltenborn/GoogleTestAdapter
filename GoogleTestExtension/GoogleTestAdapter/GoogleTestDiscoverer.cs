@@ -42,7 +42,7 @@ namespace GoogleTestAdapter
 
         internal List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
-            List<string> consoleOutput = new ProcessUtils(Options).GetOutputOfCommand(logger, "", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
+            List<string> consoleOutput = new ProcessLauncher(Options).GetOutputOfCommand(logger, "", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
             List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
             suiteCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, logger, suiteCasePairs);

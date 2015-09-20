@@ -94,7 +94,7 @@
     <Compile Include="Discovery\Native.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
     <Compile Include="GoogleTestAdapterOptions.cs" />
-    <Compile Include="Helpers\ProcessUtils.cs" />
+    <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />

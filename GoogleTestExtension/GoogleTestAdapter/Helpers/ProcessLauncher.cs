@@ -7,9 +7,9 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Helpers
 {
 
-    class ProcessUtils : AbstractGoogleTestAdapterClass
+    class ProcessLauncher : AbstractGoogleTestAdapterClass
     {
-        internal ProcessUtils(AbstractOptions options) : base(options) { }
+        internal ProcessLauncher(AbstractOptions options) : base(options) { }
 
         internal List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
         {
@@ -85,7 +85,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private static void ReadTheStream(bool throwIfError, Process process, List<string> streamContent, IMessageLogger logger, bool printTestOutput)
+        private void ReadTheStream(bool throwIfError, Process process, List<string> streamContent, IMessageLogger logger, bool printTestOutput)
         {
             while (!process.StandardOutput.EndOfStream)
             {
