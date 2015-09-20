@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.Runners
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
+            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(Options, handle);
             TestDurationSerializer serializer = new TestDurationSerializer(Options);
 
             CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, handle, Options);

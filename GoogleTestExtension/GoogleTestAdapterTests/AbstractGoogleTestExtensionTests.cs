@@ -56,6 +56,7 @@ namespace GoogleTestAdapter
         {
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
+            MockOptions.Setup(o => o.TestCounter).Returns(1);
         }
 
         [TestCleanup]
