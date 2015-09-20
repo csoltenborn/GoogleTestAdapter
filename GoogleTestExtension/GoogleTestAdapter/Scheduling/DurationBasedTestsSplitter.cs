@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    class DurationBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
+    class DurationBasedTestsSplitter : AbstractOptionsProvider, ITestsSplitter
     {
         private int OverallDuration { get; }
         private IDictionary<TestCase, int> TestcaseDurations { get; }

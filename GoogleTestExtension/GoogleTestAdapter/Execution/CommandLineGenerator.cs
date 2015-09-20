@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Execution
 {
 
-    class CommandLineGenerator : AbstractGoogleTestAdapterClass
+    class CommandLineGenerator : AbstractOptionsProvider
     {
         internal class Args
         {

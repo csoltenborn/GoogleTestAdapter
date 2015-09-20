@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GoogleTestConstants.cs" />
-    <Compile Include="Helpers\AbstractGoogleTestAdapterClass.cs" />
+    <Compile Include="Helpers\AbstractOptionsProvider.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Helpers\ProcessWaiter.cs" />
     <Compile Include="Helpers\Utils.cs" />

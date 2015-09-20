@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class XmlTestResultParser : AbstractGoogleTestAdapterClass
+    class XmlTestResultParser : AbstractOptionsProvider
     {
         private const string ErrorMsgNoXmlFile = "GTA: Output file does not exist, did your tests crash?";
 

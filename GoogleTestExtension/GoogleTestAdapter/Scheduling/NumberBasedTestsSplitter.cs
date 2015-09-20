@@ -6,7 +6,7 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    class NumberBasedTestsSplitter : AbstractGoogleTestAdapterClass, ITestsSplitter
+    class NumberBasedTestsSplitter : AbstractOptionsProvider, ITestsSplitter
     {
         private IEnumerable<TestCase> TestcasesToRun { get; }
 

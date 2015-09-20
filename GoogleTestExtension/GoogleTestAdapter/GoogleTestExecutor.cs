@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter
 {
     [ExtensionUri(ExecutorUriString)]
-    public class GoogleTestExecutor : AbstractGoogleTestAdapterClass, ITestExecutor
+    public class GoogleTestExecutor : AbstractOptionsProvider, ITestExecutor
     {
         internal const string ExecutorUriString = Constants.IdentifierUri;
         internal static readonly Uri ExecutorUri = new Uri(ExecutorUriString);

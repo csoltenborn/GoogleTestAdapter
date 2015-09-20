@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.Scheduling
         public List<SerializableKeyValuePair<string, int>> TestDurations { get; set; } = new List<SerializableKeyValuePair<string, int>>();
     }
 
-    class TestDurationSerializer : AbstractGoogleTestAdapterClass
+    class TestDurationSerializer : AbstractOptionsProvider
     {
         private static object Lock { get; } = new object();
         private static readonly SerializableKeyValuePair<string, int> Default = new SerializableKeyValuePair<string, int>();

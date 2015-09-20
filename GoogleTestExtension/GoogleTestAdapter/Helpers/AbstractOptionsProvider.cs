@@ -1,12 +1,12 @@
 ﻿namespace GoogleTestAdapter.Helpers
 {
 
-    public class AbstractGoogleTestAdapterClass
+    public class AbstractOptionsProvider
     {
 
         protected AbstractOptions Options { get; }
 
-        protected AbstractGoogleTestAdapterClass(AbstractOptions options)
+        protected AbstractOptionsProvider(AbstractOptions options)
         {
             this.Options = options ?? new GoogleTestAdapterOptions();
         }

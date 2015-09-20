@@ -12,7 +12,7 @@ namespace GoogleTestAdapter
 {
     [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]
-    public class GoogleTestDiscoverer : AbstractGoogleTestAdapterClass, ITestDiscoverer
+    public class GoogleTestDiscoverer : AbstractOptionsProvider, ITestDiscoverer
     {
         private static readonly Regex CompiledTestFinderRegex = new Regex(Constants.TestFinderRegex, RegexOptions.Compiled);
 

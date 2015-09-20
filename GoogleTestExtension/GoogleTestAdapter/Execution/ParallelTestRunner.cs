@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Execution
 {
-    class ParallelTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    class ParallelTestRunner : AbstractOptionsProvider, IGoogleTestRunner
     {
         internal ParallelTestRunner(AbstractOptions options) : base(options) { }
 

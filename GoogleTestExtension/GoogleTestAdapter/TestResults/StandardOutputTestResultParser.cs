@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class StandardOutputTestResultParser : AbstractGoogleTestAdapterClass
+    class StandardOutputTestResultParser : AbstractOptionsProvider
     {
         private const string Run    = "[ RUN      ]";
         private const string Failed = "[  FAILED  ]";

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Helpers
 {
 
-    class ProcessLauncher : AbstractGoogleTestAdapterClass
+    class ProcessLauncher : AbstractOptionsProvider
     {
         internal ProcessLauncher(AbstractOptions options) : base(options) { }
 

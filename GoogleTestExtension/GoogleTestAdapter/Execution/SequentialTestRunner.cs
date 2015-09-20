@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Execution
 {
-    class SequentialTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    class SequentialTestRunner : AbstractOptionsProvider, IGoogleTestRunner
     {
         private bool Canceled { get; set; } = false;
 

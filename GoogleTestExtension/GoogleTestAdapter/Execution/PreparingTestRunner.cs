@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Execution
 {
-    class PreparingTestRunner : AbstractGoogleTestAdapterClass, IGoogleTestRunner
+    class PreparingTestRunner : AbstractOptionsProvider, IGoogleTestRunner
     {
         private IGoogleTestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
