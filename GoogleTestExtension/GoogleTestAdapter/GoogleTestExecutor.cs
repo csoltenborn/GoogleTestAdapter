@@ -17,7 +17,6 @@ namespace GoogleTestAdapter
 
         private bool Canceled { get; set; } = false;
         private IGoogleTestRunner Runner { get; set; }
-        private string UserParameters { get; set; }
         private List<TestCase> AllTestCasesInAllExecutables { get; } = new List<TestCase>(); 
 
         public GoogleTestExecutor() : this(null) { }
@@ -31,7 +30,7 @@ namespace GoogleTestAdapter
                 lock (this)
                 {
                     DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
-                    ComputeTestRunnerAndUserParameters(runContext, frameworkHandle);
+                    ComputeTestRunner(runContext, frameworkHandle);
                 }
 
                 ComputeAllTestCasesInAllExecutables(executables, frameworkHandle);
@@ -50,7 +49,7 @@ namespace GoogleTestAdapter
                 lock (this)
                 {
                     DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
-                    ComputeTestRunnerAndUserParameters(runContext, frameworkHandle);
+                    ComputeTestRunner(runContext, frameworkHandle);
                 }
 
                 TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
@@ -78,21 +77,19 @@ namespace GoogleTestAdapter
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Running " + testCasesToRunAsArray.Length + " tests...");
-            Runner.RunTests(runAllTestCases, AllTestCasesInAllExecutables, testCasesToRunAsArray, runContext, handle, UserParameters);
+            Runner.RunTests(runAllTestCases, AllTestCasesInAllExecutables, testCasesToRunAsArray, runContext, handle, null);
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
         }
 
-        private void ComputeTestRunnerAndUserParameters(IRunContext runContext, IMessageLogger logger)
+        private void ComputeTestRunner(IRunContext runContext, IMessageLogger logger)
         {
             if (Options.ParallelTestExecution && !runContext.IsBeingDebugged)
             {
                 Runner = new ParallelTestRunner(Options);
-                UserParameters = null;
             }
             else
             {
-                Runner = new SequentialTestRunner(Options);
-                UserParameters = Options.GetUserParameters(runContext.SolutionDirectory, Utils.GetTempDirectory(), 0);
+                Runner = new PreparingTestRunner(new SequentialTestRunner(Options), Options, 0);
                 if (Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
                     DebugUtils.LogUserDebugMessage(logger, Options, 

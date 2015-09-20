@@ -1,6 +1,5 @@
 ﻿Before release:
 	code review
-	implement execution of setup/teardown batches
 	parse param value from test name, print into TestResult
 	move more constants to Constants.cs etc.
 	end-to-end tests

@@ -75,6 +75,7 @@
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="Helpers\AbstractGoogleTestAdapterClass.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Helpers\ProcessWaiter.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Execution\PreparingTestRunner.cs" />
     <Compile Include="Execution\SequentialTestRunner.cs" />

@@ -11,6 +11,10 @@ namespace GoogleTestAdapter
 {
     public class AbstractGoogleTestExtensionTests
     {
+        private const string ConsoleApplication1TestsDir = @"..\..\..\..\ConsoleApplication1\ConsoleApplication1Tests\";
+        protected const string Results0Batch = ConsoleApplication1TestsDir + @"Returns0.bat";
+        protected const string Results1Batch = ConsoleApplication1TestsDir + @"Returns1.bat";
+
         protected const string X86StaticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
         protected const string X86ExternallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
         protected const string X86CrashingTests = @"..\..\..\testdata\_x86\CrashingGoogleTests\CrashingGoogleTests.exe";

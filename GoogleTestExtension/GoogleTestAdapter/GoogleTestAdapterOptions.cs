@@ -24,15 +24,29 @@ namespace GoogleTestAdapter
         public abstract string TestTeardownBatch { get; }
         public abstract string AdditionalTestExecutionParam { get; }
 
-        public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
+        internal string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
-            string parameters = AdditionalTestExecutionParam;
-            if (string.IsNullOrEmpty(parameters))
+            return ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
+        }
+
+        internal string GetTestSetupBatch(string solutionDirectory, string testDirectory, int threadId)
+        {
+            return ReplacePlaceholders(TestSetupBatch, solutionDirectory, testDirectory, threadId);
+        }
+
+        internal string GetTestTeardownBatch(string solutionDirectory, string testDirectory, int threadId)
+        {
+            return ReplacePlaceholders(TestTeardownBatch, solutionDirectory, testDirectory, threadId);
+        }
+
+        private static string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
+        {
+            if (string.IsNullOrEmpty(theString))
             {
                 return "";
             }
 
-            string result = parameters.Replace(GoogleTestAdapterOptions.TestDirPlaceholder, testDirectory);
+            string result = theString.Replace(GoogleTestAdapterOptions.TestDirPlaceholder, testDirectory);
             result = result.Replace(GoogleTestAdapterOptions.ThreadIdPlaceholder, threadId.ToString());
             result = result.Replace(GoogleTestAdapterOptions.SolutionDirPlaceholder, solutionDirectory);
             return result;

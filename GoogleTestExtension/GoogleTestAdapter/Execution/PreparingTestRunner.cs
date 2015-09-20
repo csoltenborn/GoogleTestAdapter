@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Execution
         private IGoogleTestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
-        internal PreparingTestRunner(IGoogleTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
+        internal PreparingTestRunner(SequentialTestRunner innerTestrunner, AbstractOptions options, int threadId) : base(options) {
             this.InnerTestRunner = innerTestrunner;
             this.ThreadId = threadId;
         }
@@ -27,9 +27,13 @@ namespace GoogleTestAdapter.Execution
                 string testDirectory = Utils.GetTempDirectory();
                 userParameters = Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
-                // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
+                string batch = Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
+                ExecuteBatch(runContext, handle, batch, "Test setup");
+
                 InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, runContext, handle, userParameters);
-                // ProcessUtils.GetOutputOfCommand(handle, "", "", "", false, false, runContext, handle);
+
+                batch = Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
+                ExecuteBatch(runContext, handle, batch, "Test teardown");
 
                 Directory.Delete(testDirectory);
             }
@@ -42,6 +46,37 @@ namespace GoogleTestAdapter.Execution
         void IGoogleTestRunner.Cancel()
         {
             InnerTestRunner.Cancel();
+        }
+
+        private void ExecuteBatch(IRunContext runContext, IFrameworkHandle handle, string batch, string batchType)
+        {
+            if (string.IsNullOrEmpty(batch))
+            {
+                return;
+            }
+
+            try
+            {
+                int batchExitCode;
+                ProcessUtils.GetOutputOfCommand(handle, "", batch, "", false, false, runContext, null,
+                    out batchExitCode);
+                if (batchExitCode == 0)
+                {
+                    DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "Successfully ran " + batchType + "batch '" + batch + "'");
+                }
+                else
+                {
+                    handle.SendMessage(TestMessageLevel.Warning,
+                        "GTA: " + batchType + " batch returned exit code " + batchExitCode + ", executed command: '" +
+                        batch + "'");
+                }
+            }
+            catch (Exception e)
+            {
+                handle.SendMessage(TestMessageLevel.Error,
+                    "GTA: " + batchType + " batch caused exception, msg: '" + e.Message + "', executed command: '" +
+                    batch + "'");
+            }
         }
 
     }

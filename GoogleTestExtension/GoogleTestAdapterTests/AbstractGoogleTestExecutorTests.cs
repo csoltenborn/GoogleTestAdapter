@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
 using System.Reflection;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
@@ -58,7 +59,19 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsExternallyLinkedX86TestsWithResult()
         {
+            MockOptions.Setup(o => o.TestSetupBatch).Returns(Results0Batch);
+            MockOptions.Setup(o => o.TestTeardownBatch).Returns(Results1Batch);
+
             RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
+
+            MockFrameworkHandle.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains("setup"))),
+                Times.Never);
+            MockFrameworkHandle.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains("teardown"))),
+                Times.AtLeastOnce());
         }
 
         [TestMethod]
@@ -82,7 +95,19 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsExternallyLinkedX64TestsWithResult()
         {
+            MockOptions.Setup(o => o.TestSetupBatch).Returns(Results1Batch);
+            MockOptions.Setup(o => o.TestTeardownBatch).Returns(Results0Batch);
+
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
+
+            MockFrameworkHandle.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains("setup"))),
+                Times.AtLeastOnce());
+            MockFrameworkHandle.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains("teardown"))),
+                Times.Never);
         }
 
         [TestMethod]

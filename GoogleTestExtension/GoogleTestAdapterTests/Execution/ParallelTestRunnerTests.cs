@@ -17,12 +17,10 @@ namespace GoogleTestAdapter.Execution
                 Assert.Inconclusive("This test is designed for machines with at least 4 cores");
             }
 
-            string executable = X86TraitsTests;
-
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
-            executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(X86TraitsTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long sequentialDuration = stopwatch.ElapsedMilliseconds;
 
@@ -31,7 +29,7 @@ namespace GoogleTestAdapter.Execution
 
             stopwatch.Restart();
             executor = new GoogleTestExecutor(MockOptions.Object);
-            executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(X86TraitsTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 

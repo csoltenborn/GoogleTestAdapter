@@ -73,9 +73,7 @@ namespace GoogleTestAdapter.Discovery
                         foundSymbols.AddRange(allTestMethodSymbols.Where(symbol => symbol.Symbol.Contains(s)));
                     }
 
-                    List<GoogleTestDiscoverer.SourceFileLocation> sourceFileLocations = foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols)).ToList();
-                    DebugUtils.LogUserDebugMessage(logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "GTA: found " + foundSymbols.Count + " symbols in executable " + executable);
-                    return sourceFileLocations;
+                    return foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols)).ToList();
                 }
                 finally
                 {
@@ -99,13 +97,22 @@ namespace GoogleTestAdapter.Discovery
             {
                 if (lineNumbers.count > 0)
                 {
-                    return new GoogleTestDiscoverer.SourceFileLocation()
+                    GoogleTestDiscoverer.SourceFileLocation result = null;
+                    foreach (IDiaLineNumber lineNumber in lineNumbers)
                     {
-                        Symbol = nativeSymbol.Symbol,
-                        Sourcefile = lineNumbers.Item(0).sourceFile.fileName,
-                        Line = lineNumbers.Item(0).lineNumber,
-                        Traits = traits
-                    };
+                        if (result == null)
+                        {
+                            result = new GoogleTestDiscoverer.SourceFileLocation()
+                            {
+                                Symbol = nativeSymbol.Symbol,
+                                Sourcefile = lineNumber.sourceFile.fileName,
+                                Line = lineNumber.lineNumber,
+                                Traits = traits
+                            };
+                        }
+                        Native.ReleaseCom(lineNumber);
+                    }
+                    return result;
                 }
                 else
                 {
