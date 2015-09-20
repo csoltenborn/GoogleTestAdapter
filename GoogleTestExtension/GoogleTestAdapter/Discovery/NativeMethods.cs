@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Discovery
     }
 
 
-    unsafe internal static class Native
+    unsafe internal static class NativeMethods
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);

@@ -95,7 +95,7 @@ namespace GoogleTestAdapter.Helpers
                     AddressOffset = diaSymbol.addressOffset,
                     Length = (UInt32)diaSymbol.length
                 });
-                Native.ReleaseCom(diaSymbol);
+                NativeMethods.ReleaseCom(diaSymbol);
             }
             return locations;
         }

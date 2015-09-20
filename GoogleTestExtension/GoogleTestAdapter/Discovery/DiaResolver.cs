@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.Discovery
 
             if (foundSourceFileLocations.Count == 0)
             {
-                Native.ImportsParser parser = new Native.ImportsParser(executable, logger);
+                NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(executable, logger);
                 string moduleDirectory = Path.GetDirectoryName(executable);
                 logger.SendMessage(TestMessageLevel.Warning, "GTA: Couldn't find " + symbols.Count + " symbols in " + executable + ", looking from DllImports in module directory " + moduleDirectory);
                 List<string> foundSymbols = parser.Imports;
@@ -77,8 +77,8 @@ namespace GoogleTestAdapter.Discovery
                 }
                 finally
                 {
-                    Native.ReleaseCom(diaSession);
-                    Native.ReleaseCom(diaDataSource);
+                    NativeMethods.ReleaseCom(diaSession);
+                    NativeMethods.ReleaseCom(diaDataSource);
                     fileStream.Close();
                 }
             }
@@ -110,7 +110,7 @@ namespace GoogleTestAdapter.Discovery
                                 Traits = traits
                             };
                         }
-                        Native.ReleaseCom(lineNumber);
+                        NativeMethods.ReleaseCom(lineNumber);
                     }
                     return result;
                 }
@@ -128,7 +128,7 @@ namespace GoogleTestAdapter.Discovery
             }
             finally
             {
-                Native.ReleaseCom(lineNumbers);
+                NativeMethods.ReleaseCom(lineNumbers);
             }
         }
 
@@ -160,7 +160,7 @@ namespace GoogleTestAdapter.Discovery
             }
             finally
             {
-                Native.ReleaseCom(diaSymbols);
+                NativeMethods.ReleaseCom(diaSymbols);
             }
         }
 

@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.Discovery
         [TestMethod]
         public void ReadsImports()
         {
-            Native.ImportsParser parser = new Native.ImportsParser(@"kernel32.dll", MockLogger.Object);
+            NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(@"kernel32.dll", MockLogger.Object);
             List<string> imports = parser.Imports;
             Version version = Environment.OSVersion.Version;
             if (version.Major == 6 && version.Minor == 1)
