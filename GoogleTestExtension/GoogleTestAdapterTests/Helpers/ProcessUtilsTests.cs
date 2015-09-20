@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.Helpers
         [TestMethod]
         public void ReturnsOutputOfCommand()
         {
-            List<string> output = ProcessUtils.GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"echo 2\"", false, false, null, null);
+            List<string> output = new ProcessUtils(MockOptions.Object).GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"echo 2\"", false, false, null, null);
 
             Assert.AreEqual(1, output.Count);
             Assert.AreEqual("2", output[0]);
@@ -21,13 +21,13 @@ namespace GoogleTestAdapter.Helpers
         [ExpectedException(typeof(Exception))]
         public void ThrowsIfProcessFails()
         {
-            ProcessUtils.GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"exit 2\"", false, true, null, null);
+            new ProcessUtils(new GoogleTestAdapterOptions()).GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"exit 2\"", false, true, null, null);
         }
 
         [TestMethod]
         public void DoesNotThrowIfProcessFails()
         {
-            ProcessUtils.GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"exit 2\"", false, false, null, null);
+            new ProcessUtils(MockOptions.Object).GetOutputOfCommand(MockLogger.Object, ".", "cmd.exe", "/C \"exit 2\"", false, false, null, null);
         }
 
     }

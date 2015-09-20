@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Execution
 {
 
-    class CommandLineGenerator
+    class CommandLineGenerator : AbstractGoogleTestAdapterClass
     {
         internal class Args
         {
@@ -30,10 +30,9 @@ namespace GoogleTestAdapter.Execution
         private IEnumerable<TestCase> CasesToRun { get; }
         private string ResultXmlFile { get; }
         private IMessageLogger Logger { get; }
-        private AbstractOptions Options { get; }
         private string UserParameters { get; }
 
-        internal CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, AbstractOptions options, string userParameters)
+        internal CommandLineGenerator(bool runAllTestCases, int lengthOfExecutableString, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun, string resultXmlFile, IMessageLogger logger, AbstractOptions options, string userParameters) : base(options)
         {
             if (userParameters == null)
             {
@@ -46,7 +45,6 @@ namespace GoogleTestAdapter.Execution
             this.CasesToRun = casesToRun;
             this.ResultXmlFile = resultXmlFile;
             this.Logger = logger;
-            this.Options = options;
             this.UserParameters = userParameters;
         }
 

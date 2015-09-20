@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class StandardOutputTestResultParser
+    class StandardOutputTestResultParser : AbstractGoogleTestAdapterClass
     {
         private const string Run    = "[ RUN      ]";
         private const string Failed = "[  FAILED  ]";
@@ -20,7 +21,7 @@ namespace GoogleTestAdapter.TestResults
 
         internal TestCase CrashedTestCase { get; private set; }
 
-        internal StandardOutputTestResultParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger)
+        internal StandardOutputTestResultParser(IEnumerable<string> consoleOutput, IEnumerable<TestCase> cases, IMessageLogger logger, AbstractOptions options) : base(options)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = cases.ToList();

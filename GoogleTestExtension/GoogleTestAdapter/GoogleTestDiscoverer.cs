@@ -42,7 +42,7 @@ namespace GoogleTestAdapter
 
         internal List<TestCase> GetTestsFromExecutable(IMessageLogger logger, string executable)
         {
-            List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(logger, "", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
+            List<string> consoleOutput = new ProcessUtils(Options).GetOutputOfCommand(logger, "", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
             List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
             suiteCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, logger, suiteCasePairs);
@@ -162,7 +162,7 @@ namespace GoogleTestAdapter
             return traits;
         }
 
-        internal static bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string customRegex = "")
+        internal bool IsGoogleTestExecutable(string executable, IMessageLogger logger, string customRegex = "")
         {
             bool matches;
             string regexUsed;
@@ -192,7 +192,7 @@ namespace GoogleTestAdapter
                 }
             }
 
-            DebugUtils.LogUserDebugMessage(logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational,
+            DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational,
                     "GTA: " + executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
 
             return matches;

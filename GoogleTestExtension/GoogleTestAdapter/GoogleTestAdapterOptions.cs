@@ -68,6 +68,8 @@ namespace GoogleTestAdapter
 
     public class GoogleTestAdapterOptions : AbstractOptions
     {
+        internal GoogleTestAdapterOptions() { }
+
         public const string CategoryName = "Google Test Adapter";
         public const string PageGeneralName = "General";
         public const string PageParallelizationName = "Parallelization (experimental)";

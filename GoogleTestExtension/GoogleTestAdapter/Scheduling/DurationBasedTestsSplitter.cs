@@ -10,8 +10,6 @@ namespace GoogleTestAdapter.Scheduling
         private int OverallDuration { get; }
         private IDictionary<TestCase, int> TestcaseDurations { get; }
 
-        internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations) : this(testcaseDurations, null) { }
-
         internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, AbstractOptions options) : base(options)
         {
             this.TestcaseDurations = testcaseDurations;

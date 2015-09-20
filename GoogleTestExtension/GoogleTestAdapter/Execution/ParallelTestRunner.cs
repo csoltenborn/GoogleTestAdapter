@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.Execution
 
         private void DoRunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle, List<Thread> threads)
         {
-            TestDurationSerializer serializer = new TestDurationSerializer();
+            TestDurationSerializer serializer = new TestDurationSerializer(Options);
             TestCase[] testcasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testcasesToRun);
 
@@ -70,12 +70,12 @@ namespace GoogleTestAdapter.Execution
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)
             {
-                splitter = new NumberBasedTestsSplitter(testCasesToRun);
+                splitter = new NumberBasedTestsSplitter(testCasesToRun, Options);
                 DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on number of tests");
             }
             else
             {
-                splitter = new DurationBasedTestsSplitter(durations);
+                splitter = new DurationBasedTestsSplitter(durations, Options);
                 DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on test durations");
             }
 

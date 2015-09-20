@@ -58,7 +58,7 @@ namespace GoogleTestAdapter.Execution
             try
             {
                 int batchExitCode;
-                ProcessUtils.GetOutputOfCommand(handle, "", batch, "", false, false, runContext, null,
+                new ProcessUtils(Options).GetOutputOfCommand(handle, "", batch, "", false, false, runContext, null,
                     out batchExitCode);
                 if (batchExitCode == 0)
                 {

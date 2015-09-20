@@ -15,35 +15,35 @@ namespace GoogleTestAdapter
     public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
     {
         [TestMethod]
-        public void MatchesTestExecutableName()
+        public void MatchesTestExecutableName() // TODO depends on real options
         {
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTest.exe", MockLogger.Object));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("mygoogletests.exe", MockLogger.Object));
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("mygoogletest.exe", MockLogger.Object));
+            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object));
+            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTest.exe", MockLogger.Object));
+            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("mygoogletests.exe", MockLogger.Object));
+            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("mygoogletest.exe", MockLogger.Object));
 
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTes.exe", MockLogger.Object));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TotallyWrong.exe", MockLogger.Object));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TestStuff.exe", MockLogger.Object));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("TestLibrary.exe", MockLogger.Object));
+            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTes.exe", MockLogger.Object));
+            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("TotallyWrong.exe", MockLogger.Object));
+            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("TestStuff.exe", MockLogger.Object));
+            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("TestLibrary.exe", MockLogger.Object));
         }
 
         [TestMethod]
-        public void MatchesCustomRegex()
+        public void MatchesCustomRegex() // TODO depends on real options
         {
-            Assert.IsTrue(GoogleTestDiscoverer.IsGoogleTestExecutable("SomeWeirdExpression", MockLogger.Object, "Some.*Expression"));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("SomeWeirdOtherThing", MockLogger.Object, "Some.*Expression"));
-            Assert.IsFalse(GoogleTestDiscoverer.IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object, "Some.*Expression"));
+            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("SomeWeirdExpression", MockLogger.Object, "Some.*Expression"));
+            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("SomeWeirdOtherThing", MockLogger.Object, "Some.*Expression"));
+            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object, "Some.*Expression"));
         }
 
         [TestMethod]
-        public void RegistersFoundTestsAtDiscoverySink()
+        public void RegistersFoundTestsAtDiscoverySink() // TODO depends on real options
         {
             CheckForDiscoverySinkCalls(2);
         }
 
         [TestMethod]
-        public void MatchesCustomRegexIfSetInOptions()
+        public void MatchesCustomRegexIfSetInOptions() // TODO depends on real options
         {
             CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
         }
@@ -234,9 +234,9 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void UnparseableRegexProducesErrorMessage()
+        public void UnparseableRegexProducesErrorMessage() // TODO depends on real options
         {
-            bool result = GoogleTestDiscoverer.IsGoogleTestExecutable("my.exe", MockLogger.Object, "d[ddd[");
+            bool result = new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("my.exe", MockLogger.Object, "d[ddd[");
 
             Assert.IsFalse(result);
             MockLogger.Verify(h => h.SendMessage(

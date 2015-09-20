@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.Execution
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
-            TestDurationSerializer serializer = new TestDurationSerializer();
+            TestDurationSerializer serializer = new TestDurationSerializer(Options);
 
             CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, executable.Length, allTestCases, testCasesToRun, resultXmlFile, handle, Options, userParameters);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
@@ -57,7 +57,7 @@ namespace GoogleTestAdapter.Execution
                 reporter.ReportTestsStarted(handle, arguments.TestCases);
 
                 DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.");
-                List<string> consoleOutput = ProcessUtils.GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
+                List<string> consoleOutput = new ProcessUtils(Options).GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(resultXmlFile, consoleOutput, arguments.TestCases,
                     handle);
 
@@ -71,8 +71,8 @@ namespace GoogleTestAdapter.Execution
             List<TestResult> testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            XmlTestResultParser xmlParser = new XmlTestResultParser(resultXmlFile, testCasesRunAsArray, handle);
-            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(consoleOutput, testCasesRunAsArray, handle);
+            XmlTestResultParser xmlParser = new XmlTestResultParser(resultXmlFile, testCasesRunAsArray, handle, Options);
+            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(consoleOutput, testCasesRunAsArray, handle, Options);
 
             testResults.AddRange(xmlParser.GetTestResults());
 

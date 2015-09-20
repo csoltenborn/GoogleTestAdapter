@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class XmlTestResultParser
+    class XmlTestResultParser : AbstractGoogleTestAdapterClass
     {
         private const string ErrorMsgNoXmlFile = "GTA: Output file does not exist, did your tests crash?";
 
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.TestResults
         private string XmlResultFile { get; }
         private List<TestCase> TestCasesRun { get; }
 
-        internal XmlTestResultParser(string xmlResultFile, IEnumerable<TestCase> testCases, IMessageLogger logger)
+        internal XmlTestResultParser(string xmlResultFile, IEnumerable<TestCase> testCases, IMessageLogger logger, AbstractOptions options) : base(options)
         {
             this.Logger = logger;
             this.XmlResultFile = xmlResultFile;
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(XmlResultFile);
-                DebugUtils.LogUserDebugMessage(Logger, new GoogleTestAdapterOptions(), TestMessageLevel.Informational, "GTA: Loaded test results from " + XmlResultFile);
+                DebugUtils.LogUserDebugMessage(Logger, Options, TestMessageLevel.Informational, "GTA: Loaded test results from " + XmlResultFile);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)

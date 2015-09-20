@@ -6,16 +6,18 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Helpers
 {
-    static class ProcessUtils
-    {
 
-        internal static List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
+    class ProcessUtils : AbstractGoogleTestAdapterClass
+    {
+        internal ProcessUtils(AbstractOptions options) : base(options) { }
+
+        internal List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
         {
             int dummy;
             return GetOutputOfCommand(logger, workingDirectory, command, param, printTestOutput, throwIfError, runContext, handle, out dummy);
         }
 
-        internal static List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle, out int processExitCode)
+        internal List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle, out int processExitCode)
         {
             List<string> output = new List<string>();
             if (runContext != null && handle != null && runContext.IsBeingDebugged)
@@ -29,7 +31,7 @@ namespace GoogleTestAdapter.Helpers
             return output;
         }
 
-        private static int LaunchProcess(IMessageLogger logger, string workingDirectory, string command, string param,
+        private int LaunchProcess(IMessageLogger logger, string workingDirectory, string command, string param,
             bool printTestOutput, bool throwIfError, List<string> output)
         {
             ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
@@ -63,13 +65,13 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        private static int LaunchProcessWithDebuggerAttached(IMessageLogger logger, string workingDirectory, string command,
+        private int LaunchProcessWithDebuggerAttached(IMessageLogger logger, string workingDirectory, string command,
             string param, bool printTestOutput, IFrameworkHandle handle)
         {
             logger.SendMessage(TestMessageLevel.Informational, "GTA: Attaching debugger to " + command);
             if (printTestOutput)
             {
-                DebugUtils.LogUserDebugMessage(logger, new GoogleTestAdapterOptions(),
+                DebugUtils.LogUserDebugMessage(logger, Options,
                     TestMessageLevel.Informational,
                     "GTA: Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
             }

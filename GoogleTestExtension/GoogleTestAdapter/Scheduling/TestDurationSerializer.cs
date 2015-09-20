@@ -31,12 +31,14 @@ namespace GoogleTestAdapter.Scheduling
         public List<SerializableKeyValuePair<string, int>> TestDurations { get; set; } = new List<SerializableKeyValuePair<string, int>>();
     }
 
-    internal class TestDurationSerializer
+    class TestDurationSerializer : AbstractGoogleTestAdapterClass
     {
         private static object Lock { get; } = new object();
         private static readonly SerializableKeyValuePair<string, int> Default = new SerializableKeyValuePair<string, int>();
 
         private XmlSerializer Serializer { get; } = new XmlSerializer(typeof (TestDurationsContainer));
+
+        internal TestDurationSerializer(AbstractOptions options) : base(options) { }
 
         internal IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
