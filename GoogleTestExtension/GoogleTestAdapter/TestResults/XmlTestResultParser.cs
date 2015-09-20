@@ -60,11 +60,11 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                Logger.SendMessage(TestMessageLevel.Warning, "GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                DebugUtils.LogUserDebugMessage(Logger, Options, TestMessageLevel.Warning, "GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
             catch (NullReferenceException e)
             {
-                Logger.SendMessage(TestMessageLevel.Warning, "GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                DebugUtils.LogUserDebugMessage(Logger, Options, TestMessageLevel.Warning, "GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
 
             return testResults;

@@ -91,9 +91,9 @@ namespace GoogleTestAdapter
         public const string OptionTraitsRegexesAfter = "Regex for setting test traits after test execution";
         public const string OptionUserDebugMode = "Debug mode";
         public const string OptionEnableParallelTestExecution = "Enable parallel test execution";
-        public const string OptionMaxNrOfThreads = "Maximum number of threads to be used";
-        public const string OptionTestSetupBatch = "Batch file for test setup";
-        public const string OptionTestTeardownBatch = "Batch file for test teardown";
+        public const string OptionMaxNrOfThreads = "Maximum number of threads";
+        public const string OptionTestSetupBatch = "Test setup batch file";
+        public const string OptionTestTeardownBatch = "Test teardown batch file";
         public const string OptionAdditionalTestExecutionParam = "Additional test execution parameters";
 
         public const bool OptionPrintTestOutputDefaultValue = false;
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter
         public const string DescriptionOfPlaceholders =
            TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
            ThreadIdPlaceholder + " - id of thread executing the current tests\n" + 
-           SolutionDirPlaceholder + " - diractory of the solution";
+           SolutionDirPlaceholder + " - directory of the solution";
 
         public override bool PrintTestOutput => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionPrintTestOutput, OptionPrintTestOutputDefaultValue);
 

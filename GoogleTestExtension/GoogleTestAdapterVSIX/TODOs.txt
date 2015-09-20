@@ -3,7 +3,6 @@
 	parse param value from test name, print into TestResult
 	move more constants to Constants.cs etc.
 	end-to-end tests
-	docs and/or improved option descriptions
 	fix "error message if run automatically after build" bug
 		goal: should work :-)
 	fix "not all test results are shown" bug

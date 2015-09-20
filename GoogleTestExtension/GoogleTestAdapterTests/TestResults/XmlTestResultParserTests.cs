@@ -34,6 +34,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string[] tests = { "GoogleTestSuiteName1.TestMethod_001", "GoogleTestSuiteName1.TestMethod_002" };
             IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
+            MockOptions.Setup(o => o.UserDebugMode).Returns(true);
 
             XmlTestResultParser parser = new XmlTestResultParser(XmlFileBroken, testCases, MockLogger.Object, MockOptions.Object);
             List<TestResult> results = parser.GetTestResults();
