@@ -206,6 +206,10 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\GoogleTestExtensionOptionsPage.ico" />
+    <Content Include="Resources\Screenshot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="TODOs.txt" />
   </ItemGroup>
   <ItemGroup>
