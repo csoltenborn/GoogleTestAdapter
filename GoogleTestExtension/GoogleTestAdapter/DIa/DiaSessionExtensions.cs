@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Dia;
 
-namespace GoogleTestAdapter.DIa
+namespace GoogleTestAdapter.Dia
 {
     static class DiaSessionExtensions
     {

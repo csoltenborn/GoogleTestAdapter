@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.DIa
+namespace GoogleTestAdapter.Dia
 {
 
     [StructLayout(LayoutKind.Sequential)]
@@ -59,6 +59,14 @@ namespace GoogleTestAdapter.DIa
         NsfUndecoratedName = 0x10u
     }
 
+    class NativeSourceFileLocation
+    {
+        public string Symbol;
+        public uint AddressSection;
+        public uint AddressOffset;
+        public uint Length;
+    }
+
     // [BestFitMapping(false)]
     unsafe internal static class NativeMethods
     {
@@ -87,11 +95,11 @@ namespace GoogleTestAdapter.DIa
 
             internal List<string> Imports { get; } = new List<string>();
 
-            internal ImportsParser(string fileName, IMessageLogger logger)
+            internal ImportsParser(string executable, IMessageLogger logger)
             {
                 fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {
-                    if (MapAndLoad(fileName, null, fixedLoadedImage, true, true))
+                    if (MapAndLoad(executable, null, fixedLoadedImage, true, true))
                     {
                         uint size = 0u;
                         IMAGE_IMPORT_DESCRIPTOR* directoryEntryPtr = ImageDirectoryEntryToData(fixedLoadedImage->MappedAddress, 0, 1, &size);
@@ -115,6 +123,7 @@ namespace GoogleTestAdapter.DIa
                 IntPtr stringPtr = ImageRvaToVa(_loadedImage.FileHeader, _loadedImage.MappedAddress, name, IntPtr.Zero);
                 return Marshal.PtrToStringAnsi(stringPtr);
             }
+
         }
 
     }

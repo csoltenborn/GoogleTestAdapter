@@ -2,7 +2,7 @@
 using System.IO;
 using Dia;
 
-namespace GoogleTestAdapter.DIa
+namespace GoogleTestAdapter.Dia
 {
     class DiaMemoryStream : IStream
     {

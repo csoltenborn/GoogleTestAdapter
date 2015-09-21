@@ -9,16 +9,8 @@ using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
-namespace GoogleTestAdapter.DIa
+namespace GoogleTestAdapter.Dia
 {
-
-    class NativeSourceFileLocation
-    {
-        public string Symbol;
-        public uint AddressSection;
-        public uint AddressOffset;
-        public uint Length;
-    }
 
     class DiaResolver : AbstractOptionsProvider
     {
@@ -54,32 +46,32 @@ namespace GoogleTestAdapter.DIa
 
         private List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString, IMessageLogger logger)
         {
-            DiaSourceClass diaDataSource = new DiaSourceClass();
-            string path = ReplaceExtension(binary, ".pdb");
+            DiaSourceClass diaSourceClass = new DiaSourceClass();
+            string pdb = ReplaceExtension(binary, ".pdb");
             try
             {
-                Stream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                Stream fileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
                 IStream memoryStream = new DiaMemoryStream(fileStream);
-                diaDataSource.loadDataFromIStream(memoryStream);
+                diaSourceClass.loadDataFromIStream(memoryStream);
 
                 IDiaSession diaSession;
-                diaDataSource.openSession(out diaSession);
+                diaSourceClass.openSession(out diaSession);
                 try
                 {
                     List<NativeSourceFileLocation> allTestMethodSymbols = ExecutableSymbols(diaSession, symbolFilterString);
                     List<NativeSourceFileLocation> allTraitSymbols = ExecutableSymbols(diaSession, "*" + TraitAppendix);
                     List<NativeSourceFileLocation> foundSymbols = new List<NativeSourceFileLocation>();
-                    foreach (string s in symbols)
+                    foreach (string symbol in symbols)
                     {
-                        foundSymbols.AddRange(allTestMethodSymbols.Where(symbol => symbol.Symbol.Contains(s)));
+                        foundSymbols.AddRange(allTestMethodSymbols.Where(s => s.Symbol.Contains(symbol)));
                     }
 
-                    return foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, binary, symbol, allTraitSymbols)).ToList();
+                    return foundSymbols.Select(s => GetSourceFileLocation(diaSession, logger, binary, s, allTraitSymbols)).ToList();
                 }
                 finally
                 {
                     NativeMethods.ReleaseCom(diaSession);
-                    NativeMethods.ReleaseCom(diaDataSource);
+                    NativeMethods.ReleaseCom(diaSourceClass);
                     fileStream.Close();
                 }
             }
