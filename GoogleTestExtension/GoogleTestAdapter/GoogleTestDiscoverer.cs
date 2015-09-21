@@ -87,7 +87,8 @@ namespace GoogleTestAdapter
         {
             List<string> symbols = testcases.Select(GetGoogleTestCombinedName).ToList();
             string SymbolFilterString = "*" + GoogleTestConstants.TestBodySignature;
-            return DiaResolver.ResolveAllMethods(executable, symbols, SymbolFilterString, logger);
+            DiaResolver resolver = new DiaResolver(Options);
+            return resolver.ResolveAllMethods(executable, symbols, SymbolFilterString, logger);
         }
 
         private string GetGoogleTestCombinedName(SuiteCasePair pair)
