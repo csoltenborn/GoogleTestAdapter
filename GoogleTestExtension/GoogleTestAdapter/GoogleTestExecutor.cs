@@ -89,7 +89,7 @@ namespace GoogleTestAdapter
             }
             else
             {
-                Runner = new PreparingTestRunner(new SequentialTestRunner(Options), 0, Options);
+                Runner = new PreparingTestRunner(0, Options);
                 if (Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
                     DebugUtils.LogUserDebugMessage(logger, Options,

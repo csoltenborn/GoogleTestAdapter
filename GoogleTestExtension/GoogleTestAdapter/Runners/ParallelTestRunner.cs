@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Runners
             List<Thread> threads = new List<Thread>();
             lock (this)
             {
-                DoRunTests(allTestCases, testCasesToRun, threads, runContext, handle);
+                RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
             }
 
             foreach (Thread thread in threads)
@@ -43,13 +43,11 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private void DoRunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, List<Thread> threads, IRunContext runContext, IFrameworkHandle handle)
+        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, List<Thread> threads, IRunContext runContext, IFrameworkHandle handle)
         {
-            TestDurationSerializer serializer = new TestDurationSerializer(Options);
-            TestCase[] testcasesToRun = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testcasesToRun);
+            TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
-            ITestsSplitter splitter = GetTestsSplitter(testcasesToRun, durations, handle);
+            ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray, handle);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing tests on " + splittedTestCasesToRun.Count + " threads");
@@ -58,7 +56,7 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                IGoogleTestRunner runner = new PreparingTestRunner(new SequentialTestRunner(Options), threadId++, Options);
+                IGoogleTestRunner runner = new PreparingTestRunner(threadId++, Options);
                 Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, null, runContext, handle));
                 thread.Start();
                 threads.Add(thread);
@@ -66,18 +64,21 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun, IDictionary<TestCase, int> durations, IFrameworkHandle handle)
+        private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun, IMessageLogger logger)
         {
+            TestDurationSerializer serializer = new TestDurationSerializer(Options);
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
+
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun, Options);
-                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on number of tests");
+                DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational, "GTA: Using splitter based on number of tests");
             }
             else
             {
                 splitter = new DurationBasedTestsSplitter(durations, Options);
-                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Using splitter based on test durations");
+                DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational, "GTA: Using splitter based on test durations");
             }
 
             return splitter;
