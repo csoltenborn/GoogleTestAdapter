@@ -59,17 +59,19 @@ namespace GoogleTestAdapter.DIa
         NsfUndecoratedName = 0x10u
     }
 
-
+    // [BestFitMapping(false)]
     unsafe internal static class NativeMethods
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
-        private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
+        private static extern bool MapAndLoad(string imageName, [MarshalAs(UnmanagedType.LPWStr)] string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
+        // [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, ThrowOnUnmappableChar = true)]
+        // private static extern bool MapAndLoad([MarshalAs(UnmanagedType.LPStr)] string imageName, [MarshalAs(UnmanagedType.LPWStr)] string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
 
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern bool UnMapAndLoad(ref LOADED_IMAGE loadedImage);
 
         [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
-        private static extern IMAGE_IMPORT_DESCRIPTOR* ImageDirectoryEntryToData(IntPtr pBase, bool mappedAsImage, ushort directoryEntry, uint* size);
+        private static extern IMAGE_IMPORT_DESCRIPTOR* ImageDirectoryEntryToData(IntPtr pBase, byte mappedAsImage, ushort directoryEntry, uint* size);
 
         [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern IntPtr ImageRvaToVa(IntPtr pNtHeaders, IntPtr pBase, uint rva, IntPtr pLastRvaSection);
@@ -92,7 +94,7 @@ namespace GoogleTestAdapter.DIa
                     if (MapAndLoad(fileName, null, fixedLoadedImage, true, true))
                     {
                         uint size = 0u;
-                        IMAGE_IMPORT_DESCRIPTOR* directoryEntryPtr = ImageDirectoryEntryToData(fixedLoadedImage->MappedAddress, false, 1, &size);
+                        IMAGE_IMPORT_DESCRIPTOR* directoryEntryPtr = ImageDirectoryEntryToData(fixedLoadedImage->MappedAddress, 0, 1, &size);
                         IMAGE_IMPORT_DESCRIPTOR directoryEntry = *directoryEntryPtr;
                         while (directoryEntry.OriginalFirstThunk != 0u)
                         {

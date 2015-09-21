@@ -6,14 +6,6 @@ namespace GoogleTestAdapter.DIa
 {
     static class DiaSessionExtensions
     {
-        /// Find all symbols from session's global scope which are tagged as functions
-        internal static IDiaEnumSymbols FindFunctions(this IDiaSession session)
-        {
-            IDiaEnumSymbols result;
-            session.findChildren(session.globalScope, SymTagEnum.SymTagFunction, null, (uint)NameSearchOptions.NsNone, out result);
-            return result;
-        }
-
         /// Find all symbols matching from session's global scope which are tagged as functions
         internal static IDiaEnumSymbols FindFunctionsByRegex(this IDiaSession session, string pattern)
         {

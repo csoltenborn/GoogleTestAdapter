@@ -1,8 +1,7 @@
 ﻿Before release:
 	code review
-	move more constants to Constants.cs etc.
 	end-to-end tests
-	fixing warnings from static analysis
+	fix warnings from static analysis
 	reduce # of known issues if possible :-)
 
 Release:
@@ -33,6 +32,7 @@ For next releases:
 		project?
 		name of executable?
 	more test coverage
+	CI build
 
 Known Issues
 	"error message if run automatically after build" bug
