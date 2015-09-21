@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Dia;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
@@ -19,41 +20,42 @@ namespace GoogleTestAdapter.DIa
         public uint Length;
     }
 
-    class DiaResolver
+    class DiaResolver : AbstractOptionsProvider
     {
+        internal DiaResolver(AbstractOptions options) : base(options) { }
 
+        // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
 
-        internal static List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString, IMessageLogger logger)
+        internal List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString, IMessageLogger logger)
         {
-            List<GoogleTestDiscoverer.SourceFileLocation> foundSourceFileLocations = FindSymbolsFromExecutable(symbols, symbolFilterString, logger, executable);
+            List<GoogleTestDiscoverer.SourceFileLocation> foundSourceFileLocations = FindSymbolsFromBinary(executable, symbols, symbolFilterString, logger);
 
             if (foundSourceFileLocations.Count == 0)
             {
                 NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(executable, logger);
+                List<string> imports = parser.Imports;
+
                 string moduleDirectory = Path.GetDirectoryName(executable);
-                logger.SendMessage(TestMessageLevel.Warning, "GTA: Couldn't find " + symbols.Count + " symbols in " + executable + ", looking from DllImports in module directory " + moduleDirectory);
-                List<string> foundSymbols = parser.Imports;
-                foreach (string symbol in foundSymbols)
+                DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational, "");
+
+                foreach (string import in imports)
                 {
-                    if (moduleDirectory != null)
+                    string importedBinary = Path.Combine(moduleDirectory, import);
+                    if (File.Exists(importedBinary))
                     {
-                        string symbolFileName = Path.Combine(moduleDirectory, symbol);
-                        if (File.Exists(symbolFileName))
-                        {
-                            foundSourceFileLocations.AddRange(FindSymbolsFromExecutable(symbols, symbolFilterString, logger, symbolFileName));
-                        }
+                        foundSourceFileLocations.AddRange(FindSymbolsFromBinary(importedBinary, symbols, symbolFilterString, logger));
                     }
                 }
             }
             return foundSourceFileLocations;
         }
 
-        private static List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromExecutable(List<string> symbols, string symbolFilterString, IMessageLogger logger, string executable)
+        private List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString, IMessageLogger logger)
         {
             DiaSourceClass diaDataSource = new DiaSourceClass();
-            string path = ReplaceExtension(executable, ".pdb");
+            string path = ReplaceExtension(binary, ".pdb");
             try
             {
                 Stream fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -72,7 +74,7 @@ namespace GoogleTestAdapter.DIa
                         foundSymbols.AddRange(allTestMethodSymbols.Where(symbol => symbol.Symbol.Contains(s)));
                     }
 
-                    return foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, executable, symbol, allTraitSymbols)).ToList();
+                    return foundSymbols.Select(symbol => GetSourceFileLocation(diaSession, logger, binary, symbol, allTraitSymbols)).ToList();
                 }
                 finally
                 {
@@ -88,7 +90,7 @@ namespace GoogleTestAdapter.DIa
             }
         }
 
-        private static GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, IMessageLogger logger, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        private GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, IMessageLogger logger, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = GetTraits(nativeSymbol, allTraitSymbols);
             IDiaEnumLineNumbers lineNumbers = diaSession.GetLineNumbers(nativeSymbol.AddressSection, nativeSymbol.AddressOffset, nativeSymbol.Length);
@@ -131,7 +133,7 @@ namespace GoogleTestAdapter.DIa
             }
         }
 
-        private static List<Trait> GetTraits(NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        private List<Trait> GetTraits(NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = new List<Trait>();
             // ReSharper disable once LoopCanBeConvertedToQuery
@@ -150,7 +152,7 @@ namespace GoogleTestAdapter.DIa
             return traits;
         }
 
-        private static List<NativeSourceFileLocation> ExecutableSymbols(IDiaSession diaSession, string symbolFilterString)
+        private List<NativeSourceFileLocation> ExecutableSymbols(IDiaSession diaSession, string symbolFilterString)
         {
             IDiaEnumSymbols diaSymbols = diaSession.FindFunctionsByRegex(symbolFilterString);
             try
@@ -164,7 +166,7 @@ namespace GoogleTestAdapter.DIa
         }
 
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        private static string ReplaceExtension(string executable, string newExtension)
+        private string ReplaceExtension(string executable, string newExtension)
         {
             return Path.Combine(Path.GetDirectoryName(executable),
                      Path.GetFileNameWithoutExtension(executable)) + newExtension;
