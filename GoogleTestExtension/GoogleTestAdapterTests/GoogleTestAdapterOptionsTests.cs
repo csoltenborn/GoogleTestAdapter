@@ -14,7 +14,7 @@ namespace GoogleTestAdapter
             string result = MockOptions.Object.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.TestDirPlaceholder+ " " + GoogleTestAdapterOptions.TestDirPlaceholder);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.TestDirPlaceholder + " " + GoogleTestAdapterOptions.TestDirPlaceholder);
             result = MockOptions.Object.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir mydir", result);
 
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter
         public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
         {
             PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
-            string OptionsString = "MyTest*///Type,Small";
+            string OptionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
             List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
 
             Assert.IsNotNull(result);
@@ -69,7 +69,9 @@ namespace GoogleTestAdapter
         public void TraitsRegexOptionsAreParsedCorrectlyIfTwo()
         {
             PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
-            string optionsString = "MyTest*///Type,Small//||//*MyOtherTest*///Category,Integration";
+            string optionsString = ConcatTraisRegexes(
+                CreateTraitsRegex("MyTest*", "Type", "Small"),
+                CreateTraitsRegex("*MyOtherTest*", "Category", "Integration"));
             List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", optionsString) as List<RegexTraitPair>;
 
             Assert.IsNotNull(result);
@@ -82,6 +84,18 @@ namespace GoogleTestAdapter
             Assert.AreEqual("*MyOtherTest*", result[1].Regex);
             Assert.AreEqual("Category", result[1].Trait.Name);
             Assert.AreEqual("Integration", result[1].Trait.Value);
+        }
+
+        private string CreateTraitsRegex(string regex, string name, string value)
+        {
+            return regex +
+                GoogleTestAdapterOptions.TraitsRegexesRegexSeparator + name +
+                GoogleTestAdapterOptions.TraitsRegexesTraitSeparator + value;
+        }
+
+        private string ConcatTraisRegexes(params string[] regexes)
+        {
+            return string.Join(GoogleTestAdapterOptions.TraitsRegexesPairSeparator, regexes);
         }
 
     }
