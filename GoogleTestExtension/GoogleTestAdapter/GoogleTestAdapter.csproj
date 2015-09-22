@@ -64,10 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="msdia120typelib_clr0200, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="msdia140typelib_clr0200">
+      <HintPath>..\lib\msdia140typelib_clr0200.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\lib\msdia120typelib_clr0200.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
