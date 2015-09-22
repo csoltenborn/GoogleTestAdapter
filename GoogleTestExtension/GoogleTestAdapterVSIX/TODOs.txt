@@ -1,7 +1,6 @@
 ﻿Before release:
 	code review
 	end-to-end tests
-	fix warnings from static analysis
 	reduce # of known issues if possible :-)
 
 Release:

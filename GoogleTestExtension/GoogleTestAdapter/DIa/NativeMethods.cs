@@ -59,13 +59,10 @@ namespace GoogleTestAdapter.DIa
         NsfUndecoratedName = 0x10u
     }
 
-    // [BestFitMapping(false)]
     unsafe internal static class NativeMethods
     {
-        [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
-        private static extern bool MapAndLoad(string imageName, [MarshalAs(UnmanagedType.LPWStr)] string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
-        // [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, ThrowOnUnmappableChar = true)]
-        // private static extern bool MapAndLoad([MarshalAs(UnmanagedType.LPStr)] string imageName, [MarshalAs(UnmanagedType.LPWStr)] string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
+        [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
 
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern bool UnMapAndLoad(ref LOADED_IMAGE loadedImage);
