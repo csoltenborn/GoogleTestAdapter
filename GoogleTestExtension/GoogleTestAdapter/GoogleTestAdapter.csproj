@@ -77,7 +77,7 @@
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="Helpers\AbstractOptionsProvider.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DIa\DiaSessionExtensions.cs" />
+    <Compile Include="Dia\DiaSessionExtensions.cs" />
     <Compile Include="Helpers\ProcessWaiter.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Runners\PreparingTestRunner.cs" />
@@ -88,13 +88,13 @@
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="DIa\DiaResolver.cs" />
+    <Compile Include="Dia\DiaResolver.cs" />
     <Compile Include="Runners\CommandLineGenerator.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
     <Compile Include="Helpers\RegistryReader.cs" />
-    <Compile Include="DIa\DiaMemoryStream.cs" />
+    <Compile Include="Dia\DiaMemoryStream.cs" />
     <Compile Include="Scheduling\ITestsSplitter.cs" />
-    <Compile Include="DIa\NativeMethods.cs" />
+    <Compile Include="Dia\NativeMethods.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
     <Compile Include="GoogleTestAdapterOptions.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
