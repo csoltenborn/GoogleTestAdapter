@@ -92,6 +92,11 @@ namespace GoogleTestAdapterVSIX
         [Description("Additional parameters for Google Test executable. Placeholders:\n" + GoogleTestAdapterOptions.DescriptionOfPlaceholders)]
         public string AdditionalTestExecutionParams { get; set; } = GoogleTestAdapterOptions.OptionAdditionalTestExecutionParamDefaultValue;
 
+        [Category(GoogleTestAdapterOptions.CategoryName)]
+        [DisplayName("Test counter")]
+        [Description("Workaround for bug. 0: No pauses at all. n: Pause every nth test (the higher, the faster; 1 is slowest)")]
+        public int TestCounter { get; set; } = 1;
+
     }
 
     public class ParallelizationOptionsDialogPage : DialogPage

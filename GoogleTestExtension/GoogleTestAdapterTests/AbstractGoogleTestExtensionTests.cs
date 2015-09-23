@@ -11,18 +11,27 @@ namespace GoogleTestAdapter
 {
     public class AbstractGoogleTestExtensionTests
     {
-        private const string ConsoleApplication1TestsDir = @"..\..\..\..\ConsoleApplication1\ConsoleApplication1Tests\";
-        protected const string Results0Batch = ConsoleApplication1TestsDir + @"Returns0.bat";
-        protected const string Results1Batch = ConsoleApplication1TestsDir + @"Returns1.bat";
+        private const string ConsoleApplication1Dir = @"..\..\..\..\ConsoleApplication1\";
+        private const string TestdataDir = @"..\..\..\testdata\";
 
-        protected const string X86StaticallyLinkedTests = @"..\..\..\testdata\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        protected const string X86ExternallyLinkedTests = @"..\..\..\testdata\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        protected const string X86CrashingTests = @"..\..\..\testdata\_x86\CrashingGoogleTests\CrashingGoogleTests.exe";
-        protected const string X64StaticallyLinkedTests = @"..\..\..\testdata\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        protected const string X64ExternallyLinkedTests = @"..\..\..\testdata\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        protected const string X64CrashingTests = @"..\..\..\testdata\_x64\CrashingGoogleTests\CrashingGoogleTests.exe";
-        protected const string X86TraitsTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1Tests.exe";
-        protected const string X86HardcrashingTests = @"..\..\..\..\ConsoleApplication1\Debug\ConsoleApplication1CrashingTests.exe";
+        protected const string Results0Batch = ConsoleApplication1Dir + @"ConsoleApplication1Tests\Returns0.bat";
+        protected const string Results1Batch = ConsoleApplication1Dir + @"ConsoleApplication1Tests\Returns1.bat";
+        protected const string X86TraitsTests = ConsoleApplication1Dir + @"Debug\ConsoleApplication1Tests.exe";
+        protected const string X86HardcrashingTests = ConsoleApplication1Dir + @"Debug\ConsoleApplication1CrashingTests.exe";
+
+        private const string X86Dir = TestdataDir + @"_x86\";
+        protected const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
+        protected const string X86ExternallyLinkedTests = X86Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
+        protected const string X86CrashingTests = X86Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+
+        private const string X64Dir = TestdataDir + @"_x64\";
+        protected const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
+        protected const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
+        protected const string X64CrashingTests = X64Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+
+        protected const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
+        protected const string XmlFile2 = TestdataDir + @"SampleResult2.xml";
+        protected const string XmlFileBroken = TestdataDir + @"SampleResult1_Broken.xml";
 
         protected const string DummyExecutable = "ff.exe";
 
@@ -32,7 +41,8 @@ namespace GoogleTestAdapter
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
 
         private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
-        protected List<TestCase> AllTestCasesOfConsoleApplication1 {
+        protected List<TestCase> AllTestCasesOfConsoleApplication1
+        {
             get
             {
                 if (_allTestCasesOfConsoleApplication1 == null)
@@ -46,16 +56,14 @@ namespace GoogleTestAdapter
             }
         }
 
-        internal AbstractGoogleTestExtensionTests()
-        {
-            Constants.UnitTestMode = true;
-        }
-
         [TestInitialize]
         virtual public void SetUp()
         {
+            Constants.UnitTestMode = true;
+
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
+            MockOptions.Setup(o => o.TestCounter).Returns(1);
         }
 
         [TestCleanup]

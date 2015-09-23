@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
 using System.Reflection;
+using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
@@ -34,10 +35,10 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
-            IEnumerable<TestCase> testcase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet");
+            TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
 
             GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
-            executor.RunTests(testcase, MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(0));
@@ -48,7 +49,7 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + GoogleTestAdapterOptions.TestDirPlaceholder + "\"");
 
             executor = new GoogleTestExecutor(MockOptions.Object);
-            executor.RunTests(testcase, MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(1));
@@ -59,6 +60,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsExternallyLinkedX86TestsWithResult()
         {
+            // also tests batch execution
             MockOptions.Setup(o => o.TestSetupBatch).Returns(Results0Batch);
             MockOptions.Setup(o => o.TestTeardownBatch).Returns(Results1Batch);
 
@@ -95,6 +97,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsExternallyLinkedX64TestsWithResult()
         {
+            // also tests batch execution
             MockOptions.Setup(o => o.TestSetupBatch).Returns(Results1Batch);
             MockOptions.Setup(o => o.TestTeardownBatch).Returns(Results0Batch);
 

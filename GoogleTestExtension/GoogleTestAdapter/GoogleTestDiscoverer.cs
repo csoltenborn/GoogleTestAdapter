@@ -32,7 +32,7 @@ namespace GoogleTestAdapter
             }
 
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables, logger);
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter();
+            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(Options, logger);
             foreach (string executable in googleTestExecutables)
             {
                 List<TestCase> testCases = GetTestsFromExecutable(executable, logger);

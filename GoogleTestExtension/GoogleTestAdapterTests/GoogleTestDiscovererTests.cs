@@ -17,24 +17,32 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void MatchesTestExecutableName()
         {
-            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object));
-            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTest.exe", MockLogger.Object));
-            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("mygoogletests.exe", MockLogger.Object));
-            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("mygoogletest.exe", MockLogger.Object));
+            AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
+            AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
+            AssertIsGoogleTestExecutable("MyGoogleTest.exe", true);
+            AssertIsGoogleTestExecutable("mygoogletests.exe", true);
+            AssertIsGoogleTestExecutable("mygoogletest.exe", true);
 
-            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTes.exe", MockLogger.Object));
-            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("TotallyWrong.exe", MockLogger.Object));
-            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("TestStuff.exe", MockLogger.Object));
-            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("TestLibrary.exe", MockLogger.Object));
+            AssertIsGoogleTestExecutable("MyGoogleTes.exe", false);
+            AssertIsGoogleTestExecutable("TotallyWrong.exe", false);
+            AssertIsGoogleTestExecutable("TestStuff.exe", false);
+            AssertIsGoogleTestExecutable("TestLibrary.exe", false);
         }
 
         [TestMethod]
         public void MatchesCustomRegex()
         {
-            Assert.IsTrue(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("SomeWeirdExpression", MockLogger.Object, "Some.*Expression"));
-            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("SomeWeirdOtherThing", MockLogger.Object, "Some.*Expression"));
-            Assert.IsFalse(new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("MyGoogleTests.exe", MockLogger.Object, "Some.*Expression"));
+            AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
+            AssertIsGoogleTestExecutable("SomeWeirdOtherThing", false, "Some.*Expression");
+            AssertIsGoogleTestExecutable("MyGoogleTests.exe", false, "Some.*Expression");
         }
+
+        private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
+        {
+            Assert.AreEqual(isGoogleTestExecutable,
+                new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable(executable, MockLogger.Object, regex));
+        }
+
 
         [TestMethod]
         public void RegistersFoundTestsAtDiscoverySink()
@@ -60,18 +68,6 @@ namespace GoogleTestAdapter
             mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
         }
 
-        private void FindStaticallyLinkedTests(string location)
-        {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            var tests = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
-            Assert.AreEqual(2, tests.Count);
-            Assert.AreEqual("FooTest.DoesXyz", tests[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", tests[0].CodeFilePath);
-            Assert.AreEqual(45, tests[0].LineNumber);
-            Assert.AreEqual("FooTest.MethodBarDoesAbc", tests[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", tests[1].CodeFilePath);
-            Assert.AreEqual(36, tests[1].LineNumber);
-        }
 
         [TestMethod]
         public void FindsTestsFromStaticallyLinkedX86ExecutableWithSourceFileLocation()
@@ -85,22 +81,22 @@ namespace GoogleTestAdapter
             FindStaticallyLinkedTests(X64StaticallyLinkedTests);
         }
 
-
-        private void FindExternallyLinkedTests(string location)
+        private void FindStaticallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            var tests = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
 
-            Assert.AreEqual(2, tests.Count);
+            Assert.AreEqual(2, testCases.Count);
 
-            Assert.AreEqual("BarTest.DoesXyz", tests[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", tests[0].CodeFilePath);
-            Assert.AreEqual(44, tests[0].LineNumber);
+            Assert.AreEqual("FooTest.DoesXyz", testCases[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
+            Assert.AreEqual(45, testCases[0].LineNumber);
 
-            Assert.AreEqual("BarTest.MethodBarDoesAbc", tests[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", tests[1].CodeFilePath);
-            Assert.AreEqual(36, tests[1].LineNumber);
+            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
+            Assert.AreEqual(36, testCases[1].LineNumber);
         }
+
 
         [TestMethod]
         public void FindsTestsFromExternallyLinkedX86ExecutableWithSourceFileLocation()
@@ -112,6 +108,22 @@ namespace GoogleTestAdapter
         public void FindsTestsFromExternallyLinkedX64ExecutableWithSourceFileLocation()
         {
             FindExternallyLinkedTests(X64ExternallyLinkedTests);
+        }
+
+        private void FindExternallyLinkedTests(string location)
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
+
+            Assert.AreEqual(2, testCases.Count);
+
+            Assert.AreEqual("BarTest.DoesXyz", testCases[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[0].CodeFilePath);
+            Assert.AreEqual(44, testCases[0].LineNumber);
+
+            Assert.AreEqual("BarTest.MethodBarDoesAbc", testCases[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[1].CodeFilePath);
+            Assert.AreEqual(36, testCases[1].LineNumber);
         }
 
 

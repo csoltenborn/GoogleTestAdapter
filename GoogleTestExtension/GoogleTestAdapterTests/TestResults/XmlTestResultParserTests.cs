@@ -11,15 +11,11 @@ namespace GoogleTestAdapter.TestResults
     public class XmlTestResultParserTests : AbstractGoogleTestExtensionTests
     {
 
-        private const string XmlFile1 = @"..\..\..\testdata\SampleResult1.xml";
-        private const string XmlFile2 = @"..\..\..\testdata\SampleResult2.xml";
-        private const string XmlFileBroken = @"..\..\..\testdata\SampleResult1_Broken.xml";
-
         [TestMethod]
         public void FailsNicelyIfFileDoesNotExist()
         {
-            string[] tests = { "BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2" };
-            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
+                "FooSuite.BazTest", "BarSuite.BazTest2");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", MockLogger.Object, MockOptions.Object);
             List<TestResult> results = parser.GetTestResults();
@@ -32,8 +28,8 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileIsInvalid()
         {
-            string[] tests = { "GoogleTestSuiteName1.TestMethod_001", "GoogleTestSuiteName1.TestMethod_002" };
-            IEnumerable<TestCase> testCases = tests.Select(ToTestCase);
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
+                "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.UserDebugMode).Returns(true);
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, MockLogger.Object, MockOptions.Object);

@@ -17,6 +17,7 @@ namespace GoogleTestAdapter
         public abstract List<RegexTraitPair> TraitsRegexesBefore { get; }
         public abstract List<RegexTraitPair> TraitsRegexesAfter { get; }
         public abstract bool UserDebugMode { get; }
+        public abstract int TestCounter { get; }
 
         public abstract bool ParallelTestExecution { get; }
         public abstract int MaxNrOfThreads { get; }
@@ -149,6 +150,8 @@ namespace GoogleTestAdapter
         public override bool UserDebugMode => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionUserDebugMode, OptionUserDebugModeDefaultValue);
 
         public override string AdditionalTestExecutionParam => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionAdditionalTestExecutionParam, OptionAdditionalTestExecutionParamDefaultValue);
+
+        public override int TestCounter => RegistryReader.ReadInt(RegOptionGeneralBase, "TestCounter", 1);
 
         public override List<RegexTraitPair> TraitsRegexesBefore
         {
