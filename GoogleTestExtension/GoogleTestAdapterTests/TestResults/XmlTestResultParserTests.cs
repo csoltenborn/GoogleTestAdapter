@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +16,7 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<TestCase> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
@@ -32,7 +31,7 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.UserDebugMode).Returns(true);
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
@@ -45,7 +44,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -57,7 +56,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -69,7 +68,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("AnimalsTest.testGetEnoughAnimals");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -88,7 +87,7 @@ Should get three animals";
                 CreateDummyTestCases(
                     "ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -102,7 +101,7 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("FooTest.DoesXyz");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -114,7 +113,7 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("FooTest.MethodBarDoesAbc");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, MockLogger.Object, MockOptions.Object);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);

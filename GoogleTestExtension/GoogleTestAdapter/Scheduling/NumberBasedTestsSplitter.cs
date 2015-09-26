@@ -6,18 +6,20 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    class NumberBasedTestsSplitter : AbstractOptionsProvider, ITestsSplitter
+    class NumberBasedTestsSplitter : ITestsSplitter
     {
         private IEnumerable<TestCase> TestcasesToRun { get; }
+        private TestEnvironment TestEnvironment { get; }
 
-        internal NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, AbstractOptions options) : base(options)
+        internal NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, TestEnvironment testEnvironment)
         {
+            this.TestEnvironment = testEnvironment;
             this.TestcasesToRun = testcasesToRun;
         }
 
         List<List<TestCase>> ITestsSplitter.SplitTestcases()
         {
-            int nrOfThreadsToUse = Math.Min(Options.MaxNrOfThreads, TestcasesToRun.Count());
+            int nrOfThreadsToUse = Math.Min(TestEnvironment.Options.MaxNrOfThreads, TestcasesToRun.Count());
             List<TestCase>[] splitTestCases = new List<TestCase>[nrOfThreadsToUse];
             for (int i = 0; i < nrOfThreadsToUse; i++)
             {

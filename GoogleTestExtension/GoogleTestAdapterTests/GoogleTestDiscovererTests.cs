@@ -40,7 +40,7 @@ namespace GoogleTestAdapter
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
         {
             Assert.AreEqual(isGoogleTestExecutable,
-                new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable(executable, MockLogger.Object, regex));
+                new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object)).IsGoogleTestExecutable(executable, regex));
         }
 
 
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter
             Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
             MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
 
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object));
             discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockLogger.Object, mockDiscoverySink.Object);
 
             mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
@@ -83,8 +83,8 @@ namespace GoogleTestAdapter
 
         private void FindStaticallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -112,8 +112,8 @@ namespace GoogleTestAdapter
 
         private void FindExternallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location, MockLogger.Object);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -248,7 +248,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void UnparseableRegexProducesErrorMessage()
         {
-            bool result = new GoogleTestDiscoverer(MockOptions.Object).IsGoogleTestExecutable("my.exe", MockLogger.Object, "d[ddd[");
+            bool result = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object)).IsGoogleTestExecutable("my.exe", "d[ddd[");
 
             Assert.IsFalse(result);
             MockLogger.Verify(h => h.SendMessage(
@@ -261,8 +261,8 @@ namespace GoogleTestAdapter
         {
             Assert.IsTrue(File.Exists(X86TraitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-            List<TestCase> tests = discoverer.GetTestsFromExecutable(X86TraitsTests, MockLogger.Object);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(X86TraitsTests);
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
             Assert.IsNotNull(testCase);

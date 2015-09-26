@@ -1,7 +1,6 @@
 ﻿using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
 using System.Reflection;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace GoogleTestAdapter
         {
             TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
 
-            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
             executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
@@ -48,7 +47,7 @@ namespace GoogleTestAdapter
             MockFrameworkHandle.Reset();
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + GoogleTestAdapterOptions.TestDirPlaceholder + "\"");
 
-            executor = new GoogleTestExecutor(MockOptions.Object);
+            executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
             executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
@@ -66,11 +65,11 @@ namespace GoogleTestAdapter
 
             RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
 
-            MockFrameworkHandle.Verify(l => l.SendMessage(
+            MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("setup"))),
                 Times.Never);
-            MockFrameworkHandle.Verify(l => l.SendMessage(
+            MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("teardown"))),
                 Times.AtLeastOnce());
@@ -80,7 +79,7 @@ namespace GoogleTestAdapter
         public virtual void RunsExternallyLinkedX86TestsWithResultInDebugMode()
         {
             // for at least having the debug messaging code executed once
-            FieldInfo fieldInfo = typeof(DebugUtils).GetField("DebugMode", BindingFlags.NonPublic | BindingFlags.Static);
+            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("DebugMode", BindingFlags.NonPublic | BindingFlags.Static);
             // ReSharper disable once PossibleNullReferenceException
             fieldInfo.SetValue(null, true);
             MockOptions.Setup(o => o.UserDebugMode).Returns(true);
@@ -103,11 +102,11 @@ namespace GoogleTestAdapter
 
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
 
-            MockFrameworkHandle.Verify(l => l.SendMessage(
+            MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("setup"))),
                 Times.AtLeastOnce());
-            MockFrameworkHandle.Verify(l => l.SendMessage(
+            MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("teardown"))),
                 Times.Never);
@@ -134,7 +133,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsHardCrashingX86TestsWithoutResult()
         {
-            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
             executor.RunTests(X86HardcrashingTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(0, 1, 0, 3);
@@ -142,7 +141,7 @@ namespace GoogleTestAdapter
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
-            GoogleTestExecutor executor = new GoogleTestExecutor(MockOptions.Object);
+            GoogleTestExecutor executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);

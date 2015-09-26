@@ -75,10 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GoogleTestConstants.cs" />
-    <Compile Include="Helpers\AbstractOptionsProvider.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Dia\DiaSessionExtensions.cs" />
     <Compile Include="Helpers\ProcessWaiter.cs" />
+    <Compile Include="Helpers\TestEnvironment.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Runners\PreparingTestRunner.cs" />
     <Compile Include="Runners\SequentialTestRunner.cs" />

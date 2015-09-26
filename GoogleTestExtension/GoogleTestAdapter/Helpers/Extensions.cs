@@ -38,16 +38,11 @@ namespace GoogleTestAdapter.Helpers
             return groupedTestCases;
         }
 
-
-    }
-
-    static class StringExtensions
-    {
-
         internal static string AppendIfNotEmpty(this string theString, string appendix)
         {
             return string.IsNullOrWhiteSpace(theString) ? theString : theString + appendix;
         }
 
     }
+
 }

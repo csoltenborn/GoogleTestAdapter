@@ -34,14 +34,20 @@ namespace GoogleTestAdapter.Scheduling
         public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
     }
 
-    class TestDurationSerializer : AbstractOptionsProvider
+    class TestDurationSerializer
     {
+        private const string FileEndingTestDurations = ".gta_testdurations";
+
         private static object Lock { get; } = new object();
         private static readonly TestDuration Default = new TestDuration();
 
         private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GTATestDurations));
+        private TestEnvironment TestEnvironment { get; }
 
-        internal TestDurationSerializer(AbstractOptions options) : base(options) { }
+        internal TestDurationSerializer(TestEnvironment testEnvironment)
+        {
+            this.TestEnvironment = testEnvironment;
+        }
 
         internal IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
@@ -152,7 +158,7 @@ namespace GoogleTestAdapter.Scheduling
 
         private string GetDurationsFile(string executable)
         {
-            return executable + Constants.FileEndingTestDurations;
+            return executable + FileEndingTestDurations;
         }
 
     }

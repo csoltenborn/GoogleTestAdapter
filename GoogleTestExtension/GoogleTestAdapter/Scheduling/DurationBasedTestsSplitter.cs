@@ -5,13 +5,15 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    class DurationBasedTestsSplitter : AbstractOptionsProvider, ITestsSplitter
+    class DurationBasedTestsSplitter : ITestsSplitter
     {
         private int OverallDuration { get; }
         private IDictionary<TestCase, int> TestcaseDurations { get; }
+        private TestEnvironment TestEnvironment { get; }
 
-        internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, AbstractOptions options) : base(options)
+        internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, TestEnvironment testEnvironment)
         {
+            this.TestEnvironment = testEnvironment;
             this.TestcaseDurations = testcaseDurations;
             this.OverallDuration = testcaseDurations.Values.Sum();
         }
@@ -19,7 +21,7 @@ namespace GoogleTestAdapter.Scheduling
         List<List<TestCase>> ITestsSplitter.SplitTestcases()
         {
             List<TestCase> sortedTestcases = TestcaseDurations.Keys.OrderByDescending(tc => TestcaseDurations[tc]).ToList();
-            int nrOfThreadsToUse = Options.MaxNrOfThreads;
+            int nrOfThreadsToUse = TestEnvironment.Options.MaxNrOfThreads;
             int targetDuration = OverallDuration / nrOfThreadsToUse;
 
             List<List<TestCase>> splitTestcases = new List<List<TestCase>>();

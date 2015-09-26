@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Scheduling
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
@@ -27,7 +27,7 @@ namespace GoogleTestAdapter.Scheduling
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
@@ -45,7 +45,7 @@ namespace GoogleTestAdapter.Scheduling
             }
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(8, result.Count);
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.Scheduling
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, MockOptions.Object);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);

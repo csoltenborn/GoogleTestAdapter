@@ -7,15 +7,19 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
-    class SequentialTestRunner : AbstractOptionsProvider, ITestRunner
+    class SequentialTestRunner : ITestRunner
     {
         private bool Canceled { get; set; } = false;
 
-        internal SequentialTestRunner(AbstractOptions options) : base(options) { }
+        private TestEnvironment TestEnvironment { get; }
+
+        internal SequentialTestRunner(TestEnvironment testEnvironment)
+        {
+            TestEnvironment = testEnvironment;
+        }
 
         void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
@@ -46,10 +50,10 @@ namespace GoogleTestAdapter.Runners
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(Options, handle);
-            TestDurationSerializer serializer = new TestDurationSerializer(Options);
+            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
+            TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
 
-            CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, handle, Options);
+            CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (Canceled)
@@ -59,8 +63,8 @@ namespace GoogleTestAdapter.Runners
 
                 reporter.ReportTestsStarted(handle, arguments.TestCases);
 
-                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.");
-                List<string> consoleOutput = new ProcessLauncher(Options).GetOutputOfCommand(handle, workingDir, executable, arguments.CommandLine, Options.PrintTestOutput && !Options.ParallelTestExecution, false, runContext, handle);
+                TestEnvironment.LogInfo("GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.", TestEnvironment.LogType.UserDebug);
+                List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases,
                     resultXmlFile, consoleOutput, handle);
 
@@ -74,8 +78,8 @@ namespace GoogleTestAdapter.Runners
             List<TestResult> testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, handle, Options);
-            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, handle, Options);
+            XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment);
+            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, TestEnvironment);
 
             testResults.AddRange(xmlParser.GetTestResults());
 

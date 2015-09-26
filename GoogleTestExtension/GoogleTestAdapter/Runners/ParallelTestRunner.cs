@@ -5,27 +5,27 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
-    class ParallelTestRunner : AbstractOptionsProvider, ITestRunner
+    class ParallelTestRunner : ITestRunner
     {
-        internal ParallelTestRunner(AbstractOptions options) : base(options) { }
-
+        private TestEnvironment TestEnvironment { get; }
         private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
+
+        internal ParallelTestRunner(TestEnvironment testEnvironment)
+        {
+            this.TestEnvironment = testEnvironment;
+        }
 
         void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             List<Thread> threads;
-            lock (this)
-            {
-                DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
+            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
-                threads = new List<Thread>();
-                RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
-            }
+            threads = new List<Thread>();
+            RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
 
             foreach (Thread thread in threads)
             {
@@ -35,12 +35,9 @@ namespace GoogleTestAdapter.Runners
 
         void ITestRunner.Cancel()
         {
-            lock (this)
+            foreach (ITestRunner runner in TestRunners)
             {
-                foreach (ITestRunner runner in TestRunners)
-                {
-                    runner.Cancel();
-                }
+                runner.Cancel();
             }
         }
 
@@ -48,16 +45,17 @@ namespace GoogleTestAdapter.Runners
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
-            ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray, handle);
+            ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
-            handle.SendMessage(TestMessageLevel.Informational, "GTA: Executing tests on " + splittedTestCasesToRun.Count + " threads");
-            DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational, "GTA: Note that no test output will be shown on the test console when executing tests concurrently!");
+            TestEnvironment.LogInfo("GTA: Executing tests on " + splittedTestCasesToRun.Count + " threads");
+            TestEnvironment.LogInfo("GTA: Note that no test output will be shown on the test console when executing tests concurrently!",
+                TestEnvironment.LogType.UserDebug);
 
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                ITestRunner runner = new PreparingTestRunner(threadId++, Options);
+                ITestRunner runner = new PreparingTestRunner(threadId++, TestEnvironment);
                 Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, null, runContext, handle));
                 thread.Start();
                 threads.Add(thread);
@@ -65,21 +63,21 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun, IMessageLogger logger)
+        private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun)
         {
-            TestDurationSerializer serializer = new TestDurationSerializer(Options);
+            TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
             IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
 
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)
             {
-                splitter = new NumberBasedTestsSplitter(testCasesToRun, Options);
-                DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational, "GTA: Using splitter based on number of tests");
+                splitter = new NumberBasedTestsSplitter(testCasesToRun, TestEnvironment);
+                TestEnvironment.LogInfo("GTA: Using splitter based on number of tests", TestEnvironment.LogType.UserDebug);
             }
             else
             {
-                splitter = new DurationBasedTestsSplitter(durations, Options);
-                DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational, "GTA: Using splitter based on test durations");
+                splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
+                TestEnvironment.LogInfo("GTA: Using splitter based on test durations", TestEnvironment.LogType.UserDebug);
             }
 
             return splitter;

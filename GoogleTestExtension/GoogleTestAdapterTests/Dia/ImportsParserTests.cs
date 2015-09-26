@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.Dia
         [TestMethod]
         public void ReadsImports()
         {
-            NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(@"kernel32.dll", MockLogger.Object);
+            NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(@"kernel32.dll", TestEnvironment);
             List<string> imports = parser.Imports;
             Version version = Environment.OSVersion.Version;
             if (version.Major == 6 && version.Minor == 1)

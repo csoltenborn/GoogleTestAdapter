@@ -149,14 +149,14 @@ namespace GoogleTestAdapter.TestResults
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[0].Duration);
 
             MockLogger.Verify(h => h.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), 
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }
 
         private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {
             List<TestCase> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
-            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, MockLogger.Object, MockOptions.Object);
+            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment);
             return parser.GetTestResults();
         }
 

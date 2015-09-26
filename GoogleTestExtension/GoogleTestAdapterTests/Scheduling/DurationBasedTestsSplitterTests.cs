@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Scheduling
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
+            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.Scheduling
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
-            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
+            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(3, result.Count);
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.Scheduling
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
-            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
+            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
@@ -82,7 +82,7 @@ namespace GoogleTestAdapter.Scheduling
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(nrOfThreads);
 
-            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, MockOptions.Object);
+            ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
             List<List<TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(nrOfThreads, result.Count);

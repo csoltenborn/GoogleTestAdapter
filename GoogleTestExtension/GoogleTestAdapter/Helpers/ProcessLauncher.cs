@@ -2,36 +2,40 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Helpers
 {
 
-    class ProcessLauncher : AbstractOptionsProvider
+    class ProcessLauncher
     {
-        internal ProcessLauncher(AbstractOptions options) : base(options) { }
+        private TestEnvironment TestEnvironment { get; }
 
-        internal List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
+        internal ProcessLauncher(TestEnvironment testEnvironment)
         {
-            int dummy;
-            return GetOutputOfCommand(logger, workingDirectory, command, param, printTestOutput, throwIfError, runContext, handle, out dummy);
+            this.TestEnvironment = testEnvironment;
         }
 
-        internal List<string> GetOutputOfCommand(IMessageLogger logger, string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle, out int processExitCode)
+        internal List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
+        {
+            int dummy;
+            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, runContext, handle, out dummy);
+        }
+
+        internal List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle, out int processExitCode)
         {
             List<string> output = new List<string>();
             if (runContext != null && handle != null && runContext.IsBeingDebugged)
             {
-                processExitCode = LaunchProcessWithDebuggerAttached(logger, workingDirectory, command, param, printTestOutput, handle);
+                processExitCode = LaunchProcessWithDebuggerAttached(workingDirectory, command, param, printTestOutput, handle);
             }
             else
             {
-                processExitCode = LaunchProcess(logger, workingDirectory, command, param, printTestOutput, throwIfError, output);
+                processExitCode = LaunchProcess(workingDirectory, command, param, printTestOutput, throwIfError, output);
             }
             return output;
         }
 
-        private int LaunchProcess(IMessageLogger logger, string workingDirectory, string command, string param,
+        private int LaunchProcess(string workingDirectory, string command, string param,
             bool printTestOutput, bool throwIfError, List<string> output)
         {
             ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
@@ -48,13 +52,13 @@ namespace GoogleTestAdapter.Helpers
                 ProcessWaiter waiter = new ProcessWaiter(process);
                 if (printTestOutput)
                 {
-                    logger.SendMessage(TestMessageLevel.Informational,
+                    TestEnvironment.LogInfo(
                         "GTA: >>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
                 }
-                ReadTheStream(throwIfError, process, output, logger, printTestOutput);
+                ReadTheStream(throwIfError, process, output, printTestOutput);
                 if (printTestOutput)
                 {
-                    logger.SendMessage(TestMessageLevel.Informational, "GTA: <<<<<<<<<<<<<<< End of Output");
+                    TestEnvironment.LogInfo("GTA: <<<<<<<<<<<<<<< End of Output");
                 }
                 waiter.WaitForExit();
                 return waiter.ProcessExitCode;
@@ -65,15 +69,15 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        private int LaunchProcessWithDebuggerAttached(IMessageLogger logger, string workingDirectory, string command,
+        private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command,
             string param, bool printTestOutput, IFrameworkHandle handle)
         {
-            logger.SendMessage(TestMessageLevel.Informational, "GTA: Attaching debugger to " + command);
+            TestEnvironment.LogInfo("GTA: Attaching debugger to " + command);
             if (printTestOutput)
             {
-                DebugUtils.LogUserDebugMessage(logger, Options,
-                    TestMessageLevel.Informational,
-                    "GTA: Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
+                TestEnvironment.LogInfo(
+                    "GTA: Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!",
+                    TestEnvironment.LogType.UserDebug);
             }
             int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param,
                 null);
@@ -85,7 +89,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void ReadTheStream(bool throwIfError, Process process, List<string> streamContent, IMessageLogger logger, bool printTestOutput)
+        private void ReadTheStream(bool throwIfError, Process process, List<string> streamContent, bool printTestOutput)
         {
             while (!process.StandardOutput.EndOfStream)
             {
@@ -93,7 +97,7 @@ namespace GoogleTestAdapter.Helpers
                 streamContent.Add(line);
                 if (printTestOutput)
                 {
-                    logger.SendMessage(TestMessageLevel.Informational, line);
+                    TestEnvironment.LogInfo(line);
                 }
             }
             if ((throwIfError && process.ExitCode != 0))

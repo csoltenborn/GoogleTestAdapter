@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Dia
 {
@@ -92,7 +92,7 @@ namespace GoogleTestAdapter.Dia
 
             internal List<string> Imports { get; } = new List<string>();
 
-            internal ImportsParser(string executable, IMessageLogger logger)
+            internal ImportsParser(string executable, TestEnvironment testEnvironment)
             {
                 fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {
@@ -109,7 +109,7 @@ namespace GoogleTestAdapter.Dia
                         }
                         if (!UnMapAndLoad(ref _loadedImage))
                         {
-                            logger.SendMessage(TestMessageLevel.Error, "GTA: UnMapAndLoad failed!");
+                            testEnvironment.LogError("GTA: UnMapAndLoad failed!");
                         }
                     }
                 }

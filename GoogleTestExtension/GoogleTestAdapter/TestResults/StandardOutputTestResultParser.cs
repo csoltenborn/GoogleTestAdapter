@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class StandardOutputTestResultParser : AbstractOptionsProvider
+    class StandardOutputTestResultParser
     {
         private const string Run = "[ RUN      ]";
         private const string Failed = "[  FAILED  ]";
@@ -17,15 +16,15 @@ namespace GoogleTestAdapter.TestResults
 
         private List<string> ConsoleOutput { get; }
         private List<TestCase> TestCasesRun { get; }
-        private IMessageLogger Logger { get; }
 
         internal TestCase CrashedTestCase { get; private set; }
+        private TestEnvironment TestEnvironment { get; }
 
-        internal StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, IMessageLogger logger, AbstractOptions options) : base(options)
+        internal StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = testCasesRun.ToList();
-            this.Logger = logger;
+            this.TestEnvironment = testEnvironment;
         }
 
         internal List<TestResult> GetTestResults()
@@ -88,7 +87,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                Logger.SendMessage(TestMessageLevel.Warning, "Could not parse duration in line '" + line + "'");
+                TestEnvironment.LogWarning("Could not parse duration in line '" + line + "'");
             }
 
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));

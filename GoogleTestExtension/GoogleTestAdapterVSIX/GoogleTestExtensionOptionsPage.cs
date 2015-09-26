@@ -54,7 +54,7 @@ namespace GoogleTestAdapterVSIX
 
         [Category(GoogleTestAdapterOptions.CategoryName)]
         [DisplayName(GoogleTestAdapterOptions.OptionTestDiscoveryRegex)]
-        [Description("If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: " + GoogleTestAdapter.Constants.TestFinderRegex)]
+        [Description("If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: " + GoogleTestDiscoverer.TestFinderRegex)]
         public string TestDiscoveryRegex { get; set; } = GoogleTestAdapterOptions.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(GoogleTestAdapterOptions.CategoryName)]

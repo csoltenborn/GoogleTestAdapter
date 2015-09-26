@@ -7,24 +7,22 @@ using System.Linq;
 using System.Xml;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class XmlTestResultParser : AbstractOptionsProvider
+    class XmlTestResultParser
     {
         private const string ErrorMsgNoXmlFile = "GTA: Output file does not exist, did your tests crash?";
 
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
-        private IMessageLogger Logger { get; }
-
+        private TestEnvironment TestEnvironment { get; }
         private string XmlResultFile { get; }
         private List<TestCase> TestCasesRun { get; }
 
-        internal XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, IMessageLogger logger, AbstractOptions options) : base(options)
+        internal XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
         {
-            this.Logger = logger;
+            this.TestEnvironment = testEnvironment;
             this.XmlResultFile = xmlResultFile;
             this.TestCasesRun = testCasesRun.ToList();
         }
@@ -36,7 +34,7 @@ namespace GoogleTestAdapter.TestResults
                 return ParseTestResults();
             }
 
-            Logger.SendMessage(TestMessageLevel.Warning, ErrorMsgNoXmlFile);
+            TestEnvironment.LogWarning(ErrorMsgNoXmlFile);
             return new List<TestResult>();
         }
 
@@ -49,7 +47,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(XmlResultFile);
-                DebugUtils.LogUserDebugMessage(Logger, Options, TestMessageLevel.Informational, "GTA: Loaded test results from " + XmlResultFile);
+                TestEnvironment.LogInfo("GTA: Loaded test results from " + XmlResultFile, TestEnvironment.LogType.UserDebug);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
@@ -60,11 +58,11 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                DebugUtils.LogUserDebugMessage(Logger, Options, TestMessageLevel.Warning, "GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                TestEnvironment.LogWarning("GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
             }
             catch (NullReferenceException e)
             {
-                DebugUtils.LogUserDebugMessage(Logger, Options, TestMessageLevel.Warning, "GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                TestEnvironment.LogWarning("GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
             }
 
             return testResults;
@@ -112,7 +110,7 @@ namespace GoogleTestAdapter.TestResults
                     break;
                 default:
                     string msg = "GTA: Unknown testcase status: " + testCaseStatus;
-                    Logger.SendMessage(TestMessageLevel.Error, msg);
+                    TestEnvironment.LogError(msg);
                     throw new Exception(msg);
             }
 

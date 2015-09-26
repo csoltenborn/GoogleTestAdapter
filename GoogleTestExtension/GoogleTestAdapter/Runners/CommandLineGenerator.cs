@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
 
-    class CommandLineGenerator : AbstractOptionsProvider
+    class CommandLineGenerator
     {
         internal class Args
         {
@@ -29,13 +28,13 @@ namespace GoogleTestAdapter.Runners
         private IEnumerable<TestCase> AllCases { get; }
         private IEnumerable<TestCase> CasesToRun { get; }
         private string ResultXmlFile { get; }
-        private IMessageLogger Logger { get; }
+        private TestEnvironment TestEnvironment { get; }
         private string UserParameters { get; }
 
         internal CommandLineGenerator(
             bool runAllTestCases, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
-            IMessageLogger logger, AbstractOptions options) : base(options)
+            TestEnvironment testEnvironment)
         {
             if (userParameters == null)
             {
@@ -47,7 +46,7 @@ namespace GoogleTestAdapter.Runners
             this.AllCases = allCases;
             this.CasesToRun = casesToRun;
             this.ResultXmlFile = resultXmlFile;
-            this.Logger = logger;
+            this.TestEnvironment = testEnvironment;
             this.UserParameters = userParameters;
         }
 
@@ -148,24 +147,24 @@ namespace GoogleTestAdapter.Runners
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return Options.RunDisabledTests ? GoogleTestConstants.AlsoRunDisabledTestsOption : "";
+            return TestEnvironment.Options.RunDisabledTests ? GoogleTestConstants.AlsoRunDisabledTestsOption : "";
         }
 
         private string GetShuffleTestsParameter()
         {
-            return Options.ShuffleTests ? GoogleTestConstants.ShuffleTestsOption : "";
+            return TestEnvironment.Options.ShuffleTests ? GoogleTestConstants.ShuffleTestsOption : "";
         }
 
         private string GetTestsRepetitionsParameter()
         {
-            int nrOfRepetitions = Options.NrOfTestRepetitions;
+            int nrOfRepetitions = TestEnvironment.Options.NrOfTestRepetitions;
             if (nrOfRepetitions == 1)
             {
                 return "";
             }
             if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
             {
-                Logger.SendMessage(TestMessageLevel.Warning,
+                TestEnvironment.LogWarning(
                     "Test level repetitions configured under Options/Google Test Adapter is " +
                     nrOfRepetitions + ", should be -1 (infinite) or > 0. Ignoring value.");
                 return "";

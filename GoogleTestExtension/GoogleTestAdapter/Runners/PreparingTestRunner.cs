@@ -4,18 +4,19 @@ using System.IO;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
-    class PreparingTestRunner : AbstractOptionsProvider, ITestRunner
+    class PreparingTestRunner : ITestRunner
     {
+        private TestEnvironment TestEnvironment { get; }
         private ITestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
-        internal PreparingTestRunner(int threadId, AbstractOptions options) : base(options)
+        internal PreparingTestRunner(int threadId, TestEnvironment testEnvironment)
         {
-            this.InnerTestRunner = new SequentialTestRunner(options);
+            this.TestEnvironment = testEnvironment;
+            this.InnerTestRunner = new SequentialTestRunner(TestEnvironment);
             this.ThreadId = threadId;
         }
 
@@ -27,21 +28,21 @@ namespace GoogleTestAdapter.Runners
             try
             {
                 string testDirectory = Utils.GetTempDirectory();
-                userParameters = Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
+                userParameters = TestEnvironment.Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
-                string batch = Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
+                string batch = TestEnvironment.Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test setup", batch, runContext, handle);
 
                 InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, userParameters, runContext, handle);
 
-                batch = Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
+                batch = TestEnvironment.Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test teardown", batch, runContext, handle);
 
                 Directory.Delete(testDirectory);
             }
             catch (Exception e)
             {
-                handle.SendMessage(TestMessageLevel.Error, "GTA: Exception while running tests: " + e);
+                TestEnvironment.LogError("GTA: Exception while running tests: " + e);
             }
         }
 
@@ -63,7 +64,7 @@ namespace GoogleTestAdapter.Runners
             }
             catch (Exception e)
             {
-                handle.SendMessage(TestMessageLevel.Error,
+                TestEnvironment.LogError(
                     "GTA: " + batchType + " batch caused exception, msg: '" + e.Message + "', executed command: '" +
                     batch + "'");
             }
@@ -72,16 +73,16 @@ namespace GoogleTestAdapter.Runners
         private void RunBatch(string batchType, string batch, IRunContext runContext, IFrameworkHandle handle)
         {
             int batchExitCode;
-            new ProcessLauncher(Options).GetOutputOfCommand(handle, "", batch, "", false, false, runContext, null,
+            new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", batch, "", false, false, runContext, null,
                 out batchExitCode);
             if (batchExitCode == 0)
             {
-                DebugUtils.LogUserDebugMessage(handle, Options, TestMessageLevel.Informational,
-                    "Successfully ran " + batchType + "batch '" + batch + "'");
+                TestEnvironment.LogInfo(
+                    "Successfully ran " + batchType + "batch '" + batch + "'", TestEnvironment.LogType.UserDebug);
             }
             else
             {
-                handle.SendMessage(TestMessageLevel.Warning,
+                TestEnvironment.LogWarning(
                     "GTA: " + batchType + " batch returned exit code " + batchExitCode + ", executed command: '" +
                     batch + "'");
             }

@@ -7,44 +7,48 @@ using System.Linq;
 using Dia;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Dia
 {
 
-    class DiaResolver : AbstractOptionsProvider
+    class DiaResolver
     {
-        internal DiaResolver(AbstractOptions options) : base(options) { }
-
         // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
 
-        internal List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString, IMessageLogger logger)
+        private TestEnvironment TestEnvironment { get; }
+
+        internal DiaResolver(TestEnvironment testEnvironment)
         {
-            List<GoogleTestDiscoverer.SourceFileLocation> foundSourceFileLocations = FindSymbolsFromBinary(executable, symbols, symbolFilterString, logger);
+            this.TestEnvironment = testEnvironment;
+        }
+
+        internal List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString)
+        {
+            List<GoogleTestDiscoverer.SourceFileLocation> foundSourceFileLocations = FindSymbolsFromBinary(executable, symbols, symbolFilterString);
 
             if (foundSourceFileLocations.Count == 0)
             {
-                NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(executable, logger);
+                NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(executable, TestEnvironment);
                 List<string> imports = parser.Imports;
 
                 string moduleDirectory = Path.GetDirectoryName(executable);
-                DebugUtils.LogUserDebugMessage(logger, Options, TestMessageLevel.Informational, "");
+                TestEnvironment.LogInfo("", TestEnvironment.LogType.UserDebug);
 
                 foreach (string import in imports)
                 {
                     string importedBinary = Path.Combine(moduleDirectory, import);
                     if (File.Exists(importedBinary))
                     {
-                        foundSourceFileLocations.AddRange(FindSymbolsFromBinary(importedBinary, symbols, symbolFilterString, logger));
+                        foundSourceFileLocations.AddRange(FindSymbolsFromBinary(importedBinary, symbols, symbolFilterString));
                     }
                 }
             }
             return foundSourceFileLocations;
         }
 
-        private List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString, IMessageLogger logger)
+        private List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString)
         {
             DiaSourceClass diaSourceClass = new DiaSourceClass();
             string pdb = ReplaceExtension(binary, ".pdb");
@@ -66,7 +70,7 @@ namespace GoogleTestAdapter.Dia
                         foundSymbols.AddRange(allTestMethodSymbols.Where(s => s.Symbol.Contains(symbol)));
                     }
 
-                    return foundSymbols.Select(s => GetSourceFileLocation(diaSession, logger, binary, s, allTraitSymbols)).ToList();
+                    return foundSymbols.Select(s => GetSourceFileLocation(diaSession, binary, s, allTraitSymbols)).ToList();
                 }
                 finally
                 {
@@ -82,7 +86,7 @@ namespace GoogleTestAdapter.Dia
             }
         }
 
-        private GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, IMessageLogger logger, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        private GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = GetTraits(nativeSymbol, allTraitSymbols);
             IDiaEnumLineNumbers lineNumbers = diaSession.GetLineNumbers(nativeSymbol.AddressSection, nativeSymbol.AddressOffset, nativeSymbol.Length);
@@ -109,7 +113,7 @@ namespace GoogleTestAdapter.Dia
                 }
                 else
                 {
-                    logger.SendMessage(TestMessageLevel.Error, "GTA: Failed to locate line number for " + nativeSymbol);
+                    TestEnvironment.LogError("GTA: Failed to locate line number for " + nativeSymbol);
                     return new GoogleTestDiscoverer.SourceFileLocation()
                     {
                         Symbol = executable,

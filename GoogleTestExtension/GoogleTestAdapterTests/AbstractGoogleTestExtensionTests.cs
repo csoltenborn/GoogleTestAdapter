@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -35,10 +37,16 @@ namespace GoogleTestAdapter
 
         protected const string DummyExecutable = "ff.exe";
 
-        protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
+        protected Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
         protected readonly Mock<AbstractOptions> MockOptions = new Mock<AbstractOptions>() { CallBase = true };
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
+        internal readonly TestEnvironment TestEnvironment;
+
+        public AbstractGoogleTestExtensionTests()
+        {
+            TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
+        }
 
         private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
         protected List<TestCase> AllTestCasesOfConsoleApplication1
@@ -48,9 +56,9 @@ namespace GoogleTestAdapter
                 if (_allTestCasesOfConsoleApplication1 == null)
                 {
                     _allTestCasesOfConsoleApplication1 = new List<TestCase>();
-                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(MockOptions.Object);
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests, MockLogger.Object));
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests, MockLogger.Object));
+                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests));
                 }
                 return _allTestCasesOfConsoleApplication1;
             }
@@ -59,7 +67,9 @@ namespace GoogleTestAdapter
         [TestInitialize]
         virtual public void SetUp()
         {
-            Constants.UnitTestMode = true;
+            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("UnitTestMode", BindingFlags.NonPublic | BindingFlags.Static);
+            // ReSharper disable once PossibleNullReferenceException
+            fieldInfo.SetValue(null, true);
 
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
