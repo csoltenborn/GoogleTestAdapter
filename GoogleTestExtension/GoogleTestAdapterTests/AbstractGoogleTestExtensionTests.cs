@@ -12,7 +12,7 @@ namespace GoogleTestAdapter
     public class AbstractGoogleTestExtensionTests
     {
         private const string ConsoleApplication1Dir = @"..\..\..\..\ConsoleApplication1\";
-        private const string TestdataDir = @"..\..\..\testdata\";
+        private const string TestdataDir = @"Resources\TestData\";
 
         protected const string Results0Batch = ConsoleApplication1Dir + @"ConsoleApplication1Tests\Returns0.bat";
         protected const string Results1Batch = ConsoleApplication1Dir + @"ConsoleApplication1Tests\Returns1.bat";
