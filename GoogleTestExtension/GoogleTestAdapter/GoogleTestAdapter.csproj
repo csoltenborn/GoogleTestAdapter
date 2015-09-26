@@ -82,7 +82,7 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Runners\PreparingTestRunner.cs" />
     <Compile Include="Runners\SequentialTestRunner.cs" />
-    <Compile Include="Runners\IGoogleTestRunner.cs" />
+    <Compile Include="Runners\ITestRunner.cs" />
     <Compile Include="Runners\ParallelTestRunner.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitter.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />

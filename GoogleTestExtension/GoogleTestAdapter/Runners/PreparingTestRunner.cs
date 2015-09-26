@@ -8,9 +8,9 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
-    class PreparingTestRunner : AbstractOptionsProvider, IGoogleTestRunner
+    class PreparingTestRunner : AbstractOptionsProvider, ITestRunner
     {
-        private IGoogleTestRunner InnerTestRunner { get; }
+        private ITestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
         internal PreparingTestRunner(int threadId, AbstractOptions options) : base(options)
@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.Runners
             this.ThreadId = threadId;
         }
 
-        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
@@ -45,7 +45,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        void IGoogleTestRunner.Cancel()
+        void ITestRunner.Cancel()
         {
             InnerTestRunner.Cancel();
         }

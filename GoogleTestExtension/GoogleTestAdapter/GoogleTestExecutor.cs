@@ -16,7 +16,7 @@ namespace GoogleTestAdapter
         internal static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
         private bool Canceled { get; set; } = false;
-        private IGoogleTestRunner Runner { get; set; }
+        private ITestRunner Runner { get; set; }
         private List<TestCase> AllTestCasesInAllExecutables { get; } = new List<TestCase>();
 
         public GoogleTestExecutor() : this(null) { }
@@ -30,10 +30,12 @@ namespace GoogleTestAdapter
                 lock (this)
                 {
                     DebugUtils.CheckDebugModeForExecutionCode(frameworkHandle);
+
                     ComputeTestRunner(runContext, frameworkHandle);
                 }
 
                 ComputeAllTestCasesInAllExecutables(executables, frameworkHandle);
+
                 RunTests(true, AllTestCasesInAllExecutables, runContext, frameworkHandle);
             }
             catch (Exception e)
@@ -54,6 +56,7 @@ namespace GoogleTestAdapter
 
                 TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
                 ComputeAllTestCasesInAllExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct(), frameworkHandle);
+
                 RunTests(false, testCasesToRunAsArray, runContext, frameworkHandle);
             }
             catch (Exception e)
@@ -66,8 +69,6 @@ namespace GoogleTestAdapter
         {
             lock (this)
             {
-                DebugUtils.CheckDebugModeForExecutionCode();
-
                 Canceled = true;
                 Runner.Cancel();
             }
@@ -77,6 +78,7 @@ namespace GoogleTestAdapter
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Running " + testCasesToRunAsArray.Length + " tests...");
+
             Runner.RunTests(runAllTestCases, AllTestCasesInAllExecutables, testCasesToRunAsArray, null, runContext, handle);
             handle.SendMessage(TestMessageLevel.Informational, "GTA: Test execution completed.");
         }

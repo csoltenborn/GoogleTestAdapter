@@ -43,7 +43,7 @@ namespace GoogleTestAdapter
             List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
-            IGoogleTestRunner runner = new SequentialTestRunner(MockOptions.Object);
+            ITestRunner runner = new SequentialTestRunner(MockOptions.Object);
             Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testCasesToRun, "", MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();

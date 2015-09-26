@@ -21,10 +21,10 @@ namespace GoogleTestAdapter.TestResults
 
         internal TestCase CrashedTestCase { get; private set; }
 
-        internal StandardOutputTestResultParser(IEnumerable<TestCase> cases, IEnumerable<string> consoleOutput, IMessageLogger logger, AbstractOptions options) : base(options)
+        internal StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, IMessageLogger logger, AbstractOptions options) : base(options)
         {
             this.ConsoleOutput = consoleOutput.ToList();
-            this.TestCasesRun = cases.ToList();
+            this.TestCasesRun = testCasesRun.ToList();
             this.Logger = logger;
         }
 
@@ -83,8 +83,7 @@ namespace GoogleTestAdapter.TestResults
                 int indexOfOpeningBracket = line.LastIndexOf('(');
                 int lengthOfDurationPart = line.Length - indexOfOpeningBracket - 2;
                 string durationPart = line.Substring(indexOfOpeningBracket + 1, lengthOfDurationPart);
-                durationPart = durationPart.Replace("ms", "");
-                durationPart = durationPart.Trim();
+                durationPart = durationPart.Replace("ms", "").Trim();
                 durationInMs = int.Parse(durationPart);
             }
             catch (Exception)

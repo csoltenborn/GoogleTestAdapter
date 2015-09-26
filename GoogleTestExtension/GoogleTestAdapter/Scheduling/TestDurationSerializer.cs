@@ -9,34 +9,37 @@ using System.Xml.Serialization;
 namespace GoogleTestAdapter.Scheduling
 {
     [Serializable]
-    public struct SerializableKeyValuePair<TK, TV>
+    public struct TestDuration
     {
-        public SerializableKeyValuePair(TK key, TV value)
+        public TestDuration(string test, int duration)
         {
-            Key = key;
-            Value = value;
+            Test = test;
+            Duration = duration;
         }
 
-        public TK Key
+        [XmlAttribute]
+        public string Test
         { get; set; }
 
-        public TV Value
+        [XmlAttribute]
+        public int Duration
         { get; set; }
     }
 
     [Serializable]
-    public class TestDurationsContainer
+    [XmlRoot]
+    public class GTATestDurations
     {
         public string Executable { get; set; }
-        public List<SerializableKeyValuePair<string, int>> TestDurations { get; set; } = new List<SerializableKeyValuePair<string, int>>();
+        public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
     }
 
     class TestDurationSerializer : AbstractOptionsProvider
     {
         private static object Lock { get; } = new object();
-        private static readonly SerializableKeyValuePair<string, int> Default = new SerializableKeyValuePair<string, int>();
+        private static readonly TestDuration Default = new TestDuration();
 
-        private XmlSerializer Serializer { get; } = new XmlSerializer(typeof (TestDurationsContainer));
+        private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GTATestDurations));
 
         internal TestDurationSerializer(AbstractOptions options) : base(options) { }
 
@@ -74,14 +77,14 @@ namespace GoogleTestAdapter.Scheduling
                 return durations;
             }
 
-            TestDurationsContainer container = LoadTestDurations(durationsFile);
+            GTATestDurations container = LoadTestDurations(durationsFile);
 
             foreach (TestCase testcase in testcases)
             {
-                SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(p => p.Key == testcase.FullyQualifiedName);
+                TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testcase.FullyQualifiedName);
                 if (!pair.Equals(Default))
                 {
-                    durations.Add(testcase, pair.Value);
+                    durations.Add(testcase, pair.Duration);
                 }
             }
 
@@ -91,31 +94,31 @@ namespace GoogleTestAdapter.Scheduling
         private void UpdateTestDurations(string executable, List<TestResult> testresults)
         {
             string durationsFile = GetDurationsFile(executable);
-            TestDurationsContainer container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new TestDurationsContainer();
-            container.Executable = executable;
+            GTATestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GTATestDurations();
+            container.Executable = Path.GetFullPath(executable);
 
             foreach (TestResult testResult in testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
             {
-                SerializableKeyValuePair<string, int> pair = container.TestDurations.FirstOrDefault(p => p.Key == testResult.TestCase.FullyQualifiedName);
+                TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testResult.TestCase.FullyQualifiedName);
                 if (!pair.Equals(Default))
                 {
                     container.TestDurations.Remove(pair);
                 }
-                container.TestDurations.Add(new SerializableKeyValuePair<string, int>(testResult.TestCase.FullyQualifiedName, GetDuration(testResult)));
+                container.TestDurations.Add(new TestDuration(testResult.TestCase.FullyQualifiedName, GetDuration(testResult)));
             }
 
             SaveTestDurations(container, durationsFile);
         }
 
-        private TestDurationsContainer LoadTestDurations(string durationsFile)
+        private GTATestDurations LoadTestDurations(string durationsFile)
         {
             FileStream fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            TestDurationsContainer container = Serializer.Deserialize(fileStream) as TestDurationsContainer;
+            GTATestDurations container = Serializer.Deserialize(fileStream) as GTATestDurations;
             fileStream.Close();
             return container;
         }
 
-        private void SaveTestDurations(TestDurationsContainer durations, string durationsFile)
+        private void SaveTestDurations(GTATestDurations durations, string durationsFile)
         {
             TextWriter fileStream = new StreamWriter(durationsFile);
             Serializer.Serialize(fileStream, durations);

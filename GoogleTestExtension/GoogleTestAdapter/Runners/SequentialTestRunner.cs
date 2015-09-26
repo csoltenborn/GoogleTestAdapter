@@ -11,13 +11,13 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
-    class SequentialTestRunner : AbstractOptionsProvider, IGoogleTestRunner
+    class SequentialTestRunner : AbstractOptionsProvider, ITestRunner
     {
         private bool Canceled { get; set; } = false;
 
         internal SequentialTestRunner(AbstractOptions options) : base(options) { }
 
-        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        void IGoogleTestRunner.Cancel()
+        void ITestRunner.Cancel()
         {
             Canceled = true;
         }

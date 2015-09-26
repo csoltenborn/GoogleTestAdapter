@@ -23,7 +23,6 @@ For next releases:
 			scheduling would then make sure tests are not running at same time when competing for test resources
 	refactoring
 		TestDurationSerializer
-			XML format
 			date, time?
 		refactor Helpers
 		factor out placeholder values in container class to be passed around?

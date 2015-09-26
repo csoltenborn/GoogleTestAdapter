@@ -9,20 +9,21 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Runners
 {
-    class ParallelTestRunner : AbstractOptionsProvider, IGoogleTestRunner
+    class ParallelTestRunner : AbstractOptionsProvider, ITestRunner
     {
         internal ParallelTestRunner(AbstractOptions options) : base(options) { }
 
-        private List<IGoogleTestRunner> TestRunners { get; } = new List<IGoogleTestRunner>();
+        private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
 
-        void IGoogleTestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
-            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
-
-            List<Thread> threads = new List<Thread>();
+            List<Thread> threads;
             lock (this)
             {
+                DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
+
+                threads = new List<Thread>();
                 RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
             }
 
@@ -32,11 +33,11 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        void IGoogleTestRunner.Cancel()
+        void ITestRunner.Cancel()
         {
             lock (this)
             {
-                foreach (IGoogleTestRunner runner in TestRunners)
+                foreach (ITestRunner runner in TestRunners)
                 {
                     runner.Cancel();
                 }
@@ -56,7 +57,7 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                IGoogleTestRunner runner = new PreparingTestRunner(threadId++, Options);
+                ITestRunner runner = new PreparingTestRunner(threadId++, Options);
                 Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, null, runContext, handle));
                 thread.Start();
                 threads.Add(thread);

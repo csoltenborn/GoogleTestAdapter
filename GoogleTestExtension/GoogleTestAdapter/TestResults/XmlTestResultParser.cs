@@ -22,11 +22,11 @@ namespace GoogleTestAdapter.TestResults
         private string XmlResultFile { get; }
         private List<TestCase> TestCasesRun { get; }
 
-        internal XmlTestResultParser(IEnumerable<TestCase> testCases, string xmlResultFile, IMessageLogger logger, AbstractOptions options) : base(options)
+        internal XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, IMessageLogger logger, AbstractOptions options) : base(options)
         {
             this.Logger = logger;
             this.XmlResultFile = xmlResultFile;
-            this.TestCasesRun = testCases.ToList();
+            this.TestCasesRun = testCasesRun.ToList();
         }
 
         internal List<TestResult> GetTestResults()
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.TestResults
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
                 {
                     XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
-                    testResults.AddRange(testcaseNodes.Cast<XmlNode>().Select(ParseTestResult).Where(result => result != null));
+                    testResults.AddRange(testcaseNodes.Cast<XmlNode>().Select(ParseTestResult).Where(xn => xn != null));
                 }
             }
             catch (XmlException e)
