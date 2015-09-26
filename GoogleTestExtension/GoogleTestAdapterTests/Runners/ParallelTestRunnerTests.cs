@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Runners
 {

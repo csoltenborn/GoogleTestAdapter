@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using GoogleTestAdapter.Dia;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using GoogleTestAdapter.Dia;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -14,18 +14,32 @@ namespace GoogleTestAdapter
     [FileExtension(".exe")]
     public class GoogleTestDiscoverer : ITestDiscoverer
     {
-        class SuiteCasePair
+        class SuiteTestCasePair
         {
-            public string TestSuite;
-            public string TestCase;
+            internal string TestSuite { get; }
+            internal string TestCase { get; }
+
+            internal SuiteTestCasePair(string testSuite, string testCase)
+            {
+                this.TestSuite = testSuite;
+                this.TestCase = testCase;
+            }
         }
 
-        public class SourceFileLocation
+        internal class SourceFileLocation
         {
-            public string Symbol;
-            public string Sourcefile;
-            public uint Line;
-            public List<Trait> Traits;
+            internal string Symbol { get; }
+            internal string Sourcefile { get; }
+            internal uint Line { get; }
+            internal List<Trait> Traits { get; }
+
+            internal SourceFileLocation(string symbol, string sourceFile, uint line, List<Trait> traits)
+            {
+                this.Symbol = symbol;
+                this.Sourcefile = sourceFile;
+                this.Line = line;
+                this.Traits = traits;
+            }
         }
 
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
@@ -63,14 +77,14 @@ namespace GoogleTestAdapter
         internal List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
-            List<SuiteCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
+            List<SuiteTestCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
             suiteCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteCasePairs);
 
             TestEnvironment.LogInfo("GTA: Found " + suiteCasePairs.Count + " tests in executable " + executable);
 
             List<TestCase> testCases = new List<TestCase>();
-            foreach (SuiteCasePair suiteCasePair in suiteCasePairs)
+            foreach (SuiteTestCasePair suiteCasePair in suiteCasePairs)
             {
                 testCases.Add(ToTestCase(executable, suiteCasePair, sourceFileLocations));
                 TestEnvironment.LogInfo("GTA: Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase, TestEnvironment.LogType.Debug);
@@ -114,20 +128,16 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        private List<SuiteCasePair> ParseTestCases(List<string> output)
+        private List<SuiteTestCasePair> ParseTestCases(List<string> output)
         {
-            List<SuiteCasePair> suiteCasePairs = new List<SuiteCasePair>();
+            List<SuiteTestCasePair> suiteCasePairs = new List<SuiteTestCasePair>();
             string currentSuite = "";
             foreach (string line in output)
             {
                 string trimmedLine = line.Trim('.', '\n', '\r');
                 if (trimmedLine.StartsWith("  "))
                 {
-                    suiteCasePairs.Add(new SuiteCasePair
-                    {
-                        TestSuite = currentSuite,
-                        TestCase = trimmedLine.Substring(2)
-                    });
+                    suiteCasePairs.Add(new SuiteTestCasePair(currentSuite, trimmedLine.Substring(2)));
                 }
                 else
                 {
@@ -139,7 +149,7 @@ namespace GoogleTestAdapter
             return suiteCasePairs;
         }
 
-        private List<SourceFileLocation> GetSourceFileLocations(string executable, List<SuiteCasePair> testcases)
+        private List<SourceFileLocation> GetSourceFileLocations(string executable, List<SuiteTestCasePair> testcases)
         {
             List<string> symbols = testcases.Select(GetGoogleTestCombinedName).ToList();
             string SymbolFilterString = "*" + GoogleTestConstants.TestBodySignature;
@@ -147,7 +157,7 @@ namespace GoogleTestAdapter
             return resolver.ResolveAllMethods(executable, symbols, SymbolFilterString);
         }
 
-        private string GetGoogleTestCombinedName(SuiteCasePair pair)
+        private string GetGoogleTestCombinedName(SuiteTestCasePair pair)
         {
             if (!pair.TestCase.Contains(GoogleTestConstants.ParameterizedTestMarker))
             {
@@ -163,7 +173,7 @@ namespace GoogleTestAdapter
             return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
-        private TestCase ToTestCase(string executable, SuiteCasePair suiteCasePair, List<SourceFileLocation> sourceFileLocations)
+        private TestCase ToTestCase(string executable, SuiteTestCasePair suiteCasePair, List<SourceFileLocation> sourceFileLocations)
         {
             string displayName = suiteCasePair.TestSuite + "." + suiteCasePair.TestCase;
             string symbolName = GetGoogleTestCombinedName(suiteCasePair);

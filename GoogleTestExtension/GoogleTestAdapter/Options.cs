@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -17,13 +17,14 @@ namespace GoogleTestAdapter
         public abstract List<RegexTraitPair> TraitsRegexesBefore { get; }
         public abstract List<RegexTraitPair> TraitsRegexesAfter { get; }
         public abstract bool UserDebugMode { get; }
-        public abstract int TestCounter { get; }
 
         public abstract bool ParallelTestExecution { get; }
         public abstract int MaxNrOfThreads { get; }
         public abstract string TestSetupBatch { get; }
         public abstract string TestTeardownBatch { get; }
         public abstract string AdditionalTestExecutionParam { get; }
+
+        public abstract int ReportWaitPeriod { get; }
 
         internal string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
@@ -73,7 +74,8 @@ namespace GoogleTestAdapter
 
         public const string CategoryName = "Google Test Adapter";
         public const string PageGeneralName = "General";
-        public const string PageParallelizationName = "Parallelization (experimental)";
+        public const string PageParallelizationName = "Parallelization";
+        public const string PageAdvancedName = "Advanced";
 
         // ReSharper disable once UnusedMember.Local
         private const string RegOptionBaseProduction = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
@@ -81,6 +83,7 @@ namespace GoogleTestAdapter
         private const string RegOptionBaseDebugging = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
         private const string RegOptionGeneralBase = RegOptionBaseProduction + @"\GeneralOptionsDialogPage";
         private const string RegOptionParallelizationBase = RegOptionBaseProduction + @"\ParallelizationOptionsDialogPage";
+        private const string RegOptionAdvancedBase = RegOptionBaseProduction + @"\AdvancedOptionsDialogPage";
 
         //\OptionPageGrid
         public const string OptionPrintTestOutput = "Print test output";
@@ -96,6 +99,7 @@ namespace GoogleTestAdapter
         public const string OptionTestSetupBatch = "Test setup batch file";
         public const string OptionTestTeardownBatch = "Test teardown batch file";
         public const string OptionAdditionalTestExecutionParam = "Additional test execution parameters";
+        public const string OptionReportWaitPeriod = "Wait period during result reporting";
 
         public const bool OptionPrintTestOutputDefaultValue = false;
         public const string OptionTestDiscoveryRegexDefaultValue = "";
@@ -109,6 +113,7 @@ namespace GoogleTestAdapter
         public const string OptionTestSetupBatchDefaultValue = "";
         public const string OptionTestTeardownBatchDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamDefaultValue = "";
+        public const int OptionReportWaitPeriodDefaultValue = 0;
 
         private const string RegOptionPrintTestOutput = "PrintTestOutput";
         private const string RegOptionTestDiscoveryRegex = "TestDiscoveryRegex";
@@ -123,6 +128,7 @@ namespace GoogleTestAdapter
         private const string RegOptionTestSetupBatch = "BatchForTestSetup";
         private const string RegOptionTestTeardownBatch = "BatchForTestTeardown";
         private const string RegOptionAdditionalTestExecutionParam = "AdditionalTestExecutionParams";
+        private const string RegOptionReportWaitPeriod = "ReportWaitPeriod";
 
         public const string TraitsRegexesPairSeparator = "//||//";
         public const string TraitsRegexesRegexSeparator = "///";
@@ -151,7 +157,7 @@ namespace GoogleTestAdapter
 
         public override string AdditionalTestExecutionParam => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionAdditionalTestExecutionParam, OptionAdditionalTestExecutionParamDefaultValue);
 
-        public override int TestCounter => RegistryReader.ReadInt(RegOptionGeneralBase, "TestCounter", 1);
+        public override int ReportWaitPeriod => RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionReportWaitPeriod, OptionReportWaitPeriodDefaultValue);
 
         public override List<RegexTraitPair> TraitsRegexesBefore
         {

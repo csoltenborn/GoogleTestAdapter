@@ -5,8 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Dia;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Dia
 {
@@ -99,13 +99,9 @@ namespace GoogleTestAdapter.Dia
                     {
                         if (result == null)
                         {
-                            result = new GoogleTestDiscoverer.SourceFileLocation()
-                            {
-                                Symbol = nativeSymbol.Symbol,
-                                Sourcefile = lineNumber.sourceFile.fileName,
-                                Line = lineNumber.lineNumber,
-                                Traits = traits
-                            };
+                            result = new GoogleTestDiscoverer.SourceFileLocation(
+                                nativeSymbol.Symbol, lineNumber.sourceFile.fileName,
+                                lineNumber.lineNumber, traits);
                         }
                         NativeMethods.ReleaseCom(lineNumber);
                     }
@@ -114,13 +110,7 @@ namespace GoogleTestAdapter.Dia
                 else
                 {
                     TestEnvironment.LogError("GTA: Failed to locate line number for " + nativeSymbol);
-                    return new GoogleTestDiscoverer.SourceFileLocation()
-                    {
-                        Symbol = executable,
-                        Sourcefile = "",
-                        Line = 0,
-                        Traits = traits
-                    };
+                    return new GoogleTestDiscoverer.SourceFileLocation(executable, "", 0, traits);
                 }
             }
             finally

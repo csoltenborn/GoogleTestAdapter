@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -19,7 +19,7 @@ namespace GoogleTestAdapter
         internal VsTestFrameworkReporter(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
-            NrOfTestResultsBeforeWaiting = TestEnvironment.Options.TestCounter;
+            NrOfTestResultsBeforeWaiting = TestEnvironment.Options.ReportWaitPeriod;
             if (NrOfTestResultsBeforeWaiting < 0)
             {
                 NrOfTestResultsBeforeWaiting = 1;

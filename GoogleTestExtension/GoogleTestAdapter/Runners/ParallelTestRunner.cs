@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Scheduling;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Scheduling;
 
 namespace GoogleTestAdapter.Runners
 {

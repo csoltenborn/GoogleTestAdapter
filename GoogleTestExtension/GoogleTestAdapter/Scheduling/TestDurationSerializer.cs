@@ -1,10 +1,10 @@
-﻿using GoogleTestAdapter.Helpers;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {

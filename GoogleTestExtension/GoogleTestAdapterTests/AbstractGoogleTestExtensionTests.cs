@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -73,7 +73,7 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
-            MockOptions.Setup(o => o.TestCounter).Returns(1);
+            MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
         }
 
         [TestCleanup]

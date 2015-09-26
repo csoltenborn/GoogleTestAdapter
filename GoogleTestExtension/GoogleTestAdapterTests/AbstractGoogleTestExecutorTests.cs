@@ -1,10 +1,10 @@
-﻿using Moq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using GoogleTestAdapter.Helpers;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Moq;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {

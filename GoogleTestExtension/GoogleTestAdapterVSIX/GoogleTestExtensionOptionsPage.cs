@@ -14,6 +14,7 @@ namespace GoogleTestAdapterVSIX
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), Options.CategoryName, Options.PageGeneralName, 0, 0, true)]
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.CategoryName, Options.PageParallelizationName, 0, 0, true)]
+    [ProvideOptionPage(typeof(AdvancedOptionsDialogPage), Options.CategoryName, Options.PageAdvancedName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     public sealed class GoogleTestExtensionOptionsPage : Package
     {
@@ -26,6 +27,8 @@ namespace GoogleTestAdapterVSIX
             DialogPage page = GetDialogPage(typeof(GeneralOptionsDialogPage));
             page.SaveSettingsToStorage();
             page = GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            page.SaveSettingsToStorage();
+            page = GetDialogPage(typeof(AdvancedOptionsDialogPage));
             page.SaveSettingsToStorage();
         }
 
@@ -92,11 +95,6 @@ namespace GoogleTestAdapterVSIX
         [Description("Additional parameters for Google Test executable. Placeholders:\n" + Options.DescriptionOfPlaceholders)]
         public string AdditionalTestExecutionParams { get; set; } = Options.OptionAdditionalTestExecutionParamDefaultValue;
 
-        [Category(Options.CategoryName)]
-        [DisplayName("Test counter")]
-        [Description("Workaround for bug. 0: No pauses at all. n: Pause every nth test (the higher, the faster; 1 is slowest)")]
-        public int TestCounter { get; set; } = 1;
-
     }
 
     public class ParallelizationOptionsDialogPage : DialogPage
@@ -121,6 +119,17 @@ namespace GoogleTestAdapterVSIX
         [DisplayName(Options.OptionTestTeardownBatch)]
         [Description("Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n" + Options.DescriptionOfPlaceholders)]
         public string BatchForTestTeardown { get; set; } = Options.OptionTestTeardownBatchDefaultValue;
+
+    }
+
+    public class AdvancedOptionsDialogPage : DialogPage
+    {
+
+        [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionReportWaitPeriod)]
+        [Description("Sometimes, not all TestResults are recognized by VS. This is probably due to inter process communication - if anybody has a clean solution for this, please provide a patch. Until then, use this option to ovetcome such problems.\n" +
+            "During test reporting, 0: do not pause at all, n: pause for 1ms every nth test (the higher, the faster; 1 is slowest)")]
+        public int ReportWaitPeriod { get; set; } = Options.OptionReportWaitPeriodDefaultValue;
 
     }
 

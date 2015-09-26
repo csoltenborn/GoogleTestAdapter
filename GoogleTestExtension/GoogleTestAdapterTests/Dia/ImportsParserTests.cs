@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GoogleTestAdapter.Dia;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter.Dia

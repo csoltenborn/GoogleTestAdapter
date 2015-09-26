@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Moq;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using Moq;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -251,7 +251,7 @@ namespace GoogleTestAdapter
             bool result = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object)).IsGoogleTestExecutable("my.exe", "d[ddd[");
 
             Assert.IsFalse(result);
-            MockLogger.Verify(h => h.SendMessage(
+            MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
                 It.Is<string>(s => s.Contains("'d[ddd['"))),
                 Times.Exactly(1));

@@ -148,7 +148,7 @@ namespace GoogleTestAdapter.TestResults
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[0].Duration);
 
-            MockLogger.Verify(h => h.SendMessage(
+            MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }

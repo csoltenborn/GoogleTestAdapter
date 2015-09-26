@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Runners
 {

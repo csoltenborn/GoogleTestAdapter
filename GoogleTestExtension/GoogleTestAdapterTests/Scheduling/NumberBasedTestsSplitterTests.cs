@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace GoogleTestAdapter.Scheduling
 {
