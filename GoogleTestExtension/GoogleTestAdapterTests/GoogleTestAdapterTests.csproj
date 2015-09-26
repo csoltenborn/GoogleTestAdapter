@@ -80,7 +80,7 @@
     <Compile Include="Dia\ImportsParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
-    <Compile Include="GoogleTestAdapterOptionsTests.cs" />
+    <Compile Include="OptionsTests.cs" />
     <Compile Include="Helpers\ProcessLauncherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />

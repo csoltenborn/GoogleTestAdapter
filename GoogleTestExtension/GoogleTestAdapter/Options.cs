@@ -47,9 +47,9 @@ namespace GoogleTestAdapter
                 return "";
             }
 
-            string result = theString.Replace(GoogleTestAdapterOptions.TestDirPlaceholder, testDirectory);
-            result = result.Replace(GoogleTestAdapterOptions.ThreadIdPlaceholder, threadId.ToString());
-            result = result.Replace(GoogleTestAdapterOptions.SolutionDirPlaceholder, solutionDirectory);
+            string result = theString.Replace(Options.TestDirPlaceholder, testDirectory);
+            result = result.Replace(Options.ThreadIdPlaceholder, threadId.ToString());
+            result = result.Replace(Options.SolutionDirPlaceholder, solutionDirectory);
             return result;
         }
 
@@ -67,9 +67,9 @@ namespace GoogleTestAdapter
         }
     }
 
-    public class GoogleTestAdapterOptions : AbstractOptions
+    public class Options : AbstractOptions
     {
-        internal GoogleTestAdapterOptions() { }
+        internal Options() { }
 
         public const string CategoryName = "Google Test Adapter";
         public const string PageGeneralName = "General";
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter
 
         public const string DescriptionOfPlaceholders =
            TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
-           ThreadIdPlaceholder + " - id of thread executing the current tests\n" + 
+           ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
            SolutionDirPlaceholder + " - directory of the solution";
 
         public override bool PrintTestOutput => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionPrintTestOutput, OptionPrintTestOutputDefaultValue);

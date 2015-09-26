@@ -1,13 +1,15 @@
 ﻿namespace GoogleTestAdapter
 {
+
     public static class GoogleTestConstants
     {
 
-        internal const string ListTestsOption = "--gtest_list_tests";
-        internal const string FilterOption = " --gtest_filter=";
         public const string AlsoRunDisabledTestsOption = " --gtest_also_run_disabled_tests";
         public const string ShuffleTestsOption = " --gtest_shuffle";
         public const string NrOfRepetitionsOption = " --gtest_repeat=";
+
+        internal const string ListTestsOption = "--gtest_list_tests";
+        internal const string FilterOption = " --gtest_filter=";
 
         internal const string TestBodySignature = "::TestBody";
         internal const string ParameterizedTestMarker = "# GetParam() = ";

@@ -14,6 +14,20 @@ namespace GoogleTestAdapter
     [FileExtension(".exe")]
     public class GoogleTestDiscoverer : ITestDiscoverer
     {
+        class SuiteCasePair
+        {
+            public string TestSuite;
+            public string TestCase;
+        }
+
+        public class SourceFileLocation
+        {
+            public string Symbol;
+            public string Sourcefile;
+            public uint Line;
+            public List<Trait> Traits;
+        }
+
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
         private static readonly Regex CompiledTestFinderRegex = new Regex(TestFinderRegex, RegexOptions.Compiled);
@@ -32,7 +46,7 @@ namespace GoogleTestAdapter
         {
             if (TestEnvironment == null)
             {
-                TestEnvironment = new TestEnvironment(new GoogleTestAdapterOptions(), logger);
+                TestEnvironment = new TestEnvironment(new Options(), logger);
             }
 
             TestEnvironment.CheckDebugModeForDiscoverageCode();
@@ -62,6 +76,42 @@ namespace GoogleTestAdapter
                 TestEnvironment.LogInfo("GTA: Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase, TestEnvironment.LogType.Debug);
             }
             return testCases;
+        }
+
+        internal bool IsGoogleTestExecutable(string executable, string customRegex = "")
+        {
+            bool matches;
+            string regexUsed;
+            if (string.IsNullOrWhiteSpace(customRegex))
+            {
+                regexUsed = TestFinderRegex;
+                matches = CompiledTestFinderRegex.IsMatch(executable);
+            }
+            else
+            {
+                regexUsed = customRegex;
+                try
+                {
+                    matches = Regex.IsMatch(executable, customRegex);
+                }
+                catch (ArgumentException e)
+                {
+                    TestEnvironment.LogError(
+                        "GTA: Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                    matches = false;
+                }
+                catch (RegexMatchTimeoutException e)
+                {
+                    TestEnvironment.LogError(
+                        "GTA: Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                    matches = false;
+                }
+            }
+
+            TestEnvironment.LogInfo(
+                    "GTA: " + executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'", TestEnvironment.LogType.UserDebug);
+
+            return matches;
         }
 
         private List<SuiteCasePair> ParseTestCases(List<string> output)
@@ -132,6 +182,7 @@ namespace GoogleTestAdapter
                     return testCase;
                 }
             }
+
             TestEnvironment.LogWarning("GTA: Could not find source location for test " + displayName);
             return new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
             {
@@ -169,60 +220,9 @@ namespace GoogleTestAdapter
             return traits;
         }
 
-        internal bool IsGoogleTestExecutable(string executable, string customRegex = "")
-        {
-            bool matches;
-            string regexUsed;
-            if (string.IsNullOrWhiteSpace(customRegex))
-            {
-                regexUsed = TestFinderRegex;
-                matches = CompiledTestFinderRegex.IsMatch(executable);
-            }
-            else
-            {
-                regexUsed = customRegex;
-                try
-                {
-                    matches = Regex.IsMatch(executable, customRegex);
-                }
-                catch (ArgumentException e)
-                {
-                    TestEnvironment.LogError(
-                        "GTA: Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
-                    matches = false;
-                }
-                catch (RegexMatchTimeoutException e)
-                {
-                    TestEnvironment.LogError(
-                        "GTA: Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
-                    matches = false;
-                }
-            }
-
-            TestEnvironment.LogInfo(
-                    "GTA: " + executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'", TestEnvironment.LogType.UserDebug);
-
-            return matches;
-        }
-
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
         {
             return allExecutables.Where(e => IsGoogleTestExecutable(e, TestEnvironment.Options.TestDiscoveryRegex)).ToList();
-        }
-
-
-        class SuiteCasePair
-        {
-            public string TestSuite;
-            public string TestCase;
-        }
-
-        public class SourceFileLocation
-        {
-            public string Symbol;
-            public string Sourcefile;
-            public uint Line;
-            public List<Trait> Traits;
         }
 
     }

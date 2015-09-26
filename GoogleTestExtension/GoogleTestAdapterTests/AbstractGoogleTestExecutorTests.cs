@@ -45,7 +45,7 @@ namespace GoogleTestAdapter
                 Times.Exactly(1));
 
             MockFrameworkHandle.Reset();
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + GoogleTestAdapterOptions.TestDirPlaceholder + "\"");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + Options.TestDirPlaceholder + "\"");
 
             executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
             executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);

@@ -33,13 +33,12 @@ namespace GoogleTestAdapter
             {
                 if (TestEnvironment == null)
                 {
-                    TestEnvironment = new TestEnvironment(new GoogleTestAdapterOptions(), frameworkHandle);
+                    TestEnvironment = new TestEnvironment(new Options(), frameworkHandle);
                 }
 
                 TestEnvironment.CheckDebugModeForExecutionCode();
 
                 ComputeTestRunner(runContext);
-
                 ComputeAllTestCasesInAllExecutables(executables);
 
                 RunTests(true, AllTestCasesInAllExecutables, runContext, frameworkHandle);
@@ -56,14 +55,13 @@ namespace GoogleTestAdapter
             {
                 if (TestEnvironment == null)
                 {
-                    TestEnvironment = new TestEnvironment(new GoogleTestAdapterOptions(), frameworkHandle);
+                    TestEnvironment = new TestEnvironment(new Options(), frameworkHandle);
                 }
 
                 TestEnvironment.CheckDebugModeForExecutionCode();
 
-                ComputeTestRunner(runContext);
-
                 TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
+                ComputeTestRunner(runContext);
                 ComputeAllTestCasesInAllExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct());
 
                 RunTests(false, testCasesToRunAsArray, runContext, frameworkHandle);

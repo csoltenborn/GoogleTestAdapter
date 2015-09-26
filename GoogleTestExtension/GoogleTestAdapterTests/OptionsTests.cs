@@ -4,29 +4,29 @@ using System.Collections.Generic;
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestAdapterOptionsTests : AbstractGoogleTestExtensionTests
+    public class OptionsTests : AbstractGoogleTestExtensionTests
     {
 
         [TestMethod]
         public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
         {
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.TestDirPlaceholder);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder);
             string result = MockOptions.Object.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.TestDirPlaceholder + " " + GoogleTestAdapterOptions.TestDirPlaceholder);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + " " + Options.TestDirPlaceholder);
             result = MockOptions.Object.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir mydir", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.TestDirPlaceholder.ToLower());
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder.ToLower());
             result = MockOptions.Object.GetUserParameters("", "mydir", 0);
-            Assert.AreEqual(GoogleTestAdapterOptions.TestDirPlaceholder.ToLower(), result);
+            Assert.AreEqual(Options.TestDirPlaceholder.ToLower(), result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.ThreadIdPlaceholder);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.ThreadIdPlaceholder);
             result = MockOptions.Object.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("4711", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(GoogleTestAdapterOptions.TestDirPlaceholder + ", " + GoogleTestAdapterOptions.ThreadIdPlaceholder);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + ", " + Options.ThreadIdPlaceholder);
             result = MockOptions.Object.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("mydir, 4711", result);
         }
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsFailsNicelyIfInvokedWithUnparsableString()
         {
-            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            PrivateObject optionsAccessor = new PrivateObject(new Options());
             List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", "vrr<erfwe") as List<RegexTraitPair>;
 
             Assert.IsNotNull(result);
@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfEmpty()
         {
-            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            PrivateObject optionsAccessor = new PrivateObject(new Options());
             List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", "") as List<RegexTraitPair>;
 
             Assert.IsNotNull(result);
@@ -54,7 +54,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
         {
-            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            PrivateObject optionsAccessor = new PrivateObject(new Options());
             string OptionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
             List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
 
@@ -68,7 +68,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void TraitsRegexOptionsAreParsedCorrectlyIfTwo()
         {
-            PrivateObject optionsAccessor = new PrivateObject(new GoogleTestAdapterOptions());
+            PrivateObject optionsAccessor = new PrivateObject(new Options());
             string optionsString = ConcatTraisRegexes(
                 CreateTraitsRegex("MyTest*", "Type", "Small"),
                 CreateTraitsRegex("*MyOtherTest*", "Category", "Integration"));
@@ -89,13 +89,13 @@ namespace GoogleTestAdapter
         private string CreateTraitsRegex(string regex, string name, string value)
         {
             return regex +
-                GoogleTestAdapterOptions.TraitsRegexesRegexSeparator + name +
-                GoogleTestAdapterOptions.TraitsRegexesTraitSeparator + value;
+                Options.TraitsRegexesRegexSeparator + name +
+                Options.TraitsRegexesTraitSeparator + value;
         }
 
         private string ConcatTraisRegexes(params string[] regexes)
         {
-            return string.Join(GoogleTestAdapterOptions.TraitsRegexesPairSeparator, regexes);
+            return string.Join(Options.TraitsRegexesPairSeparator, regexes);
         }
 
     }

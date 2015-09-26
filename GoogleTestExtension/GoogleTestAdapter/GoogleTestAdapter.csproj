@@ -95,7 +95,7 @@
     <Compile Include="Scheduling\ITestsSplitter.cs" />
     <Compile Include="Dia\NativeMethods.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
-    <Compile Include="GoogleTestAdapterOptions.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
