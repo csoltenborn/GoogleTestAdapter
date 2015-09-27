@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void TestCompleteOutput()
+        public void CompleteOutputIsParsedCorrectly()
         {
             List<TestResult> results = ComputeTestResults(Complete);
 
@@ -99,7 +99,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void TestOutputWithImmediateCrash()
+        public void OutputWithImmediateCrashIsParsedCorrectly()
         {
             List<TestResult> results = ComputeTestResults(CrashesImmediately);
 
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void TestOutputWithCrashAfterErrorMessage()
+        public void OutputWithCrashAfterErrorMessage()
         {
             List<TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
@@ -140,7 +140,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void TestOutputWithInvalidDurationUnit()
+        public void OutputWithInvalidDurationUnitIsParsedCorrectly()
         {
             List<TestResult> results = ComputeTestResults(WrongDurationUnit);
 

@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void TestArgumentsWhenRunningAllTests()
+        public void CorrectArgumentsWhenRunningAllTests()
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.Runners
 
         [TestMethod]
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public void TestCombinesCommonTestsInSuite()
+        public void CombinesCommonTestsInSuite()
         {
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.FooTest"));

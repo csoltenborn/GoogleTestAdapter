@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Scheduling
     {
 
         [TestMethod]
-        public void TestDurationIsWrittenAndReadCorrectly()
+        public void DurationIsWrittenAndReadCorrectly()
         {
             string tempFile = Path.GetTempFileName();
             List<TestResult> testResults = new List<TestResult>
@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void TestDurationIsUpdatedCorrectly()
+        public void DurationIsUpdatedCorrectly()
         {
             string tempFile = Path.GetTempFileName();
             List<TestResult> testResults = new List<TestResult>
