@@ -62,10 +62,12 @@ namespace GoogleTestAdapter.Runners
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
                 ITestRunner runner = new PreparingTestRunner(threadId++, TestEnvironment);
-                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, runContext, handle));
-                thread.Start();
-                threads.Add(thread);
                 TestRunners.Add(runner);
+
+                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, runContext, handle));
+                threads.Add(thread);
+
+                thread.Start();
             }
         }
 

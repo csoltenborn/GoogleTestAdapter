@@ -24,14 +24,14 @@ namespace GoogleTestAdapter.Runners
         internal const int MaxCommandLength = 8191;
 
         private int LengthOfExecutableString { get; }
-        private IEnumerable<TestCase> AllCases { get; }
-        private IEnumerable<TestCase> CasesToRun { get; }
+        private IEnumerable<TestCase> AllTestCases { get; }
+        private IEnumerable<TestCase> TestCasesToRun { get; }
         private string ResultXmlFile { get; }
         private TestEnvironment TestEnvironment { get; }
         private string UserParameters { get; }
 
         internal CommandLineGenerator(
-            IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun,
+            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
             TestEnvironment testEnvironment)
         {
@@ -41,8 +41,8 @@ namespace GoogleTestAdapter.Runners
             }
 
             this.LengthOfExecutableString = lengthOfExecutableString;
-            this.AllCases = allCases;
-            this.CasesToRun = casesToRun;
+            this.AllTestCases = allTestCases;
+            this.TestCasesToRun = testCasesToRun;
             this.ResultXmlFile = resultXmlFile;
             this.TestEnvironment = testEnvironment;
             this.UserParameters = userParameters;
@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.Runners
             string userParam = GetAdditionalUserParameter();
             if (AllTestCasesOfExecutableAreRun())
             {
-                commandLines.Add(new Args(CasesToRun.ToList(), baseCommandLine + userParam));
+                commandLines.Add(new Args(TestCasesToRun.ToList(), baseCommandLine + userParam));
                 return commandLines;
             }
 
@@ -75,27 +75,29 @@ namespace GoogleTestAdapter.Runners
                 GoogleTestConstants.FilterOption + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
             string baseCommandLineWithFilter = baseCommandLine + baseFilter;
 
-            List<TestCase> testsNotRunBySuite = GetCasesNotRunBySuite(suitesRunningAllTests);
-            List<TestCase> testsRunBySuite = CasesToRun.Where(tc => !testsNotRunBySuite.Contains(tc)).ToList();
-            if (testsNotRunBySuite.Count == 0)
+            List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
+            List<TestCase> testCasesRunBySuite = TestCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
+            if (testCasesNotRunBySuite.Count == 0)
             {
-                commandLines.Add(new Args(CasesToRun.ToList(), baseCommandLineWithFilter + userParam));
+                commandLines.Add(new Args(TestCasesToRun.ToList(), baseCommandLineWithFilter + userParam));
                 return commandLines;
             }
 
             List<TestCase> includedTestCases;
             string commandLine = baseCommandLineWithFilter +
-                                 JoinTestsUpToMaxLength(testsNotRunBySuite,
+                                 JoinTestsUpToMaxLength(testCasesNotRunBySuite,
                                      MaxCommandLength - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1,
                                      out includedTestCases);
-            includedTestCases.AddRange(testsRunBySuite);
+            includedTestCases.AddRange(testCasesRunBySuite);
             commandLines.Add(new Args(includedTestCases, commandLine + userParam));
-            baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption; // only add suites to first command line
 
-            while (testsNotRunBySuite.Count > 0)
+            // only add suites to first command line
+            baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption;
+
+            while (testCasesNotRunBySuite.Count > 0)
             {
                 commandLine = baseCommandLineWithFilter +
-                              JoinTestsUpToMaxLength(testsNotRunBySuite,
+                              JoinTestsUpToMaxLength(testCasesNotRunBySuite,
                                   MaxCommandLength - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1,
                                   out includedTestCases);
                 commandLines.Add(new Args(includedTestCases, commandLine + userParam));
@@ -104,30 +106,30 @@ namespace GoogleTestAdapter.Runners
             return commandLines;
         }
 
-        private string JoinTestsUpToMaxLength(List<TestCase> tests, int maxLength, out List<TestCase> includedTestCases)
+        private string JoinTestsUpToMaxLength(List<TestCase> testCases, int maxLength, out List<TestCase> includedTestCases)
         {
             includedTestCases = new List<TestCase>();
-            if (tests.Count == 0)
+            if (testCases.Count == 0)
             {
                 return "";
             }
 
             string result = "";
-            string nextTest = GetTestcaseNameForFiltering(tests[0].FullyQualifiedName);
+            string nextTest = GetTestcaseNameForFiltering(testCases[0].FullyQualifiedName);
             if (nextTest.Length > maxLength)
             {
                 throw new Exception("CommandLineGenerator: I can not deal with this case :-( - maxLength=" + maxLength +
                     ", includedTestCases.Count=" + includedTestCases.Count + ", nextTest.Length=" + nextTest.Length);
             }
 
-            while (result.Length + nextTest.Length <= maxLength && tests.Count > 0)
+            while (result.Length + nextTest.Length <= maxLength && testCases.Count > 0)
             {
                 result += nextTest;
-                includedTestCases.Add(tests[0]);
-                tests.RemoveAt(0);
-                if (tests.Count > 0)
+                includedTestCases.Add(testCases[0]);
+                testCases.RemoveAt(0);
+                if (testCases.Count > 0)
                 {
-                    nextTest = ":" + GetTestcaseNameForFiltering(tests[0].FullyQualifiedName);
+                    nextTest = ":" + GetTestcaseNameForFiltering(testCases[0].FullyQualifiedName);
                 }
             }
             return result;
@@ -145,7 +147,9 @@ namespace GoogleTestAdapter.Runners
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return TestEnvironment.Options.RunDisabledTests ? GoogleTestConstants.AlsoRunDisabledTestsOption : "";
+            return TestEnvironment.Options.RunDisabledTests
+                ? GoogleTestConstants.AlsoRunDisabledTestsOption
+                : "";
         }
 
         private string GetShuffleTestsParameter()
@@ -183,24 +187,24 @@ namespace GoogleTestAdapter.Runners
 
         private bool AllTestCasesOfExecutableAreRun()
         {
-            HashSet<TestCase> allCasesSet = new HashSet<TestCase>(AllCases);
-            HashSet<TestCase> casesToRunSet = new HashSet<TestCase>(CasesToRun);
-            return allCasesSet.SetEquals(casesToRunSet);
+            HashSet<TestCase> allTestCasesAsSet = new HashSet<TestCase>(AllTestCases);
+            HashSet<TestCase> testCasesToRunAsSet = new HashSet<TestCase>(TestCasesToRun);
+            return allTestCasesAsSet.SetEquals(testCasesToRunAsSet);
         }
 
-        private List<TestCase> GetCasesNotRunBySuite(List<string> suitesRunningAllTests)
+        private List<TestCase> GetTestCasesNotRunBySuite(List<string> suitesRunningAllTests)
         {
-            List<TestCase> casesNotRunBySuite = new List<TestCase>();
+            List<TestCase> testCasesNotRunBySuite = new List<TestCase>();
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (TestCase testCase in CasesToRun)
+            foreach (TestCase testCase in TestCasesToRun)
             {
-                bool isRunBySuite = suitesRunningAllTests.Any(s => s == GetTestsuiteNameFromCase(testCase));
+                bool isRunBySuite = suitesRunningAllTests.Any(s => s == GetTestsuiteName(testCase));
                 if (!isRunBySuite)
                 {
-                    casesNotRunBySuite.Add(testCase);
+                    testCasesNotRunBySuite.Add(testCase);
                 }
             }
-            return casesNotRunBySuite;
+            return testCasesNotRunBySuite;
         }
 
         private List<string> GetSuitesRunningAllTests()
@@ -209,9 +213,9 @@ namespace GoogleTestAdapter.Runners
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string suite in GetAllSuitesOfTestCasesToRun())
             {
-                List<TestCase> allMatchingCasesToBeRun = GetAllMatchingCases(CasesToRun, suite);
-                List<TestCase> allMatchingCases = GetAllMatchingCases(AllCases, suite);
-                if (allMatchingCasesToBeRun.Count == allMatchingCases.Count)
+                List<TestCase> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(TestCasesToRun, suite);
+                List<TestCase> allMatchingTestCases = GetAllMatchingTestCases(AllTestCases, suite);
+                if (allMatchingTestCasesToBeRun.Count == allMatchingTestCases.Count)
                 {
                     suitesRunningAllTests.Add(suite);
                 }
@@ -221,22 +225,23 @@ namespace GoogleTestAdapter.Runners
 
         private List<string> GetAllSuitesOfTestCasesToRun()
         {
-            return CasesToRun.Select(GetTestsuiteNameFromCase).Distinct().ToList();
+            return TestCasesToRun.Select(GetTestsuiteName).Distinct().ToList();
         }
 
-        private List<TestCase> GetAllMatchingCases(IEnumerable<TestCase> cases, string suite)
+        private List<TestCase> GetAllMatchingTestCases(IEnumerable<TestCase> cases, string suite)
         {
-            return cases.Where(testcase => suite == GetTestsuiteNameFromCase(testcase)).ToList();
+            return cases.Where(testcase => suite == GetTestsuiteName(testcase)).ToList();
         }
 
-        private string GetTestsuiteNameFromCase(TestCase testcase)
+        private string GetTestsuiteName(TestCase testCase)
         {
-            return testcase.FullyQualifiedName.Split('.')[0];
+            return testCase.FullyQualifiedName.Split('.')[0];
         }
 
         private string GetTestcaseNameForFiltering(string fullname)
         {
-            int index = fullname.IndexOf(' ');
+            int index = fullname.IndexOf(GoogleTestConstants.ParameterizedTestMarker,
+                StringComparison.Ordinal);
             if (index < 0)
             {
                 return fullname;

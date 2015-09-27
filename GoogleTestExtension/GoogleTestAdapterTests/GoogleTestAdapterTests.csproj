@@ -73,6 +73,7 @@
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\ParallelTestRunnerTests.cs" />
+    <Compile Include="Runners\SequentialTestRunnerTests.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="AbstractGoogleTestExecutorTests.cs" />
@@ -84,8 +85,8 @@
     <Compile Include="Helpers\ProcessLauncherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />
-    <Compile Include="ParallelGoogleTestExecutorTests.cs" />
-    <Compile Include="SequentialGoogleTestExecutorTests.cs" />
+    <Compile Include="GoogleTestExecutorParallelTests.cs" />
+    <Compile Include="GoogleTestExecutorSequentialTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">

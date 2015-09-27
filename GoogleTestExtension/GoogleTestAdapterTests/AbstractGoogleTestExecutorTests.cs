@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
         {
             TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
 
-            GoogleTestExecutor executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
             executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter
             MockFrameworkHandle.Reset();
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + Options.TestDirPlaceholder + "\"");
 
-            executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            executor = new GoogleTestExecutor(TestEnvironment);
             executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
@@ -90,6 +90,9 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsStaticallyLinkedX86TestsWithResult()
         {
+            // let's print the test output
+            MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
+
             RunAndVerifyTests(X86StaticallyLinkedTests, 1, 1, 0);
         }
 
@@ -133,7 +136,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsHardCrashingX86TestsWithoutResult()
         {
-            GoogleTestExecutor executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
             executor.RunTests(X86HardcrashingTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(0, 1, 0, 3);
@@ -141,7 +144,7 @@ namespace GoogleTestAdapter
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
-            GoogleTestExecutor executor = new GoogleTestExecutor(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+            GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);

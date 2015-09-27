@@ -56,7 +56,7 @@ namespace GoogleTestAdapter
                 if (_allTestCasesOfConsoleApplication1 == null)
                 {
                     _allTestCasesOfConsoleApplication1 = new List<TestCase>();
-                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(new TestEnvironment(MockOptions.Object, MockLogger.Object));
+                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
                     _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests));
                     _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests));
                 }
@@ -114,7 +114,7 @@ namespace GoogleTestAdapter
             };
         }
 
-        protected static List<TestCase> CreateDummyTestCases(params string[] qualifiedNames)
+        protected static IEnumerable<TestCase> CreateDummyTestCases(params string[] qualifiedNames)
         {
             return qualifiedNames.Select(ToTestCase).ToList();
         }

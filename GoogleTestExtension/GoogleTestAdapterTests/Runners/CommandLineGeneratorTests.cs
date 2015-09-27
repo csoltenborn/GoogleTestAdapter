@@ -15,6 +15,7 @@ namespace GoogleTestAdapter.Runners
         [ExpectedException(typeof(ArgumentNullException))]
         public void ThrowsIfUserParametersIsNull()
         {
+            // ReSharper disable once ObjectCreationAsStatement
             new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), 0, null, "", TestEnvironment);
         }
 
@@ -85,6 +86,22 @@ namespace GoogleTestAdapter.Runners
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", commandLine);
+        }
+
+        [TestMethod]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public void CombinesCommonParameterizedTestsInSuite()
+        {
+            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases(
+                "InstantiationName2/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)",
+                "InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)",
+                "InstantiationName/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)");
+            IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("InstantiationName2/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)"));
+
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
+                .GetCommandLines().First().CommandLine;
+
+            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=InstantiationName/ParameterizedTests.*:InstantiationName2/ParameterizedTests.SimpleTraits/0", commandLine);
         }
 
         [TestMethod]

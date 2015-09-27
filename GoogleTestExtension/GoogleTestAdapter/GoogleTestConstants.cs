@@ -18,7 +18,7 @@
         internal const string FilterOption = " --gtest_filter=";
 
         internal const string TestBodySignature = "::TestBody";
-        internal const string ParameterizedTestMarker = "# GetParam() = ";
+        internal const string ParameterizedTestMarker = "  # GetParam() = ";
         internal const string ParameterValueMarker = ".  # TypeParam";
 
         internal static string GetResultXmlFileOption(string resultXmlFile)

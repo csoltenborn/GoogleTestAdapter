@@ -1,61 +1,44 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿using System;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using GoogleTestAdapter.Runners;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class SequentialGoogleTestExecutorTests : AbstractGoogleTestExecutorTests
+    public class GoogleTestExecutorParallelTests : AbstractGoogleTestExecutorTests
     {
 
-        override protected bool ParallelTestExecution => false;
+        override protected bool ParallelTestExecution => true;
 
-        override protected int MaxNrOfThreads => 0;
+        override protected int MaxNrOfThreads => Environment.ProcessorCount;
 
         override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
             base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
 
-            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
-                Times.Exactly(nrOfPassedTests));
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
-                Times.Exactly(nrOfPassedTests));
+            if (nrOfPassedTests > 0)
+            {
+                MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
+                    Times.AtLeast(nrOfPassedTests));
+                MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
+                    Times.AtLeast(nrOfPassedTests));
+            }
 
-            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed)),
-                Times.Exactly(nrOfFailedTests));
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
-                Times.Exactly(nrOfFailedTests));
+            if (nrOfFailedTests > 0)
+            {
+                MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Failed)),
+                    Times.AtLeast(nrOfFailedTests));
+                MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
+                    Times.AtLeast(nrOfFailedTests));
+            }
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
-                Times.Exactly(nrOfNotFoundTests));
+                Times.AtMost(nrOfNotFoundTests));
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
-                Times.Exactly(nrOfNotFoundTests));
+                Times.AtMost(nrOfNotFoundTests));
         }
 
-        [TestMethod]
-        public void CancelingRunnerStopsTestExecution()
-        {
-            List<TestCase> allTestCases = AllTestCasesOfConsoleApplication1;
-            List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
-
-            Stopwatch stopwatch = new Stopwatch();
-            ITestRunner runner = new SequentialTestRunner(TestEnvironment);
-            Thread thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", MockRunContext.Object, MockFrameworkHandle.Object));
-
-            stopwatch.Start();
-            thread.Start();
-            Thread.Sleep(1000);
-            runner.Cancel();
-            thread.Join();
-            stopwatch.Stop();
-
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds > 2000); // 1st test should be executed
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 3000); // 2nd test should not be executed 
-        }
 
         // for now, to get test coverage
         [TestMethod]
