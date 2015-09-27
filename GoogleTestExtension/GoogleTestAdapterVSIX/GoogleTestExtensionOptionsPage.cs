@@ -50,6 +50,13 @@ namespace GoogleTestAdapterVSIX
                                                  + Options.TraitsRegexesRegexSeparator + "Type"
                                                  + Options.TraitsRegexesTraitSeparator + "Medium";
 
+        private const string ShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<n<"
+            + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
+            + ": The given seed is used. See note of option '"
+            + Options.OptionShuffleTests
+            + "'";
+
+
         [Category(Options.CategoryName)]
         [DisplayName(Options.OptionPrintTestOutput)]
         [Description("Print the output of the Google Test executable(s) to the Tests Output window.")]
@@ -74,6 +81,11 @@ namespace GoogleTestAdapterVSIX
         [DisplayName(Options.OptionShuffleTests)]
         [Description("If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\nGoogle Test option:" + GoogleTestConstants.ShuffleTestsOption)]
         public bool ShuffleTests { get; set; } = Options.OptionShuffleTestsDefaultValue;
+
+        [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionShuffleTestsSeed)]
+        [Description(ShuffleTestsSeedDescription)]
+        public int ShuffleTestsSeed { get; set; } = Options.OptionShuffleTestsSeedDefaultValue;
 
         [Category(Options.CategoryName)]
         [DisplayName(Options.OptionUserDebugMode)]

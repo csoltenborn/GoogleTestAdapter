@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,6 +10,13 @@ namespace GoogleTestAdapter.Runners
     [TestClass]
     public class CommandLineGeneratorTests : AbstractGoogleTestExtensionTests
     {
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThrowsIfUserParametersIsNull()
+        {
+            new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), 0, null, "", TestEnvironment);
+        }
 
         [TestMethod]
         public void AppendsAdditionalArgumentsCorrectly()
@@ -24,9 +31,47 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string commandLine = new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
+            string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\"", commandLine);
+        }
+
+        [TestMethod]
+        public void AppendsRepetitionsOption()
+        {
+            MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(4711);
+
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+
+            string repetitionsOption = GoogleTestConstants.NrOfRepetitionsOption + "=4711";
+            Assert.AreEqual("--gtest_output=\"xml:\"" + repetitionsOption, commandLine);
+        }
+
+        [TestMethod]
+        public void AppendsShuffleTestOptionWithDefaultSeed()
+        {
+            MockOptions.Setup(o => o.ShuffleTests).Returns(true);
+
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+
+            Assert.AreEqual("--gtest_output=\"xml:\"" + GoogleTestConstants.ShuffleTestsOption, commandLine);
+        }
+
+        [TestMethod]
+        public void AppendsShuffleTestOptionWithFixedSeed()
+        {
+            MockOptions.Setup(o => o.ShuffleTests).Returns(true);
+            MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(4711);
+
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+
+            string shuffleTestsOption = GoogleTestConstants.ShuffleTestsOption
+                + GoogleTestConstants.ShuffleTestsSeedOption + "=4711";
+            Assert.AreEqual("--gtest_output=\"xml:\"" + shuffleTestsOption, commandLine);
         }
 
         [TestMethod]

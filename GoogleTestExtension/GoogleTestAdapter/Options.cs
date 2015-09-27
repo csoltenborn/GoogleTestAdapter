@@ -14,6 +14,7 @@ namespace GoogleTestAdapter
         public abstract bool RunDisabledTests { get; }
         public abstract int NrOfTestRepetitions { get; }
         public abstract bool ShuffleTests { get; }
+        public abstract int ShuffleTestsSeed { get; }
         public abstract List<RegexTraitPair> TraitsRegexesBefore { get; }
         public abstract List<RegexTraitPair> TraitsRegexesAfter { get; }
         public abstract bool UserDebugMode { get; }
@@ -91,6 +92,7 @@ namespace GoogleTestAdapter
         public const string OptionRunDisabledTests = "Also run disabled tests";
         public const string OptionNrOfTestRepetitions = "Number of test repetitions";
         public const string OptionShuffleTests = "Shuffle tests per execution";
+        public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
         public const string OptionTraitsRegexesBefore = "Regex for setting test traits before test execution";
         public const string OptionTraitsRegexesAfter = "Regex for setting test traits after test execution";
         public const string OptionUserDebugMode = "Debug mode";
@@ -106,6 +108,7 @@ namespace GoogleTestAdapter
         public const bool OptionRunDisabledTestsDefaultValue = false;
         public const int OptionNrOfTestRepetitionsDefaultValue = 1;
         public const bool OptionShuffleTestsDefaultValue = false;
+        public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
         public const string OptionTraitsRegexesDefaultValue = "";
         public const bool OptionUserDebugModeDefaultValue = false;
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
@@ -120,6 +123,7 @@ namespace GoogleTestAdapter
         private const string RegOptionRunDisabledTests = "RunDisabledTests";
         private const string RegOptionNrOfTestRepetitions = "NrOfTestRepetitions";
         private const string RegOptionShuffleTests = "ShuffleTests";
+        private const string RegOptionShuffleTestsSeed = "ShuffleTestsSeed";
         private const string RegOptionTraitsRegexesBefore = "TraitsRegexesBefore";
         private const string RegOptionTraitsRegexesAfter = "TraitsRegexesAfter";
         private const string RegOptionUserDebugMode = "UserDebugMode";
@@ -148,6 +152,19 @@ namespace GoogleTestAdapter
         public override string TestDiscoveryRegex => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionTestDiscoveryRegex, OptionTestDiscoveryRegexDefaultValue);
 
         public override bool RunDisabledTests => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionRunDisabledTests, OptionRunDisabledTestsDefaultValue);
+
+        public override int ShuffleTestsSeed
+        {
+            get
+            {
+                int seed = RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionShuffleTestsSeed, OptionShuffleTestsSeedDefaultValue);
+                if (seed < GoogleTestConstants.ShuffleTestsSeedMinValue || seed > GoogleTestConstants.ShuffleTestsSeedMaxValue)
+                {
+                    seed = OptionShuffleTestsSeedDefaultValue;
+                }
+                return seed;
+            }
+        }
 
         public override int NrOfTestRepetitions
         {

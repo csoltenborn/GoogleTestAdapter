@@ -150,7 +150,20 @@ namespace GoogleTestAdapter.Runners
 
         private string GetShuffleTestsParameter()
         {
-            return TestEnvironment.Options.ShuffleTests ? GoogleTestConstants.ShuffleTestsOption : "";
+            if (!TestEnvironment.Options.ShuffleTests)
+            {
+                return "";
+            }
+
+            string option = GoogleTestConstants.ShuffleTestsOption;
+
+            int seed = TestEnvironment.Options.ShuffleTestsSeed;
+            if (seed != GoogleTestConstants.ShuffleTestsSeedDefaultValue)
+            {
+                option += GoogleTestConstants.ShuffleTestsSeedOption + "=" + seed;
+            }
+
+            return option;
         }
 
         private string GetTestsRepetitionsParameter()
@@ -160,7 +173,7 @@ namespace GoogleTestAdapter.Runners
             {
                 return "";
             }
-            return GoogleTestConstants.NrOfRepetitionsOption + nrOfRepetitions;
+            return GoogleTestConstants.NrOfRepetitionsOption + "=" + nrOfRepetitions;
         }
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)
