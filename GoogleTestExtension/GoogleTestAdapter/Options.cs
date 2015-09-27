@@ -149,15 +149,24 @@ namespace GoogleTestAdapter
 
         public override bool RunDisabledTests => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionRunDisabledTests, OptionRunDisabledTestsDefaultValue);
 
-        public override int NrOfTestRepetitions => RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionNrOfTestRepetitions, OptionNrOfTestRepetitionsDefaultValue);
+        public override int NrOfTestRepetitions
+        {
+            get
+            {
+                int nrOfRepetitions = RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionNrOfTestRepetitions, OptionNrOfTestRepetitionsDefaultValue);
+                if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
+                {
+                    nrOfRepetitions = OptionNrOfTestRepetitionsDefaultValue;
+                }
+                return nrOfRepetitions;
+            }
+        }
 
         public override bool ShuffleTests => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionShuffleTests, OptionShuffleTestsDefaultValue);
 
         public override bool UserDebugMode => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionUserDebugMode, OptionUserDebugModeDefaultValue);
 
         public override string AdditionalTestExecutionParam => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionAdditionalTestExecutionParam, OptionAdditionalTestExecutionParamDefaultValue);
-
-        public override int ReportWaitPeriod => RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionReportWaitPeriod, OptionReportWaitPeriodDefaultValue);
 
         public override List<RegexTraitPair> TraitsRegexesBefore
         {
@@ -194,6 +203,20 @@ namespace GoogleTestAdapter
                     result = Environment.ProcessorCount;
                 }
                 return result;
+            }
+        }
+
+
+        public override int ReportWaitPeriod
+        {
+            get
+            {
+                int period = RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionReportWaitPeriod, OptionReportWaitPeriodDefaultValue);
+                if (period < 0)
+                {
+                    period = OptionReportWaitPeriodDefaultValue;
+                }
+                return period;
             }
         }
 

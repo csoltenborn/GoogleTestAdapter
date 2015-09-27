@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.TestResults
 {
     class XmlTestResultParser
     {
-        private const string ErrorMsgNoXmlFile = "GTA: Output file does not exist, did your tests crash?";
+        private const string ErrorMsgNoXmlFile = "Output file does not exist, did your tests crash?";
 
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(XmlResultFile);
-                TestEnvironment.LogInfo("GTA: Loaded test results from " + XmlResultFile, TestEnvironment.LogType.UserDebug);
+                TestEnvironment.LogInfo("Loaded test results from " + XmlResultFile, TestEnvironment.LogType.UserDebug);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
@@ -58,11 +58,11 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                TestEnvironment.LogWarning("GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
+                TestEnvironment.LogWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
             }
             catch (NullReferenceException e)
             {
-                TestEnvironment.LogWarning("GTA: Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
+                TestEnvironment.LogWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
             }
 
             return testResults;
@@ -109,7 +109,7 @@ namespace GoogleTestAdapter.TestResults
                     testResult.Outcome = TestOutcome.Skipped;
                     break;
                 default:
-                    string msg = "GTA: Unknown testcase status: " + testCaseStatus;
+                    string msg = "Unknown testcase status: " + testCaseStatus;
                     TestEnvironment.LogError(msg);
                     throw new Exception(msg);
             }

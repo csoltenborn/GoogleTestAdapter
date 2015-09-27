@@ -18,14 +18,17 @@ namespace GoogleTestAdapter.Runners
             this.TestEnvironment = testEnvironment;
         }
 
-        void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             List<Thread> threads;
-            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
+            lock (this)
+            {
+                DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
-            threads = new List<Thread>();
-            RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
+                threads = new List<Thread>();
+                RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
+            }
 
             foreach (Thread thread in threads)
             {
@@ -35,9 +38,12 @@ namespace GoogleTestAdapter.Runners
 
         void ITestRunner.Cancel()
         {
-            foreach (ITestRunner runner in TestRunners)
+            lock (this)
             {
-                runner.Cancel();
+                foreach (ITestRunner runner in TestRunners)
+                {
+                    runner.Cancel();
+                }
             }
         }
 
@@ -48,15 +54,15 @@ namespace GoogleTestAdapter.Runners
             ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
-            TestEnvironment.LogInfo("GTA: Executing tests on " + splittedTestCasesToRun.Count + " threads");
-            TestEnvironment.LogInfo("GTA: Note that no test output will be shown on the test console when executing tests concurrently!",
+            TestEnvironment.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
+            TestEnvironment.LogInfo("Note that no test output will be shown on the test console when executing tests concurrently!",
                 TestEnvironment.LogType.UserDebug);
 
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
                 ITestRunner runner = new PreparingTestRunner(threadId++, TestEnvironment);
-                Thread thread = new Thread(() => runner.RunTests(false, allTestCases, testcases, null, runContext, handle));
+                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, runContext, handle));
                 thread.Start();
                 threads.Add(thread);
                 TestRunners.Add(runner);
@@ -72,12 +78,12 @@ namespace GoogleTestAdapter.Runners
             if (durations.Count < testCasesToRun.Length)
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun, TestEnvironment);
-                TestEnvironment.LogInfo("GTA: Using splitter based on number of tests", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.LogInfo("Using splitter based on number of tests", TestEnvironment.LogType.UserDebug);
             }
             else
             {
                 splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-                TestEnvironment.LogInfo("GTA: Using splitter based on test durations", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.LogInfo("Using splitter based on test durations", TestEnvironment.LogType.UserDebug);
             }
 
             return splitter;

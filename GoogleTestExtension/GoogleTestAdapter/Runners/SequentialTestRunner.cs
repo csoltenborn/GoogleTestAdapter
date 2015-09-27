@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.Runners
             TestEnvironment = testEnvironment;
         }
 
-        void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-                RunTestsFromExecutable(runAllTestCases, executable, allTestCasesAsArray, groupedTestCases[executable], userParameters, runContext, handle);
+                RunTestsFromExecutable(executable, allTestCasesAsArray, groupedTestCases[executable], userParameters, runContext, handle);
             }
         }
 
@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void RunTestsFromExecutable(bool runAllTestCases, string executable,
+        private void RunTestsFromExecutable(string executable,
             IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string userParameters,
             IRunContext runContext, IFrameworkHandle handle)
         {
@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.Runners
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
 
-            CommandLineGenerator generator = new CommandLineGenerator(runAllTestCases, allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
+            CommandLineGenerator generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (Canceled)
@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.Runners
 
                 reporter.ReportTestsStarted(handle, arguments.TestCases);
 
-                TestEnvironment.LogInfo("GTA: Executing command '" + executable + " " + arguments.CommandLine + "'.", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.LogInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.", TestEnvironment.LogType.UserDebug);
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases,
                     resultXmlFile, consoleOutput, handle);

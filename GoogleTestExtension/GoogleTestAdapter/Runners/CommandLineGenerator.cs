@@ -23,7 +23,6 @@ namespace GoogleTestAdapter.Runners
 
         internal const int MaxCommandLength = 8191;
 
-        private bool RunAllTestCases { get; }
         private int LengthOfExecutableString { get; }
         private IEnumerable<TestCase> AllCases { get; }
         private IEnumerable<TestCase> CasesToRun { get; }
@@ -32,7 +31,7 @@ namespace GoogleTestAdapter.Runners
         private string UserParameters { get; }
 
         internal CommandLineGenerator(
-            bool runAllTestCases, IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun,
+            IEnumerable<TestCase> allCases, IEnumerable<TestCase> casesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
             TestEnvironment testEnvironment)
         {
@@ -41,7 +40,6 @@ namespace GoogleTestAdapter.Runners
                 throw new ArgumentNullException(nameof(userParameters));
             }
 
-            this.RunAllTestCases = runAllTestCases;
             this.LengthOfExecutableString = lengthOfExecutableString;
             this.AllCases = allCases;
             this.CasesToRun = casesToRun;
@@ -66,7 +64,7 @@ namespace GoogleTestAdapter.Runners
         {
             List<Args> commandLines = new List<Args>();
             string userParam = GetAdditionalUserParameter();
-            if (RunAllTestCases)
+            if (AllTestCasesOfExecutableAreRun())
             {
                 commandLines.Add(new Args(CasesToRun.ToList(), baseCommandLine + userParam));
                 return commandLines;
@@ -162,19 +160,19 @@ namespace GoogleTestAdapter.Runners
             {
                 return "";
             }
-            if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
-            {
-                TestEnvironment.LogWarning(
-                    "Test level repetitions configured under Options/Google Test Adapter is " +
-                    nrOfRepetitions + ", should be -1 (infinite) or > 0. Ignoring value.");
-                return "";
-            }
             return GoogleTestConstants.NrOfRepetitionsOption + nrOfRepetitions;
         }
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)
         {
             return string.Join(".*:", suitesRunningAllTests).AppendIfNotEmpty(".*:");
+        }
+
+        private bool AllTestCasesOfExecutableAreRun()
+        {
+            HashSet<TestCase> allCasesSet = new HashSet<TestCase>(AllCases);
+            HashSet<TestCase> casesToRunSet = new HashSet<TestCase>(CasesToRun);
+            return allCasesSet.SetEquals(casesToRunSet);
         }
 
         private List<TestCase> GetCasesNotRunBySuite(List<string> suitesRunningAllTests)

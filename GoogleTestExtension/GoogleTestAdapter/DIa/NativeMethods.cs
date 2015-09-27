@@ -109,7 +109,7 @@ namespace GoogleTestAdapter.Dia
                         }
                         if (!UnMapAndLoad(ref _loadedImage))
                         {
-                            testEnvironment.LogError("GTA: UnMapAndLoad failed!");
+                            testEnvironment.LogError("UnMapAndLoad failed!");
                         }
                     }
                 }

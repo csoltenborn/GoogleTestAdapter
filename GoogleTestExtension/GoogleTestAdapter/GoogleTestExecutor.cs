@@ -14,11 +14,13 @@ namespace GoogleTestAdapter
         internal const string ExecutorUriString = "executor://GoogleTestRunner/v1";
         internal static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
+
         private TestEnvironment TestEnvironment { get; set; }
 
-        private bool Canceled { get; set; } = false;
+        private List<TestCase> AllTestCasesInExecutables { get; } = new List<TestCase>();
         private ITestRunner Runner { get; set; }
-        private List<TestCase> AllTestCasesInAllExecutables { get; } = new List<TestCase>();
+        private bool Canceled { get; set; } = false;
+
 
         public GoogleTestExecutor() : this(null) { }
 
@@ -27,25 +29,20 @@ namespace GoogleTestAdapter
             TestEnvironment = testEnvironment;
         }
 
+
         public void RunTests(IEnumerable<string> executables, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             try
             {
-                if (TestEnvironment == null)
-                {
-                    TestEnvironment = new TestEnvironment(new Options(), frameworkHandle);
-                }
+                InitTestEnvironment(frameworkHandle);
 
-                TestEnvironment.CheckDebugModeForExecutionCode();
+                ComputeAllTestCasesInExecutables(executables);
 
-                ComputeTestRunner(runContext);
-                ComputeAllTestCasesInAllExecutables(executables);
-
-                RunTests(true, AllTestCasesInAllExecutables, runContext, frameworkHandle);
+                DoRunTests(AllTestCasesInExecutables, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
-                TestEnvironment.LogError("GTA: Exception while running tests: " + e);
+                TestEnvironment.LogError("Exception while running tests: " + e);
             }
         }
 
@@ -53,38 +50,55 @@ namespace GoogleTestAdapter
         {
             try
             {
-                if (TestEnvironment == null)
-                {
-                    TestEnvironment = new TestEnvironment(new Options(), frameworkHandle);
-                }
-
-                TestEnvironment.CheckDebugModeForExecutionCode();
+                InitTestEnvironment(frameworkHandle);
 
                 TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-                ComputeTestRunner(runContext);
-                ComputeAllTestCasesInAllExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct());
+                ComputeAllTestCasesInExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct());
 
-                RunTests(false, testCasesToRunAsArray, runContext, frameworkHandle);
+                DoRunTests(testCasesToRunAsArray, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
-                TestEnvironment.LogError("GTA: Exception while running tests: " + e);
+                TestEnvironment.LogError("Exception while running tests: " + e);
             }
         }
 
         public void Cancel()
         {
-            Canceled = true;
-            Runner.Cancel();
+            lock (this)
+            {
+                Canceled = true;
+                Runner?.Cancel();
+                TestEnvironment.LogInfo("Test execution canceled.");
+            }
         }
 
-        private void RunTests(bool runAllTestCases, IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        private void InitTestEnvironment(IFrameworkHandle frameworkHandle)
+        {
+            if (TestEnvironment == null)
+            {
+                TestEnvironment = new TestEnvironment(new Options(), frameworkHandle);
+            }
+
+            TestEnvironment.CheckDebugModeForExecutionCode();
+        }
+
+        private void DoRunTests(IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            TestEnvironment.LogInfo("GTA: Running " + testCasesToRunAsArray.Length + " tests...");
+            TestEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 
-            Runner.RunTests(runAllTestCases, AllTestCasesInAllExecutables, testCasesToRunAsArray, null, runContext, handle);
-            TestEnvironment.LogInfo("GTA: Test execution completed.");
+            lock (this)
+            {
+                if (Canceled)
+                {
+                    return;
+                }
+                ComputeTestRunner(runContext);
+            }
+
+            Runner.RunTests(AllTestCasesInExecutables, testCasesToRunAsArray, null, runContext, handle);
+            TestEnvironment.LogInfo("Test execution completed.");
         }
 
         private void ComputeTestRunner(IRunContext runContext)
@@ -99,26 +113,26 @@ namespace GoogleTestAdapter
                 if (TestEnvironment.Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
                     TestEnvironment.LogInfo(
-                        "GTA: Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.",
+                        "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.",
                         TestEnvironment.LogType.UserDebug);
                 }
             }
         }
 
-        private void ComputeAllTestCasesInAllExecutables(IEnumerable<string> executables)
+        private void ComputeAllTestCasesInExecutables(IEnumerable<string> executables)
         {
-            AllTestCasesInAllExecutables.Clear();
+            AllTestCasesInExecutables.Clear();
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             foreach (string executable in executables)
             {
                 if (Canceled)
                 {
-                    AllTestCasesInAllExecutables.Clear();
+                    AllTestCasesInExecutables.Clear();
                     break;
                 }
 
-                AllTestCasesInAllExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
+                AllTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
             }
         }
 

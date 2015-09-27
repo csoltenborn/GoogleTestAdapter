@@ -11,9 +11,9 @@ namespace GoogleTestAdapter.Helpers
 
         internal enum LogType { Normal, UserDebug, Debug }
 
-        // for testing and developing the test adapter itself
-        private static bool UnitTestMode = false;
+        // for developing and testing the test adapter itself
         private static bool DebugMode = false;
+        private static bool UnitTestMode = false;
 
         private static bool DiscoveryProcessIdShown { get; set; } = false;
 
@@ -28,20 +28,20 @@ namespace GoogleTestAdapter.Helpers
 
         internal void LogInfo(string message, LogType logType = LogType.Normal)
         {
-            Log(message, logType, TestMessageLevel.Informational);
+            Log(message, logType, TestMessageLevel.Informational, "I");
         }
 
         internal void LogWarning(string message, LogType logType = LogType.Normal)
         {
-            Log(message, logType, TestMessageLevel.Warning);
+            Log(message, logType, TestMessageLevel.Warning, "W");
         }
 
         internal void LogError(string message, LogType logType = LogType.Normal)
         {
-            Log(message, logType, TestMessageLevel.Error);
+            Log(message, logType, TestMessageLevel.Error, "E");
         }
 
-        private void Log(string message, LogType logType, TestMessageLevel level)
+        private void Log(string message, LogType logType, TestMessageLevel level, string levelChar)
         {
             bool log;
             switch (logType)
@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.Helpers
 
             if (log)
             {
-                Logger.SendMessage(level, message);
+                Logger.SendMessage(level, "GTA " + levelChar + ": " + message);
             }
         }
 
@@ -70,24 +70,24 @@ namespace GoogleTestAdapter.Helpers
             CheckDebugMode("Test execution code");
         }
 
-        internal void CheckDebugModeForDiscoverageCode()
+        internal void CheckDebugModeForDiscoveryCode()
         {
             if (!DiscoveryProcessIdShown)
             {
                 DiscoveryProcessIdShown = true;
-                CheckDebugMode("Test discoverage code");
+                CheckDebugMode("Test discovery code");
             }
         }
 
         private void CheckDebugMode(string codeType)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            string message = "GTA: " + codeType + " is running on the process with id " + Process.GetCurrentProcess().Id;
+            string message = codeType +
+                " is running in the process with id " + Process.GetCurrentProcess().Id;
             LogInfo(message, LogType.Debug);
             if (DebugMode && !UnitTestMode)
             {
-                MessageBox.Show(message + ". Attach debugger if necessary, then click ok.",
-                    "Attach debugger", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(message + ". Attach debugger if necessary, then click ok.", "Attach debugger",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
             }
         }
 

@@ -20,12 +20,6 @@ namespace GoogleTestAdapter
         {
             TestEnvironment = testEnvironment;
             NrOfTestResultsBeforeWaiting = TestEnvironment.Options.ReportWaitPeriod;
-            if (NrOfTestResultsBeforeWaiting < 0)
-            {
-                NrOfTestResultsBeforeWaiting = 1;
-                TestEnvironment.LogWarning("Test counter must be >= 0 - using 1 instead");
-            }
-            TestEnvironment.LogInfo("GTA: Test counter is " + NrOfTestResultsBeforeWaiting);
         }
 
         internal void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase> testCases)

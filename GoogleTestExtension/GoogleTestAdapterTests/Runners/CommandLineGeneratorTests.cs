@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,7 +16,7 @@ namespace GoogleTestAdapter.Runners
         {
             string userParameters = "-testdirectory=\"MyTestDirectory\"";
 
-            string commandLine = new CommandLineGenerator(true, new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, userParameters, "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, userParameters, "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             Assert.IsTrue(commandLine.EndsWith(" -testdirectory=\"MyTestDirectory\""));
         }
@@ -23,7 +24,7 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void TestArgumentsWhenRunningAllTests()
         {
-            string commandLine = new CommandLineGenerator(true, new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\"", commandLine);
         }
@@ -33,8 +34,9 @@ namespace GoogleTestAdapter.Runners
         public void TestCombinesCommonTestsInSuite()
         {
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
+            IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.FooTest"));
 
-            string commandLine = new CommandLineGenerator(false, testCasesWithCommonSuite, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", commandLine);
@@ -46,11 +48,12 @@ namespace GoogleTestAdapter.Runners
         {
             IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest",
                 "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb");
+            IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.BarTest"));
             IEnumerable<TestCase> testCasesReversed = testCasesWithCommonSuite.Reverse();
 
-            string commandLine = new CommandLineGenerator(false, testCasesWithCommonSuite, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
-            string commandLineFromBackwards = new CommandLineGenerator(false, testCasesReversed, testCasesReversed, DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLineFromBackwards = new CommandLineGenerator(allTestCases, testCasesReversed, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
             string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
@@ -62,9 +65,9 @@ namespace GoogleTestAdapter.Runners
         public void DoesNotCombineTestsNotHavingCommonSuite()
         {
             IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
-            IEnumerable<TestCase> allTestCases = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest1", "BarSuite.BazTest2");
+            IEnumerable<TestCase> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
 
-            string commandLine = new CommandLineGenerator(false, allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", commandLine);
@@ -74,9 +77,9 @@ namespace GoogleTestAdapter.Runners
         public void DoesNotCombineTestsNotHavingCommonSuite_InDifferentOrder()
         {
             IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
-            IEnumerable<TestCase> allTestCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest", "FooSuite.BazTest", "BarSuite.BazTest2");
+            IEnumerable<TestCase> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
 
-            string commandLine = new CommandLineGenerator(false, allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", commandLine);
@@ -96,7 +99,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
             IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, allTestCases, testCases, DummyExecutable.Length, "", "", TestEnvironment)
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().ToList();
 
             Assert.AreEqual(3, commands.Count);
@@ -144,7 +147,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
             IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(false, allTestCases, testCases, DummyExecutable.Length, "", "", TestEnvironment)
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().ToList();
 
             Assert.AreEqual(3, commands.Count);

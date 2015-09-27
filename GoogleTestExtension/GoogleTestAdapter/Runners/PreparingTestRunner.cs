@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Runners
             this.ThreadId = threadId;
         }
 
-        void ITestRunner.RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.Runners
                 string batch = TestEnvironment.Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test setup", batch, runContext, handle);
 
-                InnerTestRunner.RunTests(runAllTestCases, allTestCases, testCasesToRun, userParameters, runContext, handle);
+                InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, runContext, handle);
 
                 batch = TestEnvironment.Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test teardown", batch, runContext, handle);
@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.Runners
             }
             catch (Exception e)
             {
-                TestEnvironment.LogError("GTA: Exception while running tests: " + e);
+                TestEnvironment.LogError("Exception while running tests: " + e);
             }
         }
 
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.Runners
             catch (Exception e)
             {
                 TestEnvironment.LogError(
-                    "GTA: " + batchType + " batch caused exception, msg: '" + e.Message + "', executed command: '" +
+                    batchType + " batch caused exception, msg: '" + e.Message + "', executed command: '" +
                     batch + "'");
             }
         }
@@ -83,7 +83,7 @@ namespace GoogleTestAdapter.Runners
             else
             {
                 TestEnvironment.LogWarning(
-                    "GTA: " + batchType + " batch returned exit code " + batchExitCode + ", executed command: '" +
+                    batchType + " batch returned exit code " + batchExitCode + ", executed command: '" +
                     batch + "'");
             }
         }

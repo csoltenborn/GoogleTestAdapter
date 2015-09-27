@@ -58,12 +58,7 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            if (TestEnvironment == null)
-            {
-                TestEnvironment = new TestEnvironment(new Options(), logger);
-            }
-
-            TestEnvironment.CheckDebugModeForDiscoverageCode();
+            InitTestEnvironment(logger);
 
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
@@ -81,13 +76,13 @@ namespace GoogleTestAdapter
             suiteCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteCasePairs);
 
-            TestEnvironment.LogInfo("GTA: Found " + suiteCasePairs.Count + " tests in executable " + executable);
+            TestEnvironment.LogInfo("Found " + suiteCasePairs.Count + " tests in executable " + executable);
 
             List<TestCase> testCases = new List<TestCase>();
             foreach (SuiteTestCasePair suiteCasePair in suiteCasePairs)
             {
                 testCases.Add(ToTestCase(executable, suiteCasePair, sourceFileLocations));
-                TestEnvironment.LogInfo("GTA: Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase, TestEnvironment.LogType.Debug);
+                TestEnvironment.LogInfo("Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase, TestEnvironment.LogType.Debug);
             }
             return testCases;
         }
@@ -111,21 +106,31 @@ namespace GoogleTestAdapter
                 catch (ArgumentException e)
                 {
                     TestEnvironment.LogError(
-                        "GTA: Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                        "Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
                     matches = false;
                 }
                 catch (RegexMatchTimeoutException e)
                 {
                     TestEnvironment.LogError(
-                        "GTA: Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                        "Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
                     matches = false;
                 }
             }
 
             TestEnvironment.LogInfo(
-                    "GTA: " + executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'", TestEnvironment.LogType.UserDebug);
+                    executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'", TestEnvironment.LogType.UserDebug);
 
             return matches;
+        }
+
+        private void InitTestEnvironment(IMessageLogger logger)
+        {
+            if (TestEnvironment == null)
+            {
+                TestEnvironment = new TestEnvironment(new Options(), logger);
+            }
+
+            TestEnvironment.CheckDebugModeForDiscoveryCode();
         }
 
         private List<SuiteTestCasePair> ParseTestCases(List<string> output)
@@ -193,7 +198,7 @@ namespace GoogleTestAdapter
                 }
             }
 
-            TestEnvironment.LogWarning("GTA: Could not find source location for test " + displayName);
+            TestEnvironment.LogWarning("Could not find source location for test " + displayName);
             return new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
             {
                 DisplayName = displayName

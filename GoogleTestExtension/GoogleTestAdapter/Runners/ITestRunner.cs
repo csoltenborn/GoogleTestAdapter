@@ -6,7 +6,7 @@ namespace GoogleTestAdapter.Runners
 {
     interface ITestRunner
     {
-        void RunTests(bool runAllTestCases, IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle);
 
         void Cancel();

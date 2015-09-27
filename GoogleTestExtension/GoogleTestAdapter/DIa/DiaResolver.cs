@@ -109,7 +109,7 @@ namespace GoogleTestAdapter.Dia
                 }
                 else
                 {
-                    TestEnvironment.LogError("GTA: Failed to locate line number for " + nativeSymbol);
+                    TestEnvironment.LogError("Failed to locate line number for " + nativeSymbol);
                     return new GoogleTestDiscoverer.SourceFileLocation(executable, "", 0, traits);
                 }
             }

@@ -53,12 +53,12 @@ namespace GoogleTestAdapter.Helpers
                 if (printTestOutput)
                 {
                     TestEnvironment.LogInfo(
-                        "GTA: >>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
+                        ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
                 }
-                ReadTheStream(throwIfError, process, output, printTestOutput);
+                ReadTheStream(process, output, printTestOutput, throwIfError);
                 if (printTestOutput)
                 {
-                    TestEnvironment.LogInfo("GTA: <<<<<<<<<<<<<<< End of Output");
+                    TestEnvironment.LogInfo("<<<<<<<<<<<<<<< End of Output");
                 }
                 waiter.WaitForExit();
                 return waiter.ProcessExitCode;
@@ -72,11 +72,11 @@ namespace GoogleTestAdapter.Helpers
         private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command,
             string param, bool printTestOutput, IFrameworkHandle handle)
         {
-            TestEnvironment.LogInfo("GTA: Attaching debugger to " + command);
+            TestEnvironment.LogInfo("Attaching debugger to " + command);
             if (printTestOutput)
             {
                 TestEnvironment.LogInfo(
-                    "GTA: Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!",
+                    "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!",
                     TestEnvironment.LogType.UserDebug);
             }
             int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param,
@@ -89,7 +89,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void ReadTheStream(bool throwIfError, Process process, List<string> streamContent, bool printTestOutput)
+        private void ReadTheStream(Process process, List<string> streamContent, bool printTestOutput, bool throwIfError)
         {
             while (!process.StandardOutput.EndOfStream)
             {
