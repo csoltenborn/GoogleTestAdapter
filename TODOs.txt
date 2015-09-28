@@ -1,0 +1,10 @@
+﻿Before release:
+	code review
+	end-to-end tests
+	reduce # of known issues if possible :-)
+
+Release:
+	Clone repository on GitHub
+	Set up GitHub page, Wiki, Issues tracker
+	Publish on MS market
+
