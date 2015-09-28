@@ -103,7 +103,7 @@ namespace GoogleTestAdapter
         {
             if (TestEnvironment == null)
             {
-                TestEnvironment = new TestEnvironment(new Options(), logger);
+                TestEnvironment = new TestEnvironment(new Options(logger), logger);
             }
 
             TestEnvironment.CheckDebugModeForDiscoveryCode();

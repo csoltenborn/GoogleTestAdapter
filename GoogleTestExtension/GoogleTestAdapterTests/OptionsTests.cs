@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
@@ -11,6 +10,15 @@ namespace GoogleTestAdapter
     {
 
         private Mock<IRegistryReader> MockRegistryReader { get; } = new Mock<IRegistryReader>();
+        private AbstractOptions TheOptions { get; set; }
+
+        [TestInitialize]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            TheOptions = new Options(MockRegistryReader.Object, MockLogger.Object);
+        }
 
         [TestCleanup]
         public override void TearDown()
@@ -23,163 +31,91 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void NrOfTestRepitionsHandlesInvalidValuesCorrectly()
         {
-            Options options = new Options(MockRegistryReader.Object);
+            SetupMockToReturnInt(-2);
+            Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, TheOptions.NrOfTestRepetitions);
 
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(-2);
-            Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, options.NrOfTestRepetitions);
+            SetupMockToReturnInt(0);
+            Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, TheOptions.NrOfTestRepetitions);
 
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(0);
-            Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, options.NrOfTestRepetitions);
-
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(4711);
-            Assert.AreEqual(4711, options.NrOfTestRepetitions);
+            SetupMockToReturnInt(4711);
+            Assert.AreEqual(4711, TheOptions.NrOfTestRepetitions);
         }
 
         [TestMethod]
         public void ShuffleTestsSeedHandlesInvalidValuesCorrectly()
         {
-            Options options = new Options(MockRegistryReader.Object);
+            SetupMockToReturnInt(-1);
+            Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, TheOptions.ShuffleTestsSeed);
 
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(-1);
-            Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, options.ShuffleTestsSeed);
+            SetupMockToReturnInt(1000000);
+            Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, TheOptions.ShuffleTestsSeed);
 
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(1000000);
-            Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, options.ShuffleTestsSeed);
-
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(4711);
-            Assert.AreEqual(4711, options.ShuffleTestsSeed);
+            SetupMockToReturnInt(4711);
+            Assert.AreEqual(4711, TheOptions.ShuffleTestsSeed);
         }
 
         [TestMethod]
         public void MaxNrOfThreadsHandlesInvalidValuesCorrectly()
         {
-            Options options = new Options(MockRegistryReader.Object);
+            SetupMockToReturnInt(-1);
+            Assert.AreEqual(Environment.ProcessorCount, TheOptions.MaxNrOfThreads);
 
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(-1);
-            Assert.AreEqual(Environment.ProcessorCount, options.MaxNrOfThreads);
-
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(Environment.ProcessorCount + 1);
-            Assert.AreEqual(Environment.ProcessorCount, options.MaxNrOfThreads);
+            SetupMockToReturnInt(Environment.ProcessorCount + 1);
+            Assert.AreEqual(Environment.ProcessorCount, TheOptions.MaxNrOfThreads);
 
             if (Environment.ProcessorCount > 1)
             {
-                MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                    .Returns(Environment.ProcessorCount - 1);
-                Assert.AreEqual(Environment.ProcessorCount - 1, options.MaxNrOfThreads);
+                SetupMockToReturnInt(Environment.ProcessorCount - 1);
+                Assert.AreEqual(Environment.ProcessorCount - 1, TheOptions.MaxNrOfThreads);
             }
         }
 
         [TestMethod]
         public void ReportWaitPeriodHandlesInvalidValuesCorrectly()
         {
-            Options options = new Options(MockRegistryReader.Object);
+            SetupMockToReturnInt(-1);
+            Assert.AreEqual(Options.OptionReportWaitPeriodDefaultValue, TheOptions.ReportWaitPeriod);
 
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(-1);
-            Assert.AreEqual(Options.OptionReportWaitPeriodDefaultValue, options.ReportWaitPeriod);
-
-            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(4711);
-            Assert.AreEqual(4711, options.ReportWaitPeriod);
+            SetupMockToReturnInt(4711);
+            Assert.AreEqual(4711, TheOptions.ReportWaitPeriod);
         }
 
         [TestMethod]
         public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
         {
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder);
-            string result = MockOptions.Object.GetUserParameters("", "mydir", 0);
+            SetupMockToReturnString(Options.TestDirPlaceholder);
+            string result = TheOptions.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + " " + Options.TestDirPlaceholder);
-            result = MockOptions.Object.GetUserParameters("", "mydir", 0);
+            SetupMockToReturnString(Options.TestDirPlaceholder + " " + Options.TestDirPlaceholder);
+            result = TheOptions.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir mydir", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder.ToLower());
-            result = MockOptions.Object.GetUserParameters("", "mydir", 0);
+            SetupMockToReturnString(Options.TestDirPlaceholder.ToLower());
+            result = TheOptions.GetUserParameters("", "mydir", 0);
             Assert.AreEqual(Options.TestDirPlaceholder.ToLower(), result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.ThreadIdPlaceholder);
-            result = MockOptions.Object.GetUserParameters("", "mydir", 4711);
+            SetupMockToReturnString(Options.ThreadIdPlaceholder);
+            result = TheOptions.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("4711", result);
 
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + ", " + Options.ThreadIdPlaceholder);
-            result = MockOptions.Object.GetUserParameters("", "mydir", 4711);
+            SetupMockToReturnString(Options.TestDirPlaceholder + ", " + Options.ThreadIdPlaceholder);
+            result = TheOptions.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("mydir, 4711", result);
         }
 
-        [TestMethod]
-        public void TraitsRegexOptionsFailsNicelyIfInvokedWithUnparsableString()
+        private void SetupMockToReturnString(string s)
         {
-            PrivateObject optionsAccessor = new PrivateObject(new Options());
-            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", "vrr<erfwe") as List<RegexTraitPair>;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.Count);
+            MockRegistryReader
+                .Setup(rr => rr.ReadString(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(s);
         }
 
-        [TestMethod]
-        public void TraitsRegexOptionsAreParsedCorrectlyIfEmpty()
+        private void SetupMockToReturnInt(int i)
         {
-            PrivateObject optionsAccessor = new PrivateObject(new Options());
-            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", "") as List<RegexTraitPair>;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.Count);
-        }
-
-        [TestMethod]
-        public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
-        {
-            PrivateObject optionsAccessor = new PrivateObject(new Options());
-            string optionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
-            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", optionsString) as List<RegexTraitPair>;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual("MyTest*", result[0].Regex);
-            Assert.AreEqual("Type", result[0].Trait.Name);
-            Assert.AreEqual("Small", result[0].Trait.Value);
-        }
-
-        [TestMethod]
-        public void TraitsRegexOptionsAreParsedCorrectlyIfTwo()
-        {
-            PrivateObject optionsAccessor = new PrivateObject(new Options());
-            string optionsString = ConcatTraisRegexes(
-                CreateTraitsRegex("MyTest*", "Type", "Small"),
-                CreateTraitsRegex("*MyOtherTest*", "Category", "Integration"));
-            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", optionsString) as List<RegexTraitPair>;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
-
-            Assert.AreEqual("MyTest*", result[0].Regex);
-            Assert.AreEqual("Type", result[0].Trait.Name);
-            Assert.AreEqual("Small", result[0].Trait.Value);
-
-            Assert.AreEqual("*MyOtherTest*", result[1].Regex);
-            Assert.AreEqual("Category", result[1].Trait.Name);
-            Assert.AreEqual("Integration", result[1].Trait.Value);
-        }
-
-        private string CreateTraitsRegex(string regex, string name, string value)
-        {
-            return regex +
-                Options.TraitsRegexesRegexSeparator + name +
-                Options.TraitsRegexesTraitSeparator + value;
-        }
-
-        private string ConcatTraisRegexes(params string[] regexes)
-        {
-            return string.Join(Options.TraitsRegexesPairSeparator, regexes);
+            MockRegistryReader
+                .Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(i);
         }
 
     }

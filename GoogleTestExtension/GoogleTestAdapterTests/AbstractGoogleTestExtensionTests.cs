@@ -43,7 +43,7 @@ namespace GoogleTestAdapter
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
         internal readonly TestEnvironment TestEnvironment;
 
-        public AbstractGoogleTestExtensionTests()
+        protected AbstractGoogleTestExtensionTests()
         {
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
         }

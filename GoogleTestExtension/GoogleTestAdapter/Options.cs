@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
+
+    public class RegexTraitPair
+    {
+        public string Regex { get; set; }
+        public Trait Trait { get; set; }
+
+        public RegexTraitPair(string regex, string name, string value)
+        {
+            this.Regex = regex;
+            this.Trait = new Trait(name, value);
+        }
+    }
 
     public abstract class AbstractOptions
     {
@@ -27,22 +39,22 @@ namespace GoogleTestAdapter
 
         public abstract int ReportWaitPeriod { get; }
 
-        internal string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
+        public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
             return ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
         }
 
-        internal string GetTestSetupBatch(string solutionDirectory, string testDirectory, int threadId)
+        public string GetTestSetupBatch(string solutionDirectory, string testDirectory, int threadId)
         {
             return ReplacePlaceholders(TestSetupBatch, solutionDirectory, testDirectory, threadId);
         }
 
-        internal string GetTestTeardownBatch(string solutionDirectory, string testDirectory, int threadId)
+        public string GetTestTeardownBatch(string solutionDirectory, string testDirectory, int threadId)
         {
             return ReplacePlaceholders(TestTeardownBatch, solutionDirectory, testDirectory, threadId);
         }
 
-        private static string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
+        private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
         {
             if (string.IsNullOrEmpty(theString))
             {
@@ -57,28 +69,20 @@ namespace GoogleTestAdapter
 
     }
 
-    public class RegexTraitPair
-    {
-        public string Regex { get; set; }
-        public Trait Trait { get; set; }
-
-        public RegexTraitPair(string regex, string name, string value)
-        {
-            this.Regex = regex;
-            this.Trait = new Trait(name, value);
-        }
-    }
-
     public class Options : AbstractOptions
     {
         private IRegistryReader RegistryReader { get; }
+        private TestEnvironment TestEnvironment { get; }
+        private RegexTraitParser RegexTraitParser { get; }
 
 
-        internal Options() : this(new RegistryReader()) { }
+        internal Options(IMessageLogger logger) : this(new RegistryReader(), logger) { }
 
-        internal Options(IRegistryReader registryReader)
+        internal Options(IRegistryReader registryReader, IMessageLogger logger)
         {
             this.RegistryReader = registryReader;
+            this.TestEnvironment = new TestEnvironment(this, logger);
+            this.RegexTraitParser = new RegexTraitParser(TestEnvironment);
         }
 
 
@@ -91,9 +95,11 @@ namespace GoogleTestAdapter
         private const string RegOptionBaseProduction = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
         // ReSharper disable once UnusedMember.Local
         private const string RegOptionBaseDebugging = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
-        private const string RegOptionGeneralBase = RegOptionBaseProduction + @"\GeneralOptionsDialogPage";
-        private const string RegOptionParallelizationBase = RegOptionBaseProduction + @"\ParallelizationOptionsDialogPage";
-        private const string RegOptionAdvancedBase = RegOptionBaseProduction + @"\AdvancedOptionsDialogPage";
+
+        private const string RegOptionBase = RegOptionBaseProduction;
+        private const string RegOptionGeneralBase = RegOptionBase + @"\GeneralOptionsDialogPage";
+        private const string RegOptionParallelizationBase = RegOptionBase + @"\ParallelizationOptionsDialogPage";
+        private const string RegOptionAdvancedBase = RegOptionBase + @"\AdvancedOptionsDialogPage";
 
         internal const string SolutionDirPlaceholder = "$(SolutionDir)";
         internal const string TestDirPlaceholder = "$(TestDir)";
@@ -104,7 +110,8 @@ namespace GoogleTestAdapter
            ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
            SolutionDirPlaceholder + " - directory of the solution";
 
-        // GeneralOptionsPage
+        #region GeneralOptionsPage
+
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;
         private const string RegOptionPrintTestOutput = "PrintTestOutput";
@@ -214,7 +221,7 @@ namespace GoogleTestAdapter
             get
             {
                 string option = RegistryReader.ReadString(RegOptionGeneralBase, RegOptionTraitsRegexesBefore, OptionTraitsRegexesDefaultValue);
-                return ParseTraitsRegexesString(option);
+                return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
 
@@ -226,7 +233,7 @@ namespace GoogleTestAdapter
             get
             {
                 string option = RegistryReader.ReadString(RegOptionGeneralBase, RegOptionTraitsRegexesAfter, OptionTraitsRegexesDefaultValue);
-                return ParseTraitsRegexesString(option);
+                return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
 
@@ -249,8 +256,10 @@ namespace GoogleTestAdapter
 
         public override string AdditionalTestExecutionParam => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionAdditionalTestExecutionParam, OptionAdditionalTestExecutionParamDefaultValue);
 
+        #endregion
 
-        // ParallelizationOptionsPage
+        #region ParallelizationOptionsPage
+
         public const string OptionEnableParallelTestExecution = "Enable parallel test execution";
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
         private const string RegOptionEnableParallelTestExecution = "EnableParallelTestExecution";
@@ -299,8 +308,10 @@ namespace GoogleTestAdapter
 
         public override string TestTeardownBatch => RegistryReader.ReadString(RegOptionParallelizationBase, RegOptionTestTeardownBatch, OptionTestTeardownBatchDefaultValue);
 
+        #endregion
 
-        // AdvancedOptionsPage
+        #region AdvancedOptionsPage
+
         public const string OptionReportWaitPeriod = "Wait period during result reporting";
         public const int OptionReportWaitPeriodDefaultValue = 0;
         private const string RegOptionReportWaitPeriod = "ReportWaitPeriod";
@@ -321,29 +332,7 @@ namespace GoogleTestAdapter
             }
         }
 
-
-        private List<RegexTraitPair> ParseTraitsRegexesString(string option)
-        {
-            List<RegexTraitPair> result = new List<RegexTraitPair>();
-            string[] pairs = option.Split(new[] { TraitsRegexesPairSeparator }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string pair in pairs)
-            {
-                try
-                {
-                    string[] values = pair.Split(new[] { TraitsRegexesRegexSeparator }, StringSplitOptions.None);
-                    string[] trait = values[1].Split(new[] { TraitsRegexesTraitSeparator }, StringSplitOptions.None);
-                    string regex = values[0];
-                    string traitName = trait[0];
-                    string traitValue = trait[1];
-                    result.Add(new RegexTraitPair(regex, traitName, traitValue));
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Could not parse pair '" + pair + "', exception message: " + e.Message);
-                }
-            }
-            return result;
-        }
+        #endregion
 
     }
 

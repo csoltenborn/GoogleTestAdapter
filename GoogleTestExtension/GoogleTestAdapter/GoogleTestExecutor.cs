@@ -77,7 +77,7 @@ namespace GoogleTestAdapter
         {
             if (TestEnvironment == null)
             {
-                TestEnvironment = new TestEnvironment(new Options(), frameworkHandle);
+                TestEnvironment = new TestEnvironment(new Options(frameworkHandle), frameworkHandle);
             }
 
             TestEnvironment.CheckDebugModeForExecutionCode();
