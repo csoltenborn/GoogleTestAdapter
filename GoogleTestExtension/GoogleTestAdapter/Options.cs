@@ -71,7 +71,16 @@ namespace GoogleTestAdapter
 
     public class Options : AbstractOptions
     {
-        internal Options() { }
+        private IRegistryReader RegistryReader { get; }
+
+
+        internal Options() : this(new RegistryReader()) { }
+
+        internal Options(IRegistryReader registryReader)
+        {
+            this.RegistryReader = registryReader;
+        }
+
 
         public const string CategoryName = "Google Test Adapter";
         public const string PageGeneralName = "General";

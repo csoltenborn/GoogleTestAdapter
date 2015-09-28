@@ -1,11 +1,95 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
     public class OptionsTests : AbstractGoogleTestExtensionTests
     {
+
+        private Mock<IRegistryReader> MockRegistryReader { get; } = new Mock<IRegistryReader>();
+
+        [TestCleanup]
+        public override void TearDown()
+        {
+            base.TearDown();
+
+            MockRegistryReader.Reset();
+        }
+
+        [TestMethod]
+        public void NrOfTestRepitionsHandlesInvalidValuesCorrectly()
+        {
+            Options options = new Options(MockRegistryReader.Object);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(-2);
+            Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, options.NrOfTestRepetitions);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(0);
+            Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, options.NrOfTestRepetitions);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(4711);
+            Assert.AreEqual(4711, options.NrOfTestRepetitions);
+        }
+
+        [TestMethod]
+        public void ShuffleTestsSeedHandlesInvalidValuesCorrectly()
+        {
+            Options options = new Options(MockRegistryReader.Object);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(-1);
+            Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, options.ShuffleTestsSeed);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(1000000);
+            Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, options.ShuffleTestsSeed);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(4711);
+            Assert.AreEqual(4711, options.ShuffleTestsSeed);
+        }
+
+        [TestMethod]
+        public void MaxNrOfThreadsHandlesInvalidValuesCorrectly()
+        {
+            Options options = new Options(MockRegistryReader.Object);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(-1);
+            Assert.AreEqual(Environment.ProcessorCount, options.MaxNrOfThreads);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(Environment.ProcessorCount + 1);
+            Assert.AreEqual(Environment.ProcessorCount, options.MaxNrOfThreads);
+
+            if (Environment.ProcessorCount > 1)
+            {
+                MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                    .Returns(Environment.ProcessorCount - 1);
+                Assert.AreEqual(Environment.ProcessorCount - 1, options.MaxNrOfThreads);
+            }
+        }
+
+        [TestMethod]
+        public void ReportWaitPeriodHandlesInvalidValuesCorrectly()
+        {
+            Options options = new Options(MockRegistryReader.Object);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(-1);
+            Assert.AreEqual(Options.OptionReportWaitPeriodDefaultValue, options.ReportWaitPeriod);
+
+            MockRegistryReader.Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(4711);
+            Assert.AreEqual(4711, options.ReportWaitPeriod);
+        }
 
         [TestMethod]
         public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
