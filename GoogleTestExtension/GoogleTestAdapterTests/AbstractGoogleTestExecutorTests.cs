@@ -11,8 +11,14 @@ namespace GoogleTestAdapter
     public abstract class AbstractGoogleTestExecutorTests : AbstractGoogleTestExtensionTests
     {
 
-        protected abstract bool ParallelTestExecution { get; }
-        protected abstract int MaxNrOfThreads { get; }
+        private bool ParallelTestExecution { get; }
+        private int MaxNrOfThreads { get; }
+
+        protected AbstractGoogleTestExecutorTests(bool parallelTestExecution, int maxNrOfThreads)
+        {
+            this.ParallelTestExecution = parallelTestExecution;
+            this.MaxNrOfThreads = maxNrOfThreads;
+        }
 
         protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {

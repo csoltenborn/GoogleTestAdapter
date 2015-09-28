@@ -8,12 +8,15 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Dia;
 using GoogleTestAdapter.Helpers;
 
+using SourceFileLocation = GoogleTestAdapter.Dia.DiaResolver.SourceFileLocation;
+
 namespace GoogleTestAdapter
 {
     [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]
     public class GoogleTestDiscoverer : ITestDiscoverer
     {
+
         class SuiteTestCasePair
         {
             internal string TestSuite { get; }
@@ -26,27 +29,14 @@ namespace GoogleTestAdapter
             }
         }
 
-        internal class SourceFileLocation
-        {
-            internal string Symbol { get; }
-            internal string Sourcefile { get; }
-            internal uint Line { get; }
-            internal List<Trait> Traits { get; }
-
-            internal SourceFileLocation(string symbol, string sourceFile, uint line, List<Trait> traits)
-            {
-                this.Symbol = symbol;
-                this.Sourcefile = sourceFile;
-                this.Line = line;
-                this.Traits = traits;
-            }
-        }
 
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
         private static readonly Regex CompiledTestFinderRegex = new Regex(TestFinderRegex, RegexOptions.Compiled);
 
+
         private TestEnvironment TestEnvironment { get; set; }
+
 
         public GoogleTestDiscoverer() : this(null) { }
 
@@ -54,6 +44,7 @@ namespace GoogleTestAdapter
         {
             this.TestEnvironment = testEnvironment;
         }
+
 
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
@@ -69,17 +60,18 @@ namespace GoogleTestAdapter
             }
         }
 
+
         internal List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
-            List<SuiteTestCasePair> suiteCasePairs = ParseTestCases(consoleOutput);
-            suiteCasePairs.Reverse();
-            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteCasePairs);
+            List<SuiteTestCasePair> suiteTestCasePairs = ParseTestCases(consoleOutput);
+            suiteTestCasePairs.Reverse();
+            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteTestCasePairs);
 
-            TestEnvironment.LogInfo("Found " + suiteCasePairs.Count + " tests in executable " + executable);
+            TestEnvironment.LogInfo("Found " + suiteTestCasePairs.Count + " tests in executable " + executable);
 
             List<TestCase> testCases = new List<TestCase>();
-            foreach (SuiteTestCasePair suiteCasePair in suiteCasePairs)
+            foreach (SuiteTestCasePair suiteCasePair in suiteTestCasePairs)
             {
                 testCases.Add(ToTestCase(executable, suiteCasePair, sourceFileLocations));
                 TestEnvironment.LogInfo("Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase, TestEnvironment.LogType.Debug);
@@ -99,22 +91,7 @@ namespace GoogleTestAdapter
             else
             {
                 regexUsed = customRegex;
-                try
-                {
-                    matches = Regex.IsMatch(executable, customRegex);
-                }
-                catch (ArgumentException e)
-                {
-                    TestEnvironment.LogError(
-                        "Regex '" + regexUsed + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
-                    matches = false;
-                }
-                catch (RegexMatchTimeoutException e)
-                {
-                    TestEnvironment.LogError(
-                        "Regex '" + regexUsed + "' configured under Options/Google Test Adapter timed out: " + e.Message);
-                    matches = false;
-                }
+                matches = SafeMatches(executable, customRegex);
             }
 
             TestEnvironment.LogInfo(
@@ -238,6 +215,26 @@ namespace GoogleTestAdapter
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
         {
             return allExecutables.Where(e => IsGoogleTestExecutable(e, TestEnvironment.Options.TestDiscoveryRegex)).ToList();
+        }
+
+        private bool SafeMatches(string executable, string regex)
+        {
+            bool matches = false;
+            try
+            {
+                matches = Regex.IsMatch(executable, regex);
+            }
+            catch (ArgumentException e)
+            {
+                TestEnvironment.LogError(
+                    "Regex '" + regex + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+            }
+            catch (RegexMatchTimeoutException e)
+            {
+                TestEnvironment.LogError(
+                    "Regex '" + regex + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+            }
+            return matches;
         }
 
     }

@@ -11,9 +11,7 @@ namespace GoogleTestAdapter
     public class GoogleTestExecutorSequentialTests : AbstractGoogleTestExecutorTests
     {
 
-        override protected bool ParallelTestExecution => false;
-
-        override protected int MaxNrOfThreads => 0;
+        public GoogleTestExecutorSequentialTests() : base(false, 1) { }
 
         override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {

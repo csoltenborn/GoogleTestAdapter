@@ -11,8 +11,25 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.Dia
 {
 
+
     class DiaResolver
     {
+        internal class SourceFileLocation
+        {
+            internal string Symbol { get; }
+            internal string Sourcefile { get; }
+            internal uint Line { get; }
+            internal List<Trait> Traits { get; }
+
+            internal SourceFileLocation(string symbol, string sourceFile, uint line, List<Trait> traits)
+            {
+                this.Symbol = symbol;
+                this.Sourcefile = sourceFile;
+                this.Line = line;
+                this.Traits = traits;
+            }
+        }
+
         // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
@@ -24,9 +41,9 @@ namespace GoogleTestAdapter.Dia
             this.TestEnvironment = testEnvironment;
         }
 
-        internal List<GoogleTestDiscoverer.SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString)
+        internal List<SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString)
         {
-            List<GoogleTestDiscoverer.SourceFileLocation> foundSourceFileLocations = FindSymbolsFromBinary(executable, symbols, symbolFilterString);
+            List<SourceFileLocation> foundSourceFileLocations = FindSymbolsFromBinary(executable, symbols, symbolFilterString);
 
             if (foundSourceFileLocations.Count == 0)
             {
@@ -49,7 +66,7 @@ namespace GoogleTestAdapter.Dia
             return foundSourceFileLocations;
         }
 
-        private List<GoogleTestDiscoverer.SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString)
+        private List<SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString)
         {
             DiaSourceClass diaSourceClass = new DiaSourceClass();
             string pdb = ReplaceExtension(binary, ".pdb");
@@ -87,7 +104,7 @@ namespace GoogleTestAdapter.Dia
             }
         }
 
-        private GoogleTestDiscoverer.SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        private SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = GetTraits(nativeSymbol, allTraitSymbols);
             IDiaEnumLineNumbers lineNumbers = diaSession.GetLineNumbers(nativeSymbol.AddressSection, nativeSymbol.AddressOffset, nativeSymbol.Length);
@@ -95,12 +112,12 @@ namespace GoogleTestAdapter.Dia
             {
                 if (lineNumbers.count > 0)
                 {
-                    GoogleTestDiscoverer.SourceFileLocation result = null;
+                    SourceFileLocation result = null;
                     foreach (IDiaLineNumber lineNumber in lineNumbers)
                     {
                         if (result == null)
                         {
-                            result = new GoogleTestDiscoverer.SourceFileLocation(
+                            result = new SourceFileLocation(
                                 nativeSymbol.Symbol, lineNumber.sourceFile.fileName,
                                 lineNumber.lineNumber, traits);
                         }
@@ -111,7 +128,7 @@ namespace GoogleTestAdapter.Dia
                 else
                 {
                     TestEnvironment.LogError("Failed to locate line number for " + nativeSymbol);
-                    return new GoogleTestDiscoverer.SourceFileLocation(executable, "", 0, traits);
+                    return new SourceFileLocation(executable, "", 0, traits);
                 }
             }
             finally

@@ -9,9 +9,7 @@ namespace GoogleTestAdapter
     public class GoogleTestExecutorParallelTests : AbstractGoogleTestExecutorTests
     {
 
-        override protected bool ParallelTestExecution => true;
-
-        override protected int MaxNrOfThreads => Environment.ProcessorCount;
+        public GoogleTestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
 
         override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
