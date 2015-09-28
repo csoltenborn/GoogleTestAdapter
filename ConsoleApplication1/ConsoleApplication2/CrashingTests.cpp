@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <concrt.h>
 #include "../ConsoleApplication1/ConsoleApplication1.h"
-#include "../../GoogleTestExtension/GoogleTestAdapter\Resources/GTA_Traits.h"
+#include "../../GoogleTestExtension/GoogleTestAdapter/Resources/GTA_Traits.h"
 
 TEST(Crashing, TheCrash)
 {
