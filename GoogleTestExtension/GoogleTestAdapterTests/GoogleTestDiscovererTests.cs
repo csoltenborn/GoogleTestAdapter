@@ -88,13 +88,13 @@ namespace GoogleTestAdapter
 
             Assert.AreEqual(2, testCases.Count);
 
-            Assert.AreEqual("FooTest.DoesXyz", testCases[0].DisplayName);
+            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[0].DisplayName);
             Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
-            Assert.AreEqual(45, testCases[0].LineNumber);
+            Assert.AreEqual(36, testCases[0].LineNumber);
 
-            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[1].DisplayName);
+            Assert.AreEqual("FooTest.DoesXyz", testCases[1].DisplayName);
             Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
-            Assert.AreEqual(36, testCases[1].LineNumber);
+            Assert.AreEqual(45, testCases[1].LineNumber);
         }
 
 
@@ -117,13 +117,13 @@ namespace GoogleTestAdapter
 
             Assert.AreEqual(2, testCases.Count);
 
-            Assert.AreEqual("BarTest.DoesXyz", testCases[0].DisplayName);
+            Assert.AreEqual("BarTest.MethodBarDoesAbc", testCases[0].DisplayName);
             Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[0].CodeFilePath);
-            Assert.AreEqual(44, testCases[0].LineNumber);
+            Assert.AreEqual(36, testCases[0].LineNumber);
 
-            Assert.AreEqual("BarTest.MethodBarDoesAbc", testCases[1].DisplayName);
+            Assert.AreEqual("BarTest.DoesXyz", testCases[1].DisplayName);
             Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[1].CodeFilePath);
-            Assert.AreEqual(36, testCases[1].LineNumber);
+            Assert.AreEqual(44, testCases[1].LineNumber);
         }
 
 

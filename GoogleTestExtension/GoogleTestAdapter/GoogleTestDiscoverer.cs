@@ -65,7 +65,6 @@ namespace GoogleTestAdapter
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
             List<SuiteTestCasePair> suiteTestCasePairs = ParseTestCases(consoleOutput);
-            suiteTestCasePairs.Reverse();
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteTestCasePairs);
 
             TestEnvironment.LogInfo("Found " + suiteTestCasePairs.Count + " tests in executable " + executable);

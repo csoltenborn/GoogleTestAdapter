@@ -130,13 +130,13 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsCrashingX64TestsWithoutResult()
         {
-            RunAndVerifyTests(X64CrashingTests, 0, 1, 0, 1);
+            RunAndVerifyTests(X64CrashingTests, 0, 2, 0);
         }
 
         [TestMethod]
         public virtual void RunsCrashingX86TestsWithoutResult()
         {
-            RunAndVerifyTests(X86CrashingTests, 0, 1, 0, 1);
+            RunAndVerifyTests(X86CrashingTests, 0, 2, 0);
         }
 
         [TestMethod]
