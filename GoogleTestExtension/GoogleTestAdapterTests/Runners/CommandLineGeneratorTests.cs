@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace GoogleTestAdapter.Runners
 {

@@ -55,8 +55,8 @@ namespace GoogleTestAdapter
         public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
         {
             PrivateObject optionsAccessor = new PrivateObject(new Options());
-            string OptionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
-            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", OptionsString) as List<RegexTraitPair>;
+            string optionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
+            List<RegexTraitPair> result = optionsAccessor.Invoke("ParseTraitsRegexesString", optionsString) as List<RegexTraitPair>;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count);

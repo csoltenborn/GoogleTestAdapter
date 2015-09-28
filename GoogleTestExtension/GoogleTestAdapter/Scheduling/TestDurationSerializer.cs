@@ -28,7 +28,7 @@ namespace GoogleTestAdapter.Scheduling
 
     [Serializable]
     [XmlRoot]
-    public class GTATestDurations
+    public class GtaTestDurations
     {
         public string Executable { get; set; }
         public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.Scheduling
         private static object Lock { get; } = new object();
         private static readonly TestDuration Default = new TestDuration();
 
-        private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GTATestDurations));
+        private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GtaTestDurations));
         private TestEnvironment TestEnvironment { get; }
 
         internal TestDurationSerializer(TestEnvironment testEnvironment)
@@ -83,7 +83,7 @@ namespace GoogleTestAdapter.Scheduling
                 return durations;
             }
 
-            GTATestDurations container = LoadTestDurations(durationsFile);
+            GtaTestDurations container = LoadTestDurations(durationsFile);
 
             foreach (TestCase testcase in testcases)
             {
@@ -100,7 +100,7 @@ namespace GoogleTestAdapter.Scheduling
         private void UpdateTestDurations(string executable, List<TestResult> testresults)
         {
             string durationsFile = GetDurationsFile(executable);
-            GTATestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GTATestDurations();
+            GtaTestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GtaTestDurations();
             container.Executable = Path.GetFullPath(executable);
 
             foreach (TestResult testResult in testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
@@ -116,15 +116,15 @@ namespace GoogleTestAdapter.Scheduling
             SaveTestDurations(container, durationsFile);
         }
 
-        private GTATestDurations LoadTestDurations(string durationsFile)
+        private GtaTestDurations LoadTestDurations(string durationsFile)
         {
             FileStream fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            GTATestDurations container = Serializer.Deserialize(fileStream) as GTATestDurations;
+            GtaTestDurations container = Serializer.Deserialize(fileStream) as GtaTestDurations;
             fileStream.Close();
             return container;
         }
 
-        private void SaveTestDurations(GTATestDurations durations, string durationsFile)
+        private void SaveTestDurations(GtaTestDurations durations, string durationsFile)
         {
             TextWriter fileStream = new StreamWriter(durationsFile);
             Serializer.Serialize(fileStream, durations);

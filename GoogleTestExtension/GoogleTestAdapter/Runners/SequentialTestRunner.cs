@@ -65,15 +65,14 @@ namespace GoogleTestAdapter.Runners
 
                 TestEnvironment.LogInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.", TestEnvironment.LogType.UserDebug);
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
-                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases,
-                    resultXmlFile, consoleOutput, handle);
+                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 
                 reporter.ReportTestResults(handle, results);
                 serializer.UpdateTestDurations(results);
             }
         }
 
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, IFrameworkHandle handle)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput)
         {
             List<TestResult> testResults = new List<TestResult>();
 

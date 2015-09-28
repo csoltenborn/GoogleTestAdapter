@@ -17,6 +17,8 @@ namespace GoogleTestAdapter.Helpers
 
         private static bool DiscoveryProcessIdShown { get; set; } = false;
 
+        private static readonly object Lock = new object();
+
         internal AbstractOptions Options { get; }
         private IMessageLogger Logger { get; }
 
@@ -56,12 +58,15 @@ namespace GoogleTestAdapter.Helpers
                     log = Options.UserDebugMode;
                     break;
                 default:
-                    throw new Exception("Unknown LogType: " + logType.ToString());
+                    throw new Exception("Unknown LogType: " + logType);
             }
 
             if (log)
             {
-                Logger.SendMessage(level, "GTA " + levelChar + ": " + message);
+                lock (Lock)
+                {
+                    Logger.SendMessage(level, "GTA " + levelChar + ": " + message);
+                }
             }
         }
 

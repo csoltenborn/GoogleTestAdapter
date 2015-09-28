@@ -31,12 +31,12 @@ namespace GoogleTestAdapter.Runners
                 userParameters = TestEnvironment.Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
                 string batch = TestEnvironment.Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
-                SafeRunBatch("Test setup", batch, runContext, handle);
+                SafeRunBatch("Test setup", batch, runContext);
 
                 InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, runContext, handle);
 
                 batch = TestEnvironment.Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
-                SafeRunBatch("Test teardown", batch, runContext, handle);
+                SafeRunBatch("Test teardown", batch, runContext);
 
                 Directory.Delete(testDirectory);
             }
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.Runners
             InnerTestRunner.Cancel();
         }
 
-        private void SafeRunBatch(string batchType, string batch, IRunContext runContext, IFrameworkHandle handle)
+        private void SafeRunBatch(string batchType, string batch, IRunContext runContext)
         {
             if (string.IsNullOrEmpty(batch))
             {
@@ -60,7 +60,7 @@ namespace GoogleTestAdapter.Runners
 
             try
             {
-                RunBatch(batchType, batch, runContext, handle);
+                RunBatch(batchType, batch, runContext);
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private void RunBatch(string batchType, string batch, IRunContext runContext, IFrameworkHandle handle)
+        private void RunBatch(string batchType, string batch, IRunContext runContext)
         {
             int batchExitCode;
             new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", batch, "", false, false, runContext, null,

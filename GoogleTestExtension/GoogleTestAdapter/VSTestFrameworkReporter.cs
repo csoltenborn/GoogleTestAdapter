@@ -13,7 +13,7 @@ namespace GoogleTestAdapter
         private static int NrOfReportedResults { get; set; } = 0;
 
         private TestEnvironment TestEnvironment { get; }
-        private readonly int NrOfTestResultsBeforeWaiting;
+        private int NrOfTestResultsBeforeWaiting { get; }
         private const int WaitingTime = 1;
 
         internal VsTestFrameworkReporter(TestEnvironment testEnvironment)

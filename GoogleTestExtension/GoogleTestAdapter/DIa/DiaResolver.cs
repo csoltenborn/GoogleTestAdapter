@@ -38,6 +38,7 @@ namespace GoogleTestAdapter.Dia
 
                 foreach (string import in imports)
                 {
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     string importedBinary = Path.Combine(moduleDirectory, import);
                     if (File.Exists(importedBinary))
                     {
