@@ -37,12 +37,6 @@ namespace GoogleTestAdapter
             AssertIsGoogleTestExecutable("MyGoogleTests.exe", false, "Some.*Expression");
         }
 
-        private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
-        {
-            Assert.AreEqual(isGoogleTestExecutable,
-                new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable(executable, regex));
-        }
-
 
         [TestMethod]
         public void RegistersFoundTestsAtDiscoverySink()
@@ -54,18 +48,6 @@ namespace GoogleTestAdapter
         public void MatchesCustomRegexIfSetInOptions()
         {
             CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
-        }
-
-        private void CheckForDiscoverySinkCalls(int expectedNrOfTests, string customRegex = null)
-        {
-            Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
-            Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
-            MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
-
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockLogger.Object, mockDiscoverySink.Object);
-
-            mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
         }
 
 
@@ -81,22 +63,6 @@ namespace GoogleTestAdapter
             FindStaticallyLinkedTests(X64StaticallyLinkedTests);
         }
 
-        private void FindStaticallyLinkedTests(string location)
-        {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
-
-            Assert.AreEqual(2, testCases.Count);
-
-            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
-            Assert.AreEqual(36, testCases[0].LineNumber);
-
-            Assert.AreEqual("FooTest.DoesXyz", testCases[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
-            Assert.AreEqual(45, testCases[1].LineNumber);
-        }
-
 
         [TestMethod]
         public void FindsTestsFromExternallyLinkedX86ExecutableWithSourceFileLocation()
@@ -108,22 +74,6 @@ namespace GoogleTestAdapter
         public void FindsTestsFromExternallyLinkedX64ExecutableWithSourceFileLocation()
         {
             FindExternallyLinkedTests(X64ExternallyLinkedTests);
-        }
-
-        private void FindExternallyLinkedTests(string location)
-        {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
-
-            Assert.AreEqual(2, testCases.Count);
-
-            Assert.AreEqual("BarTest.MethodBarDoesAbc", testCases[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[0].CodeFilePath);
-            Assert.AreEqual(36, testCases[0].LineNumber);
-
-            Assert.AreEqual("BarTest.DoesXyz", testCases[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[1].CodeFilePath);
-            Assert.AreEqual(44, testCases[1].LineNumber);
         }
 
 
@@ -255,6 +205,57 @@ namespace GoogleTestAdapter
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
                 It.Is<string>(s => s.Contains("'d[ddd['"))),
                 Times.Exactly(1));
+        }
+
+
+        private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
+        {
+            Assert.AreEqual(isGoogleTestExecutable,
+                new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable(executable, regex));
+        }
+
+        private void CheckForDiscoverySinkCalls(int expectedNrOfTests, string customRegex = null)
+        {
+            Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
+            Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
+            MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
+
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockLogger.Object, mockDiscoverySink.Object);
+
+            mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
+        }
+
+        private void FindStaticallyLinkedTests(string location)
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+
+            Assert.AreEqual(2, testCases.Count);
+
+            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
+            Assert.AreEqual(36, testCases[0].LineNumber);
+
+            Assert.AreEqual("FooTest.DoesXyz", testCases[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
+            Assert.AreEqual(45, testCases[1].LineNumber);
+        }
+
+        private void FindExternallyLinkedTests(string location)
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+
+            Assert.AreEqual(2, testCases.Count);
+
+            Assert.AreEqual("BarTest.MethodBarDoesAbc", testCases[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[0].CodeFilePath);
+            Assert.AreEqual(36, testCases[0].LineNumber);
+
+            Assert.AreEqual("BarTest.DoesXyz", testCases[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[1].CodeFilePath);
+            Assert.AreEqual(44, testCases[1].LineNumber);
         }
 
         private void FindsTestWithTraits(string fullyQualifiedName, Trait[] traits)

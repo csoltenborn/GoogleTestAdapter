@@ -73,6 +73,7 @@ namespace GoogleTestAdapter
             }
         }
 
+
         private void InitTestEnvironment(IFrameworkHandle frameworkHandle)
         {
             if (TestEnvironment == null)

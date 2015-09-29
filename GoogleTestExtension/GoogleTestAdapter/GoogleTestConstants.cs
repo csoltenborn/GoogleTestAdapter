@@ -10,11 +10,11 @@
         public const string NrOfRepetitionsOption = " --gtest_repeat";
 
         public const int ShuffleTestsSeedDefaultValue = 0;
-        internal const int ShuffleTestsSeedMinValue = 0;
         public const string ShuffleTestsSeedMaxValueAsString = "99999";
+        internal const int ShuffleTestsSeedMinValue = 0;
         internal static readonly int ShuffleTestsSeedMaxValue = int.Parse(ShuffleTestsSeedMaxValueAsString);
 
-        internal const string ListTestsOption = "--gtest_list_tests";
+        internal const string ListTestsOption = " --gtest_list_tests";
         internal const string FilterOption = " --gtest_filter=";
 
         internal const string TestBodySignature = "::TestBody";

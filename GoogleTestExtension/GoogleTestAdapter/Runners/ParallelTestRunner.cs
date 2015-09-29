@@ -13,10 +13,12 @@ namespace GoogleTestAdapter.Runners
         private TestEnvironment TestEnvironment { get; }
         private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
 
+
         internal ParallelTestRunner(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
+
 
         void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
@@ -46,6 +48,7 @@ namespace GoogleTestAdapter.Runners
                 }
             }
         }
+
 
         private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, List<Thread> threads, IRunContext runContext, IFrameworkHandle handle)
         {

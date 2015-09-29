@@ -10,10 +10,12 @@ namespace GoogleTestAdapter.Helpers
     {
         private TestEnvironment TestEnvironment { get; }
 
+
         internal ProcessLauncher(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
+
 
         internal List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
         {
@@ -34,6 +36,7 @@ namespace GoogleTestAdapter.Helpers
             }
             return output;
         }
+
 
         private int LaunchProcess(string workingDirectory, string command, string param,
             bool printTestOutput, bool throwIfError, List<string> output)

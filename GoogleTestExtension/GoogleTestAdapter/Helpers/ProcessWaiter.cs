@@ -10,11 +10,13 @@ namespace GoogleTestAdapter.Helpers
         internal int ProcessExitCode { get; private set; } = -1;
         internal bool Exited { get; private set; } = false;
 
+
         internal ProcessWaiter(Process process)
         {
             process.EnableRaisingEvents = true;
             process.Exited += OnExited;
         }
+
 
         internal void WaitForExit()
         {

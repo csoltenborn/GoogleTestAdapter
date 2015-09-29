@@ -11,11 +11,13 @@ namespace GoogleTestAdapter.Scheduling
         private IEnumerable<TestCase> TestcasesToRun { get; }
         private TestEnvironment TestEnvironment { get; }
 
+
         internal NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.TestcasesToRun = testcasesToRun;
         }
+
 
         List<List<TestCase>> ITestsSplitter.SplitTestcases()
         {

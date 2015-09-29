@@ -14,11 +14,13 @@ namespace GoogleTestAdapter.TestResults
 
         internal const string CrashText = "!! This is probably the test that crashed !!";
 
-        private List<string> ConsoleOutput { get; }
-        private List<TestCase> TestCasesRun { get; }
 
         internal TestCase CrashedTestCase { get; private set; }
+
+        private List<string> ConsoleOutput { get; }
+        private List<TestCase> TestCasesRun { get; }
         private TestEnvironment TestEnvironment { get; }
+
 
         internal StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
         {
@@ -26,6 +28,7 @@ namespace GoogleTestAdapter.TestResults
             this.TestCasesRun = testCasesRun.ToList();
             this.TestEnvironment = testEnvironment;
         }
+
 
         internal List<TestResult> GetTestResults()
         {
@@ -38,6 +41,7 @@ namespace GoogleTestAdapter.TestResults
             }
             return testResults;
         }
+
 
         private TestResult CreateTestResult(int indexOfTestcase)
         {

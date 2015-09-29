@@ -33,6 +33,7 @@ namespace GoogleTestAdapter
                 Times.Exactly(nrOfNotFoundTests));
         }
 
+
         [TestMethod]
         public void CancelingExecutorStopsTestExecution()
         {
@@ -53,7 +54,9 @@ namespace GoogleTestAdapter
             Assert.IsTrue(stopwatch.ElapsedMilliseconds < 3000); // 2nd test should not be executed 
         }
 
-        // for now, to get test coverage
+
+        #region Method stubs for code coverage
+
         [TestMethod]
         public override void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
@@ -107,6 +110,8 @@ namespace GoogleTestAdapter
         {
             base.RunsExternallyLinkedX86TestsWithResultInDebugMode();
         }
+
+        #endregion
 
     }
 

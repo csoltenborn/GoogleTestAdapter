@@ -11,12 +11,14 @@ namespace GoogleTestAdapter.Scheduling
         private IDictionary<TestCase, int> TestcaseDurations { get; }
         private TestEnvironment TestEnvironment { get; }
 
+
         internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.TestcaseDurations = testcaseDurations;
             this.OverallDuration = testcaseDurations.Values.Sum();
         }
+
 
         List<List<TestCase>> ITestsSplitter.SplitTestcases()
         {
@@ -53,6 +55,7 @@ namespace GoogleTestAdapter.Scheduling
 
             return splitTestcases;
         }
+
 
         private int GetIndexOfListWithShortestDuration(List<List<TestCase>> splitTestcases)
         {

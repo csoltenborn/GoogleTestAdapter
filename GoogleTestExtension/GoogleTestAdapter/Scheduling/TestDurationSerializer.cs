@@ -9,6 +9,14 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.Scheduling
 {
     [Serializable]
+    [XmlRoot]
+    public class GtaTestDurations
+    {
+        public string Executable { get; set; }
+        public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
+    }
+
+    [Serializable]
     public struct TestDuration
     {
         public TestDuration(string test, int duration)
@@ -26,13 +34,6 @@ namespace GoogleTestAdapter.Scheduling
         { get; set; }
     }
 
-    [Serializable]
-    [XmlRoot]
-    public class GtaTestDurations
-    {
-        public string Executable { get; set; }
-        public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
-    }
 
     class TestDurationSerializer
     {
@@ -41,13 +42,16 @@ namespace GoogleTestAdapter.Scheduling
         private static object Lock { get; } = new object();
         private static readonly TestDuration Default = new TestDuration();
 
+
         private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GtaTestDurations));
         private TestEnvironment TestEnvironment { get; }
+
 
         internal TestDurationSerializer(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
+
 
         internal IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
@@ -73,6 +77,7 @@ namespace GoogleTestAdapter.Scheduling
                 }
             }
         }
+
 
         private IDictionary<TestCase, int> ReadTestDurations(string executable, List<TestCase> testcases)
         {

@@ -122,6 +122,7 @@ namespace GoogleTestAdapter.Scheduling
             File.Delete(GetDurationsFile(serializer, tempFile));
         }
 
+
         private string GetDurationsFile(TestDurationSerializer serializer, string executable)
         {
             PrivateObject serializerAccessor = new PrivateObject(serializer);

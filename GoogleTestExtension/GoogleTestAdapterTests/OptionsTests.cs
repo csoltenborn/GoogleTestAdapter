@@ -12,6 +12,7 @@ namespace GoogleTestAdapter
         private Mock<IRegistryReader> MockRegistryReader { get; } = new Mock<IRegistryReader>();
         private AbstractOptions TheOptions { get; set; }
 
+
         [TestInitialize]
         public override void SetUp()
         {
@@ -27,6 +28,7 @@ namespace GoogleTestAdapter
 
             MockRegistryReader.Reset();
         }
+
 
         [TestMethod]
         public void NrOfTestRepitionsHandlesInvalidValuesCorrectly()
@@ -103,6 +105,7 @@ namespace GoogleTestAdapter
             result = TheOptions.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("mydir, 4711", result);
         }
+
 
         private void SetupMockToReturnString(string s)
         {

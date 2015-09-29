@@ -8,10 +8,12 @@ namespace GoogleTestAdapter.Dia
     {
         private Stream PdbFile { get; }
 
+
         internal DiaMemoryStream(Stream pdbFile)
         {
             this.PdbFile = pdbFile;
         }
+
 
         unsafe void IStream.RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
         {
@@ -44,7 +46,7 @@ namespace GoogleTestAdapter.Dia
         }
 
 
-
+        #region Unimplemented methods
 
         void IStream.Clone(out IStream ppstm)
         {
@@ -95,6 +97,8 @@ namespace GoogleTestAdapter.Dia
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
     }
 

@@ -11,6 +11,7 @@ namespace GoogleTestAdapter
 
         public GoogleTestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
 
+
         override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
             base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
@@ -38,7 +39,8 @@ namespace GoogleTestAdapter
         }
 
 
-        // for now, to get test coverage
+        #region Method stubs for code coverage
+
         [TestMethod]
         public override void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
@@ -92,6 +94,8 @@ namespace GoogleTestAdapter
         {
             base.RunsExternallyLinkedX86TestsWithResultInDebugMode();
         }
+
+        #endregion
 
     }
 

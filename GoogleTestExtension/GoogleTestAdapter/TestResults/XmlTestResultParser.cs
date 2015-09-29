@@ -16,9 +16,11 @@ namespace GoogleTestAdapter.TestResults
 
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
+
         private TestEnvironment TestEnvironment { get; }
         private string XmlResultFile { get; }
         private List<TestCase> TestCasesRun { get; }
+
 
         internal XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
         {
@@ -26,6 +28,7 @@ namespace GoogleTestAdapter.TestResults
             this.XmlResultFile = xmlResultFile;
             this.TestCasesRun = testCasesRun.ToList();
         }
+
 
         internal List<TestResult> GetTestResults()
         {
@@ -37,6 +40,7 @@ namespace GoogleTestAdapter.TestResults
             TestEnvironment.LogWarning(ErrorMsgNoXmlFile);
             return new List<TestResult>();
         }
+
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]

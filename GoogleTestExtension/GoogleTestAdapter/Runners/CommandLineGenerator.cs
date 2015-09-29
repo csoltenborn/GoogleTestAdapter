@@ -21,7 +21,9 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
+
         internal const int MaxCommandLength = 8191;
+
 
         private int LengthOfExecutableString { get; }
         private IEnumerable<TestCase> AllTestCases { get; }
@@ -29,6 +31,7 @@ namespace GoogleTestAdapter.Runners
         private string ResultXmlFile { get; }
         private TestEnvironment TestEnvironment { get; }
         private string UserParameters { get; }
+
 
         internal CommandLineGenerator(
             IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
@@ -48,6 +51,7 @@ namespace GoogleTestAdapter.Runners
             this.UserParameters = userParameters;
         }
 
+
         internal IEnumerable<Args> GetCommandLines()
         {
             string baseCommandLine = GetOutputpathParameter();
@@ -60,6 +64,7 @@ namespace GoogleTestAdapter.Runners
             return commandLines;
         }
 
+
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
             List<Args> commandLines = new List<Args>();
@@ -71,8 +76,8 @@ namespace GoogleTestAdapter.Runners
             }
 
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
-            string baseFilter =
-                GoogleTestConstants.FilterOption + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
+            string baseFilter = GoogleTestConstants.FilterOption
+                + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
             string baseCommandLineWithFilter = baseCommandLine + baseFilter;
 
             List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);

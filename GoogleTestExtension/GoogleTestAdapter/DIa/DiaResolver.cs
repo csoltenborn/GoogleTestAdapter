@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Dia
 {
-
 
     class DiaResolver
     {
@@ -30,9 +28,11 @@ namespace GoogleTestAdapter.Dia
             }
         }
 
+
         // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
+
 
         private TestEnvironment TestEnvironment { get; }
 
@@ -40,6 +40,7 @@ namespace GoogleTestAdapter.Dia
         {
             this.TestEnvironment = testEnvironment;
         }
+
 
         internal List<SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString)
         {
@@ -65,6 +66,7 @@ namespace GoogleTestAdapter.Dia
             }
             return foundSourceFileLocations;
         }
+
 
         private List<SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString)
         {
@@ -99,7 +101,7 @@ namespace GoogleTestAdapter.Dia
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                TestEnvironment.LogError("Exception while looking for symbols: " + e);
                 throw;
             }
         }

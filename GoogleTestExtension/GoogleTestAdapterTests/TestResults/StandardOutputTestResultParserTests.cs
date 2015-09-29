@@ -54,6 +54,7 @@ namespace GoogleTestAdapter.TestResults
             @"",
         };
 
+
         private List<string> CrashesImmediately { get; set; }
         private List<string> CrashesAfterErrorMsg { get; set; }
         private List<string> Complete { get; set; }
@@ -74,6 +75,7 @@ namespace GoogleTestAdapter.TestResults
             Complete = new List<string>(CrashesAfterErrorMsg);
             Complete.AddRange(ConsoleOutput3);
         }
+
 
         [TestMethod]
         public void CompleteOutputIsParsedCorrectly()
@@ -152,6 +154,7 @@ namespace GoogleTestAdapter.TestResults
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }
+
 
         private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {

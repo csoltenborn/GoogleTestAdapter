@@ -70,6 +70,7 @@ namespace GoogleTestAdapter.Helpers
             Assert.AreEqual("Integration", result[1].Trait.Value);
         }
 
+
         private string CreateTraitsRegex(string regex, string name, string value)
         {
             return regex +

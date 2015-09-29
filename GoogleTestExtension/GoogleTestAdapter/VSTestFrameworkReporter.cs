@@ -12,15 +12,18 @@ namespace GoogleTestAdapter
 
         private static int NrOfReportedResults { get; set; } = 0;
 
+
         private TestEnvironment TestEnvironment { get; }
         private int NrOfTestResultsBeforeWaiting { get; }
         private const int WaitingTime = 1;
+
 
         internal VsTestFrameworkReporter(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
             NrOfTestResultsBeforeWaiting = TestEnvironment.Options.ReportWaitPeriod;
         }
+
 
         internal void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase> testCases)
         {
@@ -54,6 +57,7 @@ namespace GoogleTestAdapter
                 }
             }
         }
+
 
         private void ReportTestResult(IFrameworkHandle frameworkHandle, TestResult testResult)
         {

@@ -13,12 +13,14 @@ namespace GoogleTestAdapter.Runners
         private ITestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
+
         internal PreparingTestRunner(int threadId, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.InnerTestRunner = new SequentialTestRunner(TestEnvironment);
             this.ThreadId = threadId;
         }
+
 
         void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
@@ -50,6 +52,7 @@ namespace GoogleTestAdapter.Runners
         {
             InnerTestRunner.Cancel();
         }
+
 
         private void SafeRunBatch(string batchType, string batch, IRunContext runContext)
         {

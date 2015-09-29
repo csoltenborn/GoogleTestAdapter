@@ -60,10 +60,9 @@ namespace GoogleTestAdapter
             }
         }
 
-
         internal List<TestCase> GetTestsFromExecutable(string executable)
         {
-            List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption, false, false, null, null);
+            List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null, null);
             List<SuiteTestCasePair> suiteTestCasePairs = ParseTestCases(consoleOutput);
             List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteTestCasePairs);
 
@@ -98,6 +97,7 @@ namespace GoogleTestAdapter
 
             return matches;
         }
+
 
         private void InitTestEnvironment(IMessageLogger logger)
         {

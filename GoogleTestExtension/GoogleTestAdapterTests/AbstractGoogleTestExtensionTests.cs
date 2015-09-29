@@ -37,32 +37,20 @@ namespace GoogleTestAdapter
 
         protected const string DummyExecutable = "ff.exe";
 
-        protected Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
+
+        protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
         protected readonly Mock<AbstractOptions> MockOptions = new Mock<AbstractOptions>() { CallBase = true };
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
         internal readonly TestEnvironment TestEnvironment;
+        private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
+
 
         protected AbstractGoogleTestExtensionTests()
         {
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
         }
 
-        private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
-        protected List<TestCase> AllTestCasesOfConsoleApplication1
-        {
-            get
-            {
-                if (_allTestCasesOfConsoleApplication1 == null)
-                {
-                    _allTestCasesOfConsoleApplication1 = new List<TestCase>();
-                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests));
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests));
-                }
-                return _allTestCasesOfConsoleApplication1;
-            }
-        }
 
         [TestInitialize]
         virtual public void SetUp()
@@ -93,6 +81,21 @@ namespace GoogleTestAdapter
                 testCase => qualifiedNames.Any(
                     qualifiedName => testCase.FullyQualifiedName.Contains(qualifiedName)))
                     .ToList();
+        }
+
+        protected List<TestCase> AllTestCasesOfConsoleApplication1
+        {
+            get
+            {
+                if (_allTestCasesOfConsoleApplication1 == null)
+                {
+                    _allTestCasesOfConsoleApplication1 = new List<TestCase>();
+                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests));
+                }
+                return _allTestCasesOfConsoleApplication1;
+            }
         }
 
         protected static TestCase ToTestCase(string name, string executable)

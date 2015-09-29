@@ -16,10 +16,12 @@ namespace GoogleTestAdapter.Runners
 
         private TestEnvironment TestEnvironment { get; }
 
+
         internal SequentialTestRunner(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
         }
+
 
         void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
@@ -42,6 +44,7 @@ namespace GoogleTestAdapter.Runners
         {
             Canceled = true;
         }
+
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable,

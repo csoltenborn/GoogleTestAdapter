@@ -11,6 +11,7 @@ namespace GoogleTestAdapter.Helpers
 
         internal enum LogType { Normal, UserDebug, Debug }
 
+
         // for developing and testing the test adapter itself
         private static bool DebugMode = false;
         private static bool UnitTestMode = false;
@@ -19,14 +20,17 @@ namespace GoogleTestAdapter.Helpers
 
         private static readonly object Lock = new object();
 
+
         internal AbstractOptions Options { get; }
         private IMessageLogger Logger { get; }
+
 
         internal TestEnvironment(AbstractOptions options, IMessageLogger logger)
         {
             this.Options = options;
             this.Logger = logger;
         }
+
 
         internal void LogInfo(string message, LogType logType = LogType.Normal)
         {
@@ -42,6 +46,21 @@ namespace GoogleTestAdapter.Helpers
         {
             Log(message, logType, TestMessageLevel.Error, "E");
         }
+
+        internal void CheckDebugModeForExecutionCode()
+        {
+            CheckDebugMode("Test execution code");
+        }
+
+        internal void CheckDebugModeForDiscoveryCode()
+        {
+            if (!DiscoveryProcessIdShown)
+            {
+                DiscoveryProcessIdShown = true;
+                CheckDebugMode("Test discovery code");
+            }
+        }
+
 
         private void Log(string message, LogType logType, TestMessageLevel level, string levelChar)
         {
@@ -67,20 +86,6 @@ namespace GoogleTestAdapter.Helpers
                 {
                     Logger.SendMessage(level, "GTA " + levelChar + ": " + message);
                 }
-            }
-        }
-
-        internal void CheckDebugModeForExecutionCode()
-        {
-            CheckDebugMode("Test execution code");
-        }
-
-        internal void CheckDebugModeForDiscoveryCode()
-        {
-            if (!DiscoveryProcessIdShown)
-            {
-                DiscoveryProcessIdShown = true;
-                CheckDebugMode("Test discovery code");
             }
         }
 

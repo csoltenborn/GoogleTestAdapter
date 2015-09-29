@@ -76,6 +76,7 @@ namespace GoogleTestAdapter.Scheduling
             ExecuteRandomDurationsTest(50, 100000, 8);
         }
 
+
         private void ExecuteRandomDurationsTest(int nrOfTests, int maxRandomDuration, int nrOfThreads)
         {
             IDictionary<TestCase, int> durations = CreateRandomTestResults(nrOfTests, maxRandomDuration);

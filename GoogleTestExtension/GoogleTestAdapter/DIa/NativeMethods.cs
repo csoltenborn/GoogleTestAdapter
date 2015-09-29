@@ -86,6 +86,7 @@ namespace GoogleTestAdapter.Dia
             Marshal.FinalReleaseComObject(obj);
         }
 
+
         internal class ImportsParser
         {
             private LOADED_IMAGE _loadedImage = new LOADED_IMAGE();

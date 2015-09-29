@@ -131,6 +131,7 @@ Something's wrong :(";
             AssertTestResultIsFailure(results[0], ErrorMsg);
         }
 
+
         private void AssertTestResultIsPassed(TestResult testResult)
         {
             Assert.AreEqual(TestOutcome.Passed, testResult.Outcome);

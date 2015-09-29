@@ -14,11 +14,13 @@ namespace GoogleTestAdapter
         private bool ParallelTestExecution { get; }
         private int MaxNrOfThreads { get; }
 
+
         protected AbstractGoogleTestExecutorTests(bool parallelTestExecution, int maxNrOfThreads)
         {
             this.ParallelTestExecution = parallelTestExecution;
             this.MaxNrOfThreads = maxNrOfThreads;
         }
+
 
         protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
@@ -36,6 +38,7 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(ParallelTestExecution);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(MaxNrOfThreads);
         }
+
 
         [TestMethod]
         public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg()
@@ -147,6 +150,7 @@ namespace GoogleTestAdapter
 
             CheckMockInvocations(0, 1, 0, 3);
         }
+
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
