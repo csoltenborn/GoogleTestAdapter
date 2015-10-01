@@ -43,4 +43,9 @@ TEST_P_TRAITS3(ParameterizedTests, SimpleTraits3, Type, Medium, Author, MSI, Cat
 INSTANTIATE_TEST_CASE_P(InstantiationName,
 	ParameterizedTests,
 	testing::Values(MyParam("", 1), MyParam("!", 1), MyParam("", -1))
-);
+	);
+
+INSTANTIATE_TEST_CASE_P(/* no instantiation name*/,
+	ParameterizedTests,
+	testing::Values(MyParam("_", 0))
+	);

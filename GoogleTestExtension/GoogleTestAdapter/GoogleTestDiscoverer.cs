@@ -17,6 +17,17 @@ namespace GoogleTestAdapter
     public class GoogleTestDiscoverer : ITestDiscoverer
     {
 
+        /*
+        Simple tests: 
+            TestSuite=<test_case_name>
+            TestCase=<test_name>
+        Tests with fixture
+            TestSuite=<test_fixture>
+            TestCase=<test_name>
+        Parameterized case: 
+            TestSuite=[<prefix>/]<test_case_name>, 
+            TestCase=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
+        */
         class SuiteTestCasePair
         {
             internal string TestSuite { get; }
@@ -132,13 +143,13 @@ namespace GoogleTestAdapter
 
         private List<SourceFileLocation> GetSourceFileLocations(string executable, List<SuiteTestCasePair> testcases)
         {
-            List<string> symbols = testcases.Select(GetGoogleTestCombinedName).ToList();
-            string SymbolFilterString = "*" + GoogleTestConstants.TestBodySignature;
+            List<string> testMethodSignatures = testcases.Select(GetTestMethodSignature).ToList();
+            string filterString = "*" + GoogleTestConstants.TestBodySignature;
             DiaResolver resolver = new DiaResolver(TestEnvironment);
-            return resolver.ResolveAllMethods(executable, symbols, SymbolFilterString);
+            return resolver.ResolveAllMethods(executable, testMethodSignatures, filterString);
         }
 
-        private string GetGoogleTestCombinedName(SuiteTestCasePair pair)
+        private string GetTestMethodSignature(SuiteTestCasePair pair)
         {
             if (!pair.TestCase.Contains(GoogleTestConstants.ParameterizedTestMarker))
             {
@@ -157,7 +168,7 @@ namespace GoogleTestAdapter
         private TestCase ToTestCase(string executable, SuiteTestCasePair suiteCasePair, List<SourceFileLocation> sourceFileLocations)
         {
             string displayName = suiteCasePair.TestSuite + "." + suiteCasePair.TestCase;
-            string symbolName = GetGoogleTestCombinedName(suiteCasePair);
+            string symbolName = GetTestMethodSignature(suiteCasePair);
 
             foreach (SourceFileLocation location in sourceFileLocations)
             {

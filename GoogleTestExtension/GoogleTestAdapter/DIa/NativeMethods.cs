@@ -61,6 +61,10 @@ namespace GoogleTestAdapter.Dia
 
     class NativeSourceFileLocation
     {
+        /*
+        Test methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::TestBody
+        Trait methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::<trait name>__GTA__<trait value>_GTA_TRAIT
+        */
         public string Symbol;
         public uint AddressSection;
         public uint AddressOffset;

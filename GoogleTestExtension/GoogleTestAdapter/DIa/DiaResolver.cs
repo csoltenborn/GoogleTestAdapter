@@ -12,6 +12,9 @@ namespace GoogleTestAdapter.Dia
 
     class DiaResolver
     {
+        /*
+        Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::TestBody
+        */
         internal class SourceFileLocation
         {
             internal string Symbol { get; }
@@ -42,9 +45,10 @@ namespace GoogleTestAdapter.Dia
         }
 
 
-        internal List<SourceFileLocation> ResolveAllMethods(string executable, List<string> symbols, string symbolFilterString)
+        internal List<SourceFileLocation> ResolveAllMethods(string executable, List<string> testMethodSignatures, string symbolFilterString)
         {
-            List<SourceFileLocation> foundSourceFileLocations = FindSymbolsFromBinary(executable, symbols, symbolFilterString);
+            List<SourceFileLocation> foundSourceFileLocations =
+                FindSymbolsFromBinary(executable, testMethodSignatures, symbolFilterString).ToList();
 
             if (foundSourceFileLocations.Count == 0)
             {
@@ -60,7 +64,7 @@ namespace GoogleTestAdapter.Dia
                     string importedBinary = Path.Combine(moduleDirectory, import);
                     if (File.Exists(importedBinary))
                     {
-                        foundSourceFileLocations.AddRange(FindSymbolsFromBinary(importedBinary, symbols, symbolFilterString));
+                        foundSourceFileLocations.AddRange(FindSymbolsFromBinary(importedBinary, testMethodSignatures, symbolFilterString));
                     }
                 }
             }
@@ -68,7 +72,7 @@ namespace GoogleTestAdapter.Dia
         }
 
 
-        private List<SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> symbols, string symbolFilterString)
+        private IEnumerable<SourceFileLocation> FindSymbolsFromBinary(string binary, List<string> testMethodSignatures, string symbolFilterString)
         {
             DiaSourceClass diaSourceClass = new DiaSourceClass();
             string pdb = ReplaceExtension(binary, ".pdb");
@@ -82,15 +86,14 @@ namespace GoogleTestAdapter.Dia
                 diaSourceClass.openSession(out diaSession);
                 try
                 {
-                    List<NativeSourceFileLocation> allTestMethodSymbols = ExecutableSymbols(diaSession, symbolFilterString);
-                    List<NativeSourceFileLocation> allTraitSymbols = ExecutableSymbols(diaSession, "*" + TraitAppendix);
-                    List<NativeSourceFileLocation> foundSymbols = new List<NativeSourceFileLocation>();
-                    foreach (string symbol in symbols)
-                    {
-                        foundSymbols.AddRange(allTestMethodSymbols.Where(s => s.Symbol.Contains(symbol)));
-                    }
-
-                    return foundSymbols.Select(s => GetSourceFileLocation(diaSession, binary, s, allTraitSymbols)).ToList();
+                    IEnumerable<NativeSourceFileLocation> allTestMethodSymbols = ExecutableSymbols(diaSession, symbolFilterString);
+                    IEnumerable<NativeSourceFileLocation> allTraitSymbols = ExecutableSymbols(diaSession, "*" + TraitAppendix);
+                    return
+                        allTestMethodSymbols.Where(
+                            nsfl => testMethodSignatures.Any(
+                                tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
+                        .Select(
+                            nsfl => GetSourceFileLocation(diaSession, binary, nsfl, allTraitSymbols));
                 }
                 finally
                 {
@@ -101,12 +104,12 @@ namespace GoogleTestAdapter.Dia
             }
             catch (Exception e)
             {
-                TestEnvironment.LogError("Exception while looking for symbols: " + e);
+                TestEnvironment.LogError("Exception while looking for testMethodSignatures: " + e);
                 throw;
             }
         }
 
-        private SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, string executable, NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        private SourceFileLocation GetSourceFileLocation(IDiaSession diaSession, string executable, NativeSourceFileLocation nativeSymbol, IEnumerable<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = GetTraits(nativeSymbol, allTraitSymbols);
             IDiaEnumLineNumbers lineNumbers = diaSession.GetLineNumbers(nativeSymbol.AddressSection, nativeSymbol.AddressOffset, nativeSymbol.Length);
@@ -139,18 +142,19 @@ namespace GoogleTestAdapter.Dia
             }
         }
 
-        private List<Trait> GetTraits(NativeSourceFileLocation nativeSymbol, List<NativeSourceFileLocation> allTraitSymbols)
+        private List<Trait> GetTraits(NativeSourceFileLocation nativeSymbol, IEnumerable<NativeSourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = new List<Trait>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (NativeSourceFileLocation nativeTraitSymbol in allTraitSymbols)
             {
-                int indexOfColons = nativeTraitSymbol.Symbol.LastIndexOf("::", StringComparison.Ordinal);
-                string testIdentifier = nativeTraitSymbol.Symbol.Substring(0, indexOfColons);
-                if (nativeSymbol.Symbol.StartsWith(testIdentifier))
+                int indexOfSerializedTrait = nativeTraitSymbol.Symbol.LastIndexOf("::", StringComparison.Ordinal) + "::".Length;
+                string testClassSignature = nativeTraitSymbol.Symbol.Substring(0, indexOfSerializedTrait - "::".Length);
+                if (nativeSymbol.Symbol.StartsWith(testClassSignature))
                 {
-                    string trait = nativeTraitSymbol.Symbol.Substring(indexOfColons + 2, nativeTraitSymbol.Symbol.Length - indexOfColons - TraitAppendix.Length - 2);
-                    string[] data = trait.Split(new[] { TraitSeparator }, StringSplitOptions.None);
+                    int lengthOfSerializedTrait = nativeTraitSymbol.Symbol.Length - indexOfSerializedTrait - TraitAppendix.Length;
+                    string serializedTrait = nativeTraitSymbol.Symbol.Substring(indexOfSerializedTrait, lengthOfSerializedTrait);
+                    string[] data = serializedTrait.Split(new[] { TraitSeparator }, StringSplitOptions.None);
                     traits.Add(new Trait(data[0], data[1]));
                 }
             }
@@ -158,7 +162,7 @@ namespace GoogleTestAdapter.Dia
             return traits;
         }
 
-        private List<NativeSourceFileLocation> ExecutableSymbols(IDiaSession diaSession, string symbolFilterString)
+        private IEnumerable<NativeSourceFileLocation> ExecutableSymbols(IDiaSession diaSession, string symbolFilterString)
         {
             IDiaEnumSymbols diaSymbols = diaSession.FindFunctionsByRegex(symbolFilterString);
             try
