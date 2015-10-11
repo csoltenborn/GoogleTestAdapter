@@ -3,6 +3,8 @@
 #include "../LibProject/Lib.h"
 #include "../../GoogleTestExtension/GoogleTestAdapter/Resources/GTA_Traits.h"
 
+#include "../Tests/Main.cpp"
+
 TEST(Crashing, TheCrash)
 {
 	__asm {

@@ -142,10 +142,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Tests\Main.cpp" />
     <ClCompile Include="..\gtest-1.7.0\fused-src\gtest\gtest-all.cc" />
     <ClCompile Include="CrashingTests.cpp" />
   </ItemGroup>

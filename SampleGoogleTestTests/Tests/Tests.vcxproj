@@ -136,7 +136,6 @@
     <ClCompile Include="ParameterizedTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\GoogleTestExtension\GTA_Traits.h" />
     <ClInclude Include="Main.h" />
   </ItemGroup>
   <ItemGroup>
