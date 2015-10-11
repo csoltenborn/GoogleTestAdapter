@@ -16,9 +16,9 @@ namespace GoogleTestAdapter
         private const string SampleTestsSolutionDir = @"..\..\..\..\SampleGoogleTestTests\";
         private const string TestdataDir = @"Resources\TestData\";
 
-        protected const string Results0Batch = SampleTestsSolutionDir + @"ConsoleApplication1Tests\Returns0.bat";
-        protected const string Results1Batch = SampleTestsSolutionDir + @"ConsoleApplication1Tests\Returns1.bat";
-        protected const string X86TraitsTests = SampleTestsSolutionDir + @"Debug\ConsoleApplication1Tests.exe";
+        protected const string Results0Batch = SampleTestsSolutionDir + @"Tests\Returns0.bat";
+        protected const string Results1Batch = SampleTestsSolutionDir + @"Tests\Returns1.bat";
+        protected const string X86TraitsTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
         protected const string X86HardcrashingTests = SampleTestsSolutionDir + @"Debug\ConsoleApplication1CrashingTests.exe";
 
         private const string X86Dir = TestdataDir + @"_x86\";

@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibProject", "LibProject\LibProject.vcxproj", "{1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplication1Tests", "ConsoleApplication1Tests\ConsoleApplication1Tests.vcxproj", "{04990B2A-C7B5-40DA-A856-230E1E062FF1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{04990B2A-C7B5-40DA-A856-230E1E062FF1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0} = {1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0}
 	EndProjectSection

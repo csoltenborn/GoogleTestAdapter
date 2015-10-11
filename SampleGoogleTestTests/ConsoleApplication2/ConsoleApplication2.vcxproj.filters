@@ -23,10 +23,10 @@
     <ClCompile Include="..\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\ConsoleApplication1Tests\Main.cpp">
+    <ClCompile Include="CrashingTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CrashingTests.cpp">
+    <ClCompile Include="..\Tests\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
