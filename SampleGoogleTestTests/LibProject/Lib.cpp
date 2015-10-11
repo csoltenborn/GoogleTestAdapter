@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "ConsoleApplication1.h"
+#include "Lib.h"
 
 
 

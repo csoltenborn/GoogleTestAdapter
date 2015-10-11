@@ -150,7 +150,7 @@
     <ClCompile Include="CrashingTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApplication1\ConsoleApplication1.vcxproj">
+    <ProjectReference Include="..\LibProject\LibProject.vcxproj">
       <Project>{1f2c133f-b7bd-4446-a65c-3f7ef9a22ce0}</Project>
     </ProjectReference>
   </ItemGroup>

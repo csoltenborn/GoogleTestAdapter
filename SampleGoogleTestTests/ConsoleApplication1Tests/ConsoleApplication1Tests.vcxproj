@@ -135,13 +135,13 @@
     <ClCompile Include="ParameterizedTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApplication1\ConsoleApplication1.vcxproj">
-      <Project>{1f2c133f-b7bd-4446-a65c-3f7ef9a22ce0}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\GoogleTestExtension\GTA_Traits.h" />
     <ClInclude Include="Main.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibProject\LibProject.vcxproj">
+      <Project>{1f2c133f-b7bd-4446-a65c-3f7ef9a22ce0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
