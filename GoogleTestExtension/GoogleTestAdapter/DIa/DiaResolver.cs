@@ -93,7 +93,8 @@ namespace GoogleTestAdapter.Dia
                             nsfl => testMethodSignatures.Any(
                                 tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
                         .Select(
-                            nsfl => GetSourceFileLocation(diaSession, binary, nsfl, allTraitSymbols));
+                            nsfl => GetSourceFileLocation(diaSession, binary, nsfl, allTraitSymbols))
+                        .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
                 }
                 finally
                 {
