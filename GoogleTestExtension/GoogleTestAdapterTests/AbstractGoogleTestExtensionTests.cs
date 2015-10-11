@@ -18,8 +18,8 @@ namespace GoogleTestAdapter
 
         protected const string Results0Batch = SampleTestsSolutionDir + @"Tests\Returns0.bat";
         protected const string Results1Batch = SampleTestsSolutionDir + @"Tests\Returns1.bat";
-        protected const string X86TraitsTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
-        protected const string X86HardcrashingTests = SampleTestsSolutionDir + @"Debug\ConsoleApplication1CrashingTests.exe";
+        protected const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
+        protected const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
 
         private const string X86Dir = TestdataDir + @"_x86\";
         protected const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
@@ -91,8 +91,8 @@ namespace GoogleTestAdapter
                 {
                     _allTestCasesOfConsoleApplication1 = new List<TestCase>();
                     GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86TraitsTests));
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(X86HardcrashingTests));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(SampleTests));
+                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(HardCrashingSampleTests));
                 }
                 return _allTestCasesOfConsoleApplication1;
             }

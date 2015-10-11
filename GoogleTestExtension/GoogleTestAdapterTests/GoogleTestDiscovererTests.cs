@@ -260,10 +260,10 @@ namespace GoogleTestAdapter
 
         private void FindsTestWithTraits(string fullyQualifiedName, Trait[] traits)
         {
-            Assert.IsTrue(File.Exists(X86TraitsTests), "Build ConsoleApplication1 in Debug mode before executing this test");
+            Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> tests = discoverer.GetTestsFromExecutable(X86TraitsTests);
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
             Assert.IsNotNull(testCase);

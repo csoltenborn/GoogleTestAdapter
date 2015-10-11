@@ -146,7 +146,7 @@ namespace GoogleTestAdapter
         public virtual void RunsHardCrashingX86TestsWithoutResult()
         {
             GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
-            executor.RunTests(X86HardcrashingTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(HardCrashingSampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(0, 1, 0, 3);
         }

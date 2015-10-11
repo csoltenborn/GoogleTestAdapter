@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Runners
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
-            executor.RunTests(X86TraitsTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(SampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long sequentialDuration = stopwatch.ElapsedMilliseconds;
 
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Runners
 
             stopwatch.Restart();
             executor = new GoogleTestExecutor(TestEnvironment);
-            executor.RunTests(X86TraitsTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(SampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 

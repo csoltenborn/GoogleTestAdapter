@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxpro
 		{1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0} = {1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplication1TestsCrashing", "ConsoleApplication2\ConsoleApplication2.vcxproj", "{4A4606CD-6D7B-4F76-8981-46D3C74E18BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrashingTests", "CrashingTests\CrashingTests.vcxproj", "{4A4606CD-6D7B-4F76-8981-46D3C74E18BD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0} = {1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0}
 	EndProjectSection
