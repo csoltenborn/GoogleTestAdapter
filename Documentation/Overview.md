@@ -7,13 +7,13 @@ Google Test Adapter (GTA) is a Visual Studio 2015 extension providing test disco
 #### Features
 
 * Linear and parallel test execution
-* Full support for parameterized tests
-* Test discovery using a custom regex (if needed)
 * Traits support by means of custom C++ macros and/or trait assignment by regexes
+* Full support of parameterized tests
 * Full support of all Google Test command line options, including test shuffling and test repetition
-* Test output can be piped to test console
 * Identification of crashed tests
+* Test output can be piped to test console
 * Execution of parameterized batch files for test setup/teardown
+* Test discovery using a custom regex (if needed)
 
 #### History
 
@@ -104,9 +104,9 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 
 #### Executing the tests
 
-Many of the tests depend on the second solution 'ConsoleApplication1', which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution 'SampleGoogleTestTests', which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86. Afterwards, the GTA tests can be run and should all pass.
 
-For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the ConsoleApplication1 solution (or any other solution containing Google Test tests).
+For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the SampleGoogleTestTests solution (or any other solution containing Google Test tests).
 
 #### Debugging GTA
 

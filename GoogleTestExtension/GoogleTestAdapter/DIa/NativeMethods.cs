@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.Dia
         public uint Length;
     }
 
-    unsafe internal static class NativeMethods
+    unsafe static class NativeMethods
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);

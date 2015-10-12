@@ -28,7 +28,7 @@ namespace GoogleTestAdapter
             TestSuite=[<prefix>/]<test_case_name>, 
             TestCase=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
         */
-        class SuiteTestCasePair
+        private class SuiteTestCasePair
         {
             internal string TestSuite { get; }
             internal string TestCase { get; }
