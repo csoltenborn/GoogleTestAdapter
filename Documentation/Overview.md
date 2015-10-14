@@ -59,15 +59,15 @@ The following tasks will be tackled in the months to come. Feel free to suggest 
   * Save settings into XML file, e.g. within solution dir, to allow easy exchange of settings via developers
   * Provide more placeholders to be used with test parameters and setup/teardown batch files (project dir? executable?)
   * Performance improvements
-    * Parallel test discovery
 	* Faster canceling of running tests by actively killing test processes
+    * Parallel test discovery
   * Setup CI build
   * Improve test coverage
 * 0.3 (second quarter of 2016)
   * Smarter test scheduling
     * Reduce number of times executables are invoked
 	* introduce minimum duration per thread (executing 8 tests each lasting 1ms is much faster on 1 thread than on 8 threads)
-    * introduce option to assign test ressources to threads
+    * introduce option to assign test resources to threads
 	  *	scheduling would then make sure tests are not running at same time if competing for the same test resources
   * Performance improvements
     * More fine-grained locking of resources  (e.g., synchronize updating of test duration files on file level)
@@ -112,6 +112,8 @@ For manually testing GTA, just start the GTA solution: A development instance of
 
 Note that test discovery as well as test execution will be performed in processes different to the VS one. Therefore, to debug GTA's discovery and execution code, you need to manually attach a debugger to these processes. To support this, the class GoogleTestAdapter.Helpers.TestEnvironment contains a member variable DebugMode defaulting to false. Set this to true and start the VS development instance. As soon as your code is triggered, a dialog is opened and shows the id of the process the code is executed in. Switch to the other VS instance, attach a debugger to the according process, and click the OK button of the dialog to continue execution of the GTA code. Your breakpoints will now be hit.
 
+Alternatively, you can ... (TODO registry)
+
 #### Contributions
 
 Pull requests are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
@@ -121,3 +123,8 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 
 * Markus Lindqvist, author of Google Test Runner
 * Matthew Manela, author of Chutzpah Test Adapter
+
+### Contact
+
+* Christian Soltenborn (first_name@last_name.de)
+* Jonas Gefele (first_name@last_name.de)
