@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.Dia
             }
             else
             {
-                throw new Exception("Unknown Windows version, Major: " + version.Major + ", Minor: " + version.Minor);
+                Assert.Inconclusive("Unknown Windows version, Major: " + version.Major + ", Minor: " + version.Minor + " (" + imports.Count  + " imports)");
             }
         }
 
