@@ -52,21 +52,19 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 
 ### Roadmap
 
-The following tasks will be tackled in the months to come. Feel free to suggest other enhancements, or to provide pull requests providing some of the features listed below (see section *Contributing* below).
+The following tasks will be tackled in the months to come. Feel free to suggest other enhancements, or to provide pull requests providing some of the features listed below (see section *Contributions* below).
 
-* 0.2 (planned for 1/1/2016)
+* 0.2 (first  quarter of 2016)
   * Better parsing and displaying of parameter values in case of parameterized tests
   * Save settings into XML file, e.g. within solution dir, to allow easy exchange of settings via developers
   * Provide more placeholders to be used with test parameters and setup/teardown batch files (project dir? executable?)
   * Performance improvements
 	* Faster canceling of running tests by actively killing test processes
-    * Parallel test discovery
   * Setup CI build
   * Improve test coverage
 * 0.3 (second quarter of 2016)
   * Smarter test scheduling
     * Reduce number of times executables are invoked
-	* introduce minimum duration per thread (executing 8 tests each lasting 1ms is much faster on 1 thread than on 8 threads)
     * introduce option to assign test resources to threads
 	  *	scheduling would then make sure tests are not running at same time if competing for the same test resources
   * Performance improvements
@@ -80,7 +78,7 @@ The following tasks will be tackled in the months to come. Feel free to suggest 
 Currently, the following issues are known to us - patches welcome!
 
 * Exceptions when debugging tests
-  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of the type TODO
+  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of type System.Runtime.InteropServices.InvalidComObjectException, the messages of which contain 'The object invoked has disconnected from its clients'
   * Reason: This seems to be due to a bug in *te.processhost.managed.exe*, to which VS attaches a debugger when debugging tests
   * Workaround 1: Select *Test/Test Settings/Default Processor Architecture/X64* - this lets VS use the older *vstest.executionengine.exe* which does not have this problem
   * Workaround 2: In VS, mark the exception as "Do not catch" when it occurs
@@ -104,7 +102,7 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 
 #### Executing the tests
 
-Many of the tests depend on the second solution 'SampleGoogleTestTests', which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution 'SampleGoogleTestTests', which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
 
 For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the SampleGoogleTestTests solution (or any other solution containing Google Test tests).
 
