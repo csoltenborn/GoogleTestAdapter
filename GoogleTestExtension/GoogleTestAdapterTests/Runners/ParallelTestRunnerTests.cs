@@ -12,9 +12,9 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void ParallelTestExecutionSpeedsUpTestExecution()
         {
-            if (Environment.ProcessorCount < 4)
+            if (Environment.ProcessorCount < 2)
             {
-                Assert.Inconclusive("This test is designed for machines with at least 4 cores");
+                Assert.Inconclusive("This test is designed for multi-core machines");
             }
 
             Stopwatch stopwatch = new Stopwatch();
