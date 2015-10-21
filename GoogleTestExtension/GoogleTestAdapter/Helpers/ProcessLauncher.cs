@@ -63,8 +63,7 @@ namespace GoogleTestAdapter.Helpers
                 {
                     TestEnvironment.LogInfo("<<<<<<<<<<<<<<< End of Output");
                 }
-                waiter.WaitForExit();
-                return waiter.ProcessExitCode;
+                return waiter.WaitForExit();
             }
             finally
             {

@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.Helpers
     class ProcessWaiter
     {
         internal int ProcessExitCode { get; private set; } = -1;
-        internal bool Exited { get; private set; } = false;
+        private bool Exited { get; set; } = false;
 
 
         internal ProcessWaiter(Process process)
@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        internal void WaitForExit()
+        internal int WaitForExit()
         {
             lock (this)
             {
@@ -27,9 +27,11 @@ namespace GoogleTestAdapter.Helpers
                     Monitor.Wait(this);
                 }
             }
+
+            return ProcessExitCode;
         }
 
-        public void OnExited(object sender, EventArgs e)
+        private void OnExited(object sender, EventArgs e)
         {
             Process process = sender as Process;
             if (process != null)
@@ -37,9 +39,10 @@ namespace GoogleTestAdapter.Helpers
                 lock (this)
                 {
                     ProcessExitCode = process.ExitCode;
+                    Exited = true;
+
                     process.Exited -= OnExited;
 
-                    Exited = true;
                     Monitor.Pulse(this);
                 }
             }
