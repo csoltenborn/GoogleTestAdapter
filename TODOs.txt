@@ -1,10 +1,20 @@
-﻿Before release:
-	code review
-	end-to-end tests
-	reduce # of known issues if possible :-)
-
-Release:
-	Clone repository on GitHub
-	Set up GitHub page, Wiki, Issues tracker
-	Publish on MS market
-
+﻿Discuss version
+Signing
+	Remove keys from repository, add to .gitignore
+	Generate new key
+Set Assembly info
+Finish Overview.md
+Check licensing of Google Test code
+GitHub
+	Clone into repository
+	Set up overview page, issue tracker
+AppVeyor
+	Setup CI build
+Coveralls
+	Setup code coverage
+GitHub
+	Update badges and links in overview page
+Remove this file, commit
+Locally test .vsix resulting from CI build
+MS gallery
+	Publish extension

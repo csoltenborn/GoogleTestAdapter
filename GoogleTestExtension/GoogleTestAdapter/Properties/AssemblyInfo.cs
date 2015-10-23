@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GoogleTestAdapter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn")]
+[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
 [assembly: AssemblyProduct("GoogleTestAdapter")]
-[assembly: AssemblyCopyright("Copyright © 2015")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -41,3 +42,5 @@ using System.Runtime.InteropServices;
 "b13f90466abd9eeb491b430d2c3ebdfcf41e3a57634dda8c4c4516434b050db89fd95036ab757e" +
 "e29d92ebfe66ee453fa0b300d56a6f8d41c45606ba478b757e1f4ec2ea1e2c08d8db3982a53e64" +
 "f110f7ec")]
+[assembly: NeutralResourcesLanguage("en-US")]
+

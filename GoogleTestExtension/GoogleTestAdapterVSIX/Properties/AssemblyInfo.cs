@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GoogleTestAdapterVSIX")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn")]
+[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
 [assembly: AssemblyProduct("GoogleTestAdapterVSIX")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

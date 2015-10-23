@@ -1,5 +1,9 @@
 ### Google Test Adapter
 
+[![Build status](https://ci.appveyor.com/api/projects/status/i0kaq677kfer5ffn?svg=true)](https://ci.appveyor.com/project/jgefele/googletestadapter)
+
+[![Coverage Status](https://coveralls.io/repos/OpenCover/opencover/badge.svg?branch=master&service=github)](https://coveralls.io/github/OpenCover/opencover?branch=master)
+
 Google Test Adapter (GTA) is a Visual Studio 2015 extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements. 
 
 ![Screenshot of test explorer](Screenshot.png)
@@ -8,8 +12,8 @@ Google Test Adapter (GTA) is a Visual Studio 2015 extension providing test disco
 
 * Linear and parallel test execution
 * Traits support by means of custom C++ macros and/or trait assignment by regexes
-* Full support of parameterized tests
-* Full support of all Google Test command line options, including test shuffling and test repetition
+* Full support for parameterized tests
+* Full support for all Google Test command line options, including test shuffling and test repetition
 * Identification of crashed tests
 * Test output can be piped to test console
 * Execution of parameterized batch files for test setup/teardown
@@ -25,8 +29,8 @@ Google Test Adapter (GTA) is a Visual Studio 2015 extension providing test disco
 
 Google Test Adapter can be installed in two ways:
 
-* Install through the Visual Studio Gallery - search for *Google Test Adapter*
-* Download the VSIX installer
+* Install through the Visual Studio Gallery - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
+* Download and launch the [VSIX installer](https://ci.appveyor.com/api/buildjobs/nqkie3qal53y9mhq/artifacts/GoogleTestExtension/GoogleTestAdapterVSIX/bin/Release/GoogleTestAdapterVSIX.vsix)
 
 After restarting VS, your tests will be displayed in the test explorer at build completion. If they don't, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they don't, configure a *Test discovery regex* at the same place.
 
@@ -54,23 +58,16 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 
 The following tasks will be tackled in the months to come. Feel free to suggest other enhancements, or to provide pull requests providing some of the features listed below (see section *Contributions* below).
 
-* 0.2 (first  quarter of 2016)
-  * Better parsing and displaying of parameter values in case of parameterized tests
-  * Save settings into XML file, e.g. within solution dir, to allow easy exchange of settings via developers
-  * Provide more placeholders to be used with test parameters and setup/teardown batch files (project dir? executable?)
-  * Performance improvements
-	* Faster canceling of running tests by actively killing test processes
-  * Setup CI build
-  * Improve test coverage
-* 0.3 (second quarter of 2016)
-  * Smarter test scheduling
-    * Reduce number of times executables are invoked
-    * introduce option to assign test resources to threads
-	  *	scheduling would then make sure tests are not running at same time if competing for the same test resources
-  * Performance improvements
-    * More fine-grained locking of resources  (e.g., synchronize updating of test duration files on file level)
-	* Make use of smarter data structures e.g. in scheduling
-  * Improve test coverage
+* Better parsing and displaying of parameter values in case of parameterized tests
+* Save settings into XML file, e.g. within solution dir, to allow easy exchange of settings via developers
+* Smarter test scheduling
+  * Reduce number of times executables are invoked where possible
+  * introduce option to assign test resources to threads (scheduling would then make sure tests are not running at same time if competing for the same test resources)
+* Performance improvements
+  * Faster canceling of running tests by actively killing test processes
+  * More fine-grained locking of resources  (e.g., synchronize updating of test duration files on file level)
+  * Make use of smarter data structures e.g. in scheduling
+* Provide more placeholders to be used with test parameters and setup/teardown batch files (project dir? executable?)
 
 	
 ### Known Issues
@@ -84,7 +81,7 @@ Currently, the following issues are known to us - patches welcome!
   * Workaround 2: In VS, mark the exception as "Do not catch" when it occurs
 * Not all test results are reported to VS
   * Symptoms: When running tests, GTA reports that n tests have been executed, but VS shows less test results in the test explorer
-  * Reason: This seems to be due to inter process communication, but we do not have a lot of expertise in this area, and there is no official documentation of the VS test framework API.
+  * Reason: This seems to be due to inter process communication, but we do not have a lot of expertise in this area, and there is no official documentation of the VS test framework API
   * Workaround: Configure *Report waiting time* at *Tools/Options/Google Test Adapter/Advanced*
 * *Run tests after build* does not work
   * Symptoms: Selecting the *Run tests after build* option does not or not always result in the tests being run after build completion. Instead, the following error message is printed to the test console: "The specified type member 'Stale' is not supported in LINQ to Entities. Only initializers, entity members, and entity navigation properties are supported."
@@ -108,7 +105,7 @@ For manually testing GTA, just start the GTA solution: A development instance of
 
 #### Debugging GTA
 
-Note that test discovery as well as test execution will be performed in processes different to the VS one. Therefore, to debug GTA's discovery and execution code, you need to manually attach a debugger to these processes. To support this, the class GoogleTestAdapter.Helpers.TestEnvironment contains a member variable DebugMode defaulting to false. Set this to true and start the VS development instance. As soon as your code is triggered, a dialog is opened and shows the id of the process the code is executed in. Switch to the other VS instance, attach a debugger to the according process, and click the OK button of the dialog to continue execution of the GTA code. Your breakpoints will now be hit.
+Note that test discovery as well as test execution will be performed in processes different from the VS one. Therefore, to debug GTA's discovery and execution code, you need to manually attach a debugger to these processes. To support this, the class GoogleTestAdapter.Helpers.TestEnvironment contains a member variable DebugMode defaulting to false. Set this to true and start the VS development instance. As soon as your code is triggered, a dialog shows the id of the process the code is executed in. Switch to the other VS instance, attach a debugger to the according process, and click the OK button of the dialog to continue execution of the GTA code. Your breakpoints will now be hit.
 
 Alternatively, you can ... (TODO registry)
 
@@ -121,6 +118,7 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 
 * Markus Lindqvist, author of Google Test Runner
 * Matthew Manela, author of Chutzpah Test Adapter
+
 
 ### Contact
 
