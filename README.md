@@ -1,12 +1,10 @@
 ### Google Test Adapter
 
-[![Build status](https://ci.appveyor.com/api/projects/status/i0kaq677kfer5ffn?svg=true)](https://ci.appveyor.com/project/jgefele/googletestadapter)
-
-[![Coverage Status](https://coveralls.io/repos/OpenCover/opencover/badge.svg?branch=master&service=github)](https://coveralls.io/github/OpenCover/opencover?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/jgefele/googletestadapter-u1cxh/branch/master)
 
 Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements. 
 
-![Screenshot of test explorer](Screenshot.png)
+![Screenshot of test explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestExtension/GoogleTestAdapterVSIX/Resources/Screenshot.png "Screenshot of test explorer")
 
 #### Features
 
