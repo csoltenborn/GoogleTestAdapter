@@ -9,7 +9,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 #### Features
 
 * Sequential and parallel test execution
-* [Traits}(http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of custom C++ macros and/or trait assignment by regexes
+* [Traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of custom C++ macros and/or trait assignment by regexes
 * Full support for [parameterized tests](https://code.google.com/p/googletest/wiki/AdvancedGuide#Value_Parameterized_Tests)
 * Full support for all Google Test command line options, including [test shuffling](https://code.google.com/p/googletest/wiki/AdvancedGuide#Shuffling_the_Tests) and [test repetition](https://code.google.com/p/googletest/wiki/AdvancedGuide#Repeating_the_Tests)
 * Identification of crashed tests
