@@ -41,7 +41,7 @@ notifications:
 - provider: Email
   to:
   - christian@soltenborn.de
-  subject: Project {{projectName}} {{buildVersion}}: {{status}}
+  subject: 'Project {{projectName}} {{buildVersion}}: {{status}}'
   on_build_success: false
   on_build_failure: true
   on_build_status_changed: true
