@@ -13,11 +13,11 @@ assembly_info:
   assembly_informational_version: '{version}'
 install: 
   - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
-before_build: 
+before_build:
 - ps: >-
-  nuget restore GoogleTestExtension\GoogleTestExtension.sln
+    nuget restore GoogleTestExtension\GoogleTestExtension.sln
 
-  Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
+    Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   verbosity: normal
