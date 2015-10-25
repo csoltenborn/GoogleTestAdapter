@@ -34,14 +34,14 @@ test_script:
     }
 artifacts:
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
-  name: GoogleTestAdapter-0.1.{build}.vsix
+  name: GoogleTestAdapter-{version}.vsix
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
-  name: GoogleTestAdapter-0.1.{build}.pdb
+  name: GoogleTestAdapter-{version}.pdb
 notifications:
 - provider: Email
   to:
   - christian@soltenborn.de
-  subject: GTA build failed
+  subject: Project {{projectName}} {{buildVersion}}: {{status}}
   on_build_success: false
   on_build_failure: true
   on_build_status_changed: true
