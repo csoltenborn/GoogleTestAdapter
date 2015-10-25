@@ -77,7 +77,7 @@ The following tasks will be tackled in the months to come. Feel free to suggest 
 Currently, the following issues are known to us - patches welcome!
 
 * Exceptions when debugging tests
-  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of type System.Runtime.InteropServices.InvalidComObjectException, the messages of which contain "The object invoked has disconnected from its clients"
+  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of type `System.Runtime.InteropServices.InvalidComObjectException`, the messages of which contain "The object invoked has disconnected from its clients"
   * Reason: This seems to be due to a bug in *te.processhost.managed.exe*, to which VS attaches a debugger when debugging tests
   * Workaround 1: Select *Test/Test Settings/Default Processor Architecture/X64* - this lets VS use the older *vstest.executionengine.exe* which does not have this problem
   * Workaround 2: In VS, mark the exception as "Do not catch" when it occurs
@@ -98,6 +98,17 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 * GoogleTestAdapter contains the actual adapter code
 * GoogleTestAdapterVSIX adds the VS Options page and some resources
 * GoogleTestAdapterTests contains GTA's tests
+
+#### Signing
+
+GTA's DLLs have strong names, i.e., they are cryptographically signed. Our key is contained within the solution in an encrypted way and is decrypted for signing by means of pre-build events of the projects, the password being provided as an environment variable. This allows us to build the solution locally as well as on a CI server without revealing the password. Since you do not have access to the password, you have two options for building GTA:
+* Build without signing: Remove 
+  1. the "Sign the assembly" checks and the build events' key decryption steps from the projects' configurations
+  2. the `PublicKey` part from the `InternalsVisibleTo` attribute of GoogleTestAdapter's `AssemblyInfo`
+* Sign with own key: 
+  1. Create a key with VS
+  2. Encrypt that key with `aescrypt` (to be found in the Tools folder of the repository) and using your own password, and replace GoogleTestExtension\Key.aes with the result 
+  3. Create the environment variable GTA_KEY_PASSWORD and assign it your password as value.
 
 #### Executing the tests
 
