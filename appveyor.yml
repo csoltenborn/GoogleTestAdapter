@@ -23,7 +23,7 @@ test_script:
 
     $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\Release\GoogleTestAdapterTests.dll" -output:opencoverCoverage.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\Release\GoogleTestAdapterTests.dll" -filter:-[GoogleTestAdapterTests]* -output:opencoverCoverage.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
