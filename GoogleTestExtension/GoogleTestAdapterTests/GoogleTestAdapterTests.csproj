@@ -38,11 +38,10 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
@@ -95,6 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Key.snk" />
     <None Include="packages.config" />
     <None Include="Resources\TestData\_x64\CrashingGoogleTests\CrashingGoogleTests.exe.gta_testdurations" />
     <None Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe.gta_testdurations" />
@@ -195,7 +195,9 @@
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(MSBuildToolsPath)\msbuild" ..\..\..\..\SampleGoogleTestTests\SampleGoogleTestTests.sln /t:Build /p:Configuration=Debug;Platform=x86</PreBuildEvent>
+    <PreBuildEvent>$(SolutionDir)..\Tools\AESCrypt\aescrypt -d -p $(GTA_KEY_PASSWORD) -o $(ProjectDir)Key.snk $(SolutionDir)Key.aes
+
+"$(MSBuildToolsPath)\msbuild" ..\..\..\..\SampleGoogleTestTests\SampleGoogleTestTests.sln /t:Build /p:Configuration=Debug;Platform=x86</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
