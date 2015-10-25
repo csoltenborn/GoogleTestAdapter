@@ -34,17 +34,17 @@ namespace GoogleTestAdapter.Helpers
 
         internal void LogInfo(string message, LogType logType = LogType.Normal)
         {
-            Log(message, logType, TestMessageLevel.Informational, "I");
+            Log(message, logType, TestMessageLevel.Informational, "");
         }
 
         internal void LogWarning(string message, LogType logType = LogType.Normal)
         {
-            Log(message, logType, TestMessageLevel.Warning, "W");
+            Log(message, logType, TestMessageLevel.Warning, "Warning: ");
         }
 
         internal void LogError(string message, LogType logType = LogType.Normal)
         {
-            Log(message, logType, TestMessageLevel.Error, "E");
+            Log(message, logType, TestMessageLevel.Error, "ERROR: ");
         }
 
         internal void CheckDebugModeForExecutionCode()
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        private void Log(string message, LogType logType, TestMessageLevel level, string levelChar)
+        private void Log(string message, LogType logType, TestMessageLevel level, string prefix)
         {
             bool log;
             switch (logType)
@@ -84,7 +84,7 @@ namespace GoogleTestAdapter.Helpers
             {
                 lock (Lock)
                 {
-                    Logger.SendMessage(level, "GTA " + levelChar + ": " + message);
+                    Logger.SendMessage(level, prefix + message);
                 }
             }
         }

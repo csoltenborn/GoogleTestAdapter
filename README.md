@@ -108,7 +108,7 @@ GTA's DLLs have strong names, i.e., they are cryptographically signed. Our key i
 * Sign with own key: 
   1. Create a key with VS
   2. Encrypt that key with `aescrypt` (to be found in the Tools folder of the repository) and using your own password, and replace GoogleTestExtension\Key.aes with the result 
-  3. Create the environment variable GTA_KEY_PASSWORD and assign it your password as value.
+  3. Create environment variable `GTA_KEY_PASSWORD` and assign it your password as value.
 
 #### Executing the tests
 
