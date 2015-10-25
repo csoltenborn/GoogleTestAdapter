@@ -1,16 +1,16 @@
 version: 0.1.{build}
 os: Visual Studio 2015
 configuration: Release
+platform: Any CPU
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-platform: Any CPU
-environment:
-  COVERALLS_REPO_TOKEN:
-    secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
 before_build:
 - cmd: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
@@ -34,14 +34,13 @@ test_script:
     }
 artifacts:
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
-  name: GoogleTestAdapter-{version}.vsix
+  name: GoogleTestAdapter.vsix
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
-  name: GoogleTestAdapter-{version}.pdb
+  name: GoogleTestAdapter.pdb
 notifications:
 - provider: Email
   to:
   - christian@soltenborn.de
-  subject: 'Project {{projectName}} {{buildVersion}}: {{status}}'
   on_build_success: false
   on_build_failure: true
   on_build_status_changed: true
