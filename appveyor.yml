@@ -1,4 +1,4 @@
-version: 0.1.{build}
+version: 0.1.0.{build}
 os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
@@ -11,9 +11,13 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-before_build:
-- cmd: >-
-    nuget restore GoogleTestExtension\GoogleTestExtension.sln
+install: 
+  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+before_build: 
+- ps: >-
+  nuget restore GoogleTestExtension\GoogleTestExtension.sln
+
+  Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   verbosity: normal
