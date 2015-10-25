@@ -7,8 +7,6 @@ environment:
     secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
 before_build:
 - cmd: >-
-    set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
@@ -24,9 +22,9 @@ test_script:
     & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
 artifacts:
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
-  name: GoogleTestAdapter.vsix
+  name: GoogleTestAdapter-0.1.{build}.vsix
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
-  name: GoogleTestAdapter.pdb
+  name: GoogleTestAdapter-0.1.{build}.pdb
 notifications:
 - provider: Email
   to:
@@ -34,4 +32,4 @@ notifications:
   subject: GTA build failed
   on_build_success: false
   on_build_failure: true
-  on_build_status_changed: false
+  on_build_status_changed: true
