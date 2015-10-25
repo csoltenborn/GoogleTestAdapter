@@ -9,9 +9,9 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 #### Features
 
 * Sequential and parallel test execution
-* Traits support by means of custom C++ macros and/or trait assignment by regexes
-* Full support for parameterized tests
-* Full support for all Google Test command line options, including test shuffling and test repetition
+* [Traits}(http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of custom C++ macros and/or trait assignment by regexes
+* Full support for [parameterized tests](https://code.google.com/p/googletest/wiki/AdvancedGuide#Value_Parameterized_Tests)
+* Full support for all Google Test command line options, including [test shuffling](https://code.google.com/p/googletest/wiki/AdvancedGuide#Shuffling_the_Tests) and [test repetition](https://code.google.com/p/googletest/wiki/AdvancedGuide#Repeating_the_Tests)
 * Identification of crashed tests
 * Test output can be piped to test console
 * Execution of parameterized batch files for test setup/teardown
@@ -27,14 +27,14 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 Google Test Adapter can be installed in two ways:
 
-* Install through the Visual Studio Gallery - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
+* Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://ci.appveyor.com/api/buildjobs/nqkie3qal53y9mhq/artifacts/GoogleTestExtension/GoogleTestAdapterVSIX/bin/Release/GoogleTestAdapterVSIX.vsix)
 
 After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they are not, configure a *Test discovery regex* at the same place.
 
 #### Configuration
 
-GTA is configured through Visual Studio's standard options (Tools/Options/Google Test Adapter).
+GTA is configured through Visual Studio's standard options at *Tools/Options/Google Test Adapter*.
 
 #### Assigning traits to tests
 
@@ -45,9 +45,9 @@ GTA has full support for traits, which can be assigned to tests in two ways:
 
 More precisely, traits are assigned to tests in three phases:
 
-1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression *///Size,Medium assigns the trait (Size,Medium) to all tests.
-2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Size, Small) will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
-3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression *# param = 0*///Size,Large will make sure that all parameterized tests where the parameter starts with a 0 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2). 
+1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression `*///Size,Medium` assigns the trait (Size,Medium) to all tests.
+2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration `TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Size, Small)` will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
+3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `*# param = 0*///Size,Large` will make sure that all parameterized tests where the parameter starts with a 0 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2). 
 
 #### Parallelization
 
@@ -77,7 +77,7 @@ The following tasks will be tackled in the months to come. Feel free to suggest 
 Currently, the following issues are known to us - patches welcome!
 
 * Exceptions when debugging tests
-  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of type System.Runtime.InteropServices.InvalidComObjectException, the messages of which contain 'The object invoked has disconnected from its clients'
+  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of type System.Runtime.InteropServices.InvalidComObjectException, the messages of which contain "The object invoked has disconnected from its clients"
   * Reason: This seems to be due to a bug in *te.processhost.managed.exe*, to which VS attaches a debugger when debugging tests
   * Workaround 1: Select *Test/Test Settings/Default Processor Architecture/X64* - this lets VS use the older *vstest.executionengine.exe* which does not have this problem
   * Workaround 2: In VS, mark the exception as "Do not catch" when it occurs
@@ -93,7 +93,7 @@ Currently, the following issues are known to us - patches welcome!
   
 ### Building, testing, debugging
 
-Google Test Adapter has been created using Visual Studio 2015 and Nuget, which are the only requirements for building GTA. Its main solution *Google Test Extension* consists of three projects:
+Google Test Adapter has been created using Visual Studio 2015 and Nuget, which are the only requirements for building GTA. Its main solution *GoogleTestExtension* consists of three projects:
 
 * GoogleTestAdapter contains the actual adapter code
 * GoogleTestAdapterVSIX adds the VS Options page and some resources
@@ -101,13 +101,13 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 
 #### Executing the tests
 
-Many of the tests depend on the second solution 'SampleGoogleTestTests', which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution *SampleGoogleTestTests*, which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
 
-For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the SampleGoogleTestTests solution (or any other solution containing Google Test tests).
+For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the *SampleGoogleTestTests* solution (or any other solution containing Google Test tests).
 
 #### Debugging GTA
 
-Note that test discovery as well as test execution will be performed in processes different from the VS one. Therefore, to debug GTA's discovery and execution code, you need to manually attach a debugger to these processes. To support this, the class GoogleTestAdapter.Helpers.TestEnvironment contains a member variable DebugMode defaulting to false. Set this to true and start the VS development instance. As soon as your code is triggered, a dialog shows the id of the process the code is executed in. Switch to the other VS instance, attach a debugger to the according process, and click the OK button of the dialog to continue execution of the GTA code. Your breakpoints will now be hit.
+Note that test discovery as well as test execution will be performed in processes different from the VS one. Therefore, to debug GTA's discovery and execution code, you need to manually attach a debugger to these processes. To support this, the class `GoogleTestAdapter.Helpers.TestEnvironment` contains a member variable `DebugMode` defaulting to `false`. Set this to `true` and start the VS development instance. As soon as your code is triggered, a dialog shows the id of the process the code is executed in. Switch to the other VS instance, attach a debugger to the according process, and click the OK button of the dialog to continue execution of the GTA code. Your breakpoints will now be hit.
 
 Alternatively, you can [configure Windows to automatically attach a debugger](https://msdn.microsoft.com/en-us/library/a329t4ed(v=vs.100).aspx) whenever the processes for test discovery or test execution are started.
 
