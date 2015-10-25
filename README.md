@@ -30,7 +30,7 @@ Google Test Adapter can be installed in two ways:
 * Install through the Visual Studio Gallery - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://ci.appveyor.com/api/buildjobs/nqkie3qal53y9mhq/artifacts/GoogleTestExtension/GoogleTestAdapterVSIX/bin/Release/GoogleTestAdapterVSIX.vsix)
 
-After restarting VS, your tests will be displayed in the test explorer at build completion time. If they don't, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they don't, configure a *Test discovery regex* at the same place.
+After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they are not, configure a *Test discovery regex* at the same place.
 
 #### Configuration
 
@@ -45,9 +45,9 @@ GTA has full support for traits, which can be assigned to tests in two ways:
 
 More precisely, traits are assigned to tests in three phases:
 
-1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option.
-2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase (e.g., if test Foo has been assigned a trait (Size,Small) in the first phase, and its macro assigns the trait (Size,Medium), the test will carry the (and only the) trait (Size,Medium)
-3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above.
+1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression *///Size,Medium assigns the trait (Size,Medium) to all tests.
+2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Size, Small) will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
+3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression *# param = 0*///Size,Large will make sure that all parameterized tests where the parameter starts with a 0 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2). 
 
 #### Parallelization
 
@@ -118,8 +118,15 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 
 ### Credits
 
+#### People
 * Markus Lindqvist, author of Google Test Runner
 * Matthew Manela, author of Chutzpah Test Adapter
+
+#### Tools
+* [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
+* [AppVeyor](http://www.appveyor.com/) - awesome .NET CI build services
+* [Coveralls](https://coveralls.io/) - code coverage visualization facilities
+* [Coveralls.net](https://github.com/csmacnz/coveralls.net) - uploads code coverage data to Coveralls
 
 
 ### Contact
