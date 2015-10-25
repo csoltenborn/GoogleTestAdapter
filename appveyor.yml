@@ -1,0 +1,27 @@
+version: 0.1.{build}
+os: Visual Studio 2015
+configuration: Release
+platform: Any CPU
+before_build:
+- cmd: >-
+    set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+
+    nuget restore GoogleTestExtension\GoogleTestExtension.sln
+build:
+  project: GoogleTestExtension\GoogleTestExtension.sln
+  verbosity: normal
+test_script:
+- cmd: GoogleTestExtension\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor  GoogleTestExtension\GoogleTestAdapterTests\bin\Release\GoogleTestAdapterTests.dll" -output:opencoverCoverage.xml
+artifacts:
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
+  name: GoogleTestAdapter.vsix
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
+  name: GoogleTestAdapter.pdb
+notifications:
+- provider: Email
+  to:
+  - christian@soltenborn.de
+  subject: GTA build failed
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: false
