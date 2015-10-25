@@ -4,7 +4,7 @@ configuration: Release
 platform: Any CPU
 environment:
   COVERALLS_REPO_TOKEN:
-    secure: sdXh3Vu3Pfz0xXbJuWTYSRT88Oq5s7zNV
+    secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
 before_build:
 - cmd: >-
     set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
