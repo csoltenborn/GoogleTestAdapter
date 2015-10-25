@@ -24,7 +24,6 @@ namespace GoogleTestAdapter.Helpers
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count);
-            Assert.AreEqual(0, 1);
         }
 
         [TestMethod]
