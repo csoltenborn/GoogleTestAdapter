@@ -101,14 +101,9 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 
 #### Signing
 
-GTA's DLLs have strong names, i.e., they are cryptographically signed. Our key is contained within the solution in an encrypted way and is decrypted for signing by means of pre-build events of the projects, the password being provided as an environment variable. This allows us to build the solution locally as well as on a CI server without revealing the password. Since you do not have access to the password, you have two options for building GTA:
-* Build without signing: Remove 
-  1. the "Sign the assembly" checks and the build events' key decryption steps from the projects' configurations
-  2. the `PublicKey` part from the `InternalsVisibleTo` attribute of GoogleTestAdapter's `AssemblyInfo`
-* Sign with own key: 
-  1. Create a key with VS
-  2. Encrypt that key with `aescrypt` (to be found in the Tools folder of the repository) and using your own password, and replace GoogleTestExtension\Key.aes with the result 
-  3. Create environment variable `GTA_KEY_PASSWORD` and assign it your password as value.
+GTA's DLLs have strong names, i.e., they are cryptographically signed. Our key is contained within the solution in an encrypted way (file `Keys\Key_Production.aes`) and is decrypted for signing by means of pre-build events of the projects, the password being provided as an environment variable. This allows us to build the solution locally as well as on a CI server without revealing the password.
+
+Additionally, we have provided a key without password for debugging purposes (file Keys\Key_Debug.snk). To use this key, place a file named `UseDebugKeyForSigning` within the `Keys` folder.
 
 #### Executing the tests
 

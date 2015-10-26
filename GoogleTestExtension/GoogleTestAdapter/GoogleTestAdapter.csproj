@@ -103,7 +103,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)..\Tools\AESCrypt\aescrypt" -d -p $(GTA_KEY_PASSWORD) -o "$(ProjectDir)Key.snk" "$(SolutionDir)Key.aes"</PreBuildEvent>
+    <PreBuildEvent>if exist "$(SolutionDir)Keys\UseDebugKeyForSigning" (
+    copy "$(SolutionDir)Keys\Key_Debug.snk" "$(ProjectDir)Key.snk"
+) else (
+    "$(SolutionDir)..\Tools\AESCrypt\aescrypt" -d -p $(GTA_KEY_PASSWORD) -o "$(ProjectDir)Key.snk" "$(SolutionDir)Keys\Key_Production.aes"
+)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

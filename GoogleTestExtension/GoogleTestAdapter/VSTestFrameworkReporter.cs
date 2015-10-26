@@ -6,7 +6,7 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
-    class VsTestFrameworkReporter
+    public class VsTestFrameworkReporter
     {
         private static readonly object Lock = new object();
 
@@ -18,14 +18,14 @@ namespace GoogleTestAdapter
         private const int WaitingTime = 1;
 
 
-        internal VsTestFrameworkReporter(TestEnvironment testEnvironment)
+        public VsTestFrameworkReporter(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
             NrOfTestResultsBeforeWaiting = TestEnvironment.Options.ReportWaitPeriod;
         }
 
 
-        internal void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase> testCases)
+        public void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase> testCases)
         {
             lock (Lock)
             {
@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        internal void ReportTestsStarted(IFrameworkHandle frameworkHandle, IEnumerable<TestCase> testCases)
+        public void ReportTestsStarted(IFrameworkHandle frameworkHandle, IEnumerable<TestCase> testCases)
         {
             lock (Lock)
             {
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        internal void ReportTestResults(IFrameworkHandle frameworkHandle, IEnumerable<TestResult> testResults)
+        public void ReportTestResults(IFrameworkHandle frameworkHandle, IEnumerable<TestResult> testResults)
         {
             lock (Lock)
             {

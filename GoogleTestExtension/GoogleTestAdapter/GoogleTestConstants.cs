@@ -11,22 +11,22 @@
 
         public const int ShuffleTestsSeedDefaultValue = 0;
         public const string ShuffleTestsSeedMaxValueAsString = "99999";
-        internal const int ShuffleTestsSeedMinValue = 0;
-        internal static readonly int ShuffleTestsSeedMaxValue = int.Parse(ShuffleTestsSeedMaxValueAsString);
+        public const int ShuffleTestsSeedMinValue = 0;
+        public static readonly int ShuffleTestsSeedMaxValue = int.Parse(ShuffleTestsSeedMaxValueAsString);
 
-        internal const string ListTestsOption = " --gtest_list_tests";
-        internal const string FilterOption = " --gtest_filter=";
+        public const string ListTestsOption = " --gtest_list_tests";
+        public const string FilterOption = " --gtest_filter=";
 
-        internal const string TestBodySignature = "::TestBody";
-        internal const string ParameterizedTestMarker = "  # GetParam() = ";
-        internal const string ParameterValueMarker = ".  # TypeParam";
+        public const string TestBodySignature = "::TestBody";
+        public const string ParameterizedTestMarker = "  # GetParam() = ";
+        public const string ParameterValueMarker = ".  # TypeParam";
 
-        internal static string GetResultXmlFileOption(string resultXmlFile)
+        public static string GetResultXmlFileOption(string resultXmlFile)
         {
             return "--gtest_output=\"xml:" + resultXmlFile + "\"";
         }
 
-        internal static string GetTestMethodSignature(string suite, string testCase)
+        public static string GetTestMethodSignature(string suite, string testCase)
         {
             return suite + "_" + testCase + "_Test" + TestBodySignature;
         }

@@ -76,9 +76,9 @@ namespace GoogleTestAdapter
         private RegexTraitParser RegexTraitParser { get; }
 
 
-        internal Options(IMessageLogger logger) : this(new RegistryReader(), logger) { }
+        public Options(IMessageLogger logger) : this(new RegistryReader(), logger) { }
 
-        internal Options(IRegistryReader registryReader, IMessageLogger logger)
+        public Options(IRegistryReader registryReader, IMessageLogger logger)
         {
             this.RegistryReader = registryReader;
             this.TestEnvironment = new TestEnvironment(this, logger);
@@ -101,9 +101,9 @@ namespace GoogleTestAdapter
         private const string RegOptionParallelizationBase = RegOptionBase + @"\ParallelizationOptionsDialogPage";
         private const string RegOptionAdvancedBase = RegOptionBase + @"\AdvancedOptionsDialogPage";
 
-        internal const string SolutionDirPlaceholder = "$(SolutionDir)";
-        internal const string TestDirPlaceholder = "$(TestDir)";
-        internal const string ThreadIdPlaceholder = "$(ThreadId)";
+        public const string SolutionDirPlaceholder = "$(SolutionDir)";
+        public const string TestDirPlaceholder = "$(TestDir)";
+        public const string ThreadIdPlaceholder = "$(ThreadId)";
 
         private const string DescriptionOfPlaceholders =
            TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
@@ -195,9 +195,9 @@ namespace GoogleTestAdapter
         }
 
 
-        internal const string TraitsRegexesPairSeparator = "//||//";
-        internal const string TraitsRegexesRegexSeparator = "///";
-        internal const string TraitsRegexesTraitSeparator = ",";
+        public const string TraitsRegexesPairSeparator = "//||//";
+        public const string TraitsRegexesRegexSeparator = "///";
+        public const string TraitsRegexesTraitSeparator = ",";
         public const string OptionTraitsRegexesDefaultValue = "";
         public const string OptionTraitsDescription = "Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the 'Traits before' option. 2nd, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the 'Traits after' option is evaluated, again in an overriding manner.\nSyntax: "
                                                  + TraitsRegexesRegexSeparator +

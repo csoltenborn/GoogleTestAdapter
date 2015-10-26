@@ -5,10 +5,10 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 namespace GoogleTestAdapter.Helpers
 {
 
-    static class AllKindsOfExtensions
+    public static class AllKindsOfExtensions
     {
 
-        internal static IEnumerable<T> Yield<T>(this T item)
+        public static IEnumerable<T> Yield<T>(this T item)
         {
             yield return item;
         }

@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.Helpers
         int ReadInt(string keyName, string valueName, int defaultValue);
     }
 
-    class RegistryReader : IRegistryReader
+    public class RegistryReader : IRegistryReader
     {
 
         public string ReadString(string keyName, string valueName, string defaultValue)

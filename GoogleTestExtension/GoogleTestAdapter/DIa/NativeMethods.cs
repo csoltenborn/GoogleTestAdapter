@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.Dia
         public uint Length;
     }
 
-    unsafe static class NativeMethods
+    unsafe public static class NativeMethods
     {
         [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         private static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
@@ -91,13 +91,13 @@ namespace GoogleTestAdapter.Dia
         }
 
 
-        internal class ImportsParser
+        public class ImportsParser
         {
             private LOADED_IMAGE _loadedImage = new LOADED_IMAGE();
 
-            internal List<string> Imports { get; } = new List<string>();
+            public List<string> Imports { get; } = new List<string>();
 
-            internal ImportsParser(string executable, TestEnvironment testEnvironment)
+            public ImportsParser(string executable, TestEnvironment testEnvironment)
             {
                 fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {

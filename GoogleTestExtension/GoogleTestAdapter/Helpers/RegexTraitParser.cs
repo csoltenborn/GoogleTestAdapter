@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace GoogleTestAdapter.Helpers
 {
-    class RegexTraitParser
+    public class RegexTraitParser
     {
         private TestEnvironment TestEnvironment { get; }
 
 
-        internal RegexTraitParser(TestEnvironment testEnvironment)
+        public RegexTraitParser(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
 
 
-        internal List<RegexTraitPair> ParseTraitsRegexesString(string option)
+        public List<RegexTraitPair> ParseTraitsRegexesString(string option)
         {
             List<RegexTraitPair> result = new List<RegexTraitPair>();
 

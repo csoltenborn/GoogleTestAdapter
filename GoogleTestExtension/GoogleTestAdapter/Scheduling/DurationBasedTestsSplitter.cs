@@ -5,14 +5,14 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Scheduling
 {
-    class DurationBasedTestsSplitter : ITestsSplitter
+    public class DurationBasedTestsSplitter : ITestsSplitter
     {
         private int OverallDuration { get; }
         private IDictionary<TestCase, int> TestcaseDurations { get; }
         private TestEnvironment TestEnvironment { get; }
 
 
-        internal DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, TestEnvironment testEnvironment)
+        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.TestcaseDurations = testcaseDurations;
@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
 
-        List<List<TestCase>> ITestsSplitter.SplitTestcases()
+        public List<List<TestCase>> SplitTestcases()
         {
             List<TestCase> sortedTestcases = TestcaseDurations.Keys.OrderByDescending(tc => TestcaseDurations[tc]).ToList();
             int nrOfThreadsToUse = TestEnvironment.Options.MaxNrOfThreads;

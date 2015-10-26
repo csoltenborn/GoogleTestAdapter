@@ -7,14 +7,14 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Runners
 {
-    class PreparingTestRunner : ITestRunner
+    public class PreparingTestRunner : ITestRunner
     {
         private TestEnvironment TestEnvironment { get; }
         private ITestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
 
 
-        internal PreparingTestRunner(int threadId, TestEnvironment testEnvironment)
+        public PreparingTestRunner(int threadId, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.InnerTestRunner = new SequentialTestRunner(TestEnvironment);
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
@@ -54,7 +54,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        void ITestRunner.Cancel()
+        public void Cancel()
         {
             InnerTestRunner.Cancel();
         }

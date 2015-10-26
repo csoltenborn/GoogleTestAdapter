@@ -24,7 +24,7 @@ namespace GoogleTestAdapter
 
         public GoogleTestExecutor() : this(null) { }
 
-        internal GoogleTestExecutor(TestEnvironment testEnvironment)
+        public GoogleTestExecutor(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
         }

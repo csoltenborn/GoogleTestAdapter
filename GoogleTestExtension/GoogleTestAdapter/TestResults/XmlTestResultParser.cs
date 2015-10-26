@@ -10,7 +10,7 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class XmlTestResultParser
+    public class XmlTestResultParser
     {
         private const string ErrorMsgNoXmlFile = "Output file does not exist, did your tests crash?";
 
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.TestResults
         private List<TestCase> TestCasesRun { get; }
 
 
-        internal XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.XmlResultFile = xmlResultFile;
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        internal List<TestResult> GetTestResults()
+        public List<TestResult> GetTestResults()
         {
             if (File.Exists(XmlResultFile))
             {

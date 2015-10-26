@@ -6,23 +6,23 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestResults
 {
-    class StandardOutputTestResultParser
+    public class StandardOutputTestResultParser
     {
         private const string Run = "[ RUN      ]";
         private const string Failed = "[  FAILED  ]";
         private const string Passed = "[       OK ]";
 
-        internal const string CrashText = "!! This is probably the test that crashed !!";
+        public const string CrashText = "!! This is probably the test that crashed !!";
 
 
-        internal TestCase CrashedTestCase { get; private set; }
+        public TestCase CrashedTestCase { get; private set; }
 
         private List<string> ConsoleOutput { get; }
         private List<TestCase> TestCasesRun { get; }
         private TestEnvironment TestEnvironment { get; }
 
 
-        internal StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
+        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = testCasesRun.ToList();
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        internal List<TestResult> GetTestResults()
+        public List<TestResult> GetTestResults()
         {
             List<TestResult> testResults = new List<TestResult>();
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);

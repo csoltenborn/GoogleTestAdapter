@@ -51,7 +51,7 @@ namespace GoogleTestAdapter
 
         public GoogleTestDiscoverer() : this(null) { }
 
-        internal GoogleTestDiscoverer(TestEnvironment testEnvironment)
+        public GoogleTestDiscoverer(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        internal List<TestCase> GetTestsFromExecutable(string executable)
+        public List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null, null);
             List<SuiteTestCasePair> suiteTestCasePairs = ParseTestCases(consoleOutput);
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter
             return testCases;
         }
 
-        internal bool IsGoogleTestExecutable(string executable, string customRegex = "")
+        public bool IsGoogleTestExecutable(string executable, string customRegex = "")
         {
             bool matches;
             string regexUsed;

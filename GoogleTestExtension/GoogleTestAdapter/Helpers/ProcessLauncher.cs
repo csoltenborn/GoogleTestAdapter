@@ -6,24 +6,24 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 namespace GoogleTestAdapter.Helpers
 {
 
-    class ProcessLauncher
+    public class ProcessLauncher
     {
         private TestEnvironment TestEnvironment { get; }
 
 
-        internal ProcessLauncher(TestEnvironment testEnvironment)
+        public ProcessLauncher(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
 
 
-        internal List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
+        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle)
         {
             int dummy;
             return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, runContext, handle, out dummy);
         }
 
-        internal List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle, out int processExitCode)
+        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IRunContext runContext, IFrameworkHandle handle, out int processExitCode)
         {
             List<string> output = new List<string>();
             if (runContext != null && handle != null && runContext.IsBeingDebugged)

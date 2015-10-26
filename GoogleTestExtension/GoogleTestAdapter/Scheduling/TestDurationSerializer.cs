@@ -35,7 +35,7 @@ namespace GoogleTestAdapter.Scheduling
     }
 
 
-    class TestDurationSerializer
+    public class TestDurationSerializer
     {
         private const string FileEndingTestDurations = ".gta_testdurations";
 
@@ -47,13 +47,13 @@ namespace GoogleTestAdapter.Scheduling
         private TestEnvironment TestEnvironment { get; }
 
 
-        internal TestDurationSerializer(TestEnvironment testEnvironment)
+        public TestDurationSerializer(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
 
 
-        internal IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
+        public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
             IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
             IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.Scheduling
             return durations;
         }
 
-        internal void UpdateTestDurations(IEnumerable<TestResult> testResults)
+        public void UpdateTestDurations(IEnumerable<TestResult> testResults)
         {
             IDictionary<string, List<TestResult>> groupedTestcases = GroupTestResultsByExecutable(testResults);
             foreach (string executable in groupedTestcases.Keys)

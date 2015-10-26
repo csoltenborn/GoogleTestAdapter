@@ -7,12 +7,12 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.Runners
 {
 
-    class CommandLineGenerator
+    public class CommandLineGenerator
     {
-        internal class Args
+        public class Args
         {
-            internal List<TestCase> TestCases { get; }
-            internal string CommandLine { get; }
+            public List<TestCase> TestCases { get; }
+            public string CommandLine { get; }
 
             internal Args(List<TestCase> testCases, string commandLine)
             {
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        internal const int MaxCommandLength = 8191;
+        public const int MaxCommandLength = 8191;
 
 
         private int LengthOfExecutableString { get; }
@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.Runners
         private string UserParameters { get; }
 
 
-        internal CommandLineGenerator(
+        public CommandLineGenerator(
             IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
             TestEnvironment testEnvironment)
@@ -52,7 +52,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        internal IEnumerable<Args> GetCommandLines()
+        public IEnumerable<Args> GetCommandLines()
         {
             string baseCommandLine = GetOutputpathParameter();
             baseCommandLine += GetAlsoRunDisabledTestsParameter();

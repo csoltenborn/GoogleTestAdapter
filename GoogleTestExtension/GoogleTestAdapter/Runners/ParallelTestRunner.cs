@@ -8,19 +8,19 @@ using GoogleTestAdapter.Scheduling;
 
 namespace GoogleTestAdapter.Runners
 {
-    class ParallelTestRunner : ITestRunner
+    public class ParallelTestRunner : ITestRunner
     {
         private TestEnvironment TestEnvironment { get; }
         private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
 
 
-        internal ParallelTestRunner(TestEnvironment testEnvironment)
+        public ParallelTestRunner(TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
         }
 
 
-        void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             List<Thread> threads;
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        void ITestRunner.Cancel()
+        public void Cancel()
         {
             lock (this)
             {

@@ -10,20 +10,20 @@ using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.Runners
 {
-    class SequentialTestRunner : ITestRunner
+    public class SequentialTestRunner : ITestRunner
     {
         private bool Canceled { get; set; } = false;
 
         private TestEnvironment TestEnvironment { get; }
 
 
-        internal SequentialTestRunner(TestEnvironment testEnvironment)
+        public SequentialTestRunner(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
         }
 
 
-        void ITestRunner.RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        void ITestRunner.Cancel()
+        public void Cancel()
         {
             Canceled = true;
         }
