@@ -84,9 +84,18 @@ namespace GoogleTestAdapter.Helpers
             {
                 lock (Lock)
                 {
-                    Logger.SendMessage(level, prefix + message);
+                    SafeLogMessage(level, prefix + message);
                 }
             }
+        }
+
+        private void SafeLogMessage(TestMessageLevel level, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                message = " ";
+            }
+            Logger.SendMessage(level, message);
         }
 
         private void CheckDebugMode(string codeType)
