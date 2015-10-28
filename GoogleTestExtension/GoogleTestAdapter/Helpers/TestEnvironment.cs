@@ -6,10 +6,10 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 namespace GoogleTestAdapter.Helpers
 {
 
-    class TestEnvironment
+    public class TestEnvironment
     {
 
-        internal enum LogType { Normal, UserDebug, Debug }
+        public enum LogType { Normal, UserDebug, Debug }
 
 
         // for developing and testing the test adapter itself
@@ -21,38 +21,38 @@ namespace GoogleTestAdapter.Helpers
         private static readonly object Lock = new object();
 
 
-        internal AbstractOptions Options { get; }
+        public AbstractOptions Options { get; }
         private IMessageLogger Logger { get; }
 
 
-        internal TestEnvironment(AbstractOptions options, IMessageLogger logger)
+        public TestEnvironment(AbstractOptions options, IMessageLogger logger)
         {
             this.Options = options;
             this.Logger = logger;
         }
 
 
-        internal void LogInfo(string message, LogType logType = LogType.Normal)
+        public void LogInfo(string message, LogType logType = LogType.Normal)
         {
             Log(message, logType, TestMessageLevel.Informational, "");
         }
 
-        internal void LogWarning(string message, LogType logType = LogType.Normal)
+        public void LogWarning(string message, LogType logType = LogType.Normal)
         {
             Log(message, logType, TestMessageLevel.Warning, "Warning: ");
         }
 
-        internal void LogError(string message, LogType logType = LogType.Normal)
+        public void LogError(string message, LogType logType = LogType.Normal)
         {
             Log(message, logType, TestMessageLevel.Error, "ERROR: ");
         }
 
-        internal void CheckDebugModeForExecutionCode()
+        public void CheckDebugModeForExecutionCode()
         {
             CheckDebugMode("Test execution code");
         }
 
-        internal void CheckDebugModeForDiscoveryCode()
+        public void CheckDebugModeForDiscoveryCode()
         {
             if (!DiscoveryProcessIdShown)
             {
