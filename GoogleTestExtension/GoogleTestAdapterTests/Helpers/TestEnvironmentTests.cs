@@ -77,6 +77,10 @@ namespace GoogleTestAdapter.Helpers
         [TestMethod]
         public void LogInfoAsDebug_ProducesMessageOnlyIfDebugMode()
         {
+            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("DebugMode", BindingFlags.NonPublic | BindingFlags.Static);
+            // ReSharper disable once PossibleNullReferenceException
+            fieldInfo.SetValue(null, false);
+
             Environment.LogInfo("bar", TestEnvironment.LogType.Debug);
 
             MockLogger.Verify(l => l.SendMessage(
@@ -84,7 +88,6 @@ namespace GoogleTestAdapter.Helpers
                 It.Is<string>(s => s.Contains("bar"))),
                 Times.Never());
 
-            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("DebugMode", BindingFlags.NonPublic | BindingFlags.Static);
             // ReSharper disable once PossibleNullReferenceException
             fieldInfo.SetValue(null, true);
 

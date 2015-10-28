@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.Runners
 
             Assert.IsTrue(sequentialDuration > 4000, sequentialDuration.ToString()); // 2 long tests, 2 seconds per test
             Assert.IsTrue(parallelDuration > 2000, parallelDuration.ToString());
-            Assert.IsTrue(parallelDuration < 3200, parallelDuration.ToString()); // 2 seconds per long test + some time for the rest
+            Assert.IsTrue(parallelDuration < 3500, parallelDuration.ToString()); // 2 seconds per long test + some time for the rest
         }
 
     }
