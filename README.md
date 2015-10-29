@@ -58,7 +58,7 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 
 ### Roadmap
 
-The following tasks will be tackled in the months to come. Feel free to suggest other enhancements, or to provide pull requests providing some of the features listed below (see section *Contributions* below).
+The following tasks will be tackled in the months to come. Feel free to suggest other enhancements, or to provide pull requests implementing some of the features listed below (see section *Contributions* below).
 
 * Better parsing and displaying of parameter values in case of parameterized tests
 * Allow settings per solution, including exchange between developers
