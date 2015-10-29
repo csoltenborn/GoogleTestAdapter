@@ -156,4 +156,4 @@ $RECYCLE.BIN/
 # Google Test Adapter specific
 # ============================
 
-/Keys/UseDebugKeyForSigning
+/Keys/Key_Release.snk

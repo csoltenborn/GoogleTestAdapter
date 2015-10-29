@@ -196,10 +196,12 @@
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if exist "$(SolutionDir)Keys\UseDebugKeyForSigning" (
-    copy "$(SolutionDir)Keys\Key_Debug.snk" "$(ProjectDir)Key.snk"
+    <PreBuildEvent>if exist "$(SolutionDir)Keys\Key_Release.snk" (
+    echo Using Release key for signing assembly
+    copy "$(SolutionDir)Keys\Key_Release.snk" "$(ProjectDir)Key.snk"
 ) else (
-    "$(SolutionDir)..\Tools\AESCrypt\aescrypt" -d -p $(GTA_KEY_PASSWORD) -o "$(ProjectDir)Key.snk" "$(SolutionDir)Keys\Key_Production.aes"
+    echo Using Debug key for signing assembly
+    copy "$(SolutionDir)Keys\Key_Debug.snk" "$(ProjectDir)Key.snk"
 )
 
 "$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleGoogleTestTests\SampleGoogleTestTests.sln" /t:Build /p:Configuration=Debug;Platform=x86</PreBuildEvent>

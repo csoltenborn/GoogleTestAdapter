@@ -99,12 +99,6 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 * GoogleTestAdapterVSIX adds the VS Options page and some resources
 * GoogleTestAdapterTests contains GTA's tests
 
-#### Signing
-
-GTA's DLLs have strong names, i.e., they are cryptographically signed. Our key is contained within the solution in an encrypted way (file `Keys\Key_Production.aes`) and is decrypted for signing by means of pre-build events of the projects, the password being provided as an environment variable. This allows us to build the solution locally as well as on a CI server without revealing the password.
-
-Additionally, we have provided a key without password for debugging purposes (file Keys\Key_Debug.snk). To use this key, place a file named `UseDebugKeyForSigning` within the `Keys` folder.
-
 #### Executing the tests
 
 Many of the tests depend on the second solution *SampleGoogleTestTests*, which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
