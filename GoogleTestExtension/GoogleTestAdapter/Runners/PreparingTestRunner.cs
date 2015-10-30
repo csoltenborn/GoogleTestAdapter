@@ -40,7 +40,13 @@ namespace GoogleTestAdapter.Runners
                 batch = TestEnvironment.Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test teardown", batch, runContext);
 
-                Directory.Delete(testDirectory);
+                string errorMessage;
+                if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
+                {
+                    TestEnvironment.LogWarning(
+                        "Could not delete test directory '" + testDirectory + "': " + errorMessage,
+                        TestEnvironment.LogType.UserDebug);
+                }
             }
             catch (Exception e)
             {
