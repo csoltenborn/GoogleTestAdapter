@@ -179,7 +179,7 @@
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.14.0.23107\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.14.0.23107\build\Microsoft.VSSDK.BuildTools.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)..\Tools\AESCrypt\aescrypt -d -p $(GTA_KEY_PASSWORD) -o $(ProjectDir)Key.snk $(SolutionDir)Key.aes</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)..\Tools\AESCrypt\aescrypt" -d -p $(GTA_KEY_PASSWORD) -o "$(ProjectDir)Key.snk" "$(SolutionDir)Key.aes"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

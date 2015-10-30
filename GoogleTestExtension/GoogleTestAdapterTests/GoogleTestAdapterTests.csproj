@@ -196,9 +196,9 @@
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)..\Tools\AESCrypt\aescrypt -d -p $(GTA_KEY_PASSWORD) -o $(ProjectDir)Key.snk $(SolutionDir)Key.aes
+    <PreBuildEvent>"$(SolutionDir)..\Tools\AESCrypt\aescrypt" -d -p $(GTA_KEY_PASSWORD) -o "$(ProjectDir)Key.snk" "$(SolutionDir)Key.aes"
 
-"$(MSBuildToolsPath)\msbuild" ..\..\..\..\SampleGoogleTestTests\SampleGoogleTestTests.sln /t:Build /p:Configuration=Debug;Platform=x86</PreBuildEvent>
+"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleGoogleTestTests\SampleGoogleTestTests.sln" /t:Build /p:Configuration=Debug;Platform=x86</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
