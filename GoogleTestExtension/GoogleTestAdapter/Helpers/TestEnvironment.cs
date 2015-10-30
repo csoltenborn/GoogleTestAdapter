@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.Helpers
         private static bool DebugMode = false;
         private static bool UnitTestMode = false;
 
-        private static bool DiscoveryProcessIdShown { get; set; } = false;
+        private static bool AlreadyAskedForDebugger { get; set; } = false;
 
         private static readonly object Lock = new object();
 
@@ -49,16 +49,12 @@ namespace GoogleTestAdapter.Helpers
 
         public void CheckDebugModeForExecutionCode()
         {
-            CheckDebugMode("Test execution code");
+            CheckDebugMode("execution");
         }
 
         public void CheckDebugModeForDiscoveryCode()
         {
-            if (!DiscoveryProcessIdShown)
-            {
-                DiscoveryProcessIdShown = true;
-                CheckDebugMode("Test discovery code");
-            }
+            CheckDebugMode("discovery");
         }
 
 
@@ -98,15 +94,34 @@ namespace GoogleTestAdapter.Helpers
             Logger.SendMessage(level, message);
         }
 
-        private void CheckDebugMode(string codeType)
+        private void CheckDebugMode(string taskType)
         {
-            string message = codeType +
-                " is running in the process with id " + Process.GetCurrentProcess().Id;
-            LogInfo(message, LogType.Debug);
-            if (DebugMode && !UnitTestMode)
+            string processName = Process.GetCurrentProcess().MainModule.ModuleName;
+            int processId = Process.GetCurrentProcess().Id;
+
+            LogInfo($"Test {taskType} is running in the process '{processName}' with id {processId}.", LogType.Debug);
+            if (DebugMode && !UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
             {
-                MessageBox.Show(message + ". Attach debugger if necessary, then click ok.", "Attach debugger",
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                AlreadyAskedForDebugger = true;
+
+                string title = $"Attach debugger to test {taskType}?";
+                string message = $"Test {taskType} is spawning a new process."
+                    + "\nDo you want to attach the debugger?"
+                    + "\n"
+                    + "\nNote: if Visual Studio is already attached to some other process,"
+                    + " you cannot select it as debugger in the following dialog."
+                    + " In order to debug multiple processes at the same time please"
+                    + $" attach manually to the process '{processName}' with id {processId}."
+                    + "\n"
+                    + "\nTip: Starting the Visual Studio experimental instance with 'Debug/Start"
+                    + " Debugging (F5)' will attach the debugger to 'devenv.exe' and you cannot"
+                    + " automatically attach to test discovery or execution. Use 'Debug/Start"
+                    + " Without Debugging (Ctrl+F5)' instead and be happy.";
+
+                DialogResult result = MessageBox.Show(message, title,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.Yes)
+                    Debugger.Launch();
             }
         }
 

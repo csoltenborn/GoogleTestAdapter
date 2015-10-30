@@ -118,9 +118,15 @@ For manually testing GTA, just start the GTA solution: A development instance of
 
 #### Debugging GTA
 
-Note that test discovery as well as test execution will be performed in processes different from the VS one. Therefore, to debug GTA's discovery and execution code, you need to manually attach a debugger to these processes. To support this, the class `GoogleTestAdapter.Helpers.TestEnvironment` contains a member variable `DebugMode` defaulting to `false`. Set this to `true` and start the VS development instance. As soon as your code is triggered, a dialog shows the id of the process the code is executed in. Switch to the other VS instance, attach a debugger to the according process, and click the OK button of the dialog to continue execution of the GTA code. Your breakpoints will now be hit.
+When you select *Debug/Start (Without) Debugging* an [experimental instance of Visual Studio](https://msdn.microsoft.com/en-us/library/vstudio/bb166560.aspx) will start and have the current build of GTA deployed. You can test and debug the extension here.
 
-Alternatively, you can [configure Windows to automatically attach a debugger](https://msdn.microsoft.com/en-us/library/a329t4ed(v=vs.100).aspx) whenever the processes for test discovery or test execution are started.
+Note that test discovery and execution will not run as part of the Visual Studio process `devenv.exe`. It will spawn some of the following processes (depending on *Test/Test Settings/Default Processor Architecture*):
+* `te.processhost.managed.exe` (test discovery and execution for X86)
+* `vstest.discoveryengine.exe` (test discovery for X64)
+* `vstest.executionengine.exe` (test execution for X64)
+
+A convenient way to get your debugger attached is to set the boolean flag `GoogleTestAdapter.Helpers.TestEnvironment.DebugMode` to `true` and recompile GTA. Now you will get a chance to semi-automatically attach your debugger each time new GTA discovery or execution process is spawned (using the power of [just-in-time debugging](https://msdn.microsoft.com/en-us/library/5hs4b7a6.aspx)).
+
 
 #### Contributions
 
