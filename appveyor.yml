@@ -37,9 +37,9 @@ test_script:
         exit $TestExitCode
     }
 artifacts:
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$env:CONFIGURATION\GoogleTestAdapterVSIX.vsix
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
   name: GoogleTestAdapter.vsix
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$env:CONFIGURATION\GoogleTestAdapter.pdb
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
   name: GoogleTestAdapter.pdb
 notifications:
 - provider: Email
