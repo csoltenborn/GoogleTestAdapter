@@ -11,11 +11,8 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-install: 
-- ps: >-
-    $vsixScript = (Resolve-Path ".\vsix.ps1").ToString()
-
-    & $vsixScript
+install:
+- ps: (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/vsix.ps1") | iex
 before_build:
 - ps: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
