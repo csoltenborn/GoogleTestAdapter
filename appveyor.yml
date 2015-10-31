@@ -12,7 +12,10 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 install: 
-  - ps: (Resolve-Path "vsix.ps1") | iex
+  - ps: >-
+    $vsixScript = (Resolve-Path ".\vsix.ps1").ToString()
+    
+    $ $vsixScript
 before_build:
 - ps: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
