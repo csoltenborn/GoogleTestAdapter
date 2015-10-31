@@ -12,7 +12,7 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 install:
-- ps: (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/vsix.ps1") | iex
+- ps: (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/$env:APPVEYOR_REPO_BRANCH/vsix.ps1") | iex
 before_build:
 - ps: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
@@ -27,7 +27,7 @@ test_script:
 
     $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\Release\GoogleTestAdapterTests.dll" "-filter:+[*]* -[GoogleTestAdapterTests]*" -output:OpenCover_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll" "-filter:+[*]* -[GoogleTestAdapterTests]*" -output:OpenCover_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
@@ -37,9 +37,9 @@ test_script:
         exit $TestExitCode
     }
 artifacts:
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$env:CONFIGURATION\GoogleTestAdapterVSIX.vsix
   name: GoogleTestAdapter.vsix
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$env:CONFIGURATION\GoogleTestAdapter.pdb
   name: GoogleTestAdapter.pdb
 notifications:
 - provider: Email
