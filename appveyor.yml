@@ -12,7 +12,7 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 install: 
-  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  - ps: vsix.ps1 | iex
 before_build:
 - ps: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
