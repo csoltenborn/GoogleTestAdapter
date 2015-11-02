@@ -12,7 +12,7 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 install:
-- ps: (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/$env:APPVEYOR_REPO_BRANCH/vsix.ps1") | iex
+- ps: (new-object Net.WebClient).DownloadString("https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/$env:APPVEYOR_REPO_COMMIT/vsix.ps1") | iex
 before_build:
 - ps: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
