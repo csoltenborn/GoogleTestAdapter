@@ -1,4 +1,4 @@
-version: 0.1.{build}
+version: 0.2.0.{build}
 os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
@@ -17,7 +17,7 @@ before_build:
 - ps: >-
     nuget restore GoogleTestExtension\GoogleTestExtension.sln
 
-    Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
+    Vsix-IncrementVsixVersion -versionType "revision" | Vsix-UpdateBuildVersion
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   verbosity: normal
