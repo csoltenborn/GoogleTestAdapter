@@ -58,11 +58,6 @@ namespace GoogleTestAdapter.TestResults
 
             line = ConsoleOutput[currentLineIndex++];
 
-            if (IsPassedLine(line))
-            {
-                return CreatePassedTestResult(testCase, ParseDuration(line));
-            }
-
             string errorMsg = "";
             while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex < ConsoleOutput.Count)
             {
