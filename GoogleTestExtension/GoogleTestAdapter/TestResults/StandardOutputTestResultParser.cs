@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.TestResults
             }
 
             string errorMsg = "";
-            while (!IsFailedLine(line) && currentLineIndex < ConsoleOutput.Count)
+            while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex < ConsoleOutput.Count)
             {
                 errorMsg += line + "\n";
                 line = ConsoleOutput[currentLineIndex++];
@@ -72,6 +72,10 @@ namespace GoogleTestAdapter.TestResults
             if (IsFailedLine(line))
             {
                 return CreateFailedTestResult(testCase, ParseDuration(line), false, errorMsg);
+            }
+            if (IsPassedLine(line))
+            {
+                return CreatePassedTestResult(testCase, ParseDuration(line));
             }
 
             string appendedMessage = errorMsg == "" ? "" : "\n\n" + errorMsg;

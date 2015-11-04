@@ -54,11 +54,26 @@ namespace GoogleTestAdapter.TestResults
             @"",
         };
 
+        private string[] ConsoleOutputWithOutputOfExe { get; } = {
+            @"[==========] Running 1 tests from 1 test case.",
+            @"[----------] Global test environment set-up.",
+            @"[----------] 1 tests from TestMath",
+            @"[ RUN      ] TestMath.AddPasses",
+            @"Some output produced by the exe",
+            @"[       OK ] TestMath.AddPasses(0 ms)",
+            @"[----------] 1 tests from TestMath(26 ms total)",
+            @"",
+            @"[----------] Global test environment tear-down",
+            @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+            @"[  PASSED  ] 1 test.",
+        };
+
 
         private List<string> CrashesImmediately { get; set; }
         private List<string> CrashesAfterErrorMsg { get; set; }
         private List<string> Complete { get; set; }
         private List<string> WrongDurationUnit { get; set; }
+        private List<string> PassingTestProducesConsoleOutput { get; set; }
 
         [TestInitialize]
         public override void SetUp()
@@ -74,6 +89,8 @@ namespace GoogleTestAdapter.TestResults
 
             Complete = new List<string>(CrashesAfterErrorMsg);
             Complete.AddRange(ConsoleOutput3);
+
+            PassingTestProducesConsoleOutput = new List<string>(ConsoleOutputWithOutputOfExe);
         }
 
 
@@ -153,6 +170,16 @@ namespace GoogleTestAdapter.TestResults
             MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void OutputWithConsoleOutputIsParsedCorrectly()
+        {
+            List<TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
+
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual("TestMath.AddPasses", results[0].TestCase.FullyQualifiedName);
+            Assert.AreEqual(TestOutcome.Passed, results[0].Outcome);
         }
 
 
