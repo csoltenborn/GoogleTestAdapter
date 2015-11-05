@@ -12,6 +12,7 @@ before_build:
     SetVersion $env:APPVEYOR_BUILD_VERSION
 
     cd ..
+- ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   verbosity: normal
