@@ -9,7 +9,7 @@ before_build:
 - cmd: >-
     cd GoogleTestExtension
 
-    SetVersion {version}
+    SetVersion $env:APPVEYOR_BUILD_VERSION
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   verbosity: normal
