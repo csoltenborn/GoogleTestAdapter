@@ -8,6 +8,7 @@ environment:
 before_build: 
 - cmd: >-
     cd GoogleTestExtension
+
     SetVersion {version}
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
