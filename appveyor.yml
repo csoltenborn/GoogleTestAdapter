@@ -6,7 +6,9 @@ environment:
   COVERALLS_REPO_TOKEN:
     secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
 before_build: 
-- cmd: GoogleTestExtension\SetVersion {version}
+- cmd: >-
+    cd GoogleTestExtension
+    SetVersion {version}
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   verbosity: normal
