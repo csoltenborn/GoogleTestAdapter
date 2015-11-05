@@ -9,7 +9,7 @@ before_build:
 - cmd: >-
     cd GoogleTestExtension
 
-    SetVersion $env:APPVEYOR_BUILD_VERSION
+    SetVersion %APPVEYOR_BUILD_VERSION%
 
     cd ..
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
