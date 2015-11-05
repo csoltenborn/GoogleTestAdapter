@@ -10,7 +10,7 @@ before_build:
     cd GoogleTestExtension
 
     SetVersion $env:APPVEYOR_BUILD_VERSION
-	
+
     cd ..
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
