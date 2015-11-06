@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.Runners
         {
             if (Environment.ProcessorCount < 2)
             {
-                Console.WriteLine("Warning: Test has not been executed since this is a single-core machine!");
+                Trace.WriteLine("Warning: Test has not been executed since this is a single-core machine!");
                 return;
                 //Assert.Inconclusive("This test is designed for multi-core machines");
             }

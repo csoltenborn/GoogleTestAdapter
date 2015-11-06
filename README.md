@@ -2,7 +2,7 @@
 
 ### Google Test Adapter
 
-Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements. 
+Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements.
 
 ![Screenshot of test explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestExtension/GoogleTestAdapterVSIX/Resources/Screenshot.png "Screenshot of test explorer")
 
@@ -29,6 +29,7 @@ Google Test Adapter can be installed in two ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.1/GoogleTestAdapter.vsix)
+* GTA is also available at the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874)
 
 After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they are not, configure a *Test discovery regex* at the same place.
 

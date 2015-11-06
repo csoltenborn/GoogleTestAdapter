@@ -15,6 +15,7 @@ before_build:
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
+  parallel: true
   verbosity: normal
 test_script:
 - ps: >-
