@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.Runners
     public class SequentialTestRunnerTests : AbstractGoogleTestExtensionTests
     {
 
-        [TestMethod, Ignore] // this fails on the CI build machine because of an OpenCover error
+        [TestMethod]
         public void CancelingRunnerStopsTestExecution()
         {
             List<TestCase> allTestCases = AllTestCasesOfConsoleApplication1;
