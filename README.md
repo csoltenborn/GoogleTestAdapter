@@ -28,8 +28,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 Google Test Adapter can be installed in two ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
-* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.1/GoogleTestAdapter.vsix)
-* GTA is also available at the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874)
+* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.1/GoogleTestAdapter.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
 
 After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they are not, configure a *Test discovery regex* at the same place.
 
@@ -55,22 +54,6 @@ More precisely, traits are assigned to tests in three phases:
 Tests are run sequentially by default. If parallel test execution is enabled, the tests will be distributed to the available cores of your machine. To support parallel test execution, additional command line parameters can be passed to the Google Test executables (note that this feature is not restricted to parallel test execution); they can then be parsed by the test code at run time and e.g. be used to improve test isolation.
 
 If you need to perform some setup or teardown tasks in addition to the setup/teardown methods of your test code, you can do so by configuring test setup/teardown batch files, to which you can pass several values such as solution directory or test directory for exclusive usage of the tests.
-
-
-### Roadmap
-
-The following tasks will be tackled in the months to come. Feel free to suggest other enhancements, or to provide pull requests implementing some of the features listed below (see section *Contributions* below).
-
-* Better parsing and displaying of parameter values in case of parameterized tests
-* Allow settings per solution, including exchange between developers
-* Smarter test scheduling
-  * Reduce number of times executables are invoked where possible
-  * introduce option to assign test resources to threads (scheduling would then make sure tests are not running at same time if competing for the same test resources)
-* Performance improvements
-  * Faster canceling of running tests by actively killing test processes
-  * More fine-grained locking of resources  (e.g., synchronize updating of test duration files on file level)
-  * Make use of smarter data structures e.g. in scheduling
-* Provide more placeholders to be used with test parameters and setup/teardown batch files, e.g. project dir or executable
 
 
 ### Known Issues
