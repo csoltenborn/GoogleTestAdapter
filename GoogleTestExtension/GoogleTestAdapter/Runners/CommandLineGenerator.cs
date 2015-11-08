@@ -76,9 +76,9 @@ namespace GoogleTestAdapter.Runners
             }
 
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
-            string baseFilter = GoogleTestConstants.FilterOption
+            string suitesFilter = GoogleTestConstants.FilterOption
                 + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
-            string baseCommandLineWithFilter = baseCommandLine + baseFilter;
+            string baseCommandLineWithFilter = baseCommandLine + suitesFilter;
 
             List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
             List<TestCase> testCasesRunBySuite = TestCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
@@ -89,10 +89,10 @@ namespace GoogleTestAdapter.Runners
             }
 
             List<TestCase> includedTestCases;
+            int remainingLength = MaxCommandLength
+                - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1;
             string commandLine = baseCommandLineWithFilter +
-                                 JoinTestsUpToMaxLength(testCasesNotRunBySuite,
-                                     MaxCommandLength - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1,
-                                     out includedTestCases);
+                JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
             includedTestCases.AddRange(testCasesRunBySuite);
             commandLines.Add(new Args(includedTestCases, commandLine + userParam));
 
@@ -101,10 +101,10 @@ namespace GoogleTestAdapter.Runners
 
             while (testCasesNotRunBySuite.Count > 0)
             {
+                remainingLength = MaxCommandLength
+                    - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1;
                 commandLine = baseCommandLineWithFilter +
-                              JoinTestsUpToMaxLength(testCasesNotRunBySuite,
-                                  MaxCommandLength - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1,
-                                  out includedTestCases);
+                              JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
                 commandLines.Add(new Args(includedTestCases, commandLine + userParam));
             }
 
