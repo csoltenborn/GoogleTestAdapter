@@ -60,7 +60,7 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            InitTestEnvironment(logger);
+            InitTestEnvironment(discoveryContext.RunSettings, logger);
 
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
@@ -110,11 +110,15 @@ namespace GoogleTestAdapter
         }
 
 
-        private void InitTestEnvironment(IMessageLogger logger)
+        private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger logger)
         {
             if (TestEnvironment == null)
             {
-                TestEnvironment = new TestEnvironment(new Options(logger), logger);
+                RunSettings ourRunSettings;
+                var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
+                ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+
+                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, logger), logger);
             }
 
             TestEnvironment.CheckDebugModeForDiscoveryCode();

@@ -9,7 +9,7 @@ namespace GoogleTestAdapter
     public class OptionsTests : AbstractGoogleTestExtensionTests
     {
 
-        private Mock<IRegistryReader> MockRegistryReader { get; } = new Mock<IRegistryReader>();
+        private Mock<IXmlOptions> MockXmlOptions { get; } = new Mock<IXmlOptions>();
         private AbstractOptions TheOptions { get; set; }
 
 
@@ -18,7 +18,7 @@ namespace GoogleTestAdapter
         {
             base.SetUp();
 
-            TheOptions = new Options(MockRegistryReader.Object, MockLogger.Object);
+            TheOptions = new Options(MockXmlOptions.Object, MockLogger.Object);
         }
 
         [TestCleanup]
@@ -26,48 +26,48 @@ namespace GoogleTestAdapter
         {
             base.TearDown();
 
-            MockRegistryReader.Reset();
+            MockXmlOptions.Reset();
         }
 
 
         [TestMethod]
         public void NrOfTestRepitionsHandlesInvalidValuesCorrectly()
         {
-            SetupMockToReturnInt(-2);
+            MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(-2);
             Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, TheOptions.NrOfTestRepetitions);
 
-            SetupMockToReturnInt(0);
+            MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(0);
             Assert.AreEqual(Options.OptionNrOfTestRepetitionsDefaultValue, TheOptions.NrOfTestRepetitions);
 
-            SetupMockToReturnInt(4711);
+            MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(4711);
             Assert.AreEqual(4711, TheOptions.NrOfTestRepetitions);
         }
 
         [TestMethod]
         public void ShuffleTestsSeedHandlesInvalidValuesCorrectly()
         {
-            SetupMockToReturnInt(-1);
+            MockXmlOptions.Setup(o => o.ShuffleTestsSeed).Returns(-1);
             Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, TheOptions.ShuffleTestsSeed);
 
-            SetupMockToReturnInt(1000000);
+            MockXmlOptions.Setup(o => o.ShuffleTestsSeed).Returns(1000000);
             Assert.AreEqual(Options.OptionShuffleTestsSeedDefaultValue, TheOptions.ShuffleTestsSeed);
 
-            SetupMockToReturnInt(4711);
+            MockXmlOptions.Setup(o => o.ShuffleTestsSeed).Returns(4711);
             Assert.AreEqual(4711, TheOptions.ShuffleTestsSeed);
         }
 
         [TestMethod]
         public void MaxNrOfThreadsHandlesInvalidValuesCorrectly()
         {
-            SetupMockToReturnInt(-1);
+            MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(-1);
             Assert.AreEqual(Environment.ProcessorCount, TheOptions.MaxNrOfThreads);
 
-            SetupMockToReturnInt(Environment.ProcessorCount + 1);
+            MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount + 1);
             Assert.AreEqual(Environment.ProcessorCount, TheOptions.MaxNrOfThreads);
 
             if (Environment.ProcessorCount > 1)
             {
-                SetupMockToReturnInt(Environment.ProcessorCount - 1);
+                MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount - 1);
                 Assert.AreEqual(Environment.ProcessorCount - 1, TheOptions.MaxNrOfThreads);
             }
         }
@@ -75,50 +75,35 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void ReportWaitPeriodHandlesInvalidValuesCorrectly()
         {
-            SetupMockToReturnInt(-1);
+            MockXmlOptions.Setup(o => o.ReportWaitPeriod).Returns(-1);
             Assert.AreEqual(Options.OptionReportWaitPeriodDefaultValue, TheOptions.ReportWaitPeriod);
 
-            SetupMockToReturnInt(4711);
+            MockXmlOptions.Setup(o => o.ReportWaitPeriod).Returns(4711);
             Assert.AreEqual(4711, TheOptions.ReportWaitPeriod);
         }
 
         [TestMethod]
         public void AdditionalTestParameter_PlaceholdersAreTreatedCorrectly()
         {
-            SetupMockToReturnString(Options.TestDirPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder);
             string result = TheOptions.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir", result);
 
-            SetupMockToReturnString(Options.TestDirPlaceholder + " " + Options.TestDirPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + " " + Options.TestDirPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 0);
             Assert.AreEqual("mydir mydir", result);
 
-            SetupMockToReturnString(Options.TestDirPlaceholder.ToLower());
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder.ToLower());
             result = TheOptions.GetUserParameters("", "mydir", 0);
             Assert.AreEqual(Options.TestDirPlaceholder.ToLower(), result);
 
-            SetupMockToReturnString(Options.ThreadIdPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.ThreadIdPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("4711", result);
 
-            SetupMockToReturnString(Options.TestDirPlaceholder + ", " + Options.ThreadIdPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + ", " + Options.ThreadIdPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("mydir, 4711", result);
-        }
-
-
-        private void SetupMockToReturnString(string s)
-        {
-            MockRegistryReader
-                .Setup(rr => rr.ReadString(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(s);
-        }
-
-        private void SetupMockToReturnInt(int i)
-        {
-            MockRegistryReader
-                .Setup(rr => rr.ReadInt(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(i);
         }
 
     }

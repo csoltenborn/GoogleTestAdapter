@@ -42,21 +42,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\lib\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.VisualStudio.TestWindow, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Core, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="msdia140typelib_clr0200">
       <HintPath>..\lib\msdia140typelib_clr0200.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -70,6 +69,7 @@
     <Compile Include="Helpers\TestEnvironment.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Helpers\Utils.cs" />
+    <Compile Include="Helpers\XmlOptions.cs" />
     <Compile Include="Runners\PreparingTestRunner.cs" />
     <Compile Include="Runners\SequentialTestRunner.cs" />
     <Compile Include="Runners\ITestRunner.cs" />
@@ -81,7 +81,6 @@
     <Compile Include="Dia\DiaResolver.cs" />
     <Compile Include="Runners\CommandLineGenerator.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
-    <Compile Include="Helpers\RegistryReader.cs" />
     <Compile Include="Dia\DiaMemoryStream.cs" />
     <Compile Include="Scheduling\ITestsSplitter.cs" />
     <Compile Include="Dia\NativeMethods.cs" />

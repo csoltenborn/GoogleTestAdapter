@@ -69,8 +69,8 @@ namespace GoogleTestAdapter
         public virtual void RunsExternallyLinkedX86TestsWithResult()
         {
             // also tests batch execution
-            MockOptions.Setup(o => o.TestSetupBatch).Returns(Results0Batch);
-            MockOptions.Setup(o => o.TestTeardownBatch).Returns(Results1Batch);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Results0Batch);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Results1Batch);
 
             RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
 
@@ -109,8 +109,8 @@ namespace GoogleTestAdapter
         public virtual void RunsExternallyLinkedX64TestsWithResult()
         {
             // also tests batch execution
-            MockOptions.Setup(o => o.TestSetupBatch).Returns(Results1Batch);
-            MockOptions.Setup(o => o.TestTeardownBatch).Returns(Results0Batch);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Results1Batch);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Results0Batch);
 
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
 

@@ -1,11 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Helpers;
+using Microsoft.VisualStudio.TestWindow.Extensibility;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace GoogleTestAdapter
 {
+    public interface IGlobalRunSettings
+    {
+        RunSettings RunSettings { get; }
+    }
+
+    [Export(typeof(IRunSettingsService))]
+    [SettingsName(GoogleTestConstants.SettingsName)]
+    public class RunSettingsService : IRunSettingsService
+    {
+        public string Name { get { return GoogleTestConstants.SettingsName; } }
+
+        private IGlobalRunSettings globalRunSettings;
+
+        [ImportingConstructor]
+        RunSettingsService([Import(typeof(IGlobalRunSettings))] IGlobalRunSettings globalRunSettings)
+        {
+            this.globalRunSettings = globalRunSettings;
+        }
+
+        public IXPathNavigable AddRunSettings(IXPathNavigable inputRunSettingDocument, IRunSettingsConfigurationInfo configurationInfo, ILogger log)
+        {
+            var navigator = inputRunSettingDocument.CreateNavigator();
+            if (navigator.MoveToChild("RunSettings", ""))
+            {
+                if (navigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
+                {
+                    navigator.DeleteSelf();
+                }
+
+                navigator.AppendChild(globalRunSettings.RunSettings.ToXml().CreateNavigator());
+            }
+
+            navigator.MoveToRoot();
+            return navigator;
+        }
+    }
+
+    [Export(typeof(ISettingsProvider))]
+    [SettingsName(GoogleTestConstants.SettingsName)]
+    public class RunSettingsProvider : ISettingsProvider
+    {
+        public RunSettings Settings { get; private set; }
+
+        public string Name { get; private set; } = GoogleTestConstants.SettingsName;
+
+        public void Load(XmlReader reader)
+        {
+            Settings = RunSettings.LoadFromXml(reader);
+        }
+    }
 
     public class RegexTraitPair
     {
@@ -33,8 +88,8 @@ namespace GoogleTestAdapter
 
         public abstract bool ParallelTestExecution { get; }
         public abstract int MaxNrOfThreads { get; }
-        public abstract string TestSetupBatch { get; }
-        public abstract string TestTeardownBatch { get; }
+        public abstract string BatchForTestSetup { get; }
+        public abstract string BatchForTestTeardown { get; }
         public abstract string AdditionalTestExecutionParam { get; }
 
         public abstract int ReportWaitPeriod { get; }
@@ -44,14 +99,14 @@ namespace GoogleTestAdapter
             return ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
         }
 
-        public string GetTestSetupBatch(string solutionDirectory, string testDirectory, int threadId)
+        public string GetBatchForTestSetup(string solutionDirectory, string testDirectory, int threadId)
         {
-            return ReplacePlaceholders(TestSetupBatch, solutionDirectory, testDirectory, threadId);
+            return ReplacePlaceholders(BatchForTestSetup, solutionDirectory, testDirectory, threadId);
         }
 
-        public string GetTestTeardownBatch(string solutionDirectory, string testDirectory, int threadId)
+        public string GetBatchForTestTeardown(string solutionDirectory, string testDirectory, int threadId)
         {
-            return ReplacePlaceholders(TestTeardownBatch, solutionDirectory, testDirectory, threadId);
+            return ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
         }
 
         private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
@@ -71,16 +126,14 @@ namespace GoogleTestAdapter
 
     public class Options : AbstractOptions
     {
-        private IRegistryReader RegistryReader { get; }
+        private IXmlOptions XmlOptions { get; }
         private TestEnvironment TestEnvironment { get; }
         private RegexTraitParser RegexTraitParser { get; }
 
 
-        public Options(IMessageLogger logger) : this(new RegistryReader(), logger) { }
-
-        public Options(IRegistryReader registryReader, IMessageLogger logger)
+        public Options(IXmlOptions xmlOptions, IMessageLogger logger)
         {
-            this.RegistryReader = registryReader;
+            this.XmlOptions = xmlOptions;
             this.TestEnvironment = new TestEnvironment(this, logger);
             this.RegexTraitParser = new RegexTraitParser(TestEnvironment);
         }
@@ -90,16 +143,6 @@ namespace GoogleTestAdapter
         public const string PageGeneralName = "General";
         public const string PageParallelizationName = "Parallelization";
         public const string PageAdvancedName = "Advanced";
-
-        // ReSharper disable once UnusedMember.Local
-        private const string RegOptionBaseProduction = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
-        // ReSharper disable once UnusedMember.Local
-        private const string RegOptionBaseDebugging = @"HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\14.0Exp\ApplicationPrivateSettings\GoogleTestAdapterVSIX";
-
-        private const string RegOptionBase = RegOptionBaseProduction;
-        private const string RegOptionGeneralBase = RegOptionBase + @"\GeneralOptionsDialogPage";
-        private const string RegOptionParallelizationBase = RegOptionBase + @"\ParallelizationOptionsDialogPage";
-        private const string RegOptionAdvancedBase = RegOptionBase + @"\AdvancedOptionsDialogPage";
 
         public const string SolutionDirPlaceholder = "$(SolutionDir)";
         public const string TestDirPlaceholder = "$(TestDir)";
@@ -114,36 +157,32 @@ namespace GoogleTestAdapter
 
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;
-        private const string RegOptionPrintTestOutput = "PrintTestOutput";
         public const string OptionPrintTestOutputDescription =
             "Print the output of the Google Test executable(s) to the Tests Output window.";
 
-        public override bool PrintTestOutput => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionPrintTestOutput, OptionPrintTestOutputDefaultValue);
+        public override bool PrintTestOutput => XmlOptions.PrintTestOutput;
 
 
         public const string OptionTestDiscoveryRegex = "Regex for test discovery";
         public const string OptionTestDiscoveryRegexDefaultValue = "";
-        private const string RegOptionTestDiscoveryRegex = "TestDiscoveryRegex";
         public const string OptionTestDiscoveryRegexDescription =
             "If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: "
             + GoogleTestDiscoverer.TestFinderRegex;
 
-        public override string TestDiscoveryRegex => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionTestDiscoveryRegex, OptionTestDiscoveryRegexDefaultValue);
+        public override string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex;
 
 
         public const string OptionRunDisabledTests = "Also run disabled tests";
         public const bool OptionRunDisabledTestsDefaultValue = false;
-        private const string RegOptionRunDisabledTests = "RunDisabledTests";
         public const string OptionRunDisabledTestsDescription =
             "If true, all (selected) tests will be run, even if they have been disabled.\n"
             + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
 
-        public override bool RunDisabledTests => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionRunDisabledTests, OptionRunDisabledTestsDefaultValue);
+        public override bool RunDisabledTests => XmlOptions.RunDisabledTests;
 
 
         public const string OptionNrOfTestRepetitions = "Number of test repetitions";
         public const int OptionNrOfTestRepetitionsDefaultValue = 1;
-        private const string RegOptionNrOfTestRepetitions = "NrOfTestRepetitions";
         public const string OptionNrOfTestRepetitionsDescription =
             "Tests will be run for the selected number of times (-1: infinite).\n"
             + "Google Test option:" + GoogleTestConstants.NrOfRepetitionsOption;
@@ -152,7 +191,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int nrOfRepetitions = RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionNrOfTestRepetitions, OptionNrOfTestRepetitionsDefaultValue);
+                int nrOfRepetitions = XmlOptions.NrOfTestRepetitions;
                 if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
                 {
                     nrOfRepetitions = OptionNrOfTestRepetitionsDefaultValue;
@@ -164,17 +203,15 @@ namespace GoogleTestAdapter
 
         public const string OptionShuffleTests = "Shuffle tests per execution";
         public const bool OptionShuffleTestsDefaultValue = false;
-        private const string RegOptionShuffleTests = "ShuffleTests";
         public const string OptionShuffleTestsDescription =
             "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
             + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
 
-        public override bool ShuffleTests => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionShuffleTests, OptionShuffleTestsDefaultValue);
+        public override bool ShuffleTests => XmlOptions.ShuffleTests;
 
 
         public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
         public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
-        private const string RegOptionShuffleTestsSeed = "ShuffleTestsSeed";
         public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<n<"
                                                            + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
                                                            + ": The given seed is used. See note of option '"
@@ -185,7 +222,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int seed = RegistryReader.ReadInt(RegOptionGeneralBase, RegOptionShuffleTestsSeed, OptionShuffleTestsSeedDefaultValue);
+                int seed = XmlOptions.ShuffleTestsSeed;
                 if (seed < GoogleTestConstants.ShuffleTestsSeedMinValue || seed > GoogleTestConstants.ShuffleTestsSeedMaxValue)
                 {
                     seed = OptionShuffleTestsSeedDefaultValue;
@@ -214,25 +251,23 @@ namespace GoogleTestAdapter
                                                  + TraitsRegexesTraitSeparator + "Medium";
 
         public const string OptionTraitsRegexesBefore = "Regex for setting test traits before test execution";
-        private const string RegOptionTraitsRegexesBefore = "TraitsRegexesBefore";
 
         public override List<RegexTraitPair> TraitsRegexesBefore
         {
             get
             {
-                string option = RegistryReader.ReadString(RegOptionGeneralBase, RegOptionTraitsRegexesBefore, OptionTraitsRegexesDefaultValue);
+                string option = XmlOptions.TraitsRegexesBefore;
                 return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
 
         public const string OptionTraitsRegexesAfter = "Regex for setting test traits after test execution";
-        private const string RegOptionTraitsRegexesAfter = "TraitsRegexesAfter";
 
         public override List<RegexTraitPair> TraitsRegexesAfter
         {
             get
             {
-                string option = RegistryReader.ReadString(RegOptionGeneralBase, RegOptionTraitsRegexesAfter, OptionTraitsRegexesDefaultValue);
+                string option = XmlOptions.TraitsRegexesAfter;
                 return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
@@ -240,21 +275,19 @@ namespace GoogleTestAdapter
 
         public const string OptionUserDebugMode = "Debug mode";
         public const bool OptionUserDebugModeDefaultValue = false;
-        private const string RegOptionUserDebugMode = "UserDebugMode";
         public const string OptionUserDebugModeDescription =
             "If true, debug output will be printed to the test console.";
 
-        public override bool UserDebugMode => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionUserDebugMode, OptionUserDebugModeDefaultValue);
+        public override bool UserDebugMode => XmlOptions.UserDebugMode;
 
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
-        public const string OptionAdditionalTestExecutionParamDefaultValue = "";
-        private const string RegOptionAdditionalTestExecutionParam = "AdditionalTestExecutionParams";
+        public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string AdditionalTestExecutionParam => RegistryReader.ReadString(RegOptionGeneralBase, RegOptionAdditionalTestExecutionParam, OptionAdditionalTestExecutionParamDefaultValue);
+        public override string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam;
 
         #endregion
 
@@ -262,16 +295,14 @@ namespace GoogleTestAdapter
 
         public const string OptionEnableParallelTestExecution = "Enable parallel test execution";
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
-        private const string RegOptionEnableParallelTestExecution = "EnableParallelTestExecution";
         public const string OptionEnableParallelTestExecutionDescription =
             "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";
 
-        public override bool ParallelTestExecution => RegistryReader.ReadBool(RegOptionParallelizationBase, RegOptionEnableParallelTestExecution, OptionEnableParallelTestExecutionDefaultValue);
+        public override bool ParallelTestExecution => XmlOptions.ParallelTestExecution;
 
 
         public const string OptionMaxNrOfThreads = "Maximum number of threads";
         public const int OptionMaxNrOfThreadsDefaultValue = 0;
-        private const string RegOptionMaxNrOfThreads = "MaxNumberOfThreads";
         public const string OptionMaxNrOfThreadsDescription =
             "Maximum number of threads to be used for test execution (0: all available threads).";
 
@@ -279,7 +310,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int result = RegistryReader.ReadInt(RegOptionParallelizationBase, RegOptionMaxNrOfThreads, OptionMaxNrOfThreadsDefaultValue);
+                int result = XmlOptions.MaxNrOfThreads;
                 if (result <= 0 || result > Environment.ProcessorCount)
                 {
                     result = Environment.ProcessorCount;
@@ -289,24 +320,22 @@ namespace GoogleTestAdapter
         }
 
 
-        public const string OptionTestSetupBatch = "Test setup batch file";
-        public const string OptionTestSetupBatchDefaultValue = "";
-        private const string RegOptionTestSetupBatch = "BatchForTestSetup";
-        public const string OptionTestSetupBatchDescription =
+        public const string OptionBatchForTestSetup = "Test setup batch file";
+        public const string OptionBatchForTestSetupDefaultValue = "";
+        public const string OptionBatchForTestSetupDescription =
             "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string TestSetupBatch => RegistryReader.ReadString(RegOptionParallelizationBase, RegOptionTestSetupBatch, OptionTestSetupBatchDefaultValue);
+        public override string BatchForTestSetup => XmlOptions.BatchForTestSetup;
 
 
-        public const string OptionTestTeardownBatch = "Test teardown batch file";
-        public const string OptionTestTeardownBatchDefaultValue = "";
-        private const string RegOptionTestTeardownBatch = "BatchForTestTeardown";
-        public const string OptionTestTeardownBatchDescription =
+        public const string OptionBatchForTestTeardown = "Test teardown batch file";
+        public const string OptionBatchForTestTeardownDefaultValue = "";
+        public const string OptionBatchForTestTeardownDescription =
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string TestTeardownBatch => RegistryReader.ReadString(RegOptionParallelizationBase, RegOptionTestTeardownBatch, OptionTestTeardownBatchDefaultValue);
+        public override string BatchForTestTeardown => XmlOptions.BatchForTestTeardown;
 
         #endregion
 
@@ -314,7 +343,6 @@ namespace GoogleTestAdapter
 
         public const string OptionReportWaitPeriod = "Wait period during result reporting";
         public const int OptionReportWaitPeriodDefaultValue = 0;
-        private const string RegOptionReportWaitPeriod = "ReportWaitPeriod";
         public const string OptionReportWaitPeriodDescription =
             "Sometimes, not all TestResults are recognized by VS. This is probably due to inter process communication - if anybody has a clean solution for this, please provide a patch. Until then, use this option to ovetcome such problems.\n" +
             "During test reporting, 0: do not pause at all, n: pause for 1ms every nth test (the higher, the faster; 1 is slowest)";
@@ -323,7 +351,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int period = RegistryReader.ReadInt(RegOptionAdvancedBase, RegOptionReportWaitPeriod, OptionReportWaitPeriodDefaultValue);
+                int period = XmlOptions.ReportWaitPeriod;
                 if (period < 0)
                 {
                     period = OptionReportWaitPeriodDefaultValue;

@@ -31,12 +31,12 @@ namespace GoogleTestAdapter.Runners
                 string testDirectory = Utils.GetTempDirectory();
                 userParameters = TestEnvironment.Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
-                string batch = TestEnvironment.Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
+                string batch = TestEnvironment.Options.GetBatchForTestSetup(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test setup", batch, runContext);
 
                 InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, runContext, handle);
 
-                batch = TestEnvironment.Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
+                batch = TestEnvironment.Options.GetBatchForTestTeardown(runContext.SolutionDirectory, testDirectory, ThreadId);
                 SafeRunBatch("Test teardown", batch, runContext);
 
                 string errorMessage;
