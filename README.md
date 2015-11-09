@@ -47,7 +47,7 @@ More precisely, traits are assigned to tests in three phases:
 
 1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression `*///Size,Medium` assigns the trait (Size,Medium) to all tests.
 2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration `TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Size, Small)` will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
-3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `*# param = 0*///Size,Large` will make sure that all parameterized tests where the parameter starts with a 0 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2). 
+3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `*# GetParam() = 0*///Size,Large` will make sure that all parameterized tests where the parameter starts with a 0 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2). 
 
 #### Parallelization
 
