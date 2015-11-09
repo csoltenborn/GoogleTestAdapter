@@ -27,7 +27,7 @@
     <ClCompile Include="FixtureTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
+    <ClCompile Include="$(SolutionDir)\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LongRunningTests.cpp">
