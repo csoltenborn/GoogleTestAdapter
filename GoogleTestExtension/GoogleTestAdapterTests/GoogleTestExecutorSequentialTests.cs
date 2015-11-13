@@ -34,7 +34,7 @@ namespace GoogleTestAdapter
         }
 
 
-        [TestMethod, Ignore] // this fails on the CI build machine because of an OpenCover error
+        [TestMethod]
         public void CancelingExecutorStopsTestExecution()
         {
             List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");

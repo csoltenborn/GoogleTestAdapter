@@ -13,13 +13,6 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void ParallelTestExecutionSpeedsUpTestExecution()
         {
-            if (Environment.ProcessorCount < 2)
-            {
-                Trace.WriteLine("Warning: Test has not been executed since this is a single-core machine!");
-                return;
-                //Assert.Inconclusive("This test is designed for multi-core machines");
-            }
-
             Stopwatch stopwatch = new Stopwatch();
             GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
             IEnumerable<string> testsToRun = SampleTests.Yield();

@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.Dia
     public class ImportsParserTests : AbstractGoogleTestExtensionTests
     {
 
-        [TestMethod, Ignore] // this fails on the CI build machine
+        [TestMethod]
         public void ReadsImports()
         {
             NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(@"kernel32.dll", TestEnvironment);
