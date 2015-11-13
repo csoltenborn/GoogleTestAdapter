@@ -19,24 +19,48 @@ namespace GoogleTestAdapter
 
         /*
         Simple tests: 
-            TestSuite=<test_case_name>
-            TestCase=<test_name>
+            Suite=<test_case_name>
+            NameAndParam=<test_name>
         Tests with fixture
-            TestSuite=<test_fixture>
-            TestCase=<test_name>
+            Suite=<test_fixture>
+            NameAndParam=<test_name>
         Parameterized case: 
-            TestSuite=[<prefix>/]<test_case_name>, 
-            TestCase=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
+            Suite=[<prefix>/]<test_case_name>, 
+            NameAndParam=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
         */
-        private class SuiteTestCasePair
+        internal class TestCaseInfo
         {
-            internal string TestSuite { get; }
-            internal string TestCase { get; }
+            internal string Suite { get; }
 
-            internal SuiteTestCasePair(string testSuite, string testCase)
+            internal string NameAndParam { get; }
+
+            internal string Name
             {
-                this.TestSuite = testSuite;
-                this.TestCase = testCase;
+                get
+                {
+                    int startOfParamInfo = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
+                    return startOfParamInfo > 0 ? NameAndParam.Substring(0, startOfParamInfo).Trim() : NameAndParam;
+                }
+            }
+
+            internal string Param
+            {
+                get
+                {
+                    int indexOfMarker = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
+                    if (indexOfMarker < 0)
+                    {
+                        return "";
+                    }
+                    int startOfParam = indexOfMarker + GoogleTestConstants.ParameterizedTestMarker.Length;
+                    return NameAndParam.Substring(startOfParam, NameAndParam.Length - startOfParam).Trim();
+                }
+            }
+
+            internal TestCaseInfo(string suite, string nameAndParam)
+            {
+                this.Suite = suite;
+                this.NameAndParam = nameAndParam;
             }
         }
 
@@ -74,16 +98,16 @@ namespace GoogleTestAdapter
         public List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null, null);
-            List<SuiteTestCasePair> suiteTestCasePairs = ParseTestCases(consoleOutput);
-            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, suiteTestCasePairs);
+            List<TestCaseInfo> testCaseInfos = ParseTestCases(consoleOutput);
+            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, testCaseInfos);
 
-            TestEnvironment.LogInfo("Found " + suiteTestCasePairs.Count + " tests in executable " + executable);
+            TestEnvironment.LogInfo("Found " + testCaseInfos.Count + " tests in executable " + executable);
 
             List<TestCase> testCases = new List<TestCase>();
-            foreach (SuiteTestCasePair suiteCasePair in suiteTestCasePairs)
+            foreach (TestCaseInfo testCaseInfo in testCaseInfos)
             {
-                testCases.Add(ToTestCase(executable, suiteCasePair, sourceFileLocations));
-                TestEnvironment.DebugInfo("Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase);
+                testCases.Add(ToTestCase(executable, testCaseInfo, sourceFileLocations));
+                TestEnvironment.DebugInfo("Added testcase " + testCaseInfo.Suite + "." + testCaseInfo.NameAndParam);
             }
             return testCases;
         }
@@ -123,16 +147,16 @@ namespace GoogleTestAdapter
             TestEnvironment.CheckDebugModeForDiscoveryCode();
         }
 
-        private List<SuiteTestCasePair> ParseTestCases(List<string> output)
+        private List<TestCaseInfo> ParseTestCases(List<string> output)
         {
-            List<SuiteTestCasePair> suiteCasePairs = new List<SuiteTestCasePair>();
+            List<TestCaseInfo> testCaseInfos = new List<TestCaseInfo>();
             string currentSuite = "";
             foreach (string line in output)
             {
                 string trimmedLine = line.Trim('.', '\n', '\r');
                 if (trimmedLine.StartsWith("  "))
                 {
-                    suiteCasePairs.Add(new SuiteTestCasePair(currentSuite, trimmedLine.Substring(2)));
+                    testCaseInfos.Add(new TestCaseInfo(currentSuite, trimmedLine.Substring(2)));
                 }
                 else
                 {
@@ -141,10 +165,10 @@ namespace GoogleTestAdapter
                 }
             }
 
-            return suiteCasePairs;
+            return testCaseInfos;
         }
 
-        private List<SourceFileLocation> GetSourceFileLocations(string executable, List<SuiteTestCasePair> testcases)
+        private List<SourceFileLocation> GetSourceFileLocations(string executable, List<TestCaseInfo> testcases)
         {
             List<string> testMethodSignatures = testcases.Select(GetTestMethodSignature).ToList();
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
@@ -152,32 +176,37 @@ namespace GoogleTestAdapter
             return resolver.ResolveAllMethods(executable, testMethodSignatures, filterString);
         }
 
-        private string GetTestMethodSignature(SuiteTestCasePair pair)
+        private string GetTestMethodSignature(TestCaseInfo testCaseInfo)
         {
-            if (!pair.TestCase.Contains(GoogleTestConstants.ParameterizedTestMarker))
+            if (!testCaseInfo.NameAndParam.Contains(GoogleTestConstants.ParameterizedTestMarker))
             {
-                return GoogleTestConstants.GetTestMethodSignature(pair.TestSuite, pair.TestCase);
+                return GoogleTestConstants.GetTestMethodSignature(testCaseInfo.Suite, testCaseInfo.NameAndParam);
             }
 
-            int index = pair.TestSuite.IndexOf('/');
-            string suite = index < 0 ? pair.TestSuite : pair.TestSuite.Substring(index + 1);
+            int index = testCaseInfo.Suite.IndexOf('/');
+            string suite = index < 0 ? testCaseInfo.Suite : testCaseInfo.Suite.Substring(index + 1);
 
-            index = pair.TestCase.IndexOf('/');
-            string testName = index < 0 ? pair.TestCase : pair.TestCase.Substring(0, index);
+            index = testCaseInfo.NameAndParam.IndexOf('/');
+            string testName = index < 0 ? testCaseInfo.NameAndParam : testCaseInfo.NameAndParam.Substring(0, index);
 
             return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
-        private TestCase ToTestCase(string executable, SuiteTestCasePair suiteCasePair, List<SourceFileLocation> sourceFileLocations)
+        private TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<SourceFileLocation> sourceFileLocations)
         {
-            string displayName = suiteCasePair.TestSuite + "." + suiteCasePair.TestCase;
-            string symbolName = GetTestMethodSignature(suiteCasePair);
+            string fullName = testCaseInfo.Suite + "." + testCaseInfo.NameAndParam;
+            string displayName = testCaseInfo.Suite + "." + testCaseInfo.Name;
+            if (!string.IsNullOrEmpty(testCaseInfo.Param))
+            {
+                displayName += $" [{testCaseInfo.Param}]";
+            }
+            string symbolName = GetTestMethodSignature(testCaseInfo);
 
             foreach (SourceFileLocation location in sourceFileLocations)
             {
                 if (location.Symbol.Contains(symbolName))
                 {
-                    TestCase testCase = new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+                    TestCase testCase = new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
                     {
                         DisplayName = displayName,
                         CodeFilePath = location.Sourcefile,
@@ -188,8 +217,8 @@ namespace GoogleTestAdapter
                 }
             }
 
-            TestEnvironment.LogWarning("Could not find source location for test " + displayName);
-            return new TestCase(displayName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+            TestEnvironment.LogWarning("Could not find source location for test " + fullName);
+            return new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
             {
                 DisplayName = displayName
             };
