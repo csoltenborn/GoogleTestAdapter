@@ -35,12 +35,16 @@ namespace GoogleTestAdapter
             var navigator = inputRunSettingDocument.CreateNavigator();
             if (navigator.MoveToChild("RunSettings", ""))
             {
+                RunSettings currentRunSettings = new RunSettings();
                 if (navigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
                 {
+                    currentRunSettings = RunSettings.LoadFromXml(navigator.ReadSubtree());
                     navigator.DeleteSelf();
                 }
 
-                navigator.AppendChild(globalRunSettings.RunSettings.ToXml().CreateNavigator());
+                currentRunSettings.ComplementUnsetValuesWith(globalRunSettings.RunSettings);
+
+                navigator.AppendChild(currentRunSettings.ToXml().CreateNavigator());
             }
 
             navigator.MoveToRoot();
@@ -160,7 +164,7 @@ namespace GoogleTestAdapter
         public const string OptionPrintTestOutputDescription =
             "Print the output of the Google Test executable(s) to the Tests Output window.";
 
-        public override bool PrintTestOutput => XmlOptions.PrintTestOutput;
+        public override bool PrintTestOutput => XmlOptions.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
 
 
         public const string OptionTestDiscoveryRegex = "Regex for test discovery";
@@ -169,7 +173,7 @@ namespace GoogleTestAdapter
             "If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: "
             + GoogleTestDiscoverer.TestFinderRegex;
 
-        public override string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex;
+        public override string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
         public const string OptionRunDisabledTests = "Also run disabled tests";
@@ -178,7 +182,7 @@ namespace GoogleTestAdapter
             "If true, all (selected) tests will be run, even if they have been disabled.\n"
             + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
 
-        public override bool RunDisabledTests => XmlOptions.RunDisabledTests;
+        public override bool RunDisabledTests => XmlOptions.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
 
 
         public const string OptionNrOfTestRepetitions = "Number of test repetitions";
@@ -191,7 +195,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int nrOfRepetitions = XmlOptions.NrOfTestRepetitions;
+                int nrOfRepetitions = XmlOptions.NrOfTestRepetitions ?? OptionNrOfTestRepetitionsDefaultValue;
                 if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
                 {
                     nrOfRepetitions = OptionNrOfTestRepetitionsDefaultValue;
@@ -207,7 +211,7 @@ namespace GoogleTestAdapter
             "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
             + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
 
-        public override bool ShuffleTests => XmlOptions.ShuffleTests;
+        public override bool ShuffleTests => XmlOptions.ShuffleTests ?? OptionShuffleTestsDefaultValue;
 
 
         public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
@@ -222,7 +226,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int seed = XmlOptions.ShuffleTestsSeed;
+                int seed = XmlOptions.ShuffleTestsSeed ?? OptionShuffleTestsSeedDefaultValue;
                 if (seed < GoogleTestConstants.ShuffleTestsSeedMinValue || seed > GoogleTestConstants.ShuffleTestsSeedMaxValue)
                 {
                     seed = OptionShuffleTestsSeedDefaultValue;
@@ -256,7 +260,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                string option = XmlOptions.TraitsRegexesBefore;
+                string option = XmlOptions.TraitsRegexesBefore ?? OptionTraitsRegexesDefaultValue;
                 return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
@@ -267,7 +271,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                string option = XmlOptions.TraitsRegexesAfter;
+                string option = XmlOptions.TraitsRegexesAfter ?? OptionTraitsRegexesDefaultValue;
                 return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
@@ -278,7 +282,7 @@ namespace GoogleTestAdapter
         public const string OptionUserDebugModeDescription =
             "If true, debug output will be printed to the test console.";
 
-        public override bool UserDebugMode => XmlOptions.UserDebugMode;
+        public override bool UserDebugMode => XmlOptions.UserDebugMode ?? OptionUserDebugModeDefaultValue;
 
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
@@ -287,7 +291,7 @@ namespace GoogleTestAdapter
             "Additional parameters for Google Test executable. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam;
+        public override string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
         #endregion
 
@@ -298,7 +302,7 @@ namespace GoogleTestAdapter
         public const string OptionEnableParallelTestExecutionDescription =
             "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";
 
-        public override bool ParallelTestExecution => XmlOptions.ParallelTestExecution;
+        public override bool ParallelTestExecution => XmlOptions.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
 
 
         public const string OptionMaxNrOfThreads = "Maximum number of threads";
@@ -310,7 +314,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int result = XmlOptions.MaxNrOfThreads;
+                int result = XmlOptions.MaxNrOfThreads ?? OptionMaxNrOfThreadsDefaultValue;
                 if (result <= 0 || result > Environment.ProcessorCount)
                 {
                     result = Environment.ProcessorCount;
@@ -326,7 +330,7 @@ namespace GoogleTestAdapter
             "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string BatchForTestSetup => XmlOptions.BatchForTestSetup;
+        public override string BatchForTestSetup => XmlOptions.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
 
         public const string OptionBatchForTestTeardown = "Test teardown batch file";
@@ -335,7 +339,7 @@ namespace GoogleTestAdapter
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string BatchForTestTeardown => XmlOptions.BatchForTestTeardown;
+        public override string BatchForTestTeardown => XmlOptions.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
         #endregion
 
@@ -351,7 +355,7 @@ namespace GoogleTestAdapter
         {
             get
             {
-                int period = XmlOptions.ReportWaitPeriod;
+                int period = XmlOptions.ReportWaitPeriod ?? OptionReportWaitPeriodDefaultValue;
                 if (period < 0)
                 {
                     period = OptionReportWaitPeriodDefaultValue;
