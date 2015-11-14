@@ -77,41 +77,18 @@ namespace GoogleTestAdapter.Helpers
         [TestMethod]
         public void LogInfoAsDebug_ProducesMessageOnlyIfDebugMode()
         {
-            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("DebugMode", BindingFlags.NonPublic | BindingFlags.Static);
-            // ReSharper disable once PossibleNullReferenceException
-            fieldInfo.SetValue(null, false);
+            MockOptions.Setup(o => o.DebugMode).Returns(false);
 
-            Environment.LogInfo("bar", TestEnvironment.LogType.Debug);
+            Environment.DebugInfo("bar");
 
             MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
                 It.Is<string>(s => s.Contains("bar"))),
                 Times.Never());
 
-            // ReSharper disable once PossibleNullReferenceException
-            fieldInfo.SetValue(null, true);
+            MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            Environment.LogInfo("bar", TestEnvironment.LogType.Debug);
-
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
-                It.Is<string>(s => s.Contains("bar"))),
-                Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void LogInfoAsUserDebug_ProducesMessageOnlyIfUserDebugMode()
-        {
-            Environment.LogInfo("bar", TestEnvironment.LogType.UserDebug);
-
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
-                It.Is<string>(s => s.Contains("bar"))),
-                Times.Never());
-
-            MockOptions.Setup(o => o.UserDebugMode).Returns(true);
-
-            Environment.LogInfo("bar", TestEnvironment.LogType.UserDebug);
+            Environment.DebugInfo("bar");
 
             MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),

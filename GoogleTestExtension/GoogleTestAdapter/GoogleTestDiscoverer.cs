@@ -83,7 +83,7 @@ namespace GoogleTestAdapter
             foreach (SuiteTestCasePair suiteCasePair in suiteTestCasePairs)
             {
                 testCases.Add(ToTestCase(executable, suiteCasePair, sourceFileLocations));
-                TestEnvironment.LogInfo("Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase, TestEnvironment.LogType.Debug);
+                TestEnvironment.DebugInfo("Added testcase " + suiteCasePair.TestSuite + "." + suiteCasePair.TestCase);
             }
             return testCases;
         }
@@ -103,8 +103,8 @@ namespace GoogleTestAdapter
                 matches = SafeMatches(executable, customRegex);
             }
 
-            TestEnvironment.LogInfo(
-                    executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'", TestEnvironment.LogType.UserDebug);
+            TestEnvironment.DebugInfo(
+                    executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
 
             return matches;
         }

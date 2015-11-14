@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.Dia
                 List<string> imports = parser.Imports;
 
                 string moduleDirectory = Path.GetDirectoryName(executable);
-                TestEnvironment.LogInfo("", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo("");
 
                 foreach (string import in imports)
                 {

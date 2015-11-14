@@ -67,9 +67,9 @@ namespace GoogleTestAdapterVSIX
         public int ShuffleTestsSeed { get; set; } = Options.OptionShuffleTestsSeedDefaultValue;
 
         [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionUserDebugMode)]
-        [Description(Options.OptionUserDebugModeDescription)]
-        public bool UserDebugMode { get; set; } = Options.OptionUserDebugModeDefaultValue;
+        [DisplayName(Options.OptionDebugMode)]
+        [Description(Options.OptionDebugModeDescription)]
+        public bool DebugMode { get; set; } = Options.OptionDebugModeDefaultValue;
 
         [Category(Options.CategoryName)]
         [DisplayName(Options.OptionTraitsRegexesBefore)]

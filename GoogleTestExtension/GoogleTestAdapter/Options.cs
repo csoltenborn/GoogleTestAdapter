@@ -29,7 +29,7 @@ namespace GoogleTestAdapter
         public abstract int ShuffleTestsSeed { get; }
         public abstract List<RegexTraitPair> TraitsRegexesBefore { get; }
         public abstract List<RegexTraitPair> TraitsRegexesAfter { get; }
-        public abstract bool UserDebugMode { get; }
+        public abstract bool DebugMode { get; }
 
         public abstract bool ParallelTestExecution { get; }
         public abstract int MaxNrOfThreads { get; }
@@ -238,13 +238,13 @@ namespace GoogleTestAdapter
         }
 
 
-        public const string OptionUserDebugMode = "Debug mode";
-        public const bool OptionUserDebugModeDefaultValue = false;
-        private const string RegOptionUserDebugMode = "UserDebugMode";
-        public const string OptionUserDebugModeDescription =
+        public const string OptionDebugMode = "Debug mode";
+        public const bool OptionDebugModeDefaultValue = false;
+        private const string RegOptionDebugMode = "DebugMode";
+        public const string OptionDebugModeDescription =
             "If true, debug output will be printed to the test console.";
 
-        public override bool UserDebugMode => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionUserDebugMode, OptionUserDebugModeDefaultValue);
+        public override bool DebugMode => RegistryReader.ReadBool(RegOptionGeneralBase, RegOptionDebugMode, OptionDebugModeDefaultValue);
 
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";

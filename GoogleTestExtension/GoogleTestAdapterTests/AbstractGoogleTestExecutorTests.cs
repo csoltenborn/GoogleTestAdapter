@@ -88,10 +88,7 @@ namespace GoogleTestAdapter
         public virtual void RunsExternallyLinkedX86TestsWithResultInDebugMode()
         {
             // for at least having the debug messaging code executed once
-            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("DebugMode", BindingFlags.NonPublic | BindingFlags.Static);
-            // ReSharper disable once PossibleNullReferenceException
-            fieldInfo.SetValue(null, true);
-            MockOptions.Setup(o => o.UserDebugMode).Returns(true);
+            MockOptions.Setup(o => o.DebugMode).Returns(true);
 
             RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
         }

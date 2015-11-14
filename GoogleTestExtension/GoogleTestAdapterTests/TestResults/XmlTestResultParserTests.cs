@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
-            MockOptions.Setup(o => o.UserDebugMode).Returns(true);
+            MockOptions.Setup(o => o.DebugMode).Returns(true);
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();

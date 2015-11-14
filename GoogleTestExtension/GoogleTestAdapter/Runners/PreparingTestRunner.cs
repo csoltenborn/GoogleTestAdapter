@@ -42,9 +42,8 @@ namespace GoogleTestAdapter.Runners
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
                 {
-                    TestEnvironment.LogWarning(
-                        "Could not delete test directory '" + testDirectory + "': " + errorMessage,
-                        TestEnvironment.LogType.UserDebug);
+                    TestEnvironment.DebugWarning(
+                        "Could not delete test directory '" + testDirectory + "': " + errorMessage);
                 }
             }
             catch (Exception e)
@@ -85,8 +84,8 @@ namespace GoogleTestAdapter.Runners
                 out batchExitCode);
             if (batchExitCode == 0)
             {
-                TestEnvironment.LogInfo(
-                    "Successfully ran " + batchType + "batch '" + batch + "'", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo(
+                    "Successfully ran " + batchType + "batch '" + batch + "'");
             }
             else
             {

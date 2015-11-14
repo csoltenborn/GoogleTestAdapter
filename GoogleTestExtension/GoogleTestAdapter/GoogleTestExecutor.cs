@@ -113,9 +113,8 @@ namespace GoogleTestAdapter
                 Runner = new PreparingTestRunner(0, TestEnvironment);
                 if (TestEnvironment.Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
-                    TestEnvironment.LogInfo(
-                        "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.",
-                        TestEnvironment.LogType.UserDebug);
+                    TestEnvironment.DebugInfo(
+                        "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
                 }
             }
         }

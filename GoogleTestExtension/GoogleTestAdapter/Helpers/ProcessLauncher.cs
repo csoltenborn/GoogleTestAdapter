@@ -77,9 +77,8 @@ namespace GoogleTestAdapter.Helpers
             TestEnvironment.LogInfo("Attaching debugger to " + command);
             if (printTestOutput)
             {
-                TestEnvironment.LogInfo(
-                    "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!",
-                    TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo(
+                    "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
             }
             int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param,
                 null);

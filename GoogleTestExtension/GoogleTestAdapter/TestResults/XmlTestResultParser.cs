@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(XmlResultFile);
-                TestEnvironment.LogInfo("Loaded test results from " + XmlResultFile, TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo("Loaded test results from " + XmlResultFile);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
@@ -62,11 +62,11 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                TestEnvironment.LogWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
             catch (NullReferenceException e)
             {
-                TestEnvironment.LogWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message, TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
 
             return testResults;

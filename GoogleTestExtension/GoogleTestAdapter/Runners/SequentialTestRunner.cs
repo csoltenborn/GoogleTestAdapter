@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.Runners
 
                 reporter.ReportTestsStarted(handle, arguments.TestCases);
 
-                TestEnvironment.LogInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 

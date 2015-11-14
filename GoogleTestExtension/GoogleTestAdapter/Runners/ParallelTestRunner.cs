@@ -58,8 +58,7 @@ namespace GoogleTestAdapter.Runners
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
             TestEnvironment.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
-            TestEnvironment.LogInfo("Note that no test output will be shown on the test console when executing tests concurrently!",
-                TestEnvironment.LogType.UserDebug);
+            TestEnvironment.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
 
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
@@ -83,12 +82,12 @@ namespace GoogleTestAdapter.Runners
             if (durations.Count < testCasesToRun.Length)
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun, TestEnvironment);
-                TestEnvironment.LogInfo("Using splitter based on number of tests", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo("Using splitter based on number of tests");
             }
             else
             {
                 splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-                TestEnvironment.LogInfo("Using splitter based on test durations", TestEnvironment.LogType.UserDebug);
+                TestEnvironment.DebugInfo("Using splitter based on test durations");
             }
 
             return splitter;
