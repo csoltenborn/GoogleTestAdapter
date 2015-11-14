@@ -9,11 +9,10 @@ namespace GoogleTestAdapter.Helpers
     public class TestEnvironment
     {
 
-        public enum LogType { Normal, UserDebug, Debug }
+        private enum LogType { Normal, Debug }
 
 
         // for developing and testing the test adapter itself
-        private static bool DebugMode = false;
         private static bool UnitTestMode = false;
 
         private static bool AlreadyAskedForDebugger { get; set; } = false;
@@ -32,19 +31,34 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        public void LogInfo(string message, LogType logType = LogType.Normal)
+        public void LogInfo(string message)
         {
-            Log(message, logType, TestMessageLevel.Informational, "");
+            Log(message, LogType.Normal, TestMessageLevel.Informational, "");
         }
 
-        public void LogWarning(string message, LogType logType = LogType.Normal)
+        public void LogWarning(string message)
         {
-            Log(message, logType, TestMessageLevel.Warning, "Warning: ");
+            Log(message, LogType.Normal, TestMessageLevel.Warning, "Warning: ");
         }
 
-        public void LogError(string message, LogType logType = LogType.Normal)
+        public void LogError(string message)
         {
-            Log(message, logType, TestMessageLevel.Error, "ERROR: ");
+            Log(message, LogType.Normal, TestMessageLevel.Error, "ERROR: ");
+        }
+
+        public void DebugInfo(string message)
+        {
+            Log(message, LogType.Debug, TestMessageLevel.Informational, "");
+        }
+
+        public void DebugWarning(string message)
+        {
+            Log(message, LogType.Debug, TestMessageLevel.Warning, "Warning: ");
+        }
+
+        public void DebugError(string message)
+        {
+            Log(message, LogType.Debug, TestMessageLevel.Error, "ERROR: ");
         }
 
         public void CheckDebugModeForExecutionCode()
@@ -67,10 +81,7 @@ namespace GoogleTestAdapter.Helpers
                     log = true;
                     break;
                 case LogType.Debug:
-                    log = DebugMode;
-                    break;
-                case LogType.UserDebug:
-                    log = Options.UserDebugMode;
+                    log = Options.DebugMode;
                     break;
                 default:
                     throw new Exception("Unknown LogType: " + logType);
@@ -99,8 +110,8 @@ namespace GoogleTestAdapter.Helpers
             string processName = Process.GetCurrentProcess().MainModule.ModuleName;
             int processId = Process.GetCurrentProcess().Id;
 
-            LogInfo($"Test {taskType} is running in the process '{processName}' with id {processId}.", LogType.Debug);
-            if (DebugMode && !UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
+            DebugInfo($"Test {taskType} is running in the process '{processName}' with id {processId}.");
+            if (Options.DebugMode && !UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
             {
                 AlreadyAskedForDebugger = true;
 
