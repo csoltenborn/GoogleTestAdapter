@@ -77,11 +77,10 @@ namespace GoogleTestAdapter
 
         private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
-            if (TestEnvironment == null)
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options))
             {
-                RunSettings ourRunSettings;
                 var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-                ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
 
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, messageLogger), messageLogger);
             }

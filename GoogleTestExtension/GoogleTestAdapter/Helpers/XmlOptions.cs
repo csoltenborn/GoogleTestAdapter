@@ -28,7 +28,7 @@ namespace GoogleTestAdapter.Helpers
 
     public static class XmlOptionsExtension
     {
-        public static void ComplementUnsetValuesWith(this IXmlOptions self, IXmlOptions other)
+        public static void GetUnsetValuesFrom(this IXmlOptions self, IXmlOptions other)
         {
             self.AdditionalTestExecutionParam   = self.AdditionalTestExecutionParam ?? other.AdditionalTestExecutionParam;
             self.MaxNrOfThreads                 = self.MaxNrOfThreads               ?? other.MaxNrOfThreads;
@@ -116,7 +116,7 @@ namespace GoogleTestAdapter.Helpers
         {
             ValidateArg.NotNull(reader, nameof(reader));
 
-            RunSettings runSettings = new RunSettings();
+            var runSettings = new RunSettings();
             if (reader.Read() && reader.Name.Equals(GoogleTestConstants.SettingsName))
             {
                 try
@@ -132,5 +132,7 @@ namespace GoogleTestAdapter.Helpers
 
             return runSettings;
         }
+
     }
+
 }

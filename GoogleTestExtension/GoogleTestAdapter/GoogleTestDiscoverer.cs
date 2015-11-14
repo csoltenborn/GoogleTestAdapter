@@ -112,11 +112,10 @@ namespace GoogleTestAdapter
 
         private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger logger)
         {
-            if (TestEnvironment == null)
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options))
             {
-                RunSettings ourRunSettings;
                 var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-                ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
 
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, logger), logger);
             }
@@ -240,13 +239,11 @@ namespace GoogleTestAdapter
             }
             catch (ArgumentException e)
             {
-                TestEnvironment.LogError(
-                    "Regex '" + regex + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                TestEnvironment.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
             }
             catch (RegexMatchTimeoutException e)
             {
-                TestEnvironment.LogError(
-                    "Regex '" + regex + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                TestEnvironment.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
         }

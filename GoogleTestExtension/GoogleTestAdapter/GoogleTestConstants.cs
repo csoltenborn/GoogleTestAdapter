@@ -4,6 +4,8 @@
     public static class GoogleTestConstants
     {
         public const string SettingsName = "GoogleTestAdapter";
+        public const string SettingsExtension = ".gta.runsettings";
+        public const string DurationsExtension = ".gta.testdurations";
 
         public const string AlsoRunDisabledTestsOption = " --gtest_also_run_disabled_tests";
         public const string ShuffleTestsOption = " --gtest_shuffle";
