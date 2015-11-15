@@ -5,11 +5,11 @@
 
 #include "../Tests/Main.cpp"
 
+extern "C" void CrashReallyHard(void);
+
 TEST(Crashing, TheCrash)
 {
-	__asm {
-		mov esp, 0
-	}
+	CrashReallyHard();
 }
 
 TEST(Crashing, AddFails)

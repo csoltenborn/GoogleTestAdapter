@@ -100,7 +100,9 @@ namespace GoogleTestAdapter.Helpers
         {
             if (string.IsNullOrWhiteSpace(message))
             {
-                message = " ";
+                // Visual Studio 2013 is very picky about empty lines...
+                // But it accepts an 'INVISIBLE SEPARATOR' (U+2063)  :-)
+                message = "\u2063";
             }
             Logger.SendMessage(level, message);
         }

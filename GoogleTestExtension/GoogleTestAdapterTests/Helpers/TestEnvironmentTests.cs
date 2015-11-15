@@ -20,35 +20,35 @@ namespace GoogleTestAdapter.Helpers
 
 
         [TestMethod]
-        public void LogInfoHandlesNull_ProducesSpace()
+        public void LogInfoHandlesNull_ProducesNonNullOrWhitespace()
         {
             Environment.LogInfo(null);
 
             MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
-                It.Is<string>(s => " ".Equals(s))),
+                It.Is<string>(s => !string.IsNullOrWhiteSpace(s))),
                 Times.Exactly(1));
         }
 
         [TestMethod]
-        public void LogInfoHandlesEmptyString_ProducesSpace()
+        public void LogInfoHandlesEmptyString_ProducesNonNullOrWhitespace()
         {
             Environment.LogInfo("");
 
             MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
-                It.Is<string>(s => " ".Equals(s))),
+                It.Is<string>(s => !string.IsNullOrWhiteSpace(s))),
                 Times.Exactly(1));
         }
 
         [TestMethod]
-        public void LogInfoHandlesWhitespace_ProducesSpace()
+        public void LogInfoHandlesWhitespace_ProducesNonNullOrWhitespace()
         {
             Environment.LogInfo("\n");
 
             MockLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
-                It.Is<string>(s => " ".Equals(s))),
+                It.Is<string>(s => !string.IsNullOrWhiteSpace(s))),
                 Times.Exactly(1));
         }
 
