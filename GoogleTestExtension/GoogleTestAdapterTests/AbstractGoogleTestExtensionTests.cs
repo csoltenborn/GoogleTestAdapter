@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -16,8 +17,8 @@ namespace GoogleTestAdapter
         private const string SampleTestsSolutionDir = @"..\..\..\..\SampleGoogleTestTests\";
         private const string TestdataDir = @"Resources\TestData\";
 
-        protected const string Results0Batch = SampleTestsSolutionDir + @"Tests\Returns0.bat";
-        protected const string Results1Batch = SampleTestsSolutionDir + @"Tests\Returns1.bat";
+        protected const string Results0Batch = @"Tests\Returns0.bat";
+        protected const string Results1Batch = @"Tests\Returns1.bat";
         protected const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
         protected const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
 
@@ -63,6 +64,9 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(1);
+            MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
+
+            MockRunContext.Setup(rc => rc.SolutionDirectory).Returns(Path.GetFullPath(SampleTestsSolutionDir));
         }
 
         [TestCleanup]
