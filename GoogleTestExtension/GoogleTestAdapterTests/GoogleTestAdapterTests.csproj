@@ -47,11 +47,23 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
       <HintPath>..\lib\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Core">
+      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -97,6 +109,12 @@
   <ItemGroup>
     <None Include="Key.snk" />
     <None Include="packages.config" />
+    <Content Include="Resources\TestData\RunSettingsServiceTests\Solution.gta.runsettings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestData\RunSettingsServiceTests\User.runsettings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\TestData\_x64\CrashingGoogleTests\CrashingGoogleTests.exe.gta_testdurations" />
     <None Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe.gta_testdurations" />
     <None Include="Resources\TestData\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe.gta_testdurations" />

@@ -25,10 +25,12 @@ namespace GoogleTestAdapter
     {
         public string Name { get { return GoogleTestConstants.SettingsName; } }
 
+        public string SolutionSettingsFile_ForTesting { get; set; } = null;
+
         private IGlobalRunSettings globalRunSettings;
 
         [ImportingConstructor]
-        RunSettingsService([Import(typeof(IGlobalRunSettings))] IGlobalRunSettings globalRunSettings)
+        public RunSettingsService([Import(typeof(IGlobalRunSettings))] IGlobalRunSettings globalRunSettings)
         {
             this.globalRunSettings = globalRunSettings;
         }
@@ -49,7 +51,8 @@ namespace GoogleTestAdapter
                 userRunSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
             }
 
-            string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
+            // FIXME test code
+            string solutionRunSettingsFile = SolutionSettingsFile_ForTesting ?? GetSolutionSettingsXmlFile();
             try
             {
                 if (File.Exists(solutionRunSettingsFile))
