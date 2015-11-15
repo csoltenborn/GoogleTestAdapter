@@ -37,8 +37,6 @@ namespace GoogleTestAdapter.Scheduling
 
     public class TestDurationSerializer
     {
-        private const string FileEndingTestDurations = ".gta_testdurations";
-
         private static object Lock { get; } = new object();
         private static readonly TestDuration Default = new TestDuration();
 
@@ -163,7 +161,7 @@ namespace GoogleTestAdapter.Scheduling
 
         private string GetDurationsFile(string executable)
         {
-            return executable + FileEndingTestDurations;
+            return executable + GoogleTestConstants.DurationsExtension;
         }
 
     }

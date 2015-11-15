@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter
 {
@@ -34,7 +35,7 @@ namespace GoogleTestAdapter
         {
             try
             {
-                InitTestEnvironment(frameworkHandle);
+                InitTestEnvironment(runContext.RunSettings, frameworkHandle);
 
                 ComputeAllTestCasesInExecutables(executables);
 
@@ -50,7 +51,7 @@ namespace GoogleTestAdapter
         {
             try
             {
-                InitTestEnvironment(frameworkHandle);
+                InitTestEnvironment(runContext.RunSettings, frameworkHandle);
 
                 TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
                 ComputeAllTestCasesInExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct());
@@ -74,11 +75,14 @@ namespace GoogleTestAdapter
         }
 
 
-        private void InitTestEnvironment(IFrameworkHandle frameworkHandle)
+        private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
-            if (TestEnvironment == null)
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options))
             {
-                TestEnvironment = new TestEnvironment(new Options(frameworkHandle), frameworkHandle);
+                var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
+                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+
+                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, messageLogger), messageLogger);
             }
 
             TestEnvironment.CheckDebugModeForExecutionCode();

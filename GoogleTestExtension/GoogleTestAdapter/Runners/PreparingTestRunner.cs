@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -31,13 +32,15 @@ namespace GoogleTestAdapter.Runners
                 string testDirectory = Utils.GetTempDirectory();
                 userParameters = TestEnvironment.Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
-                string batch = TestEnvironment.Options.GetTestSetupBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
-                SafeRunBatch("Test setup", batch, runContext);
+                string batch = runContext.SolutionDirectory;
+                batch += TestEnvironment.Options.GetBatchForTestSetup(runContext.SolutionDirectory, testDirectory, ThreadId);
+                SafeRunBatch("Test setup", runContext.SolutionDirectory, batch, runContext);
 
                 InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, runContext, handle);
 
-                batch = TestEnvironment.Options.GetTestTeardownBatch(runContext.SolutionDirectory, testDirectory, ThreadId);
-                SafeRunBatch("Test teardown", batch, runContext);
+                batch = runContext.SolutionDirectory;
+                batch += TestEnvironment.Options.GetBatchForTestTeardown(runContext.SolutionDirectory, testDirectory, ThreadId);
+                SafeRunBatch("Test teardown", runContext.SolutionDirectory, batch, runContext);
 
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
@@ -58,16 +61,21 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void SafeRunBatch(string batchType, string batch, IRunContext runContext)
+        private void SafeRunBatch(string batchType, string workingDirectory, string batch, IRunContext runContext)
         {
             if (string.IsNullOrEmpty(batch))
             {
                 return;
             }
+            if (!File.Exists(batch))
+            {
+                TestEnvironment.LogError("Did not find " + batchType.ToLower() + " batch file: " + batch);
+                return;
+            }
 
             try
             {
-                RunBatch(batchType, batch, runContext);
+                RunBatch(batchType, workingDirectory, batch, runContext);
             }
             catch (Exception e)
             {
@@ -77,11 +85,11 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private void RunBatch(string batchType, string batch, IRunContext runContext)
+        private void RunBatch(string batchType, string workingDirectory, string batch, IRunContext runContext)
         {
             int batchExitCode;
-            new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", batch, "", false, false, runContext, null,
-                out batchExitCode);
+            new ProcessLauncher(TestEnvironment).GetOutputOfCommand(
+                workingDirectory, batch, "", false, false, runContext, null, out batchExitCode);
             if (batchExitCode == 0)
             {
                 TestEnvironment.DebugInfo(
@@ -90,8 +98,8 @@ namespace GoogleTestAdapter.Runners
             else
             {
                 TestEnvironment.LogWarning(
-                    batchType + " batch returned exit code " + batchExitCode + ", executed command: '" +
-                    batch + "'");
+                    batchType + " batch returned exit code " + batchExitCode
+                    + ", executed command: '" + batch + "'");
             }
         }
 

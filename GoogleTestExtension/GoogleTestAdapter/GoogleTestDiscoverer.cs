@@ -60,7 +60,7 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            InitTestEnvironment(logger);
+            InitTestEnvironment(discoveryContext.RunSettings, logger);
 
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
@@ -110,11 +110,14 @@ namespace GoogleTestAdapter
         }
 
 
-        private void InitTestEnvironment(IMessageLogger logger)
+        private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger logger)
         {
-            if (TestEnvironment == null)
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options))
             {
-                TestEnvironment = new TestEnvironment(new Options(logger), logger);
+                var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
+                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+
+                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, logger), logger);
             }
 
             TestEnvironment.CheckDebugModeForDiscoveryCode();
@@ -236,13 +239,11 @@ namespace GoogleTestAdapter
             }
             catch (ArgumentException e)
             {
-                TestEnvironment.LogError(
-                    "Regex '" + regex + "' configured under Options/Google Test Adapter can not be parsed: " + e.Message);
+                TestEnvironment.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
             }
             catch (RegexMatchTimeoutException e)
             {
-                TestEnvironment.LogError(
-                    "Regex '" + regex + "' configured under Options/Google Test Adapter timed out: " + e.Message);
+                TestEnvironment.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
         }

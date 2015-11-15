@@ -16,6 +16,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * Test output can be piped to test console
 * Execution of parameterized batch files for test setup/teardown
 * Test discovery using a custom regex (if needed)
+* Settings can be shared via source control
 
 #### History
 
@@ -34,7 +35,13 @@ After restarting VS, your tests will be displayed in the test explorer at build 
 
 #### Configuration
 
-GTA is configured through Visual Studio's standard options at *Tools/Options/Google Test Adapter*.
+GTA is configured following Visual Studio's approach of configuration inheritance. There are three configuration levels:
+
+1. Global options are configured in *Tools/Options/Google Test Adapter*.
+2. Solution specific options override global options. They are provided by means of an XML configuration file; this allows sharing of settings via source control. The configuration file must be placed in the same folder as the solution's `.sln` file, and must have the same name as that file, but with extension `.gta.runsettings`. E.g., if the solution file's name is `Foo.sln`, the settings file must be named `Foo.gta.runsettings`. As a start, you can download a [sample solution test settings file](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleGoogleTestTests/SampleGoogleTestTests.gta.runsettings).
+3. Finally, VS allows for the selection of [test settings](https://msdn.microsoft.com/en-us/library/jj635153.aspx) files via the *Test/Test Settings* menu. GTA test settings can be added to an existing `.runsettings` file by adding a `GoogleTestAdapter` node to the `RunSettings` node of the file; such settings override global and solution settings.
+
+Note that due to the overriding hierarchy described above, you probably want to provide only a subset of the nodes under `GoogleTestAdapter` in your configuration files. For instance, providing the node `<DebugMode>true</DebugMode>` in a shared solution settings file will make sure that all sharing developers will run GTA with debug output, no matter what the developer's individual settings at *Tools/Options/Google Test Adapter* are (and unless the developer has selected a test settings file via VS which again overrides that setting).
 
 #### Assigning traits to tests
 
