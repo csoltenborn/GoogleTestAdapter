@@ -1,0 +1,6 @@
+<RunSettings>
+	<GoogleTestAdapter>
+		<ShuffleTests>true</ShuffleTests>
+		<NrOfTestRepetitions>5</NrOfTestRepetitions>
+	</GoogleTestAdapter>
+</RunSettings>

@@ -15,6 +15,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrashingTests", "CrashingTe
 		{1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0} = {1F2C133F-B7BD-4446-A65C-3F7EF9A22CE0}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0646ED7F-AD7D-4932-AB74-3597A853C461}"
+	ProjectSection(SolutionItems) = preProject
+		NonDeterministic.runsettings = NonDeterministic.runsettings
+		SampleGoogleTestTests.gta.runsettings = SampleGoogleTestTests.gta.runsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
