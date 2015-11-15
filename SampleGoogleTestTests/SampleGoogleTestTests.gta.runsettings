@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
 	<GoogleTestAdapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<AdditionalTestExecutionParam>-dir=$(TestDir)</AdditionalTestExecutionParam>
+		<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
 		<BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
 		<BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
 		<DebugMode>false</DebugMode>
