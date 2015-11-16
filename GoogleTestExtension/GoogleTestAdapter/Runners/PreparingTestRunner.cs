@@ -9,6 +9,9 @@ namespace GoogleTestAdapter.Runners
 {
     public class PreparingTestRunner : ITestRunner
     {
+        public const string TEST_SETUP = "Test setup";
+        public const string TEST_TEARDOWN = "Test teardown";
+
         private TestEnvironment TestEnvironment { get; }
         private ITestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
@@ -32,15 +35,15 @@ namespace GoogleTestAdapter.Runners
                 string testDirectory = Utils.GetTempDirectory();
                 userParameters = TestEnvironment.Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
 
-                string batch = runContext.SolutionDirectory;
-                batch += TestEnvironment.Options.GetBatchForTestSetup(runContext.SolutionDirectory, testDirectory, ThreadId);
-                SafeRunBatch("Test setup", runContext.SolutionDirectory, batch, runContext);
+                string batch = TestEnvironment.Options.GetBatchForTestSetup(runContext.SolutionDirectory, testDirectory, ThreadId);
+                batch = batch == "" ? "" : runContext.SolutionDirectory + batch;
+                SafeRunBatch(TEST_SETUP, runContext.SolutionDirectory, batch, runContext);
 
                 InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, runContext, handle);
 
-                batch = runContext.SolutionDirectory;
-                batch += TestEnvironment.Options.GetBatchForTestTeardown(runContext.SolutionDirectory, testDirectory, ThreadId);
-                SafeRunBatch("Test teardown", runContext.SolutionDirectory, batch, runContext);
+                batch = TestEnvironment.Options.GetBatchForTestTeardown(runContext.SolutionDirectory, testDirectory, ThreadId);
+                batch = batch == "" ? "" : runContext.SolutionDirectory + batch;
+                SafeRunBatch(TEST_TEARDOWN, runContext.SolutionDirectory, batch, runContext);
 
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))

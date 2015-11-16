@@ -111,6 +111,30 @@ namespace GoogleTestAdapter
             base.RunsExternallyLinkedX86TestsWithResultInDebugMode();
         }
 
+        [TestMethod]
+        public override void RunsWithoutBatches_NoLogging()
+        {
+            base.RunsWithoutBatches_NoLogging();
+        }
+
+        [TestMethod]
+        public override void RunsWithSetupAndTeardownBatches_SetupFails_LogsWarning()
+        {
+            base.RunsWithSetupAndTeardownBatches_SetupFails_LogsWarning();
+        }
+
+        [TestMethod]
+        public override void RunsWithSetupAndTeardownBatches_TeardownFails_LogsWarning()
+        {
+            base.RunsWithSetupAndTeardownBatches_TeardownFails_LogsWarning();
+        }
+
+        [TestMethod]
+        public override void RunsWithNonexistingSetupBatch_LogsError()
+        {
+            base.RunsWithNonexistingSetupBatch_LogsError();
+        }
+
         #endregion
 
     }

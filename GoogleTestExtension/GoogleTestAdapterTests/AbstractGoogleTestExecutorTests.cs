@@ -1,10 +1,10 @@
-﻿using System.Reflection;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Runners;
 
 namespace GoogleTestAdapter
 {
@@ -68,20 +68,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsExternallyLinkedX86TestsWithResult()
         {
-            // also tests batch execution
-            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Results0Batch);
-            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Results1Batch);
-
             RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
-
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
-                It.Is<string>(s => s.Contains("setup"))),
-                Times.Never);
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
-                It.Is<string>(s => s.Contains("teardown"))),
-                Times.AtLeastOnce());
         }
 
         [TestMethod]
@@ -105,20 +92,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void RunsExternallyLinkedX64TestsWithResult()
         {
-            // also tests batch execution
-            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Results1Batch);
-            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Results0Batch);
-
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
-
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
-                It.Is<string>(s => s.Contains("setup"))),
-                Times.AtLeastOnce());
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
-                It.Is<string>(s => s.Contains("teardown"))),
-                Times.Never);
         }
 
         [TestMethod]
@@ -146,6 +120,70 @@ namespace GoogleTestAdapter
             executor.RunTests(HardCrashingSampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(0, 1, 0, 3);
+        }
+
+        [TestMethod]
+        public virtual void RunsWithSetupAndTeardownBatches_TeardownFails_LogsWarning()
+        {
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Results0Batch);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Results1Batch);
+
+            RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
+
+            MockLogger.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
+                Times.Never);
+            MockLogger.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
+                Times.AtLeastOnce());
+        }
+
+        [TestMethod]
+        public virtual void RunsWithSetupAndTeardownBatches_SetupFails_LogsWarning()
+        {
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Results1Batch);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Results0Batch);
+
+            RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
+
+            MockLogger.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
+                Times.AtLeastOnce());
+            MockLogger.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
+                Times.Never);
+        }
+
+        [TestMethod]
+        public virtual void RunsWithoutBatches_NoLogging()
+        {
+            RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
+
+            MockLogger.Verify(l => l.SendMessage(
+                It.IsAny<TestMessageLevel>(),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
+                Times.Never);
+            MockLogger.Verify(l => l.SendMessage(
+                It.IsAny<TestMessageLevel>(),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
+                Times.Never);
+        }
+
+        [TestMethod]
+        public virtual void RunsWithNonexistingSetupBatch_LogsError()
+        {
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns("some_nonexisting_file");
+
+            RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
+
+            MockLogger.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP.ToLower()))),
+                Times.AtLeastOnce());
         }
 
 
