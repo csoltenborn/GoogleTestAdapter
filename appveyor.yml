@@ -5,42 +5,67 @@ platform: Any CPU
 environment:
   COVERALLS_REPO_TOKEN:
     secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
+  RELEASE_KEY_PASSWORD:
+    secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
+install:
+- nuget install secure-file -ExcludeVersion
+- secure-file\tools\secure-file -decrypt GoogleTestExtension\Keys\Key_Release.snk.enc -secret %RELEASE_KEY_PASSWORD%
 before_build: 
 - cmd: >-
-    cd GoogleTestExtension
+  if "%APPVEYOR_REPO_TAG%" == "false" then del GoogleTestExtension\Keys\Key_Release.snk
 
-    SetVersion %APPVEYOR_BUILD_VERSION%
+  cd GoogleTestExtension
 
-    cd GoogleTestAdapterTests
+  SetVersion %APPVEYOR_BUILD_VERSION%
 
-    IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Dia\ImportsParserTests.cs::ReadsImports, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
+  cd GoogleTestAdapterTests
 
-    cd ..\..
+  IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Dia\ImportsParserTests.cs::ReadsImports, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
+
+  cd ..\..
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   parallel: true
   verbosity: normal
+after_build:
+- ps: >-
+  $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
+
+  $sourceFile = "GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix"
+
+  $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
+
+  Copy-Item -Path $sourceFile -Destination $targetFile
 test_script:
 - ps: >-
-    $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+  $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+  $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll" "-filter:+[*]* -[GoogleTestAdapterTests]*" -output:OpenCover_CoverageData.xml -returntargetcode
+  & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll" "-filter:+[*]* -[GoogleTestAdapterTests]*" -output:OpenCover_CoverageData.xml -returntargetcode
 
-    $TestExitCode = $LASTEXITCODE
+  $TestExitCode = $LASTEXITCODE
 
-    & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
+  & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
 
-    if ($TestExitCode -ne 0) {
-        exit $TestExitCode
-    }
+  if ($TestExitCode -ne 0) {
+    exit $TestExitCode
+  }
 artifacts:
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
-  name: GoogleTestAdapter.vsix
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
-  name: GoogleTestAdapter.pdb
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter-*.vsix
+  name: GoogleTestAdapter - VSIX file
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
+  artifact: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter-*.vsix
+  description: 'TODO provide release notes'
+  draft: true
+  prerelease: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
 notifications:
 - provider: Email
   to:
