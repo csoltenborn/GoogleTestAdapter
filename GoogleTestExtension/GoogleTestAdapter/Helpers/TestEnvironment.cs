@@ -113,7 +113,7 @@ namespace GoogleTestAdapter.Helpers
             int processId = Process.GetCurrentProcess().Id;
 
             DebugInfo($"Test {taskType} is running in the process '{processName}' with id {processId}.");
-            if (Options.DebugMode && !UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
+            if (Options.DevelopmentMode && !UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
             {
                 AlreadyAskedForDebugger = true;
 

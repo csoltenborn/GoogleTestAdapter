@@ -24,6 +24,7 @@ namespace GoogleTestAdapter.Helpers
         string TraitsRegexesAfter { get; set; }
         string TraitsRegexesBefore { get; set; }
         bool? DebugMode { get; set; }
+        bool? DevelopmentMode { get; set; }
     }
 
     public static class XmlOptionsExtension
@@ -45,6 +46,7 @@ namespace GoogleTestAdapter.Helpers
             self.TraitsRegexesAfter             = self.TraitsRegexesAfter           ?? other.TraitsRegexesAfter;
             self.TraitsRegexesBefore            = self.TraitsRegexesBefore          ?? other.TraitsRegexesBefore;
             self.DebugMode                      = self.DebugMode                    ?? other.DebugMode;
+            self.DevelopmentMode                = self.DevelopmentMode              ?? other.DevelopmentMode;
         }
     }
 
@@ -100,6 +102,9 @@ namespace GoogleTestAdapter.Helpers
 
         public int? ReportWaitPeriod { get; set; }
         public bool ShouldSerializeReportWaitPeriod() { return ReportWaitPeriod != null; }
+
+        public bool? DevelopmentMode { get; set; }
+        public bool ShouldSerializeDevelopmentMode() { return DevelopmentMode != null; }
 
 
         public override XmlElement ToXml()

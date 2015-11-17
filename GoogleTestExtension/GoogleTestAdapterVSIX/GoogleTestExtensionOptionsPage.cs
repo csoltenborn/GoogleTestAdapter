@@ -88,6 +88,7 @@ namespace GoogleTestAdapterVSIX
             runSettings.BatchForTestTeardown = parallelizationOptions.BatchForTestTeardown;
 
             runSettings.ReportWaitPeriod = advancedOptions.ReportWaitPeriod;
+            runSettings.DevelopmentMode = advancedOptions.DevelopmentMode;
 
             return runSettings;
         }
@@ -267,5 +268,15 @@ namespace GoogleTestAdapterVSIX
             set { SetAndNotify(ref reportWaitPeriod, value); }
         }
         private int reportWaitPeriod = Options.OptionReportWaitPeriodDefaultValue;
+
+        [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionDevelopmentMode)]
+        [Description(Options.OptionDevelopmentModeDescription)]
+        public bool DevelopmentMode
+        {
+            get { return developmentMode; }
+            set { SetAndNotify(ref developmentMode, value); }
+        }
+        private bool developmentMode = Options.OptionDevelopmentModeDefaultValue;
     }
 }

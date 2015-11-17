@@ -145,6 +145,7 @@ namespace GoogleTestAdapter
         public abstract string AdditionalTestExecutionParam { get; }
 
         public abstract int ReportWaitPeriod { get; }
+        public abstract bool DevelopmentMode { get; }
 
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
@@ -411,6 +412,14 @@ namespace GoogleTestAdapter
                 return period;
             }
         }
+
+
+        public const string OptionDevelopmentMode = "Development mode";
+        public const bool OptionDevelopmentModeDefaultValue = false;
+        public const string OptionDevelopmentModeDescription =
+            "If true, dialogs will open which help to debug test discovery and execution code (which is executed in processes different to the one Visual Studio runs in).";
+
+        public override bool DevelopmentMode => XmlOptions.DevelopmentMode ?? OptionDevelopmentModeDefaultValue;
 
         #endregion
 
