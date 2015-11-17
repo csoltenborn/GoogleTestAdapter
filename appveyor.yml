@@ -12,17 +12,17 @@ install:
 - secure-file\tools\secure-file -decrypt GoogleTestExtension\Keys\Key_Release.snk.enc -secret %RELEASE_KEY_PASSWORD%
 before_build: 
 - cmd: >-
-  if "%APPVEYOR_REPO_TAG%" == "false" then del GoogleTestExtension\Keys\Key_Release.snk
+    if "%APPVEYOR_REPO_TAG%" == "false" then del GoogleTestExtension\Keys\Key_Release.snk
 
-  cd GoogleTestExtension
+    cd GoogleTestExtension
 
-  SetVersion %APPVEYOR_BUILD_VERSION%
+    SetVersion %APPVEYOR_BUILD_VERSION%
 
-  cd GoogleTestAdapterTests
+    cd GoogleTestAdapterTests
 
-  IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Dia\ImportsParserTests.cs::ReadsImports, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
+    IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Dia\ImportsParserTests.cs::ReadsImports, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
 
-  cd ..\..
+    cd ..\..
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
