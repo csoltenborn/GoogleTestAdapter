@@ -12,7 +12,7 @@ install:
 - secure-file\tools\secure-file -decrypt GoogleTestExtension\Keys\Key_Release.snk.enc -secret %RELEASE_KEY_PASSWORD%
 before_build: 
 - cmd: >-
-    if "%APPVEYOR_REPO_TAG%" == "false" then del GoogleTestExtension\Keys\Key_Release.snk
+    if "%APPVEYOR_REPO_TAG%" == "false" (del GoogleTestExtension\Keys\Key_Release.snk)
 
     cd GoogleTestExtension
 
@@ -35,6 +35,8 @@ after_build:
     $sourceFile = "GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix"
 
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
+
+    $targetFile
 
     Copy-Item -Path $sourceFile -Destination $targetFile
 test_script:
