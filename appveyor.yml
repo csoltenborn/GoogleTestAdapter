@@ -65,7 +65,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
-  artifact: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter-*.vsix
+  artifact: GoogleTestExtension/GoogleTestAdapterVSIX/bin/Release/GoogleTestAdapter-.*\.vsix
   description: 'TODO provide release notes'
   draft: true
   prerelease: true
