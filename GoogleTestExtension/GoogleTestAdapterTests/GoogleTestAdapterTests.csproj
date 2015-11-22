@@ -101,6 +101,10 @@
     <Compile Include="GoogleTestExecutorSequentialTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DiaAdapter\DiaAdapter.csproj">
+      <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
+      <Name>DiaAdapter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>GoogleTestAdapter</Name>

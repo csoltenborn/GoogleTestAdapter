@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using GoogleTestAdapter.Helpers;
 
-namespace GoogleTestAdapter.Dia
+namespace DiaAdapter
 {
 
     [StructLayout(LayoutKind.Sequential)]
@@ -59,16 +58,16 @@ namespace GoogleTestAdapter.Dia
         NsfUndecoratedName = 0x10u
     }
 
-    class NativeSourceFileLocation
+    internal class NativeSourceFileLocation
     {
         /*
         Test methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::TestBody
         Trait methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::<trait name>__GTA__<trait value>_GTA_TRAIT
         */
-        public string Symbol;
-        public uint AddressSection;
-        public uint AddressOffset;
-        public uint Length;
+        internal string Symbol;
+        internal uint AddressSection;
+        internal uint AddressOffset;
+        internal uint Length;
     }
 
     unsafe public static class NativeMethods
@@ -97,7 +96,7 @@ namespace GoogleTestAdapter.Dia
 
             public List<string> Imports { get; } = new List<string>();
 
-            public ImportsParser(string executable, TestEnvironment testEnvironment)
+            public ImportsParser(string executable, List<string> errorMessages)
             {
                 fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {
@@ -114,7 +113,7 @@ namespace GoogleTestAdapter.Dia
                         }
                         if (!UnMapAndLoad(ref _loadedImage))
                         {
-                            testEnvironment.LogError("UnMapAndLoad failed!");
+                            errorMessages.Add("UnMapAndLoad failed!");
                         }
                     }
                 }

@@ -78,9 +78,6 @@
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="msdia120typelib_clr0200">
-      <HintPath>..\lib\msdia120typelib_clr0200.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Windows.Forms" />
@@ -88,8 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GoogleTestConstants.cs" />
-    <Compile Include="Dia\DiaSessionExtensions.cs" />
     <Compile Include="Helpers\ProcessWaiter.cs" />
+    <Compile Include="Helpers\TestCaseResolver.cs" />
     <Compile Include="Helpers\TestEnvironment.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Helpers\Utils.cs" />
@@ -102,12 +99,9 @@
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Dia\DiaResolver.cs" />
     <Compile Include="Runners\CommandLineGenerator.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
-    <Compile Include="Dia\DiaMemoryStream.cs" />
     <Compile Include="Scheduling\ITestsSplitter.cs" />
-    <Compile Include="Dia\NativeMethods.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
@@ -123,6 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\GTA_Traits.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DiaAdapter\DiaAdapter.csproj">
+      <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
+      <Name>DiaAdapter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

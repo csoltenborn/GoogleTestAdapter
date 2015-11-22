@@ -5,10 +5,7 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Dia;
 using GoogleTestAdapter.Helpers;
-
-using SourceFileLocation = GoogleTestAdapter.Dia.DiaResolver.SourceFileLocation;
 
 namespace GoogleTestAdapter
 {
@@ -99,14 +96,14 @@ namespace GoogleTestAdapter
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null, null);
             List<TestCaseInfo> testCaseInfos = ParseTestCases(consoleOutput);
-            List<SourceFileLocation> sourceFileLocations = GetSourceFileLocations(executable, testCaseInfos);
+            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(executable, testCaseInfos);
 
             TestEnvironment.LogInfo("Found " + testCaseInfos.Count + " tests in executable " + executable);
 
             List<TestCase> testCases = new List<TestCase>();
             foreach (TestCaseInfo testCaseInfo in testCaseInfos)
             {
-                testCases.Add(ToTestCase(executable, testCaseInfo, sourceFileLocations));
+                testCases.Add(ToTestCase(executable, testCaseInfo, testCaseLocations));
                 TestEnvironment.DebugInfo("Added testcase " + testCaseInfo.Suite + "." + testCaseInfo.NameAndParam);
             }
             return testCases;
@@ -168,12 +165,18 @@ namespace GoogleTestAdapter
             return testCaseInfos;
         }
 
-        private List<SourceFileLocation> GetSourceFileLocations(string executable, List<TestCaseInfo> testcases)
+        private List<TestCaseLocation> GetTestCaseLocations(string executable, List<TestCaseInfo> testCaseInfos)
         {
-            List<string> testMethodSignatures = testcases.Select(GetTestMethodSignature).ToList();
+            List<string> testMethodSignatures = testCaseInfos.Select(GetTestMethodSignature).ToList();
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
-            DiaResolver resolver = new DiaResolver(TestEnvironment);
-            return resolver.ResolveAllMethods(executable, testMethodSignatures, filterString);
+            TestCaseResolver resolver = new TestCaseResolver();
+            List<string> errorMessages = new List<string>();
+            List<TestCaseLocation> testCaseLocations = resolver.ResolveAllTestCases(executable, testMethodSignatures, filterString, errorMessages);
+            foreach (string errorMessage in errorMessages)
+            {
+                TestEnvironment.LogWarning(errorMessage);
+            }
+            return testCaseLocations;
         }
 
         private string GetTestMethodSignature(TestCaseInfo testCaseInfo)
@@ -192,7 +195,7 @@ namespace GoogleTestAdapter
             return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
-        private TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<SourceFileLocation> sourceFileLocations)
+        private TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<TestCaseLocation> testCaseLocations)
         {
             string fullName = testCaseInfo.Suite + "." + testCaseInfo.NameAndParam;
             string displayName = testCaseInfo.Suite + "." + testCaseInfo.Name;
@@ -202,7 +205,7 @@ namespace GoogleTestAdapter
             }
             string symbolName = GetTestMethodSignature(testCaseInfo);
 
-            foreach (SourceFileLocation location in sourceFileLocations)
+            foreach (TestCaseLocation location in testCaseLocations)
             {
                 if (location.Symbol.Contains(symbolName))
                 {

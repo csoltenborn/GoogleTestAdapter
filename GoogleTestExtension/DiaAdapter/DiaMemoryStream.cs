@@ -2,7 +2,7 @@
 using System.IO;
 using Dia;
 
-namespace GoogleTestAdapter.Dia
+namespace DiaAdapter
 {
 
     class DiaMemoryStream : StubMemoryStream

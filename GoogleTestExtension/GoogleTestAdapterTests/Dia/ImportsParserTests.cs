@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DiaAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter.Dia
@@ -11,7 +12,7 @@ namespace GoogleTestAdapter.Dia
         [TestMethod]
         public void ReadsImports()
         {
-            NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(@"kernel32.dll", TestEnvironment);
+            NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(@"kernel32.dll", new List<string>());
             List<string> imports = parser.Imports;
             Version version = Environment.OSVersion.Version;
             if (version.Major == 6 && version.Minor == 1)
