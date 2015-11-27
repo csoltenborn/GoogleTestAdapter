@@ -32,7 +32,7 @@ after_build:
 - ps: >-
     $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
 
-    $sourceFile = (Resolve-Path "GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix").ToString()
+    $sourceFile = (Resolve-Path ("GoogleTestExtension\GoogleTestAdapterVSIX\bin\" + $env:CONFIGURATION + "\GoogleTestAdapterVSIX.vsix")).ToString()
 
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
 
@@ -53,7 +53,7 @@ test_script:
         exit $TestExitCode
     }
 artifacts:
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter-*.vsix
+- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: GoogleTestAdapter
 deploy:
   provider: GitHub
