@@ -20,11 +20,11 @@ namespace GoogleTestAdapter.Helpers
         private static readonly object Lock = new object();
 
 
-        public AbstractOptions Options { get; }
+        public Options Options { get; }
         private IMessageLogger Logger { get; }
 
 
-        public TestEnvironment(AbstractOptions options, IMessageLogger logger)
+        public TestEnvironment(Options options, IMessageLogger logger)
         {
             this.Options = options;
             this.Logger = logger;

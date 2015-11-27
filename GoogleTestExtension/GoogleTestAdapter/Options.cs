@@ -126,26 +126,22 @@ namespace GoogleTestAdapter
         }
     }
 
-    public abstract class AbstractOptions
+    public class Options
     {
-        public abstract bool PrintTestOutput { get; }
-        public abstract string TestDiscoveryRegex { get; }
-        public abstract bool RunDisabledTests { get; }
-        public abstract int NrOfTestRepetitions { get; }
-        public abstract bool ShuffleTests { get; }
-        public abstract int ShuffleTestsSeed { get; }
-        public abstract List<RegexTraitPair> TraitsRegexesBefore { get; }
-        public abstract List<RegexTraitPair> TraitsRegexesAfter { get; }
-        public abstract bool DebugMode { get; }
+        private IXmlOptions XmlOptions { get; }
+        private TestEnvironment TestEnvironment { get; }
+        private RegexTraitParser RegexTraitParser { get; }
 
-        public abstract bool ParallelTestExecution { get; }
-        public abstract int MaxNrOfThreads { get; }
-        public abstract string BatchForTestSetup { get; }
-        public abstract string BatchForTestTeardown { get; }
-        public abstract string AdditionalTestExecutionParam { get; }
 
-        public abstract int ReportWaitPeriod { get; }
-        public abstract bool DevelopmentMode { get; }
+        public Options(IXmlOptions xmlOptions, IMessageLogger logger)
+        {
+            this.XmlOptions = xmlOptions;
+            this.TestEnvironment = new TestEnvironment(this, logger);
+            this.RegexTraitParser = new RegexTraitParser(TestEnvironment);
+        }
+
+        public Options() { }
+
 
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
@@ -175,22 +171,6 @@ namespace GoogleTestAdapter
             return result;
         }
 
-    }
-
-    public class Options : AbstractOptions
-    {
-        private IXmlOptions XmlOptions { get; }
-        private TestEnvironment TestEnvironment { get; }
-        private RegexTraitParser RegexTraitParser { get; }
-
-
-        public Options(IXmlOptions xmlOptions, IMessageLogger logger)
-        {
-            this.XmlOptions = xmlOptions;
-            this.TestEnvironment = new TestEnvironment(this, logger);
-            this.RegexTraitParser = new RegexTraitParser(TestEnvironment);
-        }
-
 
         public const string CategoryName = "Google Test Adapter";
         public const string PageGeneralName = "General";
@@ -213,7 +193,7 @@ namespace GoogleTestAdapter
         public const string OptionPrintTestOutputDescription =
             "Print the output of the Google Test executable(s) to the Tests Output window.";
 
-        public override bool PrintTestOutput => XmlOptions.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
+        public virtual bool PrintTestOutput => XmlOptions.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
 
 
         public const string OptionTestDiscoveryRegex = "Regex for test discovery";
@@ -222,7 +202,7 @@ namespace GoogleTestAdapter
             "If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: "
             + GoogleTestDiscoverer.TestFinderRegex;
 
-        public override string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
+        public virtual string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
         public const string OptionRunDisabledTests = "Also run disabled tests";
@@ -231,7 +211,7 @@ namespace GoogleTestAdapter
             "If true, all (selected) tests will be run, even if they have been disabled.\n"
             + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
 
-        public override bool RunDisabledTests => XmlOptions.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
+        public virtual bool RunDisabledTests => XmlOptions.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
 
 
         public const string OptionNrOfTestRepetitions = "Number of test repetitions";
@@ -240,7 +220,7 @@ namespace GoogleTestAdapter
             "Tests will be run for the selected number of times (-1: infinite).\n"
             + "Google Test option:" + GoogleTestConstants.NrOfRepetitionsOption;
 
-        public override int NrOfTestRepetitions
+        public virtual int NrOfTestRepetitions
         {
             get
             {
@@ -260,7 +240,7 @@ namespace GoogleTestAdapter
             "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
             + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
 
-        public override bool ShuffleTests => XmlOptions.ShuffleTests ?? OptionShuffleTestsDefaultValue;
+        public virtual bool ShuffleTests => XmlOptions.ShuffleTests ?? OptionShuffleTestsDefaultValue;
 
 
         public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
@@ -271,7 +251,7 @@ namespace GoogleTestAdapter
                                                            + OptionShuffleTests
                                                            + "'.";
 
-        public override int ShuffleTestsSeed
+        public virtual int ShuffleTestsSeed
         {
             get
             {
@@ -305,7 +285,7 @@ namespace GoogleTestAdapter
 
         public const string OptionTraitsRegexesBefore = "Regex for setting test traits before test execution";
 
-        public override List<RegexTraitPair> TraitsRegexesBefore
+        public virtual List<RegexTraitPair> TraitsRegexesBefore
         {
             get
             {
@@ -316,7 +296,7 @@ namespace GoogleTestAdapter
 
         public const string OptionTraitsRegexesAfter = "Regex for setting test traits after test execution";
 
-        public override List<RegexTraitPair> TraitsRegexesAfter
+        public virtual List<RegexTraitPair> TraitsRegexesAfter
         {
             get
             {
@@ -331,7 +311,7 @@ namespace GoogleTestAdapter
         public const string OptionDebugModeDescription =
             "If true, debug output will be printed to the test console.";
 
-        public override bool DebugMode => XmlOptions.DebugMode ?? OptionDebugModeDefaultValue;
+        public virtual bool DebugMode => XmlOptions.DebugMode ?? OptionDebugModeDefaultValue;
 
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
@@ -340,7 +320,7 @@ namespace GoogleTestAdapter
             "Additional parameters for Google Test executable. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
+        public virtual string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
         #endregion
 
@@ -351,7 +331,7 @@ namespace GoogleTestAdapter
         public const string OptionEnableParallelTestExecutionDescription =
             "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";
 
-        public override bool ParallelTestExecution => XmlOptions.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
+        public virtual bool ParallelTestExecution => XmlOptions.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
 
 
         public const string OptionMaxNrOfThreads = "Maximum number of threads";
@@ -359,7 +339,7 @@ namespace GoogleTestAdapter
         public const string OptionMaxNrOfThreadsDescription =
             "Maximum number of threads to be used for test execution (0: all available threads).";
 
-        public override int MaxNrOfThreads
+        public virtual int MaxNrOfThreads
         {
             get
             {
@@ -379,7 +359,7 @@ namespace GoogleTestAdapter
             "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string BatchForTestSetup => XmlOptions.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
+        public virtual string BatchForTestSetup => XmlOptions.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
 
         public const string OptionBatchForTestTeardown = "Test teardown batch file";
@@ -388,7 +368,7 @@ namespace GoogleTestAdapter
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholders;
 
-        public override string BatchForTestTeardown => XmlOptions.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
+        public virtual string BatchForTestTeardown => XmlOptions.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
         #endregion
 
@@ -400,7 +380,7 @@ namespace GoogleTestAdapter
             "Sometimes, not all TestResults are recognized by VS. This is probably due to inter process communication - if anybody has a clean solution for this, please provide a patch. Until then, use this option to ovetcome such problems.\n" +
             "During test reporting, 0: do not pause at all, n: pause for 1ms every nth test (the higher, the faster; 1 is slowest)";
 
-        public override int ReportWaitPeriod
+        public virtual int ReportWaitPeriod
         {
             get
             {
@@ -419,7 +399,7 @@ namespace GoogleTestAdapter
         public const string OptionDevelopmentModeDescription =
             "If true, dialogs will open which help to debug test discovery and execution code (which is executed in processes different to the one Visual Studio runs in).";
 
-        public override bool DevelopmentMode => XmlOptions.DevelopmentMode ?? OptionDevelopmentModeDefaultValue;
+        public virtual bool DevelopmentMode => XmlOptions.DevelopmentMode ?? OptionDevelopmentModeDefaultValue;
 
         #endregion
 

@@ -43,7 +43,7 @@ namespace GoogleTestAdapter
 
 
         protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
-        protected readonly Mock<AbstractOptions> MockOptions = new Mock<AbstractOptions>() { CallBase = true };
+        protected readonly Mock<Options> MockOptions = new Mock<Options>() { CallBase = true };
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
         internal readonly TestEnvironment TestEnvironment;
@@ -63,11 +63,22 @@ namespace GoogleTestAdapter
             // ReSharper disable once PossibleNullReferenceException
             fieldInfo.SetValue(null, true);
 
+            MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
+
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
-            MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
-            MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(1);
-            MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
+            MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(Options.OptionNrOfTestRepetitionsDefaultValue);
+            MockOptions.Setup(o => o.PrintTestOutput).Returns(Options.OptionPrintTestOutputDefaultValue);
+            MockOptions.Setup(o => o.RunDisabledTests).Returns(Options.OptionRunDisabledTestsDefaultValue);
+            MockOptions.Setup(o => o.ShuffleTests).Returns(Options.OptionShuffleTestsDefaultValue);
+            MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(Options.OptionShuffleTestsSeedDefaultValue);
+            MockOptions.Setup(o => o.DebugMode).Returns(Options.OptionDebugModeDefaultValue);
+            MockOptions.Setup(o => o.DevelopmentMode).Returns(Options.OptionDevelopmentModeDefaultValue);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.OptionAdditionalTestExecutionParamsDefaultValue);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(Options.OptionBatchForTestSetupDefaultValue);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Options.OptionBatchForTestTeardownDefaultValue);
+            MockOptions.Setup(o => o.ParallelTestExecution).Returns(Options.OptionEnableParallelTestExecutionDefaultValue);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Options.OptionMaxNrOfThreadsDefaultValue);
 
             MockRunContext.Setup(rc => rc.SolutionDirectory).Returns(Path.GetFullPath(SampleTestsSolutionDir));
         }

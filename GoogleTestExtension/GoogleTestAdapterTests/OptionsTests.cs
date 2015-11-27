@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
-using System.Xml.XPath;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System.Xml;
 
@@ -13,7 +12,7 @@ namespace GoogleTestAdapter
     {
 
         private Mock<IXmlOptions> MockXmlOptions { get; } = new Mock<IXmlOptions>();
-        private AbstractOptions TheOptions { get; set; }
+        private Options TheOptions { get; set; }
 
 
         [TestInitialize]
