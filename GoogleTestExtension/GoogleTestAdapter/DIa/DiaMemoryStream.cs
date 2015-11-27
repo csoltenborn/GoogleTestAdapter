@@ -4,18 +4,17 @@ using Dia;
 
 namespace GoogleTestAdapter.Dia
 {
-    class DiaMemoryStream : IStream
+
+    class DiaMemoryStream : StubMemoryStream
     {
         private Stream PdbFile { get; }
-
 
         internal DiaMemoryStream(Stream pdbFile)
         {
             this.PdbFile = pdbFile;
         }
 
-
-        unsafe void IStream.RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
+        unsafe public override void RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
         {
             fixed (byte* addressOfBuffer = &buffer)
             {
@@ -29,12 +28,12 @@ namespace GoogleTestAdapter.Dia
             }
         }
 
-        void IStream.RemoteSeek(_LARGE_INTEGER offset, uint seekOrigin, out _ULARGE_INTEGER newPosition)
+        unsafe public override void RemoteSeek(_LARGE_INTEGER offset, uint seekOrigin, out _ULARGE_INTEGER newPosition)
         {
             newPosition.QuadPart = (ulong)PdbFile.Seek(offset.QuadPart, (SeekOrigin)seekOrigin);
         }
 
-        void IStream.Stat(out tagSTATSTG pstatstg, uint grfStatFlag)
+        unsafe public override void Stat(out tagSTATSTG pstatstg, uint grfStatFlag)
         {
             pstatstg = new tagSTATSTG
             {
@@ -45,8 +44,14 @@ namespace GoogleTestAdapter.Dia
             };
         }
 
+    }
 
-        #region Unimplemented methods
+
+    abstract class StubMemoryStream : IStream
+    {
+        unsafe public abstract void RemoteRead(out byte pv, uint cb, out uint pcbRead);
+        unsafe public abstract void RemoteSeek(_LARGE_INTEGER dlibMove, uint dwOrigin, out _ULARGE_INTEGER plibNewPosition);
+        unsafe public abstract void Stat(out tagSTATSTG pstatstg, uint grfStatFlag);
 
         void IStream.Clone(out IStream ppstm)
         {
@@ -97,8 +102,6 @@ namespace GoogleTestAdapter.Dia
         {
             throw new NotImplementedException();
         }
-
-        #endregion
 
     }
 
