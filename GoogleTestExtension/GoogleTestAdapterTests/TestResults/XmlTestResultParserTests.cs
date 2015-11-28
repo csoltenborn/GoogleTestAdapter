@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,13 +43,35 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsSuccessfulResultsInSample1()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001");
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult> results = parser.GetTestResults();
 
-            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(2, results.Count);
             AssertTestResultIsPassed(results[0]);
+            AssertTestResultIsSkipped(results[1]);
+        }
+
+        [TestMethod]
+        public void LogUnexpectedTestOutcomeInSample1()
+        {
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
+
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
+            try
+            {
+                parser.GetTestResults();
+                Assert.Fail();
+            }
+            catch (Exception)
+            {
+            }
+
+            MockLogger.Verify(l => l.SendMessage(
+                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
+                It.Is<string>(s => s.Contains("Foo"))),
+                Times.Exactly(1));
         }
 
         [TestMethod]
@@ -135,6 +158,12 @@ Something's wrong :(";
         private void AssertTestResultIsPassed(TestResult testResult)
         {
             Assert.AreEqual(TestOutcome.Passed, testResult.Outcome);
+            Assert.IsNull(testResult.ErrorMessage);
+        }
+
+        private void AssertTestResultIsSkipped(TestResult testResult)
+        {
+            Assert.AreEqual(TestOutcome.Skipped, testResult.Outcome);
             Assert.IsNull(testResult.ErrorMessage);
         }
 
