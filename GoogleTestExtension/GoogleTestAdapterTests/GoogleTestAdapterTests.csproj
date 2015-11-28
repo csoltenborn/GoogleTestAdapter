@@ -86,6 +86,8 @@
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\ParallelTestRunnerTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
+    <Compile Include="RunSettingsProviderTests.cs" />
+    <Compile Include="RunSettingsServiceTests.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="AbstractGoogleTestExecutorTests.cs" />
