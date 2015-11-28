@@ -20,7 +20,7 @@ before_build:
 
     cd GoogleTestAdapterTests
 
-    IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Dia\ImportsParserTests.cs::ReadsImports, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
+    IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
 
     cd ..\..
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln

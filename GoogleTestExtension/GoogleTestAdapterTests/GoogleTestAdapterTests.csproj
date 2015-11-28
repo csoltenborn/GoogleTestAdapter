@@ -81,7 +81,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
-    <Compile Include="Dia\DiaResolverTests.cs" />
+    <Compile Include="DiaAdapter\DiaResolverTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="AbstractGoogleTestExecutorTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
-    <Compile Include="Dia\ImportsParserTests.cs" />
+    <Compile Include="DiaAdapter\ImportsParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
     <Compile Include="OptionsTests.cs" />
