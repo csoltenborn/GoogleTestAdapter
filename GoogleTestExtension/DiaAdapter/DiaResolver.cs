@@ -6,7 +6,7 @@ using Dia;
 
 namespace DiaAdapter
 {
-    public class DiaResolver : IDisposable
+    public sealed class DiaResolver : IDisposable
     {
         private string Binary { get; }
 
@@ -38,7 +38,7 @@ namespace DiaAdapter
             Dispose(false);
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

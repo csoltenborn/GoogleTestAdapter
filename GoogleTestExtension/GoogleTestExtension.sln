@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterVSIX", "GoogleTestAdapterVSIX\GoogleTestAdapterVSIX.csproj", "{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapter", "GoogleTestAdapter\GoogleTestAdapter.csproj", "{44C04E51-D543-4155-A57E-BBEB73D3F8E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDC95D92-5E1E-4BDF-AA35-181851FCE755} = {FDC95D92-5E1E-4BDF-AA35-181851FCE755}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterTests", "GoogleTestAdapterTests\GoogleTestAdapterTests.csproj", "{B06C696E-E458-490A-AC44-9E4F460DBAFE}"
 	ProjectSection(ProjectDependencies) = postProject
