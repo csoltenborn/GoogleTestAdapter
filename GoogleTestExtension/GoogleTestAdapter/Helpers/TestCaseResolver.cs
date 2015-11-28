@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.Helpers
 
         // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
-        private const string TraitAppendix = "_GTA_TRAIT";
+        public const string TraitAppendix = "_GTA_TRAIT";
 
         public List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
         {
