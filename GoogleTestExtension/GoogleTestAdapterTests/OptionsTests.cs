@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
 using GoogleTestAdapter.Helpers;
-using Microsoft.VisualStudio.TestWindow.Extensibility;
-using System.Xml;
+using GoogleTestAdapterVSIX;
 
 namespace GoogleTestAdapter
 {

@@ -105,6 +105,10 @@
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaAdapter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GoogleTestAdapterVSIX\GoogleTestAdapterVSIX.csproj">
+      <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
+      <Name>GoogleTestAdapterVSIX</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>GoogleTestAdapter</Name>
