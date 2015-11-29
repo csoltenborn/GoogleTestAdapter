@@ -41,6 +41,21 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
+        public void FailsNicelyIfFileIsInvalid_InvalidStatusAttribute()
+        {
+            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
+                "GoogleTestSuiteName1.TestMethod_002");
+            MockOptions.Setup(o => o.DebugMode).Returns(true);
+
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken_InvalidStatusAttibute, TestEnvironment);
+            List<TestResult> results = parser.GetTestResults();
+
+            Assert.AreEqual(0, results.Count);
+            MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
+                            Times.Exactly(1));
+        }
+
+        [TestMethod]
         public void FindsSuccessfulResultsInSample1()
         {
             IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");

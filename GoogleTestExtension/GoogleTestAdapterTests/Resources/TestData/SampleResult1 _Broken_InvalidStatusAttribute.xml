@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="39" failures="3" disabled="10" errors="0" timestamp="2013-08-14T17:44:14" time="0.844" name="AllTests">
+  <testsuite name="GoogleTestSuiteName1" tests="7" failures="0" disabled="0" errors="0" time="0.001">
+    <testcase name="TestMethod_001" statuss="run" time="0" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_002" status="run" time="0" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_003" status="run" time="0" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_004" status="run" time="0" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_005" status="run" time="0.2" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_006" status="run" time="0.001" classname="GoogleTestSuiteName1" />
+    <testcase name="TestMethod_007" status="Foo" time="0" classname="GoogleTestSuiteName1" />
+  </testsuite>
+  <testsuite name="AnimalsTest" tests="3" failures="1" disabled="0" errors="0" time="0">
+    <testcase name="AnimalsTestMethod_DoStuff" status="run" time="0" classname="AnimalsTest" />
+    <testcase name="AnimalsTestMethod_DontDoStuff" status="run" time="0" classname="AnimalsTest" />
+    <testcase name="testGetEnoughAnimals" status="run" time="0" classname="AnimalsTest">
+      <failure message="x:\prod\company\util\util.cpp:67&#x0A;Value of: animals.size()&#x0A;  Actual: 1&#x0A;Expected: 3&#x0A;Should get three animals" type=""><![CDATA[x:\prod\company\util\util.cpp:67
+Value of: animals.size()
+  Actual: 1
+Expected: 3
+Should get three animals]]></failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="SimpleTest" tests="2" failures="0" disabled="1" errors="0" time="0">
+    <testcase name="DISABLED_TestMethodDisabled" status="notrun" time="0" classname="SimpleTest" />
+    <testcase name="SomeOtherTestMethod" status="run" time="0" classname="SimpleTest" />
+  </testsuite>
+  <testsuite name="ParameterizedTestsTest1/AllEnabledTest" tests="18" failures="2" disabled="0" errors="0" time="0.003">
+    <testcase name="TestInstance/0" value_param="(false, 0, -100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/1" value_param="(false, 0, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/2" value_param="(false, 0, 100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/3" value_param="(false, 100, -100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/4" value_param="(false, 100, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/5" value_param="(false, 100, 100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/6" value_param="(false, 200, -100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/7" value_param="(false, 200, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/8" value_param="(false, 200, 100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/9" value_param="(true, 0, -100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/10" value_param="(true, 0, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest">
+      <failure message="someSimpleParameterizedTest.cpp:61&#x0A;Expected: (0) != ((pGSD-&gt;g_outputs64[(g_nOutput[ 8 ]-1)/64] &amp; g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0" type="">
+        <![CDATA[someSimpleParameterizedTest.cpp:61
+Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0]]>
+      </failure>
+    </testcase>
+    <testcase name="TestInstance/11" value_param="(true, 0, 100)" status="run" time="0.001" classname="ParameterizedTestsTest1/AllEnabledTest">
+      <failure message="someSimpleParameterizedTest.cpp:61&#x0A;Expected: (0) != ((pGSD-&gt;g_outputs64[(g_nOutput[ 8 ]-1)/64] &amp; g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0" type="">
+        <![CDATA[someSimpleParameterizedTest.cpp:61
+Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0]]>
+      </failure>
+    </testcase>
+    <testcase name="TestInstance/12" value_param="(true, 100, -100)" status="run" time="0.001" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/13" value_param="(true, 100, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/14" value_param="(true, 100, 100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/15" value_param="(true, 200, -100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/16" value_param="(true, 200, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+    <testcase name="TestInstance/17" value_param="(true, 200, 100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
+  </testsuite>
+  <testsuite name="DISABLED_ParameterizedTestsTest2/InstantiateDisabledTest" tests="3" failures="0" disabled="3" errors="0" time="0">
+    <testcase name="TestInstance/0" value_param="-100" status="notrun" time="0" classname="DISABLED_ParameterizedTestsTest2/InstantiateDisabledTest" />
+    <testcase name="TestInstance/1" value_param="0" status="notrun" time="0" classname="DISABLED_ParameterizedTestsTest2/InstantiateDisabledTest" />
+    <testcase name="TestInstance/2" value_param="100" status="notrun" time="0" classname="DISABLED_ParameterizedTestsTest2/InstantiateDisabledTest" />
+  </testsuite>
+  <testsuite name="ParameterizedTestsTest3/NameDisabledTest" tests="3" failures="0" disabled="3" errors="0" time="0">
+    <testcase name="DISABLED_TestInstance/0" value_param="-100" status="notrun" time="0" classname="ParameterizedTestsTest3/NameDisabledTest" />
+    <testcase name="DISABLED_TestInstance/1" value_param="0" status="notrun" time="0" classname="ParameterizedTestsTest3/NameDisabledTest" />
+    <testcase name="DISABLED_TestInstance/2" value_param="100" status="notrun" time="0" classname="ParameterizedTestsTest3/NameDisabledTest" />
+  </testsuite>
+  <testsuite name="ParameterizedTestsTest4/DISABLED_ClassDisabledTest" tests="3" failures="0" disabled="3" errors="0" time="0">
+    <testcase name="TestInstance/0" value_param="-100" status="notrun" time="0" classname="ParameterizedTestsTest4/DISABLED_ClassDisabledTest" />
+    <testcase name="TestInstance/1" value_param="0" status="notrun" time="0" classname="ParameterizedTestsTest4/DISABLED_ClassDisabledTest" />
+    <testcase name="TestInstance/2" value_param="100" status="notrun" time="0" classname="ParameterizedTestsTest4/DISABLED_ClassDisabledTest" />
+  </testsuite>
+</testsuites>

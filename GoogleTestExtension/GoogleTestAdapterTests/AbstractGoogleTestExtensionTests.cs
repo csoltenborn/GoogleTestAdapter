@@ -36,6 +36,7 @@ namespace GoogleTestAdapter
         protected const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         protected const string XmlFile2 = TestdataDir + @"SampleResult2.xml";
         protected const string XmlFileBroken = TestdataDir + @"SampleResult1_Broken.xml";
+        protected const string XmlFileBroken_InvalidStatusAttibute = TestdataDir + @"SampleResult1 _Broken_InvalidStatusAttribute.xml";
 
         protected const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution" + GoogleTestConstants.SettingsExtension;
         protected const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
