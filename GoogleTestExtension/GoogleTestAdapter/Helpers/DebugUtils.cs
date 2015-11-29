@@ -2,9 +2,9 @@
 
 namespace GoogleTestAdapter.Helpers
 {
-    static class DebugUtils
+    public static class DebugUtils
     {
-        internal static void AssertIsNotNull(object parameter, string parameterName)
+        public static void AssertIsNotNull(object parameter, string parameterName)
         {
             if (parameter == null)
             {
@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        internal static void AssertIsNull(object parameter, string parameterName)
+        public static void AssertIsNull(object parameter, string parameterName)
         {
             if (parameter != null)
             {

@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
     <Compile Include="DiaAdapter\DiaResolverTests.cs" />
+    <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
