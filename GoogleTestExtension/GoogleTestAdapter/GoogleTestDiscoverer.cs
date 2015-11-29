@@ -215,7 +215,7 @@ namespace GoogleTestAdapter
                         CodeFilePath = location.Sourcefile,
                         LineNumber = (int)location.Line
                     };
-                    testCase.Traits.AddRange(GetTraits(testCase.FullyQualifiedName, location.Traits));
+                    testCase.Traits.AddRange(GetTraits(testCase.DisplayName, location.Traits));
                     return testCase;
                 }
             }
@@ -227,9 +227,9 @@ namespace GoogleTestAdapter
             };
         }
 
-        private IEnumerable<Trait> GetTraits(string fullyQualifiedName, List<Trait> traits)
+        private IEnumerable<Trait> GetTraits(string displayName, List<Trait> traits)
         {
-            foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesBefore.Where(p => Regex.IsMatch(fullyQualifiedName, p.Regex)))
+            foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesBefore.Where(p => Regex.IsMatch(displayName, p.Regex)))
             {
                 if (!traits.Exists(T => T.Name == pair.Trait.Name))
                 {
@@ -237,7 +237,7 @@ namespace GoogleTestAdapter
                 }
             }
 
-            foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesAfter.Where(p => Regex.IsMatch(fullyQualifiedName, p.Regex)))
+            foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesAfter.Where(p => Regex.IsMatch(displayName, p.Regex)))
             {
                 bool replacedTrait = false;
                 foreach (Trait traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))

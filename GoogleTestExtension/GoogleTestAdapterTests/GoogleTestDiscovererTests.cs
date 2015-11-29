@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
 using GoogleTestAdapter.Helpers;
+using System.Text.RegularExpressions;
 
 namespace GoogleTestAdapter
 {
@@ -81,118 +82,119 @@ namespace GoogleTestAdapter
         public void FindsMathTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithTwoTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits2", traits);
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithThreeTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits3", traits);
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TheFixture.AddPassesWithTraits", traits);
+            AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithTwoTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("TheFixture.AddPassesWithTraits2", traits);
+            AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithThreeTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("TheFixture.AddPassesWithTraits3", traits);
+            AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)", traits);
+            AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithTwoTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0  # GetParam() = (1,)", traits);
+            AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithThreeTraits()
         {
             Trait[] traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
-            FindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0  # GetParam() = (1,)", traits);
+            AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]", traits);
         }
 
         [TestMethod]
         public void CustomTraitBeforeAddsTraitIfNotAlreadyExisting()
         {
+            string testname = "InstantiationName/ParameterizedTests.Simple/0 [(1,)]";
             Trait[] traits = { };
-            FindsTestWithTraits("TestMath.AddPasses", traits);
+            AssertFindsTestWithTraits(testname, traits);
 
-            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape(testname), "Type", "SomeNewType").Yield().ToList());
 
             traits = new[] { new Trait("Type", "SomeNewType") };
-            FindsTestWithTraits("TestMath.AddPasses", traits);
+            AssertFindsTestWithTraits(testname, traits);
         }
 
         [TestMethod]
         public void CustomTraitBeforeIsOverridenByTraitOfTest()
         {
-            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
 
             Trait[] traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void CustomTraitBeforeIsOverridenByCustomTraitAfter()
         {
-            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "BeforeType").Yield().ToList());
-            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "AfterType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "BeforeType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "AfterType").Yield().ToList());
 
             Trait[] traits = { new Trait("Type", "AfterType") };
-            FindsTestWithTraits("TestMath.AddPasses", traits);
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         [TestMethod]
         public void CustomTraitAfterOverridesTraitOfTest()
         {
             Trait[] traits = { new Trait("Type", "Small") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
 
-            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPassesWithTraits", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
 
             traits = new[] { new Trait("Type", "SomeNewType") };
-            FindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void CustomTraitAfterAddsTraitIfNotAlreadyExisting()
         {
             Trait[] traits = { };
-            FindsTestWithTraits("TestMath.AddPasses", traits);
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
 
-            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair("TestMath.AddPasses", "Type", "SomeNewType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "SomeNewType").Yield().ToList());
 
             traits = new[] { new Trait("Type", "SomeNewType") };
-            FindsTestWithTraits("TestMath.AddPasses", traits);
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         [TestMethod]
@@ -258,14 +260,14 @@ namespace GoogleTestAdapter
             Assert.AreEqual(44, testCases[1].LineNumber);
         }
 
-        private void FindsTestWithTraits(string fullyQualifiedName, Trait[] traits)
+        private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
         {
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
-            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.FullyQualifiedName == fullyQualifiedName);
+            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
             Assert.IsNotNull(testCase);
 
             foreach (Trait trait in traits)
