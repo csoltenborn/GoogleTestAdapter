@@ -6,7 +6,7 @@ using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
-    public class VsTestFrameworkReporter
+    public class VsTestFrameworkReporter : ITestFrameworkReporter
     {
         private static readonly object Lock = new object();
 

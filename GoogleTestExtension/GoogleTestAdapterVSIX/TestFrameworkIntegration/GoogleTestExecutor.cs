@@ -110,11 +110,11 @@ namespace GoogleTestAdapter
         {
             if (TestEnvironment.Options.ParallelTestExecution && !runContext.IsBeingDebugged)
             {
-                Runner = new ParallelTestRunner(TestEnvironment);
+                Runner = new ParallelTestRunner(new VsTestFrameworkReporter(TestEnvironment), TestEnvironment);
             }
             else
             {
-                Runner = new PreparingTestRunner(0, TestEnvironment);
+                Runner = new PreparingTestRunner(0, new VsTestFrameworkReporter(TestEnvironment), TestEnvironment);
                 if (TestEnvironment.Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
                     TestEnvironment.DebugInfo(

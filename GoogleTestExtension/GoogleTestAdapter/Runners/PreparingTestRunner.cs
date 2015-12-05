@@ -17,10 +17,10 @@ namespace GoogleTestAdapter.Runners
         private int ThreadId { get; }
 
 
-        public PreparingTestRunner(int threadId, TestEnvironment testEnvironment)
+        public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
-            this.InnerTestRunner = new SequentialTestRunner(TestEnvironment);
+            this.InnerTestRunner = new SequentialTestRunner(reporter, TestEnvironment);
             this.ThreadId = threadId;
         }
 

@@ -62,9 +62,7 @@ namespace GoogleTestAdapter
         }
 
 
-        public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
-
-        private static readonly Regex CompiledTestFinderRegex = new Regex(TestFinderRegex, RegexOptions.Compiled);
+        private static readonly Regex CompiledTestFinderRegex = new Regex(Options.TestFinderRegex, RegexOptions.Compiled);
 
 
         private TestEnvironment TestEnvironment { get; set; }
@@ -115,7 +113,7 @@ namespace GoogleTestAdapter
             string regexUsed;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexUsed = TestFinderRegex;
+                regexUsed = Options.TestFinderRegex;
                 matches = CompiledTestFinderRegex.IsMatch(executable);
             }
             else

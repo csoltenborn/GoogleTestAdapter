@@ -10,13 +10,15 @@ namespace GoogleTestAdapter.Runners
 {
     public class ParallelTestRunner : ITestRunner
     {
+        private ITestFrameworkReporter FrameworkReporter { get; }
         private TestEnvironment TestEnvironment { get; }
         private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
 
 
-        public ParallelTestRunner(TestEnvironment testEnvironment)
+        public ParallelTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
         {
-            this.TestEnvironment = testEnvironment;
+            FrameworkReporter = reporter;
+            TestEnvironment = testEnvironment;
         }
 
 
@@ -63,7 +65,7 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                ITestRunner runner = new PreparingTestRunner(threadId++, TestEnvironment);
+                ITestRunner runner = new PreparingTestRunner(threadId++, FrameworkReporter, TestEnvironment);
                 TestRunners.Add(runner);
 
                 Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, runContext, handle));

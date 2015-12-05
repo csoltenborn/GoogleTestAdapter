@@ -48,6 +48,7 @@ namespace GoogleTestAdapter
         protected readonly Mock<Options> MockOptions = new Mock<Options>() { CallBase = true };
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
+        protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
         internal readonly TestEnvironment TestEnvironment;
         private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
 
@@ -92,6 +93,7 @@ namespace GoogleTestAdapter
             MockOptions.Reset();
             MockRunContext.Reset();
             MockFrameworkHandle.Reset();
+            MockFrameworkReporter.Reset();
             _allTestCasesOfConsoleApplication1 = null;
         }
 

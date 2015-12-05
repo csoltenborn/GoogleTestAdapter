@@ -14,11 +14,14 @@ namespace GoogleTestAdapter.Runners
     {
         private bool Canceled { get; set; } = false;
 
+        private ITestFrameworkReporter FrameworkReporter { get; }
         private TestEnvironment TestEnvironment { get; }
 
 
-        public SequentialTestRunner(TestEnvironment testEnvironment)
+
+        public SequentialTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
         {
+            FrameworkReporter = reporter;
             TestEnvironment = testEnvironment;
         }
 
@@ -53,7 +56,6 @@ namespace GoogleTestAdapter.Runners
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
 
             CommandLineGenerator generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
@@ -64,13 +66,13 @@ namespace GoogleTestAdapter.Runners
                     break;
                 }
 
-                reporter.ReportTestsStarted(handle, arguments.TestCases);
+                FrameworkReporter.ReportTestsStarted(handle, arguments.TestCases);
 
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 
-                reporter.ReportTestResults(handle, results);
+                FrameworkReporter.ReportTestResults(handle, results);
                 serializer.UpdateTestDurations(results);
             }
         }

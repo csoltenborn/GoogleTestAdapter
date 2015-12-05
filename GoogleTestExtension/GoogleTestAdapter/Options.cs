@@ -42,6 +42,8 @@ namespace GoogleTestAdapter
 
     public class Options
     {
+        public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
+
         private IXmlOptions XmlOptions { get; }
         private TestEnvironment TestEnvironment { get; }
         private RegexTraitParser RegexTraitParser { get; }
@@ -114,7 +116,7 @@ namespace GoogleTestAdapter
         public const string OptionTestDiscoveryRegexDefaultValue = "";
         public const string OptionTestDiscoveryRegexDescription =
             "If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: "
-            + GoogleTestDiscoverer.TestFinderRegex;
+            + TestFinderRegex;
 
         public virtual string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
