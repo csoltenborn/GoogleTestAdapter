@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -30,9 +31,9 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        public List<TestResult> GetTestResults()
+        public List<TestResult2> GetTestResults()
         {
-            List<TestResult> testResults = new List<TestResult>();
+            List<TestResult2> testResults = new List<TestResult2>();
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);
             while (indexOfNextTestcase >= 0)
             {
@@ -43,7 +44,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        private TestResult CreateTestResult(int indexOfTestcase)
+        private TestResult2 CreateTestResult(int indexOfTestcase)
         {
             int currentLineIndex = indexOfTestcase;
 
@@ -96,29 +97,29 @@ namespace GoogleTestAdapter.TestResults
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));
         }
 
-        private TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
+        private TestResult2 CreatePassedTestResult(TestCase testCase, TimeSpan duration)
         {
-            return new TestResult(testCase)
+            return new TestResult2(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = " ",
-                Outcome = TestOutcome.Passed,
+                Outcome = TestOutcome2.Passed,
                 ErrorMessage = "",
                 Duration = duration
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, bool crashed, string errorMessage)
+        private TestResult2 CreateFailedTestResult(TestCase testCase, TimeSpan duration, bool crashed, string errorMessage)
         {
             if (crashed)
             {
                 CrashedTestCase = testCase;
             }
-            return new TestResult(testCase)
+            return new TestResult2(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = crashed ? "because it CRASHED!" : " ",
-                Outcome = TestOutcome.Failed,
+                Outcome = TestOutcome2.Failed,
                 ErrorMessage = errorMessage,
                 Duration = duration
             };

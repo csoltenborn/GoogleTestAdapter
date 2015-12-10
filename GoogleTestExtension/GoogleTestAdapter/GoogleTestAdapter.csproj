@@ -60,6 +60,7 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\XmlOptions.cs" />
     <Compile Include="ITestFrameworkReporter.cs" />
+    <Compile Include="Model\TestResult.cs" />
     <Compile Include="Runners\PreparingTestRunner.cs" />
     <Compile Include="Runners\SequentialTestRunner.cs" />
     <Compile Include="Runners\ITestRunner.cs" />

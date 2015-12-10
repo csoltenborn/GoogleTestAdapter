@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -30,7 +31,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        public List<TestResult> GetTestResults()
+        public List<TestResult2> GetTestResults()
         {
             if (File.Exists(XmlResultFile))
             {
@@ -38,15 +39,15 @@ namespace GoogleTestAdapter.TestResults
             }
 
             TestEnvironment.LogWarning(ErrorMsgNoXmlFile);
-            return new List<TestResult>();
+            return new List<TestResult2>();
         }
 
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        private List<TestResult> ParseTestResults()
+        private List<TestResult2> ParseTestResults()
         {
-            List<TestResult> testResults = new List<TestResult>();
+            List<TestResult2> testResults = new List<TestResult2>();
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
@@ -73,7 +74,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        private TestResult ParseTestResult(XmlNode testcaseNode)
+        private TestResult2 ParseTestResult(XmlNode testcaseNode)
         {
             string className = testcaseNode.Attributes["classname"].InnerText;
             string testCaseName = testcaseNode.Attributes["name"].InnerText;
@@ -85,7 +86,7 @@ namespace GoogleTestAdapter.TestResults
                 return null;
             }
 
-            TestResult testResult = new TestResult(testCase)
+            TestResult2 testResult = new TestResult2(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = " "
@@ -101,16 +102,16 @@ namespace GoogleTestAdapter.TestResults
                     XmlNodeList failureNodes = testcaseNode.SelectNodes("failure");
                     if (failureNodes.Count == 0)
                     {
-                        testResult.Outcome = TestOutcome.Passed;
+                        testResult.Outcome = TestOutcome2.Passed;
                     }
                     else
                     {
-                        testResult.Outcome = TestOutcome.Failed;
+                        testResult.Outcome = TestOutcome2.Failed;
                         testResult.ErrorMessage = CreateErrorMessage(failureNodes);
                     }
                     break;
                 case "notrun":
-                    testResult.Outcome = TestOutcome.Skipped;
+                    testResult.Outcome = TestOutcome2.Skipped;
                     break;
                 default:
                     string msg = "Unknown testcase status: " + testCaseStatus;

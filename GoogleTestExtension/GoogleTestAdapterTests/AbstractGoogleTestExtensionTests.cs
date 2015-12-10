@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
@@ -130,9 +131,9 @@ namespace GoogleTestAdapter
             return ToTestCase(name, DummyExecutable);
         }
 
-        protected static TestResult ToTestResult(string qualifiedTestCaseName, TestOutcome outcome, int duration, string executable = DummyExecutable)
+        protected static TestResult2 ToTestResult(string qualifiedTestCaseName, TestOutcome2 outcome, int duration, string executable = DummyExecutable)
         {
-            return new TestResult(ToTestCase(qualifiedTestCaseName, executable))
+            return new TestResult2(ToTestCase(qualifiedTestCaseName, executable))
             {
                 Outcome = outcome,
                 Duration = TimeSpan.FromMilliseconds(duration)

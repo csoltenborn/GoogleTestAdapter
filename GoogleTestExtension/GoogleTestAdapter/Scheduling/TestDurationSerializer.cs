@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Scheduling
 {
@@ -63,9 +64,9 @@ namespace GoogleTestAdapter.Scheduling
             return durations;
         }
 
-        public void UpdateTestDurations(IEnumerable<TestResult> testResults)
+        public void UpdateTestDurations(IEnumerable<TestResult2> testResults)
         {
-            IDictionary<string, List<TestResult>> groupedTestcases = GroupTestResultsByExecutable(testResults);
+            IDictionary<string, List<TestResult2>> groupedTestcases = GroupTestResultsByExecutable(testResults);
             foreach (string executable in groupedTestcases.Keys)
             {
                 lock (Lock)
@@ -100,13 +101,13 @@ namespace GoogleTestAdapter.Scheduling
             return durations;
         }
 
-        private void UpdateTestDurations(string executable, List<TestResult> testresults)
+        private void UpdateTestDurations(string executable, List<TestResult2> testresults)
         {
             string durationsFile = GetDurationsFile(executable);
             GtaTestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GtaTestDurations();
             container.Executable = Path.GetFullPath(executable);
 
-            foreach (TestResult testResult in testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
+            foreach (TestResult2 testResult in testresults.Where(tr => tr.Outcome == TestOutcome2.Passed || tr.Outcome == TestOutcome2.Failed))
             {
                 TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testResult.TestCase.FullyQualifiedName);
                 if (!pair.Equals(Default))
@@ -134,19 +135,19 @@ namespace GoogleTestAdapter.Scheduling
             fileStream.Close();
         }
 
-        private IDictionary<string, List<TestResult>> GroupTestResultsByExecutable(IEnumerable<TestResult> testresults)
+        private IDictionary<string, List<TestResult2>> GroupTestResultsByExecutable(IEnumerable<TestResult2> testresults)
         {
-            Dictionary<string, List<TestResult>> groupedTestResults = new Dictionary<string, List<TestResult>>();
-            foreach (TestResult testResult in testresults)
+            Dictionary<string, List<TestResult2>> groupedTestResults = new Dictionary<string, List<TestResult2>>();
+            foreach (TestResult2 testResult in testresults)
             {
-                List<TestResult> group;
+                List<TestResult2> group;
                 if (groupedTestResults.ContainsKey(testResult.TestCase.Source))
                 {
                     group = groupedTestResults[testResult.TestCase.Source];
                 }
                 else
                 {
-                    group = new List<TestResult>();
+                    group = new List<TestResult2>();
                     groupedTestResults.Add(testResult.TestCase.Source, group);
                 }
                 group.Add(testResult);
@@ -154,7 +155,7 @@ namespace GoogleTestAdapter.Scheduling
             return groupedTestResults;
         }
 
-        private int GetDuration(TestResult testResult)
+        private int GetDuration(TestResult2 testResult)
         {
             return (int)Math.Ceiling(testResult.Duration.TotalMilliseconds);
         }

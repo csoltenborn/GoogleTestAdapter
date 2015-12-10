@@ -5,6 +5,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Scheduling
 {
@@ -16,10 +17,10 @@ namespace GoogleTestAdapter.Scheduling
         public void DurationIsWrittenAndReadCorrectly()
         {
             string tempFile = Path.GetTempFileName();
-            List<TestResult> testResults = new List<TestResult>
+            List<TestResult2> testResults = new List<TestResult2>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome.Passed, 3, tempFile),
-                ToTestResult("TestSuite1.SkippedTest", TestOutcome.Skipped, 1, tempFile)
+                ToTestResult("TestSuite1.Test1", TestOutcome2.Passed, 3, tempFile),
+                ToTestResult("TestSuite1.SkippedTest", TestOutcome2.Skipped, 1, tempFile)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
@@ -42,10 +43,10 @@ namespace GoogleTestAdapter.Scheduling
         {
             string tempFile = Path.GetTempFileName();
             string tempFile2 = Path.GetTempFileName();
-            List<TestResult> testResults = new List<TestResult>
+            List<TestResult2> testResults = new List<TestResult2>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome.Passed, 3, tempFile),
-                ToTestResult("TestSuite1.Test1", TestOutcome.Failed, 4, tempFile2)
+                ToTestResult("TestSuite1.Test1", TestOutcome2.Passed, 3, tempFile),
+                ToTestResult("TestSuite1.Test1", TestOutcome2.Failed, 4, tempFile2)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
@@ -71,9 +72,9 @@ namespace GoogleTestAdapter.Scheduling
         public void DurationIsUpdatedCorrectly()
         {
             string tempFile = Path.GetTempFileName();
-            List<TestResult> testResults = new List<TestResult>
+            List<TestResult2> testResults = new List<TestResult2>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome.Passed, 3, tempFile)
+                ToTestResult("TestSuite1.Test1", TestOutcome2.Passed, 3, tempFile)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
@@ -107,9 +108,9 @@ namespace GoogleTestAdapter.Scheduling
         public void DurationFileWithoutCurrentTestResultsInEmptyDictionary()
         {
             string tempFile = Path.GetTempFileName();
-            List<TestResult> testResults = new List<TestResult>
+            List<TestResult2> testResults = new List<TestResult2>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome.None, 3, tempFile)
+                ToTestResult("TestSuite1.Test1", TestOutcome2.None, 3, tempFile)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);

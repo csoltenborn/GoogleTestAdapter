@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
@@ -47,11 +49,11 @@ namespace GoogleTestAdapter
             }
         }
 
-        public void ReportTestResults(IFrameworkHandle frameworkHandle, IEnumerable<TestResult> testResults)
+        public void ReportTestResults(IFrameworkHandle frameworkHandle, IEnumerable<TestResult2> testResults)
         {
             lock (Lock)
             {
-                foreach (TestResult testResult in testResults)
+                foreach (TestResult2 testResult in testResults)
                 {
                     ReportTestResult(frameworkHandle, testResult);
                 }
@@ -59,10 +61,11 @@ namespace GoogleTestAdapter
         }
 
 
-        private void ReportTestResult(IFrameworkHandle frameworkHandle, TestResult testResult)
+        private void ReportTestResult(IFrameworkHandle frameworkHandle, TestResult2 testResult)
         {
-            frameworkHandle.RecordResult(testResult);
-            frameworkHandle.RecordEnd(testResult.TestCase, testResult.Outcome);
+            TestResult result = testResult.ToTestResult();
+            frameworkHandle.RecordResult(result);
+            frameworkHandle.RecordEnd(testResult.TestCase, result.Outcome);
 
             NrOfReportedResults++;
             if (NrOfTestResultsBeforeWaiting != 0 && NrOfReportedResults % NrOfTestResultsBeforeWaiting == 0)
@@ -71,6 +74,34 @@ namespace GoogleTestAdapter
             }
         }
 
+    }
+
+    public static class Extensions
+    {
+        public static TestResult ToTestResult(this TestResult2 testResult)
+        {
+            TestResult result = new TestResult(testResult.TestCase);
+            result.Outcome = testResult.Outcome.ToTestOutcome();
+            result.ComputerName = testResult.ComputerName;
+            result.DisplayName = testResult.DisplayName;
+            result.Duration = testResult.Duration;
+            result.ErrorMessage = testResult.ErrorMessage;
+            return result;
+        }
+
+        public static TestOutcome ToTestOutcome(this TestOutcome2 testOutcome)
+        {
+            switch (testOutcome)
+            {
+                case TestOutcome2.Passed: return TestOutcome.Passed;
+                case TestOutcome2.Failed: return TestOutcome.Failed;
+                case TestOutcome2.Skipped: return TestOutcome.Skipped;
+                case TestOutcome2.None: return TestOutcome.None;
+                case TestOutcome2.NotFound: return TestOutcome.NotFound;
+                default:
+                    throw new Exception();
+            }
+        }
     }
 
 }

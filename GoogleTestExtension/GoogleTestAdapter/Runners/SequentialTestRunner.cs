@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -70,16 +71,16 @@ namespace GoogleTestAdapter.Runners
 
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
-                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
+                IEnumerable<TestResult2> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 
                 FrameworkReporter.ReportTestResults(handle, results);
                 serializer.UpdateTestDurations(results);
             }
         }
 
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput)
+        private List<TestResult2> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput)
         {
-            List<TestResult> testResults = new List<TestResult>();
+            List<TestResult2> testResults = new List<TestResult2>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
             XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment);
@@ -89,8 +90,8 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                List<TestResult> consoleResults = consoleParser.GetTestResults();
-                foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
+                List<TestResult2> consoleResults = consoleParser.GetTestResults();
+                foreach (TestResult2 testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
                 {
                     testResults.Add(testResult);
                 }
@@ -102,10 +103,10 @@ namespace GoogleTestAdapter.Runners
                 {
                     string errorMsg = consoleParser.CrashedTestCase == null ? ""
                         : "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
-                    testResults.Add(new TestResult(testCase)
+                    testResults.Add(new TestResult2(testCase)
                     {
                         ComputerName = Environment.MachineName,
-                        Outcome = TestOutcome.Skipped,
+                        Outcome = TestOutcome2.Skipped,
                         ErrorMessage = errorMsg
                     });
                 }
