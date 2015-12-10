@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -16,14 +15,14 @@ namespace GoogleTestAdapter.TestResults
         public const string CrashText = "!! This is probably the test that crashed !!";
 
 
-        public TestCase CrashedTestCase { get; private set; }
+        public TestCase2 CrashedTestCase { get; private set; }
 
         private List<string> ConsoleOutput { get; }
-        private List<TestCase> TestCasesRun { get; }
+        private List<TestCase2> TestCasesRun { get; }
         private TestEnvironment TestEnvironment { get; }
 
 
-        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
+        public StandardOutputTestResultParser(IEnumerable<TestCase2> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = testCasesRun.ToList();
@@ -50,7 +49,7 @@ namespace GoogleTestAdapter.TestResults
 
             string line = ConsoleOutput[currentLineIndex++];
             string qualifiedTestname = RemovePrefix(line).Trim();
-            TestCase testCase = FindTestcase(qualifiedTestname);
+            TestCase2 testCase = FindTestcase(qualifiedTestname);
 
             if (currentLineIndex >= ConsoleOutput.Count)
             {
@@ -97,7 +96,7 @@ namespace GoogleTestAdapter.TestResults
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));
         }
 
-        private TestResult2 CreatePassedTestResult(TestCase testCase, TimeSpan duration)
+        private TestResult2 CreatePassedTestResult(TestCase2 testCase, TimeSpan duration)
         {
             return new TestResult2(testCase)
             {
@@ -109,7 +108,7 @@ namespace GoogleTestAdapter.TestResults
             };
         }
 
-        private TestResult2 CreateFailedTestResult(TestCase testCase, TimeSpan duration, bool crashed, string errorMessage)
+        private TestResult2 CreateFailedTestResult(TestCase2 testCase, TimeSpan duration, bool crashed, string errorMessage)
         {
             if (crashed)
             {
@@ -139,7 +138,7 @@ namespace GoogleTestAdapter.TestResults
             return -1;
         }
 
-        private TestCase FindTestcase(string qualifiedTestname)
+        private TestCase2 FindTestcase(string qualifiedTestname)
         {
             return TestCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
         }

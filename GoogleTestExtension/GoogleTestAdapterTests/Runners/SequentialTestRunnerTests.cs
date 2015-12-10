@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,8 +14,8 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void CancelingRunnerStopsTestExecution()
         {
-            List<TestCase> allTestCases = AllTestCasesOfConsoleApplication1;
-            List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<TestCase2> allTestCases = AllTestCasesOfConsoleApplication1;
+            List<TestCase2> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
             ITestRunner runner = new SequentialTestRunner(MockFrameworkReporter.Object, TestEnvironment);

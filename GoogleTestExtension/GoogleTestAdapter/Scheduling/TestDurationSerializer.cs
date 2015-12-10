@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -52,10 +51,10 @@ namespace GoogleTestAdapter.Scheduling
         }
 
 
-        public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
+        public IDictionary<TestCase2, int> ReadTestDurations(IEnumerable<TestCase2> testcases)
         {
-            IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
-            IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
+            IDictionary<string, List<TestCase2>> groupedTestcases = testcases.GroupByExecutable();
+            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string executable in groupedTestcases.Keys)
             {
@@ -78,9 +77,9 @@ namespace GoogleTestAdapter.Scheduling
         }
 
 
-        private IDictionary<TestCase, int> ReadTestDurations(string executable, List<TestCase> testcases)
+        private IDictionary<TestCase2, int> ReadTestDurations(string executable, List<TestCase2> testcases)
         {
-            IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
+            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
             string durationsFile = GetDurationsFile(executable);
             if (!File.Exists(durationsFile))
             {
@@ -89,7 +88,7 @@ namespace GoogleTestAdapter.Scheduling
 
             GtaTestDurations container = LoadTestDurations(durationsFile);
 
-            foreach (TestCase testcase in testcases)
+            foreach (TestCase2 testcase in testcases)
             {
                 TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testcase.FullyQualifiedName);
                 if (!pair.Equals(Default))

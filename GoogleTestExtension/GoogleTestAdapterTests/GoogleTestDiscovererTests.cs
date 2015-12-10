@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
@@ -231,7 +232,7 @@ namespace GoogleTestAdapter
         private void FindStaticallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+            List<TestCase2> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -247,7 +248,7 @@ namespace GoogleTestAdapter
         private void FindExternallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+            List<TestCase2> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -265,14 +266,14 @@ namespace GoogleTestAdapter
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            List<TestCase2> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
-            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
+            TestCase2 testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
             Assert.IsNotNull(testCase);
 
             foreach (Trait trait in traits)
             {
-                Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
+                Trait2 foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
                 Assert.IsNotNull(foundTrait, "Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
         }

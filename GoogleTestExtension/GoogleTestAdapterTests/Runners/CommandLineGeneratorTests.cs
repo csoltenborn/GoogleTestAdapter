@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable PossibleMultipleEnumeration
@@ -17,7 +18,7 @@ namespace GoogleTestAdapter.Runners
         public void ThrowsIfUserParametersIsNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), 0, null, "", TestEnvironment);
+            new CommandLineGenerator(new List<TestCase2>(), new List<TestCase2>(), 0, null, "", TestEnvironment);
         }
 
         [TestMethod]
@@ -25,7 +26,7 @@ namespace GoogleTestAdapter.Runners
         {
             string userParameters = "-testdirectory=\"MyTestDirectory\"";
 
-            string commandLine = new CommandLineGenerator(new List<TestCase>(), new List<TestCase>(), DummyExecutable.Length, userParameters, "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(new List<TestCase2>(), new List<TestCase2>(), DummyExecutable.Length, userParameters, "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             Assert.IsTrue(commandLine.EndsWith(" -testdirectory=\"MyTestDirectory\""));
         }
@@ -33,7 +34,7 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void CorrectArgumentsWhenRunningAllTests()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\"", commandLine);
@@ -44,7 +45,7 @@ namespace GoogleTestAdapter.Runners
         {
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(4711);
 
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             string repetitionsOption = GoogleTestConstants.NrOfRepetitionsOption + "=4711";
@@ -56,7 +57,7 @@ namespace GoogleTestAdapter.Runners
         {
             MockOptions.Setup(o => o.ShuffleTests).Returns(true);
 
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             Assert.AreEqual("--gtest_output=\"xml:\"" + GoogleTestConstants.ShuffleTestsOption, commandLine);
@@ -68,7 +69,7 @@ namespace GoogleTestAdapter.Runners
             MockOptions.Setup(o => o.ShuffleTests).Returns(true);
             MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(4711);
 
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             string shuffleTestsOption = GoogleTestConstants.ShuffleTestsOption
@@ -80,8 +81,8 @@ namespace GoogleTestAdapter.Runners
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void CombinesCommonTestsInSuite()
         {
-            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
-            IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.FooTest"));
+            IEnumerable<TestCase2> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
+            IEnumerable<TestCase2> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.FooTest"));
 
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
@@ -93,11 +94,11 @@ namespace GoogleTestAdapter.Runners
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void CombinesCommonParameterizedTestsInSuite()
         {
-            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases(
+            IEnumerable<TestCase2> testCasesWithCommonSuite = CreateDummyTestCases(
                 "InstantiationName2/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)",
                 "InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)",
                 "InstantiationName/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)");
-            IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("InstantiationName2/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)"));
+            IEnumerable<TestCase2> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("InstantiationName2/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)"));
 
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
@@ -109,10 +110,10 @@ namespace GoogleTestAdapter.Runners
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public void CombinesCommonTestsInSuiteInDifferentOrder()
         {
-            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest",
+            IEnumerable<TestCase2> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest",
                 "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb");
-            IEnumerable<TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.BarTest"));
-            IEnumerable<TestCase> testCasesReversed = testCasesWithCommonSuite.Reverse();
+            IEnumerable<TestCase2> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.BarTest"));
+            IEnumerable<TestCase2> testCasesReversed = testCasesWithCommonSuite.Reverse();
 
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
@@ -127,8 +128,8 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void DoesNotCombineTestsNotHavingCommonSuite()
         {
-            IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
-            IEnumerable<TestCase> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
+            IEnumerable<TestCase2> testCasesWithDifferentSuite = CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
+            IEnumerable<TestCase2> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
 
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
@@ -139,8 +140,8 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void DoesNotCombineTestsNotHavingCommonSuite_InDifferentOrder()
         {
-            IEnumerable<TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
-            IEnumerable<TestCase> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
+            IEnumerable<TestCase2> testCasesWithDifferentSuite = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
+            IEnumerable<TestCase2> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
 
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
@@ -159,8 +160,8 @@ namespace GoogleTestAdapter.Runners
                 testsToExecute.Add("MyTestSuite" + i + ".MyTest");
                 allTests.Add("MyTestSuite" + i + ".MyTest2");
             }
-            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
-            IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
+            IEnumerable<TestCase2> allTestCases = allTests.Select(ToTestCase).ToList();
+            IEnumerable<TestCase2> testCases = testsToExecute.Select(ToTestCase).ToList();
 
             List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().ToList();
@@ -183,13 +184,13 @@ namespace GoogleTestAdapter.Runners
             Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
             Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            HashSet<TestCase> testsAsSet = new HashSet<TestCase>(testCases);
-            HashSet<TestCase> splittedTestsAsSet = new HashSet<TestCase>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
+            HashSet<TestCase2> testsAsSet = new HashSet<TestCase2>(testCases);
+            HashSet<TestCase2> splittedTestsAsSet = new HashSet<TestCase2>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
 
             Assert.AreEqual(testsAsSet.Count, splittedTestsAsSet.Count);
-            foreach (TestCase testCase in testsAsSet)
+            foreach (TestCase2 TestCase2 in testsAsSet)
             {
-                Assert.IsTrue(splittedTestsAsSet.Contains(testCase));
+                Assert.IsTrue(splittedTestsAsSet.Contains(TestCase2));
             }
         }
 
@@ -207,8 +208,8 @@ namespace GoogleTestAdapter.Runners
             testsToExecute.Add("MyTestSuite1.MyTest2");
             testsToExecute.Add("MyTestSuite5.MyTest2");
 
-            IEnumerable<TestCase> allTestCases = allTests.Select(ToTestCase).ToList();
-            IEnumerable<TestCase> testCases = testsToExecute.Select(ToTestCase).ToList();
+            IEnumerable<TestCase2> allTestCases = allTests.Select(ToTestCase).ToList();
+            IEnumerable<TestCase2> testCases = testsToExecute.Select(ToTestCase).ToList();
 
             List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().ToList();
@@ -233,13 +234,13 @@ namespace GoogleTestAdapter.Runners
             Assert.IsFalse(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
             Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
 
-            HashSet<TestCase> testsAsSet = new HashSet<TestCase>(testCases);
-            HashSet<TestCase> splittedTestsAsSet = new HashSet<TestCase>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
+            HashSet<TestCase2> testsAsSet = new HashSet<TestCase2>(testCases);
+            HashSet<TestCase2> splittedTestsAsSet = new HashSet<TestCase2>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
 
             Assert.AreEqual(testsAsSet.Count, splittedTestsAsSet.Count);
-            foreach (TestCase testCase in testsAsSet)
+            foreach (TestCase2 TestCase2 in testsAsSet)
             {
-                Assert.IsTrue(splittedTestsAsSet.Contains(testCase));
+                Assert.IsTrue(splittedTestsAsSet.Contains(TestCase2));
             }
         }
 

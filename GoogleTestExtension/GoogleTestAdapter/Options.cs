@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Xml;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
@@ -31,12 +32,12 @@ namespace GoogleTestAdapter
     public class RegexTraitPair
     {
         public string Regex { get; set; }
-        public Trait Trait { get; set; }
+        public Trait2 Trait { get; set; }
 
         public RegexTraitPair(string regex, string name, string value)
         {
             this.Regex = regex;
-            this.Trait = new Trait(name, value);
+            this.Trait = new Trait2(name, value);
         }
     }
 

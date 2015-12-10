@@ -186,7 +186,7 @@ namespace GoogleTestAdapter.TestResults
 
         private List<TestResult2> ComputeTestResults(List<string> consoleOutput)
         {
-            IEnumerable<TestCase> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
+            IEnumerable<TestCase2> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
             StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment);
             return parser.GetTestResults();
         }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -13,24 +13,24 @@ namespace GoogleTestAdapter.Helpers
             yield return item;
         }
 
-        internal static TestCase FindTestcase(this IEnumerable<TestCase> testcases, string qualifiedName)
+        internal static TestCase2 FindTestcase(this IEnumerable<TestCase2> testcases, string qualifiedName)
         {
             return testcases.FirstOrDefault(testcase => testcase.FullyQualifiedName.Split(' ')[0] == qualifiedName);
         }
 
-        internal static IDictionary<string, List<TestCase>> GroupByExecutable(this IEnumerable<TestCase> testcases)
+        internal static IDictionary<string, List<TestCase2>> GroupByExecutable(this IEnumerable<TestCase2> testcases)
         {
-            Dictionary<string, List<TestCase>> groupedTestCases = new Dictionary<string, List<TestCase>>();
-            foreach (TestCase testCase in testcases)
+            Dictionary<string, List<TestCase2>> groupedTestCases = new Dictionary<string, List<TestCase2>>();
+            foreach (TestCase2 testCase in testcases)
             {
-                List<TestCase> group;
+                List<TestCase2> group;
                 if (groupedTestCases.ContainsKey(testCase.Source))
                 {
                     group = groupedTestCases[testCase.Source];
                 }
                 else
                 {
-                    group = new List<TestCase>();
+                    group = new List<TestCase2>();
                     groupedTestCases.Add(testCase.Source, group);
                 }
                 group.Add(testCase);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,11 +11,11 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void SameNumberOfTestsAsThreads_TestsAreDistributedEvenly()
         {
-            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
+            IEnumerable<TestCase2> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
-            List<List<TestCase>> result = splitter.SplitTestcases();
+            List<List<TestCase2>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(1, result[0].Count);
@@ -24,11 +25,11 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void MoreTestsThanThreads_TestsAreDistributedEvenly()
         {
-            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest");
+            IEnumerable<TestCase2> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
-            List<List<TestCase>> result = splitter.SplitTestcases();
+            List<List<TestCase2>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(2, result[0].Count);
@@ -38,7 +39,7 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void ALotMoreTestsThanThreads_TestsAreDistributedEvenly()
         {
-            List<TestCase> testcases = new List<TestCase>();
+            List<TestCase2> testcases = new List<TestCase2>();
             for (int i = 0; i < 5002; i++)
             {
                 testcases.Add(ToTestCase("TestSuite.Test" + i));
@@ -46,7 +47,7 @@ namespace GoogleTestAdapter.Scheduling
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, TestEnvironment);
-            List<List<TestCase>> result = splitter.SplitTestcases();
+            List<List<TestCase2>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(8, result.Count);
             Assert.AreEqual(626, result[0].Count);
@@ -62,11 +63,11 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void MoreThreadsThanTests_TestsAreDistributedEvenly()
         {
-            IEnumerable<TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
+            IEnumerable<TestCase2> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
-            List<List<TestCase>> result = splitter.SplitTestcases();
+            List<List<TestCase2>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(1, result[0].Count);

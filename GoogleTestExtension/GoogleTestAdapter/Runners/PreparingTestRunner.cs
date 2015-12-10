@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));

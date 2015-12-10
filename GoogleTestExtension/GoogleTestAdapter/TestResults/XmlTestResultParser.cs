@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -20,10 +19,10 @@ namespace GoogleTestAdapter.TestResults
 
         private TestEnvironment TestEnvironment { get; }
         private string XmlResultFile { get; }
-        private List<TestCase> TestCasesRun { get; }
+        private List<TestCase2> TestCasesRun { get; }
 
 
-        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
+        public XmlTestResultParser(IEnumerable<TestCase2> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.XmlResultFile = xmlResultFile;
@@ -80,7 +79,7 @@ namespace GoogleTestAdapter.TestResults
             string testCaseName = testcaseNode.Attributes["name"].InnerText;
             string qualifiedName = className + "." + testCaseName;
 
-            TestCase testCase = TestCasesRun.FindTestcase(qualifiedName);
+            TestCase2 testCase = TestCasesRun.FindTestcase(qualifiedName);
             if (testCase == null)
             {
                 return null;

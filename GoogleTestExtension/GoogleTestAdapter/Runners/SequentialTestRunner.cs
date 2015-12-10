@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
@@ -27,13 +26,13 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
             string userParameters, IRunContext runContext, IFrameworkHandle handle)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
-            IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
-            TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
+            IDictionary<string, List<TestCase2>> groupedTestCases = testCasesToRun.GroupByExecutable();
+            TestCase2[] allTestCasesAsArray = allTestCases as TestCase2[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
                 if (Canceled)
@@ -52,7 +51,7 @@ namespace GoogleTestAdapter.Runners
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable,
-            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string userParameters,
+            IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun, string userParameters,
             IRunContext runContext, IFrameworkHandle handle)
         {
             string resultXmlFile = Path.GetTempFileName();
@@ -78,11 +77,11 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private List<TestResult2> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput)
+        private List<TestResult2> CollectTestResults(IEnumerable<TestCase2> testCasesRun, string resultXmlFile, List<string> consoleOutput)
         {
             List<TestResult2> testResults = new List<TestResult2>();
 
-            TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
+            TestCase2[] testCasesRunAsArray = testCasesRun as TestCase2[] ?? testCasesRun.ToArray();
             XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment);
             StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, TestEnvironment);
 
@@ -99,7 +98,7 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
+                foreach (TestCase2 testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
                 {
                     string errorMsg = consoleParser.CrashedTestCase == null ? ""
                         : "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;

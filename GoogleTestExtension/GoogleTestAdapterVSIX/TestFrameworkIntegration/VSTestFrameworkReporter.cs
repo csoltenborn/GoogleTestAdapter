@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -27,24 +28,24 @@ namespace GoogleTestAdapter
         }
 
 
-        public void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase> testCases)
+        public void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase2> testCases)
         {
             lock (Lock)
             {
-                foreach (TestCase testCase in testCases)
+                foreach (TestCase2 testCase in testCases)
                 {
-                    sink.SendTestCase(testCase);
+                    sink.SendTestCase(Extensions.ToVsTestCase(testCase));
                 }
             }
         }
 
-        public void ReportTestsStarted(IFrameworkHandle frameworkHandle, IEnumerable<TestCase> testCases)
+        public void ReportTestsStarted(IFrameworkHandle frameworkHandle, IEnumerable<TestCase2> testCases)
         {
             lock (Lock)
             {
-                foreach (TestCase testCase in testCases)
+                foreach (TestCase2 testCase in testCases)
                 {
-                    frameworkHandle.RecordStart(testCase);
+                    frameworkHandle.RecordStart(Extensions.ToVsTestCase(testCase));
                 }
             }
         }
@@ -65,7 +66,7 @@ namespace GoogleTestAdapter
         {
             TestResult result = testResult.ToTestResult();
             frameworkHandle.RecordResult(result);
-            frameworkHandle.RecordEnd(testResult.TestCase, result.Outcome);
+            frameworkHandle.RecordEnd(Extensions.ToVsTestCase(testResult.TestCase), result.Outcome);
 
             NrOfReportedResults++;
             if (NrOfTestResultsBeforeWaiting != 0 && NrOfReportedResults % NrOfTestResultsBeforeWaiting == 0)
@@ -78,10 +79,40 @@ namespace GoogleTestAdapter
 
     public static class Extensions
     {
+        public static TestCase ToVsTestCase(this TestCase2 testCase)
+        {
+            TestCase result = new TestCase(testCase.FullyQualifiedName, testCase.ExecutorUri, testCase.Source);
+            result.DisplayName = testCase.DisplayName;
+            result.CodeFilePath = testCase.CodeFilePath;
+            result.LineNumber = testCase.LineNumber;
+            result.Traits.AddRange(testCase.Traits.Select(ToVsTrait));
+            return result;
+        }
+
+        public static TestCase2 ToTestCase(this TestCase testCase)
+        {
+            TestCase2 result = new TestCase2(testCase.FullyQualifiedName, testCase.ExecutorUri, testCase.Source);
+            result.DisplayName = testCase.DisplayName;
+            result.CodeFilePath = testCase.CodeFilePath;
+            result.LineNumber = testCase.LineNumber;
+            result.Traits.AddRange(testCase.Traits.Select(ToTrait));
+            return result;
+        }
+
+        public static Trait ToVsTrait(this Trait2 trait)
+        {
+            return new Trait(trait.Name, trait.Value);
+        }
+
+        public static Trait2 ToTrait(this Trait trait)
+        {
+            return new Trait2(trait.Name, trait.Value);
+        }
+
         public static TestResult ToTestResult(this TestResult2 testResult)
         {
-            TestResult result = new TestResult(testResult.TestCase);
-            result.Outcome = testResult.Outcome.ToTestOutcome();
+            TestResult result = new TestResult(ToVsTestCase(testResult.TestCase));
+            result.Outcome = testResult.Outcome.ToVsTestOutcome();
             result.ComputerName = testResult.ComputerName;
             result.DisplayName = testResult.DisplayName;
             result.Duration = testResult.Duration;
@@ -89,7 +120,7 @@ namespace GoogleTestAdapter
             return result;
         }
 
-        public static TestOutcome ToTestOutcome(this TestOutcome2 testOutcome)
+        public static TestOutcome ToVsTestOutcome(this TestOutcome2 testOutcome)
         {
             switch (testOutcome)
             {

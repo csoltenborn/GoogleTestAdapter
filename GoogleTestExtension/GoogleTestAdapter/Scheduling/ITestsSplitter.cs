@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Scheduling
 {
     public interface ITestsSplitter
     {
-        List<List<TestCase>> SplitTestcases();
+        List<List<TestCase2>> SplitTestcases();
     }
 
 }

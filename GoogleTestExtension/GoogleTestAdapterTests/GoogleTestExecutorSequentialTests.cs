@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -37,11 +39,11 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void CancelingExecutorStopsTestExecution()
         {
-            List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<TestCase2> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
             GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
-            Thread thread = new Thread(() => executor.RunTests(testCasesToRun, MockRunContext.Object, MockFrameworkHandle.Object));
+            Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(Extensions.ToVsTestCase), MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();
             thread.Start();

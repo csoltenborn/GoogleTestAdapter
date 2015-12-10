@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileDoesNotExist()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment);
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileIsInvalid()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileIsInvalid_InvalidStatusAttribute()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsSuccessfulResultsInSample1()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult2> results = parser.GetTestResults();
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void LogUnexpectedTestOutcomeInSample1()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             try
@@ -93,7 +93,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsSuccessfulParameterizedResultInSample1()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult2> results = parser.GetTestResults();
@@ -105,7 +105,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsFailureResultInSample1()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("AnimalsTest.testGetEnoughAnimals");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("AnimalsTest.testGetEnoughAnimals");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             List<TestResult2> results = parser.GetTestResults();
@@ -122,7 +122,7 @@ Should get three animals";
         [TestMethod]
         public void FindsParamterizedFailureResultInSample1()
         {
-            IEnumerable<TestCase> testCases =
+            IEnumerable<TestCase2> testCases =
                 CreateDummyTestCases(
                     "ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)");
 
@@ -138,7 +138,7 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         [TestMethod]
         public void FindsSuccessfulResultInSample2()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("FooTest.DoesXyz");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("FooTest.DoesXyz");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
             List<TestResult2> results = parser.GetTestResults();
@@ -150,7 +150,7 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         [TestMethod]
         public void FindsFailureResultInSample2()
         {
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("FooTest.MethodBarDoesAbc");
+            IEnumerable<TestCase2> testCases = CreateDummyTestCases("FooTest.MethodBarDoesAbc");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
             List<TestResult2> results = parser.GetTestResults();

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
@@ -85,12 +86,12 @@ namespace GoogleTestAdapter
             VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
             foreach (string executable in googleTestExecutables)
             {
-                List<TestCase> testCases = GetTestsFromExecutable(executable);
+                List<TestCase2> testCases = GetTestsFromExecutable(executable);
                 reporter.ReportTestsFound(discoverySink, testCases);
             }
         }
 
-        public List<TestCase> GetTestsFromExecutable(string executable)
+        public List<TestCase2> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null, null);
             List<TestCaseInfo> testCaseInfos = ParseTestCases(consoleOutput);
@@ -98,7 +99,7 @@ namespace GoogleTestAdapter
 
             TestEnvironment.LogInfo("Found " + testCaseInfos.Count + " tests in executable " + executable);
 
-            List<TestCase> testCases = new List<TestCase>();
+            List<TestCase2> testCases = new List<TestCase2>();
             foreach (TestCaseInfo testCaseInfo in testCaseInfos)
             {
                 testCases.Add(ToTestCase(executable, testCaseInfo, testCaseLocations));
@@ -193,7 +194,7 @@ namespace GoogleTestAdapter
             return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
-        private TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<TestCaseLocation> testCaseLocations)
+        private TestCase2 ToTestCase(string executable, TestCaseInfo testCaseInfo, List<TestCaseLocation> testCaseLocations)
         {
             string fullName = testCaseInfo.Suite + "." + testCaseInfo.NameAndParam;
             string displayName = testCaseInfo.Suite + "." + testCaseInfo.Name;
@@ -207,7 +208,7 @@ namespace GoogleTestAdapter
             {
                 if (location.Symbol.Contains(symbolName))
                 {
-                    TestCase testCase = new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+                    TestCase2 testCase = new TestCase2(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
                     {
                         DisplayName = displayName,
                         CodeFilePath = location.Sourcefile,
@@ -219,13 +220,13 @@ namespace GoogleTestAdapter
             }
 
             TestEnvironment.LogWarning("Could not find source location for test " + fullName);
-            return new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+            return new TestCase2(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
             {
                 DisplayName = displayName
             };
         }
 
-        private IEnumerable<Trait> GetTraits(string displayName, List<Trait> traits)
+        private IEnumerable<Trait2> GetTraits(string displayName, List<Trait2> traits)
         {
             foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesBefore.Where(p => Regex.IsMatch(displayName, p.Regex)))
             {
@@ -238,7 +239,7 @@ namespace GoogleTestAdapter
             foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesAfter.Where(p => Regex.IsMatch(displayName, p.Regex)))
             {
                 bool replacedTrait = false;
-                foreach (Trait traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))
+                foreach (Trait2 traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))
                 {
                     replacedTrait = true;
                     traits.Remove(traitToModify);

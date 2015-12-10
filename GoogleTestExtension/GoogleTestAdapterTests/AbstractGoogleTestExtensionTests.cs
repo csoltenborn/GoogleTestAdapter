@@ -51,7 +51,7 @@ namespace GoogleTestAdapter
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
         protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
         internal readonly TestEnvironment TestEnvironment;
-        private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
+        private List<TestCase2> _allTestCasesOfConsoleApplication1 = null;
 
 
         protected AbstractGoogleTestExtensionTests()
@@ -98,7 +98,7 @@ namespace GoogleTestAdapter
             _allTestCasesOfConsoleApplication1 = null;
         }
 
-        protected List<TestCase> GetTestCasesOfConsoleApplication1(params string[] qualifiedNames)
+        protected List<TestCase2> GetTestCasesOfConsoleApplication1(params string[] qualifiedNames)
         {
             return AllTestCasesOfConsoleApplication1.Where(
                 testCase => qualifiedNames.Any(
@@ -106,13 +106,13 @@ namespace GoogleTestAdapter
                     .ToList();
         }
 
-        protected List<TestCase> AllTestCasesOfConsoleApplication1
+        protected List<TestCase2> AllTestCasesOfConsoleApplication1
         {
             get
             {
                 if (_allTestCasesOfConsoleApplication1 == null)
                 {
-                    _allTestCasesOfConsoleApplication1 = new List<TestCase>();
+                    _allTestCasesOfConsoleApplication1 = new List<TestCase2>();
                     GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
                     _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(SampleTests));
                     _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(HardCrashingSampleTests));
@@ -121,12 +121,12 @@ namespace GoogleTestAdapter
             }
         }
 
-        protected static TestCase ToTestCase(string name, string executable)
+        protected static TestCase2 ToTestCase(string name, string executable)
         {
-            return new TestCase(name, new Uri("http://none"), executable);
+            return new TestCase2(name, new Uri("http://none"), executable);
         }
 
-        protected static TestCase ToTestCase(string name)
+        protected static TestCase2 ToTestCase(string name)
         {
             return ToTestCase(name, DummyExecutable);
         }
@@ -140,7 +140,7 @@ namespace GoogleTestAdapter
             };
         }
 
-        protected static IEnumerable<TestCase> CreateDummyTestCases(params string[] qualifiedNames)
+        protected static IEnumerable<TestCase2> CreateDummyTestCases(params string[] qualifiedNames)
         {
             return qualifiedNames.Select(ToTestCase).ToList();
         }

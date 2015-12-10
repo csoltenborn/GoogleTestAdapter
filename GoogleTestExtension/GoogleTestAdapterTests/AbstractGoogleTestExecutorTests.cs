@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
@@ -43,10 +44,10 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
-            TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
+            TestCase2 testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
 
             GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
-            executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(Extensions.ToVsTestCase(testCase).Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(0));
@@ -57,7 +58,7 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + Options.TestDirPlaceholder + "\"");
 
             executor = new GoogleTestExecutor(TestEnvironment);
-            executor.RunTests(testCase.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(Extensions.ToVsTestCase(testCase).Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Passed)),
                 Times.Exactly(1));

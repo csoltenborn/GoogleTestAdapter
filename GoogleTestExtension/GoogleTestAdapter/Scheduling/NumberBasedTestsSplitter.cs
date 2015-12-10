@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Scheduling
 {
     public class NumberBasedTestsSplitter : ITestsSplitter
     {
-        private IEnumerable<TestCase> TestcasesToRun { get; }
+        private IEnumerable<TestCase2> TestcasesToRun { get; }
         private TestEnvironment TestEnvironment { get; }
 
 
-        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, TestEnvironment testEnvironment)
+        public NumberBasedTestsSplitter(IEnumerable<TestCase2> testcasesToRun, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.TestcasesToRun = testcasesToRun;
         }
 
 
-        public List<List<TestCase>> SplitTestcases()
+        public List<List<TestCase2>> SplitTestcases()
         {
             int nrOfThreadsToUse = Math.Min(TestEnvironment.Options.MaxNrOfThreads, TestcasesToRun.Count());
-            List<TestCase>[] splitTestCases = new List<TestCase>[nrOfThreadsToUse];
+            List<TestCase2>[] splitTestCases = new List<TestCase2>[nrOfThreadsToUse];
             for (int i = 0; i < nrOfThreadsToUse; i++)
             {
-                splitTestCases[i] = new List<TestCase>();
+                splitTestCases[i] = new List<TestCase2>();
             }
 
             int testcaseCounter = 0;
-            foreach (TestCase testCase in TestcasesToRun)
+            foreach (TestCase2 testCase in TestcasesToRun)
             {
                 splitTestCases[testcaseCounter++ % nrOfThreadsToUse].Add(testCase);
             }
