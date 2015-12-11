@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
@@ -13,17 +12,19 @@ namespace GoogleTestAdapter.Runners
         private ITestFrameworkReporter FrameworkReporter { get; }
         private TestEnvironment TestEnvironment { get; }
         private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
+        private string SolutionDirectory { get; }
 
 
-        public ParallelTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
+        public ParallelTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment, string solutionDirectory)
         {
             FrameworkReporter = reporter;
             TestEnvironment = testEnvironment;
+            SolutionDirectory = solutionDirectory;
         }
 
 
         public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
-            string userParameters, IRunContext runContext, IFrameworkHandle handle)
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             List<Thread> threads;
             lock (this)
@@ -31,7 +32,7 @@ namespace GoogleTestAdapter.Runners
                 DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
                 threads = new List<Thread>();
-                RunTests(allTestCases, testCasesToRun, threads, runContext, handle);
+                RunTests(allTestCases, testCasesToRun, threads, isBeingDebugged, debuggedLauncher);
             }
 
             foreach (Thread thread in threads)
@@ -52,7 +53,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun, List<Thread> threads, IRunContext runContext, IFrameworkHandle handle)
+        private void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             TestCase2[] testCasesToRunAsArray = testCasesToRun as TestCase2[] ?? testCasesToRun.ToArray();
 
@@ -65,10 +66,10 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase2> testcases in splittedTestCasesToRun)
             {
-                ITestRunner runner = new PreparingTestRunner(threadId++, FrameworkReporter, TestEnvironment);
+                ITestRunner runner = new PreparingTestRunner(threadId++, SolutionDirectory, FrameworkReporter, TestEnvironment);
                 TestRunners.Add(runner);
 
-                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, runContext, handle));
+                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, isBeingDebugged, debuggedLauncher));
                 threads.Add(thread);
 
                 thread.Start();

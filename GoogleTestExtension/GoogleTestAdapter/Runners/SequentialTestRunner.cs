@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
@@ -27,7 +26,7 @@ namespace GoogleTestAdapter.Runners
 
 
         public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
-            string userParameters, IRunContext runContext, IFrameworkHandle handle)
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
@@ -39,7 +38,7 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-                RunTestsFromExecutable(executable, allTestCasesAsArray, groupedTestCases[executable], userParameters, runContext, handle);
+                RunTestsFromExecutable(executable, allTestCasesAsArray, groupedTestCases[executable], userParameters, isBeingDebugged, debuggedLauncher);
             }
         }
 
@@ -52,7 +51,7 @@ namespace GoogleTestAdapter.Runners
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable,
             IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun, string userParameters,
-            IRunContext runContext, IFrameworkHandle handle)
+            bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
@@ -69,7 +68,7 @@ namespace GoogleTestAdapter.Runners
                 FrameworkReporter.ReportTestsStarted(arguments.TestCases);
 
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
-                List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
+                List<string> consoleOutput = new ProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
                 IEnumerable<TestResult2> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 
                 FrameworkReporter.ReportTestResults(results);

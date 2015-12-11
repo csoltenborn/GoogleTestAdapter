@@ -93,7 +93,7 @@ namespace GoogleTestAdapter
 
         public List<TestCase2> GetTestsFromExecutable(string executable)
         {
-            List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null, null);
+            List<string> consoleOutput = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
             List<TestCaseInfo> testCaseInfos = ParseTestCases(consoleOutput);
             List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(executable, testCaseInfos);
 

@@ -59,6 +59,7 @@
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\XmlOptions.cs" />
+    <Compile Include="IDebuggedProcessLauncher.cs" />
     <Compile Include="ITestFrameworkReporter.cs" />
     <Compile Include="Model\TestCase.cs" />
     <Compile Include="Model\TestResult.cs" />

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using GoogleTestAdapter.Model;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter.Runners
 {
     public interface ITestRunner
     {
+        // TODO remove isBeingDebugged parameter (use debuggedLauncher != null)
         void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
-            string userParameters, IRunContext runContext, IFrameworkHandle handle);
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher);
 
         void Cancel();
     }

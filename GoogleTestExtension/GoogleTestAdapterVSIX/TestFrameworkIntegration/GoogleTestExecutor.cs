@@ -10,6 +10,21 @@ using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter
 {
+    class DebuggedProcessLauncher : IDebuggedProcessLauncher
+    {
+        private IFrameworkHandle Handle { get; }
+
+        internal DebuggedProcessLauncher(IFrameworkHandle handle)
+        {
+            Handle = handle;
+        }
+
+        public int LaunchProcessWithDebuggerAttached(string command, string workingDirectory, string param)
+        {
+            return Handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, null);
+        }
+    }
+
     [ExtensionUri(ExecutorUriString)]
     public class GoogleTestExecutor : ITestExecutor
     {
@@ -104,7 +119,7 @@ namespace GoogleTestAdapter
                 ComputeTestRunner(runContext, handle);
             }
 
-            Runner.RunTests(AllTestCasesInExecutables, testCasesToRunAsArray, null, runContext, handle);
+            Runner.RunTests(AllTestCasesInExecutables, testCasesToRunAsArray, null, runContext.IsBeingDebugged, new DebuggedProcessLauncher(handle));
             TestEnvironment.LogInfo("Test execution completed.");
         }
 
@@ -112,11 +127,11 @@ namespace GoogleTestAdapter
         {
             if (TestEnvironment.Options.ParallelTestExecution && !runContext.IsBeingDebugged)
             {
-                Runner = new ParallelTestRunner(new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment);
+                Runner = new ParallelTestRunner(new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment, runContext.SolutionDirectory);
             }
             else
             {
-                Runner = new PreparingTestRunner(0, new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment);
+                Runner = new PreparingTestRunner(0, runContext.SolutionDirectory, new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment);
                 if (TestEnvironment.Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
                     TestEnvironment.DebugInfo(

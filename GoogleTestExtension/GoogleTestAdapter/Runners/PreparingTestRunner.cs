@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -15,35 +14,37 @@ namespace GoogleTestAdapter.Runners
         private TestEnvironment TestEnvironment { get; }
         private ITestRunner InnerTestRunner { get; }
         private int ThreadId { get; }
+        private string SolutionDirectory { get; }
 
 
-        public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
+        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.InnerTestRunner = new SequentialTestRunner(reporter, TestEnvironment);
             this.ThreadId = threadId;
+            this.SolutionDirectory = solutionDirectory;
         }
 
 
         public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
-            string userParameters, IRunContext runContext, IFrameworkHandle handle)
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
             try
             {
                 string testDirectory = Utils.GetTempDirectory();
-                userParameters = TestEnvironment.Options.GetUserParameters(runContext.SolutionDirectory, testDirectory, ThreadId);
+                userParameters = TestEnvironment.Options.GetUserParameters(SolutionDirectory, testDirectory, ThreadId);
 
-                string batch = TestEnvironment.Options.GetBatchForTestSetup(runContext.SolutionDirectory, testDirectory, ThreadId);
-                batch = batch == "" ? "" : runContext.SolutionDirectory + batch;
-                SafeRunBatch(TEST_SETUP, runContext.SolutionDirectory, batch, runContext);
+                string batch = TestEnvironment.Options.GetBatchForTestSetup(SolutionDirectory, testDirectory, ThreadId);
+                batch = batch == "" ? "" : SolutionDirectory + batch;
+                SafeRunBatch(TEST_SETUP, SolutionDirectory, batch, isBeingDebugged);
 
-                InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, runContext, handle);
+                InnerTestRunner.RunTests(allTestCases, testCasesToRun, userParameters, isBeingDebugged, debuggedLauncher);
 
-                batch = TestEnvironment.Options.GetBatchForTestTeardown(runContext.SolutionDirectory, testDirectory, ThreadId);
-                batch = batch == "" ? "" : runContext.SolutionDirectory + batch;
-                SafeRunBatch(TEST_TEARDOWN, runContext.SolutionDirectory, batch, runContext);
+                batch = TestEnvironment.Options.GetBatchForTestTeardown(SolutionDirectory, testDirectory, ThreadId);
+                batch = batch == "" ? "" : SolutionDirectory + batch;
+                SafeRunBatch(TEST_TEARDOWN, SolutionDirectory, batch, isBeingDebugged);
 
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
@@ -64,7 +65,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void SafeRunBatch(string batchType, string workingDirectory, string batch, IRunContext runContext)
+        private void SafeRunBatch(string batchType, string workingDirectory, string batch, bool isBeingDebugged)
         {
             if (string.IsNullOrEmpty(batch))
             {
@@ -78,7 +79,7 @@ namespace GoogleTestAdapter.Runners
 
             try
             {
-                RunBatch(batchType, workingDirectory, batch, runContext);
+                RunBatch(batchType, workingDirectory, batch, isBeingDebugged);
             }
             catch (Exception e)
             {
@@ -88,11 +89,11 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private void RunBatch(string batchType, string workingDirectory, string batch, IRunContext runContext)
+        private void RunBatch(string batchType, string workingDirectory, string batch, bool isBeingDebugged)
         {
             int batchExitCode;
-            new ProcessLauncher(TestEnvironment).GetOutputOfCommand(
-                workingDirectory, batch, "", false, false, runContext, null, out batchExitCode);
+            new ProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(
+                workingDirectory, batch, "", false, false, null, out batchExitCode);
             if (batchExitCode == 0)
             {
                 TestEnvironment.DebugInfo(

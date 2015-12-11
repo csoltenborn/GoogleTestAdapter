@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.Helpers
         [TestMethod]
         public void ReturnsOutputOfCommand()
         {
-            List<string> output = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(".", "cmd.exe", "/C \"echo 2\"", false, false, null, null);
+            List<string> output = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand(".", "cmd.exe", "/C \"echo 2\"", false, false, null);
 
             Assert.AreEqual(1, output.Count);
             Assert.AreEqual("2", output[0]);
@@ -21,13 +21,13 @@ namespace GoogleTestAdapter.Helpers
         [ExpectedException(typeof(Exception))]
         public void ThrowsIfProcessFails()
         {
-            new ProcessLauncher(TestEnvironment).GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, true, null, null);
+            new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, true, null);
         }
 
         [TestMethod]
         public void DoesNotThrowIfProcessFails()
         {
-            new ProcessLauncher(TestEnvironment).GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, false, null, null);
+            new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, false, null);
         }
 
     }
