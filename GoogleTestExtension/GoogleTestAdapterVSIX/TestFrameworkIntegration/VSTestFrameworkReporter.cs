@@ -15,58 +15,62 @@ namespace GoogleTestAdapter
 
         private static int NrOfReportedResults { get; set; } = 0;
 
+        private IFrameworkHandle FrameworkHandle { get; }
+        private ITestCaseDiscoverySink Sink { get; }
 
         private TestEnvironment TestEnvironment { get; }
         private int NrOfTestResultsBeforeWaiting { get; }
         private const int WaitingTime = 1;
 
 
-        public VsTestFrameworkReporter(TestEnvironment testEnvironment)
+        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle, TestEnvironment testEnvironment)
         {
+            Sink = sink;
+            FrameworkHandle = frameworkHandle;
             TestEnvironment = testEnvironment;
             NrOfTestResultsBeforeWaiting = TestEnvironment.Options.ReportWaitPeriod;
         }
 
 
-        public void ReportTestsFound(ITestCaseDiscoverySink sink, IEnumerable<TestCase2> testCases)
+        public void ReportTestsFound(IEnumerable<TestCase2> testCases)
         {
             lock (Lock)
             {
                 foreach (TestCase2 testCase in testCases)
                 {
-                    sink.SendTestCase(Extensions.ToVsTestCase(testCase));
+                    Sink.SendTestCase(Extensions.ToVsTestCase(testCase));
                 }
             }
         }
 
-        public void ReportTestsStarted(IFrameworkHandle frameworkHandle, IEnumerable<TestCase2> testCases)
+        public void ReportTestsStarted(IEnumerable<TestCase2> testCases)
         {
             lock (Lock)
             {
                 foreach (TestCase2 testCase in testCases)
                 {
-                    frameworkHandle.RecordStart(Extensions.ToVsTestCase(testCase));
+                    FrameworkHandle.RecordStart(Extensions.ToVsTestCase(testCase));
                 }
             }
         }
 
-        public void ReportTestResults(IFrameworkHandle frameworkHandle, IEnumerable<TestResult2> testResults)
+        public void ReportTestResults(IEnumerable<TestResult2> testResults)
         {
             lock (Lock)
             {
                 foreach (TestResult2 testResult in testResults)
                 {
-                    ReportTestResult(frameworkHandle, testResult);
+                    ReportTestResult(testResult);
                 }
             }
         }
 
 
-        private void ReportTestResult(IFrameworkHandle frameworkHandle, TestResult2 testResult)
+        private void ReportTestResult(TestResult2 testResult)
         {
             TestResult result = testResult.ToTestResult();
-            frameworkHandle.RecordResult(result);
-            frameworkHandle.RecordEnd(Extensions.ToVsTestCase(testResult.TestCase), result.Outcome);
+            FrameworkHandle.RecordResult(result);
+            FrameworkHandle.RecordEnd(Extensions.ToVsTestCase(testResult.TestCase), result.Outcome);
 
             NrOfReportedResults++;
             if (NrOfTestResultsBeforeWaiting != 0 && NrOfReportedResults % NrOfTestResultsBeforeWaiting == 0)

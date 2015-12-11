@@ -101,22 +101,22 @@ namespace GoogleTestAdapter
                 {
                     return;
                 }
-                ComputeTestRunner(runContext);
+                ComputeTestRunner(runContext, handle);
             }
 
             Runner.RunTests(AllTestCasesInExecutables, testCasesToRunAsArray, null, runContext, handle);
             TestEnvironment.LogInfo("Test execution completed.");
         }
 
-        private void ComputeTestRunner(IRunContext runContext)
+        private void ComputeTestRunner(IRunContext runContext, IFrameworkHandle handle)
         {
             if (TestEnvironment.Options.ParallelTestExecution && !runContext.IsBeingDebugged)
             {
-                Runner = new ParallelTestRunner(new VsTestFrameworkReporter(TestEnvironment), TestEnvironment);
+                Runner = new ParallelTestRunner(new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment);
             }
             else
             {
-                Runner = new PreparingTestRunner(0, new VsTestFrameworkReporter(TestEnvironment), TestEnvironment);
+                Runner = new PreparingTestRunner(0, new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment);
                 if (TestEnvironment.Options.ParallelTestExecution && runContext.IsBeingDebugged)
                 {
                     TestEnvironment.DebugInfo(

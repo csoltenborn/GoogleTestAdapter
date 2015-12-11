@@ -83,11 +83,11 @@ namespace GoogleTestAdapter
             InitTestEnvironment(discoveryContext.RunSettings, logger);
 
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(TestEnvironment);
+            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null, TestEnvironment);
             foreach (string executable in googleTestExecutables)
             {
                 List<TestCase2> testCases = GetTestsFromExecutable(executable);
-                reporter.ReportTestsFound(discoverySink, testCases);
+                reporter.ReportTestsFound(testCases);
             }
         }
 

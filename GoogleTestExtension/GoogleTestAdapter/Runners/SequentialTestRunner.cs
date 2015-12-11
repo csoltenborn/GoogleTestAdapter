@@ -66,13 +66,13 @@ namespace GoogleTestAdapter.Runners
                     break;
                 }
 
-                FrameworkReporter.ReportTestsStarted(handle, arguments.TestCases);
+                FrameworkReporter.ReportTestsStarted(arguments.TestCases);
 
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, runContext, handle);
                 IEnumerable<TestResult2> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 
-                FrameworkReporter.ReportTestResults(handle, results);
+                FrameworkReporter.ReportTestResults(results);
                 serializer.UpdateTestDurations(results);
             }
         }
