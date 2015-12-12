@@ -6,10 +6,10 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Model;
 using GoogleTestAdapter;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
+using GoogleTestAdapterVSIX.Helpers;
 
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {
@@ -144,7 +144,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
             }
 
-            TestEnvironment.CheckDebugModeForDiscoveryCode();
+            new DebugHelper(TestEnvironment).CheckDebugModeForDiscoveryCode();
         }
 
         private List<TestCaseInfo> ParseTestCases(List<string> output)

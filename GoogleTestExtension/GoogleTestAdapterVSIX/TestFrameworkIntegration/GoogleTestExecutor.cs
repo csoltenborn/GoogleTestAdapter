@@ -6,10 +6,10 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Model;
 using GoogleTestAdapter;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
+using GoogleTestAdapterVSIX.Helpers;
 
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {
@@ -92,7 +92,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
             }
 
-            TestEnvironment.CheckDebugModeForExecutionCode();
+            new DebugHelper(TestEnvironment).CheckDebugModeForExecutionCode();
         }
 
         private void DoRunTests(IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)

@@ -11,6 +11,7 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
+using GoogleTestAdapterVSIX.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -65,7 +66,7 @@ namespace GoogleTestAdapter
         [TestInitialize]
         virtual public void SetUp()
         {
-            FieldInfo fieldInfo = typeof(TestEnvironment).GetField("UnitTestMode", BindingFlags.NonPublic | BindingFlags.Static);
+            FieldInfo fieldInfo = typeof(DebugHelper).GetField("UnitTestMode", BindingFlags.NonPublic | BindingFlags.Static);
             // ReSharper disable once PossibleNullReferenceException
             fieldInfo.SetValue(null, true);
 
