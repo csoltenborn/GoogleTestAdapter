@@ -98,22 +98,22 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void CompleteOutputIsParsedCorrectly()
         {
-            List<TestResult2> results = ComputeTestResults(Complete);
+            List<Model.TestResult> results = ComputeTestResults(Complete);
 
             Assert.AreEqual(3, results.Count);
 
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Failed, results[0].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Passed, results[1].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Failed, results[2].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, results[2].Outcome);
             Assert.IsFalse(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(9), results[2].Duration);
         }
@@ -121,17 +121,17 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void OutputWithImmediateCrashIsParsedCorrectly()
         {
-            List<TestResult2> results = ComputeTestResults(CrashesImmediately);
+            List<Model.TestResult> results = ComputeTestResults(CrashesImmediately);
 
             Assert.AreEqual(2, results.Count);
 
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Failed, results[0].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Failed, results[1].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, results[1].Outcome);
             Assert.IsTrue(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
         }
@@ -139,22 +139,22 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void OutputWithCrashAfterErrorMessage()
         {
-            List<TestResult2> results = ComputeTestResults(CrashesAfterErrorMsg);
+            List<Model.TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
             Assert.AreEqual(3, results.Count);
 
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Failed, results[0].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Passed, results[1].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Failed, results[2].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, results[2].Outcome);
             Assert.IsTrue(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[2].Duration);
         }
@@ -162,7 +162,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void OutputWithInvalidDurationUnitIsParsedCorrectly()
         {
-            List<TestResult2> results = ComputeTestResults(WrongDurationUnit);
+            List<Model.TestResult> results = ComputeTestResults(WrongDurationUnit);
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
@@ -176,17 +176,17 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void OutputWithConsoleOutputIsParsedCorrectly()
         {
-            List<TestResult2> results = ComputeTestResults(PassingTestProducesConsoleOutput);
+            List<Model.TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("TestMath.AddPasses", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome2.Passed, results[0].Outcome);
+            Assert.AreEqual(Model.TestOutcome.Passed, results[0].Outcome);
         }
 
 
-        private List<TestResult2> ComputeTestResults(List<string> consoleOutput)
+        private List<Model.TestResult> ComputeTestResults(List<string> consoleOutput)
         {
-            IEnumerable<TestCase2> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
+            IEnumerable<Model.TestCase> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
             StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment);
             return parser.GetTestResults();
         }

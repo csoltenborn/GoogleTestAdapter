@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace GoogleTestAdapter.Model
 {
 
-    public class TestCase2
+    public class TestCase
     {
         public string FullyQualifiedName { get; set; }
         public string Source { get; set; }
@@ -12,9 +12,9 @@ namespace GoogleTestAdapter.Model
         public string CodeFilePath { get; set; }
         public int LineNumber { get; set; }
         public Uri ExecutorUri { get; set; }
-        public List<Trait2> Traits { get; } = new List<Trait2>();
+        public List<Trait> Traits { get; } = new List<Trait>();
 
-        public TestCase2(string fullyQualifiedName, Uri executorUri, string source)
+        public TestCase(string fullyQualifiedName, Uri executorUri, string source)
         {
             FullyQualifiedName = fullyQualifiedName;
             ExecutorUri = executorUri;

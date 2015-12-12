@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GoogleTestAdapter.Helpers;
 using System.Collections.Generic;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration;
 
 namespace GoogleTestAdapter.Runners
 {

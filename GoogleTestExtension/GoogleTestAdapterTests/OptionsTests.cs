@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
-using System.Collections.Generic;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -20,7 +22,8 @@ namespace GoogleTestAdapter
         {
             base.SetUp();
 
-            TheOptions = new Options(MockXmlOptions.Object, MockLogger.Object);
+            ILogger logger = new VsTestFrameworkLogger(MockLogger.Object);
+            TheOptions = new Options(MockXmlOptions.Object, logger);
         }
 
         [TestCleanup]

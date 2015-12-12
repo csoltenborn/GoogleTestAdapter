@@ -6,8 +6,8 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapterVSIX.OptionsPages;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 
 namespace GoogleTestAdapterVSIX
 {

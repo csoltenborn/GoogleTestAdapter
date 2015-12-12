@@ -3,13 +3,14 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 
 namespace GoogleTestAdapter
 {
@@ -51,12 +52,13 @@ namespace GoogleTestAdapter
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
         protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
         internal readonly TestEnvironment TestEnvironment;
-        private List<TestCase2> _allTestCasesOfConsoleApplication1 = null;
+        private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
 
 
         protected AbstractGoogleTestExtensionTests()
         {
-            TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
+            ILogger logger = new VsTestFrameworkLogger(MockLogger.Object);
+            TestEnvironment = new TestEnvironment(MockOptions.Object, logger);
         }
 
 
@@ -98,7 +100,7 @@ namespace GoogleTestAdapter
             _allTestCasesOfConsoleApplication1 = null;
         }
 
-        protected List<TestCase2> GetTestCasesOfConsoleApplication1(params string[] qualifiedNames)
+        protected List<TestCase> GetTestCasesOfConsoleApplication1(params string[] qualifiedNames)
         {
             return AllTestCasesOfConsoleApplication1.Where(
                 testCase => qualifiedNames.Any(
@@ -106,13 +108,13 @@ namespace GoogleTestAdapter
                     .ToList();
         }
 
-        protected List<TestCase2> AllTestCasesOfConsoleApplication1
+        protected List<TestCase> AllTestCasesOfConsoleApplication1
         {
             get
             {
                 if (_allTestCasesOfConsoleApplication1 == null)
                 {
-                    _allTestCasesOfConsoleApplication1 = new List<TestCase2>();
+                    _allTestCasesOfConsoleApplication1 = new List<TestCase>();
                     GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
                     _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(SampleTests));
                     _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(HardCrashingSampleTests));
@@ -121,26 +123,26 @@ namespace GoogleTestAdapter
             }
         }
 
-        protected static TestCase2 ToTestCase(string name, string executable)
+        protected static TestCase ToTestCase(string name, string executable)
         {
-            return new TestCase2(name, new Uri("http://none"), executable);
+            return new TestCase(name, new Uri("http://none"), executable);
         }
 
-        protected static TestCase2 ToTestCase(string name)
+        protected static TestCase ToTestCase(string name)
         {
             return ToTestCase(name, DummyExecutable);
         }
 
-        protected static TestResult2 ToTestResult(string qualifiedTestCaseName, TestOutcome2 outcome, int duration, string executable = DummyExecutable)
+        protected static TestResult ToTestResult(string qualifiedTestCaseName, TestOutcome outcome, int duration, string executable = DummyExecutable)
         {
-            return new TestResult2(ToTestCase(qualifiedTestCaseName, executable))
+            return new TestResult(ToTestCase(qualifiedTestCaseName, executable))
             {
                 Outcome = outcome,
                 Duration = TimeSpan.FromMilliseconds(duration)
             };
         }
 
-        protected static IEnumerable<TestCase2> CreateDummyTestCases(params string[] qualifiedNames)
+        protected static IEnumerable<TestCase> CreateDummyTestCases(params string[] qualifiedNames)
         {
             return qualifiedNames.Select(ToTestCase).ToList();
         }

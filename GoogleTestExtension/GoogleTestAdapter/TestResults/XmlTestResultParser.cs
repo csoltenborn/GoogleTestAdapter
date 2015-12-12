@@ -19,10 +19,10 @@ namespace GoogleTestAdapter.TestResults
 
         private TestEnvironment TestEnvironment { get; }
         private string XmlResultFile { get; }
-        private List<TestCase2> TestCasesRun { get; }
+        private List<TestCase> TestCasesRun { get; }
 
 
-        public XmlTestResultParser(IEnumerable<TestCase2> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
         {
             this.TestEnvironment = testEnvironment;
             this.XmlResultFile = xmlResultFile;
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        public List<TestResult2> GetTestResults()
+        public List<TestResult> GetTestResults()
         {
             if (File.Exists(XmlResultFile))
             {
@@ -38,15 +38,15 @@ namespace GoogleTestAdapter.TestResults
             }
 
             TestEnvironment.LogWarning(ErrorMsgNoXmlFile);
-            return new List<TestResult2>();
+            return new List<TestResult>();
         }
 
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        private List<TestResult2> ParseTestResults()
+        private List<TestResult> ParseTestResults()
         {
-            List<TestResult2> testResults = new List<TestResult2>();
+            List<TestResult> testResults = new List<TestResult>();
             try
             {
                 XmlDocument xmlDocument = new XmlDocument();
@@ -73,19 +73,19 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        private TestResult2 ParseTestResult(XmlNode testcaseNode)
+        private TestResult ParseTestResult(XmlNode testcaseNode)
         {
             string className = testcaseNode.Attributes["classname"].InnerText;
             string testCaseName = testcaseNode.Attributes["name"].InnerText;
             string qualifiedName = className + "." + testCaseName;
 
-            TestCase2 testCase = TestCasesRun.FindTestcase(qualifiedName);
+            TestCase testCase = TestCasesRun.FindTestcase(qualifiedName);
             if (testCase == null)
             {
                 return null;
             }
 
-            TestResult2 testResult = new TestResult2(testCase)
+            TestResult testResult = new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = " "
@@ -101,16 +101,16 @@ namespace GoogleTestAdapter.TestResults
                     XmlNodeList failureNodes = testcaseNode.SelectNodes("failure");
                     if (failureNodes.Count == 0)
                     {
-                        testResult.Outcome = TestOutcome2.Passed;
+                        testResult.Outcome = TestOutcome.Passed;
                     }
                     else
                     {
-                        testResult.Outcome = TestOutcome2.Failed;
+                        testResult.Outcome = TestOutcome.Failed;
                         testResult.ErrorMessage = CreateErrorMessage(failureNodes);
                     }
                     break;
                 case "notrun":
-                    testResult.Outcome = TestOutcome2.Skipped;
+                    testResult.Outcome = TestOutcome.Skipped;
                     break;
                 default:
                     string msg = "Unknown testcase status: " + testCaseStatus;

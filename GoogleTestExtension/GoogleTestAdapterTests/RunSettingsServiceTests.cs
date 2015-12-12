@@ -2,8 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapterVSIX;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 
 namespace GoogleTestAdapter
 {

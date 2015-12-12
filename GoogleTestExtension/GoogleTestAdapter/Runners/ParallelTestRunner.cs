@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             List<Thread> threads;
@@ -53,18 +53,18 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
-            TestCase2[] testCasesToRunAsArray = testCasesToRun as TestCase2[] ?? testCasesToRun.ToArray();
+            TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
             ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
-            List<List<TestCase2>> splittedTestCasesToRun = splitter.SplitTestcases();
+            List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
             TestEnvironment.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
             TestEnvironment.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
 
             int threadId = 0;
-            foreach (List<TestCase2> testcases in splittedTestCasesToRun)
+            foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
                 ITestRunner runner = new PreparingTestRunner(threadId++, SolutionDirectory, FrameworkReporter, TestEnvironment);
                 TestRunners.Add(runner);
@@ -76,10 +76,10 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private ITestsSplitter GetTestsSplitter(TestCase2[] testCasesToRun)
+        private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun)
         {
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
-            IDictionary<TestCase2, int> durations = serializer.ReadTestDurations(testCasesToRun);
+            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
 
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)

@@ -5,8 +5,8 @@ namespace GoogleTestAdapter
 {
     public interface ITestFrameworkReporter
     {
-        void ReportTestsFound(IEnumerable<TestCase2> testCases);
-        void ReportTestsStarted(IEnumerable<TestCase2> testCases);
-        void ReportTestResults(IEnumerable<TestResult2> testResults);
+        void ReportTestsFound(IEnumerable<TestCase> testCases);
+        void ReportTestsStarted(IEnumerable<TestCase> testCases);
+        void ReportTestResults(IEnumerable<TestResult> testResults);
     }
 }

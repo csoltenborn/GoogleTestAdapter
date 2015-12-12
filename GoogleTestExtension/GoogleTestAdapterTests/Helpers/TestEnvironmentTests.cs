@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using GoogleTestAdapterVSIX.TestFrameworkIntegration;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -15,7 +16,8 @@ namespace GoogleTestAdapter.Helpers
         {
             base.SetUp();
 
-            Environment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
+            ILogger logger = new VsTestFrameworkLogger(MockLogger.Object);
+            Environment = new TestEnvironment(MockOptions.Object, logger);
         }
 
 

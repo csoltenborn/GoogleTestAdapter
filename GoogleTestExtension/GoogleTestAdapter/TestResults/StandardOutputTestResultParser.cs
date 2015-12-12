@@ -15,14 +15,14 @@ namespace GoogleTestAdapter.TestResults
         public const string CrashText = "!! This is probably the test that crashed !!";
 
 
-        public TestCase2 CrashedTestCase { get; private set; }
+        public TestCase CrashedTestCase { get; private set; }
 
         private List<string> ConsoleOutput { get; }
-        private List<TestCase2> TestCasesRun { get; }
+        private List<TestCase> TestCasesRun { get; }
         private TestEnvironment TestEnvironment { get; }
 
 
-        public StandardOutputTestResultParser(IEnumerable<TestCase2> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
+        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = testCasesRun.ToList();
@@ -30,9 +30,9 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        public List<TestResult2> GetTestResults()
+        public List<TestResult> GetTestResults()
         {
-            List<TestResult2> testResults = new List<TestResult2>();
+            List<TestResult> testResults = new List<TestResult>();
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);
             while (indexOfNextTestcase >= 0)
             {
@@ -43,13 +43,13 @@ namespace GoogleTestAdapter.TestResults
         }
 
 
-        private TestResult2 CreateTestResult(int indexOfTestcase)
+        private TestResult CreateTestResult(int indexOfTestcase)
         {
             int currentLineIndex = indexOfTestcase;
 
             string line = ConsoleOutput[currentLineIndex++];
             string qualifiedTestname = RemovePrefix(line).Trim();
-            TestCase2 testCase = FindTestcase(qualifiedTestname);
+            TestCase testCase = FindTestcase(qualifiedTestname);
 
             if (currentLineIndex >= ConsoleOutput.Count)
             {
@@ -96,29 +96,29 @@ namespace GoogleTestAdapter.TestResults
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));
         }
 
-        private TestResult2 CreatePassedTestResult(TestCase2 testCase, TimeSpan duration)
+        private TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
         {
-            return new TestResult2(testCase)
+            return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = " ",
-                Outcome = TestOutcome2.Passed,
+                Outcome = TestOutcome.Passed,
                 ErrorMessage = "",
                 Duration = duration
             };
         }
 
-        private TestResult2 CreateFailedTestResult(TestCase2 testCase, TimeSpan duration, bool crashed, string errorMessage)
+        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, bool crashed, string errorMessage)
         {
             if (crashed)
             {
                 CrashedTestCase = testCase;
             }
-            return new TestResult2(testCase)
+            return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = crashed ? "because it CRASHED!" : " ",
-                Outcome = TestOutcome2.Failed,
+                Outcome = TestOutcome.Failed,
                 ErrorMessage = errorMessage,
                 Duration = duration
             };
@@ -138,7 +138,7 @@ namespace GoogleTestAdapter.TestResults
             return -1;
         }
 
-        private TestCase2 FindTestcase(string qualifiedTestname)
+        private TestCase FindTestcase(string qualifiedTestname)
         {
             return TestCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
         }

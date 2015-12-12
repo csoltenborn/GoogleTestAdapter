@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using System.Xml.XPath;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter

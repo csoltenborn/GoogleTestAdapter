@@ -1,43 +1,19 @@
-﻿using GoogleTestAdapter.Helpers;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Xml;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter
 {
-    public interface IGlobalRunSettings
-    {
-        RunSettings RunSettings { get; }
-    }
-
-    [Export(typeof(ISettingsProvider))]
-    [SettingsName(GoogleTestConstants.SettingsName)]
-    public class RunSettingsProvider : ISettingsProvider
-    {
-        public RunSettings Settings { get; private set; }
-
-        public string Name { get; private set; } = GoogleTestConstants.SettingsName;
-
-        public void Load(XmlReader reader)
-        {
-            Settings = RunSettings.LoadFromXml(reader);
-        }
-    }
-
     public class RegexTraitPair
     {
         public string Regex { get; set; }
-        public Trait2 Trait { get; set; }
+        public Trait Trait { get; set; }
 
         public RegexTraitPair(string regex, string name, string value)
         {
             this.Regex = regex;
-            this.Trait = new Trait2(name, value);
+            this.Trait = new Trait(name, value);
         }
     }
 
@@ -50,7 +26,7 @@ namespace GoogleTestAdapter
         private RegexTraitParser RegexTraitParser { get; }
 
 
-        public Options(IXmlOptions xmlOptions, IMessageLogger logger)
+        public Options(IXmlOptions xmlOptions, ILogger logger)
         {
             this.XmlOptions = xmlOptions;
             this.TestEnvironment = new TestEnvironment(this, logger);

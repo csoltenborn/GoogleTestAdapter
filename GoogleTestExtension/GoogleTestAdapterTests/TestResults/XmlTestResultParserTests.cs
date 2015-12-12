@@ -15,11 +15,11 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileDoesNotExist()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
             MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
@@ -29,12 +29,12 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileIsInvalid()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
             MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
@@ -44,12 +44,12 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FailsNicelyIfFileIsInvalid_InvalidStatusAttribute()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken_InvalidStatusAttibute, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
             MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
@@ -59,10 +59,10 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsSuccessfulResultsInSample1()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(2, results.Count);
             AssertTestResultIsPassed(results[0]);
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void LogUnexpectedTestOutcomeInSample1()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
             try
@@ -93,10 +93,10 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsSuccessfulParameterizedResultInSample1()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
             AssertTestResultIsPassed(results[0]);
@@ -105,10 +105,10 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void FindsFailureResultInSample1()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("AnimalsTest.testGetEnoughAnimals");
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("AnimalsTest.testGetEnoughAnimals");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
             string ErrorMsg = @"x:\prod\company\util\util.cpp:67
@@ -122,12 +122,12 @@ Should get three animals";
         [TestMethod]
         public void FindsParamterizedFailureResultInSample1()
         {
-            IEnumerable<TestCase2> testCases =
+            IEnumerable<Model.TestCase> testCases =
                 CreateDummyTestCases(
                     "ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
             string errorMsg = @"someSimpleParameterizedTest.cpp:61
@@ -138,10 +138,10 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         [TestMethod]
         public void FindsSuccessfulResultInSample2()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("FooTest.DoesXyz");
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("FooTest.DoesXyz");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
             AssertTestResultIsPassed(results[0]);
@@ -150,10 +150,10 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         [TestMethod]
         public void FindsFailureResultInSample2()
         {
-            IEnumerable<TestCase2> testCases = CreateDummyTestCases("FooTest.MethodBarDoesAbc");
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("FooTest.MethodBarDoesAbc");
 
             XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
-            List<TestResult2> results = parser.GetTestResults();
+            List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
             string ErrorMsg = @"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:40
@@ -171,21 +171,21 @@ Something's wrong :(";
         }
 
 
-        private void AssertTestResultIsPassed(TestResult2 TestResult2)
+        private void AssertTestResultIsPassed(Model.TestResult TestResult2)
         {
-            Assert.AreEqual(TestOutcome2.Passed, TestResult2.Outcome);
+            Assert.AreEqual(Model.TestOutcome.Passed, TestResult2.Outcome);
             Assert.IsNull(TestResult2.ErrorMessage);
         }
 
-        private void AssertTestResultIsSkipped(TestResult2 TestResult2)
+        private void AssertTestResultIsSkipped(Model.TestResult TestResult2)
         {
-            Assert.AreEqual(TestOutcome2.Skipped, TestResult2.Outcome);
+            Assert.AreEqual(Model.TestOutcome.Skipped, TestResult2.Outcome);
             Assert.IsNull(TestResult2.ErrorMessage);
         }
 
-        private void AssertTestResultIsFailure(TestResult2 TestResult2, string errorMessage)
+        private void AssertTestResultIsFailure(Model.TestResult TestResult2, string errorMessage)
         {
-            Assert.AreEqual(TestOutcome2.Failed, TestResult2.Outcome);
+            Assert.AreEqual(Model.TestOutcome.Failed, TestResult2.Outcome);
             Assert.IsNotNull(TestResult2.ErrorMessage);
             Assert.AreEqual(errorMessage.Replace("\r\n", "\n"), TestResult2.ErrorMessage.Replace("\r\n", "\n"));
         }

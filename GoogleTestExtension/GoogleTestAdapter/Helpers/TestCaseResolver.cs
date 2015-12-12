@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.Helpers
 
     public class TestCaseLocation : SourceFileLocation
     {
-        public List<Trait2> Traits { get; } = new List<Trait2>();
+        public List<Trait> Traits { get; } = new List<Trait>();
 
         public TestCaseLocation(string symbol, string sourceFile, uint line) : base(symbol, sourceFile, line)
         {
@@ -70,15 +70,15 @@ namespace GoogleTestAdapter.Helpers
 
         private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
         {
-            List<Trait2> traits = GetTraits(location, allTraitSymbols);
+            List<Trait> traits = GetTraits(location, allTraitSymbols);
             TestCaseLocation testCaseInfo = new TestCaseLocation(location.Symbol, location.Sourcefile, location.Line);
             testCaseInfo.Traits.AddRange(traits);
             return testCaseInfo;
         }
 
-        private List<Trait2> GetTraits(SourceFileLocation nativeSymbol, IEnumerable<SourceFileLocation> allTraitSymbols)
+        private List<Trait> GetTraits(SourceFileLocation nativeSymbol, IEnumerable<SourceFileLocation> allTraitSymbols)
         {
-            List<Trait2> traits = new List<Trait2>();
+            List<Trait> traits = new List<Trait>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (SourceFileLocation nativeTraitSymbol in allTraitSymbols)
             {
@@ -89,7 +89,7 @@ namespace GoogleTestAdapter.Helpers
                     int lengthOfSerializedTrait = nativeTraitSymbol.Symbol.Length - indexOfSerializedTrait - TraitAppendix.Length;
                     string serializedTrait = nativeTraitSymbol.Symbol.Substring(indexOfSerializedTrait, lengthOfSerializedTrait);
                     string[] data = serializedTrait.Split(new[] { TraitSeparator }, StringSplitOptions.None);
-                    traits.Add(new Trait2(data[0], data[1]));
+                    traits.Add(new Trait(data[0], data[1]));
                 }
             }
 

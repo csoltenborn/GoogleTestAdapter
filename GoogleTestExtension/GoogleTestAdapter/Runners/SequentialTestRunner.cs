@@ -25,13 +25,13 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
-            IDictionary<string, List<TestCase2>> groupedTestCases = testCasesToRun.GroupByExecutable();
-            TestCase2[] allTestCasesAsArray = allTestCases as TestCase2[] ?? allTestCases.ToArray();
+            IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
+            TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
                 if (Canceled)
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Runners
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable,
-            IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun, string userParameters,
+            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string userParameters,
             bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             string resultXmlFile = Path.GetTempFileName();
@@ -69,18 +69,18 @@ namespace GoogleTestAdapter.Runners
 
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new ProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
-                IEnumerable<TestResult2> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
+                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
 
                 FrameworkReporter.ReportTestResults(results);
                 serializer.UpdateTestDurations(results);
             }
         }
 
-        private List<TestResult2> CollectTestResults(IEnumerable<TestCase2> testCasesRun, string resultXmlFile, List<string> consoleOutput)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput)
         {
-            List<TestResult2> testResults = new List<TestResult2>();
+            List<TestResult> testResults = new List<TestResult>();
 
-            TestCase2[] testCasesRunAsArray = testCasesRun as TestCase2[] ?? testCasesRun.ToArray();
+            TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
             XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment);
             StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, TestEnvironment);
 
@@ -88,8 +88,8 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                List<TestResult2> consoleResults = consoleParser.GetTestResults();
-                foreach (TestResult2 testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
+                List<TestResult> consoleResults = consoleParser.GetTestResults();
+                foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
                 {
                     testResults.Add(testResult);
                 }
@@ -97,14 +97,14 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                foreach (TestCase2 testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
+                foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
                 {
                     string errorMsg = consoleParser.CrashedTestCase == null ? ""
                         : "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
-                    testResults.Add(new TestResult2(testCase)
+                    testResults.Add(new TestResult(testCase)
                     {
                         ComputerName = Environment.MachineName,
-                        Outcome = TestOutcome2.Skipped,
+                        Outcome = TestOutcome.Skipped,
                         ErrorMessage = errorMsg
                     });
                 }

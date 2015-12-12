@@ -17,10 +17,10 @@ namespace GoogleTestAdapter.Scheduling
         public void DurationIsWrittenAndReadCorrectly()
         {
             string tempFile = Path.GetTempFileName();
-            List<TestResult2> testResults = new List<TestResult2>
+            List<Model.TestResult> testResults = new List<Model.TestResult>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome2.Passed, 3, tempFile),
-                ToTestResult("TestSuite1.SkippedTest", TestOutcome2.Skipped, 1, tempFile)
+                ToTestResult("TestSuite1.Test1", Model.TestOutcome.Passed, 3, tempFile),
+                ToTestResult("TestSuite1.SkippedTest", Model.TestOutcome.Skipped, 1, tempFile)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Scheduling
             string durationsFile = GetDurationsFile(serializer, tempFile);
             Assert.IsTrue(File.Exists(durationsFile));
 
-            IDictionary<TestCase2, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
+            IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(1, durations.Count);
             Assert.IsTrue(durations.ContainsKey(testResults[0].TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
@@ -43,10 +43,10 @@ namespace GoogleTestAdapter.Scheduling
         {
             string tempFile = Path.GetTempFileName();
             string tempFile2 = Path.GetTempFileName();
-            List<TestResult2> testResults = new List<TestResult2>
+            List<Model.TestResult> testResults = new List<Model.TestResult>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome2.Passed, 3, tempFile),
-                ToTestResult("TestSuite1.Test1", TestOutcome2.Failed, 4, tempFile2)
+                ToTestResult("TestSuite1.Test1", Model.TestOutcome.Passed, 3, tempFile),
+                ToTestResult("TestSuite1.Test1", Model.TestOutcome.Failed, 4, tempFile2)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
@@ -57,7 +57,7 @@ namespace GoogleTestAdapter.Scheduling
             string durationsFile2 = GetDurationsFile(serializer, tempFile2);
             Assert.IsTrue(File.Exists(durationsFile2));
 
-            IDictionary<TestCase2, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
+            IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(2, durations.Count);
             Assert.IsTrue(durations.ContainsKey(testResults[0].TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
@@ -72,14 +72,14 @@ namespace GoogleTestAdapter.Scheduling
         public void DurationIsUpdatedCorrectly()
         {
             string tempFile = Path.GetTempFileName();
-            List<TestResult2> testResults = new List<TestResult2>
+            List<Model.TestResult> testResults = new List<Model.TestResult>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome2.Passed, 3, tempFile)
+                ToTestResult("TestSuite1.Test1", Model.TestOutcome.Passed, 3, tempFile)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
             serializer.UpdateTestDurations(testResults);
-            IDictionary<TestCase2, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
+            IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             Assert.AreEqual(3, durations[testResults[0].TestCase]);
 
             testResults[0].Duration = TimeSpan.FromMilliseconds(4);
@@ -98,7 +98,7 @@ namespace GoogleTestAdapter.Scheduling
             string tempFile = Path.GetTempFileName();
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
-            IDictionary<TestCase2, int> durations = serializer.ReadTestDurations(ToTestCase("TestSuite1.Test1", tempFile).Yield());
+            IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(ToTestCase("TestSuite1.Test1", tempFile).Yield());
 
             Assert.IsNotNull(durations);
             Assert.AreEqual(0, durations.Count);
@@ -108,15 +108,15 @@ namespace GoogleTestAdapter.Scheduling
         public void DurationFileWithoutCurrentTestResultsInEmptyDictionary()
         {
             string tempFile = Path.GetTempFileName();
-            List<TestResult2> testResults = new List<TestResult2>
+            List<Model.TestResult> testResults = new List<Model.TestResult>
             {
-                ToTestResult("TestSuite1.Test1", TestOutcome2.None, 3, tempFile)
+                ToTestResult("TestSuite1.Test1", Model.TestOutcome.None, 3, tempFile)
             };
 
             TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
             serializer.UpdateTestDurations(testResults);
 
-            IDictionary<TestCase2, int> durations = serializer.ReadTestDurations(new TestCase2("TestSuite1.Test2", new Uri("http://nothing"), tempFile).Yield());
+            IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(new Model.TestCase("TestSuite1.Test2", new Uri("http://nothing"), tempFile).Yield());
             Assert.IsNotNull(durations);
             Assert.AreEqual(0, durations.Count);
 

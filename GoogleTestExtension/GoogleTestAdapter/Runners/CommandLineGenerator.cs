@@ -11,12 +11,12 @@ namespace GoogleTestAdapter.Runners
     {
         public class Args
         {
-            public List<TestCase2> TestCases { get; }
+            public List<TestCase> TestCases { get; }
             public string CommandLine { get; }
 
-            internal Args(List<TestCase2> testCases, string commandLine)
+            internal Args(List<TestCase> testCases, string commandLine)
             {
-                this.TestCases = testCases ?? new List<TestCase2>();
+                this.TestCases = testCases ?? new List<TestCase>();
                 this.CommandLine = commandLine ?? "";
             }
         }
@@ -26,15 +26,15 @@ namespace GoogleTestAdapter.Runners
 
 
         private int LengthOfExecutableString { get; }
-        private IEnumerable<TestCase2> AllTestCases { get; }
-        private IEnumerable<TestCase2> TestCasesToRun { get; }
+        private IEnumerable<TestCase> AllTestCases { get; }
+        private IEnumerable<TestCase> TestCasesToRun { get; }
         private string ResultXmlFile { get; }
         private TestEnvironment TestEnvironment { get; }
         private string UserParameters { get; }
 
 
         public CommandLineGenerator(
-            IEnumerable<TestCase2> allTestCases, IEnumerable<TestCase2> testCasesToRun,
+            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
             TestEnvironment testEnvironment)
         {
@@ -80,15 +80,15 @@ namespace GoogleTestAdapter.Runners
                 + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
             string baseCommandLineWithFilter = baseCommandLine + suitesFilter;
 
-            List<TestCase2> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
-            List<TestCase2> testCasesRunBySuite = TestCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
+            List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
+            List<TestCase> testCasesRunBySuite = TestCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
             if (testCasesNotRunBySuite.Count == 0)
             {
                 commandLines.Add(new Args(TestCasesToRun.ToList(), baseCommandLineWithFilter + userParam));
                 return commandLines;
             }
 
-            List<TestCase2> includedTestCases;
+            List<TestCase> includedTestCases;
             int remainingLength = MaxCommandLength
                 - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1;
             string commandLine = baseCommandLineWithFilter +
@@ -111,9 +111,9 @@ namespace GoogleTestAdapter.Runners
             return commandLines;
         }
 
-        private string JoinTestsUpToMaxLength(List<TestCase2> testCases, int maxLength, out List<TestCase2> includedTestCases)
+        private string JoinTestsUpToMaxLength(List<TestCase> testCases, int maxLength, out List<TestCase> includedTestCases)
         {
-            includedTestCases = new List<TestCase2>();
+            includedTestCases = new List<TestCase>();
             if (testCases.Count == 0)
             {
                 return "";
@@ -192,16 +192,16 @@ namespace GoogleTestAdapter.Runners
 
         private bool AllTestCasesOfExecutableAreRun()
         {
-            HashSet<TestCase2> allTestCasesAsSet = new HashSet<TestCase2>(AllTestCases);
-            HashSet<TestCase2> testCasesToRunAsSet = new HashSet<TestCase2>(TestCasesToRun);
+            HashSet<TestCase> allTestCasesAsSet = new HashSet<TestCase>(AllTestCases);
+            HashSet<TestCase> testCasesToRunAsSet = new HashSet<TestCase>(TestCasesToRun);
             return allTestCasesAsSet.SetEquals(testCasesToRunAsSet);
         }
 
-        private List<TestCase2> GetTestCasesNotRunBySuite(List<string> suitesRunningAllTests)
+        private List<TestCase> GetTestCasesNotRunBySuite(List<string> suitesRunningAllTests)
         {
-            List<TestCase2> testCasesNotRunBySuite = new List<TestCase2>();
+            List<TestCase> testCasesNotRunBySuite = new List<TestCase>();
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (TestCase2 testCase in TestCasesToRun)
+            foreach (TestCase testCase in TestCasesToRun)
             {
                 bool isRunBySuite = suitesRunningAllTests.Any(s => s == GetTestsuiteName(testCase));
                 if (!isRunBySuite)
@@ -218,8 +218,8 @@ namespace GoogleTestAdapter.Runners
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string suite in GetAllSuitesOfTestCasesToRun())
             {
-                List<TestCase2> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(TestCasesToRun, suite);
-                List<TestCase2> allMatchingTestCases = GetAllMatchingTestCases(AllTestCases, suite);
+                List<TestCase> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(TestCasesToRun, suite);
+                List<TestCase> allMatchingTestCases = GetAllMatchingTestCases(AllTestCases, suite);
                 if (allMatchingTestCasesToBeRun.Count == allMatchingTestCases.Count)
                 {
                     suitesRunningAllTests.Add(suite);
@@ -233,12 +233,12 @@ namespace GoogleTestAdapter.Runners
             return TestCasesToRun.Select(GetTestsuiteName).Distinct().ToList();
         }
 
-        private List<TestCase2> GetAllMatchingTestCases(IEnumerable<TestCase2> cases, string suite)
+        private List<TestCase> GetAllMatchingTestCases(IEnumerable<TestCase> cases, string suite)
         {
             return cases.Where(testcase => suite == GetTestsuiteName(testcase)).ToList();
         }
 
-        private string GetTestsuiteName(TestCase2 testCase)
+        private string GetTestsuiteName(TestCase testCase)
         {
             return testCase.FullyQualifiedName.Split('.')[0];
         }

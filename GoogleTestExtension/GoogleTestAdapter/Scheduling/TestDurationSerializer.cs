@@ -51,10 +51,10 @@ namespace GoogleTestAdapter.Scheduling
         }
 
 
-        public IDictionary<TestCase2, int> ReadTestDurations(IEnumerable<TestCase2> testcases)
+        public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
-            IDictionary<string, List<TestCase2>> groupedTestcases = testcases.GroupByExecutable();
-            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
+            IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
+            IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string executable in groupedTestcases.Keys)
             {
@@ -63,9 +63,9 @@ namespace GoogleTestAdapter.Scheduling
             return durations;
         }
 
-        public void UpdateTestDurations(IEnumerable<TestResult2> testResults)
+        public void UpdateTestDurations(IEnumerable<TestResult> testResults)
         {
-            IDictionary<string, List<TestResult2>> groupedTestcases = GroupTestResultsByExecutable(testResults);
+            IDictionary<string, List<TestResult>> groupedTestcases = GroupTestResultsByExecutable(testResults);
             foreach (string executable in groupedTestcases.Keys)
             {
                 lock (Lock)
@@ -77,9 +77,9 @@ namespace GoogleTestAdapter.Scheduling
         }
 
 
-        private IDictionary<TestCase2, int> ReadTestDurations(string executable, List<TestCase2> testcases)
+        private IDictionary<TestCase, int> ReadTestDurations(string executable, List<TestCase> testcases)
         {
-            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
+            IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
             string durationsFile = GetDurationsFile(executable);
             if (!File.Exists(durationsFile))
             {
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.Scheduling
 
             GtaTestDurations container = LoadTestDurations(durationsFile);
 
-            foreach (TestCase2 testcase in testcases)
+            foreach (TestCase testcase in testcases)
             {
                 TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testcase.FullyQualifiedName);
                 if (!pair.Equals(Default))
@@ -100,13 +100,13 @@ namespace GoogleTestAdapter.Scheduling
             return durations;
         }
 
-        private void UpdateTestDurations(string executable, List<TestResult2> testresults)
+        private void UpdateTestDurations(string executable, List<TestResult> testresults)
         {
             string durationsFile = GetDurationsFile(executable);
             GtaTestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GtaTestDurations();
             container.Executable = Path.GetFullPath(executable);
 
-            foreach (TestResult2 testResult in testresults.Where(tr => tr.Outcome == TestOutcome2.Passed || tr.Outcome == TestOutcome2.Failed))
+            foreach (TestResult testResult in testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
             {
                 TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testResult.TestCase.FullyQualifiedName);
                 if (!pair.Equals(Default))
@@ -134,19 +134,19 @@ namespace GoogleTestAdapter.Scheduling
             fileStream.Close();
         }
 
-        private IDictionary<string, List<TestResult2>> GroupTestResultsByExecutable(IEnumerable<TestResult2> testresults)
+        private IDictionary<string, List<TestResult>> GroupTestResultsByExecutable(IEnumerable<TestResult> testresults)
         {
-            Dictionary<string, List<TestResult2>> groupedTestResults = new Dictionary<string, List<TestResult2>>();
-            foreach (TestResult2 testResult in testresults)
+            Dictionary<string, List<TestResult>> groupedTestResults = new Dictionary<string, List<TestResult>>();
+            foreach (TestResult testResult in testresults)
             {
-                List<TestResult2> group;
+                List<TestResult> group;
                 if (groupedTestResults.ContainsKey(testResult.TestCase.Source))
                 {
                     group = groupedTestResults[testResult.TestCase.Source];
                 }
                 else
                 {
-                    group = new List<TestResult2>();
+                    group = new List<TestResult>();
                     groupedTestResults.Add(testResult.TestCase.Source, group);
                 }
                 group.Add(testResult);
@@ -154,7 +154,7 @@ namespace GoogleTestAdapter.Scheduling
             return groupedTestResults;
         }
 
-        private int GetDuration(TestResult2 testResult)
+        private int GetDuration(TestResult testResult)
         {
             return (int)Math.Ceiling(testResult.Duration.TotalMilliseconds);
         }

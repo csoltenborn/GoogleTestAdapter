@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel.Composition;
-using GoogleTestAdapter;
-using GoogleTestAdapter.Helpers;
 
-namespace GoogleTestAdapterVSIX
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
 {
 
     [Export(typeof(IGlobalRunSettings))]

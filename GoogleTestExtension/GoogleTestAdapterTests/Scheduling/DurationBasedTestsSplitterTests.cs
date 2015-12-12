@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void SimpleCase_TestsAreDistributedCorrectly()
         {
-            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             durations.Add(ToTestCase("ShortTest1"), 1);
             durations.Add(ToTestCase("ShortTest2"), 1);
             durations.Add(ToTestCase("LongTest"), 3);
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.Scheduling
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-            List<List<TestCase2>> result = splitter.SplitTestcases();
+            List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(1, result[0].Count);
@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void SimpleCaseWithThreeThreads_TestsAreDistributedCorrectly()
         {
-            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             durations.Add(ToTestCase("ShortTest1"), 1);
             durations.Add(ToTestCase("ShortTest2"), 1);
             durations.Add(ToTestCase("LongTest"), 3);
@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.Scheduling
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-            List<List<TestCase2>> result = splitter.SplitTestcases();
+            List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(3, result.Count);
             Assert.AreEqual(1, result[0].Count);
@@ -54,14 +54,14 @@ namespace GoogleTestAdapter.Scheduling
         [TestMethod]
         public void AsymmetricCase_TestsAreDistributedCorrectly()
         {
-            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             durations.Add(ToTestCase("ShortTest1"), 1);
             durations.Add(ToTestCase("LongTest"), 5);
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-            List<List<TestCase2>> result = splitter.SplitTestcases();
+            List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(1, result[0].Count);
@@ -80,12 +80,12 @@ namespace GoogleTestAdapter.Scheduling
 
         private void ExecuteRandomDurationsTest(int nrOfTests, int maxRandomDuration, int nrOfThreads)
         {
-            IDictionary<TestCase2, int> durations = CreateRandomTestResults(nrOfTests, maxRandomDuration);
+            IDictionary<Model.TestCase, int> durations = CreateRandomTestResults(nrOfTests, maxRandomDuration);
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(nrOfThreads);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-            List<List<TestCase2>> result = splitter.SplitTestcases();
+            List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             Assert.AreEqual(nrOfThreads, result.Count);
             Assert.AreEqual(nrOfTests, result.Select(l => l.Count).Sum());
@@ -95,8 +95,8 @@ namespace GoogleTestAdapter.Scheduling
 
             int targetDuration = sumOfAllDurations / nrOfThreads;
 
-            HashSet<TestCase2> foundTestcases = new HashSet<TestCase2>();
-            foreach (List<TestCase2> testcases in result)
+            HashSet<Model.TestCase> foundTestcases = new HashSet<Model.TestCase>();
+            foreach (List<Model.TestCase> testcases in result)
             {
                 int sum = testcases.Select(tc => durations[tc]).Sum();
                 Assert.IsTrue(sum < targetDuration + maxDuration / 2);
@@ -108,9 +108,9 @@ namespace GoogleTestAdapter.Scheduling
             Assert.AreEqual(nrOfTests, foundTestcases.Count);
         }
 
-        private IDictionary<TestCase2, int> CreateRandomTestResults(int nr, int maxDuration)
+        private IDictionary<Model.TestCase, int> CreateRandomTestResults(int nr, int maxDuration)
         {
-            IDictionary<TestCase2, int> durations = new Dictionary<TestCase2, int>();
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             Random random = new Random();
             for (int i = 0; i < nr; i++)
             {

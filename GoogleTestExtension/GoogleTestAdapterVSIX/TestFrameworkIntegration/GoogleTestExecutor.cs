@@ -7,23 +7,12 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {
-    class DebuggedProcessLauncher : IDebuggedProcessLauncher
-    {
-        private IFrameworkHandle Handle { get; }
-
-        internal DebuggedProcessLauncher(IFrameworkHandle handle)
-        {
-            Handle = handle;
-        }
-
-        public int LaunchProcessWithDebuggerAttached(string command, string workingDirectory, string param)
-        {
-            return Handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, null);
-        }
-    }
 
     [ExtensionUri(ExecutorUriString)]
     public class GoogleTestExecutor : ITestExecutor
@@ -34,7 +23,7 @@ namespace GoogleTestAdapter
 
         private TestEnvironment TestEnvironment { get; set; }
 
-        private List<TestCase2> AllTestCasesInExecutables { get; } = new List<TestCase2>();
+        private List<GoogleTestAdapter.Model.TestCase> AllTestCasesInExecutables { get; } = new List<GoogleTestAdapter.Model.TestCase>();
         private ITestRunner Runner { get; set; }
         private bool Canceled { get; set; } = false;
 
@@ -63,14 +52,14 @@ namespace GoogleTestAdapter
             }
         }
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        public void RunTests(IEnumerable<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            IEnumerable<TestCase2> ourTestCasesToRun = testCasesToRun.Select(Extensions.ToTestCase);
+            IEnumerable<GoogleTestAdapter.Model.TestCase> ourTestCasesToRun = testCasesToRun.Select<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase, GoogleTestAdapter.Model.TestCase>(DataConversionExtensions.ToTestCase);
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
 
-                TestCase2[] testCasesToRunAsArray = ourTestCasesToRun as TestCase2[] ?? ourTestCasesToRun.ToArray();
+                GoogleTestAdapter.Model.TestCase[] testCasesToRunAsArray = ourTestCasesToRun as GoogleTestAdapter.Model.TestCase[] ?? ourTestCasesToRun.ToArray();
                 ComputeAllTestCasesInExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct());
 
                 DoRunTests(testCasesToRunAsArray, runContext, frameworkHandle);
@@ -99,15 +88,16 @@ namespace GoogleTestAdapter
                 var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
 
-                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, messageLogger), messageLogger);
+                ILogger loggerAdapter = new VsTestFrameworkLogger(messageLogger);
+                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
             }
 
             TestEnvironment.CheckDebugModeForExecutionCode();
         }
 
-        private void DoRunTests(IEnumerable<TestCase2> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        private void DoRunTests(IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
         {
-            TestCase2[] testCasesToRunAsArray = testCasesToRun as TestCase2[] ?? testCasesToRun.ToArray();
+            GoogleTestAdapter.Model.TestCase[] testCasesToRunAsArray = testCasesToRun as GoogleTestAdapter.Model.TestCase[] ?? testCasesToRun.ToArray();
             TestEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 
             lock (this)
@@ -157,16 +147,6 @@ namespace GoogleTestAdapter
             }
         }
 
-    }
-
-    public static class Conversions
-    {
-        public static TestCase ToVsTestCase(this TestCase2 testCase)
-        {
-            TestCase result = new TestCase(testCase.FullyQualifiedName, testCase.ExecutorUri, testCase.Source);
-            result.DisplayName = testCase.DisplayName;
-            return result;
-        }
     }
 
 }

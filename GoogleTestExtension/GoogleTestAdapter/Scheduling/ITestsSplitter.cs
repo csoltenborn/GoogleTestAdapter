@@ -5,7 +5,7 @@ namespace GoogleTestAdapter.Scheduling
 {
     public interface ITestsSplitter
     {
-        List<List<TestCase2>> SplitTestcases();
+        List<List<TestCase>> SplitTestcases();
     }
 
 }

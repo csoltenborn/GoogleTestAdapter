@@ -2,18 +2,18 @@
 
 namespace GoogleTestAdapter.Model
 {
-    public enum TestOutcome2 { Passed, Failed, Skipped, None, NotFound }
+    public enum TestOutcome { Passed, Failed, Skipped, None, NotFound }
 
-    public class TestResult2
+    public class TestResult
     {
-        public TestCase2 TestCase { get; set; }
-        public TestOutcome2 Outcome { get; set; }
+        public TestCase TestCase { get; set; }
+        public TestOutcome Outcome { get; set; }
         public string ComputerName { get; set; }
         public string DisplayName { get; set; }
         public string ErrorMessage { get; set; }
         public TimeSpan Duration { get; set; }
 
-        public TestResult2(TestCase2 testCase)
+        public TestResult(TestCase testCase)
         {
             TestCase = testCase;
         }

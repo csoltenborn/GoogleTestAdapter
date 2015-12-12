@@ -1,7 +1,4 @@
-﻿using GoogleTestAdapter;
-using GoogleTestAdapter.Helpers;
-
-namespace GoogleTestAdapterVSIX
+﻿namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
 {
 
     internal interface IGlobalRunSettingsInternal : IGlobalRunSettings

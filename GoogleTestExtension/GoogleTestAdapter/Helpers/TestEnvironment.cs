@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -11,20 +10,17 @@ namespace GoogleTestAdapter.Helpers
 
         private enum LogType { Normal, Debug }
 
-
         // for developing and testing the test adapter itself
         private static bool UnitTestMode = false;
 
         private static bool AlreadyAskedForDebugger { get; set; } = false;
 
-        private static readonly object Lock = new object();
-
 
         public Options Options { get; }
-        private IMessageLogger Logger { get; }
+        private ILogger Logger { get; }
 
 
-        public TestEnvironment(Options options, IMessageLogger logger)
+        public TestEnvironment(Options options, ILogger logger)
         {
             this.Options = options;
             this.Logger = logger;
@@ -33,32 +29,50 @@ namespace GoogleTestAdapter.Helpers
 
         public void LogInfo(string message)
         {
-            Log(message, LogType.Normal, TestMessageLevel.Informational, "");
+            if (ShouldBeLogged(LogType.Normal))
+            {
+                Logger.LogInfo(message);
+            }
         }
 
         public void LogWarning(string message)
         {
-            Log(message, LogType.Normal, TestMessageLevel.Warning, "Warning: ");
+            if (ShouldBeLogged(LogType.Normal))
+            {
+                Logger.LogWarning(message);
+            }
         }
 
         public void LogError(string message)
         {
-            Log(message, LogType.Normal, TestMessageLevel.Error, "ERROR: ");
+            if (ShouldBeLogged(LogType.Normal))
+            {
+                Logger.LogError(message);
+            }
         }
 
         public void DebugInfo(string message)
         {
-            Log(message, LogType.Debug, TestMessageLevel.Informational, "");
+            if (ShouldBeLogged(LogType.Debug))
+            {
+                Logger.LogInfo(message);
+            }
         }
 
         public void DebugWarning(string message)
         {
-            Log(message, LogType.Debug, TestMessageLevel.Warning, "Warning: ");
+            if (ShouldBeLogged(LogType.Debug))
+            {
+                Logger.LogWarning(message);
+            }
         }
 
         public void DebugError(string message)
         {
-            Log(message, LogType.Debug, TestMessageLevel.Error, "ERROR: ");
+            if (ShouldBeLogged(LogType.Debug))
+            {
+                Logger.LogError(message);
+            }
         }
 
         public void CheckDebugModeForExecutionCode()
@@ -72,39 +86,17 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        private void Log(string message, LogType logType, TestMessageLevel level, string prefix)
+        private bool ShouldBeLogged(LogType logType)
         {
-            bool log;
             switch (logType)
             {
                 case LogType.Normal:
-                    log = true;
-                    break;
+                    return true;
                 case LogType.Debug:
-                    log = Options.DebugMode;
-                    break;
+                    return Options.DebugMode;
                 default:
                     throw new Exception("Unknown LogType: " + logType);
             }
-
-            if (log)
-            {
-                lock (Lock)
-                {
-                    SafeLogMessage(level, prefix + message);
-                }
-            }
-        }
-
-        private void SafeLogMessage(TestMessageLevel level, string message)
-        {
-            if (string.IsNullOrWhiteSpace(message))
-            {
-                // Visual Studio 2013 is very picky about empty lines...
-                // But it accepts an 'INVISIBLE SEPARATOR' (U+2063)  :-)
-                message = "\u2063";
-            }
-            Logger.SendMessage(level, message);
         }
 
         private void CheckDebugMode(string taskType)

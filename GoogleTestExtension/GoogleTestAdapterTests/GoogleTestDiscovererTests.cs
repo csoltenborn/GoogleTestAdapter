@@ -9,6 +9,7 @@ using Moq;
 using GoogleTestAdapter.Helpers;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration;
 
 namespace GoogleTestAdapter
 {
@@ -82,63 +83,63 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void FindsMathTestWithOneTrait()
         {
-            Trait[] traits = { new Trait("Type", "Small") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithTwoTraits()
         {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Author", "CSO") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
         public void FindsMathTestWithThreeTraits()
         {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Author", "CSO"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Category", "Integration") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithOneTrait()
         {
-            Trait[] traits = { new Trait("Type", "Small") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small") };
             AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithTwoTraits()
         {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Author", "CSO") };
             AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
         public void FindsFixtureTestWithThreeTraits()
         {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Author", "CSO"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Category", "Integration") };
             AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithOneTrait()
         {
-            Trait[] traits = { new Trait("Type", "Small") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithTwoTraits()
         {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Author", "CSO") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]", traits);
         }
 
         [TestMethod]
         public void FindsParameterizedTestWithThreeTraits()
         {
-            Trait[] traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Medium"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Author", "MSI"), new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Category", "Integration") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]", traits);
         }
 
@@ -146,12 +147,12 @@ namespace GoogleTestAdapter
         public void CustomTraitBeforeAddsTraitIfNotAlreadyExisting()
         {
             string testname = "InstantiationName/ParameterizedTests.Simple/0 [(1,)]";
-            Trait[] traits = { };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { };
             AssertFindsTestWithTraits(testname, traits);
 
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape(testname), "Type", "SomeNewType").Yield().ToList());
 
-            traits = new[] { new Trait("Type", "SomeNewType") };
+            traits = new[] { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "SomeNewType") };
             AssertFindsTestWithTraits(testname, traits);
         }
 
@@ -160,7 +161,7 @@ namespace GoogleTestAdapter
         {
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
 
-            Trait[] traits = { new Trait("Type", "Small") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
@@ -170,31 +171,31 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "BeforeType").Yield().ToList());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "AfterType").Yield().ToList());
 
-            Trait[] traits = { new Trait("Type", "AfterType") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "AfterType") };
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         [TestMethod]
         public void CustomTraitAfterOverridesTraitOfTest()
         {
-            Trait[] traits = { new Trait("Type", "Small") };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "Small") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
 
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
 
-            traits = new[] { new Trait("Type", "SomeNewType") };
+            traits = new[] { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "SomeNewType") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
         public void CustomTraitAfterAddsTraitIfNotAlreadyExisting()
         {
-            Trait[] traits = { };
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits = { };
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
 
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "SomeNewType").Yield().ToList());
 
-            traits = new[] { new Trait("Type", "SomeNewType") };
+            traits = new[] { new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait("Type", "SomeNewType") };
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
@@ -226,13 +227,13 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockLogger.Object, mockDiscoverySink.Object);
 
-            mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<TestCase>()), Times.Exactly(expectedNrOfTests));
+            mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>()), Times.Exactly(expectedNrOfTests));
         }
 
         private void FindStaticallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase2> testCases = discoverer.GetTestsFromExecutable(location);
+            List<Model.TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -248,7 +249,7 @@ namespace GoogleTestAdapter
         private void FindExternallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase2> testCases = discoverer.GetTestsFromExecutable(location);
+            List<Model.TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -261,19 +262,19 @@ namespace GoogleTestAdapter
             Assert.AreEqual(44, testCases[1].LineNumber);
         }
 
-        private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
+        private void AssertFindsTestWithTraits(string displayName, Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait[] traits)
         {
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase2> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            List<Model.TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
-            TestCase2 testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
+            Model.TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
             Assert.IsNotNull(testCase);
 
-            foreach (Trait trait in traits)
+            foreach (Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait trait in traits)
             {
-                Trait2 foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
+                Model.Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
                 Assert.IsNotNull(foundTrait, "Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
         }

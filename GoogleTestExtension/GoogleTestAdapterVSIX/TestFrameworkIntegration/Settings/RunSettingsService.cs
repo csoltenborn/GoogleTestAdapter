@@ -9,7 +9,7 @@ using EnvDTE;
 using GoogleTestAdapter;
 using GoogleTestAdapter.Helpers;
 
-namespace GoogleTestAdapterVSIX
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
 {
 
     [Export(typeof(IRunSettingsService))]
@@ -28,7 +28,9 @@ namespace GoogleTestAdapterVSIX
             this.globalRunSettings = globalRunSettings;
         }
 
-        public IXPathNavigable AddRunSettings(IXPathNavigable userRunSettingDocument, IRunSettingsConfigurationInfo configurationInfo, ILogger logger)
+        public IXPathNavigable AddRunSettings(IXPathNavigable userRunSettingDocument,
+            IRunSettingsConfigurationInfo configurationInfo,
+            Microsoft.VisualStudio.TestWindow.Extensibility.ILogger logger)
         {
             XPathNavigator userRunSettingsNavigator = userRunSettingDocument.CreateNavigator();
             if (!userRunSettingsNavigator.MoveToChild("RunSettings", ""))
