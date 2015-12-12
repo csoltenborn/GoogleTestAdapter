@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
-using GoogleTestAdapterVSIX.Helpers;
+using GoogleTestAdapter.Model;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter
 {
-    [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
-    [FileExtension(".exe")]
-    public class GoogleTestDiscoverer : ITestDiscoverer
+    public class GoogleTestDiscoverer
     {
-
         /*
         Simple tests: 
             Suite=<test_case_name>
@@ -68,33 +59,24 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 
         private static readonly Regex CompiledTestFinderRegex = new Regex(Options.TestFinderRegex, RegexOptions.Compiled);
 
+        private TestEnvironment TestEnvironment { get; }
 
-        private TestEnvironment TestEnvironment { get; set; }
-
-
-        public GoogleTestDiscoverer() : this(null) { }
-
-        public GoogleTestDiscoverer(TestEnvironment testEnvironment)
+        public GoogleTestDiscoverer(TestEnvironment testEnviroment)
         {
-            this.TestEnvironment = testEnvironment;
+            TestEnvironment = testEnviroment;
         }
 
-
-        public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
-            IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
+        public void DiscoverTests(IEnumerable<string> executables, ILogger logger, ITestFrameworkReporter reporter)
         {
-            InitTestEnvironment(discoveryContext.RunSettings, logger);
-
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null, TestEnvironment);
             foreach (string executable in googleTestExecutables)
             {
-                List<GoogleTestAdapter.Model.TestCase> testCases = GetTestsFromExecutable(executable);
+                List<TestCase> testCases = GetTestsFromExecutable(executable);
                 reporter.ReportTestsFound(testCases);
             }
         }
 
-        public List<GoogleTestAdapter.Model.TestCase> GetTestsFromExecutable(string executable)
+        public List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
             List<TestCaseInfo> testCaseInfos = ParseTestCases(consoleOutput);
@@ -102,7 +84,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 
             TestEnvironment.LogInfo("Found " + testCaseInfos.Count + " tests in executable " + executable);
 
-            List<GoogleTestAdapter.Model.TestCase> testCases = new List<GoogleTestAdapter.Model.TestCase>();
+            List<TestCase> testCases = new List<TestCase>();
             foreach (TestCaseInfo testCaseInfo in testCaseInfos)
             {
                 testCases.Add(ToTestCase(executable, testCaseInfo, testCaseLocations));
@@ -130,21 +112,6 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
                     executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
 
             return matches;
-        }
-
-
-        private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger logger)
-        {
-            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options))
-            {
-                var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
-
-                ILogger loggerAdapter = new VsTestFrameworkLogger(logger);
-                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
-            }
-
-            new DebugHelper(TestEnvironment).CheckDebugModeForDiscoveryCode();
         }
 
         private List<TestCaseInfo> ParseTestCases(List<string> output)
@@ -198,7 +165,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             return GoogleTestConstants.GetTestMethodSignature(suite, testName);
         }
 
-        private GoogleTestAdapter.Model.TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<TestCaseLocation> testCaseLocations)
+        private TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<TestCaseLocation> testCaseLocations)
         {
             string fullName = testCaseInfo.Suite + "." + testCaseInfo.NameAndParam;
             string displayName = testCaseInfo.Suite + "." + testCaseInfo.Name;
@@ -212,7 +179,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             {
                 if (location.Symbol.Contains(symbolName))
                 {
-                    GoogleTestAdapter.Model.TestCase testCase = new GoogleTestAdapter.Model.TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+                    TestCase testCase = new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
                     {
                         DisplayName = displayName,
                         CodeFilePath = location.Sourcefile,
@@ -224,13 +191,13 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             }
 
             TestEnvironment.LogWarning("Could not find source location for test " + fullName);
-            return new GoogleTestAdapter.Model.TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
+            return new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
             {
                 DisplayName = displayName
             };
         }
 
-        private IEnumerable<GoogleTestAdapter.Model.Trait> GetTraits(string displayName, List<GoogleTestAdapter.Model.Trait> traits)
+        private IEnumerable<Trait> GetTraits(string displayName, List<Trait> traits)
         {
             foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesBefore.Where(p => Regex.IsMatch(displayName, p.Regex)))
             {
@@ -243,7 +210,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesAfter.Where(p => Regex.IsMatch(displayName, p.Regex)))
             {
                 bool replacedTrait = false;
-                foreach (GoogleTestAdapter.Model.Trait traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))
+                foreach (Trait traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))
                 {
                     replacedTrait = true;
                     traits.Remove(traitToModify);

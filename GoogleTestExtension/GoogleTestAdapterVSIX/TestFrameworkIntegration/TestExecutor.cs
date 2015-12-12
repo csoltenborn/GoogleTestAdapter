@@ -14,13 +14,9 @@ using GoogleTestAdapterVSIX.Helpers;
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {
 
-    [ExtensionUri(ExecutorUriString)]
-    public class GoogleTestExecutor : ITestExecutor
+    [ExtensionUri(GoogleTestExecutor.ExecutorUriString)]
+    public class TestExecutor : ITestExecutor
     {
-        internal const string ExecutorUriString = "executor://GoogleTestRunner/v1";
-        internal static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
-
-
         private TestEnvironment TestEnvironment { get; set; }
 
         private List<GoogleTestAdapter.Model.TestCase> AllTestCasesInExecutables { get; } = new List<GoogleTestAdapter.Model.TestCase>();
@@ -28,9 +24,9 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
         private bool Canceled { get; set; } = false;
 
 
-        public GoogleTestExecutor() : this(null) { }
+        public TestExecutor() : this(null) { }
 
-        public GoogleTestExecutor(TestEnvironment testEnvironment)
+        public TestExecutor(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
         }

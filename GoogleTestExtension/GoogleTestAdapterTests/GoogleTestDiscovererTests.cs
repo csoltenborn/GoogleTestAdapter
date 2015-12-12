@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using System.Text.RegularExpressions;
-using GoogleTestAdapter.Model;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration;
 
 namespace GoogleTestAdapter
@@ -224,7 +222,7 @@ namespace GoogleTestAdapter
             Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
             MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
 
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            TestDiscoverer discoverer = new TestDiscoverer(TestEnvironment);
             discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockLogger.Object, mockDiscoverySink.Object);
 
             mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>()), Times.Exactly(expectedNrOfTests));

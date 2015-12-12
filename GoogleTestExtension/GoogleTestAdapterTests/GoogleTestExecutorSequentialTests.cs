@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
             List<Model.TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
-            GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment);
             Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(DataConversionExtensions.ToVsTestCase), MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();

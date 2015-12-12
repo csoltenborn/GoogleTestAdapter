@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.Runners
         public void ParallelTestExecutionSpeedsUpTestExecution()
         {
             Stopwatch stopwatch = new Stopwatch();
-            GoogleTestExecutor executor = new GoogleTestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment);
             IEnumerable<string> testsToRun = SampleTests.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.Runners
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(true);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
-            executor = new GoogleTestExecutor(TestEnvironment);
+            executor = new TestExecutor(TestEnvironment);
             testsToRun = SampleTests.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);

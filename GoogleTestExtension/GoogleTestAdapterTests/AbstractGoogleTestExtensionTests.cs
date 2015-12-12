@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 using GoogleTestAdapterVSIX.Helpers;
 
