@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {
     [TestClass]
-    public class GoogleTestExecutorParallelTests : AbstractGoogleTestExecutorTests
+    public class TestExecutorParallelTests : AbstractTestExecutorTests
     {
 
-        public GoogleTestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
+        public TestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
 
 
         override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
@@ -36,6 +39,34 @@ namespace GoogleTestAdapter
                 Times.AtMost(nrOfNotFoundTests));
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
                 Times.AtMost(nrOfNotFoundTests));
+        }
+
+        [TestMethod]
+        public void ParallelTestExecutionSpeedsUpTestExecution()
+        {
+            MockOptions.Setup(o => o.ParallelTestExecution).Returns(false);
+
+            Stopwatch stopwatch = new Stopwatch();
+            TestExecutor executor = new TestExecutor(TestEnvironment);
+            IEnumerable<string> testsToRun = SampleTests.Yield();
+            stopwatch.Start();
+            executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
+            stopwatch.Stop();
+            long sequentialDuration = stopwatch.ElapsedMilliseconds;
+
+            MockOptions.Setup(o => o.ParallelTestExecution).Returns(true);
+            MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
+
+            executor = new TestExecutor(TestEnvironment);
+            testsToRun = SampleTests.Yield();
+            stopwatch.Restart();
+            executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
+            stopwatch.Stop();
+            long parallelDuration = stopwatch.ElapsedMilliseconds;
+
+            Assert.IsTrue(sequentialDuration > 4000, sequentialDuration.ToString()); // 2 long tests, 2 seconds per test
+            Assert.IsTrue(parallelDuration > 2000, parallelDuration.ToString());
+            Assert.IsTrue(parallelDuration < 3500, parallelDuration.ToString()); // 2 seconds per long test + some time for the rest
         }
 
 

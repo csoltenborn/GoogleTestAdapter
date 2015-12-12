@@ -44,22 +44,8 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\lib\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Core">
-      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -81,39 +67,23 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
-    <Compile Include="DiaAdapter\DiaResolverTests.cs" />
+    <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="Helpers\DebugUtilsTests.cs" />
-    <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
+    <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\UtilsTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
-    <Compile Include="Runners\ParallelTestRunnerTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
-    <Compile Include="RunSettingsProviderTests.cs" />
-    <Compile Include="RunSettingsServiceTests.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
-    <Compile Include="GoogleTestDiscovererTests.cs" />
-    <Compile Include="AbstractGoogleTestExecutorTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
-    <Compile Include="DiaAdapter\ImportsParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
     <Compile Include="OptionsTests.cs" />
     <Compile Include="Helpers\ProcessLauncherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />
-    <Compile Include="GoogleTestExecutorParallelTests.cs" />
-    <Compile Include="GoogleTestExecutorSequentialTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiaAdapter\DiaAdapter.csproj">
-      <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
-      <Name>DiaAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GoogleTestAdapterVSIX\GoogleTestAdapterVSIX.csproj">
-      <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
-      <Name>GoogleTestAdapterVSIX</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>GoogleTestAdapter</Name>

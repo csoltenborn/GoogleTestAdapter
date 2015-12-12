@@ -1,24 +1,21 @@
 ﻿using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
+using GoogleTestAdapter;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {
-    public abstract class AbstractGoogleTestExecutorTests : AbstractGoogleTestExtensionTests
+    public abstract class AbstractTestExecutorTests : AbstractVSIXTests
     {
 
         private bool ParallelTestExecution { get; }
         private int MaxNrOfThreads { get; }
 
 
-        protected AbstractGoogleTestExecutorTests(bool parallelTestExecution, int maxNrOfThreads)
+        protected AbstractTestExecutorTests(bool parallelTestExecution, int maxNrOfThreads)
         {
             this.ParallelTestExecution = parallelTestExecution;
             this.MaxNrOfThreads = maxNrOfThreads;
@@ -46,7 +43,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
-            Model.TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
+            TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
 
             TestExecutor executor = new TestExecutor(TestEnvironment);
             executor.RunTests(DataConversionExtensions.ToVsTestCase(testCase).Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
@@ -133,12 +130,10 @@ namespace GoogleTestAdapter
 
             RunAndVerifyTests(X86ExternallyLinkedTests, 2, 0, 0);
 
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+            MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
                 Times.Never);
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+            MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
                 Times.AtLeastOnce());
         }
@@ -151,12 +146,10 @@ namespace GoogleTestAdapter
 
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
 
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+            MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
                 Times.AtLeastOnce());
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+            MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
                 Times.Never);
         }
@@ -166,12 +159,22 @@ namespace GoogleTestAdapter
         {
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
 
-            MockLogger.Verify(l => l.SendMessage(
-                It.IsAny<TestMessageLevel>(),
+            MockLogger.Verify(l => l.LogInfo(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
                 Times.Never);
-            MockLogger.Verify(l => l.SendMessage(
-                It.IsAny<TestMessageLevel>(),
+            MockLogger.Verify(l => l.LogWarning(
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
+                Times.Never);
+            MockLogger.Verify(l => l.LogError(
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP))),
+                Times.Never);
+            MockLogger.Verify(l => l.LogInfo(
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
+                Times.Never);
+            MockLogger.Verify(l => l.LogWarning(
+                It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
+                Times.Never);
+            MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_TEARDOWN))),
                 Times.Never);
         }
@@ -183,8 +186,7 @@ namespace GoogleTestAdapter
 
             RunAndVerifyTests(X64ExternallyLinkedTests, 2, 0, 0);
 
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
+            MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TEST_SETUP.ToLower()))),
                 Times.AtLeastOnce());
         }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -22,8 +19,7 @@ namespace GoogleTestAdapter.TestResults
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
-            MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
-                            Times.Exactly(1));
+            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -37,8 +33,7 @@ namespace GoogleTestAdapter.TestResults
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
-            MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
-                            Times.Exactly(1));
+            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -52,8 +47,7 @@ namespace GoogleTestAdapter.TestResults
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
-            MockLogger.Verify(l => l.SendMessage(It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning), It.IsAny<string>()),
-                            Times.Exactly(1));
+            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -84,10 +78,7 @@ namespace GoogleTestAdapter.TestResults
             {
             }
 
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
-                It.Is<string>(s => s.Contains("Foo"))),
-                Times.Exactly(1));
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Foo"))), Times.Exactly(1));
         }
 
         [TestMethod]

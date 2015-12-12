@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
-using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -168,8 +165,7 @@ namespace GoogleTestAdapter.TestResults
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[0].Duration);
 
-            MockLogger.Verify(l => l.SendMessage(
-                It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
+            MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }
 

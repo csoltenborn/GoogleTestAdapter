@@ -18,7 +18,7 @@ before_build:
 
     SetVersion %APPVEYOR_BUILD_VERSION%
 
-    cd GoogleTestAdapterTests
+    cd GoogleTestAdapterVSIXTests
 
     IgnoreTests GoogleTestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, Runners\ParallelTestRunnerTests.cs::ParallelTestExecutionSpeedsUpTestExecution
 
@@ -43,7 +43,7 @@ test_script:
 
     $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll" "-filter:+[*]* -[GoogleTestAdapterTests]* -[DiaAdapter]DiaAdapter.StubMemoryStream" -output:OpenCover_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\DiaAdapterTests\bin\$env:CONFIGURATION\DiaAdapterTests.dll GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll GoogleTestExtension\GoogleTestAdapterVSIXTests\bin\$env:CONFIGURATION\GoogleTestAdapterVSIXTests.dll" "-filter:+[*]* -[*Tests]* -[DiaAdapter]DiaAdapter.StubMemoryStream" -output:OpenCover_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 

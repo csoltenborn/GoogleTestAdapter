@@ -6,9 +6,6 @@ namespace GoogleTestAdapterVSIX.Helpers
 {
     public class DebugHelper
     {
-        // for developing and testing the test adapter itself
-        private static bool UnitTestMode = false;
-
         private static bool AlreadyAskedForDebugger { get; set; } = false;
 
         private TestEnvironment TestEnvironment { get; }
@@ -35,7 +32,7 @@ namespace GoogleTestAdapterVSIX.Helpers
             int processId = Process.GetCurrentProcess().Id;
 
             TestEnvironment.DebugInfo($"Test {taskType} is running in the process '{processName}' with id {processId}.");
-            if (TestEnvironment.Options.DevelopmentMode && !UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
+            if (TestEnvironment.Options.DevelopmentMode && !TestEnvironment.UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
             {
                 AlreadyAskedForDebugger = true;
 

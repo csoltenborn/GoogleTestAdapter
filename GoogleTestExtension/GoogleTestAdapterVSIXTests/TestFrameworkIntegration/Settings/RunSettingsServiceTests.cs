@@ -1,12 +1,10 @@
 ﻿using System.Xml;
+using GoogleTestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
-using GoogleTestAdapterVSIX;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 
-namespace GoogleTestAdapter
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
 {
 
     [TestClass]

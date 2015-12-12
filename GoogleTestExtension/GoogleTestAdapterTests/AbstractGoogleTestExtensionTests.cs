@@ -1,24 +1,25 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapterVSIX.Helpers;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework;
 
 namespace GoogleTestAdapter
 {
     public abstract class AbstractGoogleTestExtensionTests
     {
-        private const string SampleTestsSolutionDir = @"..\..\..\..\SampleGoogleTestTests\";
-        private const string TestdataDir = @"Resources\TestData\";
+#if DEBUG
+        private const string BuildConfig = "Debug";
+#else
+        private const string BuildConfig = "Release";
+#endif
+
+        protected const string SampleTestsSolutionDir = @"..\..\..\..\SampleGoogleTestTests\";
+
+        private const string TestdataDir = @"..\..\..\GoogleTestAdapterTests\bin\" + BuildConfig + @"\Resources\TestData\";
 
         protected const string Results0Batch = @"Tests\Returns0.bat";
         protected const string Results1Batch = @"Tests\Returns1.bat";
@@ -47,28 +48,23 @@ namespace GoogleTestAdapter
         protected const string DummyExecutable = "ff.exe";
 
 
-        protected readonly Mock<IMessageLogger> MockLogger = new Mock<IMessageLogger>();
+        protected readonly Mock<ILogger> MockLogger = new Mock<ILogger>();
         protected readonly Mock<Options> MockOptions = new Mock<Options>() { CallBase = true };
-        protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
-        protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
         protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
-        internal readonly TestEnvironment TestEnvironment;
+        protected readonly TestEnvironment TestEnvironment;
         private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
 
 
         protected AbstractGoogleTestExtensionTests()
         {
-            ILogger logger = new VsTestFrameworkLogger(MockLogger.Object);
-            TestEnvironment = new TestEnvironment(MockOptions.Object, logger);
+            TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
         }
 
 
         [TestInitialize]
         virtual public void SetUp()
         {
-            FieldInfo fieldInfo = typeof(DebugHelper).GetField("UnitTestMode", BindingFlags.NonPublic | BindingFlags.Static);
-            // ReSharper disable once PossibleNullReferenceException
-            fieldInfo.SetValue(null, true);
+            TestEnvironment.UnitTestMode = true;
 
             MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
 
@@ -86,8 +82,6 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Options.OptionBatchForTestTeardownDefaultValue);
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(Options.OptionEnableParallelTestExecutionDefaultValue);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Options.OptionMaxNrOfThreadsDefaultValue);
-
-            MockRunContext.Setup(rc => rc.SolutionDirectory).Returns(Path.GetFullPath(SampleTestsSolutionDir));
         }
 
         [TestCleanup]
@@ -95,8 +89,6 @@ namespace GoogleTestAdapter
         {
             MockLogger.Reset();
             MockOptions.Reset();
-            MockRunContext.Reset();
-            MockFrameworkHandle.Reset();
             MockFrameworkReporter.Reset();
             _allTestCasesOfConsoleApplication1 = null;
         }

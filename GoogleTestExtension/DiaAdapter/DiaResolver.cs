@@ -11,8 +11,8 @@ namespace DiaAdapter
         private string Binary { get; }
 
         private Stream FileStream { get; }
-        private DiaSourceClass DiaSourceClass { get; }
-        private IDiaSession DiaSession { get; }
+        private DiaSourceClass DiaSourceClass { get; set; }
+        private IDiaSession DiaSession { get; set; }
 
         public List<string> ErrorMessages { get; } = new List<string>();
 
@@ -46,8 +46,16 @@ namespace DiaAdapter
 
         private void Dispose(bool isCalledFromDispose)
         {
-            NativeMethods.ReleaseCom(DiaSession);
-            NativeMethods.ReleaseCom(DiaSourceClass);
+            if (DiaSession != null)
+            {
+                NativeMethods.ReleaseCom(DiaSession);
+                DiaSession = null;
+            }
+            if (DiaSourceClass != null)
+            {
+                NativeMethods.ReleaseCom(DiaSourceClass);
+                DiaSourceClass = null;
+            }
             if (isCalledFromDispose)
             {
                 FileStream.Dispose();
