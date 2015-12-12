@@ -83,8 +83,8 @@
     <Compile Include="OptionsPages\GeneralOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TestFrameworkIntegration\Helpers\DataConversionExtensions.cs" />
-    <Compile Include="TestFrameworkIntegration\Helpers\DebuggedProcessLauncher.cs" />
+    <Compile Include="TestFrameworkIntegration\DataConversionExtensions.cs" />
+    <Compile Include="TestFrameworkIntegration\Framework\DebuggedProcessLauncher.cs" />
     <Compile Include="TestFrameworkIntegration\Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="GoogleTestExtensionOptionsPage.cs" />
     <Compile Include="TestFrameworkIntegration\Settings\IGlobalRunSettings.cs" />
@@ -101,8 +101,8 @@
     <Compile Include="TestFrameworkIntegration\TestExecutor.cs" />
     <Compile Include="TestFrameworkIntegration\Settings\RunSettings.cs" />
     <Compile Include="TestFrameworkIntegration\Settings\RunSettingsProvider.cs" />
-    <Compile Include="TestFrameworkIntegration\Helpers\VsTestFrameworkLogger.cs" />
-    <Compile Include="TestFrameworkIntegration\Helpers\VSTestFrameworkReporter.cs" />
+    <Compile Include="TestFrameworkIntegration\Framework\VsTestFrameworkLogger.cs" />
+    <Compile Include="TestFrameworkIntegration\Framework\VSTestFrameworkReporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 

@@ -4,6 +4,7 @@ using System.Threading;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter.Runners
 {

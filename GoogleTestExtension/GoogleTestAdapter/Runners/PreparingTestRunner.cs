@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter.Runners
 {

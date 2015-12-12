@@ -9,6 +9,8 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 using GoogleTestAdapterVSIX.Helpers;
+using GoogleTestAdapter.Framework;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework;
 
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
 {

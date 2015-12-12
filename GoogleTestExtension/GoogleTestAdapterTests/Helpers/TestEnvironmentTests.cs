@@ -1,5 +1,5 @@
-﻿using GoogleTestAdapterVSIX.TestFrameworkIntegration;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
+﻿using GoogleTestAdapter.Framework;
+using GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

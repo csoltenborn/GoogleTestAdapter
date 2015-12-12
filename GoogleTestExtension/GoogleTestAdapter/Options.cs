@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter
 {

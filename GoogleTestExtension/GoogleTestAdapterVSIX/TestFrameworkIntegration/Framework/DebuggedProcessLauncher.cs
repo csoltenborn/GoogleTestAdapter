@@ -1,7 +1,7 @@
-﻿using GoogleTestAdapter;
+﻿using GoogleTestAdapter.Framework;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework
 {
     class DebuggedProcessLauncher : IDebuggedProcessLauncher
     {

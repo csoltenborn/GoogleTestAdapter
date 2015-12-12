@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Model;
-using GoogleTestAdapter;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers
 {
-    public class VsTestFrameworkReporter : ITestFrameworkReporter
+    class VsTestFrameworkReporter : ITestFrameworkReporter
     {
         private static readonly object Lock = new object();
 
@@ -67,7 +65,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers
 
         private void ReportTestResult(GoogleTestAdapter.Model.TestResult testResult)
         {
-            Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = testResult.ToTestResult();
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = testResult.ToVsTestResult();
             FrameworkHandle.RecordResult(result);
             FrameworkHandle.RecordEnd((Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase)DataConversionExtensions.ToVsTestCase(testResult.TestCase), result.Outcome);
 

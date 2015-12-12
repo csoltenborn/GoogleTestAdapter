@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -17,13 +18,15 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IDebuggedProcessLauncher debuggedLauncher)
+        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
+            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher)
         {
             int dummy;
             return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, debuggedLauncher, out dummy);
         }
 
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput, bool throwIfError, IDebuggedProcessLauncher debuggedLauncher, out int processExitCode)
+        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
+            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher, out int processExitCode)
         {
             List<string> output = new List<string>();
             if (IsBeingDebugged)
@@ -38,8 +41,8 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        private int LaunchProcess(string workingDirectory, string command, string param,
-            bool printTestOutput, bool throwIfError, List<string> output)
+        private int LaunchProcess(string workingDirectory, string command, string param, bool printTestOutput,
+            bool throwIfError, List<string> output)
         {
             ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
             {
@@ -71,8 +74,8 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command,
-            string param, bool printTestOutput, IDebuggedProcessLauncher handle)
+        private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command, string param, bool printTestOutput,
+            IDebuggedProcessLauncher handle)
         {
             TestEnvironment.LogInfo("Attaching debugger to " + command);
             if (printTestOutput)

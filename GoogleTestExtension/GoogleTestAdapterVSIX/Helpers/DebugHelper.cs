@@ -61,4 +61,5 @@ namespace GoogleTestAdapterVSIX.Helpers
         }
 
     }
+
 }

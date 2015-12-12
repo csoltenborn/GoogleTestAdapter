@@ -6,6 +6,7 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter.Runners
 {
