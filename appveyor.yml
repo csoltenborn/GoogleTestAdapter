@@ -48,6 +48,9 @@ artifacts:
   name: GoogleTestAdapter.vsix
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
   name: GoogleTestAdapter.pdb
+- path: GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors\*
+  name: TestErrors
+  type: zip
 notifications:
 - provider: Email
   to:

@@ -158,3 +158,4 @@ $RECYCLE.BIN/
 
 *.gta_testdurations
 OpenCover/
+/GoogleTestExtension/GoogleTestAdapterUiTests/TestsErrors

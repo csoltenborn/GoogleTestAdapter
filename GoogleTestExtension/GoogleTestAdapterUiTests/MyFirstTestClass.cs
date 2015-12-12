@@ -33,12 +33,12 @@ namespace GoogleTestAdapterUiTests
             string debugOrRelease = match.Groups[2].Value;
             vsixPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterVSIX\bin", debugOrRelease, @"GoogleTestAdapterVSIX.vsix");
             solution = Path.Combine(basePath, @"SampleGoogleTestTests\SampleGoogleTestTests.sln");
-            resultsPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterUiTests\TestResults");
+            uiTestsPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterUiTests");
         }
 
         private static readonly string vsixPath;
         private static readonly string solution;
-        private static readonly string resultsPath;
+        private static readonly string uiTestsPath;
         private static bool keepDirtyVsInstance = keepDirtyInstanceInit;
 
         private VsExperimentalInstance visualStudioInstance;
@@ -46,15 +46,22 @@ namespace GoogleTestAdapterUiTests
         [TestInitialize]
         public void SetupVanillaVsExperimentalInstance()
         {
-            visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, "GoogleTestAdapterUiTests");
-            if (!keepDirtyVsInstance)
+            try
             {
-                keepDirtyVsInstance = AskToCleanIfExists(visualStudioInstance);
+                visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, "GoogleTestAdapterUiTests");
+                if (!keepDirtyVsInstance)
+                {
+                    keepDirtyVsInstance = AskToCleanIfExists(visualStudioInstance);
+                }
+                if (!keepDirtyVsInstance)
+                {
+                    visualStudioInstance.FirstTimeInitialization();
+                    visualStudioInstance.InstallExtension(vsixPath);
+                }
             }
-            if (!keepDirtyVsInstance)
+            catch (AutomationException exception)
             {
-                visualStudioInstance.FirstTimeInitialization();
-                visualStudioInstance.InstallExtension(vsixPath);
+                LogExceptionAndThrow(exception);
             }
         }
 
@@ -63,7 +70,9 @@ namespace GoogleTestAdapterUiTests
         {
             if (!keepDirtyVsInstance)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                // wait for removal of locks on some files we want to delete
+                // TODO: find more reliable method than using Sleep()
+                Thread.Sleep(TimeSpan.FromSeconds(1));
                 visualStudioInstance.Clean();
             }
             visualStudioInstance = null;
@@ -72,40 +81,47 @@ namespace GoogleTestAdapterUiTests
         [TestMethod]
         public void MyFirstTest()
         {
-            using (Application application = visualStudioInstance.Launch())
-            using (Window mainWindow = application.GetWindow(
-                SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
-                InitializeOption.NoCache))
+            try
             {
-                // Open solution
-                mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
-                Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
-                fileOpenDialog.Get<TextBox>("File name:").Text = solution;
-                fileOpenDialog.Get<Button>("Open").Click();
+                using (Application application = visualStudioInstance.Launch())
+                using (Window mainWindow = application.GetWindow(
+                    SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
+                    InitializeOption.NoCache))
+                {
+                    // Open solution
+                    mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
+                    Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
+                    fileOpenDialog.Get<TextBox>("File name:").Text = solution;
+                    fileOpenDialog.Get<Button>("Open").Click();
 
-                // Open test explorer and wait for discovery
-                mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
-                IUIItem testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
-                ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
-                mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
+                    // Open test explorer and wait for discovery
+                    mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
+                    IUIItem testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
+                    ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
+                    mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
 
-                // Run all tests and wait till finish (max 1 minute)
-                mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
-                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
+                    // Run all tests and wait till finish (max 1 minute)
+                    mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
+                    ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
+                    mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
 
-                // Check results
-                string solutionDir = Path.GetDirectoryName(solution);
-                IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output"));
-                string testResults = new TestRunSerializer().ParseTestResults(solutionDir, testExplorer, outputWindow).ToXML();
-                CheckResults(testResults);
+                    // Check results
+                    string solutionDir = Path.GetDirectoryName(solution);
+                    IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output"));
+                    string testResults = new TestRunSerializer().ParseTestResults(solutionDir, testExplorer, outputWindow).ToXML();
+                    CheckResults(testResults);
+                }
+            }
+            catch(AutomationException exception)
+            {
+                LogExceptionAndThrow(exception);
             }
         }
 
         private void CheckResults(string result, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(resultsPath, this.GetType().Name + "__" + testCaseName + "__expected.xml");
-            string resultFile = Path.Combine(resultsPath, this.GetType().Name + "__" + testCaseName + "__result.xml");
+            string expectationFile = Path.Combine(uiTestsPath, "TestsResults", this.GetType().Name + "__" + testCaseName + "__expected.xml");
+            string resultFile = Path.Combine(uiTestsPath, "TestsErrors", this.GetType().Name + "__" + testCaseName + "__result.xml");
 
             if (!File.Exists(expectationFile))
             {
@@ -116,10 +132,11 @@ namespace GoogleTestAdapterUiTests
             string expectedResult = File.ReadAllText(expectationFile);
             if (result != expectedResult)
             {
-#pragma warning disable CS0162 // Unreachable code detected
+                #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
                 if (overwriteTestResults)
                 {
                     File.WriteAllText(expectationFile, result);
+                    Directory.CreateDirectory(Path.GetDirectoryName(expectationFile));
                     Assert.Inconclusive("Test results changed and have been overwritten.");
                 }
                 else
@@ -127,12 +144,20 @@ namespace GoogleTestAdapterUiTests
                     File.WriteAllText(resultFile, result);
                     Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile);
                 }
-#pragma warning restore CS0162 // Unreachable code detected
+                #pragma warning restore CS0162
             }
             else if (result == expectedResult && File.Exists(resultFile))
             {
                 File.Delete(resultFile);
             }
+        }
+
+        private void LogExceptionAndThrow(AutomationException exception, [CallerMemberName] string testCaseName = null)
+        {
+            string debugDetailsFile = Path.Combine(uiTestsPath, "TestsErrors", this.GetType().Name + "__" + testCaseName + "__DebugDetails.txt");
+            Directory.CreateDirectory(Path.GetDirectoryName(debugDetailsFile));
+            File.WriteAllText(debugDetailsFile, exception.ToString() + "\r\n" + exception.StackTrace + "\r\n" + exception.DebugDetails);
+            throw exception;
         }
 
         private static bool AskToCleanIfExists(VsExperimentalInstance visualStudioInstance)
@@ -141,7 +166,7 @@ namespace GoogleTestAdapterUiTests
             if (visualStudioInstance.Exists())
             {
                 var instanceExists = $"The experimental instance '{visualStudioInstance.VersionAndSuffix}' already exists.";
-                var willReset = "\nShould it be reset before going on with the tests?";
+                var willReset = "\nShould it be deleted before going on with the tests?";
 
                 MessageBoxResult result = MessageBoxWithTimeout.Show(instanceExists + willReset, "Warning!", MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel);
                 switch (result)
