@@ -3,10 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Runners;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
 using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
 using GoogleTestAdapterVSIX.Helpers;
@@ -19,10 +18,8 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
     {
         private TestEnvironment TestEnvironment { get; set; }
 
-        private List<GoogleTestAdapter.Model.TestCase> AllTestCasesInExecutables { get; } = new List<GoogleTestAdapter.Model.TestCase>();
-        private ITestRunner Runner { get; set; }
         private bool Canceled { get; set; } = false;
-
+        private GoogleTestExecutor Executor { get; set; }
 
         public TestExecutor() : this(null) { }
 
@@ -37,10 +34,10 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+                IEnumerable<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables =
+                    GetAllTestCasesInExecutables(executables);
 
-                ComputeAllTestCasesInExecutables(executables);
-
-                DoRunTests(AllTestCasesInExecutables, runContext, frameworkHandle);
+                DoRunTests(allTestCasesInExecutables, allTestCasesInExecutables, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
@@ -48,17 +45,16 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             }
         }
 
-        public void RunTests(IEnumerable<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        public void RunTests(IEnumerable<TestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            IEnumerable<GoogleTestAdapter.Model.TestCase> ourTestCasesToRun = testCasesToRun.Select<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase, GoogleTestAdapter.Model.TestCase>(DataConversionExtensions.ToTestCase);
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+                IEnumerable<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables =
+                    GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
-                GoogleTestAdapter.Model.TestCase[] testCasesToRunAsArray = ourTestCasesToRun as GoogleTestAdapter.Model.TestCase[] ?? ourTestCasesToRun.ToArray();
-                ComputeAllTestCasesInExecutables(testCasesToRunAsArray.Select(tc => tc.Source).Distinct());
-
-                DoRunTests(testCasesToRunAsArray, runContext, frameworkHandle);
+                IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
+                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
@@ -71,7 +67,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             lock (this)
             {
                 Canceled = true;
-                Runner?.Cancel();
+                Executor?.Cancel();
                 TestEnvironment.LogInfo("Test execution canceled.");
             }
         }
@@ -91,56 +87,33 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
             new DebugHelper(TestEnvironment).CheckDebugModeForExecutionCode();
         }
 
-        private void DoRunTests(IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle handle)
+        private IEnumerable<GoogleTestAdapter.Model.TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
         {
-            GoogleTestAdapter.Model.TestCase[] testCasesToRunAsArray = testCasesToRun as GoogleTestAdapter.Model.TestCase[] ?? testCasesToRun.ToArray();
-            TestEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
-
-            lock (this)
-            {
-                if (Canceled)
-                {
-                    return;
-                }
-                ComputeTestRunner(runContext, handle);
-            }
-
-            Runner.RunTests(AllTestCasesInExecutables, testCasesToRunAsArray, null, runContext.IsBeingDebugged, new DebuggedProcessLauncher(handle));
-            TestEnvironment.LogInfo("Test execution completed.");
-        }
-
-        private void ComputeTestRunner(IRunContext runContext, IFrameworkHandle handle)
-        {
-            if (TestEnvironment.Options.ParallelTestExecution && !runContext.IsBeingDebugged)
-            {
-                Runner = new ParallelTestRunner(new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment, runContext.SolutionDirectory);
-            }
-            else
-            {
-                Runner = new PreparingTestRunner(0, runContext.SolutionDirectory, new VsTestFrameworkReporter(null, handle, TestEnvironment), TestEnvironment);
-                if (TestEnvironment.Options.ParallelTestExecution && runContext.IsBeingDebugged)
-                {
-                    TestEnvironment.DebugInfo(
-                        "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
-                }
-            }
-        }
-
-        private void ComputeAllTestCasesInExecutables(IEnumerable<string> executables)
-        {
-            AllTestCasesInExecutables.Clear();
+            List<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables = new List<GoogleTestAdapter.Model.TestCase>();
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             foreach (string executable in executables)
             {
                 if (Canceled)
                 {
-                    AllTestCasesInExecutables.Clear();
+                    allTestCasesInExecutables.Clear();
                     break;
                 }
 
-                AllTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
+                allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
             }
+
+            return allTestCasesInExecutables;
+        }
+
+        private void DoRunTests(IEnumerable<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables,
+            IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        {
+            ITestFrameworkReporter reporter = new VsTestFrameworkReporter(null, frameworkHandle, TestEnvironment);
+            IDebuggedProcessLauncher launcher = new DebuggedProcessLauncher(frameworkHandle);
+            Executor = new GoogleTestExecutor(TestEnvironment);
+            Executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
+                runContext.IsBeingDebugged, runContext.SolutionDirectory);
         }
 
     }
