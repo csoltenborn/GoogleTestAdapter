@@ -2,9 +2,11 @@ version: 0.2.1.{build}
 os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
+
 environment:
   COVERALLS_REPO_TOKEN:
     secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
+    
 before_build: 
 - cmd: >-
     cd GoogleTestExtension
@@ -17,10 +19,12 @@ before_build:
 
     cd ..\..
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
+
 build:
   project: GoogleTestExtension\GoogleTestExtension.sln
   parallel: true
   verbosity: normal
+  
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
@@ -37,20 +41,24 @@ test_script:
 
     & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
 
+    if(Test-Path GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors) {
+        7z a TestErrors.zip GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors\*
+        Push-AppveyorArtifact TestErrors.zip
+    }
+    
     if ($TestExitCode -ne 0) {
         exit $TestExitCode
     }
     if ($UiTestExitCode -ne 0) {
         exit $UiTestExitCode
     }
+
 artifacts:
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapterVSIX.vsix
   name: GoogleTestAdapter.vsix
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\Release\GoogleTestAdapter.pdb
   name: GoogleTestAdapter.pdb
-- path: GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors\*
-  name: TestErrors
-  type: zip
+
 notifications:
 - provider: Email
   to:
