@@ -74,6 +74,8 @@
   <ItemGroup>
     <Compile Include="TestFrameworkIntegration\AbstractTestExecutorTests.cs" />
     <Compile Include="AbstractVSIXTests.cs" />
+    <Compile Include="TestFrameworkIntegration\Framework\DebuggedProcessLauncherTests.cs" />
+    <Compile Include="TestFrameworkIntegration\Framework\VsTestFrameworkLoggerTests.cs" />
     <Compile Include="TestFrameworkIntegration\TestDiscovererTests.cs" />
     <Compile Include="TestFrameworkIntegration\TestExecutorParallelTests.cs" />
     <Compile Include="TestFrameworkIntegration\TestExecutorSequentialTests.cs" />

@@ -3,11 +3,11 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework
 {
-    class DebuggedProcessLauncher : IDebuggedProcessLauncher
+    public class DebuggedProcessLauncher : IDebuggedProcessLauncher
     {
         private IFrameworkHandle FrameworkHandle { get; }
 
-        internal DebuggedProcessLauncher(IFrameworkHandle handle)
+        public DebuggedProcessLauncher(IFrameworkHandle handle)
         {
             FrameworkHandle = handle;
         }

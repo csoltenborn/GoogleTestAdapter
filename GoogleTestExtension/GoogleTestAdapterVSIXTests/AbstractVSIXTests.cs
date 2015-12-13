@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using GoogleTestAdapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -11,6 +12,7 @@ namespace GoogleTestAdapterVSIX
     {
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
+        protected readonly Mock<IMessageLogger> MockVsLogger = new Mock<IMessageLogger>();
 
         [TestInitialize]
         public override void SetUp()
@@ -27,6 +29,7 @@ namespace GoogleTestAdapterVSIX
 
             MockRunContext.Reset();
             MockFrameworkHandle.Reset();
+            MockVsLogger.Reset();
         }
 
     }

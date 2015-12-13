@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.Helpers
 
 
         [TestMethod]
-        public void LogWarning_ProducesWarningPlusMessage()
+        public void LogWarning_ProducesMessage()
         {
             Environment.LogWarning("foo");
 
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        public void LogError_ProducesErrorPlusMessage()
+        public void LogError_ProducesMessage()
         {
             Environment.LogError("bar");
 
