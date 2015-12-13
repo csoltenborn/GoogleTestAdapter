@@ -120,8 +120,8 @@ namespace GoogleTestAdapterUiTests
 
         private void CheckResults(string result, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(uiTestsPath, "TestsResults", this.GetType().Name + "__" + testCaseName + "__expected.xml");
-            string resultFile = Path.Combine(uiTestsPath, "TestsErrors", this.GetType().Name + "__" + testCaseName + "__result.xml");
+            string expectationFile = Path.Combine(uiTestsPath, "TestResults", this.GetType().Name + "__" + testCaseName + "__expected.xml");
+            string resultFile = Path.Combine(uiTestsPath, "TestErrors", this.GetType().Name + "__" + testCaseName + "__result.xml");
 
             if (!File.Exists(expectationFile))
             {
@@ -154,7 +154,7 @@ namespace GoogleTestAdapterUiTests
 
         private void LogExceptionAndThrow(AutomationException exception, [CallerMemberName] string testCaseName = null)
         {
-            string debugDetailsFile = Path.Combine(uiTestsPath, "TestsErrors", this.GetType().Name + "__" + testCaseName + "__DebugDetails.txt");
+            string debugDetailsFile = Path.Combine(uiTestsPath, "TestErrors", this.GetType().Name + "__" + testCaseName + "__DebugDetails.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(debugDetailsFile));
             File.WriteAllText(debugDetailsFile, exception.ToString() + "\r\n" + exception.StackTrace + "\r\n" + exception.DebugDetails);
             throw exception;
