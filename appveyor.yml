@@ -55,6 +55,8 @@ test_script:
 artifacts:
 - path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: GoogleTestAdapter
+- path: OpenCover_CoverageData.xml
+  name: OpenCover coverage data
 deploy:
   provider: GitHub
   auth_token:
