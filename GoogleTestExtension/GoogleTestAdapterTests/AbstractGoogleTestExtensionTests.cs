@@ -64,8 +64,6 @@ namespace GoogleTestAdapter
         [TestInitialize]
         virtual public void SetUp()
         {
-            TestEnvironment.UnitTestMode = true;
-
             MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
 
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());

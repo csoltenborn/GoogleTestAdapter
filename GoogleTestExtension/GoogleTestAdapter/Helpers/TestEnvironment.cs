@@ -7,9 +7,6 @@ namespace GoogleTestAdapter.Helpers
     public class TestEnvironment
     {
 
-        // for developing and testing the test adapter itself
-        public static bool UnitTestMode = false;
-
         private enum LogType { Normal, Debug }
 
 

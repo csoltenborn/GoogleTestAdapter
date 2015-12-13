@@ -32,7 +32,7 @@ namespace GoogleTestAdapterVSIX.Helpers
             int processId = Process.GetCurrentProcess().Id;
 
             TestEnvironment.DebugInfo($"Test {taskType} is running in the process '{processName}' with id {processId}.");
-            if (TestEnvironment.Options.DevelopmentMode && !TestEnvironment.UnitTestMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
+            if (TestEnvironment.Options.DevelopmentMode && !Debugger.IsAttached && !AlreadyAskedForDebugger)
             {
                 AlreadyAskedForDebugger = true;
 
