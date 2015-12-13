@@ -41,6 +41,12 @@ test_script:
 
     & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
 
+    pwd
+    Test-Path GoogleTestExtension
+    Test-Path GoogleTestExtension\GoogleTestAdapterUiTests
+    Test-Path GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors
+    dir GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors
+    
     if(Test-Path GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors) {
         7z a TestErrors.zip GoogleTestExtension\GoogleTestAdapterUiTests\TestErrors\*
         Push-AppveyorArtifact TestErrors.zip
