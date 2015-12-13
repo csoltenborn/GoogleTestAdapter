@@ -29,8 +29,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
         }
 
         public IXPathNavigable AddRunSettings(IXPathNavigable userRunSettingDocument,
-            IRunSettingsConfigurationInfo configurationInfo,
-            Microsoft.VisualStudio.TestWindow.Extensibility.ILogger logger)
+            IRunSettingsConfigurationInfo configurationInfo, ILogger logger)
         {
             XPathNavigator userRunSettingsNavigator = userRunSettingDocument.CreateNavigator();
             if (!userRunSettingsNavigator.MoveToChild("RunSettings", ""))

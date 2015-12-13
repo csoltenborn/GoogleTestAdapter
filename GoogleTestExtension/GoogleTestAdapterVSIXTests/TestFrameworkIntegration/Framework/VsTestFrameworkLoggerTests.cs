@@ -1,10 +1,8 @@
-﻿using GoogleTestAdapterVSIX;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace GoogleTestAdapter.TestFrameworkIntegration.Framework
+namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework
 {
     [TestClass]
     public class VsTestFrameworkLoggerTests : AbstractVSIXTests

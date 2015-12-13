@@ -18,6 +18,24 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
         }
 
         [TestMethod]
+        public void RunSettingsService_GentlyHandlesUserSettingsWithoutRunSettingsNode()
+        {
+            Mock<ILogger> mockLogger = new Mock<ILogger>();
+            Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
+
+            RunSettingsService service = SetupRunSettingsService(mockLogger);
+            service.SolutionSettingsFile_ForTesting = XmlFileBroken;
+
+            XmlDocument xml = new XmlDocument();
+            xml.Load(UserTestSettingsWithoutRunSettingsNode);
+
+            service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
+
+            mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Warning), It.Is<string>(s => s.Contains("does not contain a RunSettings node"))),
+                Times.Exactly(1));
+        }
+
+        [TestMethod]
         public void RunSettingsService_GentlyHandlesBrokenSolutionSettings()
         {
             Mock<ILogger> mockLogger = new Mock<ILogger>();

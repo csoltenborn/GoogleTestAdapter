@@ -44,6 +44,7 @@ namespace GoogleTestAdapter
 
         protected const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution" + GoogleTestConstants.SettingsExtension;
         protected const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
+        protected const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
 
         protected const string DummyExecutable = "ff.exe";
 
