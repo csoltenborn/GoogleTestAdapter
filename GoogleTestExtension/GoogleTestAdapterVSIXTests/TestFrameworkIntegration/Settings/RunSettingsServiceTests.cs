@@ -7,6 +7,21 @@ using Moq;
 namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
 {
 
+    class RunSettingsServiceUnderTest : RunSettingsService
+    {
+        private string SolutionRunSettingsFile { get; }
+
+        internal RunSettingsServiceUnderTest(IGlobalRunSettings globalRunSettings, string solutionRunSettingsFile) : base(globalRunSettings)
+        {
+            SolutionRunSettingsFile = solutionRunSettingsFile;
+        }
+
+        protected override string GetSolutionSettingsXmlFile()
+        {
+            return SolutionRunSettingsFile;
+        }
+    }
+
     [TestClass]
     public class RunSettingsServiceTests : AbstractGoogleTestExtensionTests
     {
@@ -23,8 +38,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
             Mock<ILogger> mockLogger = new Mock<ILogger>();
             Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
 
-            RunSettingsService service = SetupRunSettingsService(mockLogger);
-            service.SolutionSettingsFile_ForTesting = XmlFileBroken;
+            RunSettingsService service = SetupRunSettingsService(mockLogger, XmlFileBroken);
 
             XmlDocument xml = new XmlDocument();
             xml.Load(UserTestSettingsWithoutRunSettingsNode);
@@ -41,8 +55,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
             Mock<ILogger> mockLogger = new Mock<ILogger>();
             Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
 
-            RunSettingsService service = SetupRunSettingsService(mockLogger);
-            service.SolutionSettingsFile_ForTesting = XmlFileBroken;
+            RunSettingsService service = SetupRunSettingsService(mockLogger, XmlFileBroken);
 
             XmlDocument xml = new XmlDocument();
             xml.Load(UserTestSettings);
@@ -67,8 +80,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
             Mock<ILogger> mockLogger = new Mock<ILogger>();
             Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
 
-            RunSettingsService service = SetupRunSettingsService(mockLogger);
-            service.SolutionSettingsFile_ForTesting = SolutionTestSettings;
+            RunSettingsService service = SetupRunSettingsService(mockLogger, SolutionTestSettings);
 
             XmlDocument xml = new XmlDocument();
             xml.Load(UserTestSettings);
@@ -85,7 +97,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
             AssertContainsSetting(xml, "ReportWaitPeriod", "3");
         }
 
-        private RunSettingsService SetupRunSettingsService(Mock<ILogger> mockLogger)
+        private RunSettingsService SetupRunSettingsService(Mock<ILogger> mockLogger, string solutionRunSettingsFile)
         {
             RunSettings globalRunSettings = new RunSettings();
             globalRunSettings.AdditionalTestExecutionParam = "Global";
@@ -96,7 +108,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
             Mock<IGlobalRunSettings> mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
             mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalRunSettings);
 
-            return new RunSettingsService(mockGlobalRunSettings.Object);
+            return new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, solutionRunSettingsFile);
         }
 
         private void AssertContainsSetting(XmlDocument xml, string nodeName, string value)

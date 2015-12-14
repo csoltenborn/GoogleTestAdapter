@@ -18,8 +18,6 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
     {
         public string Name { get { return GoogleTestConstants.SettingsName; } }
 
-        public string SolutionSettingsFile_ForTesting { get; set; } = null;
-
         private IGlobalRunSettings globalRunSettings;
 
         [ImportingConstructor]
@@ -45,8 +43,7 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
                 userRunSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
             }
 
-            // FIXME test code
-            string solutionRunSettingsFile = SolutionSettingsFile_ForTesting ?? GetSolutionSettingsXmlFile();
+            string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
             try
             {
                 if (File.Exists(solutionRunSettingsFile))
@@ -87,7 +84,8 @@ namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
             return false;
         }
 
-        private string GetSolutionSettingsXmlFile()
+        // protected for testing
+        protected virtual string GetSolutionSettingsXmlFile()
         {
             DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
             return Path.ChangeExtension(dte.Solution.FullName, GoogleTestConstants.SettingsExtension);
