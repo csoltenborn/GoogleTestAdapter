@@ -29,9 +29,9 @@ test_script:
 - ps: >-
     iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
-    # $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+    $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    # $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+    $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
     # & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll" "-filter:+[*]* -[GoogleTestAdapterTests]*" -output:OpenCover_CoverageData.xml -returntargetcode
 
@@ -39,10 +39,6 @@ test_script:
 
     $path = "$($env:USERPROFILE)\Desktop\Delete me to continue.txt";
     
-    Set-Content -Path $path -Value ''; while($true) { if (-not (Test-Path $path)) { break; } else { Start-Sleep -Seconds 1 } }
-    
-    & VsTest.Console.exe GoogleTestExtension\GoogleTestAdapterUiTests\bin\$env:CONFIGURATION\GoogleTestAdapterUiTests.dll
-
     Set-Content -Path $path -Value ''; while($true) { if (-not (Test-Path $path)) { break; } else { Start-Sleep -Seconds 1 } }
     
     & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterUiTests\bin\$env:CONFIGURATION\GoogleTestAdapterUiTests.dll" "-filter:+[*]* -[GoogleTestAdapterUiTests]* -[TestStack*]*" -output:OpenCover_CoverageData.xml -mergeoutput -returntargetcode
