@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using TestStack.White;
+using TestStack.White.Configuration;
 using TestStack.White.Factory;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -84,6 +85,7 @@ namespace GoogleTestAdapterUiTests
             try
             {
                 using (Application application = visualStudioInstance.Launch())
+                using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = TimeSpan.FromMinutes(3).Milliseconds; }))
                 using (Window mainWindow = application.GetWindow(
                     SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
                     InitializeOption.NoCache))

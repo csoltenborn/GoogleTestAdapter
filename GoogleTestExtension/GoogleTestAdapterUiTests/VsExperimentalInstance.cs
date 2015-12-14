@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TestStack.White;
+using TestStack.White.Configuration;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.WindowItems;
@@ -55,10 +56,13 @@ namespace GoogleTestAdapterUiTests
                 throw new InvalidOperationException("Cannot first-time initialize existing instance.");
 
             using (Application application = Launch())
+            using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = TimeSpan.FromMinutes(3).Milliseconds; }))
             using (Window win = application.GetWindow("Microsoft Visual Studio"))
             {
                 win.Get<Hyperlink>(SearchCriteria.ByText("Not now, maybe later.")).Click();
                 win.Get<Button>(SearchCriteria.ByText("Start Visual Studio")).Click();
+                win.WaitWhileBusy();
+                win.Close();
             }
         }
 
