@@ -27,6 +27,8 @@ build:
   
 test_script:
 - ps: >-
+    $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
     $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
     $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
