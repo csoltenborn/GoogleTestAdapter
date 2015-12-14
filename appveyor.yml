@@ -41,7 +41,7 @@ test_script:
     
     Set-Content -Path $path -Value ''; while($true) { if (-not (Test-Path $path)) { break; } else { Start-Sleep -Seconds 1 } }
     
-    & VsTest.Console.exe GoogleTestExtension\GoogleTestAdapterUiTests\bin\$env:CONFIGURATION\GoogleTestAdapterUiTests.dll" "-filter:+[*]* -[GoogleTestAdapterUiTests]* -[TestStack*]*
+    & VsTest.Console.exe GoogleTestExtension\GoogleTestAdapterUiTests\bin\$env:CONFIGURATION\GoogleTestAdapterUiTests.dll
 
     Set-Content -Path $path -Value ''; while($true) { if (-not (Test-Path $path)) { break; } else { Start-Sleep -Seconds 1 } }
     
