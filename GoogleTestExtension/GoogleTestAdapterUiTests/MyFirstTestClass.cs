@@ -84,7 +84,7 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                int timeOut = (int)TimeSpan.FromMinutes(3).TotalMilliseconds;
+                int timeOut = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
                 using (Application application = visualStudioInstance.Launch())
                 using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = timeOut; }))
                 using (Window mainWindow = application.GetWindow(

@@ -55,7 +55,7 @@ namespace GoogleTestAdapterUiTests
             if (Exists())
                 throw new InvalidOperationException("Cannot first-time initialize existing instance.");
 
-            int timeOut = (int)TimeSpan.FromMinutes(3).TotalMilliseconds;
+            int timeOut = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
             using (Application application = Launch())
             using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = timeOut; }))
             using (Window win = application.GetWindow("Microsoft Visual Studio"))
