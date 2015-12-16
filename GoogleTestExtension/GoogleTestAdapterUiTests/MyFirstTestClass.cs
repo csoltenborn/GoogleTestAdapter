@@ -94,8 +94,8 @@ namespace GoogleTestAdapterUiTests
                     // Open solution
                     mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
                     Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
-                    fileOpenDialog.Get<TextBox>("File name:").Text = solution;
-                    fileOpenDialog.Get<Button>("Open").Click();
+                    fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = solution;
+                    fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
 
                     // Open test explorer and wait for discovery
                     mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
@@ -115,7 +115,7 @@ namespace GoogleTestAdapterUiTests
                     CheckResults(testResults);
                 }
             }
-            catch(AutomationException exception)
+            catch (AutomationException exception)
             {
                 LogExceptionAndThrow(exception);
             }
@@ -135,7 +135,7 @@ namespace GoogleTestAdapterUiTests
             string expectedResult = File.ReadAllText(expectationFile);
             if (result != expectedResult)
             {
-                #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
+#pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
                 if (overwriteTestResults)
                 {
                     File.WriteAllText(expectationFile, result);
@@ -147,7 +147,7 @@ namespace GoogleTestAdapterUiTests
                     File.WriteAllText(resultFile, result);
                     Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile);
                 }
-                #pragma warning restore CS0162
+#pragma warning restore CS0162
             }
             else if (result == expectedResult && File.Exists(resultFile))
             {
