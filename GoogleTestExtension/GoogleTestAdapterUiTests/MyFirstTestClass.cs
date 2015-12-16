@@ -123,8 +123,8 @@ namespace GoogleTestAdapterUiTests
 
         private void CheckResults(string result, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(uiTestsPath, "TestResults", this.GetType().Name + "__" + testCaseName + "__expected.xml");
-            string resultFile = Path.Combine(uiTestsPath, "TestErrors", this.GetType().Name + "__" + testCaseName + "__result.xml");
+            string expectationFile = Path.Combine(uiTestsPath, "TestResults", this.GetType().Name + "__" + testCaseName + ".xml");
+            string resultFile = Path.Combine(uiTestsPath, "TestErrors", this.GetType().Name + "__" + testCaseName + ".xml");
 
             if (!File.Exists(expectationFile))
             {
@@ -139,11 +139,11 @@ namespace GoogleTestAdapterUiTests
                 if (overwriteTestResults)
                 {
                     File.WriteAllText(expectationFile, result);
-                    Directory.CreateDirectory(Path.GetDirectoryName(expectationFile));
                     Assert.Inconclusive("Test results changed and have been overwritten.");
                 }
                 else
                 {
+                    Directory.CreateDirectory(Path.GetDirectoryName(resultFile));
                     File.WriteAllText(resultFile, result);
                     Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile);
                 }
