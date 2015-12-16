@@ -41,7 +41,7 @@ test_script:
     
     Set-Content -Path $path -Value ''; while($true) { if (-not (Test-Path $path)) { break; } else { Start-Sleep -Seconds 1 } }
     
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\GoogleTestAdapterUiTests\bin\$env:CONFIGURATION\GoogleTestAdapterUiTests.dll" "-filter:+[*]* -[GoogleTestAdapterUiTests]* -[TestStack*]*" -output:OpenCover_CoverageData.xml -mergeoutput -returntargetcode
+    VsTest.Console.exe /logger:Appveyor GoogleTestExtension\GoogleTestAdapterUiTests\bin\$env:CONFIGURATION\GoogleTestAdapterUiTests.dll
 
     $UiTestExitCode = $LASTEXITCODE
 
