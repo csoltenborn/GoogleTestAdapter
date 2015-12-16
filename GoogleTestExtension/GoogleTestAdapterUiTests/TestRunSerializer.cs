@@ -9,6 +9,9 @@ using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.TreeItems;
 using TestStack.White.UIItems.WPFUIItems;
+using System;
+using System.Threading;
+using System.Diagnostics;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -96,9 +99,13 @@ namespace GoogleTestAdapterUiTests
             TestGroup testGroup = new TestGroup(testGroupNode.Text);
 
             testGroupNode.Expand();
-            foreach (TreeNode testNode in testGroupNode.Nodes)
+            for (int i = 0; i < testGroupNode.Nodes.Count; i++)
             {
-                testGroup.Add(ParseTestCase(testNode));
+                if (i < testGroupNode.Nodes.Count - 1)
+                {
+                    EnsureNodeIsOnScreen(testGroupNode.Nodes[i + 1]);
+                }
+                testGroup.Add(ParseTestCase(testGroupNode.Nodes[i]));
             }
 
             return testGroup;
@@ -107,7 +114,6 @@ namespace GoogleTestAdapterUiTests
         private TestCase ParseTestCase(TreeNode testNode)
         {
             TestCase testResult = new TestCase();
-
             testNode.Get<Label>("TestListViewDisplayNameTextBlock").Click();
             Assert.AreEqual(testNode.Nodes.Count, 0, "Test case tree node expected to have no children.");
 
@@ -121,6 +127,16 @@ namespace GoogleTestAdapterUiTests
             }
 
             return testResult;
+        }
+
+        private void EnsureNodeIsOnScreen(TreeNode node)
+        {
+            if (node.IsOffScreen)
+            {
+                node.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
+                node.Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                Thread.Sleep(TimeSpan.FromMilliseconds(500));
+            }
         }
 
         private void AddInfoFromDetailPane(TestCase testResult, Label label)
