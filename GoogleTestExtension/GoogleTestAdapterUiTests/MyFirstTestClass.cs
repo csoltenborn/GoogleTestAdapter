@@ -15,6 +15,7 @@ using TestStack.White.UIItems.WindowItems;
 using TestStack.White.UIItems.WPFUIItems;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
+using System.Collections.Generic;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -133,26 +134,56 @@ namespace GoogleTestAdapterUiTests
             }
 
             string expectedResult = File.ReadAllText(expectationFile);
-            if (result != expectedResult)
+            string msg;
+            bool stringsAreEqual = AreEqual(expectedResult, result, out msg);
+            if (!stringsAreEqual)
             {
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
                 if (overwriteTestResults)
                 {
                     File.WriteAllText(expectationFile, result);
                     Directory.CreateDirectory(Path.GetDirectoryName(expectationFile));
-                    Assert.Inconclusive("Test results changed and have been overwritten.");
+                    Assert.Inconclusive("Test results changed and have been overwritten. Differences: " + msg);
                 }
                 else
                 {
                     File.WriteAllText(resultFile, result);
-                    Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile);
+                    Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile + ". Differences: " + msg);
                 }
 #pragma warning restore CS0162
             }
-            else if (result == expectedResult && File.Exists(resultFile))
+            else if (stringsAreEqual && File.Exists(resultFile))
             {
                 File.Delete(resultFile);
             }
+        }
+
+        private bool AreEqual(string expectedResult, string result, out string msg)
+        {
+            // normalize file endings
+            expectedResult = Regex.Replace(expectedResult, @"\r\n|\n\r|\n|\r", "\r\n");
+            result = Regex.Replace(result, @"\r\n|\n\r|\n|\r", "\r\n");
+
+            bool areEqual = true;
+            List<string> messages = new List<string>();
+            if (expectedResult.Length != result.Length)
+            {
+                areEqual = false;
+                messages.Add("$Length differs, expected: {expectedResult.Length}, actual: {result.Length}");
+            }
+
+            for (int i = 0; i < Math.Min(expectedResult.Length, result.Length); i++)
+            {
+                if (expectedResult[i] != result[i])
+                {
+                    areEqual = false;
+                    messages.Add($"First difference at position {i}, expected: {expectedResult[i]}, actual: {result[i]}");
+                    break;
+                }
+            }
+
+            msg = string.Join("; ", messages);
+            return areEqual;
         }
 
         private void LogExceptionAndThrow(AutomationException exception, [CallerMemberName] string testCaseName = null)
