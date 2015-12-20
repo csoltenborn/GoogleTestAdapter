@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter.VS
 {
 
     public static class DataConversionExtensions

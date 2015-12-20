@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Framework;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework
+namespace GoogleTestAdapter.VS.Framework
 {
 
     public class VsTestFrameworkLogger : ILogger

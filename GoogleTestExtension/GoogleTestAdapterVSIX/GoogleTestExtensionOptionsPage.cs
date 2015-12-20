@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter;
 using GoogleTestAdapterVSIX.OptionsPages;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
+using GoogleTestAdapter.VS.Settings;
 
 namespace GoogleTestAdapterVSIX
 {

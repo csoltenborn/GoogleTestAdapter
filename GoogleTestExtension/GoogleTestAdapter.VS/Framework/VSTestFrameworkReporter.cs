@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Framework;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers
+namespace GoogleTestAdapter.VS.Helpers
 {
     class VsTestFrameworkReporter : ITestFrameworkReporter
     {

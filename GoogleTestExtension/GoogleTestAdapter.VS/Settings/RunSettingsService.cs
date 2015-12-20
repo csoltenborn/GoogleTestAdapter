@@ -6,10 +6,9 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using EnvDTE;
-using GoogleTestAdapter;
 using GoogleTestAdapter.Helpers;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
+namespace GoogleTestAdapter.VS.Settings
 {
 
     [Export(typeof(IRunSettingsService))]

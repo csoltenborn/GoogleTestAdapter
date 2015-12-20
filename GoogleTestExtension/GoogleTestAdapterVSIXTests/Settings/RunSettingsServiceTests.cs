@@ -1,10 +1,9 @@
 ﻿using System.Xml;
-using GoogleTestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
+namespace GoogleTestAdapter.VS.Settings
 {
 
     class RunSettingsServiceUnderTest : RunSettingsService

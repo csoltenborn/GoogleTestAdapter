@@ -3,14 +3,12 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
-using GoogleTestAdapterVSIX.Helpers;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework;
+using GoogleTestAdapter.VS.Framework;
+using GoogleTestAdapter.VS.Helpers;
+using GoogleTestAdapter.VS.Settings;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter.VS
 {
     [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]

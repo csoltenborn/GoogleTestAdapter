@@ -1,4 +1,4 @@
-﻿namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
+﻿namespace GoogleTestAdapter.VS.Settings
 {
 
     public interface IGlobalRunSettings

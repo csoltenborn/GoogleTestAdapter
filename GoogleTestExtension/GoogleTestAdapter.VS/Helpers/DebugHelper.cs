@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using GoogleTestAdapter.Helpers;
 
-namespace GoogleTestAdapterVSIX.Helpers
+namespace GoogleTestAdapter.VS.Helpers
 {
     public class DebugHelper
     {

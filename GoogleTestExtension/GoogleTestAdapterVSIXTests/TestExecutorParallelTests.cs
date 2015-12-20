@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter.VS
 {
     [TestClass]
     public class TestExecutorParallelTests : AbstractTestExecutorTests

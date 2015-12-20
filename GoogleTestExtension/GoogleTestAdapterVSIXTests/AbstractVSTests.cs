@@ -1,14 +1,13 @@
 ﻿using System.IO;
-using GoogleTestAdapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace GoogleTestAdapterVSIX
+namespace GoogleTestAdapter.VS
 {
 
-    public abstract class AbstractVSIXTests : AbstractGoogleTestExtensionTests
+    public abstract class AbstractVSTests : AbstractGoogleTestExtensionTests
     {
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();

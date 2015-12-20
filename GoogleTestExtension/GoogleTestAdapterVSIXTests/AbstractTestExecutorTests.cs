@@ -3,12 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
-using GoogleTestAdapter;
 using GoogleTestAdapter.Model;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter.VS
 {
-    public abstract class AbstractTestExecutorTests : AbstractVSIXTests
+    public abstract class AbstractTestExecutorTests : AbstractVSTests
     {
 
         private bool ParallelTestExecution { get; }

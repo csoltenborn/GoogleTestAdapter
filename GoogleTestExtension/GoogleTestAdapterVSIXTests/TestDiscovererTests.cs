@@ -3,9 +3,8 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter.VS
 {
 
     [TestClass]

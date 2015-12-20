@@ -2,9 +2,8 @@
 using System.Xml;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using GoogleTestAdapter;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
+namespace GoogleTestAdapter.VS.Settings
 {
     [Export(typeof(ISettingsProvider))]
     [SettingsName(GoogleTestConstants.SettingsName)]

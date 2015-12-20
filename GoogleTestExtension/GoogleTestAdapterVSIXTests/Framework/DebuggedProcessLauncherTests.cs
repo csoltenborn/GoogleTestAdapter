@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework
+namespace GoogleTestAdapter.VS.Framework
 {
     [TestClass]
-    public class DebuggedProcessLauncherTests : AbstractVSIXTests
+    public class DebuggedProcessLauncherTests : AbstractVSTests
     {
 
         [TestMethod]

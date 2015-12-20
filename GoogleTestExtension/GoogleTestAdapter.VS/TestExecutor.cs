@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Helpers;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings;
-using GoogleTestAdapterVSIX.Helpers;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapterVSIX.TestFrameworkIntegration.Framework;
+using GoogleTestAdapter.VS.Helpers;
+using GoogleTestAdapter.VS.Framework;
+using GoogleTestAdapter.VS.Settings;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration
+namespace GoogleTestAdapter.VS
 {
 
     [ExtensionUri(GoogleTestExecutor.ExecutorUriString)]

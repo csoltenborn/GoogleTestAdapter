@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 
-namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
+namespace GoogleTestAdapter.VS.Settings
 {
 
     [Export(typeof(IGlobalRunSettings))]
