@@ -7,8 +7,8 @@
     <ProjectGuid>{7F4372DA-70E2-48D0-BEE2-8043528428D0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NewGoogleTestAdapter</RootNamespace>
-    <AssemblyName>NewGoogleTestAdapter</AssemblyName>
+    <RootNamespace>GoogleTestAdapter</RootNamespace>
+    <AssemblyName>GoogleTestAdapter</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
