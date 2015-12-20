@@ -1,7 +1,7 @@
 ﻿namespace GoogleTestAdapterVSIX.TestFrameworkIntegration.Settings
 {
 
-    interface IGlobalRunSettingsInternal : IGlobalRunSettings
+    public interface IGlobalRunSettingsInternal : IGlobalRunSettings
     {
         new RunSettings RunSettings { get; set; }
     }

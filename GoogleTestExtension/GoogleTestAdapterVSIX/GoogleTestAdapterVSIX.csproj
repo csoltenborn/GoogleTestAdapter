@@ -77,19 +77,13 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Helpers\DebugHelper.cs" />
     <Compile Include="OptionsPages\AdvancedOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="OptionsPages\GeneralOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TestFrameworkIntegration\DataConversionExtensions.cs" />
-    <Compile Include="TestFrameworkIntegration\Framework\DebuggedProcessLauncher.cs" />
-    <Compile Include="TestFrameworkIntegration\Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="GoogleTestExtensionOptionsPage.cs" />
-    <Compile Include="TestFrameworkIntegration\Settings\IGlobalRunSettings.cs" />
-    <Compile Include="TestFrameworkIntegration\Settings\IGlobalRunSettingsInternal.cs" />
     <Compile Include="OptionsPages\NotifyingDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -97,13 +91,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestFrameworkIntegration\Settings\RunSettingsService.cs" />
-    <Compile Include="TestFrameworkIntegration\TestDiscoverer.cs" />
-    <Compile Include="TestFrameworkIntegration\TestExecutor.cs" />
-    <Compile Include="TestFrameworkIntegration\Settings\RunSettings.cs" />
-    <Compile Include="TestFrameworkIntegration\Settings\RunSettingsProvider.cs" />
-    <Compile Include="TestFrameworkIntegration\Framework\VsTestFrameworkLogger.cs" />
-    <Compile Include="TestFrameworkIntegration\Framework\VSTestFrameworkReporter.cs" />
+    <Compile Include="RunSettingsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
