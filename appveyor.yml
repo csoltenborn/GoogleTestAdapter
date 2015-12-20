@@ -18,9 +18,9 @@ before_build:
 
     SetVersion %APPVEYOR_BUILD_VERSION%
 
-    cd GoogleTestAdapterVSIXTests
+    cd GoogleTestAdapter.VSTests
 
-    IgnoreTests TestFrameworkIntegration\TestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, TestFrameworkIntegration\TestExecutorParallelTests.cs::ParallelTestExecutionSpeedsUpTestExecution
+    IgnoreTests TestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, TestExecutorParallelTests.cs::ParallelTestExecutionSpeedsUpTestExecution
 
     cd ..\..
 - ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
@@ -43,7 +43,7 @@ test_script:
 
     $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\DiaAdapterTests\bin\$env:CONFIGURATION\DiaAdapterTests.dll GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll GoogleTestExtension\GoogleTestAdapterVSIXTests\bin\$env:CONFIGURATION\GoogleTestAdapterVSIXTests.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapterVSIX]*DialogPage -[GoogleTestAdapterVSIX]*TestExtensionOptionsPage -[DiaAdapter]DiaAdapter.StubMemoryStream" -output:OpenCover_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\DiaAdapterTests\bin\$env:CONFIGURATION\DiaAdapterTests.dll GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll GoogleTestExtension\GoogleTestAdapter.VSTests\bin\$env:CONFIGURATION\GoogleTestAdapter.VSTests.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapterVSIX]*DialogPage -[GoogleTestAdapterVSIX]*TestExtensionOptionsPage -[DiaAdapter]DiaAdapter.StubMemoryStream" -output:OpenCover_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
