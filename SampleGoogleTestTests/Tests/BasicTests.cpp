@@ -2,7 +2,7 @@
 #include <string>
 #include "gtest/gtest.h"
 #include "../LibProject/Lib.h"
-#include "../../GoogleTestExtension/GoogleTestAdapter/Resources/GTA_Traits.h"
+#include "../../GoogleTestExtension/NewGoogleTestAdapter/Resources/GTA_Traits.h"
 
 extern std::string TEST_DIRECTORY;
 

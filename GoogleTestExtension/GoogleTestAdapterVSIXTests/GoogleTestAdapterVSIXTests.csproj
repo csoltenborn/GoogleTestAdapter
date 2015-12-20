@@ -100,6 +100,10 @@
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>GoogleTestAdapter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NewGoogleTestAdapter\NewGoogleTestAdapter.csproj">
+      <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
+      <Name>NewGoogleTestAdapter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

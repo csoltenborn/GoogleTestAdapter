@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterVSIXTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaAdapterTests", "DiaAdapterTests\DiaAdapterTests.csproj", "{941BA1B7-2CF4-4D5C-8680-5C73CD6FE197}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewGoogleTestAdapter", "NewGoogleTestAdapter\NewGoogleTestAdapter.csproj", "{7F4372DA-70E2-48D0-BEE2-8043528428D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{941BA1B7-2CF4-4D5C-8680-5C73CD6FE197}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{941BA1B7-2CF4-4D5C-8680-5C73CD6FE197}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{941BA1B7-2CF4-4D5C-8680-5C73CD6FE197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

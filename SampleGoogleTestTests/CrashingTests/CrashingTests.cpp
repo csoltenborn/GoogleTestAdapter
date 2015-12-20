@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <concrt.h>
 #include "../LibProject/Lib.h"
-#include "../../GoogleTestExtension/GoogleTestAdapter/Resources/GTA_Traits.h"
+#include "../../GoogleTestExtension/NewGoogleTestAdapter/Resources/GTA_Traits.h"
 
 #include "../Tests/Main.cpp"
 
