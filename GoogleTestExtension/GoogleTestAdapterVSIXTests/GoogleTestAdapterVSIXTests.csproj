@@ -88,6 +88,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GoogleTestAdapter.VS\GoogleTestAdapter.VS.csproj">
+      <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
+      <Name>GoogleTestAdapter.VS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapterTests\GoogleTestAdapterTests.csproj">
       <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
       <Name>GoogleTestAdapterTests</Name>
@@ -97,12 +101,8 @@
       <Name>GoogleTestAdapterVSIX</Name>
     </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
-      <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
-      <Name>GoogleTestAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NewGoogleTestAdapter\NewGoogleTestAdapter.csproj">
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
-      <Name>NewGoogleTestAdapter</Name>
+      <Name>GoogleTestAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

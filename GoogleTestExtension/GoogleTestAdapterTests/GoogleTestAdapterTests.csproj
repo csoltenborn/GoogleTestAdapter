@@ -84,16 +84,6 @@
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
-      <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
-      <Name>GoogleTestAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NewGoogleTestAdapter\NewGoogleTestAdapter.csproj">
-      <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
-      <Name>NewGoogleTestAdapter</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Key.snk" />
     <None Include="packages.config" />
     <Content Include="Resources\TestData\RunSettingsServiceTests\Solution.gta.runsettings">
@@ -185,6 +175,12 @@
     <Content Include="Resources\TestData\_x86\Traits\ConsoleApplication1Tests.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
+      <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
+      <Name>GoogleTestAdapter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

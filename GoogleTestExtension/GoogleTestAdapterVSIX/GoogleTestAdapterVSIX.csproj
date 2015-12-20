@@ -105,15 +105,13 @@
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaAdapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
+    <ProjectReference Include="..\GoogleTestAdapter.VS\GoogleTestAdapter.VS.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
-      <Name>GoogleTestAdapter</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+      <Name>GoogleTestAdapter.VS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NewGoogleTestAdapter\NewGoogleTestAdapter.csproj">
+    <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
-      <Name>NewGoogleTestAdapter</Name>
+      <Name>GoogleTestAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
