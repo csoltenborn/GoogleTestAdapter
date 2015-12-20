@@ -96,10 +96,6 @@
       <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
       <Name>GoogleTestAdapterTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GoogleTestAdapterVSIX\GoogleTestAdapterVSIX.csproj">
-      <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
-      <Name>GoogleTestAdapterVSIX</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
       <Name>GoogleTestAdapter</Name>
