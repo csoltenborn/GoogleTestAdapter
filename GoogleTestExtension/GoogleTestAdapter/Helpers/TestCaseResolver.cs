@@ -71,9 +71,9 @@ namespace GoogleTestAdapter.Helpers
         private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
         {
             List<Trait> traits = GetTraits(location, allTraitSymbols);
-            TestCaseLocation testCaseInfo = new TestCaseLocation(location.Symbol, location.Sourcefile, location.Line);
-            testCaseInfo.Traits.AddRange(traits);
-            return testCaseInfo;
+            TestCaseLocation testCaseLocation = new TestCaseLocation(location.Symbol, location.Sourcefile, location.Line);
+            testCaseLocation.Traits.AddRange(traits);
+            return testCaseLocation;
         }
 
         private List<Trait> GetTraits(SourceFileLocation nativeSymbol, IEnumerable<SourceFileLocation> allTraitSymbols)

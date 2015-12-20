@@ -21,42 +21,6 @@ namespace GoogleTestAdapter
             Suite=[<prefix>/]<test_case_name>, 
             NameAndParam=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
         */
-        internal class TestCaseInfo
-        {
-            internal string Suite { get; }
-
-            internal string NameAndParam { get; }
-
-            internal string Name
-            {
-                get
-                {
-                    int startOfParamInfo = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
-                    return startOfParamInfo > 0 ? NameAndParam.Substring(0, startOfParamInfo).Trim() : NameAndParam;
-                }
-            }
-
-            internal string Param
-            {
-                get
-                {
-                    int indexOfMarker = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
-                    if (indexOfMarker < 0)
-                    {
-                        return "";
-                    }
-                    int startOfParam = indexOfMarker + GoogleTestConstants.ParameterizedTestMarker.Length;
-                    return NameAndParam.Substring(startOfParam, NameAndParam.Length - startOfParam).Trim();
-                }
-            }
-
-            internal TestCaseInfo(string suite, string nameAndParam)
-            {
-                this.Suite = suite;
-                this.NameAndParam = nameAndParam;
-            }
-        }
-
 
         private static readonly Regex CompiledTestFinderRegex = new Regex(Options.TestFinderRegex, RegexOptions.Compiled);
 
@@ -80,16 +44,15 @@ namespace GoogleTestAdapter
         public List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
-            List<TestCaseInfo> testCaseInfos = ParseTestCases(consoleOutput);
-            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(executable, testCaseInfos);
+            List<TestCase> testCases = ParseTestCases(consoleOutput);
+            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(executable, testCases);
 
-            TestEnvironment.LogInfo("Found " + testCaseInfos.Count + " tests in executable " + executable);
+            TestEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 
-            List<TestCase> testCases = new List<TestCase>();
-            foreach (TestCaseInfo testCaseInfo in testCaseInfos)
+            foreach (TestCase testCase in testCases)
             {
-                testCases.Add(ToTestCase(executable, testCaseInfo, testCaseLocations));
-                TestEnvironment.DebugInfo("Added testcase " + testCaseInfo.Suite + "." + testCaseInfo.NameAndParam);
+                ConfigureTestCase(testCase, executable, testCaseLocations);
+                TestEnvironment.DebugInfo("Added testcase " + testCase.Suite + "." + testCase.NameAndParam);
             }
             return testCases;
         }
@@ -115,16 +78,16 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        private List<TestCaseInfo> ParseTestCases(List<string> output)
+        private List<TestCase> ParseTestCases(List<string> output)
         {
-            List<TestCaseInfo> testCaseInfos = new List<TestCaseInfo>();
+            List<TestCase> testCases = new List<TestCase>();
             string currentSuite = "";
             foreach (string line in output)
             {
                 string trimmedLine = line.Trim('.', '\n', '\r');
                 if (trimmedLine.StartsWith("  "))
                 {
-                    testCaseInfos.Add(new TestCaseInfo(currentSuite, trimmedLine.Substring(2)));
+                    testCases.Add(new TestCase(currentSuite, trimmedLine.Substring(2)));
                 }
                 else
                 {
@@ -133,12 +96,12 @@ namespace GoogleTestAdapter
                 }
             }
 
-            return testCaseInfos;
+            return testCases;
         }
 
-        private List<TestCaseLocation> GetTestCaseLocations(string executable, List<TestCaseInfo> testCaseInfos)
+        private List<TestCaseLocation> GetTestCaseLocations(string executable, List<TestCase> testCases)
         {
-            List<string> testMethodSignatures = testCaseInfos.Select(GetTestMethodSignature).ToList();
+            List<string> testMethodSignatures = testCases.Select(tc => tc.GetTestMethodSignature()).ToList();
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
             TestCaseResolver resolver = new TestCaseResolver();
             List<string> errorMessages = new List<string>();
@@ -150,52 +113,35 @@ namespace GoogleTestAdapter
             return testCaseLocations;
         }
 
-        private string GetTestMethodSignature(TestCaseInfo testCaseInfo)
+        private void ConfigureTestCase(TestCase testCase, string executable, List<TestCaseLocation> testCaseLocations)
         {
-            if (!testCaseInfo.NameAndParam.Contains(GoogleTestConstants.ParameterizedTestMarker))
+            string fullName = testCase.Suite + "." + testCase.NameAndParam;
+            string displayName = testCase.Suite + "." + testCase.Name;
+            if (!string.IsNullOrEmpty(testCase.Param))
             {
-                return GoogleTestConstants.GetTestMethodSignature(testCaseInfo.Suite, testCaseInfo.NameAndParam);
+                displayName += $" [{testCase.Param}]";
             }
-
-            int index = testCaseInfo.Suite.IndexOf('/');
-            string suite = index < 0 ? testCaseInfo.Suite : testCaseInfo.Suite.Substring(index + 1);
-
-            index = testCaseInfo.NameAndParam.IndexOf('/');
-            string testName = index < 0 ? testCaseInfo.NameAndParam : testCaseInfo.NameAndParam.Substring(0, index);
-
-            return GoogleTestConstants.GetTestMethodSignature(suite, testName);
-        }
-
-        private TestCase ToTestCase(string executable, TestCaseInfo testCaseInfo, List<TestCaseLocation> testCaseLocations)
-        {
-            string fullName = testCaseInfo.Suite + "." + testCaseInfo.NameAndParam;
-            string displayName = testCaseInfo.Suite + "." + testCaseInfo.Name;
-            if (!string.IsNullOrEmpty(testCaseInfo.Param))
-            {
-                displayName += $" [{testCaseInfo.Param}]";
-            }
-            string symbolName = GetTestMethodSignature(testCaseInfo);
+            string symbolName = testCase.GetTestMethodSignature();
 
             foreach (TestCaseLocation location in testCaseLocations)
             {
                 if (location.Symbol.Contains(symbolName))
                 {
-                    TestCase testCase = new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
-                    {
-                        DisplayName = displayName,
-                        CodeFilePath = location.Sourcefile,
-                        LineNumber = (int)location.Line
-                    };
+                    testCase.FullyQualifiedName = fullName;
+                    testCase.ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
+                    testCase.Source = executable;
+                    testCase.DisplayName = displayName;
+                    testCase.CodeFilePath = location.Sourcefile;
+                    testCase.LineNumber = (int)location.Line;
                     testCase.Traits.AddRange(GetTraits(testCase.DisplayName, location.Traits));
-                    return testCase;
                 }
             }
 
             TestEnvironment.LogWarning("Could not find source location for test " + fullName);
-            return new TestCase(fullName, new Uri(GoogleTestExecutor.ExecutorUriString), executable)
-            {
-                DisplayName = displayName
-            };
+            testCase.FullyQualifiedName = fullName;
+            testCase.ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
+            testCase.Source = executable;
+            testCase.DisplayName = displayName;
         }
 
         private IEnumerable<Trait> GetTraits(string displayName, List<Trait> traits)
