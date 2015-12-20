@@ -10,18 +10,6 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
-        /*
-        Simple tests: 
-            Suite=<test_case_name>
-            NameAndParam=<test_name>
-        Tests with fixture
-            Suite=<test_fixture>
-            NameAndParam=<test_name>
-        Parameterized case: 
-            Suite=[<prefix>/]<test_case_name>, 
-            NameAndParam=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
-        */
-
         private static readonly Regex CompiledTestFinderRegex = new Regex(Options.TestFinderRegex, RegexOptions.Compiled);
 
         private TestEnvironment TestEnvironment { get; }
@@ -51,7 +39,7 @@ namespace GoogleTestAdapter
 
             foreach (TestCase testCase in testCases)
             {
-                ConfigureTestCase(testCase, executable, testCaseLocations);
+                testCase.ConfigureTestCase(executable, testCaseLocations, TestEnvironment);
                 TestEnvironment.DebugInfo("Added testcase " + testCase.Suite + "." + testCase.NameAndParam);
             }
             return testCases;
@@ -91,8 +79,7 @@ namespace GoogleTestAdapter
                 }
                 else
                 {
-                    string[] split = trimmedLine.Split(new[] { GoogleTestConstants.ParameterValueMarker }, StringSplitOptions.RemoveEmptyEntries);
-                    currentSuite = split.Length > 0 ? split[0] : trimmedLine;
+                    currentSuite = trimmedLine;
                 }
             }
 
@@ -111,67 +98,6 @@ namespace GoogleTestAdapter
                 TestEnvironment.LogWarning(errorMessage);
             }
             return testCaseLocations;
-        }
-
-        private void ConfigureTestCase(TestCase testCase, string executable, List<TestCaseLocation> testCaseLocations)
-        {
-            string fullName = testCase.Suite + "." + testCase.NameAndParam;
-            string displayName = testCase.Suite + "." + testCase.Name;
-            if (!string.IsNullOrEmpty(testCase.Param))
-            {
-                displayName += $" [{testCase.Param}]";
-            }
-            string symbolName = testCase.GetTestMethodSignature();
-
-            foreach (TestCaseLocation location in testCaseLocations)
-            {
-                if (location.Symbol.Contains(symbolName))
-                {
-                    testCase.FullyQualifiedName = fullName;
-                    testCase.ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
-                    testCase.Source = executable;
-                    testCase.DisplayName = displayName;
-                    testCase.CodeFilePath = location.Sourcefile;
-                    testCase.LineNumber = (int)location.Line;
-                    testCase.Traits.AddRange(GetTraits(testCase.DisplayName, location.Traits));
-                }
-            }
-
-            TestEnvironment.LogWarning("Could not find source location for test " + fullName);
-            testCase.FullyQualifiedName = fullName;
-            testCase.ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
-            testCase.Source = executable;
-            testCase.DisplayName = displayName;
-        }
-
-        private IEnumerable<Trait> GetTraits(string displayName, List<Trait> traits)
-        {
-            foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesBefore.Where(p => Regex.IsMatch(displayName, p.Regex)))
-            {
-                if (!traits.Exists(T => T.Name == pair.Trait.Name))
-                {
-                    traits.Add(pair.Trait);
-                }
-            }
-
-            foreach (RegexTraitPair pair in TestEnvironment.Options.TraitsRegexesAfter.Where(p => Regex.IsMatch(displayName, p.Regex)))
-            {
-                bool replacedTrait = false;
-                foreach (Trait traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))
-                {
-                    replacedTrait = true;
-                    traits.Remove(traitToModify);
-                    if (!traits.Contains(pair.Trait))
-                    {
-                        traits.Add(pair.Trait);
-                    }
-                }
-                if (!replacedTrait)
-                {
-                    traits.Add(pair.Trait);
-                }
-            }
-            return traits;
         }
 
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)

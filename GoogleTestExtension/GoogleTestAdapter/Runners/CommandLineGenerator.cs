@@ -120,7 +120,7 @@ namespace GoogleTestAdapter.Runners
             }
 
             string result = "";
-            string nextTest = GetTestcaseNameForFiltering(testCases[0].FullyQualifiedName);
+            string nextTest = testCases[0].GetTestcaseNameForFiltering_CommandLineGenerator();
             if (nextTest.Length > maxLength)
             {
                 throw new Exception("CommandLineGenerator: I can not deal with this case :-( - maxLength=" + maxLength +
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter.Runners
                 testCases.RemoveAt(0);
                 if (testCases.Count > 0)
                 {
-                    nextTest = ":" + GetTestcaseNameForFiltering(testCases[0].FullyQualifiedName);
+                    nextTest = ":" + testCases[0].GetTestcaseNameForFiltering_CommandLineGenerator();
                 }
             }
             return result;
@@ -203,7 +203,7 @@ namespace GoogleTestAdapter.Runners
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (TestCase testCase in TestCasesToRun)
             {
-                bool isRunBySuite = suitesRunningAllTests.Any(s => s == GetTestsuiteName(testCase));
+                bool isRunBySuite = suitesRunningAllTests.Any(s => s == testCase.GetTestsuiteName_CommandLineGenerator());
                 if (!isRunBySuite)
                 {
                     testCasesNotRunBySuite.Add(testCase);
@@ -230,28 +230,12 @@ namespace GoogleTestAdapter.Runners
 
         private List<string> GetAllSuitesOfTestCasesToRun()
         {
-            return TestCasesToRun.Select(GetTestsuiteName).Distinct().ToList();
+            return TestCasesToRun.Select(tc => tc.GetTestsuiteName_CommandLineGenerator()).Distinct().ToList();
         }
 
         private List<TestCase> GetAllMatchingTestCases(IEnumerable<TestCase> cases, string suite)
         {
-            return cases.Where(testcase => suite == GetTestsuiteName(testcase)).ToList();
-        }
-
-        private string GetTestsuiteName(TestCase testCase)
-        {
-            return testCase.FullyQualifiedName.Split('.')[0];
-        }
-
-        private string GetTestcaseNameForFiltering(string fullname)
-        {
-            int index = fullname.IndexOf(GoogleTestConstants.ParameterizedTestMarker,
-                StringComparison.Ordinal);
-            if (index < 0)
-            {
-                return fullname;
-            }
-            return fullname.Substring(0, index);
+            return cases.Where(testcase => suite == testcase.GetTestsuiteName_CommandLineGenerator()).ToList();
         }
 
     }
