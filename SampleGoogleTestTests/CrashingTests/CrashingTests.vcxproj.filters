@@ -22,4 +22,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CrashReallyHard32.asm">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="CrashReallyHard64.asm">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
