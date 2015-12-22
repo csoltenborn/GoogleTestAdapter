@@ -112,6 +112,38 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public void FindsParameterizedTest()
+        {
+            AssertFindsParameterizedTest(
+                "InstantiationName/ParameterizedTests.SimpleTraits/0",
+                "InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]");
+
+            AssertFindsParameterizedTest(
+                "PointerParameterizedTests.CheckStringLength/2",
+                new Regex("PointerParameterizedTests.CheckStringLength/2 ..[0-9A-F]+ pointing to .ooops., 23.."));
+
+            AssertFindsParameterizedTest(
+                "TypedTests/2.CanDefeatMath",
+                "TypedTests/2.CanDefeatMath"); // see TODO below
+
+            AssertFindsParameterizedTest(
+                "Arr/TypeParameterizedTests/0.CanIterate",
+                "Arr/TypeParameterizedTests/0.CanIterate"); // see TODO below
+        }
+
+        [TestMethod, Ignore]
+        public void FindsParameterizedTestTODO()
+        {
+            AssertFindsParameterizedTest(
+                "TypedTests/2.CanDefeatMath",
+                "TypedTests/2.CanDefeatMath [MyStrangeArray]");
+
+            AssertFindsParameterizedTest(
+                "Arr/TypeParameterizedTests/0.CanIterate",
+                "Arr/TypeParameterizedTests/0.CanIterate [std::array<int,3>]");
+        }
+
+        [TestMethod]
         public void FindsParameterizedTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
@@ -242,6 +274,22 @@ namespace GoogleTestAdapter
                 Model.Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
                 Assert.IsNotNull(foundTrait, "Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
+        }
+
+        private void AssertFindsParameterizedTest(string fullyQualifiedName, string displayName)
+        {
+            AssertFindsParameterizedTest(fullyQualifiedName, new Regex(Regex.Escape(displayName)));
+        }
+
+        private void AssertFindsParameterizedTest(string fullyQualifiedName, Regex displayNameRegex)
+        {
+            Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
+
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            List<Model.TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+
+            Model.TestCase testCase = tests.Where(t => t.FullyQualifiedName == fullyQualifiedName).Single();
+            Assert.IsTrue(displayNameRegex.IsMatch(testCase.DisplayName));
         }
 
     }

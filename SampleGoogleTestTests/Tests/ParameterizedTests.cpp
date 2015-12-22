@@ -49,3 +49,23 @@ INSTANTIATE_TEST_CASE_P(/* no instantiation name*/,
 	ParameterizedTests,
 	testing::Values(MyParam("_", 0))
 	);
+
+
+// Some parameters can have changing output between test runs.
+// Best example: strings whose addresses can change between runs.
+// The test runner should be able to handle this (hasn't in the past).
+typedef std::pair<char*, int> MyPointerParam;
+
+class PointerParameterizedTests : public testing::TestWithParam<MyPointerParam>
+{
+};
+
+TEST_P(PointerParameterizedTests, CheckStringLength) {
+	EXPECT_EQ(GetParam().second, strlen(GetParam().first));
+}
+
+INSTANTIATE_TEST_CASE_P(/* no instantiation name*/,
+	PointerParameterizedTests,
+	// use _strdup to have strings on the heap and enforce a new address each test run (yes... we leak memory)
+	testing::Values(MyPointerParam(_strdup(""), 0), MyPointerParam(_strdup("Test"), 4), MyPointerParam(_strdup("ooops"), 23))
+	);

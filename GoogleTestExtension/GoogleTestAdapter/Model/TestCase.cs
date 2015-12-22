@@ -98,18 +98,12 @@ namespace GoogleTestAdapter.Model
 
         public string GetTestcaseNameForFiltering_CommandLineGenerator()
         {
-            int index = FullyQualifiedName.IndexOf(GoogleTestConstants.ParameterizedTestMarker,
-                StringComparison.Ordinal);
-            if (index < 0)
-            {
-                return FullyQualifiedName;
-            }
-            return FullyQualifiedName.Substring(0, index);
+            return FullyQualifiedName;
         }
 
         internal void ConfigureTestCase(string executable, List<TestCaseLocation> testCaseLocations, TestEnvironment testEnvironment)
         {
-            string fullName = Suite + "." + NameAndParam;
+            string fullName = Suite + "." + Name;
             string displayName = Suite + "." + Name;
             if (!string.IsNullOrEmpty(Param))
             {

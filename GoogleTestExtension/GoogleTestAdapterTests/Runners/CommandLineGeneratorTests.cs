@@ -93,9 +93,9 @@ namespace GoogleTestAdapter.Runners
         public void CombinesCommonParameterizedTestsInSuite()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases(
-                "InstantiationName2/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)",
-                "InstantiationName/ParameterizedTests.SimpleTraits/0  # GetParam() = (1,)",
-                "InstantiationName/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)");
+                "InstantiationName2/ParameterizedTests.SimpleTraits/0",
+                "InstantiationName/ParameterizedTests.SimpleTraits/0",
+                "InstantiationName/ParameterizedTests.SimpleTraits/1");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("InstantiationName2/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)"));
 
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
