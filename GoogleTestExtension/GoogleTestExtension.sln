@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterVSIX", "GoogleTestAdapterVSIX\GoogleTestAdapterVSIX.csproj", "{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaAdapterTests", "DiaAdapterTests\DiaAdapterTests.csproj", "{941BA1B7-2CF4-4D5C-8680-5C73CD6FE197}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapter", "GoogleTestAdapter\GoogleTestAdapter.csproj", "{7F4372DA-70E2-48D0-BEE2-8043528428D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTestAdapterUiTests", "GoogleTestAdapterUiTests\GoogleTestAdapterUiTests.csproj", "{B9C827B5-DC90-4A78-B477-852EAE1196AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F4372DA-70E2-48D0-BEE2-8043528428D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9C827B5-DC90-4A78-B477-852EAE1196AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9C827B5-DC90-4A78-B477-852EAE1196AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9C827B5-DC90-4A78-B477-852EAE1196AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9C827B5-DC90-4A78-B477-852EAE1196AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
