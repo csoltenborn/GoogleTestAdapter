@@ -88,7 +88,11 @@ namespace GoogleTestAdapter
 
         private List<TestCaseLocation> GetTestCaseLocations(string executable, List<TestCase> testCases)
         {
-            List<string> testMethodSignatures = testCases.Select(tc => tc.GetTestMethodSignature()).ToList();
+            List<string> testMethodSignatures = new List<string>();
+            foreach (TestCase testCase in testCases)
+            {
+                testMethodSignatures.AddRange(testCase.GetTestMethodSignatures());
+            }
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
             TestCaseResolver resolver = new TestCaseResolver();
             List<string> errorMessages = new List<string>();

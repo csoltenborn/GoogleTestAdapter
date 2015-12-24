@@ -37,6 +37,8 @@ namespace GoogleTestAdapter.Model
 
         internal string NameAndParam { get; }
 
+        private string TypeParam = null;
+
         internal string Name
         {
             get
@@ -69,17 +71,26 @@ namespace GoogleTestAdapter.Model
 
         internal TestCase(string suite, string nameAndParam)
         {
-            string[] split = suite.Split(new[] { GoogleTestConstants.ParameterValueMarker }, StringSplitOptions.RemoveEmptyEntries);
+            string[] split = suite.Split(new[] { GoogleTestConstants.TypedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
             Suite = split.Length > 0 ? split[0] : suite;
+            if (split.Length > 1)
+            {
+                TypeParam = split[1];
+                TypeParam = TypeParam.Replace("class ", "");
+            }
 
             NameAndParam = nameAndParam;
         }
 
-        public string GetTestMethodSignature()
+        public IEnumerable<string> GetTestMethodSignatures()
         {
+            if (TypeParam != null)
+            {
+                return GetTypedTestMethodSignatures();
+            }
             if (!NameAndParam.Contains(GoogleTestConstants.ParameterizedTestMarker))
             {
-                return GoogleTestConstants.GetTestMethodSignature(Suite, NameAndParam);
+                return GoogleTestConstants.GetTestMethodSignature(Suite, NameAndParam).Yield();
             }
 
             int index = Suite.IndexOf('/');
@@ -88,7 +99,40 @@ namespace GoogleTestAdapter.Model
             index = NameAndParam.IndexOf('/');
             string testName = index < 0 ? NameAndParam : NameAndParam.Substring(0, index);
 
-            return GoogleTestConstants.GetTestMethodSignature(suite, testName);
+            return GoogleTestConstants.GetTestMethodSignature(suite, testName).Yield();
+        }
+
+        private IEnumerable<string> GetTypedTestMethodSignatures()
+        {
+            List<string> result = new List<string>();
+
+            // remove instance number
+            string suite = Suite.Substring(0, Suite.LastIndexOf("/"));
+
+            if (suite.Contains("/"))
+            {
+                int index = suite.IndexOf("/");
+                suite = suite.Substring(index + 1, suite.Length - index - 1);
+            }
+            // <testcase name>_<test name>_Test<type param value>::TestBody
+            string signature = suite + "_" + Name + "_Test<" + TypeParam;
+            if (signature.EndsWith(">"))
+            {
+                signature += " ";
+            }
+            signature += ">::TestBody";
+            result.Add(signature);
+
+            // gtest_case_<testcase name>_::<test name><type param value>::TestBody
+            signature = "gtest_case_" + suite + "_::" + Name + "<" + TypeParam;
+            if (signature.EndsWith(">"))
+            {
+                signature += " ";
+            }
+            signature += ">::TestBody";
+            result.Add(signature);
+
+            return result;
         }
 
         public string GetTestsuiteName_CommandLineGenerator()
@@ -109,20 +153,26 @@ namespace GoogleTestAdapter.Model
             {
                 displayName += $" [{Param}]";
             }
-            string symbolName = GetTestMethodSignature();
-
-            foreach (TestCaseLocation location in testCaseLocations)
+            if (!string.IsNullOrEmpty(TypeParam))
             {
-                if (location.Symbol.Contains(symbolName))
+                displayName += $" [{TypeParam}]";
+            }
+
+            foreach (string symbolName in GetTestMethodSignatures())
+            {
+                foreach (TestCaseLocation location in testCaseLocations)
                 {
-                    FullyQualifiedName = fullName;
-                    ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
-                    Source = executable;
-                    DisplayName = displayName;
-                    CodeFilePath = location.Sourcefile;
-                    LineNumber = (int)location.Line;
-                    Traits.AddRange(GetTraits(DisplayName, location.Traits, testEnvironment));
-                    return;
+                    if (location.Symbol.Contains(symbolName))
+                    {
+                        FullyQualifiedName = fullName;
+                        ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
+                        Source = executable;
+                        DisplayName = displayName;
+                        CodeFilePath = location.Sourcefile;
+                        LineNumber = (int)location.Line;
+                        Traits.AddRange(GetTraits(DisplayName, location.Traits, testEnvironment));
+                        return;
+                    }
                 }
             }
 

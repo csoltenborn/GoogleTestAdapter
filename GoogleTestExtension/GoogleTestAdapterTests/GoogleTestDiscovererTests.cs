@@ -14,14 +14,18 @@ namespace GoogleTestAdapter
     {
 
         [TestMethod]
-        public void MatchesTestExecutableName()
+        public void IsGoogleTestExecutable_MatchingExamples_AreMatched()
         {
             AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
             AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
             AssertIsGoogleTestExecutable("MyGoogleTest.exe", true);
             AssertIsGoogleTestExecutable("mygoogletests.exe", true);
             AssertIsGoogleTestExecutable("mygoogletest.exe", true);
+        }
 
+        [TestMethod]
+        public void IsGoogleTestExecutable_NotMatchingExamples_AreNotMatched()
+        {
             AssertIsGoogleTestExecutable("MyGoogleTes.exe", false);
             AssertIsGoogleTestExecutable("TotallyWrong.exe", false);
             AssertIsGoogleTestExecutable("TestStuff.exe", false);
@@ -29,7 +33,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void MatchesCustomRegex()
+        public void IsGoogleTestExecutable_WithRegexFromOptions_MatchesCorrectly()
         {
             AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
             AssertIsGoogleTestExecutable("SomeWeirdOtherThing", false, "Some.*Expression");
@@ -37,7 +41,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void UnparseableRegexProducesErrorMessage()
+        public void IsGoogleTestExecutable_WithUnparsableRegexFromOptions_ProducesErrorMessage()
         {
             bool result = new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable("my.exe", "d[ddd[");
 
@@ -46,73 +50,73 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void FindsTestsFromStaticallyLinkedX86ExecutableWithSourceFileLocation()
+        public void GetTestsFromExecutable_StaticallyLinkedX86Executable_FindsTestsWitLocation()
         {
             FindStaticallyLinkedTests(X86StaticallyLinkedTests);
         }
 
         [TestMethod]
-        public void FindsTestsFromStaticallyLinkedX64ExecutableWithSourceFileLocation()
+        public void GetTestsFromExecutable_StaticallyLinkedX64Executable_FindsTestsWithLocation()
         {
             FindStaticallyLinkedTests(X64StaticallyLinkedTests);
         }
 
         [TestMethod]
-        public void FindsTestsFromExternallyLinkedX86ExecutableWithSourceFileLocation()
+        public void GetTestsFromExecutable_ExternallyLinkedX86Executable_FindsTestsWithLocation()
         {
             FindExternallyLinkedTests(X86ExternallyLinkedTests);
         }
 
         [TestMethod]
-        public void FindsTestsFromExternallyLinkedX64ExecutableWithSourceFileLocation()
+        public void GetTestsFromExecutable_ExternallyLinkedX64Executable_FindsTestsWithLocation()
         {
             FindExternallyLinkedTests(X64ExternallyLinkedTests);
         }
 
         [TestMethod]
-        public void FindsMathTestWithOneTrait()
+        public void GetTestsFromExecutable_SampleTests_FindsMathTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
-        public void FindsMathTestWithTwoTraits()
+        public void GetTestsFromExecutable_SampleTests_FindsMathTestWithTwoTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
-        public void FindsMathTestWithThreeTraits()
+        public void GetTestsFromExecutable_SampleTests_FindsMathTestWithThreeTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
-        public void FindsFixtureTestWithOneTrait()
+        public void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
             AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits", traits);
         }
 
         [TestMethod]
-        public void FindsFixtureTestWithTwoTraits()
+        public void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithTwoTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
             AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits2", traits);
         }
 
         [TestMethod]
-        public void FindsFixtureTestWithThreeTraits()
+        public void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithThreeTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("Category", "Integration") };
             AssertFindsTestWithTraits("TheFixture.AddPassesWithTraits3", traits);
         }
 
         [TestMethod]
-        public void FindsParameterizedTest()
+        public void GetTestsFromExecutable_SampleTests_FindsParameterizedTests()
         {
             AssertFindsParameterizedTest(
                 "InstantiationName/ParameterizedTests.SimpleTraits/0",
@@ -121,51 +125,43 @@ namespace GoogleTestAdapter
             AssertFindsParameterizedTest(
                 "PointerParameterizedTests.CheckStringLength/2",
                 new Regex("PointerParameterizedTests.CheckStringLength/2 ..[0-9A-F]+ pointing to .ooops., 23.."));
-
-            AssertFindsParameterizedTest(
-                "TypedTests/2.CanDefeatMath",
-                "TypedTests/2.CanDefeatMath"); // see TODO below
-
-            AssertFindsParameterizedTest(
-                "Arr/TypeParameterizedTests/0.CanIterate",
-                "Arr/TypeParameterizedTests/0.CanIterate"); // see TODO below
-        }
-
-        [TestMethod, Ignore]
-        public void FindsParameterizedTestTODO()
-        {
-            AssertFindsParameterizedTest(
-                "TypedTests/2.CanDefeatMath",
-                "TypedTests/2.CanDefeatMath [MyStrangeArray]");
-
-            AssertFindsParameterizedTest(
-                "Arr/TypeParameterizedTests/0.CanIterate",
-                "Arr/TypeParameterizedTests/0.CanIterate [std::array<int,3>]");
         }
 
         [TestMethod]
-        public void FindsParameterizedTestWithOneTrait()
+        public void GetTestsFromExecutable_SampleTests_FindsTypedTests()
+        {
+            AssertFindsParameterizedTest(
+                "Arr/TypeParameterizedTests/0.CanIterate",
+                "Arr/TypeParameterizedTests/0.CanIterate [std::array<int,3>]");
+
+            AssertFindsParameterizedTest(
+                "TypedTests/2.CanDefeatMath",
+                "TypedTests/2.CanDefeatMath [MyStrangeArray]");
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithOneTrait()
         {
             Trait[] traits = { new Trait("Type", "Small") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]", traits);
         }
 
         [TestMethod]
-        public void FindsParameterizedTestWithTwoTraits()
+        public void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithTwoTraits()
         {
             Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]", traits);
         }
 
         [TestMethod]
-        public void FindsParameterizedTestWithThreeTraits()
+        public void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithThreeTraits()
         {
             Trait[] traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("Category", "Integration") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]", traits);
         }
 
         [TestMethod]
-        public void CustomTraitBeforeAddsTraitIfNotAlreadyExisting()
+        public void GetTestsFromExecutable_RegexBeforeFromOptions_AddsTraitIfNotAlreadyExisting()
         {
             string testname = "InstantiationName/ParameterizedTests.Simple/0 [(1,)]";
             Trait[] traits = { };
@@ -178,7 +174,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void CustomTraitBeforeIsOverridenByTraitOfTest()
+        public void GetTestsFromExecutable_RegexBeforeFromOptions_TraitFromOptionsIsOverridenByTraitFromTest()
         {
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
 
@@ -187,7 +183,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void CustomTraitBeforeIsOverridenByCustomTraitAfter()
+        public void GetTestsFromExecutable_BothRegexesFromOptions_BeforeTraitIsOverridenByAfterTrait()
         {
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "BeforeType").Yield().ToList());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "AfterType").Yield().ToList());
@@ -197,7 +193,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void CustomTraitAfterOverridesTraitOfTest()
+        public void GetTestsFromExecutable_RegexAfterFromOptions_AfterTraitOverridesTraitFromTest()
         {
             Trait[] traits = { new Trait("Type", "Small") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
@@ -209,7 +205,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void CustomTraitAfterAddsTraitIfNotAlreadyExisting()
+        public void GetTestsFromExecutable_RegexAfterFromOptions_AddsTraitIfNotAlreadyExisting()
         {
             Trait[] traits = { };
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
@@ -246,7 +242,7 @@ namespace GoogleTestAdapter
         private void FindExternallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<Model.TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -264,14 +260,14 @@ namespace GoogleTestAdapter
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<Model.TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
-            Model.TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
+            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
             Assert.IsNotNull(testCase);
 
             foreach (Trait trait in traits)
             {
-                Model.Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
+                Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
                 Assert.IsNotNull(foundTrait, "Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
         }
@@ -286,9 +282,9 @@ namespace GoogleTestAdapter
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<Model.TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
-            Model.TestCase testCase = tests.Where(t => t.FullyQualifiedName == fullyQualifiedName).Single();
+            TestCase testCase = tests.Where(t => t.FullyQualifiedName == fullyQualifiedName).Single();
             Assert.IsTrue(displayNameRegex.IsMatch(testCase.DisplayName));
         }
 
