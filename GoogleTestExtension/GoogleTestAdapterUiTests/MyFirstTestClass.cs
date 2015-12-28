@@ -23,7 +23,7 @@ namespace GoogleTestAdapterUiTests
     public class UiTests
     {
         private const bool keepDirtyInstanceInit = false;
-        private const bool overwriteTestResults  = false;
+        private const bool overwriteTestResults = false;
 
         static UiTests()
         {
@@ -48,6 +48,13 @@ namespace GoogleTestAdapterUiTests
         [TestInitialize]
         public void SetupVanillaVsExperimentalInstance()
         {
+            string solutionDir = Path.GetDirectoryName(solution);
+            string vsDir = Path.Combine(solutionDir, ".vs");
+            if (Directory.Exists(vsDir))
+            {
+                Directory.Delete(vsDir, true);
+            }
+
             try
             {
                 visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, "GoogleTestAdapterUiTests");
