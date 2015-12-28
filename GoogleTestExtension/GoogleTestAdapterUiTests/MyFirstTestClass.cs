@@ -316,7 +316,7 @@ namespace GoogleTestAdapterUiTests
             if (expectedResult.Length != result.Length)
             {
                 areEqual = false;
-                messages.Add("$Length differs, expected: {expectedResult.Length}, actual: {result.Length}");
+                messages.Add($"Length differs, expected: {expectedResult.Length}, actual: {result.Length}");
             }
 
             for (int i = 0; i < Math.Min(expectedResult.Length, result.Length); i++)
