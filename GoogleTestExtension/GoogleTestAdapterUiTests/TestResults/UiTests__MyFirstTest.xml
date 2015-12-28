@@ -3,9 +3,10 @@
   <TestGroup>
     <description>Failed Tests</description>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/0.CanDefeatMath</Name>
+      <Name>Arr/TypeParameterizedTests/0.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 43</Source>
       <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:44
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
@@ -207,23 +208,26 @@ Expected: 1000</Error>
 SEH exception with code 0xc0000005 thrown in the test body.</Error>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/0.CanDefeatMath</Name>
+      <Name>TypedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>TypedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 26</Source>
       <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:27
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/1.CanDefeatMath</Name>
+      <Name>TypedTests/1.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>TypedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 26</Source>
       <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:27
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
-      <Name>Vec/TypeParameterizedTests/0.CanDefeatMath</Name>
+      <Name>Vec/TypeParameterizedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 43</Source>
       <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:44
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
@@ -252,19 +256,22 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
   <TestGroup>
     <description>Passed Tests</description>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/0.CanIterate</Name>
+      <Name>Arr/TypeParameterizedTests/0.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 36</Source>
     </TestCase>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/1.CanDefeatMath</Name>
+      <Name>Arr/TypeParameterizedTests/1.CanDefeatMath [MyStrangeArray]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 43</Source>
     </TestCase>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/1.CanIterate</Name>
+      <Name>Arr/TypeParameterizedTests/1.CanIterate [MyStrangeArray]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 36</Source>
     </TestCase>
     <TestCase>
       <Name>CommandArgs.TestDirectoryIsSet</Name>
@@ -353,46 +360,39 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Source>fixturetests.cpp line 37</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/0.CanIterate</Name>
+      <Name>TypedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 19</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/1.CanIterate</Name>
+      <Name>TypedTests/1.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>TypedTests/1.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 19</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/2.CanDefeatMath</Name>
+      <Name>TypedTests/2.CanDefeatMath [MyStrangeArray]</Name>
+      <FullyQualifiedName>TypedTests/2.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 26</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/2.CanIterate</Name>
+      <Name>TypedTests/2.CanIterate [MyStrangeArray]</Name>
+      <FullyQualifiedName>TypedTests/2.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 19</Source>
     </TestCase>
     <TestCase>
-      <Name>Vec/TypeParameterizedTests/0.CanIterate</Name>
+      <Name>Vec/TypeParameterizedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source />
+      <Source>typeparameterizedtests.cpp line 36</Source>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
 Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Found 46 tests in executable ${SolutionDir}\Debug\Tests.exe
-Warning: Could not find source location for test TypedTests/0.CanIterate
-Warning: Could not find source location for test TypedTests/0.CanDefeatMath
-Warning: Could not find source location for test TypedTests/1.CanIterate
-Warning: Could not find source location for test TypedTests/1.CanDefeatMath
-Warning: Could not find source location for test TypedTests/2.CanIterate
-Warning: Could not find source location for test TypedTests/2.CanDefeatMath
-Warning: Could not find source location for test Vec/TypeParameterizedTests/0.CanIterate
-Warning: Could not find source location for test Vec/TypeParameterizedTests/0.CanDefeatMath
-Warning: Could not find source location for test Arr/TypeParameterizedTests/0.CanIterate
-Warning: Could not find source location for test Arr/TypeParameterizedTests/0.CanDefeatMath
-Warning: Could not find source location for test Arr/TypeParameterizedTests/1.CanIterate
-Warning: Could not find source location for test Arr/TypeParameterizedTests/1.CanDefeatMath
 Running 50 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
