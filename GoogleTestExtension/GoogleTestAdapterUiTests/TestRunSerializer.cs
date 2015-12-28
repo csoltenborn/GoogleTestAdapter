@@ -60,15 +60,15 @@ namespace GoogleTestAdapterUiTests
 
     public class TestCase
     {
-        public string Name               = string.Empty;
+        public string Name = string.Empty;
         public string FullyQualifiedName = string.Empty;
-        public string Result             = string.Empty;
-        public string Source             = string.Empty;
-        public string Error              = string.Empty;
-        public string Unexpected         = string.Empty;
+        public string Result = string.Empty;
+        public string Source = string.Empty;
+        public string Error = string.Empty;
+        public string Unexpected = string.Empty;
         public bool ShouldSerializeFullyQualifiedName() { return !string.IsNullOrWhiteSpace(FullyQualifiedName); }
-        public bool ShouldSerializeError()              { return !string.IsNullOrWhiteSpace(Error); }
-        public bool ShouldSerializeUnexpected()         { return !string.IsNullOrWhiteSpace(Unexpected); }
+        public bool ShouldSerializeError() { return !string.IsNullOrWhiteSpace(Error); }
+        public bool ShouldSerializeUnexpected() { return !string.IsNullOrWhiteSpace(Unexpected); }
     }
 
     public class TestRunSerializer
@@ -79,7 +79,8 @@ namespace GoogleTestAdapterUiTests
             this.detailsPane = testExplorer.Get<Panel>("LeftSelectionControl");
 
             TestRun testResults = new TestRun();
-            string tmp = outputWindow.Get<TextBox>("WpfTextView").Text.ReplaceIgnoreCase(solutionDir, "${SolutionDir}");
+            TextBox wpfTextView = outputWindow.Get<TextBox>("WpfTextView");
+            string tmp = wpfTextView.Text.ReplaceIgnoreCase(solutionDir, "${SolutionDir}");
             testResults.testOutput = Regex.Replace(tmp, @"(========== Run test finished: [0-9]+ run )\([0-9:,]+\)( ==========)", "$1($${RunTime})$2");
 
             Tree testTree = testExplorer.Get<Tree>("TestsTreeView");
@@ -149,7 +150,7 @@ namespace GoogleTestAdapterUiTests
                 case "detailPanelHeader":
                     var name = Regex.Replace(label.Text, "([0-9A-F]{8}){1,2} pointing to", "${MemoryLocation} pointing to");
                     testResult.Name += name;
-                    if(label.Text != label.HelpText)
+                    if (label.Text != label.HelpText)
                         testResult.FullyQualifiedName += label.HelpText;
                     break;
                 case "hasSourceToolTip":

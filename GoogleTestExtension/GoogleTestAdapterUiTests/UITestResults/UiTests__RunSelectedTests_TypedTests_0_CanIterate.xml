@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-16"?>
+<TestRun>
+  <TestGroup>
+    <description>Not Run Tests</description>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/0.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 43</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/0.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 36</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/1.CanDefeatMath [MyStrangeArray]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 43</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/1.CanIterate [MyStrangeArray]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanIterate</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 36</Source>
+    </TestCase>
+    <TestCase>
+      <Name>CommandArgs.TestDirectoryIsSet</Name>
+      <Result />
+      <Source>basictests.cpp line 23</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Crashing.AddFails</Name>
+      <Result />
+      <Source>crashingtests.cpp line 16</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Crashing.AddPasses</Name>
+      <Result />
+      <Source>crashingtests.cpp line 21</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Crashing.LongRunning</Name>
+      <Result />
+      <Source>crashingtests.cpp line 26</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Crashing.TheCrash</Name>
+      <Result />
+      <Source>crashingtests.cpp line 11</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.Simple/0 [(1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.Simple/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 23</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.Simple/1 [(1,!)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.Simple/1</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 23</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.Simple/2 [(-1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.Simple/2</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 23</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 28</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits/1</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 28</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits/2</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 28</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits2/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 33</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits2/1</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 33</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits2/2</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 33</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits3/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 38</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits3/1</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 38</Source>
+    </TestCase>
+    <TestCase>
+      <Name>InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]</Name>
+      <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits3/2</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 38</Source>
+    </TestCase>
+    <TestCase>
+      <Name>LongRunningTests.Test1</Name>
+      <Result />
+      <Source>longrunningtests.cpp line 5</Source>
+    </TestCase>
+    <TestCase>
+      <Name>LongRunningTests.Test2</Name>
+      <Result />
+      <Source>longrunningtests.cpp line 11</Source>
+    </TestCase>
+    <TestCase>
+      <Name>ParameterizedTests.Simple/0 [(0,_)]</Name>
+      <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 23</Source>
+    </TestCase>
+    <TestCase>
+      <Name>ParameterizedTests.SimpleTraits/0 [(0,_)]</Name>
+      <FullyQualifiedName>ParameterizedTests.SimpleTraits/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 28</Source>
+    </TestCase>
+    <TestCase>
+      <Name>ParameterizedTests.SimpleTraits2/0 [(0,_)]</Name>
+      <FullyQualifiedName>ParameterizedTests.SimpleTraits2/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 33</Source>
+    </TestCase>
+    <TestCase>
+      <Name>ParameterizedTests.SimpleTraits3/0 [(0,_)]</Name>
+      <FullyQualifiedName>ParameterizedTests.SimpleTraits3/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 38</Source>
+    </TestCase>
+    <TestCase>
+      <Name>PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Name>
+      <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/0</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 63</Source>
+    </TestCase>
+    <TestCase>
+      <Name>PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]</Name>
+      <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/1</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 63</Source>
+    </TestCase>
+    <TestCase>
+      <Name>PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]</Name>
+      <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/2</FullyQualifiedName>
+      <Result />
+      <Source>parameterizedtests.cpp line 63</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TestMath.AddFails</Name>
+      <Result />
+      <Source>basictests.cpp line 29</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TestMath.AddPasses</Name>
+      <Result />
+      <Source>basictests.cpp line 34</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TestMath.AddPassesWithTraits</Name>
+      <Result />
+      <Source>basictests.cpp line 45</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TestMath.AddPassesWithTraits2</Name>
+      <Result />
+      <Source>basictests.cpp line 50</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TestMath.AddPassesWithTraits3</Name>
+      <Result />
+      <Source>basictests.cpp line 55</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TestMath.Crash</Name>
+      <Result />
+      <Source>basictests.cpp line 39</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TheFixture.AddFails</Name>
+      <Result />
+      <Source>fixturetests.cpp line 11</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TheFixture.AddPasses</Name>
+      <Result />
+      <Source>fixturetests.cpp line 16</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TheFixture.AddPassesWithTraits</Name>
+      <Result />
+      <Source>fixturetests.cpp line 27</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TheFixture.AddPassesWithTraits2</Name>
+      <Result />
+      <Source>fixturetests.cpp line 32</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TheFixture.AddPassesWithTraits3</Name>
+      <Result />
+      <Source>fixturetests.cpp line 37</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TheFixture.Crash</Name>
+      <Result />
+      <Source>fixturetests.cpp line 21</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>TypedTests/0.CanDefeatMath</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 26</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/1.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>TypedTests/1.CanDefeatMath</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 26</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/1.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>TypedTests/1.CanIterate</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 19</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/2.CanDefeatMath [MyStrangeArray]</Name>
+      <FullyQualifiedName>TypedTests/2.CanDefeatMath</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 26</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/2.CanIterate [MyStrangeArray]</Name>
+      <FullyQualifiedName>TypedTests/2.CanIterate</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 19</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Vec/TypeParameterizedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 43</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Vec/TypeParameterizedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 36</Source>
+    </TestCase>
+  </TestGroup>
+  <TestOutput>------ Run test started ------
+Found 46 tests in executable ${SolutionDir}\Debug\Tests.exe
+Running 1 tests...
+Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
+Test execution completed.
+========== Run test finished: 1 run (${RunTime}) ==========
+</TestOutput>
+</TestRun>

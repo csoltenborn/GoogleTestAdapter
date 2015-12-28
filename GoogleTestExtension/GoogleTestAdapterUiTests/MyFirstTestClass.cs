@@ -16,6 +16,7 @@ using TestStack.White.UIItems.WPFUIItems;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 using System.Collections.Generic;
+using TestStack.White.UIItems.TreeItems;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -88,39 +89,27 @@ namespace GoogleTestAdapterUiTests
         }
 
         [TestMethod]
-        public void MyFirstTest()
+        [TestCategory("UI")]
+        public void RunAllTests__AllTestsAreRun()
         {
             try
             {
-                int timeOut = (int)TimeSpan.FromMinutes(5).TotalMilliseconds;
+                int timeOut = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
                 using (Application application = visualStudioInstance.Launch())
                 using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = timeOut; }))
                 using (Window mainWindow = application.GetWindow(
                     SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
                     InitializeOption.NoCache))
                 {
-                    // Open solution
-                    mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
-                    Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
-                    fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = solution;
-                    fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
-
-                    // Open test explorer and wait for discovery
-                    mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
-                    IUIItem testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
-                    ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
-                    mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
+                    OpenSolution(mainWindow);
+                    IUIItem testExplorer = OpenTestExplorerAndWaitForDiscovery(mainWindow);
 
                     // Run all tests and wait till finish (max 1 minute)
                     mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
                     ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
                     mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
 
-                    // Check results
-                    string solutionDir = Path.GetDirectoryName(solution);
-                    IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output"));
-                    string testResults = new TestRunSerializer().ParseTestResults(solutionDir, testExplorer, outputWindow).ToXML();
-                    CheckResults(testResults);
+                    CheckResults(mainWindow, testExplorer);
                 }
             }
             catch (AutomationException exception)
@@ -129,9 +118,160 @@ namespace GoogleTestAdapterUiTests
             }
         }
 
-        private void CheckResults(string result, [CallerMemberName] string testCaseName = null)
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_Crashing_AddPasses()
         {
-            string expectationFile = Path.Combine(uiTestsPath, "TestResults", this.GetType().Name + "__" + testCaseName + ".xml");
+            ExecuteSingleTestCase("Crashing.AddPasses");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_ParameterizedTests_Simple_0()
+        {
+            ExecuteSingleTestCase("ParameterizedTests.Simple/0");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0()
+        {
+            ExecuteSingleTestCase("InstantiationName/ParameterizedTests.SimpleTraits/0");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_PointerParameterizedTests_CheckStringLength_0()
+        {
+            ExecuteSingleTestCase("PointerParameterizedTests.CheckStringLength/0");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_TypedTests_0_CanIterate()
+        {
+            ExecuteSingleTestCase("TypedTests/0.CanIterate");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath()
+        {
+            ExecuteSingleTestCase("Arr/TypeParameterizedTests/1.CanDefeatMath");
+        }
+
+        private void ExecuteSingleTestCase(string displayName, [CallerMemberName] string testCaseName = null)
+        {
+            try
+            {
+                int timeOut = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+                using (Application application = visualStudioInstance.Launch())
+                using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = timeOut; }))
+                using (Window mainWindow = application.GetWindow(
+                    SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
+                    InitializeOption.NoCache))
+                {
+                    OpenSolution(mainWindow);
+                    IUIItem testExplorer = OpenTestExplorerAndWaitForDiscovery(mainWindow);
+
+                    // Run a selected test and wait till finish (max 1 minute)
+                    TreeNode testNode = GetTestCaseNode(testExplorer, displayName);
+                    Assert.IsNotNull(testNode, $"Did not find test {displayName} in test explorer");
+                    testNode.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
+                    testNode.Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                    mainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
+                    ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
+                    mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
+
+                    CheckResults(mainWindow, testExplorer, testCaseName);
+                }
+            }
+            catch (AutomationException exception)
+            {
+                LogExceptionAndThrow(exception);
+            }
+        }
+
+        private TreeNode GetTestCaseNode(IUIItem testExplorer, string displayName)
+        {
+            Tree testTree = testExplorer.Get<Tree>("TestsTreeView");
+            foreach (TreeNode testGroupNode in testTree.Nodes)
+            {
+                if (testGroupNode.IsOffScreen)
+                    continue;
+
+                TreeNode node = ParseTestGroup(testGroupNode, displayName);
+                if (node != null)
+                {
+                    return node;
+                }
+            }
+
+            return null;
+        }
+
+        private TreeNode ParseTestGroup(TreeNode testGroupNode, string displayName)
+        {
+            displayName += ":NotRun";
+
+            testGroupNode.Expand();
+            for (int i = 0; i < testGroupNode.Nodes.Count; i++)
+            {
+                if (i < testGroupNode.Nodes.Count - 1)
+                {
+                    EnsureNodeIsOnScreen(testGroupNode.Nodes[i + 1]);
+                }
+
+                TreeNode node = testGroupNode.Nodes[i];
+                string name = node.Text;
+                if (displayName.Equals(name))
+                {
+                    return node;
+                }
+            }
+
+            return null;
+        }
+
+        private void EnsureNodeIsOnScreen(TreeNode node)
+        {
+            if (node.IsOffScreen)
+            {
+                node.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
+                node.Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                Thread.Sleep(TimeSpan.FromMilliseconds(500));
+            }
+        }
+
+        private void OpenSolution(Window mainWindow)
+        {
+            mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
+            Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
+            fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = solution;
+            fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
+        }
+
+        private IUIItem OpenTestExplorerAndWaitForDiscovery(Window mainWindow)
+        {
+            mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
+            IUIItem testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
+            ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
+            mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
+            return testExplorer;
+        }
+
+        private void CheckResults(Window mainWindow, IUIItem testExplorer, [CallerMemberName] string testCaseName = null)
+        {
+            string solutionDir = Path.GetDirectoryName(solution);
+            IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
+            string testResults = new TestRunSerializer().ParseTestResults(solutionDir, testExplorer, outputWindow).ToXML();
+            CheckResults(testResults, testCaseName);
+        }
+
+        private void CheckResults(string result, string testCaseName)
+        {
+            string expectationFile = Path.Combine(uiTestsPath, "UITestResults", this.GetType().Name + "__" + testCaseName + ".xml");
             string resultFile = Path.Combine(uiTestsPath, "TestErrors", this.GetType().Name + "__" + testCaseName + ".xml");
 
             if (!File.Exists(expectationFile))

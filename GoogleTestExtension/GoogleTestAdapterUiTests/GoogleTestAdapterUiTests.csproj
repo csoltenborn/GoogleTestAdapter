@@ -152,7 +152,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestResults\UiTests__MyFirstTest.xml" />
+    <Content Include="UITestResults\UiTests__RunAllTests__AllTestsAreRun.xml" />
+    <Content Include="UITestResults\UiTests__RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath.xml" />
+    <Content Include="UITestResults\UiTests__RunSelectedTests_Crashing_AddPasses.xml" />
+    <Content Include="UITestResults\UiTests__RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0.xml" />
+    <Content Include="UITestResults\UiTests__RunSelectedTests_ParameterizedTests_Simple_0.xml" />
+    <Content Include="UITestResults\UiTests__RunSelectedTests_PointerParameterizedTests_CheckStringLength_0.xml" />
+    <Content Include="UITestResults\UiTests__RunSelectedTests_TypedTests_0_CanIterate.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestResults\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
