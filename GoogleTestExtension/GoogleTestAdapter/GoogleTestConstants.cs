@@ -22,7 +22,7 @@
 
         public const string TestBodySignature = "::TestBody";
         public const string ParameterizedTestMarker = "  # GetParam() = ";
-        public const string TypedTestMarker = ".  # TypeParam = class ";
+        public const string TypedTestMarker = ".  # TypeParam = ";
 
         public static string GetResultXmlFileOption(string resultXmlFile)
         {

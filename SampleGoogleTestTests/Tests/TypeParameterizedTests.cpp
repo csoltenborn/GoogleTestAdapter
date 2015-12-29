@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include <array>
+#include <list>
 
 class MyStrangeArray : public std::array<int, 3>
 {
@@ -49,3 +50,23 @@ REGISTER_TYPED_TEST_CASE_P(TypeParameterizedTests, CanIterate, CanDefeatMath);
 typedef ::testing::Types<std::array<int, 3>, MyStrangeArray> IntArrayTypes;
 INSTANTIATE_TYPED_TEST_CASE_P(Vec, TypeParameterizedTests, std::vector<int>);
 INSTANTIATE_TYPED_TEST_CASE_P(Arr, TypeParameterizedTests, IntArrayTypes);
+
+
+
+
+template< typename number_type >
+class PrimitivelyTypedTests : public ::testing::Test {
+public:
+	std::list<number_type> container{ 1,2,127 };
+};
+
+typedef ::testing::Types<signed char, int, long> IntNumberTypes;
+TYPED_TEST_CASE(PrimitivelyTypedTests, IntNumberTypes);
+
+TYPED_TEST(PrimitivelyTypedTests, CanHasBigNumbers) {
+	TypeParam sum = 0;
+	for (auto value : this->container)
+		sum += value;
+	EXPECT_EQ(130, sum);
+}
+

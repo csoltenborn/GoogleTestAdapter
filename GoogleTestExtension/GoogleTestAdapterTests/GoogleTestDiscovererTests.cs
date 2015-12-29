@@ -137,6 +137,10 @@ namespace GoogleTestAdapter
             AssertFindsParameterizedTest(
                 "TypedTests/2.CanDefeatMath",
                 "TypedTests/2.CanDefeatMath [MyStrangeArray]");
+
+            AssertFindsParameterizedTest(
+                "PrimitivelyTypedTests/0.CanHasBigNumbers",
+                "PrimitivelyTypedTests/0.CanHasBigNumbers [signed char]");
         }
 
         [TestMethod]
