@@ -87,12 +87,12 @@ namespace GoogleTestAdapter.VS
             new DebugHelper(TestEnvironment).CheckDebugModeForExecutionCode();
         }
 
-        private IEnumerable<GoogleTestAdapter.Model.TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
+        private IEnumerable<Model.TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
         {
-            List<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables = new List<GoogleTestAdapter.Model.TestCase>();
+            List<Model.TestCase> allTestCasesInExecutables = new List<Model.TestCase>();
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            foreach (string executable in executables)
+            foreach (string executable in executables.OrderBy(e => e))
             {
                 if (Canceled)
                 {
@@ -106,8 +106,9 @@ namespace GoogleTestAdapter.VS
             return allTestCasesInExecutables;
         }
 
-        private void DoRunTests(IEnumerable<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables,
-            IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        private void DoRunTests(
+            IEnumerable<Model.TestCase> allTestCasesInExecutables, IEnumerable<Model.TestCase> testCasesToRun,
+            IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             ITestFrameworkReporter reporter = new VsTestFrameworkReporter(null, frameworkHandle, TestEnvironment);
             IDebuggedProcessLauncher launcher = new DebuggedProcessLauncher(frameworkHandle);

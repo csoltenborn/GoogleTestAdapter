@@ -17,6 +17,9 @@ using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 using System.Collections.Generic;
 using TestStack.White.UIItems.TreeItems;
+using TestStack.White.InputDevices;
+using System.Linq;
+using TestStack.White.WindowsAPI;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -160,7 +163,21 @@ namespace GoogleTestAdapterUiTests
             ExecuteSingleTestCase("Arr/TypeParameterizedTests/1.CanDefeatMath");
         }
 
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_MultipleTests()
+        {
+            ExecuteMultipleTestCases(new[] { "Crashing.AddPasses", "ParameterizedTests.Simple/0",
+                "InstantiationName/ParameterizedTests.SimpleTraits/0", "PointerParameterizedTests.CheckStringLength/0",
+                "TypedTests/0.CanIterate", "Arr/TypeParameterizedTests/1.CanDefeatMath" });
+        }
+
         private void ExecuteSingleTestCase(string displayName, [CallerMemberName] string testCaseName = null)
+        {
+            ExecuteMultipleTestCases(new[] { displayName }, testCaseName);
+        }
+
+        private void ExecuteMultipleTestCases(string[] displayNames, [CallerMemberName] string testCaseName = null)
         {
             try
             {
@@ -175,11 +192,15 @@ namespace GoogleTestAdapterUiTests
                     IUIItem testExplorer = OpenTestExplorerAndWaitForDiscovery(mainWindow);
 
                     // Run a selected test and wait till finish (max 1 minute)
-                    TreeNode testNode = GetTestCaseNode(testExplorer, displayName);
-                    Assert.IsNotNull(testNode, $"Did not find test {displayName} in test explorer");
-                    testNode.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
-                    testNode.Get<Label>("TestListViewDisplayNameTextBlock").Click();
-                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                    IEnumerable<TreeNode> testNodes = GetTestCaseNode(testExplorer, displayNames);
+                    Assert.AreEqual(displayNames.Length, testNodes.Count(), "Did not find all test cases");
+                    Keyboard.Instance.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
+                    foreach (TreeNode testNode in testNodes)
+                    {
+                        testNode.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
+                        testNode.Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                    }
+                    Keyboard.Instance.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
                     mainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
                     ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
                     mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
@@ -193,22 +214,26 @@ namespace GoogleTestAdapterUiTests
             }
         }
 
-        private TreeNode GetTestCaseNode(IUIItem testExplorer, string displayName)
+        private IEnumerable<TreeNode> GetTestCaseNode(IUIItem testExplorer, params string[] displayNames)
         {
-            Tree testTree = testExplorer.Get<Tree>("TestsTreeView");
-            foreach (TreeNode testGroupNode in testTree.Nodes)
+            List<TreeNode> result = new List<TreeNode>();
+            foreach (string displayName in displayNames)
             {
-                if (testGroupNode.IsOffScreen)
-                    continue;
-
-                TreeNode node = ParseTestGroup(testGroupNode, displayName);
-                if (node != null)
+                Tree testTree = testExplorer.Get<Tree>("TestsTreeView");
+                foreach (TreeNode testGroupNode in testTree.Nodes)
                 {
-                    return node;
+                    if (testGroupNode.IsOffScreen)
+                        continue;
+
+                    TreeNode node = ParseTestGroup(testGroupNode, displayName);
+                    if (node != null)
+                    {
+                        result.Add(node);
+                    }
                 }
             }
 
-            return null;
+            return result;
         }
 
         private TreeNode ParseTestGroup(TreeNode testGroupNode, string displayName)
