@@ -21,12 +21,6 @@ Expected: ""</Error>
   <TestGroup>
     <description>Passed Tests</description>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/0.CanIterate [std::array&lt;int,3&gt;]</Name>
-      <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
-      <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 36</Source>
-    </TestCase>
-    <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath [MyStrangeArray]</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
@@ -63,6 +57,12 @@ Expected: ""</Error>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result />
       <Source>typeparameterizedtests.cpp line 43</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/0.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 36</Source>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanIterate [MyStrangeArray]</Name>
@@ -302,9 +302,9 @@ Expected: ""</Error>
   <TestOutput>------ Run test started ------
 Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Found 46 tests in executable ${SolutionDir}\Debug\Tests.exe
-Running 7 tests...
+Running 6 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
-========== Run test finished: 7 run (${RunTime}) ==========
+========== Run test finished: 6 run (${RunTime}) ==========
 </TestOutput>
 </TestRun>

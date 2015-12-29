@@ -140,6 +140,7 @@
   <ItemGroup>
     <Compile Include="Helpers\RegistryKeyExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Helpers\TestExplorerUtil.cs" />
     <Compile Include="Helpers\TestStackWhiteExtensions.cs" />
     <Compile Include="Helpers\MessageBoxWithTimeout.cs" />
     <Compile Include="TestRunSerializer.cs" />

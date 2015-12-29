@@ -16,10 +16,6 @@ using TestStack.White.UIItems.WPFUIItems;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 using System.Collections.Generic;
-using TestStack.White.UIItems.TreeItems;
-using TestStack.White.InputDevices;
-using System.Linq;
-using TestStack.White.WindowsAPI;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -192,15 +188,8 @@ namespace GoogleTestAdapterUiTests
                     IUIItem testExplorer = OpenTestExplorerAndWaitForDiscovery(mainWindow);
 
                     // Run a selected test and wait till finish (max 1 minute)
-                    IEnumerable<TreeNode> testNodes = GetTestCaseNode(testExplorer, displayNames);
-                    Assert.AreEqual(displayNames.Length, testNodes.Count(), "Did not find all test cases");
-                    Keyboard.Instance.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
-                    foreach (TreeNode testNode in testNodes)
-                    {
-                        testNode.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
-                        testNode.Get<Label>("TestListViewDisplayNameTextBlock").Click();
-                    }
-                    Keyboard.Instance.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
+                    TestExplorerUtil util = new TestExplorerUtil(testExplorer);
+                    util.SelectTestCases(displayNames);
                     mainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
                     ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
                     mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
@@ -211,61 +200,6 @@ namespace GoogleTestAdapterUiTests
             catch (AutomationException exception)
             {
                 LogExceptionAndThrow(exception);
-            }
-        }
-
-        private IEnumerable<TreeNode> GetTestCaseNode(IUIItem testExplorer, params string[] displayNames)
-        {
-            List<TreeNode> result = new List<TreeNode>();
-            foreach (string displayName in displayNames)
-            {
-                Tree testTree = testExplorer.Get<Tree>("TestsTreeView");
-                foreach (TreeNode testGroupNode in testTree.Nodes)
-                {
-                    if (testGroupNode.IsOffScreen)
-                        continue;
-
-                    TreeNode node = ParseTestGroup(testGroupNode, displayName);
-                    if (node != null)
-                    {
-                        result.Add(node);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private TreeNode ParseTestGroup(TreeNode testGroupNode, string displayName)
-        {
-            displayName += ":NotRun";
-
-            testGroupNode.Expand();
-            for (int i = 0; i < testGroupNode.Nodes.Count; i++)
-            {
-                if (i < testGroupNode.Nodes.Count - 1)
-                {
-                    EnsureNodeIsOnScreen(testGroupNode.Nodes[i + 1]);
-                }
-
-                TreeNode node = testGroupNode.Nodes[i];
-                string name = node.Text;
-                if (displayName.Equals(name))
-                {
-                    return node;
-                }
-            }
-
-            return null;
-        }
-
-        private void EnsureNodeIsOnScreen(TreeNode node)
-        {
-            if (node.IsOffScreen)
-            {
-                node.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
-                node.Get<Label>("TestListViewDisplayNameTextBlock").Click();
-                Thread.Sleep(TimeSpan.FromMilliseconds(500));
             }
         }
 
