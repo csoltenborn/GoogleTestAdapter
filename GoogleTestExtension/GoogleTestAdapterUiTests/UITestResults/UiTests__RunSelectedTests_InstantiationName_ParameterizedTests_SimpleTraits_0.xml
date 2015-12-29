@@ -15,25 +15,25 @@
       <Name>Arr/TypeParameterizedTests/0.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 43</Source>
+      <Source>typeparameterizedtests.cpp line 44</Source>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/0.CanIterate [std::array&lt;int,3&gt;]</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 36</Source>
+      <Source>typeparameterizedtests.cpp line 37</Source>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath [MyStrangeArray]</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 43</Source>
+      <Source>typeparameterizedtests.cpp line 44</Source>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanIterate [MyStrangeArray]</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanIterate</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 36</Source>
+      <Source>typeparameterizedtests.cpp line 37</Source>
     </TestCase>
     <TestCase>
       <Name>CommandArgs.TestDirectoryIsSet</Name>
@@ -179,6 +179,24 @@
       <Source>parameterizedtests.cpp line 63</Source>
     </TestCase>
     <TestCase>
+      <Name>PrimitivelyTypedTests/0.CanHasBigNumbers [signed char]</Name>
+      <FullyQualifiedName>PrimitivelyTypedTests/0.CanHasBigNumbers</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 66</Source>
+    </TestCase>
+    <TestCase>
+      <Name>PrimitivelyTypedTests/1.CanHasBigNumbers [int]</Name>
+      <FullyQualifiedName>PrimitivelyTypedTests/1.CanHasBigNumbers</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 66</Source>
+    </TestCase>
+    <TestCase>
+      <Name>PrimitivelyTypedTests/2.CanHasBigNumbers [long]</Name>
+      <FullyQualifiedName>PrimitivelyTypedTests/2.CanHasBigNumbers</FullyQualifiedName>
+      <Result />
+      <Source>typeparameterizedtests.cpp line 66</Source>
+    </TestCase>
+    <TestCase>
       <Name>TestMath.AddFails</Name>
       <Result />
       <Source>basictests.cpp line 29</Source>
@@ -242,53 +260,41 @@
       <Name>TypedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
       <FullyQualifiedName>TypedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 26</Source>
+      <Source>typeparameterizedtests.cpp line 27</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
       <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 19</Source>
+      <Source>typeparameterizedtests.cpp line 20</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
       <FullyQualifiedName>TypedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 26</Source>
+      <Source>typeparameterizedtests.cpp line 27</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.CanIterate [std::array&lt;int,3&gt;]</Name>
       <FullyQualifiedName>TypedTests/1.CanIterate</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 19</Source>
-    </TestCase>
-    <TestCase>
-      <Name>TypedTests/2.CanDefeatMath [MyStrangeArray]</Name>
-      <FullyQualifiedName>TypedTests/2.CanDefeatMath</FullyQualifiedName>
-      <Result />
-      <Source>typeparameterizedtests.cpp line 26</Source>
-    </TestCase>
-    <TestCase>
-      <Name>TypedTests/2.CanIterate [MyStrangeArray]</Name>
-      <FullyQualifiedName>TypedTests/2.CanIterate</FullyQualifiedName>
-      <Result />
-      <Source>typeparameterizedtests.cpp line 19</Source>
+      <Source>typeparameterizedtests.cpp line 20</Source>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 43</Source>
+      <Source>typeparameterizedtests.cpp line 44</Source>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result />
-      <Source>typeparameterizedtests.cpp line 36</Source>
+      <Source>typeparameterizedtests.cpp line 37</Source>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 46 tests in executable ${SolutionDir}\Debug\Tests.exe
+Found 49 tests in executable ${SolutionDir}\Debug\Tests.exe
 Running 1 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
