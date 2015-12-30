@@ -25,6 +25,9 @@ namespace GoogleTestAdapterUiTests
         private const bool keepDirtyInstanceInit = false;
         private const bool overwriteTestResults = false;
 
+        private static readonly int TimeOut = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
+
+
         static UiTests()
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
@@ -43,10 +46,13 @@ namespace GoogleTestAdapterUiTests
         private static readonly string uiTestsPath;
         private static bool keepDirtyVsInstance = keepDirtyInstanceInit;
 
-        private VsExperimentalInstance visualStudioInstance;
+        private static VsExperimentalInstance visualStudioInstance;
+        private static Application application;
+        private static Window mainWindow;
+        private static IUIItem testExplorer;
 
-        [TestInitialize]
-        public void SetupVanillaVsExperimentalInstance()
+        [ClassInitialize]
+        public static void SetupVanillaVsExperimentalInstance(TestContext testContext)
         {
             string solutionDir = Path.GetDirectoryName(solution);
             string vsDir = Path.Combine(solutionDir, ".vs");
@@ -72,11 +78,43 @@ namespace GoogleTestAdapterUiTests
             {
                 LogExceptionAndThrow(exception);
             }
+
+            application = visualStudioInstance.Launch();
+            CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(
+                c => { c.BusyTimeout = c.FindWindowTimeout = TimeOut; });
+            mainWindow = application.GetWindow(
+                SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
+                InitializeOption.NoCache);
+        }
+
+        [TestInitialize]
+        public void OpenSolutionAndTestExplorer()
+        {
+            OpenSolution(mainWindow);
+
+            if (testExplorer == null)
+            {
+                testExplorer = OpenTestExplorer();
+                WaitForTestDiscovery();
+            }
+            else
+            {
+                testExplorer = OpenTestExplorer();
+            }
         }
 
         [TestCleanup]
-        public void CleanVsExperimentalInstance()
+        public void CloseSolution()
         {
+            CloseSolution(mainWindow);
+        }
+
+        [ClassCleanup]
+        public static void CleanVsExperimentalInstance()
+        {
+            mainWindow.Dispose();
+            application.Dispose();
+
             if (!keepDirtyVsInstance)
             {
                 // wait for removal of locks on some files we want to delete
@@ -93,23 +131,12 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                int timeOut = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                using (Application application = visualStudioInstance.Launch())
-                using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = timeOut; }))
-                using (Window mainWindow = application.GetWindow(
-                    SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
-                    InitializeOption.NoCache))
-                {
-                    OpenSolution(mainWindow);
-                    IUIItem testExplorer = OpenTestExplorerAndWaitForDiscovery(mainWindow);
+                // Run all tests and wait till finish (max 1 minute)
+                mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
+                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
+                mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
 
-                    // Run all tests and wait till finish (max 1 minute)
-                    mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
-                    ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                    mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
-
-                    CheckResults(mainWindow, testExplorer);
-                }
+                CheckResults(mainWindow, testExplorer);
             }
             catch (AutomationException exception)
             {
@@ -177,25 +204,14 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                int timeOut = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
-                using (Application application = visualStudioInstance.Launch())
-                using (CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(c => { c.BusyTimeout = c.FindWindowTimeout = timeOut; }))
-                using (Window mainWindow = application.GetWindow(
-                    SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
-                    InitializeOption.NoCache))
-                {
-                    OpenSolution(mainWindow);
-                    IUIItem testExplorer = OpenTestExplorerAndWaitForDiscovery(mainWindow);
+                // Run a selected test and wait till finish (max 1 minute)
+                TestExplorerUtil util = new TestExplorerUtil(testExplorer);
+                util.SelectTestCases(displayNames);
+                mainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
+                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
+                mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
 
-                    // Run a selected test and wait till finish (max 1 minute)
-                    TestExplorerUtil util = new TestExplorerUtil(testExplorer);
-                    util.SelectTestCases(displayNames);
-                    mainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
-                    ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                    mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
-
-                    CheckResults(mainWindow, testExplorer, testCaseName);
-                }
+                CheckResults(mainWindow, testExplorer, testCaseName);
             }
             catch (AutomationException exception)
             {
@@ -211,13 +227,22 @@ namespace GoogleTestAdapterUiTests
             fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
         }
 
-        private IUIItem OpenTestExplorerAndWaitForDiscovery(Window mainWindow)
+        private void CloseSolution(Window mainWindow)
+        {
+            mainWindow.VsMenuBarMenuItems("File", "Close Solution").Click();
+        }
+
+        private IUIItem OpenTestExplorer()
         {
             mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
             IUIItem testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
+            return testExplorer;
+        }
+
+        private static void WaitForTestDiscovery()
+        {
             ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
             mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
-            return testExplorer;
         }
 
         private void CheckResults(Window mainWindow, IUIItem testExplorer, [CallerMemberName] string testCaseName = null)
@@ -292,9 +317,9 @@ namespace GoogleTestAdapterUiTests
             return areEqual;
         }
 
-        private void LogExceptionAndThrow(AutomationException exception, [CallerMemberName] string testCaseName = null)
+        private static void LogExceptionAndThrow(AutomationException exception, [CallerMemberName] string testCaseName = null)
         {
-            string debugDetailsFile = Path.Combine(uiTestsPath, "TestErrors", this.GetType().Name + "__" + testCaseName + "__DebugDetails.txt");
+            string debugDetailsFile = Path.Combine(uiTestsPath, "TestErrors", typeof(UiTests).Name + "__" + testCaseName + "__DebugDetails.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(debugDetailsFile));
             File.WriteAllText(debugDetailsFile, exception.ToString() + "\r\n" + exception.StackTrace + "\r\n" + exception.DebugDetails);
             throw exception;
