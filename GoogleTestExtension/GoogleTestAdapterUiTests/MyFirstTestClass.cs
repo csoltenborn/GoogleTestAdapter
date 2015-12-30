@@ -90,7 +90,7 @@ namespace GoogleTestAdapterUiTests
         [TestInitialize]
         public void OpenSolutionAndTestExplorer()
         {
-            OpenSolution(mainWindow);
+            OpenSolution();
 
             if (testExplorer == null)
             {
@@ -106,7 +106,7 @@ namespace GoogleTestAdapterUiTests
         [TestCleanup]
         public void CloseSolution()
         {
-            CloseSolution(mainWindow);
+            mainWindow.VsMenuBarMenuItems("File", "Close Solution").Click();
         }
 
         [ClassCleanup]
@@ -114,6 +114,10 @@ namespace GoogleTestAdapterUiTests
         {
             mainWindow.Dispose();
             application.Dispose();
+
+            mainWindow = null;
+            application = null;
+            testExplorer = null;
 
             if (!keepDirtyVsInstance)
             {
@@ -136,7 +140,7 @@ namespace GoogleTestAdapterUiTests
                 ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
                 mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
 
-                CheckResults(mainWindow, testExplorer);
+                CheckResults();
             }
             catch (AutomationException exception)
             {
@@ -209,9 +213,10 @@ namespace GoogleTestAdapterUiTests
                 util.SelectTestCases(displayNames);
                 mainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
                 ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
+                mainWindow.WaitTill(
+                    () => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
 
-                CheckResults(mainWindow, testExplorer, testCaseName);
+                CheckResults(testCaseName);
             }
             catch (AutomationException exception)
             {
@@ -219,7 +224,7 @@ namespace GoogleTestAdapterUiTests
             }
         }
 
-        private void OpenSolution(Window mainWindow)
+        private void OpenSolution()
         {
             mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
             Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
@@ -227,25 +232,19 @@ namespace GoogleTestAdapterUiTests
             fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
         }
 
-        private void CloseSolution(Window mainWindow)
-        {
-            mainWindow.VsMenuBarMenuItems("File", "Close Solution").Click();
-        }
-
         private IUIItem OpenTestExplorer()
         {
             mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
-            IUIItem testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
-            return testExplorer;
+            return mainWindow.Get<UIItem>("TestWindowToolWindowControl");
         }
 
-        private static void WaitForTestDiscovery()
+        private void WaitForTestDiscovery()
         {
             ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
             mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
         }
 
-        private void CheckResults(Window mainWindow, IUIItem testExplorer, [CallerMemberName] string testCaseName = null)
+        private void CheckResults([CallerMemberName] string testCaseName = null)
         {
             string solutionDir = Path.GetDirectoryName(solution);
             IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
@@ -308,7 +307,8 @@ namespace GoogleTestAdapterUiTests
                 if (expectedResult[i] != result[i])
                 {
                     areEqual = false;
-                    messages.Add($"First difference at position {i}, expected: {expectedResult[i]}, actual: {result[i]}");
+                    messages.Add($"First difference at position {i}, expected: {expectedResult[i]}, "
+                        + "actual: {result[i]}");
                     break;
                 }
             }
@@ -349,5 +349,7 @@ namespace GoogleTestAdapterUiTests
             }
             return keepDirtyInstance;
         }
+
     }
+
 }

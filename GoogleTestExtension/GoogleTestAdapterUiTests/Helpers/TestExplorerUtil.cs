@@ -30,15 +30,13 @@ namespace GoogleTestAdapterUiTests.Helpers
 
             if (testCaseNodes.Count > 0)
             {
-                testCaseNodes[0].Get<Label>("TestListViewDisplayNameTextBlock").Focus();
-                testCaseNodes[0].Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                ClickNode(testCaseNodes[0]);
             }
 
             Keyboard.Instance.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
             for (int i = 1; i < testCaseNodes.Count; i++)
             {
-                testCaseNodes[i].Get<Label>("TestListViewDisplayNameTextBlock").Focus();
-                testCaseNodes[i].Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                ClickNode(testCaseNodes[i]);
             }
             Keyboard.Instance.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
         }
@@ -53,7 +51,16 @@ namespace GoogleTestAdapterUiTests.Helpers
                 foreach (TreeNode testGroupNode in testTree.Nodes)
                 {
                     if (testGroupNode.IsOffScreen)
-                        continue;
+                    {
+                        if (testGroupNode.Nodes.Count > 0)
+                        {
+                            EnsureNodeIsOnScreen(testGroupNode.Nodes[0]);
+                        }
+                        if (testGroupNode.IsOffScreen)
+                        {
+                            continue;
+                        }
+                    }
 
                     TreeNode node = ParseTestGroup(testGroupNode, displayName);
                     if (node != null)
@@ -101,10 +108,15 @@ namespace GoogleTestAdapterUiTests.Helpers
         {
             if (node.IsOffScreen)
             {
-                node.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
-                node.Get<Label>("TestListViewDisplayNameTextBlock").Click();
+                ClickNode(node);
                 Thread.Sleep(TimeSpan.FromMilliseconds(WaitingTimeInMs));
             }
+        }
+
+        private static void ClickNode(TreeNode node)
+        {
+            node.Get<Label>("TestListViewDisplayNameTextBlock").Focus();
+            node.Get<Label>("TestListViewDisplayNameTextBlock").Click();
         }
 
     }
