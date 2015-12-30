@@ -86,6 +86,11 @@ namespace GoogleTestAdapterUiTests
             Tree testTree = testExplorer.Get<Tree>("TestsTreeView");
             foreach (TreeNode testGroupNode in testTree.Nodes)
             {
+                if (testGroupNode.Text.StartsWith("Not Run Tests"))
+                {
+                    continue;
+                }
+
                 if (testGroupNode.IsOffScreen)
                 {
                     if (testGroupNode.Nodes.Count > 0)
