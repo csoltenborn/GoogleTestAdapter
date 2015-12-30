@@ -87,7 +87,16 @@ namespace GoogleTestAdapterUiTests
             foreach (TreeNode testGroupNode in testTree.Nodes)
             {
                 if (testGroupNode.IsOffScreen)
-                    continue;
+                {
+                    if (testGroupNode.Nodes.Count > 0)
+                    {
+                        EnsureNodeIsOnScreen(testGroupNode.Nodes[0]);
+                    }
+                    if (testGroupNode.IsOffScreen)
+                    {
+                        continue;
+                    }
+                }
 
                 testResults.Add(ParseTestGroup(testGroupNode));
             }

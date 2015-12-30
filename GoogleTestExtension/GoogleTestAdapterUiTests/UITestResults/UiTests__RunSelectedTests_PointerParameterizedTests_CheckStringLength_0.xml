@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-16"?>
 <TestRun>
   <TestGroup>
+    <description>Passed Tests</description>
+    <TestCase>
+      <Name>PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Name>
+      <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/0</FullyQualifiedName>
+      <Result>Test Passed -  </Result>
+      <Source>parameterizedtests.cpp line 63</Source>
+    </TestCase>
+  </TestGroup>
+  <TestGroup>
     <description>Not Run Tests</description>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/0.CanDefeatMath [std::array&lt;int,3&gt;]</Name>

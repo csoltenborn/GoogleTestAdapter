@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-16"?>
 <TestRun>
   <TestGroup>
+    <description>Failed Tests</description>
+    <TestCase>
+      <Name>ParameterizedTests.Simple/0 [(0,_)]</Name>
+      <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>parameterizedtests.cpp line 23</Source>
+      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:24
+Value of: GetParam().i
+  Actual: 0
+Expected: 1
+
+$(SolutionDir)\tests\parameterizedtests.cpp:25
+Value of: GetParam().s
+  Actual: "_"
+Expected: ""</Error>
+    </TestCase>
+  </TestGroup>
+  <TestGroup>
     <description>Not Run Tests</description>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/0.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
