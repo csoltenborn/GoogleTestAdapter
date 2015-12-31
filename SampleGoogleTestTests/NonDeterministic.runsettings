@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-	<GoogleTestAdapter>
-		<ShuffleTests>true</ShuffleTests>
-		<NrOfTestRepetitions>5</NrOfTestRepetitions>
-		<BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
-	</GoogleTestAdapter>
+  <GoogleTestAdapter>
+    <ShuffleTests>true</ShuffleTests>
+    <NrOfTestRepetitions>5</NrOfTestRepetitions>
+    <BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
+    <DebugMode>true</DebugMode>
+  </GoogleTestAdapter>
 </RunSettings>

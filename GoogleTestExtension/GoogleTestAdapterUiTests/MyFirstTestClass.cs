@@ -22,9 +22,10 @@ namespace GoogleTestAdapterUiTests
     [TestClass]
     public class UiTests
     {
+        private const string BatchTeardownWarning = "Warning: Test teardown batch returned exit code 1";
+
         private const bool keepDirtyInstanceInit = false;
         private const bool overwriteTestResults = false;
-
         private static readonly int TimeOut = (int)TimeSpan.FromMinutes(1).TotalMilliseconds;
 
 
@@ -39,11 +40,15 @@ namespace GoogleTestAdapterUiTests
             vsixPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterVSIX\bin", debugOrRelease, @"GoogleTestAdapterVSIX.vsix");
             solution = Path.Combine(basePath, @"SampleGoogleTestTests\SampleGoogleTestTests.sln");
             uiTestsPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterUiTests");
+            userSettings = Path.Combine(basePath, @"SampleGoogleTestTests\NonDeterministic.runsettings");
+            noSettings = Path.Combine(basePath, @"SampleGoogleTestTests\No.runsettings");
         }
 
         private static readonly string vsixPath;
         private static readonly string solution;
         private static readonly string uiTestsPath;
+        private static readonly string userSettings;
+        private static readonly string noSettings;
         private static bool keepDirtyVsInstance = keepDirtyInstanceInit;
 
         private static VsExperimentalInstance visualStudioInstance;
@@ -199,6 +204,58 @@ namespace GoogleTestAdapterUiTests
                 "TypedTests/0.CanIterate", "Arr/TypeParameterizedTests/1.CanDefeatMath" });
         }
 
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunAllTests_GlobalAndSolutionSettings_BatchTeardownWarning()
+        {
+            try
+            {
+                mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
+                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
+                mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
+
+                IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
+                string output = outputWindow.Get<TextBox>("WpfTextView").Text;
+                Assert.IsTrue(output.Contains(BatchTeardownWarning));
+            }
+            catch (AutomationException exception)
+            {
+                LogExceptionAndThrow(exception);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunAllTests_UserSettings_ShuffledTestExecutionAndNoBatchWarning()
+        {
+            try
+            {
+                try
+                {
+                    SelectTestSettingsFile(userSettings);
+
+                    mainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
+                    ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
+                    mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
+
+                    IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
+                    string output = outputWindow.Get<TextBox>("WpfTextView").Text;
+                    Assert.IsTrue(output.Contains("--gtest_shuffle"));
+                    Assert.IsTrue(output.Contains("--gtest_repeat=5"));
+                    Assert.IsFalse(output.Contains(BatchTeardownWarning));
+                }
+                finally
+                {
+                    UnselectTestSettingsFile();
+                }
+            }
+            catch (AutomationException exception)
+            {
+                LogExceptionAndThrow(exception);
+            }
+        }
+
+
         private void ExecuteSingleTestCase(string displayName, [CallerMemberName] string testCaseName = null)
         {
             ExecuteMultipleTestCases(new[] { displayName }, testCaseName);
@@ -227,9 +284,18 @@ namespace GoogleTestAdapterUiTests
         private void OpenSolution()
         {
             mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
-            Window fileOpenDialog = mainWindow.ModalWindow("Open Project");
-            fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = solution;
-            fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
+            FillFileDialog("Open Project", solution);
+        }
+
+        private void SelectTestSettingsFile(string settingsFile)
+        {
+            mainWindow.VsMenuBarMenuItems("Test", "Test Settings", "Select Test Settings File").Click();
+            FillFileDialog("Open Settings File", settingsFile);
+        }
+
+        private void UnselectTestSettingsFile()
+        {
+            SelectTestSettingsFile(noSettings);
         }
 
         private IUIItem OpenTestExplorer()
@@ -242,6 +308,13 @@ namespace GoogleTestAdapterUiTests
         {
             ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
             mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
+        }
+
+        private void FillFileDialog(string dialogTitle, string file)
+        {
+            Window fileOpenDialog = mainWindow.ModalWindow(dialogTitle);
+            fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = file;
+            fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
         }
 
         private void CheckResults([CallerMemberName] string testCaseName = null)
