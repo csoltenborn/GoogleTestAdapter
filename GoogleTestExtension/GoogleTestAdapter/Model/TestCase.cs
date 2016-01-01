@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using DiaAdapter;
 using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Model
@@ -20,10 +19,10 @@ namespace GoogleTestAdapter.Model
     */
     public class TestCase
     {
-        public Uri ExecutorUri { get; set; }
-        public string Source { get; set; }
+        public Uri ExecutorUri { get; private set; }
+        public string Source { get; private set; }
 
-        public string FullyQualifiedName { get; set; }
+        public string FullyQualifiedName { get; private set; }
         public string DisplayName { get; set; }
 
         public string CodeFilePath { get; set; }
@@ -31,36 +30,15 @@ namespace GoogleTestAdapter.Model
 
         public List<Trait> Traits { get; } = new List<Trait>();
 
-        internal SourceFileLocation Location { get; set; }
+        private string Suite { get; }
 
-        internal string Suite { get; }
-
-        internal string NameAndParam { get; }
+        private string NameAndParam { get; }
 
         private string TypeParam = null;
 
-        internal string Name
-        {
-            get
-            {
-                int startOfParamInfo = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
-                return startOfParamInfo > 0 ? NameAndParam.Substring(0, startOfParamInfo).Trim() : NameAndParam;
-            }
-        }
+        private string Name { get; }
 
-        internal string Param
-        {
-            get
-            {
-                int indexOfMarker = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
-                if (indexOfMarker < 0)
-                {
-                    return "";
-                }
-                int startOfParam = indexOfMarker + GoogleTestConstants.ParameterizedTestMarker.Length;
-                return NameAndParam.Substring(startOfParam, NameAndParam.Length - startOfParam).Trim();
-            }
-        }
+        private string Param { get; }
 
         public TestCase(string fullyQualifiedName, Uri executorUri, string source)
         {
@@ -80,69 +58,40 @@ namespace GoogleTestAdapter.Model
             }
 
             NameAndParam = nameAndParam;
+
+            int startOfParamInfo = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
+            Name = startOfParamInfo > 0 ? NameAndParam.Substring(0, startOfParamInfo).Trim() : NameAndParam;
+
+            int indexOfMarker = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
+            if (indexOfMarker < 0)
+            {
+                Param = "";
+            }
+            else
+            {
+                int startOfParam = indexOfMarker + GoogleTestConstants.ParameterizedTestMarker.Length;
+                Param = NameAndParam.Substring(startOfParam, NameAndParam.Length - startOfParam).Trim();
+            }
         }
 
-        public IEnumerable<string> GetTestMethodSignatures()
+        internal IEnumerable<string> GetTestMethodSignatures()
         {
             if (TypeParam != null)
             {
                 return GetTypedTestMethodSignatures();
             }
-            if (!NameAndParam.Contains(GoogleTestConstants.ParameterizedTestMarker))
+            if (NameAndParam.Contains(GoogleTestConstants.ParameterizedTestMarker))
             {
-                return GoogleTestConstants.GetTestMethodSignature(Suite, NameAndParam).Yield();
+                return GetParameterizedTestMethodSignature().Yield();
             }
 
-            int index = Suite.IndexOf('/');
-            string suite = index < 0 ? Suite : Suite.Substring(index + 1);
-
-            index = NameAndParam.IndexOf('/');
-            string testName = index < 0 ? NameAndParam : NameAndParam.Substring(0, index);
-
-            return GoogleTestConstants.GetTestMethodSignature(suite, testName).Yield();
+            return GetTestMethodSignature(Suite, NameAndParam).Yield();
         }
 
-        private IEnumerable<string> GetTypedTestMethodSignatures()
-        {
-            List<string> result = new List<string>();
 
-            // remove instance number
-            string suite = Suite.Substring(0, Suite.LastIndexOf("/"));
-
-            if (suite.Contains("/"))
-            {
-                int index = suite.IndexOf("/");
-                suite = suite.Substring(index + 1, suite.Length - index - 1);
-            }
-            // <testcase name>_<test name>_Test<type param value>::TestBody
-            string signature = suite + "_" + Name + "_Test<" + TypeParam;
-            if (signature.EndsWith(">"))
-            {
-                signature += " ";
-            }
-            signature += ">::TestBody";
-            result.Add(signature);
-
-            // gtest_case_<testcase name>_::<test name><type param value>::TestBody
-            signature = "gtest_case_" + suite + "_::" + Name + "<" + TypeParam;
-            if (signature.EndsWith(">"))
-            {
-                signature += " ";
-            }
-            signature += ">::TestBody";
-            result.Add(signature);
-
-            return result;
-        }
-
-        public string GetTestsuiteName_CommandLineGenerator()
+        internal string GetTestsuiteName_CommandLineGenerator()
         {
             return FullyQualifiedName.Split('.')[0];
-        }
-
-        public string GetTestcaseNameForFiltering_CommandLineGenerator()
-        {
-            return FullyQualifiedName;
         }
 
         internal void ConfigureTestCase(string executable, List<TestCaseLocation> testCaseLocations, TestEnvironment testEnvironment)
@@ -181,6 +130,56 @@ namespace GoogleTestAdapter.Model
             ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
             Source = executable;
             DisplayName = displayName;
+        }
+
+        private IEnumerable<string> GetTypedTestMethodSignatures()
+        {
+            List<string> result = new List<string>();
+
+            // remove instance number
+            string suite = Suite.Substring(0, Suite.LastIndexOf("/"));
+
+            if (suite.Contains("/"))
+            {
+                int index = suite.IndexOf("/");
+                suite = suite.Substring(index + 1, suite.Length - index - 1);
+            }
+            // <testcase name>_<test name>_Test<type param value>::TestBody
+            string signature = suite + "_" + Name + "_Test";
+            signature += GetEnclosedTypeParam();
+            signature += GoogleTestConstants.TestBodySignature;
+            result.Add(signature);
+
+            // gtest_case_<testcase name>_::<test name><type param value>::TestBody
+            signature = "gtest_case_" + suite + "_::" + Name;
+            signature += GetEnclosedTypeParam();
+            signature += GoogleTestConstants.TestBodySignature;
+            result.Add(signature);
+
+            return result;
+        }
+
+        private string GetParameterizedTestMethodSignature()
+        {
+            // remove instance number
+            int index = Suite.IndexOf('/');
+            string suite = index < 0 ? Suite : Suite.Substring(index + 1);
+
+            index = NameAndParam.IndexOf('/');
+            string testName = index < 0 ? NameAndParam : NameAndParam.Substring(0, index);
+
+            return GetTestMethodSignature(suite, testName);
+        }
+
+        private string GetTestMethodSignature(string suite, string testCase)
+        {
+            return suite + "_" + testCase + "_Test" + GoogleTestConstants.TestBodySignature;
+        }
+
+        private string GetEnclosedTypeParam()
+        {
+            string typeParam = TypeParam.EndsWith(">") ? TypeParam + " " : TypeParam;
+            return $"<{typeParam}>";
         }
 
         private IEnumerable<Trait> GetTraits(string displayName, List<Trait> traits, TestEnvironment testEnvironment)

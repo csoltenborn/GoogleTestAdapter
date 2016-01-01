@@ -29,11 +29,6 @@
             return "--gtest_output=\"xml:" + resultXmlFile + "\"";
         }
 
-        public static string GetTestMethodSignature(string suite, string testCase)
-        {
-            return suite + "_" + testCase + "_Test" + TestBodySignature;
-        }
-
     }
 
 }

@@ -40,7 +40,7 @@ namespace GoogleTestAdapter
             foreach (TestCase testCase in testCases)
             {
                 testCase.ConfigureTestCase(executable, testCaseLocations, TestEnvironment);
-                TestEnvironment.DebugInfo("Added testcase " + testCase.Suite + "." + testCase.NameAndParam);
+                TestEnvironment.DebugInfo("Added testcase " + testCase.DisplayName);
             }
             return testCases;
         }

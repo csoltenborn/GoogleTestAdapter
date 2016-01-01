@@ -120,7 +120,7 @@ namespace GoogleTestAdapter.Runners
             }
 
             string result = "";
-            string nextTest = testCases[0].GetTestcaseNameForFiltering_CommandLineGenerator();
+            string nextTest = testCases[0].FullyQualifiedName;
             if (nextTest.Length > maxLength)
             {
                 throw new Exception("CommandLineGenerator: I can not deal with this case :-( - maxLength=" + maxLength +
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter.Runners
                 testCases.RemoveAt(0);
                 if (testCases.Count > 0)
                 {
-                    nextTest = ":" + testCases[0].GetTestcaseNameForFiltering_CommandLineGenerator();
+                    nextTest = ":" + testCases[0].FullyQualifiedName;
                 }
             }
             return result;
