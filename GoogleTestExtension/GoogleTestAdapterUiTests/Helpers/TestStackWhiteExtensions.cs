@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Automation;
+using TestStack.White;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.ListBoxItems;
 using TestStack.White.UIItems.WindowItems;
@@ -36,6 +39,15 @@ namespace GoogleTestAdapterUiTests.Helpers
             foreach (AutomationElement child in element.FindAll(TreeScope.Children, Condition.TrueCondition))
                 child.PrintStructure(indent + 1);
         }
+
+        public static void LogAndThrow(this AutomationException exception, [CallerMemberName] string testCaseName = null)
+        {
+            string debugDetailsFile = Path.Combine(VS.UiTestsDirectory, "TestErrors", typeof(UiTests).Name + "__" + testCaseName + "__DebugDetails.txt");
+            Directory.CreateDirectory(Path.GetDirectoryName(debugDetailsFile));
+            File.WriteAllText(debugDetailsFile, exception.ToString() + "\r\n" + exception.StackTrace + "\r\n" + exception.DebugDetails);
+            throw exception;
+        }
+
     }
 
     public class VsMenuBarWorkaround

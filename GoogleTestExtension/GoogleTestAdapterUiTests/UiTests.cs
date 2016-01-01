@@ -5,9 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
-using TestStack.White.UIItems;
-using TestStack.White.UIItems.Finders;
-using TestStack.White.UIItems.WPFUIItems;
 using GoogleTestAdapterUiTests.Helpers;
 
 namespace GoogleTestAdapterUiTests
@@ -17,10 +14,8 @@ namespace GoogleTestAdapterUiTests
     {
         private const bool overwriteTestResults = false;
 
-
         private const string BatchTeardownWarning = "Warning: Test teardown batch returned exit code 1";
 
-        private static IUIItem testExplorer;
 
         [ClassInitialize]
         public static void SetupVanillaVsExperimentalInstance(TestContext testContext)
@@ -32,16 +27,7 @@ namespace GoogleTestAdapterUiTests
         public void OpenSolutionAndTestExplorer()
         {
             VS.OpenSolution();
-
-            if (testExplorer == null)
-            {
-                testExplorer = VS.OpenTestExplorer();
-                WaitForTestDiscovery();
-            }
-            else
-            {
-                testExplorer = VS.OpenTestExplorer();
-            }
+            VS.TestExplorer.OpenTestExplorer();
         }
 
         [TestCleanup]
@@ -53,79 +39,9 @@ namespace GoogleTestAdapterUiTests
         [ClassCleanup]
         public static void CleanVsExperimentalInstance()
         {
-            testExplorer = null;
             VS.CleanVsExperimentalInstance();
         }
 
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunAllTests__AllTestsAreRun()
-        {
-            try
-            {
-                // Run all tests and wait till finish (max 1 minute)
-                VS.MainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
-                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                VS.MainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
-
-                CheckResults();
-            }
-            catch (AutomationException exception)
-            {
-                LogExceptionAndThrow(exception);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_Crashing_AddPasses()
-        {
-            ExecuteSingleTestCase("Crashing.AddPasses");
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_ParameterizedTests_Simple_0()
-        {
-            ExecuteSingleTestCase("ParameterizedTests.Simple/0");
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0()
-        {
-            ExecuteSingleTestCase("InstantiationName/ParameterizedTests.SimpleTraits/0");
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_PointerParameterizedTests_CheckStringLength_0()
-        {
-            ExecuteSingleTestCase("PointerParameterizedTests.CheckStringLength/0");
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_TypedTests_0_CanIterate()
-        {
-            ExecuteSingleTestCase("TypedTests/0.CanIterate");
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath()
-        {
-            ExecuteSingleTestCase("Arr/TypeParameterizedTests/1.CanDefeatMath");
-        }
-
-        [TestMethod]
-        [TestCategory("UI")]
-        public void RunSelectedTests_MultipleTests()
-        {
-            ExecuteMultipleTestCases(new[] { "Crashing.AddPasses", "ParameterizedTests.Simple/0",
-                "InstantiationName/ParameterizedTests.SimpleTraits/0", "PointerParameterizedTests.CheckStringLength/0",
-                "TypedTests/0.CanIterate", "Arr/TypeParameterizedTests/1.CanDefeatMath" });
-        }
 
         [TestMethod]
         [TestCategory("UI")]
@@ -133,17 +49,13 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                VS.MainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
-                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                VS.MainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
+                VS.TestExplorer.RunAllTests();
 
-                IUIItem outputWindow = VS.MainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
-                string output = outputWindow.Get<TextBox>("WpfTextView").Text;
-                Assert.IsTrue(output.Contains(BatchTeardownWarning));
+                Assert.IsTrue(VS.GetOutput().Contains(BatchTeardownWarning));
             }
             catch (AutomationException exception)
             {
-                LogExceptionAndThrow(exception);
+                exception.LogAndThrow();
             }
         }
 
@@ -155,95 +67,140 @@ namespace GoogleTestAdapterUiTests
             {
                 try
                 {
-                    VS.SelectTestSettingsFile(VS.UserSettingsFile);
+                    VS.TestExplorer.SelectTestSettingsFile(VS.UserSettingsFile);
 
-                    VS.MainWindow.VsMenuBarMenuItems("Test", "Run", "All Tests").Click();
-                    ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                    VS.MainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromMinutes(1));
+                    VS.TestExplorer.RunAllTests();
 
-                    IUIItem outputWindow = VS.MainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
-                    string output = outputWindow.Get<TextBox>("WpfTextView").Text;
+                    string output = VS.GetOutput();
                     Assert.IsTrue(output.Contains("--gtest_shuffle"));
-                    Assert.IsTrue(output.Contains("--gtest_repeat=5"));
+                    Assert.IsTrue(output.Contains("--gtest_repeat=3"));
                     Assert.IsFalse(output.Contains(BatchTeardownWarning));
                 }
                 finally
                 {
-                    VS.UnselectTestSettingsFile();
+                    VS.TestExplorer.UnselectTestSettingsFile();
                 }
             }
             catch (AutomationException exception)
             {
-                LogExceptionAndThrow(exception);
+                exception.LogAndThrow();
             }
         }
 
-
-        private void ExecuteSingleTestCase(string displayName, [CallerMemberName] string testCaseName = null)
-        {
-            ExecuteMultipleTestCases(new[] { displayName }, testCaseName);
-        }
-
-        private void ExecuteMultipleTestCases(string[] displayNames, [CallerMemberName] string testCaseName = null)
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunAllTests__AllTestsAreRun()
         {
             try
             {
-                // Run a selected test and wait till finish (max 1 minute)
-                TestExplorerUtil util = new TestExplorerUtil(testExplorer);
-                util.SelectTestCases(displayNames);
-                VS.MainWindow.VsMenuBarMenuItems("Test", "Run", "Selected Tests").Click();
-                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                VS.MainWindow.WaitTill(
-                    () => progressIndicator.Value == progressIndicator.Maximum, TimeSpan.FromSeconds(10));
+                VS.TestExplorer.RunAllTests();
+                CheckResults();
+            }
+            catch (AutomationException exception)
+            {
+                exception.LogAndThrow();
+            }
+        }
 
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_Crashing_AddPasses()
+        {
+            RunTest("Crashing.AddPasses");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_ParameterizedTests_Simple_0()
+        {
+            RunTest("ParameterizedTests.Simple/0");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0()
+        {
+            RunTest("InstantiationName/ParameterizedTests.SimpleTraits/0");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_PointerParameterizedTests_CheckStringLength_0()
+        {
+            RunTest("PointerParameterizedTests.CheckStringLength/0");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_TypedTests_0_CanIterate()
+        {
+            RunTest("TypedTests/0.CanIterate");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath()
+        {
+            RunTest("Arr/TypeParameterizedTests/1.CanDefeatMath");
+        }
+
+        [TestMethod]
+        [TestCategory("UI")]
+        public void RunSelectedTests_MultipleTests()
+        {
+            RunTests(new[] { "Crashing.AddPasses", "ParameterizedTests.Simple/0",
+                "InstantiationName/ParameterizedTests.SimpleTraits/0", "PointerParameterizedTests.CheckStringLength/0",
+                "TypedTests/0.CanIterate", "Arr/TypeParameterizedTests/1.CanDefeatMath" });
+        }
+
+
+        private void RunTest(string displayName, [CallerMemberName] string testCaseName = null)
+        {
+            RunTests(new[] { displayName }, testCaseName);
+        }
+
+        private void RunTests(string[] displayNames, [CallerMemberName] string testCaseName = null)
+        {
+            try
+            {
+                VS.TestExplorer.RunSelectedTests(displayNames);
                 CheckResults(testCaseName);
             }
             catch (AutomationException exception)
             {
-                LogExceptionAndThrow(exception);
+                exception.LogAndThrow();
             }
         }
 
-        private void WaitForTestDiscovery()
-        {
-            ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
-            VS.MainWindow.WaitTill(() => delayIndicator.IsOffScreen);
-        }
 
         private void CheckResults([CallerMemberName] string testCaseName = null)
         {
-            string solutionDir = Path.GetDirectoryName(VS.SolutionDirectory);
-            IUIItem outputWindow = VS.MainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
-            string testResults = new TestRunSerializer().ParseTestResults(solutionDir, testExplorer, outputWindow).ToXML();
-            CheckResults(testResults, testCaseName);
-        }
+            string testResults = VS.TestExplorer.Parser.ParseTestResults().ToXML();
 
-        private void CheckResults(string result, string testCaseName)
-        {
             string expectationFile = Path.Combine(VS.UiTestsDirectory, "UITestResults", this.GetType().Name + "__" + testCaseName + ".xml");
             string resultFile = Path.Combine(VS.UiTestsDirectory, "TestErrors", this.GetType().Name + "__" + testCaseName + ".xml");
 
             if (!File.Exists(expectationFile))
             {
-                File.WriteAllText(expectationFile, result);
+                File.WriteAllText(expectationFile, testResults);
                 Assert.Inconclusive("This is the first time this test runs.");
             }
 
             string expectedResult = File.ReadAllText(expectationFile);
             string msg;
-            bool stringsAreEqual = AreEqual(expectedResult, result, out msg);
+            bool stringsAreEqual = AreEqual(expectedResult, testResults, out msg);
             if (!stringsAreEqual)
             {
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
                 if (overwriteTestResults)
                 {
-                    File.WriteAllText(expectationFile, result);
+                    File.WriteAllText(expectationFile, testResults);
                     Assert.Inconclusive("Test results changed and have been overwritten. Differences: " + msg);
                 }
                 else
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(resultFile));
-                    File.WriteAllText(resultFile, result);
+                    File.WriteAllText(resultFile, testResults);
                     Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile + ". Differences: " + msg);
                 }
 #pragma warning restore CS0162
@@ -273,8 +230,9 @@ namespace GoogleTestAdapterUiTests
                 if (expectedResult[i] != result[i])
                 {
                     areEqual = false;
-                    messages.Add($"First difference at position {i}, expected: {expectedResult[i]}, "
-                        + "actual: {result[i]}");
+                    messages.Add($"First difference at position {i}, "
+                        + $"expected: {expectedResult[i]}, actual: {result[i]}, "
+                        + $"context: '{GetContext(expectedResult, i)}' and '{GetContext(result, i)}'");
                     break;
                 }
             }
@@ -283,12 +241,25 @@ namespace GoogleTestAdapterUiTests
             return areEqual;
         }
 
-        private static void LogExceptionAndThrow(AutomationException exception, [CallerMemberName] string testCaseName = null)
+        private string GetContext(string result, int position, int contextLength = 40)
         {
-            string debugDetailsFile = Path.Combine(VS.UiTestsDirectory, "TestErrors", typeof(UiTests).Name + "__" + testCaseName + "__DebugDetails.txt");
-            Directory.CreateDirectory(Path.GetDirectoryName(debugDetailsFile));
-            File.WriteAllText(debugDetailsFile, exception.ToString() + "\r\n" + exception.StackTrace + "\r\n" + exception.DebugDetails);
-            throw exception;
+            int leftContextLength = contextLength / 2;
+            int rightContextLength = contextLength - leftContextLength;
+
+            if (position - leftContextLength < 0)
+            {
+                int delta = leftContextLength - position;
+                leftContextLength -= delta;
+                rightContextLength += delta;
+            }
+
+            if (position + rightContextLength > result.Length)
+            {
+                int delta = position + rightContextLength - result.Length;
+                rightContextLength -= delta;
+            }
+
+            return result.Substring(position - leftContextLength, leftContextLength + rightContextLength);
         }
 
     }
