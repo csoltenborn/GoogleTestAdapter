@@ -132,15 +132,15 @@ namespace GoogleTestAdapter
         {
             AssertFindsParameterizedTest(
                 "Arr/TypeParameterizedTests/0.CanIterate",
-                "Arr/TypeParameterizedTests/0.CanIterate [std::array<int,3>]");
+                "Arr/TypeParameterizedTests/0.CanIterate<std::array<int,3> >");
 
             AssertFindsParameterizedTest(
                 "TypedTests/2.CanDefeatMath",
-                "TypedTests/2.CanDefeatMath [MyStrangeArray]");
+                "TypedTests/2.CanDefeatMath<MyStrangeArray>");
 
             AssertFindsParameterizedTest(
                 "PrimitivelyTypedTests/0.CanHasBigNumbers",
-                "PrimitivelyTypedTests/0.CanHasBigNumbers [signed char]");
+                "PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>");
         }
 
         [TestMethod]
@@ -230,7 +230,7 @@ namespace GoogleTestAdapter
         private void FindStaticallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -246,7 +246,7 @@ namespace GoogleTestAdapter
         private void FindExternallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             Assert.AreEqual(2, testCases.Count);
 
@@ -264,7 +264,7 @@ namespace GoogleTestAdapter
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests).ToList();
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
             Assert.IsNotNull(testCase);
@@ -286,7 +286,7 @@ namespace GoogleTestAdapter
             Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            IList<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
 
             TestCase testCase = tests.Where(t => t.FullyQualifiedName == fullyQualifiedName).Single();
             Assert.IsTrue(displayNameRegex.IsMatch(testCase.DisplayName));

@@ -3,7 +3,7 @@
   <TestGroup>
     <description>Failed Tests</description>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/0.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
+      <Name>Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
       <Source>typeparameterizedtests.cpp line 44</Source>
@@ -176,7 +176,7 @@ Expected: GetParam().second
 Which is: 23</Error>
     </TestCase>
     <TestCase>
-      <Name>PrimitivelyTypedTests/0.CanHasBigNumbers [signed char]</Name>
+      <Name>PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/0.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Failed -  </Result>
       <Source>typeparameterizedtests.cpp line 66</Source>
@@ -218,7 +218,7 @@ Expected: 1000</Error>
 SEH exception with code 0xc0000005 thrown in the test body.</Error>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <Name>TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
       <Source>typeparameterizedtests.cpp line 27</Source>
@@ -226,7 +226,7 @@ SEH exception with code 0xc0000005 thrown in the test body.</Error>
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/1.CanDefeatMath [std::array&lt;int,3&gt;]</Name>
+      <Name>TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
       <Source>typeparameterizedtests.cpp line 27</Source>
@@ -234,7 +234,7 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
-      <Name>Vec/TypeParameterizedTests/0.CanDefeatMath [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <Name>Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
       <Source>typeparameterizedtests.cpp line 44</Source>
@@ -266,19 +266,19 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
   <TestGroup>
     <description>Passed Tests</description>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/0.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <Name>Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 37</Source>
     </TestCase>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/1.CanDefeatMath [MyStrangeArray]</Name>
+      <Name>Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 44</Source>
     </TestCase>
     <TestCase>
-      <Name>Arr/TypeParameterizedTests/1.CanIterate [MyStrangeArray]</Name>
+      <Name>Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 37</Source>
@@ -330,13 +330,13 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Source>parameterizedtests.cpp line 63</Source>
     </TestCase>
     <TestCase>
-      <Name>PrimitivelyTypedTests/1.CanHasBigNumbers [int]</Name>
+      <Name>PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/1.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 66</Source>
     </TestCase>
     <TestCase>
-      <Name>PrimitivelyTypedTests/2.CanHasBigNumbers [long]</Name>
+      <Name>PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/2.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 66</Source>
@@ -382,31 +382,31 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Source>fixturetests.cpp line 37</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <Name>TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 20</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/1.CanIterate [std::array&lt;int,3&gt;]</Name>
+      <Name>TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 20</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/2.CanDefeatMath [MyStrangeArray]</Name>
+      <Name>TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>TypedTests/2.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 27</Source>
     </TestCase>
     <TestCase>
-      <Name>TypedTests/2.CanIterate [MyStrangeArray]</Name>
+      <Name>TypedTests/2.CanIterate&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>TypedTests/2.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 20</Source>
     </TestCase>
     <TestCase>
-      <Name>Vec/TypeParameterizedTests/0.CanIterate [std::vector&lt;int,std::allocator&lt;int&gt; &gt;]</Name>
+      <Name>Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
       <Source>typeparameterizedtests.cpp line 37</Source>

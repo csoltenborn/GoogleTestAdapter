@@ -24,24 +24,22 @@ namespace GoogleTestAdapter
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             foreach (string executable in googleTestExecutables)
             {
-                List<TestCase> testCases = GetTestsFromExecutable(executable);
+                IList<TestCase> testCases = GetTestsFromExecutable(executable);
                 reporter.ReportTestsFound(testCases);
             }
         }
 
-        public List<TestCase> GetTestsFromExecutable(string executable)
+        public IList<TestCase> GetTestsFromExecutable(string executable)
         {
-            List<string> consoleOutput = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
-            List<TestCase> testCases = ParseTestCases(executable, consoleOutput);
-            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(executable, testCases);
+            TestCaseFactory factory = new TestCaseFactory(executable, TestEnvironment);
+            IList<TestCase> testCases = factory.CreateTestCases();
 
             TestEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
-
             foreach (TestCase testCase in testCases)
             {
-                testCase.AddLocationInfo(testCaseLocations, TestEnvironment);
                 TestEnvironment.DebugInfo("Added testcase " + testCase.DisplayName);
             }
+
             return testCases;
         }
 
@@ -64,44 +62,6 @@ namespace GoogleTestAdapter
                     executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
 
             return matches;
-        }
-
-        private List<TestCase> ParseTestCases(string executable, List<string> output)
-        {
-            List<TestCase> testCases = new List<TestCase>();
-            string currentSuite = "";
-            foreach (string line in output)
-            {
-                string trimmedLine = line.Trim('.', '\n', '\r');
-                if (trimmedLine.StartsWith("  "))
-                {
-                    testCases.Add(new TestCase(executable, currentSuite, trimmedLine.Substring(2)));
-                }
-                else
-                {
-                    currentSuite = trimmedLine;
-                }
-            }
-
-            return testCases;
-        }
-
-        private List<TestCaseLocation> GetTestCaseLocations(string executable, List<TestCase> testCases)
-        {
-            List<string> testMethodSignatures = new List<string>();
-            foreach (TestCase testCase in testCases)
-            {
-                testMethodSignatures.AddRange(testCase.GetTestMethodSignatures());
-            }
-            string filterString = "*" + GoogleTestConstants.TestBodySignature;
-            TestCaseResolver resolver = new TestCaseResolver();
-            List<string> errorMessages = new List<string>();
-            List<TestCaseLocation> testCaseLocations = resolver.ResolveAllTestCases(executable, testMethodSignatures, filterString, errorMessages);
-            foreach (string errorMessage in errorMessages)
-            {
-                TestEnvironment.LogWarning(errorMessage);
-            }
-            return testCaseLocations;
         }
 
         private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
