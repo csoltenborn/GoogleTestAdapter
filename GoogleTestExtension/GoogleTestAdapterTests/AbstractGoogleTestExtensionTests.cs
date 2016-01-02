@@ -117,7 +117,7 @@ namespace GoogleTestAdapter
 
         protected static TestCase ToTestCase(string name, string executable)
         {
-            return new TestCase(name, new Uri("http://none"), executable);
+            return new TestCase(name, executable, name, "", 0);
         }
 
         protected static TestCase ToTestCase(string name)

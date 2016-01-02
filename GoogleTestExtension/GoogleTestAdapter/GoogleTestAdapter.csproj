@@ -53,6 +53,7 @@
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\ProcessWaiter.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
+    <Compile Include="Helpers\TestCaseFactory.cs" />
     <Compile Include="Helpers\TestCaseResolver.cs" />
     <Compile Include="Helpers\TestEnvironment.cs" />
     <Compile Include="Helpers\Utils.cs" />

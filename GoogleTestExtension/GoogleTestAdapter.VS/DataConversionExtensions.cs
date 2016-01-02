@@ -7,19 +7,20 @@ namespace GoogleTestAdapter.VS
     public static class DataConversionExtensions
     {
 
-        public static GoogleTestAdapter.Model.TestCase ToTestCase(this Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase vsTestCase)
+        public static Model.TestCase ToTestCase(this Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase vsTestCase)
         {
-            GoogleTestAdapter.Model.TestCase testCase = new GoogleTestAdapter.Model.TestCase(vsTestCase.FullyQualifiedName, vsTestCase.ExecutorUri, vsTestCase.Source);
-            testCase.DisplayName = vsTestCase.DisplayName;
-            testCase.CodeFilePath = vsTestCase.CodeFilePath;
-            testCase.LineNumber = vsTestCase.LineNumber;
+            Model.TestCase testCase = new Model.TestCase(
+                vsTestCase.FullyQualifiedName, vsTestCase.Source, vsTestCase.DisplayName,
+                vsTestCase.CodeFilePath, vsTestCase.LineNumber);
             testCase.Traits.AddRange(vsTestCase.Traits.Select(ToTrait));
             return testCase;
         }
 
-        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase ToVsTestCase(this GoogleTestAdapter.Model.TestCase testCase)
+        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase ToVsTestCase(this Model.TestCase testCase)
         {
-            Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase vsTestCase = new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase(testCase.FullyQualifiedName, testCase.ExecutorUri, testCase.Source);
+            Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase vsTestCase =
+                new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase(
+                    testCase.FullyQualifiedName, testCase.ExecutorUri, testCase.Source);
             vsTestCase.DisplayName = testCase.DisplayName;
             vsTestCase.CodeFilePath = testCase.CodeFilePath;
             vsTestCase.LineNumber = testCase.LineNumber;
@@ -28,18 +29,18 @@ namespace GoogleTestAdapter.VS
         }
 
 
-        public static GoogleTestAdapter.Model.Trait ToTrait(this Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait trait)
+        public static Model.Trait ToTrait(this Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait trait)
         {
-            return new GoogleTestAdapter.Model.Trait(trait.Name, trait.Value);
+            return new Model.Trait(trait.Name, trait.Value);
         }
 
-        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait ToVsTrait(this GoogleTestAdapter.Model.Trait trait)
+        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait ToVsTrait(this Model.Trait trait)
         {
             return new Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait(trait.Name, trait.Value);
         }
 
 
-        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult ToVsTestResult(this GoogleTestAdapter.Model.TestResult testResult)
+        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult ToVsTestResult(this Model.TestResult testResult)
         {
             Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult(ToVsTestCase(testResult.TestCase));
             result.Outcome = testResult.Outcome.ToVsTestOutcome();
@@ -51,19 +52,19 @@ namespace GoogleTestAdapter.VS
         }
 
 
-        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome ToVsTestOutcome(this GoogleTestAdapter.Model.TestOutcome testOutcome)
+        public static Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome ToVsTestOutcome(this Model.TestOutcome testOutcome)
         {
             switch (testOutcome)
             {
-                case GoogleTestAdapter.Model.TestOutcome.Passed:
+                case Model.TestOutcome.Passed:
                     return Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Passed;
-                case GoogleTestAdapter.Model.TestOutcome.Failed:
+                case Model.TestOutcome.Failed:
                     return Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Failed;
-                case GoogleTestAdapter.Model.TestOutcome.Skipped:
+                case Model.TestOutcome.Skipped:
                     return Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Skipped;
-                case GoogleTestAdapter.Model.TestOutcome.None:
+                case Model.TestOutcome.None:
                     return Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.None;
-                case GoogleTestAdapter.Model.TestOutcome.NotFound:
+                case Model.TestOutcome.NotFound:
                     return Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.NotFound;
                 default:
                     throw new Exception();

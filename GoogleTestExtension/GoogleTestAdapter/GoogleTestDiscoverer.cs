@@ -32,14 +32,14 @@ namespace GoogleTestAdapter
         public List<TestCase> GetTestsFromExecutable(string executable)
         {
             List<string> consoleOutput = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
-            List<TestCase> testCases = ParseTestCases(consoleOutput);
+            List<TestCase> testCases = ParseTestCases(executable, consoleOutput);
             List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(executable, testCases);
 
             TestEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 
             foreach (TestCase testCase in testCases)
             {
-                testCase.ConfigureTestCase(executable, testCaseLocations, TestEnvironment);
+                testCase.AddLocationInfo(testCaseLocations, TestEnvironment);
                 TestEnvironment.DebugInfo("Added testcase " + testCase.DisplayName);
             }
             return testCases;
@@ -66,7 +66,7 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        private List<TestCase> ParseTestCases(List<string> output)
+        private List<TestCase> ParseTestCases(string executable, List<string> output)
         {
             List<TestCase> testCases = new List<TestCase>();
             string currentSuite = "";
@@ -75,7 +75,7 @@ namespace GoogleTestAdapter
                 string trimmedLine = line.Trim('.', '\n', '\r');
                 if (trimmedLine.StartsWith("  "))
                 {
-                    testCases.Add(new TestCase(currentSuite, trimmedLine.Substring(2)));
+                    testCases.Add(new TestCase(executable, currentSuite, trimmedLine.Substring(2)));
                 }
                 else
                 {

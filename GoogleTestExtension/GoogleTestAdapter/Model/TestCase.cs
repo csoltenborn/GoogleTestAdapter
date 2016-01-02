@@ -19,14 +19,14 @@ namespace GoogleTestAdapter.Model
     */
     public class TestCase
     {
-        public Uri ExecutorUri { get; private set; }
-        public string Source { get; private set; }
+        public Uri ExecutorUri { get { return GoogleTestExecutor.ExecutorUri; } }
+        public string Source { get; }
 
-        public string FullyQualifiedName { get; private set; }
-        public string DisplayName { get; set; }
+        public string FullyQualifiedName { get; }
+        public string DisplayName { get; }
 
-        public string CodeFilePath { get; set; }
-        public int LineNumber { get; set; }
+        public string CodeFilePath { get; private set; }
+        public int LineNumber { get; private set; }
 
         public List<Trait> Traits { get; } = new List<Trait>();
 
@@ -40,24 +40,26 @@ namespace GoogleTestAdapter.Model
 
         private string Param { get; }
 
-        public TestCase(string fullyQualifiedName, Uri executorUri, string source)
+        public TestCase(string fullyQualifiedName, string source, string displayName, string codeFilePath, int lineNumber)
         {
             FullyQualifiedName = fullyQualifiedName;
-            ExecutorUri = executorUri;
             Source = source;
+            DisplayName = displayName;
+            CodeFilePath = codeFilePath;
+            LineNumber = lineNumber;
         }
 
-        internal TestCase(string suite, string nameAndParam)
+        internal TestCase(string executable, string suiteLine, string testCaseLine)
         {
-            string[] split = suite.Split(new[] { GoogleTestConstants.TypedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
-            Suite = split.Length > 0 ? split[0] : suite;
+            string[] split = suiteLine.Split(new[] { GoogleTestConstants.TypedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
+            Suite = split.Length > 0 ? split[0] : suiteLine;
             if (split.Length > 1)
             {
                 TypeParam = split[1];
                 TypeParam = TypeParam.Replace("class ", "");
             }
 
-            NameAndParam = nameAndParam;
+            NameAndParam = testCaseLine;
 
             int startOfParamInfo = NameAndParam.IndexOf(GoogleTestConstants.ParameterizedTestMarker);
             Name = startOfParamInfo > 0 ? NameAndParam.Substring(0, startOfParamInfo).Trim() : NameAndParam;
@@ -72,6 +74,40 @@ namespace GoogleTestAdapter.Model
                 int startOfParam = indexOfMarker + GoogleTestConstants.ParameterizedTestMarker.Length;
                 Param = NameAndParam.Substring(startOfParam, NameAndParam.Length - startOfParam).Trim();
             }
+
+            string fullName = Suite + "." + Name;
+            string displayName = Suite + "." + Name;
+            if (!string.IsNullOrEmpty(Param))
+            {
+                displayName += $" [{Param}]";
+            }
+            if (!string.IsNullOrEmpty(TypeParam))
+            {
+                displayName += $" [{TypeParam}]";
+            }
+
+            FullyQualifiedName = fullName;
+            DisplayName = displayName;
+            Source = executable;
+        }
+
+        internal void AddLocationInfo(List<TestCaseLocation> testCaseLocations, TestEnvironment testEnvironment)
+        {
+            foreach (string symbolName in GetTestMethodSignatures())
+            {
+                foreach (TestCaseLocation location in testCaseLocations)
+                {
+                    if (location.Symbol.Contains(symbolName))
+                    {
+                        CodeFilePath = location.Sourcefile;
+                        LineNumber = (int)location.Line;
+                        Traits.AddRange(GetTraits(DisplayName, location.Traits, testEnvironment));
+                        return;
+                    }
+                }
+            }
+
+            testEnvironment.LogWarning("Could not find source location for test " + FullyQualifiedName);
         }
 
         internal IEnumerable<string> GetTestMethodSignatures()
@@ -92,44 +128,6 @@ namespace GoogleTestAdapter.Model
         internal string GetTestsuiteName_CommandLineGenerator()
         {
             return FullyQualifiedName.Split('.')[0];
-        }
-
-        internal void ConfigureTestCase(string executable, List<TestCaseLocation> testCaseLocations, TestEnvironment testEnvironment)
-        {
-            string fullName = Suite + "." + Name;
-            string displayName = Suite + "." + Name;
-            if (!string.IsNullOrEmpty(Param))
-            {
-                displayName += $" [{Param}]";
-            }
-            if (!string.IsNullOrEmpty(TypeParam))
-            {
-                displayName += $" [{TypeParam}]";
-            }
-
-            foreach (string symbolName in GetTestMethodSignatures())
-            {
-                foreach (TestCaseLocation location in testCaseLocations)
-                {
-                    if (location.Symbol.Contains(symbolName))
-                    {
-                        FullyQualifiedName = fullName;
-                        ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
-                        Source = executable;
-                        DisplayName = displayName;
-                        CodeFilePath = location.Sourcefile;
-                        LineNumber = (int)location.Line;
-                        Traits.AddRange(GetTraits(DisplayName, location.Traits, testEnvironment));
-                        return;
-                    }
-                }
-            }
-
-            testEnvironment.LogWarning("Could not find source location for test " + fullName);
-            FullyQualifiedName = fullName;
-            ExecutorUri = new Uri(GoogleTestExecutor.ExecutorUriString);
-            Source = executable;
-            DisplayName = displayName;
         }
 
         private IEnumerable<string> GetTypedTestMethodSignatures()
