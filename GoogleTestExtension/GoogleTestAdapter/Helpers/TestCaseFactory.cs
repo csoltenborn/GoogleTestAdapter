@@ -6,17 +6,6 @@ using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Helpers
 {
-    /*
-    Simple tests: 
-        Suite=<test_case_name>
-        NameAndParam=<test_name>
-    Tests with fixture
-        Suite=<test_fixture>
-        NameAndParam=<test_name>
-    Parameterized case: 
-        Suite=[<prefix>/]<test_case_name>, 
-        NameAndParam=<test_name>/<parameter instantiation nr>  # GetParam() = <parameter instantiation>
-    */
     public class TestCaseFactory
     {
         private class TestCaseDescriptor
@@ -26,47 +15,17 @@ namespace GoogleTestAdapter.Helpers
             private string Param { get; }
             private string TypeParam { get; }
 
-            internal string DisplayName
-            {
-                get
-                {
-                    string displayName = Suite + "." + Name;
-                    if (!string.IsNullOrEmpty(TypeParam))
-                    {
-                        displayName += GetEnclosedTypeParam();
-                    }
-                    if (!string.IsNullOrEmpty(Param))
-                    {
-                        displayName += $" [{Param}]";
-                    }
-                    return displayName;
-                }
-            }
+            internal string FullyQualifiedName { get; }
+            internal string DisplayName { get; }
 
-            internal string FullyQualifiedName
+            internal TestCaseDescriptor(string suite, string name, string typeParam, string param, string fullyQualifiedName, string displayName)
             {
-                get
-                {
-                    return Suite + "." + Name;
-                }
-            }
-
-            internal TestCaseDescriptor(string suiteLine, string testCaseLine)
-            {
-                string[] split = suiteLine.Split(new[] { GoogleTestConstants.TypedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
-                Suite = split.Length > 0 ? split[0] : suiteLine;
-                if (split.Length > 1)
-                {
-                    TypeParam = split[1];
-                    TypeParam = TypeParam.Replace("class ", "");
-                }
-
-                split = testCaseLine.Split(new[] { GoogleTestConstants.ParameterizedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
-                Name = split.Length > 0 ? split[0] : testCaseLine;
-                if (split.Length > 1)
-                {
-                    Param = split[1];
-                }
+                Suite = suite;
+                Name = name;
+                TypeParam = typeParam;
+                Param = param;
+                DisplayName = displayName;
+                FullyQualifiedName = fullyQualifiedName;
             }
 
             internal IEnumerable<string> GetTestMethodSignatures()
@@ -135,6 +94,93 @@ namespace GoogleTestAdapter.Helpers
 
         }
 
+        private class ListTestsParser
+        {
+            private TestEnvironment TestEnvironment { get; }
+
+            internal ListTestsParser(TestEnvironment testEnvironment)
+            {
+                TestEnvironment = testEnvironment;
+            }
+
+            internal IList<TestCaseDescriptor> ParseListTestsOutput(string executable)
+            {
+                ProcessLauncher launcher = new ProcessLauncher(TestEnvironment, false);
+                List<string> consoleOutput = launcher.GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
+                return ParseConsoleOutput(consoleOutput);
+            }
+
+            private List<TestCaseDescriptor> ParseConsoleOutput(List<string> output)
+            {
+                List<TestCaseDescriptor> testCaseDescriptors = new List<TestCaseDescriptor>();
+                string currentSuite = "";
+                foreach (string line in output)
+                {
+                    string trimmedLine = line.Trim('.', '\n', '\r');
+                    if (trimmedLine.StartsWith("  "))
+                    {
+                        testCaseDescriptors.Add(
+                            CreateDescriptor(currentSuite, trimmedLine.Substring(2)));
+                    }
+                    else
+                    {
+                        currentSuite = trimmedLine;
+                    }
+                }
+
+                return testCaseDescriptors;
+            }
+
+            private TestCaseDescriptor CreateDescriptor(string suiteLine, string testCaseLine)
+            {
+                string[] split = suiteLine.Split(new[] { GoogleTestConstants.TypedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
+                string suite = split.Length > 0 ? split[0] : suiteLine;
+                string typeParam = null;
+                if (split.Length > 1)
+                {
+                    typeParam = split[1];
+                    typeParam = typeParam.Replace("class ", "");
+                }
+
+                split = testCaseLine.Split(new[] { GoogleTestConstants.ParameterizedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
+                string name = split.Length > 0 ? split[0] : testCaseLine;
+                string param = null;
+                if (split.Length > 1)
+                {
+                    param = split[1];
+                }
+
+                string fullyQualifiedName = $"{suite}.{name}";
+                string displayName = GetDisplayName(fullyQualifiedName, typeParam, param);
+
+                return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName);
+            }
+
+            private static string GetDisplayName(string fullyQalifiedName, string typeParam, string param)
+            {
+                string displayName = fullyQalifiedName;
+                if (!string.IsNullOrEmpty(typeParam))
+                {
+                    displayName += GetEnclosedTypeParam(typeParam);
+                }
+                if (!string.IsNullOrEmpty(param))
+                {
+                    displayName += $" [{param}]";
+                }
+
+                return displayName;
+            }
+
+            internal static string GetEnclosedTypeParam(string typeParam)
+            {
+                if (typeParam.EndsWith(">"))
+                {
+                    typeParam += " ";
+                }
+                return $"<{typeParam}>";
+            }
+
+        }
 
         private TestEnvironment TestEnvironment { get; }
         private string Executable { get; }
@@ -147,8 +193,7 @@ namespace GoogleTestAdapter.Helpers
 
         public IList<TestCase> CreateTestCases()
         {
-            List<string> consoleOutput = new ProcessLauncher(TestEnvironment, false).GetOutputOfCommand("", Executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
-            List<TestCaseDescriptor> testCaseDescriptors = ParseConsoleOutput(consoleOutput);
+            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(TestEnvironment).ParseListTestsOutput(Executable);
             List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors);
 
             List<TestCase> result = new List<TestCase>();
@@ -160,28 +205,7 @@ namespace GoogleTestAdapter.Helpers
             return result;
         }
 
-        private List<TestCaseDescriptor> ParseConsoleOutput(List<string> output)
-        {
-            List<TestCaseDescriptor> testCaseDescriptors = new List<TestCaseDescriptor>();
-            string currentSuite = "";
-            foreach (string line in output)
-            {
-                string trimmedLine = line.Trim('.', '\n', '\r');
-                if (trimmedLine.StartsWith("  "))
-                {
-                    testCaseDescriptors.Add(
-                        new TestCaseDescriptor(currentSuite, trimmedLine.Substring(2)));
-                }
-                else
-                {
-                    currentSuite = trimmedLine;
-                }
-            }
-
-            return testCaseDescriptors;
-        }
-
-        private List<TestCaseLocation> GetTestCaseLocations(List<TestCaseDescriptor> testCaseDescriptors)
+        private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors)
         {
             List<string> testMethodSignatures = new List<string>();
             foreach (TestCaseDescriptor descriptor in testCaseDescriptors)

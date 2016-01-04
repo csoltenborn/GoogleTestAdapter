@@ -35,7 +35,7 @@ namespace GoogleTestAdapterUiTests
                 internal static TestRun ParseTestResults(bool includeNotRunTests = false)
                 {
                     TestRun testResults = new TestRun();
-                    string tmp = GetOutput().ReplaceIgnoreCase(Path.GetDirectoryName(SolutionDirectory), "${SolutionDir}");
+                    string tmp = GetOutput().ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "${SolutionDir}");
                     testResults.testOutput = Regex.Replace(tmp, @"(========== Run test finished: [0-9]+ run )\([0-9:,]+\)( ==========)", "$1($${RunTime})$2");
 
                     foreach (TreeNode testGroupNode in GetTestCaseTree().Nodes)
@@ -110,7 +110,7 @@ namespace GoogleTestAdapterUiTests
                             testResult.Result += label.Text;
                             break;
                         case "errorMessageItem":
-                            testResult.Error += label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(SolutionDirectory), "$(SolutionDir)");
+                            testResult.Error += label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "$(SolutionDir)");
                             break;
                         case "sourceTextHeader":
                         case "noSourceAvailableToolTip":
@@ -211,7 +211,7 @@ namespace GoogleTestAdapterUiTests
 
             internal static void UnselectTestSettingsFile()
             {
-                SelectTestSettingsFile(NoSettingsFile);
+                SelectTestSettingsFile(noSettingsFile);
             }
 
             internal static void OpenTestExplorer()
@@ -289,12 +289,12 @@ namespace GoogleTestAdapterUiTests
         private const int WaitingTimeInMs = 500;
 
 
-        internal static readonly string UiTestsDirectory;
-        internal static readonly string UserSettingsFile;
+        internal static string UiTestsDirectory { get; }
+        internal static string UserSettingsFile { get; }
 
         private static readonly string vsixPath;
-        private static readonly string SolutionDirectory;
-        private static readonly string NoSettingsFile;
+        private static readonly string solutionFile;
+        private static readonly string noSettingsFile;
 
         private static bool keepDirtyVsInstance = keepDirtyInstanceInit;
 
@@ -312,15 +312,15 @@ namespace GoogleTestAdapterUiTests
             string basePath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
             vsixPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterVSIX\bin", debugOrRelease, @"GoogleTestAdapterVSIX.vsix");
-            SolutionDirectory = Path.Combine(basePath, @"SampleGoogleTestTests\SampleGoogleTestTests.sln");
+            solutionFile = Path.Combine(basePath, @"SampleGoogleTestTests\SampleGoogleTestTests.sln");
             UiTestsDirectory = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterUiTests");
             UserSettingsFile = Path.Combine(basePath, @"SampleGoogleTestTests\NonDeterministic.runsettings");
-            NoSettingsFile = Path.Combine(basePath, @"SampleGoogleTestTests\No.runsettings");
+            noSettingsFile = Path.Combine(basePath, @"SampleGoogleTestTests\No.runsettings");
         }
 
         internal static void SetupVanillaVsExperimentalInstance()
         {
-            string solutionDir = Path.GetDirectoryName(SolutionDirectory);
+            string solutionDir = Path.GetDirectoryName(solutionFile);
             string vsDir = Path.Combine(solutionDir, ".vs");
             if (Directory.Exists(vsDir))
             {
@@ -377,7 +377,7 @@ namespace GoogleTestAdapterUiTests
         internal static void OpenSolution()
         {
             mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
-            FillFileDialog("Open Project", SolutionDirectory);
+            FillFileDialog("Open Project", solutionFile);
         }
 
         internal static void CloseSolution()

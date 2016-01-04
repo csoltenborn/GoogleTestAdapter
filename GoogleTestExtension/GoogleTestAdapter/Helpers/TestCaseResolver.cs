@@ -50,16 +50,15 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(string binary, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
+        private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
+            string binary, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
         {
             DiaResolver resolver = new DiaResolver(binary);
             IEnumerable<SourceFileLocation> allTestMethodSymbols = resolver.GetFunctions(symbolFilterString);
             IEnumerable<SourceFileLocation> allTraitSymbols = resolver.GetFunctions("*" + TraitAppendix);
 
-            IEnumerable<TestCaseLocation> result =
-                allTestMethodSymbols.Where(
-                    nsfl => testMethodSignatures.Any(
-                        tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
+            IEnumerable<TestCaseLocation> result = allTestMethodSymbols
+                .Where(nsfl => testMethodSignatures.Any(tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
                 .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
                 .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
 
