@@ -238,7 +238,7 @@ namespace GoogleTestAdapter
             testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
 
          Assert.AreEqual("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>", testCase.DisplayName);
-         Assert.AreEqual(@"c:\users\cso\git\googletestadapter\samplegoogletesttests\tests\typeparameterizedtests.cpp", testCase.CodeFilePath);
+         Assert.IsTrue(testCase.CodeFilePath.EndsWith(@"samplegoogletesttests\tests\typeparameterizedtests.cpp"));
          Assert.AreEqual(44, testCase.LineNumber);
       }
 
