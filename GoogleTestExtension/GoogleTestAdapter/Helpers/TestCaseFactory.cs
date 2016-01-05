@@ -140,6 +140,7 @@ namespace GoogleTestAdapter.Helpers
                 {
                     typeParam = split[1];
                     typeParam = typeParam.Replace("class ", "");
+                    typeParam = typeParam.Replace("struct ", "");
                 }
 
                 split = testCaseLine.Split(new[] { GoogleTestConstants.ParameterizedTestMarker }, StringSplitOptions.RemoveEmptyEntries);

@@ -2,9 +2,9 @@
 #include <array>
 #include <list>
 
-class MyStrangeArray : public std::array<int, 3>
+struct MyStrangeArray : public std::array<int, 3>
 {
-public:  MyStrangeArray(std::initializer_list<int> init) : array({ 3,2,1 }) {}
+	MyStrangeArray(std::initializer_list<int> init) : array({ 3,2,1 }) {}
 };
 
 
