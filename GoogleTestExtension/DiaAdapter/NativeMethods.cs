@@ -84,12 +84,6 @@ namespace DiaAdapter
         [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
         private static extern IntPtr ImageRvaToVa(IntPtr pNtHeaders, IntPtr pBase, uint rva, IntPtr pLastRvaSection);
 
-        internal static void ReleaseCom(object obj)
-        {
-            Marshal.FinalReleaseComObject(obj);
-        }
-
-
         public class ImportsParser
         {
             private LOADED_IMAGE _loadedImage = new LOADED_IMAGE();

@@ -67,11 +67,6 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 
 Currently, the following issues are known to us - patches welcome!
 
-* Exceptions when debugging tests
-  * Symptoms: At the end of debugging a set of Google Test tests, Visual Studio catches exceptions of type `System.Runtime.InteropServices.InvalidComObjectException`, the messages of which contain "The object invoked has disconnected from its clients"
-  * Reason: This seems to be due to a bug in *te.processhost.managed.exe*, to which VS attaches a debugger when debugging tests
-  * Workaround 1: Select *Test/Test Settings/Default Processor Architecture/X64* - this lets VS use the older *vstest.executionengine.exe* which does not have this problem
-  * Workaround 2: In VS, mark the exception as "Do not catch" when it occurs
 * Not all test results are reported to VS
   * Symptoms: When running tests, GTA reports that n tests have been executed, but VS shows less test results in the test explorer
   * Reason: This seems to be due to inter process communication, but we do not have a lot of expertise in this area, and there is no official documentation of the VS test framework API

@@ -41,9 +41,9 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="msdia140typelib_clr0200">
-      <HintPath>..\lib\msdia140typelib_clr0200.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="msdia110to140typelib">
+      <HintPath>msdia110to140typelib\msdia110to140typelib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
