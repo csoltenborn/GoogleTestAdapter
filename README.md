@@ -63,20 +63,6 @@ Tests are run sequentially by default. If parallel test execution is enabled, th
 If you need to perform some setup or teardown tasks in addition to the setup/teardown methods of your test code, you can do so by configuring test setup/teardown batch files, to which you can pass several values such as solution directory or test directory for exclusive usage of the tests.
 
 
-### Known Issues
-
-Currently, the following issues are known to us - patches welcome!
-
-* Not all test results are reported to VS
-  * Symptoms: When running tests, GTA reports that n tests have been executed, but VS shows less test results in the test explorer
-  * Reason: This seems to be due to inter process communication, but we do not have a lot of expertise in this area, and there is no official documentation of the VS test framework API
-  * Workaround: Configure *Report waiting time* at *Tools/Options/Google Test Adapter/Advanced*
-* *Run tests after build* does not work
-  * Symptoms: Selecting the *Run tests after build* option does not or not always result in the tests being run after build completion. Instead, the following error message is printed to the test console: "The specified type member 'Stale' is not supported in LINQ to Entities. Only initializers, entity members, and entity navigation properties are supported."
-  * Reason: We have no idea
-  * Workaround: None so far
-  
-  
 ### Building, testing, debugging
 
 Google Test Adapter has been created using Visual Studio 2015 and Nuget, which are the only requirements for building GTA. Its main solution *GoogleTestExtension* consists of three projects:
