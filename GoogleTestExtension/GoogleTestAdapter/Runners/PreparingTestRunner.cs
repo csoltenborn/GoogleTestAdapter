@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
@@ -34,6 +35,8 @@ namespace GoogleTestAdapter.Runners
 
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 string testDirectory = Utils.GetTempDirectory();
                 userParameters = TestEnvironment.Options.GetUserParameters(SolutionDirectory, testDirectory, ThreadId);
 
@@ -46,6 +49,9 @@ namespace GoogleTestAdapter.Runners
                 batch = TestEnvironment.Options.GetBatchForTestTeardown(SolutionDirectory, testDirectory, ThreadId);
                 batch = batch == "" ? "" : SolutionDirectory + batch;
                 SafeRunBatch(TEST_TEARDOWN, SolutionDirectory, batch, isBeingDebugged);
+
+                stopwatch.Stop();
+                TestEnvironment.DebugInfo($"Thread {ThreadId} took {stopwatch.Elapsed}");
 
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
