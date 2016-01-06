@@ -97,10 +97,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiaAdapter\DiaAdapter.csproj">
-      <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
-      <Name>DiaAdapter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GoogleTestAdapter\GoogleTestAdapter.csproj">
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
       <Name>GoogleTestAdapter</Name>
