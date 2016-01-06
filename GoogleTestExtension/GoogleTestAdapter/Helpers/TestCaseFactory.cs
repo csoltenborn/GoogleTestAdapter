@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DiaAdapter;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Helpers
 {
-    public class TestCaseFactory
+    internal class TestCaseFactory
     {
+
         private class TestCaseDescriptor
         {
-            private string Suite { get; }
-            private string Name { get; }
-            private string Param { get; }
-            private string TypeParam { get; }
+            internal string Suite { get; }
+            internal string Name { get; }
+            internal string Param { get; }
+            internal string TypeParam { get; }
 
             internal string FullyQualifiedName { get; }
             internal string DisplayName { get; }
@@ -26,70 +29,6 @@ namespace GoogleTestAdapter.Helpers
                 Param = param;
                 DisplayName = displayName;
                 FullyQualifiedName = fullyQualifiedName;
-            }
-
-            internal IEnumerable<string> GetTestMethodSignatures()
-            {
-                if (TypeParam != null)
-                {
-                    return GetTypedTestMethodSignatures();
-                }
-                if (Param != null)
-                {
-                    return GetParameterizedTestMethodSignature().Yield();
-                }
-
-                return GetTestMethodSignature(Suite, Name).Yield();
-            }
-
-            private IEnumerable<string> GetTypedTestMethodSignatures()
-            {
-                List<string> result = new List<string>();
-
-                // remove instance number
-                string suite = Suite.Substring(0, Suite.LastIndexOf("/"));
-
-                // remove prefix
-                if (suite.Contains("/"))
-                {
-                    int index = suite.IndexOf("/");
-                    suite = suite.Substring(index + 1, suite.Length - index - 1);
-                }
-
-                string typeParam = GetEnclosedTypeParam();
-
-                // <testcase name>_<test name>_Test<type param value>::TestBody
-                result.Add(GetTestMethodSignature(suite, Name, typeParam));
-
-                // gtest_case_<testcase name>_::<test name><type param value>::TestBody
-                string signature =
-                    $"gtest_case_{suite}_::{Name}{typeParam}{GoogleTestConstants.TestBodySignature}";
-                result.Add(signature);
-
-                return result;
-            }
-
-            private string GetParameterizedTestMethodSignature()
-            {
-                // remove instance number
-                int index = Suite.IndexOf('/');
-                string suite = index < 0 ? Suite : Suite.Substring(index + 1);
-
-                index = Name.IndexOf('/');
-                string testName = index < 0 ? Name : Name.Substring(0, index);
-
-                return GetTestMethodSignature(suite, testName);
-            }
-
-            private string GetTestMethodSignature(string suite, string testCase, string typeParam = "")
-            {
-                return suite + "_" + testCase + "_Test" + typeParam + GoogleTestConstants.TestBodySignature;
-            }
-
-            private string GetEnclosedTypeParam()
-            {
-                string typeParam = TypeParam.EndsWith(">") ? TypeParam + " " : TypeParam;
-                return $"<{typeParam}>";
             }
 
         }
@@ -183,8 +122,162 @@ namespace GoogleTestAdapter.Helpers
 
         }
 
+        private class MethodSignatureCreator
+        {
+
+            internal IEnumerable<string> GetTestMethodSignatures(TestCaseDescriptor descriptor)
+            {
+                if (descriptor.TypeParam != null)
+                {
+                    return GetTypedTestMethodSignatures(descriptor);
+                }
+                if (descriptor.Param != null)
+                {
+                    return GetParameterizedTestMethodSignature(descriptor).Yield();
+                }
+
+                return GetTestMethodSignature(descriptor.Suite, descriptor.Name).Yield();
+            }
+
+            private IEnumerable<string> GetTypedTestMethodSignatures(TestCaseDescriptor descriptor)
+            {
+                List<string> result = new List<string>();
+
+                // remove instance number
+                string suite = descriptor.Suite.Substring(0, descriptor.Suite.LastIndexOf("/"));
+
+                // remove prefix
+                if (suite.Contains("/"))
+                {
+                    int index = suite.IndexOf("/");
+                    suite = suite.Substring(index + 1, suite.Length - index - 1);
+                }
+
+                string typeParam = ListTestsParser.GetEnclosedTypeParam(descriptor.TypeParam);
+
+                // <testcase name>_<test name>_Test<type param value>::TestBody
+                result.Add(GetTestMethodSignature(suite, descriptor.Name, typeParam));
+
+                // gtest_case_<testcase name>_::<test name><type param value>::TestBody
+                string signature =
+                    $"gtest_case_{suite}_::{descriptor.Name}{typeParam}{GoogleTestConstants.TestBodySignature}";
+                result.Add(signature);
+
+                return result;
+            }
+
+            private string GetParameterizedTestMethodSignature(TestCaseDescriptor descriptor)
+            {
+                // remove instance number
+                int index = descriptor.Suite.IndexOf('/');
+                string suite = index < 0 ? descriptor.Suite : descriptor.Suite.Substring(index + 1);
+
+                index = descriptor.Name.IndexOf('/');
+                string testName = index < 0 ? descriptor.Name : descriptor.Name.Substring(0, index);
+
+                return GetTestMethodSignature(suite, testName);
+            }
+
+            private string GetTestMethodSignature(string suite, string testCase, string typeParam = "")
+            {
+                return suite + "_" + testCase + "_Test" + typeParam + GoogleTestConstants.TestBodySignature;
+            }
+
+        }
+
+        private class TestCaseLocation : SourceFileLocation
+        {
+            internal List<Trait> Traits { get; } = new List<Trait>();
+
+            internal TestCaseLocation(string symbol, string sourceFile, uint line) : base(symbol, sourceFile, line)
+            {
+            }
+        }
+
+        private class TestCaseResolver
+        {
+
+            // see GTA_Traits.h
+            private const string TraitSeparator = "__GTA__";
+            private const string TraitAppendix = "_GTA_TRAIT";
+
+            internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
+            {
+                List<TestCaseLocation> testCaseLocationsFound =
+                    FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, errorMessages).ToList();
+
+                if (testCaseLocationsFound.Count == 0)
+                {
+                    NativeMethods.ImportsParser parser = new NativeMethods.ImportsParser(executable, errorMessages);
+                    List<string> imports = parser.Imports;
+
+                    string moduleDirectory = Path.GetDirectoryName(executable);
+
+                    foreach (string import in imports)
+                    {
+                        // ReSharper disable once AssignNullToNotNullAttribute
+                        string importedBinary = Path.Combine(moduleDirectory, import);
+                        if (File.Exists(importedBinary))
+                        {
+                            testCaseLocationsFound.AddRange(FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, errorMessages));
+                        }
+                    }
+                }
+                return testCaseLocationsFound;
+            }
+
+
+            private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
+                string binary, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
+            {
+                DiaResolver resolver = new DiaResolver(binary);
+                IEnumerable<SourceFileLocation> allTestMethodSymbols = resolver.GetFunctions(symbolFilterString);
+                IEnumerable<SourceFileLocation> allTraitSymbols = resolver.GetFunctions("*" + TraitAppendix);
+
+                IEnumerable<TestCaseLocation> result = allTestMethodSymbols
+                    .Where(nsfl => testMethodSignatures.Any(tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
+                    .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
+                    .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
+
+                resolver.Dispose();
+
+                return result;
+            }
+
+            private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
+            {
+                List<Trait> traits = GetTraits(location, allTraitSymbols);
+                TestCaseLocation testCaseLocation = new TestCaseLocation(location.Symbol, location.Sourcefile, location.Line);
+                testCaseLocation.Traits.AddRange(traits);
+                return testCaseLocation;
+            }
+
+            private List<Trait> GetTraits(SourceFileLocation nativeSymbol, IEnumerable<SourceFileLocation> allTraitSymbols)
+            {
+                List<Trait> traits = new List<Trait>();
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (SourceFileLocation nativeTraitSymbol in allTraitSymbols)
+                {
+                    int indexOfSerializedTrait = nativeTraitSymbol.Symbol.LastIndexOf("::", StringComparison.Ordinal) + "::".Length;
+                    string testClassSignature = nativeTraitSymbol.Symbol.Substring(0, indexOfSerializedTrait - "::".Length);
+                    if (nativeSymbol.Symbol.StartsWith(testClassSignature))
+                    {
+                        int lengthOfSerializedTrait = nativeTraitSymbol.Symbol.Length - indexOfSerializedTrait - TraitAppendix.Length;
+                        string serializedTrait = nativeTraitSymbol.Symbol.Substring(indexOfSerializedTrait, lengthOfSerializedTrait);
+                        string[] data = serializedTrait.Split(new[] { TraitSeparator }, StringSplitOptions.None);
+                        traits.Add(new Trait(data[0], data[1]));
+                    }
+                }
+
+                return traits;
+            }
+
+        }
+
+
         private TestEnvironment TestEnvironment { get; }
         private string Executable { get; }
+        private MethodSignatureCreator SignatureCreator { get; } = new MethodSignatureCreator();
 
         public TestCaseFactory(string executable, TestEnvironment testEnvironment)
         {
@@ -211,7 +304,7 @@ namespace GoogleTestAdapter.Helpers
             List<string> testMethodSignatures = new List<string>();
             foreach (TestCaseDescriptor descriptor in testCaseDescriptors)
             {
-                testMethodSignatures.AddRange(descriptor.GetTestMethodSignatures());
+                testMethodSignatures.AddRange(SignatureCreator.GetTestMethodSignatures(descriptor));
             }
 
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
@@ -231,7 +324,7 @@ namespace GoogleTestAdapter.Helpers
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, List<TestCaseLocation> testCaseLocations)
         {
             TestCaseLocation location = testCaseLocations.Where(
-                l => descriptor.GetTestMethodSignatures().Any(
+                l => SignatureCreator.GetTestMethodSignatures(descriptor).Any(
                     s => l.Symbol.Contains(s)))
                 .FirstOrDefault();
 
