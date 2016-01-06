@@ -95,14 +95,17 @@ namespace GoogleTestAdapterUiTests
         {
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             foreach(var folder in new[]{ VersionAndSuffix, Suffix })
-                yield return Path.Combine(localAppData, "Microsoft", "VisualStudio", folder);
+                yield return Path.Combine(localAppData, @"Microsoft\VisualStudio", folder);
         }
 
         private IEnumerable<string> GetVsHkcuKeys()
         {
-            string path = Path.Combine("SOFTWARE", "Microsoft", "VisualStudio", VersionAndSuffix);
+            string path = Path.Combine(@"SOFTWARE\Microsoft\VisualStudio", VersionAndSuffix);
             foreach (var additionalSuffix in new[] { "", "_Config", "_Remote" })
                 yield return path + additionalSuffix;
+
+            yield return Path.Combine(@"SOFTWARE\Microsoft\VSCommon", Suffix);
+            yield return Path.Combine(@"SOFTWARE\Microsoft\VsHub\ServiceModules\Settings\PerHubName", Suffix);
         }
     }
 }

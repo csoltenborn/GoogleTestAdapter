@@ -7,6 +7,7 @@ using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.VS.Framework;
 using GoogleTestAdapter.VS.Helpers;
 using GoogleTestAdapter.VS.Settings;
+using System;
 
 namespace GoogleTestAdapter.VS
 {
@@ -42,8 +43,16 @@ namespace GoogleTestAdapter.VS
 
             new DebugHelper(TestEnvironment).CheckDebugModeForDiscoveryCode();
 
-            VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null, TestEnvironment);
-            Discoverer.DiscoverTests(executables, loggerAdapter, reporter);
+            try
+            {
+                VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null, TestEnvironment);
+                Discoverer.DiscoverTests(executables, reporter);
+            }
+            catch (Exception e)
+            {
+                TestEnvironment.LogError("Exception while discovering tests: " + e);
+            }
+
         }
 
     }

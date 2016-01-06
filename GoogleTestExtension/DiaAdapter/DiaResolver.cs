@@ -44,7 +44,6 @@ namespace DiaAdapter
         private static readonly Guid Dia140 = new Guid("e6756135-1e65-4d17-8576-610761398c3c");
         private static readonly Guid Dia120 = new Guid("3bfcea48-620f-4b6b-81f7-b9af75454c7d");
         private static readonly Guid Dia110 = new Guid("761D3BCD-1304-41D5-94E8-EAC54E4AC172");
-        private const uint REGDB_E_CLASSNOTREG = 0x80040154;
 
         private string Binary { get; }
 
@@ -62,10 +61,8 @@ namespace DiaAdapter
                 DiaDataSource = (IDiaDataSource)System.Activator.CreateInstance(comType);
                 return true;
             }
-            catch (COMException ex)
+            catch (Exception)
             {
-                if((uint)ex.HResult != REGDB_E_CLASSNOTREG)
-                    ErrorMessages.Add(ex.ToString());
                 return false;
             }
         }
@@ -76,7 +73,7 @@ namespace DiaAdapter
 
             if (!TryCreateDiaInstance(Dia140) && !TryCreateDiaInstance(Dia120) && !TryCreateDiaInstance(Dia110))
             {
-                ErrorMessages.Add("Couldn't find any MSDIA implementation");
+                ErrorMessages.Add("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
                 return;
             }
 

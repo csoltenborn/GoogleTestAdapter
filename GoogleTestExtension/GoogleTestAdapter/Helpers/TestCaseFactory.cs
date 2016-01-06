@@ -239,6 +239,7 @@ namespace GoogleTestAdapter.Helpers
                     .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
                     .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
 
+                errorMessages.AddRange(resolver.ErrorMessages);
                 resolver.Dispose();
 
                 return result;

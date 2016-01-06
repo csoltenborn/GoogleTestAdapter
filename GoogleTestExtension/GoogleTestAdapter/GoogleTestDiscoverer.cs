@@ -19,7 +19,7 @@ namespace GoogleTestAdapter
             TestEnvironment = testEnviroment;
         }
 
-        public void DiscoverTests(IEnumerable<string> executables, ILogger logger, ITestFrameworkReporter reporter)
+        public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             foreach (string executable in googleTestExecutables)
