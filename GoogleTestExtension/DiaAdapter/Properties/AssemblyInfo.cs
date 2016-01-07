@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Encapsulation of the Dia DLL")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
-[assembly: AssemblyProduct("GoogleTestAdapter")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyProduct("DiaAdapter")]
+[assembly: AssemblyCopyright("Copyright © 2015, 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

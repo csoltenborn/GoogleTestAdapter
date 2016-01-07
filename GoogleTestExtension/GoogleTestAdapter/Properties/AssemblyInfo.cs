@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NewGoogleTestAdapter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("GoogleTestAdapter")]
+[assembly: AssemblyDescription("Adds support for the C++ unit testing framework Google Tests")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NewGoogleTestAdapter")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
+[assembly: AssemblyProduct("GoogleTestAdapter")]
+[assembly: AssemblyCopyright("Copyright © 2015, 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
