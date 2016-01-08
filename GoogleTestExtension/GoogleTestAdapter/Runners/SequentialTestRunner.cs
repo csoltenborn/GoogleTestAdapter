@@ -39,7 +39,13 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-                RunTestsFromExecutable(executable, allTestCasesAsArray, groupedTestCases[executable], userParameters, isBeingDebugged, debuggedLauncher);
+                RunTestsFromExecutable(
+                    executable,
+                    allTestCasesAsArray.Where(tc => tc.Source == executable),
+                    groupedTestCases[executable],
+                    userParameters,
+                    isBeingDebugged,
+                    debuggedLauncher);
             }
         }
 
