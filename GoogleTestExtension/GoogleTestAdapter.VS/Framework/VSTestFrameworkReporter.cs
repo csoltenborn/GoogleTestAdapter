@@ -68,6 +68,7 @@ namespace GoogleTestAdapter.VS.Helpers
             Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = testResult.ToVsTestResult();
             FrameworkHandle.RecordResult(result);
             FrameworkHandle.RecordEnd((Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase)DataConversionExtensions.ToVsTestCase(testResult.TestCase), result.Outcome);
+            TestEnvironment.DebugInfo($"Reported result of test '{result.TestCase.DisplayName}' with outcome '{result.Outcome}' to the VS testframework");
 
             NrOfReportedResults++;
             if (NrOfTestResultsBeforeWaiting != 0 && NrOfReportedResults % NrOfTestResultsBeforeWaiting == 0)
