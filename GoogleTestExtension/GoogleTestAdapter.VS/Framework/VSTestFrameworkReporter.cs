@@ -29,33 +29,33 @@ namespace GoogleTestAdapter.VS.Helpers
         }
 
 
-        public void ReportTestsFound(IEnumerable<GoogleTestAdapter.Model.TestCase> testCases)
+        public void ReportTestsFound(IEnumerable<Model.TestCase> testCases)
         {
             lock (Lock)
             {
-                foreach (GoogleTestAdapter.Model.TestCase testCase in testCases)
+                foreach (Model.TestCase testCase in testCases)
                 {
-                    Sink.SendTestCase((Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase)DataConversionExtensions.ToVsTestCase(testCase));
+                    Sink.SendTestCase(DataConversionExtensions.ToVsTestCase(testCase));
                 }
             }
         }
 
-        public void ReportTestsStarted(IEnumerable<GoogleTestAdapter.Model.TestCase> testCases)
+        public void ReportTestsStarted(IEnumerable<Model.TestCase> testCases)
         {
             lock (Lock)
             {
-                foreach (GoogleTestAdapter.Model.TestCase testCase in testCases)
+                foreach (Model.TestCase testCase in testCases)
                 {
-                    FrameworkHandle.RecordStart((Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase)DataConversionExtensions.ToVsTestCase(testCase));
+                    FrameworkHandle.RecordStart(DataConversionExtensions.ToVsTestCase(testCase));
                 }
             }
         }
 
-        public void ReportTestResults(IEnumerable<GoogleTestAdapter.Model.TestResult> testResults)
+        public void ReportTestResults(IEnumerable<Model.TestResult> testResults)
         {
             lock (Lock)
             {
-                foreach (GoogleTestAdapter.Model.TestResult testResult in testResults)
+                foreach (Model.TestResult testResult in testResults)
                 {
                     ReportTestResult(testResult);
                 }
@@ -63,11 +63,11 @@ namespace GoogleTestAdapter.VS.Helpers
         }
 
 
-        private void ReportTestResult(GoogleTestAdapter.Model.TestResult testResult)
+        private void ReportTestResult(Model.TestResult testResult)
         {
             Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = testResult.ToVsTestResult();
             FrameworkHandle.RecordResult(result);
-            FrameworkHandle.RecordEnd((Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase)DataConversionExtensions.ToVsTestCase(testResult.TestCase), result.Outcome);
+            FrameworkHandle.RecordEnd(DataConversionExtensions.ToVsTestCase(testResult.TestCase), result.Outcome);
             TestEnvironment.DebugInfo($"Reported result of test '{result.TestCase.DisplayName}' with outcome '{result.Outcome}' to the VS testframework");
 
             NrOfReportedResults++;
