@@ -1,6 +1,15 @@
 ﻿namespace GoogleTestAdapter.Helpers
 {
 
+    /*
+    To add a new option, make the following changes:
+    - add (nullable!) property to IXMLOptions
+	- add property and according constants to class Options
+    - handle property in method XmlOptionsExtension.GetUnsetValuesFrom()
+    - handle property in method GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
+    - handle property serialization in class GoogleTestAdapter.VS.Settings.RunSettings
+    - add Options UI integration to one of the classes in GoogleTestAdapterVSIX/OptionsPages
+    */
     public interface IXmlOptions
     {
         string AdditionalTestExecutionParam { get; set; }

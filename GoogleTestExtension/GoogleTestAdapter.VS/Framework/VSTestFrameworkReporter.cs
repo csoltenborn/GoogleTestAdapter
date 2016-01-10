@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.VS.Helpers
         {
             Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = testResult.ToVsTestResult();
             FrameworkHandle.RecordResult(result);
-            FrameworkHandle.RecordEnd(DataConversionExtensions.ToVsTestCase(testResult.TestCase), result.Outcome);
+            FrameworkHandle.RecordEnd(result.TestCase, result.Outcome);
 
             NrOfReportedResults++;
             if (NrOfTestResultsBeforeWaiting != 0 && NrOfReportedResults % NrOfTestResultsBeforeWaiting == 0)
