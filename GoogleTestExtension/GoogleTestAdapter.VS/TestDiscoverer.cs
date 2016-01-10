@@ -11,7 +11,7 @@ using System;
 
 namespace GoogleTestAdapter.VS
 {
-    [DefaultExecutorUri(GoogleTestExecutor.ExecutorUriString)]
+    [DefaultExecutorUri(TestExecutor.ExecutorUriString)]
     [FileExtension(".exe")]
     public class TestDiscoverer : ITestDiscoverer
     {

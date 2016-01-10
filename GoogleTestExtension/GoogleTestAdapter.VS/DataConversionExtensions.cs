@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.VS
         {
             Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase vsTestCase =
                 new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase(
-                    testCase.FullyQualifiedName, testCase.ExecutorUri, testCase.Source);
+                    testCase.FullyQualifiedName, TestExecutor.ExecutorUri, testCase.Source);
             vsTestCase.DisplayName = testCase.DisplayName;
             vsTestCase.CodeFilePath = testCase.CodeFilePath;
             vsTestCase.LineNumber = testCase.LineNumber;

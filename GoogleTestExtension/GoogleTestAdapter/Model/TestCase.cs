@@ -5,7 +5,6 @@ namespace GoogleTestAdapter.Model
 {
     public class TestCase
     {
-        public Uri ExecutorUri { get { return GoogleTestExecutor.ExecutorUri; } }
         public string Source { get; }
 
         public string FullyQualifiedName { get; }

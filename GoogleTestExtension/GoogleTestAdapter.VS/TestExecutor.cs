@@ -13,9 +13,12 @@ using GoogleTestAdapter.VS.Settings;
 namespace GoogleTestAdapter.VS
 {
 
-    [ExtensionUri(GoogleTestExecutor.ExecutorUriString)]
+    [ExtensionUri(ExecutorUriString)]
     public class TestExecutor : ITestExecutor
     {
+        public const string ExecutorUriString = "executor://GoogleTestRunner/v1";
+        public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
+
         private TestEnvironment TestEnvironment { get; set; }
 
         private bool Canceled { get; set; } = false;
