@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.VS
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
-                IEnumerable<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables =
+                IEnumerable<Model.TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(executables);
 
                 DoRunTests(allTestCasesInExecutables, allTestCasesInExecutables, runContext, frameworkHandle);
@@ -53,10 +53,10 @@ namespace GoogleTestAdapter.VS
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
-                IEnumerable<GoogleTestAdapter.Model.TestCase> allTestCasesInExecutables =
+                IEnumerable<Model.TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
-                IEnumerable<GoogleTestAdapter.Model.TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
+                IEnumerable<Model.TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
                 DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
             }
             catch (Exception e)

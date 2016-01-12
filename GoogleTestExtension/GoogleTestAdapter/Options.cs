@@ -59,9 +59,9 @@ namespace GoogleTestAdapter
                 return "";
             }
 
-            string result = theString.Replace(Options.TestDirPlaceholder, testDirectory);
-            result = result.Replace(Options.ThreadIdPlaceholder, threadId.ToString());
-            result = result.Replace(Options.SolutionDirPlaceholder, solutionDirectory);
+            string result = theString.Replace(TestDirPlaceholder, testDirectory);
+            result = result.Replace(ThreadIdPlaceholder, threadId.ToString());
+            result = result.Replace(SolutionDirPlaceholder, solutionDirectory);
             return result;
         }
 
@@ -71,14 +71,19 @@ namespace GoogleTestAdapter
         public const string PageParallelizationName = "Parallelization";
         public const string PageAdvancedName = "Advanced";
 
-        public const string SolutionDirPlaceholder = "$(SolutionDir)";
+        private const string SolutionDirPlaceholder = "$(SolutionDir)";
         public const string TestDirPlaceholder = "$(TestDir)";
         public const string ThreadIdPlaceholder = "$(ThreadId)";
+        public const string ExecutablePlaceholder = "$(Executable)";
 
-        private const string DescriptionOfPlaceholders =
-           TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
-           ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
-           SolutionDirPlaceholder + " - directory of the solution";
+        private const string DescriptionOfPlaceholdersForBatches =
+           TestDirPlaceholder + " - path of a directory which can be used by the tests" +
+           ThreadIdPlaceholder + "\n - id of thread executing the current tests" +
+           SolutionDirPlaceholder + "\n - directory of the solution";
+
+        private const string DescriptionOfPlaceholdersForExecutables =
+            DescriptionOfPlaceholdersForBatches +
+            ExecutablePlaceholder + "\n - executable containing the tests";
 
         #region GeneralOptionsPage
 
@@ -212,7 +217,7 @@ namespace GoogleTestAdapter
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable. Placeholders:\n"
-            + DescriptionOfPlaceholders;
+            + DescriptionOfPlaceholdersForExecutables;
 
         public virtual string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
@@ -251,7 +256,7 @@ namespace GoogleTestAdapter
         public const string OptionBatchForTestSetupDefaultValue = "";
         public const string OptionBatchForTestSetupDescription =
             "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
-            + DescriptionOfPlaceholders;
+            + DescriptionOfPlaceholdersForBatches;
 
         public virtual string BatchForTestSetup => XmlOptions.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
@@ -260,7 +265,7 @@ namespace GoogleTestAdapter
         public const string OptionBatchForTestTeardownDefaultValue = "";
         public const string OptionBatchForTestTeardownDescription =
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
-            + DescriptionOfPlaceholders;
+            + DescriptionOfPlaceholdersForBatches;
 
         public virtual string BatchForTestTeardown => XmlOptions.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
