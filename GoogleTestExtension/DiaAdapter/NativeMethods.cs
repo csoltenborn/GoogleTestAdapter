@@ -68,6 +68,11 @@ namespace DiaAdapter
         internal uint AddressSection;
         internal uint AddressOffset;
         internal uint Length;
+
+        public override string ToString()
+        {
+            return Symbol;
+        }
     }
 
     unsafe public static class NativeMethods

@@ -16,6 +16,11 @@
             Sourcefile = sourceFile;
             Line = line;
         }
+
+        public override string ToString()
+        {
+            return Symbol;
+        }
     }
 
 }

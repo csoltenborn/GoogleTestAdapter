@@ -29,6 +29,11 @@ namespace GoogleTestAdapter.Model
             return FullyQualifiedName.Split('.')[0];
         }
 
+        public override string ToString()
+        {
+            return DisplayName;
+        }
+
     }
 
 }

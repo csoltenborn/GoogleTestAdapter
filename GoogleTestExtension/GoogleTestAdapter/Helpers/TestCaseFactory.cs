@@ -31,6 +31,11 @@ namespace GoogleTestAdapter.Helpers
                 FullyQualifiedName = fullyQualifiedName;
             }
 
+            public override string ToString()
+            {
+                return DisplayName;
+            }
+
         }
 
         private class ListTestsParser

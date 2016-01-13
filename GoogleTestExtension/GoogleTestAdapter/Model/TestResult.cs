@@ -20,6 +20,11 @@ namespace GoogleTestAdapter.Model
             TestCase = testCase;
         }
 
+        public override string ToString()
+        {
+            return $"{DisplayName} ({Outcome})";
+        }
+
     }
 
 }
