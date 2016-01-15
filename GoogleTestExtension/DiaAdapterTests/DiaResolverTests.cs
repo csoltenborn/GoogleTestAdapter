@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Dia
         public void GetFunctions_SampleTests_TestFunctionsMatch_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(SampleTests, "*_GTA_TRAIT", 18, 0, false);
+            DoResolveTest(SampleTests, "*_GTA_TRAIT", 54, 0, false);
         }
 
         [TestMethod]

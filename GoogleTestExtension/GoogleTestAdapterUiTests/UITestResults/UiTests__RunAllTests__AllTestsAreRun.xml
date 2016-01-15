@@ -6,8 +6,24 @@
       <Name>Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source>typeparameterizedtests.cpp line 44</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:45
+      <Source>typeparameterizedtests.cpp line 53</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:54
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.ThreeTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 61</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:62
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/0.TwoTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 57</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:58
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
@@ -179,8 +195,8 @@ Which is: 23</Error>
       <Name>PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/0.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source>typeparameterizedtests.cpp line 66</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:70
+      <Source>typeparameterizedtests.cpp line 83</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:87
 Value of: sum
   Actual: '\x82' (-126)
 Expected: 130</Error>
@@ -221,24 +237,72 @@ SEH exception with code 0xc0000005 thrown in the test body.</Error>
       <Name>TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source>typeparameterizedtests.cpp line 27</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:28
+      <Source>typeparameterizedtests.cpp line 28</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:29
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
+      <FullyQualifiedName>TypedTests/0.ThreeTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 36</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:37
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
+      <FullyQualifiedName>TypedTests/0.TwoTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 32</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:33
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source>typeparameterizedtests.cpp line 27</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:28
+      <Source>typeparameterizedtests.cpp line 28</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:29
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
+      <FullyQualifiedName>TypedTests/1.ThreeTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 36</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:37
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
+      <FullyQualifiedName>TypedTests/1.TwoTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 32</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:33
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed -  </Result>
-      <Source>typeparameterizedtests.cpp line 44</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:45
+      <Source>typeparameterizedtests.cpp line 53</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:54
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
+      <FullyQualifiedName>Vec/TypeParameterizedTests/0.ThreeTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 61</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:62
+Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+    </TestCase>
+    <TestCase>
+      <Name>Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
+      <FullyQualifiedName>Vec/TypeParameterizedTests/0.TwoTraits</FullyQualifiedName>
+      <Result>Test Failed -  </Result>
+      <Source>typeparameterizedtests.cpp line 57</Source>
+      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:58
 Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
     </TestCase>
   </TestGroup>
@@ -269,19 +333,31 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Name>Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 37</Source>
+      <Source>typeparameterizedtests.cpp line 46</Source>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 44</Source>
+      <Source>typeparameterizedtests.cpp line 53</Source>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 37</Source>
+      <Source>typeparameterizedtests.cpp line 46</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/1.ThreeTraits</FullyQualifiedName>
+      <Result>Test Passed -  </Result>
+      <Source>typeparameterizedtests.cpp line 61</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;</Name>
+      <FullyQualifiedName>Arr/TypeParameterizedTests/1.TwoTraits</FullyQualifiedName>
+      <Result>Test Passed -  </Result>
+      <Source>typeparameterizedtests.cpp line 57</Source>
     </TestCase>
     <TestCase>
       <Name>CommandArgs.TestDirectoryIsSet</Name>
@@ -333,13 +409,13 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Name>PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/1.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 66</Source>
+      <Source>typeparameterizedtests.cpp line 83</Source>
     </TestCase>
     <TestCase>
       <Name>PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/2.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 66</Source>
+      <Source>typeparameterizedtests.cpp line 83</Source>
     </TestCase>
     <TestCase>
       <Name>TestMath.AddPasses</Name>
@@ -385,39 +461,51 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Name>TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 20</Source>
+      <Source>typeparameterizedtests.cpp line 21</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 20</Source>
+      <Source>typeparameterizedtests.cpp line 21</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>TypedTests/2.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 27</Source>
+      <Source>typeparameterizedtests.cpp line 28</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/2.CanIterate&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>TypedTests/2.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 20</Source>
+      <Source>typeparameterizedtests.cpp line 21</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;</Name>
+      <FullyQualifiedName>TypedTests/2.ThreeTraits</FullyQualifiedName>
+      <Result>Test Passed -  </Result>
+      <Source>typeparameterizedtests.cpp line 36</Source>
+    </TestCase>
+    <TestCase>
+      <Name>TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;</Name>
+      <FullyQualifiedName>TypedTests/2.TwoTraits</FullyQualifiedName>
+      <Result>Test Passed -  </Result>
+      <Source>typeparameterizedtests.cpp line 32</Source>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 37</Source>
+      <Source>typeparameterizedtests.cpp line 46</Source>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
 Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
-Found 49 tests in executable ${SolutionDir}\Debug\Tests.exe
-Running 53 tests...
+Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
+Running 65 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
-========== Run test finished: 53 run (${RunTime}) ==========
+========== Run test finished: 65 run (${RunTime}) ==========
 </TestOutput>
 </TestRun>

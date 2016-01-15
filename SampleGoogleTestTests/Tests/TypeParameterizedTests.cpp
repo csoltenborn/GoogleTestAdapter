@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include <array>
 #include <list>
+#include "../../GoogleTestExtension/GoogleTestAdapter/Resources/GTA_Traits.h"
 
 struct MyStrangeArray : public std::array<int, 3>
 {
@@ -17,7 +18,7 @@ public:
 typedef ::testing::Types<std::vector<int>, std::array<int, 3>, MyStrangeArray> IntContainerTypes;
 TYPED_TEST_CASE(TypedTests, IntContainerTypes);
 
-TYPED_TEST(TypedTests, CanIterate) {
+TYPED_TEST_TRAITS1(TypedTests, CanIterate, Author, JOG) {
 	int sum = 0;
 	for (int value : this->container)
 		sum += value;
@@ -28,13 +29,21 @@ TYPED_TEST(TypedTests, CanDefeatMath) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
+TYPED_TEST_TRAITS2(TypedTests, TwoTraits, Author, IBM, Category, Integration) {
+	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
+}
+
+TYPED_TEST_TRAITS3(TypedTests, ThreeTraits, Author, IBM, Category, Integration, Class, Simple) {
+	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
+}
+
 
 template< typename int_container_type >
 class TypeParameterizedTests : public TypedTests<int_container_type> {};
 
 TYPED_TEST_CASE_P(TypeParameterizedTests);
 
-TYPED_TEST_P(TypeParameterizedTests, CanIterate) {
+TYPED_TEST_P_TRAITS1(TypeParameterizedTests, CanIterate, Author, CSO) {
 	int sum = 0;
 	for (int value : this->container)
 		sum += value;
@@ -45,7 +54,15 @@ TYPED_TEST_P(TypeParameterizedTests, CanDefeatMath) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-REGISTER_TYPED_TEST_CASE_P(TypeParameterizedTests, CanIterate, CanDefeatMath);
+TYPED_TEST_P_TRAITS2(TypeParameterizedTests, TwoTraits, Author, HAL, Category, Unit) {
+	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
+}
+
+TYPED_TEST_P_TRAITS3(TypeParameterizedTests, ThreeTraits, Author, HAL, Category, Unit, Class, Cake) {
+	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
+}
+
+REGISTER_TYPED_TEST_CASE_P(TypeParameterizedTests, CanIterate, CanDefeatMath, TwoTraits, ThreeTraits);
 
 typedef ::testing::Types<std::array<int, 3>, MyStrangeArray> IntArrayTypes;
 INSTANTIATE_TYPED_TEST_CASE_P(Vec, TypeParameterizedTests, std::vector<int>);

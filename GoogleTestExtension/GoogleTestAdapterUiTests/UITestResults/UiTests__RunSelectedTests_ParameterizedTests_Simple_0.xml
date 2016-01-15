@@ -19,7 +19,7 @@ Expected: ""</Error>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 49 tests in executable ${SolutionDir}\Debug\Tests.exe
+Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
 Running 1 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.

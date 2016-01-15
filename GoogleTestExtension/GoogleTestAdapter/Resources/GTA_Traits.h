@@ -204,3 +204,137 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
 #define TEST_F_TRAITS3(test_fixture, test_name, name1, value1, name2, value2, name3, value3)\
   GTEST_TEST_TRAITS3_(test_fixture, test_name, name1, value1, name2, value2, name3, value3, test_fixture, \
               ::testing::internal::GetTypeId<test_fixture>())
+
+# define TYPED_TEST_TRAITS1(CaseName, TestName, name1, value1) \
+  template <typename gtest_TypeParam_> \
+  class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \
+      : public CaseName<gtest_TypeParam_> { \
+   public:\
+     GTEST_TEST_CLASS_NAME_(CaseName, TestName)() { GTA_TRAIT_(name1, value1)(); }\
+   private: \
+    typedef CaseName<gtest_TypeParam_> TestFixture; \
+    typedef gtest_TypeParam_ TypeParam; \
+    virtual void TestBody(); \
+    static void GTA_TRAIT_(name1, value1)() {} \
+  }; \
+  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \
+      ::testing::internal::TypeParameterizedTest< \
+          CaseName, \
+          ::testing::internal::TemplateSel< \
+              GTEST_TEST_CLASS_NAME_(CaseName, TestName)>, \
+          GTEST_TYPE_PARAMS_(CaseName)>::Register(\
+              "", #CaseName, #TestName, 0); \
+  template <typename gtest_TypeParam_> \
+  void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
+
+
+# define TYPED_TEST_TRAITS2(CaseName, TestName, name1, value1, name2, value2) \
+  template <typename gtest_TypeParam_> \
+  class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \
+      : public CaseName<gtest_TypeParam_> { \
+   public:\
+     GTEST_TEST_CLASS_NAME_(CaseName, TestName)() { GTA_TRAIT_(name1, value1)(); GTA_TRAIT_(name2, value2)(); }\
+   private: \
+    typedef CaseName<gtest_TypeParam_> TestFixture; \
+    typedef gtest_TypeParam_ TypeParam; \
+    virtual void TestBody(); \
+    static void GTA_TRAIT_(name1, value1)() {} \
+    static void GTA_TRAIT_(name2, value2)() {} \
+  }; \
+  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \
+      ::testing::internal::TypeParameterizedTest< \
+          CaseName, \
+          ::testing::internal::TemplateSel< \
+              GTEST_TEST_CLASS_NAME_(CaseName, TestName)>, \
+          GTEST_TYPE_PARAMS_(CaseName)>::Register(\
+              "", #CaseName, #TestName, 0); \
+  template <typename gtest_TypeParam_> \
+  void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
+
+
+# define TYPED_TEST_TRAITS3(CaseName, TestName, name1, value1, name2, value2, name3, value3) \
+  template <typename gtest_TypeParam_> \
+  class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \
+      : public CaseName<gtest_TypeParam_> { \
+   public:\
+     GTEST_TEST_CLASS_NAME_(CaseName, TestName)() { GTA_TRAIT_(name1, value1)(); GTA_TRAIT_(name2, value2)(); GTA_TRAIT_(name3, value3)(); }\
+   private: \
+    typedef CaseName<gtest_TypeParam_> TestFixture; \
+    typedef gtest_TypeParam_ TypeParam; \
+    virtual void TestBody(); \
+    static void GTA_TRAIT_(name1, value1)() {} \
+    static void GTA_TRAIT_(name2, value2)() {} \
+    static void GTA_TRAIT_(name3, value3)() {} \
+  }; \
+  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \
+      ::testing::internal::TypeParameterizedTest< \
+          CaseName, \
+          ::testing::internal::TemplateSel< \
+              GTEST_TEST_CLASS_NAME_(CaseName, TestName)>, \
+          GTEST_TYPE_PARAMS_(CaseName)>::Register(\
+              "", #CaseName, #TestName, 0); \
+  template <typename gtest_TypeParam_> \
+  void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
+
+
+# define TYPED_TEST_P_TRAITS1(CaseName, TestName, name1, value1) \
+  namespace GTEST_CASE_NAMESPACE_(CaseName) { \
+  template <typename gtest_TypeParam_> \
+  class TestName : public CaseName<gtest_TypeParam_> { \
+   public:\
+     TestName() { GTA_TRAIT_(name1, value1)(); }\
+   private: \
+    typedef CaseName<gtest_TypeParam_> TestFixture; \
+    typedef gtest_TypeParam_ TypeParam; \
+    virtual void TestBody(); \
+    static void GTA_TRAIT_(name1, value1)() {} \
+  }; \
+  static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \
+      GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\
+          __FILE__, __LINE__, #CaseName, #TestName); \
+  } \
+  template <typename gtest_TypeParam_> \
+  void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
+
+
+# define TYPED_TEST_P_TRAITS2(CaseName, TestName, name1, value1, name2, value2) \
+  namespace GTEST_CASE_NAMESPACE_(CaseName) { \
+  template <typename gtest_TypeParam_> \
+  class TestName : public CaseName<gtest_TypeParam_> { \
+   public:\
+     TestName() { GTA_TRAIT_(name1, value1)(); GTA_TRAIT_(name2, value2)(); }\
+   private: \
+    typedef CaseName<gtest_TypeParam_> TestFixture; \
+    typedef gtest_TypeParam_ TypeParam; \
+    virtual void TestBody(); \
+    static void GTA_TRAIT_(name1, value1)() {} \
+    static void GTA_TRAIT_(name2, value2)() {} \
+  }; \
+  static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \
+      GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\
+          __FILE__, __LINE__, #CaseName, #TestName); \
+  } \
+  template <typename gtest_TypeParam_> \
+  void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
+
+
+# define TYPED_TEST_P_TRAITS3(CaseName, TestName, name1, value1, name2, value2, name3, value3) \
+  namespace GTEST_CASE_NAMESPACE_(CaseName) { \
+  template <typename gtest_TypeParam_> \
+  class TestName : public CaseName<gtest_TypeParam_> { \
+   public:\
+     TestName() { GTA_TRAIT_(name1, value1)(); GTA_TRAIT_(name2, value2)(); GTA_TRAIT_(name3, value3)(); }\
+   private: \
+    typedef CaseName<gtest_TypeParam_> TestFixture; \
+    typedef gtest_TypeParam_ TypeParam; \
+    virtual void TestBody(); \
+    static void GTA_TRAIT_(name1, value1)() {} \
+    static void GTA_TRAIT_(name2, value2)() {} \
+    static void GTA_TRAIT_(name3, value3)() {} \
+  }; \
+  static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \
+      GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\
+          __FILE__, __LINE__, #CaseName, #TestName); \
+  } \
+  template <typename gtest_TypeParam_> \
+  void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()

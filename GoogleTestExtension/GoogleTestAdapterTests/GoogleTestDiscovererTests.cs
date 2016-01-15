@@ -116,6 +116,62 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsTypedTestWithOneTrait()
+        {
+            Trait[] traits = { new Trait("Author", "JOG") };
+            AssertFindsTestWithTraits("TypedTests/0.CanIterate", traits);
+            AssertFindsTestWithTraits("TypedTests/1.CanIterate", traits);
+            AssertFindsTestWithTraits("TypedTests/2.CanIterate", traits);
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsTypedTestWithTwoTraits()
+        {
+            Trait[] traits = { new Trait("Author", "IBM"), new Trait("Category", "Integration") };
+            AssertFindsTestWithTraits("TypedTests/0.TwoTraits", traits);
+            AssertFindsTestWithTraits("TypedTests/1.TwoTraits", traits);
+            AssertFindsTestWithTraits("TypedTests/2.TwoTraits", traits);
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsTypedTestWithThreeTraits()
+        {
+            //ThreeTraits, Author, IBM, Category, Integration, Class, Simple
+            Trait[] traits = { new Trait("Author", "IBM"), new Trait("Category", "Integration"), new Trait("Class", "Simple"), };
+            AssertFindsTestWithTraits("TypedTests/0.ThreeTraits", traits);
+            AssertFindsTestWithTraits("TypedTests/1.ThreeTraits", traits);
+            AssertFindsTestWithTraits("TypedTests/2.ThreeTraits", traits);
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsTypeParameterizedTestWithOneTrait()
+        {
+            Trait[] traits = { new Trait("Author", "CSO") };
+            AssertFindsTestWithTraits("Vec/TypeParameterizedTests/0.CanIterate", traits);
+            AssertFindsTestWithTraits("Arr/TypeParameterizedTests/0.CanIterate", traits);
+            AssertFindsTestWithTraits("Arr/TypeParameterizedTests/1.CanIterate", traits);
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsTypeParameterizedTestWithTwoTraits()
+        {
+            Trait[] traits = { new Trait("Author", "HAL"), new Trait("Category", "Unit") };
+            AssertFindsTestWithTraits("Vec/TypeParameterizedTests/0.TwoTraits", traits);
+            AssertFindsTestWithTraits("Arr/TypeParameterizedTests/0.TwoTraits", traits);
+            AssertFindsTestWithTraits("Arr/TypeParameterizedTests/1.TwoTraits", traits);
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_SampleTests_FindsTypeParameterizedTestWithThreeTraits()
+        {
+            //ThreeTraits, Author, IBM, Category, Integration, Class, Simple
+            Trait[] traits = { new Trait("Author", "HAL"), new Trait("Category", "Unit"), new Trait("Class", "Cake"), };
+            AssertFindsTestWithTraits("Vec/TypeParameterizedTests/0.ThreeTraits", traits);
+            AssertFindsTestWithTraits("Arr/TypeParameterizedTests/0.ThreeTraits", traits);
+            AssertFindsTestWithTraits("Arr/TypeParameterizedTests/1.ThreeTraits", traits);
+        }
+
+        [TestMethod]
         public void GetTestsFromExecutable_SampleTests_FindsParameterizedTests()
         {
             AssertFindsParameterizedTest(
@@ -227,38 +283,38 @@ namespace GoogleTestAdapter
                 new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable(executable, regex));
         }
 
-      private void FindSampleTests(string location)
-      {
-         GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-         IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+        private void FindSampleTests(string location)
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-         Assert.AreEqual(49, testCases.Count);
+            Assert.AreEqual(61, testCases.Count);
 
-         TestCase testCase =
-            testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
+            TestCase testCase =
+               testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
 
-         Assert.AreEqual("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>", testCase.DisplayName);
-         Assert.IsTrue(testCase.CodeFilePath.EndsWith(@"samplegoogletesttests\tests\typeparameterizedtests.cpp"));
-         Assert.AreEqual(44, testCase.LineNumber);
-      }
+            Assert.AreEqual("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>", testCase.DisplayName);
+            Assert.IsTrue(testCase.CodeFilePath.EndsWith(@"samplegoogletesttests\tests\typeparameterizedtests.cpp"));
+            Assert.AreEqual(53, testCase.LineNumber);
+        }
 
-      private void FindStaticallyLinkedTests(string location)
-      {
-         GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-         IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
+        private void FindStaticallyLinkedTests(string location)
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-         Assert.AreEqual(2, testCases.Count);
+            Assert.AreEqual(2, testCases.Count);
 
-         Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[0].DisplayName);
-         Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
-         Assert.AreEqual(36, testCases[0].LineNumber);
+            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[0].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
+            Assert.AreEqual(36, testCases[0].LineNumber);
 
-         Assert.AreEqual("FooTest.DoesXyz", testCases[1].DisplayName);
-         Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
-         Assert.AreEqual(45, testCases[1].LineNumber);
-      }
+            Assert.AreEqual("FooTest.DoesXyz", testCases[1].DisplayName);
+            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
+            Assert.AreEqual(45, testCases[1].LineNumber);
+        }
 
-      private void FindExternallyLinkedTests(string location)
+        private void FindExternallyLinkedTests(string location)
         {
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
@@ -281,7 +337,7 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests).ToList();
 
-            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName == displayName);
+            TestCase testCase = tests.Find(tc => tc.Traits.Count() == traits.Length && tc.DisplayName.StartsWith(displayName));
             Assert.IsNotNull(testCase);
 
             foreach (Trait trait in traits)

@@ -6,11 +6,11 @@
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 44</Source>
+      <Source>typeparameterizedtests.cpp line 53</Source>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 49 tests in executable ${SolutionDir}\Debug\Tests.exe
+Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
 Running 1 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
