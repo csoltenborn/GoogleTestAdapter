@@ -24,7 +24,7 @@ Expected: ""</Error>
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 44</Source>
+      <Source>typeparameterizedtests.cpp line 53</Source>
     </TestCase>
     <TestCase>
       <Name>Crashing.AddPasses</Name>
@@ -47,12 +47,12 @@ Expected: ""</Error>
       <Name>TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
       <Result>Test Passed -  </Result>
-      <Source>typeparameterizedtests.cpp line 20</Source>
+      <Source>typeparameterizedtests.cpp line 21</Source>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
 Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
-Found 49 tests in executable ${SolutionDir}\Debug\Tests.exe
+Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
 Running 6 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.

@@ -144,7 +144,7 @@ namespace GoogleTestAdapterUiTests
             RunTest("Arr/TypeParameterizedTests/1.CanDefeatMath");
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         [TestCategory("UI")]
         public void RunSelectedTests_MultipleTests()
         {

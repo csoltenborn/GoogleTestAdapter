@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Automation;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,6 +19,7 @@ using TestStack.White.UIItems.WPFUIItems;
 using TestStack.White.UIItems.TreeItems;
 using TestStack.White.InputDevices;
 using TestStack.White.WindowsAPI;
+using TestStack.White.UIItems.Scrolling;
 using GoogleTestAdapterUiTests.Helpers;
 using GoogleTestAdapterUiTests.Model;
 
@@ -134,6 +136,7 @@ namespace GoogleTestAdapterUiTests
 
                     if (testCaseNodes.Count > 0)
                     {
+                        EnsureTestCaseNodeIsOnScreen(testCaseNodes[0]);
                         ClickNode(testCaseNodes[0]);
                     }
 
@@ -142,6 +145,7 @@ namespace GoogleTestAdapterUiTests
                         Keyboard.Instance.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
                         for (int i = 1; i < testCaseNodes.Count; i++)
                         {
+                            EnsureTestCaseNodeIsOnScreen(testCaseNodes[i]);
                             ClickNode(testCaseNodes[i]);
                         }
                         Keyboard.Instance.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
@@ -186,12 +190,8 @@ namespace GoogleTestAdapterUiTests
                     testGroupNode.Expand();
                     for (int i = 0; i < testGroupNode.Nodes.Count; i++)
                     {
-                        if (i < testGroupNode.Nodes.Count - 1)
-                        {
-                            EnsureTestCaseNodeIsOnScreen(testGroupNode.Nodes[i + 1]);
-                        }
-
                         TreeNode node = testGroupNode.Nodes[i];
+                        EnsureTestCaseNodeIsOnScreen(node);
                         if (node.Text.StartsWith(displayName))
                         {
                             return node;
@@ -262,21 +262,50 @@ namespace GoogleTestAdapterUiTests
 
             private static bool EnsureTestGroupNodeIsOnScreen(TreeNode testGroupNode)
             {
-                if (testGroupNode.IsOffScreen && testGroupNode.Nodes.Count > 0)
+                if (!SafeIsNodeOnScreen(testGroupNode) && testGroupNode.Nodes.Count > 0)
                 {
                     EnsureTestCaseNodeIsOnScreen(testGroupNode.Nodes[0]);
                 }
-                return !testGroupNode.IsOffScreen;
+                return SafeIsNodeOnScreen(testGroupNode);
             }
 
             private static bool EnsureTestCaseNodeIsOnScreen(TreeNode node)
             {
-                if (node.IsOffScreen)
+                if (SafeIsNodeOnScreen(node))
                 {
-                    ClickNode(node);
-                    Thread.Sleep(TimeSpan.FromMilliseconds(WaitingTimeInMs));
+                    return true;
                 }
-                return !node.IsOffScreen;
+
+                Tree tree = GetTestCaseTree();
+                IVScrollBar scrollBar = tree.ScrollBars.Vertical;
+                double initialValue = scrollBar.Value;
+                while (scrollBar.Value < scrollBar.MaximumValue && !SafeIsNodeOnScreen(node))
+                {
+                    scrollBar.ScrollDownLarge();
+                }
+
+                if (!SafeIsNodeOnScreen(node))
+                {
+                    scrollBar.SetToMinimum();
+                    while (scrollBar.Value < initialValue && !SafeIsNodeOnScreen(node))
+                    {
+                        scrollBar.ScrollDownLarge();
+                    }
+                }
+
+                return SafeIsNodeOnScreen(node);
+            }
+
+            private static bool SafeIsNodeOnScreen(TreeNode node)
+            {
+                try
+                {
+                    return node.Visible;
+                }
+                catch (ElementNotAvailableException)
+                {
+                    return false;
+                }
             }
 
         } // class TestExplorer
