@@ -36,7 +36,7 @@ namespace GoogleTestAdapterUiTests
                 {
                     TestRun testResults = new TestRun();
                     string tmp = GetOutput().ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "${SolutionDir}");
-                    testResults.testOutput = Regex.Replace(tmp, @"(========== Run test finished: [0-9]+ run )\([0-9:,]+\)( ==========)", "$1($${RunTime})$2");
+                    testResults.testOutput = Regex.Replace(tmp, @"(========== Run test finished: [0-9]+ run )\([0-9:,\.]+\)( ==========)", "$1($${RunTime})$2");
 
                     foreach (TreeNode testGroupNode in GetTestCaseTree().Nodes)
                     {
