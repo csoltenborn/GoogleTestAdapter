@@ -18,7 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0646ED7F-AD7D-4932-AB74-3597A853C461}"
 	ProjectSection(SolutionItems) = preProject
 		NonDeterministic.runsettings = NonDeterministic.runsettings
-		SampleGoogleTestTests.gta.runsettings = SampleGoogleTestTests.gta.runsettings
+		SampleTests.gta.runsettings = SampleTests.gta.runsettings
 	EndProjectSection
 EndProject
 Global

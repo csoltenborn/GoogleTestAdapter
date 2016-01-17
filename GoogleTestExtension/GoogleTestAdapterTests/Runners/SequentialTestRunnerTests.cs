@@ -13,8 +13,8 @@ namespace GoogleTestAdapter.Runners
         [TestMethod]
         public void CancelingRunnerStopsTestExecution()
         {
-            List<TestCase> allTestCases = AllTestCasesOfConsoleApplication1;
-            List<TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<TestCase> allTestCases = AllTestCasesOfSampleTests;
+            List<TestCase> testCasesToRun = GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
             ITestRunner runner = new SequentialTestRunner(MockFrameworkReporter.Object, TestEnvironment);

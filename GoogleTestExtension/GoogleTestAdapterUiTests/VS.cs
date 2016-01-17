@@ -349,10 +349,10 @@ namespace GoogleTestAdapterUiTests
             string basePath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
             vsixPath = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterVSIX\bin", debugOrRelease, @"GoogleTestAdapterVSIX.vsix");
-            solutionFile = Path.Combine(basePath, @"SampleGoogleTestTests\SampleGoogleTestTests.sln");
+            solutionFile = Path.Combine(basePath, @"SampleTests\SampleTests.sln");
             UiTestsDirectory = Path.Combine(basePath, @"GoogleTestExtension\GoogleTestAdapterUiTests");
-            UserSettingsFile = Path.Combine(basePath, @"SampleGoogleTestTests\NonDeterministic.runsettings");
-            noSettingsFile = Path.Combine(basePath, @"SampleGoogleTestTests\No.runsettings");
+            UserSettingsFile = Path.Combine(basePath, @"SampleTests\NonDeterministic.runsettings");
+            noSettingsFile = Path.Combine(basePath, @"SampleTests\No.runsettings");
         }
 
         internal static void SetupVanillaVsExperimentalInstance()

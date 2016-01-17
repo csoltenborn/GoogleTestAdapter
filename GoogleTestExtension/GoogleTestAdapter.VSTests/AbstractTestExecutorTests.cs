@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.VS
         [TestMethod]
         public virtual void CheckThatTestDirectoryIsPassedViaCommandLineArg()
         {
-            TestCase testCase = GetTestCasesOfConsoleApplication1("CommandArgs.TestDirectoryIsSet").First();
+            TestCase testCase = GetTestCasesOfSampleTests("CommandArgs.TestDirectoryIsSet").First();
 
             TestExecutor executor = new TestExecutor(TestEnvironment);
             executor.RunTests(DataConversionExtensions.ToVsTestCase(testCase).Yield(), MockRunContext.Object, MockFrameworkHandle.Object);

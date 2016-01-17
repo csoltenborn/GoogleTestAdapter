@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.VS
         [TestMethod]
         public void CancelingExecutorStopsTestExecution()
         {
-            List<GoogleTestAdapter.Model.TestCase> testCasesToRun = GetTestCasesOfConsoleApplication1("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<Model.TestCase> testCasesToRun = GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment);

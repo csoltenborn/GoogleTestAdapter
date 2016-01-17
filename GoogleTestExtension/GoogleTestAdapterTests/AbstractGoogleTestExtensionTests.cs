@@ -17,7 +17,7 @@ namespace GoogleTestAdapter
         private const string BuildConfig = "Release";
 #endif
 
-        protected const string SampleTestsSolutionDir = @"..\..\..\..\SampleGoogleTestTests\";
+        protected const string SampleTestsSolutionDir = @"..\..\..\..\SampleTests\";
 
         private const string TestdataDir = @"..\..\..\GoogleTestAdapterTests\bin\" + BuildConfig + @"\Resources\TestData\";
 
@@ -53,7 +53,23 @@ namespace GoogleTestAdapter
         protected readonly Mock<Options> MockOptions = new Mock<Options>() { CallBase = true };
         protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
         protected readonly TestEnvironment TestEnvironment;
-        private List<TestCase> _allTestCasesOfConsoleApplication1 = null;
+
+        private List<TestCase> _allTestCasesOfSampleTests = null;
+        protected List<TestCase> AllTestCasesOfSampleTests
+        {
+            get
+            {
+                if (_allTestCasesOfSampleTests == null)
+                {
+                    _allTestCasesOfSampleTests = new List<TestCase>();
+                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+                    _allTestCasesOfSampleTests.AddRange(discoverer.GetTestsFromExecutable(SampleTests));
+                    _allTestCasesOfSampleTests.AddRange(discoverer.GetTestsFromExecutable(HardCrashingSampleTests));
+                }
+                return _allTestCasesOfSampleTests;
+            }
+        }
+
 
 
         protected AbstractGoogleTestExtensionTests()
@@ -89,30 +105,15 @@ namespace GoogleTestAdapter
             MockLogger.Reset();
             MockOptions.Reset();
             MockFrameworkReporter.Reset();
-            _allTestCasesOfConsoleApplication1 = null;
+            _allTestCasesOfSampleTests = null;
         }
 
-        protected List<TestCase> GetTestCasesOfConsoleApplication1(params string[] qualifiedNames)
+        protected List<TestCase> GetTestCasesOfSampleTests(params string[] qualifiedNames)
         {
-            return AllTestCasesOfConsoleApplication1.Where(
+            return AllTestCasesOfSampleTests.Where(
                 testCase => qualifiedNames.Any(
                     qualifiedName => testCase.FullyQualifiedName.Contains(qualifiedName)))
                     .ToList();
-        }
-
-        protected List<TestCase> AllTestCasesOfConsoleApplication1
-        {
-            get
-            {
-                if (_allTestCasesOfConsoleApplication1 == null)
-                {
-                    _allTestCasesOfConsoleApplication1 = new List<TestCase>();
-                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(SampleTests));
-                    _allTestCasesOfConsoleApplication1.AddRange(discoverer.GetTestsFromExecutable(HardCrashingSampleTests));
-                }
-                return _allTestCasesOfConsoleApplication1;
-            }
         }
 
         protected static TestCase ToTestCase(string name, string executable)

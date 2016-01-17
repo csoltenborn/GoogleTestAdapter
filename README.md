@@ -73,7 +73,7 @@ Google Test Adapter has been created using Visual Studio 2015 and Nuget, which a
 
 #### Executing the tests
 
-Many of the tests depend on the second solution *SampleGoogleTestTests*, which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
 
 For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the *SampleGoogleTestTests* solution (or any other solution containing Google Test tests).
 

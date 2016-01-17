@@ -294,7 +294,7 @@ namespace GoogleTestAdapter
                testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
 
             Assert.AreEqual("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>", testCase.DisplayName);
-            Assert.IsTrue(testCase.CodeFilePath.EndsWith(@"samplegoogletesttests\tests\typeparameterizedtests.cpp"));
+            Assert.IsTrue(testCase.CodeFilePath.EndsWith(@"sampletests\tests\typeparameterizedtests.cpp"));
             Assert.AreEqual(53, testCase.LineNumber);
         }
 
@@ -332,7 +332,7 @@ namespace GoogleTestAdapter
 
         private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
         {
-            Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
+            Assert.IsTrue(File.Exists(SampleTests), "Build SampleTests in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests).ToList();
@@ -354,7 +354,7 @@ namespace GoogleTestAdapter
 
         private void AssertFindsParameterizedTest(string fullyQualifiedName, Regex displayNameRegex)
         {
-            Assert.IsTrue(File.Exists(SampleTests), "Build ConsoleApplication1 in Debug mode before executing this test");
+            Assert.IsTrue(File.Exists(SampleTests), "Build SampleTests in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
