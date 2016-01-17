@@ -136,19 +136,27 @@ namespace GoogleTestAdapterUiTests
 
                     if (testCaseNodes.Count > 0)
                     {
-                        EnsureTestCaseNodeIsOnScreen(testCaseNodes[0]);
-                        ClickNode(testCaseNodes[0]);
+                        TreeNode node = testCaseNodes[0];
+                        EnsureTestCaseNodeIsOnScreen(node);
+                        ClickNode(node);
                     }
 
                     if (testCaseNodes.Count > 1)
                     {
                         Keyboard.Instance.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
-                        for (int i = 1; i < testCaseNodes.Count; i++)
+                        try
                         {
-                            EnsureTestCaseNodeIsOnScreen(testCaseNodes[i]);
-                            ClickNode(testCaseNodes[i]);
+                            for (int i = 1; i < testCaseNodes.Count; i++)
+                            {
+                                TreeNode node = testCaseNodes[i];
+                                EnsureTestCaseNodeIsOnScreen(node);
+                                ClickNode(node);
+                            }
                         }
-                        Keyboard.Instance.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
+                        finally
+                        {
+                            Keyboard.Instance.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
+                        }
                     }
                 }
 
@@ -349,13 +357,6 @@ namespace GoogleTestAdapterUiTests
 
         internal static void SetupVanillaVsExperimentalInstance()
         {
-            string solutionDir = Path.GetDirectoryName(solutionFile);
-            string vsDir = Path.Combine(solutionDir, ".vs");
-            if (Directory.Exists(vsDir))
-            {
-                Directory.Delete(vsDir, true);
-            }
-
             try
             {
                 visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, "GoogleTestAdapterUiTests");
