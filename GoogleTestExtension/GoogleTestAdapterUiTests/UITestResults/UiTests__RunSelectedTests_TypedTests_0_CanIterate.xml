@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-16"?>
 <TestRun>
+  <TestGroup>
+    <description>Passed Tests</description>
+    <TestCase>
+      <Name>TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
+      <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
+      <Result>Test Passed -  </Result>
+      <Source>typeparameterizedtests.cpp line 21</Source>
+    </TestCase>
+  </TestGroup>
   <TestOutput>------ Run test started ------
 Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
 Running 1 tests...

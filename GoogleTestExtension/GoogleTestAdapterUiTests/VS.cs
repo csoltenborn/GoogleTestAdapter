@@ -36,6 +36,8 @@ namespace GoogleTestAdapterUiTests
 
                 internal static TestRun ParseTestResults(bool includeNotRunTests = false)
                 {
+                    ScrollToTop();
+
                     TestRun testResults = new TestRun();
                     string tmp = GetOutput().ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "${SolutionDir}");
                     testResults.testOutput = Regex.Replace(tmp, @"(========== Run test finished: [0-9]+ run )\([0-9:,\.]+\)( ==========)", "$1($${RunTime})$2");
@@ -136,9 +138,7 @@ namespace GoogleTestAdapterUiTests
 
                     if (testCaseNodes.Count > 0)
                     {
-                        TreeNode node = testCaseNodes[0];
-                        EnsureTestCaseNodeIsOnScreen(node);
-                        ClickNode(node);
+                        ClickNode(testCaseNodes[0]);
                     }
 
                     if (testCaseNodes.Count > 1)
@@ -148,9 +148,7 @@ namespace GoogleTestAdapterUiTests
                         {
                             for (int i = 1; i < testCaseNodes.Count; i++)
                             {
-                                TreeNode node = testCaseNodes[i];
-                                EnsureTestCaseNodeIsOnScreen(node);
-                                ClickNode(node);
+                                ClickNode(testCaseNodes[i]);
                             }
                         }
                         finally
@@ -163,50 +161,54 @@ namespace GoogleTestAdapterUiTests
 
                 private static IEnumerable<TreeNode> FindTestCaseNodes(string[] displayNames)
                 {
+                    List<string> namesToBeFound = displayNames.OrderBy(s => s).ToList();
                     List<TreeNode> result = new List<TreeNode>();
-                    foreach (string displayName in displayNames)
-                    {
-                        bool found = false;
-                        foreach (TreeNode testGroupNode in GetTestCaseTree().Nodes)
-                        {
-                            if (!EnsureTestGroupNodeIsOnScreen(testGroupNode))
-                            {
-                                continue;
-                            }
 
-                            TreeNode node = FindTestCaseNode(testGroupNode, displayName);
-                            if (node != null)
-                            {
-                                result.Add(node);
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found)
+                    foreach (TreeNode testGroupNode in GetTestCaseTree().Nodes)
+                    {
+                        if (namesToBeFound.Count == 0)
                         {
-                            throw new AutomationException(
-                                $"Could not find test case {displayName} in test explorer",
-                                Debug.Details(testExplorer.AutomationElement));
+                            break;
                         }
+
+                        if (!EnsureTestGroupNodeIsOnScreen(testGroupNode))
+                        {
+                            continue;
+                        }
+
+                        IDictionary<string, TreeNode> foundTestCases = FindTestCaseNodes(testGroupNode, namesToBeFound);
+                        namesToBeFound.RemoveAll(s => foundTestCases.ContainsKey(s));
+                        result.AddRange(foundTestCases.Values);
+                    }
+
+                    if (namesToBeFound.Count > 0)
+                    {
+                        string missingTestCases = string.Join(", ", namesToBeFound);
+                        throw new AutomationException(
+                            $"Could not find test cases {missingTestCases} in test explorer",
+                            Debug.Details(testExplorer.AutomationElement));
                     }
 
                     return result;
                 }
 
-                private static TreeNode FindTestCaseNode(TreeNode testGroupNode, string displayName)
+                private static IDictionary<string, TreeNode> FindTestCaseNodes(TreeNode testGroupNode, List<string> displayNames)
                 {
+                    IDictionary<string, TreeNode> result = new Dictionary<string, TreeNode>();
                     testGroupNode.Expand();
-                    for (int i = 0; i < testGroupNode.Nodes.Count; i++)
+                    for (int i = 0; result.Count < displayNames.Count && i < testGroupNode.Nodes.Count; i++)
                     {
                         TreeNode node = testGroupNode.Nodes[i];
                         EnsureTestCaseNodeIsOnScreen(node);
-                        if (node.Text.StartsWith(displayName))
+                        foreach (string displayName in displayNames)
                         {
-                            return node;
+                            if (node.Text.StartsWith(displayName))
+                            {
+                                result.Add(displayName, node);
+                            }
                         }
                     }
-
-                    return null;
+                    return result;
                 }
 
             } // class Selector
@@ -253,6 +255,11 @@ namespace GoogleTestAdapterUiTests
                 mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum);
             }
 
+            private static void ScrollToTop()
+            {
+                GetTestCaseTree().ScrollBars.Vertical.SetToMinimum();
+            }
+
             private static Tree GetTestCaseTree()
             {
                 return testExplorer.Get<Tree>("TestsTreeView");
@@ -265,6 +272,7 @@ namespace GoogleTestAdapterUiTests
 
             private static void ClickNode(TreeNode node)
             {
+                EnsureTestCaseNodeIsOnScreen(node);
                 node.Get<Label>("TestListViewDisplayNameTextBlock").Click();
             }
 
