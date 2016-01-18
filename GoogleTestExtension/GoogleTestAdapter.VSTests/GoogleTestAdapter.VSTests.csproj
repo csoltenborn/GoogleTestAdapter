@@ -41,6 +41,14 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.2.1\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.2.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.2.1\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
       <HintPath>..\lib\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
     </Reference>
@@ -58,6 +66,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -76,6 +85,7 @@
     <Compile Include="AbstractVSTests.cs" />
     <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
     <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
+    <Compile Include="Helpers\ThrottleTests.cs" />
     <Compile Include="TestDiscovererTests.cs" />
     <Compile Include="TestExecutorParallelTests.cs" />
     <Compile Include="TestExecutorSequentialTests.cs" />

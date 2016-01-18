@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using FluentAssertions;
 
 namespace GoogleTestAdapter.VS
 {
@@ -51,8 +52,8 @@ namespace GoogleTestAdapter.VS
             thread.Join();
             stopwatch.Stop();
 
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds > 2000); // 1st test should be executed
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 3000); // 2nd test should not be executed 
+            stopwatch.ElapsedMilliseconds.Should().BeInRange(3000,  // 1st test should be executed
+                                                             4000); // 2nd test should not be executed 
         }
 
 
