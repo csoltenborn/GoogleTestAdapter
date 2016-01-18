@@ -104,7 +104,8 @@ namespace GoogleTestAdapterUiTests
             foreach (var additionalSuffix in new[] { "", "_Config", "_Remote" })
                 yield return path + additionalSuffix;
 
-            yield return Path.Combine(@"SOFTWARE\Microsoft\VSCommon", Suffix);
+            // Remove this key for now, as it makes trouble being cleaned after test run (issue #19).
+            //yield return Path.Combine(@"SOFTWARE\Microsoft\VSCommon", Suffix);
             yield return Path.Combine(@"SOFTWARE\Microsoft\VsHub\ServiceModules\Settings\PerHubName", Suffix);
         }
     }
