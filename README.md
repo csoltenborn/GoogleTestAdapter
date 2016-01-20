@@ -4,7 +4,7 @@
 
 Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements.
 
-![Screenshot of test explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestExtension/GoogleTestAdapterVSIX/Resources/Screenshot.png "Screenshot of test explorer")
+![Screenshot of test explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/Screenshot.png "Screenshot of test explorer")
 
 #### Features
 
@@ -38,7 +38,7 @@ After restarting VS, your tests will be displayed in the test explorer at build 
 GTA is configured following Visual Studio's approach of configuration inheritance. There are three configuration levels:
 
 1. Global options are configured in *Tools/Options/Google Test Adapter*.
-2. Solution specific options override global options. They are provided by means of an XML configuration file; this allows sharing of settings via source control. The configuration file must be placed in the same folder as the solution's `.sln` file, and must have the same name as that file, but with extension `.gta.runsettings`. E.g., if the solution file's name is `Foo.sln`, the settings file must be named `Foo.gta.runsettings`. As a start, you can download a [sample solution test settings file](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestExtension/Resources/AllTestSettings.gta.runsettings). A realistic example is provided as part of the SampleTests solution.
+2. Solution specific options override global options. They are provided by means of an XML configuration file; this allows sharing of settings via source control. The configuration file must be placed in the same folder as the solution's `.sln` file, and must have the same name as that file, but with extension `.gta.runsettings`. E.g., if the solution file's name is `Foo.sln`, the settings file must be named `Foo.gta.runsettings`. As a start, you can download a [sample solution test settings file](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Resources/AllTestSettings.gta.runsettings). A realistic example is provided as part of the SampleTests solution.
 3. Finally, VS allows for the selection of [test settings](https://msdn.microsoft.com/en-us/library/jj635153.aspx) files via the *Test/Test Settings* menu. GTA test settings can be added to an existing `.runsettings` file by adding a `GoogleTestAdapter` node to the `RunSettings` node of the file; such settings override global and solution settings. A sample file `NonDeterministic.runsettings` is provided as part of the SampleTests solution.
 
 Note that due to the overriding hierarchy described above, you probably want to provide only a subset of the nodes under `GoogleTestAdapter` in your configuration files. For instance, providing the node `<DebugMode>true</DebugMode>` in a shared solution settings file will make sure that all sharing developers will run GTA with debug output, no matter what the developer's individual settings at *Tools/Options/Google Test Adapter* are (and unless the developer has selected a test settings file via VS, which would override the solution setting).
@@ -47,7 +47,7 @@ Note that due to the overriding hierarchy described above, you probably want to 
 
 GTA has full support for traits, which can be assigned to tests in two ways:
 
-1. You can make use of the custom test macros provided in [GTA_Traits.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestExtension/GoogleTestAdapter/Resources/GTA_Traits.h), which contain macros for simple tests, tests with fixtures and parameterized tests, each with one, two, or three traits. 
+1. You can make use of the custom test macros provided in [GTA_Traits.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits.h), which contain macros for simple tests, tests with fixtures and parameterized tests, each with one, two, or three traits. 
 2. Combinations of regular expressions and traits can be specified under the GTA options: If a test's name matches one of these regular expressions, the according trait is assigned to that test. 
 
 More precisely, traits are assigned to tests in three phases:
@@ -67,17 +67,17 @@ Note that GTA remembers the durations of the executed tests to improve test sche
 
 ### Building, testing, debugging
 
-Google Test Adapter has been created using Visual Studio 2015 and Nuget, which are the only requirements for building GTA. Its main solution *GoogleTestExtension* consists of a couple of projects:
+Google Test Adapter has been created using Visual Studio 2015 and Nuget, which are the only requirements for building GTA. Its main solution *GoogleTestAdapter* consists of a couple of projects:
 
-* GoogleTestAdapter contains the actual adapter code
-* DiaAdapter is the bridge to the Dia DLL used for finding tests in the binaries generated by the Google Test framework
-* GoogleTestAdapter.VS contains the integration into the VS unit testing framework
-* GoogleTestAdapterVSIX adds the VS Options page and some resources
-* GoogleTestAdapterTests, DiaAdapterTests, GoogleTestAdapter.VSTests and GoogleTestAdapterUiTests contains GTA's tests
+* `Core` contains the main logic for discovering and running tests of the Google Test Framework
+* `DiaResolver` is the bridge to the Dia DLL used for finding tests in the binaries generated by the Google Test framework
+* `TestAdapter` contains the integration into the VS unit testing framework for use in Visual Studio or ``vstest.console.exe``
+* `VsPackage` bundles everything into a Visual Studio Extension Package with an option page and .VSIX installer
+* `*.Tests` contain the tests belonging to the repsective project
 
 #### Executing the tests
 
-Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before the tests contained in GoogleTestAdapterTests can be run, the second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project GoogleTestAdapterTests. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before the any of the tests can be run, this second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project Core.Tests. Afterwards, the GTA tests can be run and should all pass.
 
 For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the *SampleTests* solution (or any other solution containing Google Test tests).
 

@@ -9,41 +9,41 @@ environment:
     secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
 install:
 - nuget install secure-file -ExcludeVersion
-- secure-file\tools\secure-file -decrypt GoogleTestExtension\Keys\Key_Release.snk.enc -secret %RELEASE_KEY_PASSWORD%
+- secure-file\tools\secure-file -decrypt GoogleTestAdapter\Keys\Key_Release.snk.enc -secret %RELEASE_KEY_PASSWORD%
 before_build: 
 - cmd: >-
-    if "%APPVEYOR_REPO_TAG%" == "false" (del GoogleTestExtension\Keys\Key_Release.snk)
+    if "%APPVEYOR_REPO_TAG%" == "false" (del GoogleTestAdapter\Keys\Key_Release.snk)
 
-    cd GoogleTestExtension
+    cd GoogleTestAdapter
 
     SetVersion %APPVEYOR_BUILD_VERSION%
 
-    cd GoogleTestAdapter.VSTests
+    cd TestAdapter.Tests
 
     IgnoreTests TestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, TestExecutorParallelTests.cs::ParallelTestExecutionSpeedsUpTestExecution
 
     cd ..\..
-- ps: nuget restore GoogleTestExtension\GoogleTestExtension.sln
+- ps: nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
 build:
-  project: GoogleTestExtension\GoogleTestExtension.sln
+  project: GoogleTestAdapter\GoogleTestAdapter.sln
   parallel: true
   verbosity: normal
 after_build:
 - ps: >-
     $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
 
-    $sourceFile = (Resolve-Path ("GoogleTestExtension\GoogleTestAdapterVSIX\bin\" + $env:CONFIGURATION + "\GoogleTestAdapterVSIX.vsix")).ToString()
+    $sourceFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\bin\" + $env:CONFIGURATION + "\GoogleTestAdapter.VsPackage.vsix")).ToString()
 
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
 
     Copy-Item -Path $sourceFile -Destination $targetFile
 test_script:
 - ps: >-
-    $opencover = (Resolve-Path "GoogleTestExtension/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+    $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    $coveralls = (Resolve-Path "GoogleTestExtension/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+    $coveralls = (Resolve-Path "GoogleTestAdapter/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestExtension\DiaAdapterTests\bin\$env:CONFIGURATION\DiaAdapterTests.dll GoogleTestExtension\GoogleTestAdapterTests\bin\$env:CONFIGURATION\GoogleTestAdapterTests.dll GoogleTestExtension\GoogleTestAdapter.VSTests\bin\$env:CONFIGURATION\GoogleTestAdapter.VSTests.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapterVSIX]*DialogPage -[GoogleTestAdapterVSIX]*TestExtensionOptionsPage -[DiaAdapter]DiaAdapter.StubMemoryStream -[FluentAssertions*]*" -output:OpenCover_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/logger:Appveyor GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapter..VsPackage]*DialogPage -[GoogleTestAdapter.VsPackage]*TestExtensionOptionsPage -[GoogleTestAdapter.DiaResolver]*StubMemoryStream -[FluentAssertions*]*" -output:OpenCover_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
@@ -53,7 +53,7 @@ test_script:
         exit $TestExitCode
     }
 artifacts:
-- path: GoogleTestExtension\GoogleTestAdapterVSIX\bin\$(configuration)\GoogleTestAdapter-*.vsix
+- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: GoogleTestAdapter
 - path: OpenCover_CoverageData.xml
   name: OpenCover coverage data
