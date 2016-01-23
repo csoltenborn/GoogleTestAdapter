@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     {
 
         [TestMethod]
-        public void DebuggedProcessLauncherTests_CalledWithParameters_InvokesFrameworkhandleCorrectly()
+        public void LaunchProcessWithDebuggerAttached_WithParameters_PassedInfoToFrameworkHandleCorrectly()
         {
             DebuggedProcessLauncher launcher = new DebuggedProcessLauncher(MockFrameworkHandle.Object);
 

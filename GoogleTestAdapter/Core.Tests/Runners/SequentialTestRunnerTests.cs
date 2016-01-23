@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.Runners
     {
 
         [TestMethod]
-        public void CancelingRunnerStopsTestExecution()
+        public void RunTests_CancelingDuringTestExecution_StopsTestExecution()
         {
             List<TestCase> allTestCases = AllTestCasesOfSampleTests;
             List<TestCase> testCasesToRun = GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");

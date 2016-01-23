@@ -26,13 +26,13 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     {
 
         [TestMethod]
-        public void RunSettingsService_Instantiation_HasCorrectName()
+        public void Constructor__InstanceHasCorrectName()
         {
             Assert.AreEqual(GoogleTestConstants.SettingsName, new RunSettingsService(null).Name);
         }
 
         [TestMethod]
-        public void RunSettingsService_GentlyHandlesUserSettingsWithoutRunSettingsNode()
+        public void AddRunSettings_UserSettingsWithoutRunSettingsNode_Warning()
         {
             Mock<ILogger> mockLogger = new Mock<ILogger>();
             Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         }
 
         [TestMethod]
-        public void RunSettingsService_GentlyHandlesBrokenSolutionSettings()
+        public void AddRunSettings_BrokenSolutionSettings_Warning()
         {
             Mock<ILogger> mockLogger = new Mock<ILogger>();
             Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
@@ -74,7 +74,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         }
 
         [TestMethod]
-        public void RunSettingsService_CorrectOverridingHierarchy()
+        public void AddRunSettings_GlobalAndSolutionAndUserSettings_CorrectOverridingHierarchy()
         {
             Mock<ILogger> mockLogger = new Mock<ILogger>();
             Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();

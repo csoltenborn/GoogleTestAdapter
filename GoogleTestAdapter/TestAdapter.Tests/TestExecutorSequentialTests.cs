@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestAdapter
 
 
         [TestMethod]
-        public void CancelingExecutorStopsTestExecution()
+        public void RunTests_CancelingExecutor_StopsTestExecution()
         {
             List<Model.TestCase> testCasesToRun = GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
 
@@ -60,81 +60,81 @@ namespace GoogleTestAdapter.TestAdapter
         #region Method stubs for code coverage
 
         [TestMethod]
-        public override void CheckThatTestDirectoryIsPassedViaCommandLineArg()
+        public override void RunTests_TestDirectoryViaUserParams_IsPassedViaCommandLineArg()
         {
-            base.CheckThatTestDirectoryIsPassedViaCommandLineArg();
+            base.RunTests_TestDirectoryViaUserParams_IsPassedViaCommandLineArg();
         }
 
         [TestMethod]
-        public override void RunsExternallyLinkedX86TestsWithResult()
+        public override void RunTests_ExternallyLinkedX86Tests_CorrectTestResults()
         {
-            base.RunsExternallyLinkedX86TestsWithResult();
+            base.RunTests_ExternallyLinkedX86Tests_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsStaticallyLinkedX86TestsWithResult()
+        public override void RunTests_StaticallyLinkedX86Tests_CorrectTestResults()
         {
-            base.RunsStaticallyLinkedX86TestsWithResult();
+            base.RunTests_StaticallyLinkedX86Tests_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsExternallyLinkedX64TestsWithResult()
+        public override void RunTests_ExternallyLinkedX64_CorrectTestResults()
         {
-            base.RunsExternallyLinkedX64TestsWithResult();
+            base.RunTests_ExternallyLinkedX64_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsStaticallyLinkedX64TestsWithResult()
+        public override void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
-            base.RunsStaticallyLinkedX64TestsWithResult();
+            base.RunTests_StaticallyLinkedX64Tests_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsCrashingX64TestsWithoutResult()
+        public override void RunTests_CrashingX64Tests_CorrectTestResults()
         {
-            base.RunsCrashingX64TestsWithoutResult();
+            base.RunTests_CrashingX64Tests_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsCrashingX86TestsWithoutResult()
+        public override void RunTests_CrashingX86Tests_CorrectTestResults()
         {
-            base.RunsCrashingX86TestsWithoutResult();
+            base.RunTests_CrashingX86Tests_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsHardCrashingX86TestsWithoutResult()
+        public override void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
-            base.RunsHardCrashingX86TestsWithoutResult();
+            base.RunTests_HardCrashingX86Tests_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsExternallyLinkedX86TestsWithResultInDebugMode()
+        public override void RunTests_ExternallyLinkedX86TestsInDebugMode_CorrectTestResults()
         {
-            base.RunsExternallyLinkedX86TestsWithResultInDebugMode();
+            base.RunTests_ExternallyLinkedX86TestsInDebugMode_CorrectTestResults();
         }
 
         [TestMethod]
-        public override void RunsWithoutBatches_NoLogging()
+        public override void RunTests_WithoutBatches_NoLogging()
         {
-            base.RunsWithoutBatches_NoLogging();
+            base.RunTests_WithoutBatches_NoLogging();
         }
 
         [TestMethod]
-        public override void RunsWithSetupAndTeardownBatches_SetupFails_LogsWarning()
+        public override void RunTests_WithSetupAndTeardownBatchesWhereSetupFails_LogsWarning()
         {
-            base.RunsWithSetupAndTeardownBatches_SetupFails_LogsWarning();
+            base.RunTests_WithSetupAndTeardownBatchesWhereSetupFails_LogsWarning();
         }
 
         [TestMethod]
-        public override void RunsWithSetupAndTeardownBatches_TeardownFails_LogsWarning()
+        public override void RunTests_WithSetupAndTeardownBatchesWhereTeardownFails_LogsWarning()
         {
-            base.RunsWithSetupAndTeardownBatches_TeardownFails_LogsWarning();
+            base.RunTests_WithSetupAndTeardownBatchesWhereTeardownFails_LogsWarning();
         }
 
         [TestMethod]
-        public override void RunsWithNonexistingSetupBatch_LogsError()
+        public override void RunTests_WithNonexistingSetupBatch_LogsError()
         {
-            base.RunsWithNonexistingSetupBatch_LogsError();
+            base.RunTests_WithNonexistingSetupBatch_LogsError();
         }
 
         #endregion

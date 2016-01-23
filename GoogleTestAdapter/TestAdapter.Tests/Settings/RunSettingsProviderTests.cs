@@ -10,13 +10,13 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     {
 
         [TestMethod]
-        public void RunSettingsProvider_Instantiation_HasCorrectName()
+        public void Constructor__InstanceHasCorrectName()
         {
             Assert.AreEqual(GoogleTestConstants.SettingsName, new RunSettingsProvider().Name);
         }
 
         [TestMethod]
-        public void RunSettingsProvider_Load_LoadsIntoSettings()
+        public void Load_SolutionSettings_SettingsAreMerged()
         {
             RunSettingsProvider provider = new RunSettingsProvider();
             Assert.IsNull(provider.Settings);

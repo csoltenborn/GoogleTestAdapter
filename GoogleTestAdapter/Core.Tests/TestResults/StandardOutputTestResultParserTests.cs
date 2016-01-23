@@ -80,20 +80,21 @@ namespace GoogleTestAdapter.TestResults
 
             CrashesImmediately = new List<string>(ConsoleOutput1);
 
-            WrongDurationUnit = new List<string>(ConsoleOutput1WithInvalidDuration);
-
             CrashesAfterErrorMsg = new List<string>(ConsoleOutput1);
             CrashesAfterErrorMsg.AddRange(ConsoleOutput2);
 
-            Complete = new List<string>(CrashesAfterErrorMsg);
+            Complete = new List<string>(ConsoleOutput1);
+            Complete.AddRange(ConsoleOutput2);
             Complete.AddRange(ConsoleOutput3);
+
+            WrongDurationUnit = new List<string>(ConsoleOutput1WithInvalidDuration);
 
             PassingTestProducesConsoleOutput = new List<string>(ConsoleOutputWithOutputOfExe);
         }
 
 
         [TestMethod]
-        public void CompleteOutputIsParsedCorrectly()
+        public void GetTestResults_CompleteOutput_ParsedCorrectly()
         {
             List<Model.TestResult> results = ComputeTestResults(Complete);
 
@@ -116,7 +117,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void OutputWithImmediateCrashIsParsedCorrectly()
+        public void GetTestResults_OutputWithImmediateCrash_CorrectResultHasCrashText()
         {
             List<Model.TestResult> results = ComputeTestResults(CrashesImmediately);
 
@@ -134,7 +135,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void OutputWithCrashAfterErrorMessage()
+        public void GetTestResults_OutputWithCrashAfterErrorMessage_CorrectResultHasCrashText()
         {
             List<Model.TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
@@ -157,7 +158,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void OutputWithInvalidDurationUnitIsParsedCorrectly()
+        public void GetTestResults_OutputWithInvalidDurationUnit_DefaultDurationIsUsedAndWarningIsProduced()
         {
             List<Model.TestResult> results = ComputeTestResults(WrongDurationUnit);
 
@@ -170,7 +171,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void OutputWithConsoleOutputIsParsedCorrectly()
+        public void GetTestResults_OutputWithConsoleOutput_ConsoleOutputIsIgnored()
         {
             List<Model.TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
 

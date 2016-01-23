@@ -7,7 +7,7 @@ namespace GoogleTestAdapter.Scheduling
     public class NumberBasedTestsSplitterTests : AbstractGoogleTestExtensionTests
     {
         [TestMethod]
-        public void SameNumberOfTestsAsThreads_TestsAreDistributedEvenly()
+        public void SplitTestcases_SameNumberOfTestsAsThreads_TestsAreDistributedEvenly()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void MoreTestsThanThreads_TestsAreDistributedEvenly()
+        public void SplitTestcases_MoreTestsThanThreads_TestsAreDistributedEvenly()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
@@ -35,7 +35,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void ALotMoreTestsThanThreads_TestsAreDistributedEvenly()
+        public void SplitTestcases_ALotMoreTestsThanThreads_TestsAreDistributedEvenly()
         {
             List<Model.TestCase> testcases = new List<Model.TestCase>();
             for (int i = 0; i < 5002; i++)
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void MoreThreadsThanTests_TestsAreDistributedEvenly()
+        public void SplitTestcases_MoreThreadsThanTests_TestsAreDistributedEvenly()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);

@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.Helpers
 
 
         [TestMethod]
-        public void LogWarning_ProducesMessage()
+        public void LogWarning_ProducesWarningOnLogger()
         {
             Environment.LogWarning("foo");
 
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        public void LogError_ProducesMessage()
+        public void LogError_ProducesErrorOnLogger()
         {
             Environment.LogError("bar");
 
@@ -34,19 +34,18 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        public void LogInfoAsDebug_ProducesMessageOnlyIfDebugMode()
+        public void DebugInfo_InDebugMode_ProducesInfoOnLogger()
+        {
+            MockOptions.Setup(o => o.DebugMode).Returns(true);
+            Environment.DebugInfo("bar");
+            MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
+        }
+        [TestMethod]
+        public void DebugInfo_NotInDebugMode_DoesNotProduceLogging()
         {
             MockOptions.Setup(o => o.DebugMode).Returns(false);
-
             Environment.DebugInfo("bar");
-
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Never());
-
-            MockOptions.Setup(o => o.DebugMode).Returns(true);
-
-            Environment.DebugInfo("bar");
-
-            MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
 
     }

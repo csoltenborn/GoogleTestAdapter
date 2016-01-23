@@ -12,13 +12,13 @@ namespace GoogleTestAdapter.TestAdapter
     {
 
         [TestMethod]
-        public void RegistersFoundTestsAtDiscoverySink()
+        public void DiscoverTests_WithDefaultRegex_RegistersFoundTestsAtDiscoverySink()
         {
             CheckForDiscoverySinkCalls(2);
         }
 
         [TestMethod]
-        public void MatchesCustomRegexIfSetInOptions()
+        public void DiscoverTests_WithCustomNonMatchingRegex_DoesNotFindTests()
         {
             CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
         }

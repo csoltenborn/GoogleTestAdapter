@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.Scheduling
     {
 
         [TestMethod]
-        public void DurationIsWrittenAndReadCorrectly()
+        public void UpdateTestDurations_SimpleTests_DurationsAreWrittenAndReadCorrectly()
         {
             string tempFile = Path.GetTempFileName();
             List<Model.TestResult> testResults = new List<Model.TestResult>
@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void SameTestsInDifferentExecutables()
+        public void UpdateTestDurations_SameTestsInDifferentExecutables_DurationsAreWrittenAndReadCorrectly()
         {
             string tempFile = Path.GetTempFileName();
             string tempFile2 = Path.GetTempFileName();
@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void DurationIsUpdatedCorrectly()
+        public void UpdateTestDurations_SingleTest_DurationIsUpdatedCorrectly()
         {
             string tempFile = Path.GetTempFileName();
             List<Model.TestResult> testResults = new List<Model.TestResult>
@@ -91,7 +91,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void NoDurationFileResultsInEmptyDictionary()
+        public void ReadTestDurations_NoDurationFile_EmptyDictionary()
         {
             string tempFile = Path.GetTempFileName();
 
@@ -103,7 +103,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void DurationFileWithoutCurrentTestResultsInEmptyDictionary()
+        public void ReadTestDurations_DurationFileWithoutCurrentTest_EmptyDictionary()
         {
             string tempFile = Path.GetTempFileName();
             List<Model.TestResult> testResults = new List<Model.TestResult>

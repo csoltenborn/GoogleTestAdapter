@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.TestResults
     {
 
         [TestMethod]
-        public void FailsNicelyIfFileDoesNotExist()
+        public void GetTestResults_FileDoesNotExist_WarningAndEmptyResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void FailsNicelyIfFileIsInvalid()
+        public void GetTestResults_InvalidFile_WarningAndEmptyResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void FailsNicelyIfFileIsInvalid_InvalidStatusAttribute()
+        public void GetTestResults_FileWithInvalidStatusAttribute_WarningAndEmptyResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void FindsSuccessfulResultsInSample1()
+        public void GetTestResults_Sample1_FindsPassedAndSkipptedResults()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void LogUnexpectedTestOutcomeInSample1()
+        public void GetTestResults_Sample1_UnexpectedTestOutcome_LogsErrorAndThrows()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
@@ -82,7 +82,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void FindsSuccessfulParameterizedResultInSample1()
+        public void GetTestResults_Sample1_FindsPassedParameterizedResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
 
@@ -94,7 +94,7 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [TestMethod]
-        public void FindsFailureResultInSample1()
+        public void GetTestResults_Sample1_FindsFailureResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("AnimalsTest.testGetEnoughAnimals");
 
@@ -111,7 +111,7 @@ Should get three animals";
         }
 
         [TestMethod]
-        public void FindsParamterizedFailureResultInSample1()
+        public void GetTestResults_Sample1_FindsParamterizedFailureResult()
         {
             IEnumerable<Model.TestCase> testCases =
                 CreateDummyTestCases(
@@ -127,7 +127,7 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         }
 
         [TestMethod]
-        public void FindsSuccessfulResultInSample2()
+        public void GetTestResults_Sample2_FindsPassedResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("FooTest.DoesXyz");
 
@@ -139,7 +139,7 @@ Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutp
         }
 
         [TestMethod]
-        public void FindsFailureResultInSample2()
+        public void GetTestResults_Sample2_FindsFailureResult()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("FooTest.MethodBarDoesAbc");
 

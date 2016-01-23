@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.Scheduling
     public class DurationBasedTestsSplitterTests : AbstractGoogleTestExtensionTests
     {
         [TestMethod]
-        public void SimpleCase_TestsAreDistributedCorrectly()
+        public void SplitTestcases_SimpleCase_TestsAreDistributedCorrectly()
         {
             IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             durations.Add(ToTestCase("ShortTest1"), 1);
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void SimpleCaseWithThreeThreads_TestsAreDistributedCorrectly()
+        public void SplitTestcases_SimpleCaseWithThreeThreads_TestsAreDistributedCorrectly()
         {
             IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             durations.Add(ToTestCase("ShortTest1"), 1);
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void AsymmetricCase_TestsAreDistributedCorrectly()
+        public void SplitTestcases_AsymmetricCase_TestsAreDistributedCorrectly()
         {
             IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
             durations.Add(ToTestCase("ShortTest1"), 1);
@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [TestMethod]
-        public void RandomTestDurations_TestsAreDistributedCorrectly()
+        public void SplitTestcases_RandomTestDurations_TestsAreDistributedCorrectly()
         {
             ExecuteRandomDurationsTest(5000, 1000, 8);
             ExecuteRandomDurationsTest(5000, 500, 7);

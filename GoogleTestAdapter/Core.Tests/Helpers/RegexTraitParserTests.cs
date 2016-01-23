@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.Helpers
 
 
         [TestMethod]
-        public void TraitsRegexOptionsFailsNicelyIfInvokedWithUnparsableString()
+        public void ParseTraitsRegexesString_UnparsableString_FailsNicely()
         {
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("vrr<erfwe");
 
@@ -27,7 +27,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        public void TraitsRegexOptionsAreParsedCorrectlyIfEmpty()
+        public void ParseTraitsRegexesString_EmptyString_EmptyResult()
         {
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("");
 
@@ -36,7 +36,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        public void TraitsRegexOptionsAreParsedCorrectlyIfOne()
+        public void ParseTraitsRegexesString_OneRegex_ParsedCorrectly()
         {
             string optionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
 
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        public void TraitsRegexOptionsAreParsedCorrectlyIfTwo()
+        public void ParseTraitsRegexesString_TwoRegexes_ParsedCorrectly()
         {
             string optionsString = ConcatTraitsRegexes(
                 CreateTraitsRegex("MyTest*", "Type", "Small"),

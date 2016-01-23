@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
 
         [TestMethod]
-        public void LogInfoHandlesNull_ProducesNonNullOrWhitespace()
+        public void LogInfo_Null_NonEmptyString()
         {
             Logger.LogInfo(null);
 
@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
-        public void LogInfoHandlesEmptyString_ProducesNonNullOrWhitespace()
+        public void LogInfo_EmptyString_NonEmptyString()
         {
             Logger.LogInfo("");
 
@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
-        public void LogInfoHandlesWhitespace_ProducesNonNullOrWhitespace()
+        public void LogInfo_Whitespace_NonEmptyString()
         {
             Logger.LogInfo("\n");
 
@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
-        public void LogWarning_ProducesWarningPlusMessage()
+        public void LogWarning_Foo_WarningAndFoo()
         {
             Logger.LogWarning("foo");
 
@@ -64,13 +64,13 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
-        public void LogError_ProducesErrorPlusMessage()
+        public void LogError_Foo_ErrorAndFoo()
         {
-            Logger.LogError("bar");
+            Logger.LogError("foo");
 
             MockVsLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),
-                It.Is<string>(s => s.Contains("ERROR") && s.Contains("bar"))),
+                It.Is<string>(s => s.Contains("ERROR") && s.Contains("foo"))),
                 Times.Exactly(1));
         }
 

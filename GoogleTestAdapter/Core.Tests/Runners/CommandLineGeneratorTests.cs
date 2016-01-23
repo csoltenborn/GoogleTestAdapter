@@ -13,14 +13,14 @@ namespace GoogleTestAdapter.Runners
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ThrowsIfUserParametersIsNull()
+        public void Constructor_UserParametersNull_Throws()
         {
             // ReSharper disable once ObjectCreationAsStatement
             new CommandLineGenerator(new List<Model.TestCase>(), new List<Model.TestCase>(), 0, null, "", TestEnvironment);
         }
 
         [TestMethod]
-        public void AppendsAdditionalArgumentsCorrectly()
+        public void GetCommandLines_AdditionalArguments_AreAppendedCorrectly()
         {
             string userParameters = "-testdirectory=\"MyTestDirectory\"";
 
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void CorrectArgumentsWhenRunningAllTests()
+        public void GetCommandLines_AllTests_ProducesCorrectArguments()
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void AppendsRepetitionsOption()
+        public void GetCommandLines_RepetitionsOption_IsAppendedCorrectly()
         {
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(4711);
 
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void AppendsShuffleTestOptionWithDefaultSeed()
+        public void GetCommandLines_ShuffleTestsWithDefaultSeed_IsAppendedCorrectly()
         {
             MockOptions.Setup(o => o.ShuffleTests).Returns(true);
 
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void AppendsShuffleTestOptionWithFixedSeed()
+        public void GetCommandLines_ShuffleTestsWithCustomSeed_IsAppendedCorrectly()
         {
             MockOptions.Setup(o => o.ShuffleTests).Returns(true);
             MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(4711);
@@ -77,7 +77,7 @@ namespace GoogleTestAdapter.Runners
 
         [TestMethod]
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public void CombinesCommonTestsInSuite()
+        public void GetCommandLines_TestsWithCommonSuite_AreCombinedViaSuite()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithCommonSuite.Union(CreateDummyTestCases("BarSuite.FooTest"));
@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.Runners
 
         [TestMethod]
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public void CombinesCommonParameterizedTestsInSuite()
+        public void GetCommandLines_ParameterizedTestsWithCommonSuite_AreCombinedViaSuite()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases(
                 "InstantiationName2/ParameterizedTests.SimpleTraits/0",
@@ -106,7 +106,7 @@ namespace GoogleTestAdapter.Runners
 
         [TestMethod]
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public void CombinesCommonTestsInSuiteInDifferentOrder()
+        public void GetCommandLines_TestsWithCommonSuiteInReverseOrder_AreCombinedViaSuite()
         {
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest",
                 "FooSuite.gsdfgdfgsdfg", "FooSuite.23453452345", "FooSuite.bxcvbxcvbxcvb");
@@ -124,7 +124,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void DoesNotCombineTestsNotHavingCommonSuite()
+        public void GetCommandLines_TestsWithoutCommonSuite_AreNotCombined()
         {
             IEnumerable<Model.TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
@@ -136,7 +136,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void DoesNotCombineTestsNotHavingCommonSuite_InDifferentOrder()
+        public void GetCommandLines_TestsWithoutCommonSuiteInDifferentOrder_AreNotCombined()
         {
             IEnumerable<Model.TestCase> testCasesWithDifferentSuite = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithDifferentSuite.Union(CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
@@ -148,7 +148,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void BreaksUpLongCommandLinesCorrectly()
+        public void GetCommandLines_ManyTests_BreaksUpLongCommandLinesCorrectly()
         {
             List<string> allTests = new List<string>();
             List<string> testsToExecute = new List<string>();
@@ -193,7 +193,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         [TestMethod]
-        public void BreaksUpLongCommandLinesWithSuitesCorrectly()
+        public void GetCommandLines_ManyTestsWithSuites_BreaksUpLongCommandLinesCorrectly()
         {
             List<string> allTests = new List<string>();
             List<string> testsToExecute = new List<string>();
