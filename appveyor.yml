@@ -7,17 +7,14 @@ environment:
     secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
   RELEASE_KEY_PASSWORD:
     secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
-init:
-- ps: >-
-    if ($env:APPVEYOR_REPO_TAG -ne "true") {
-        # $blockRdp = $true
-        iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-    }
 install:
 - ps: >-
     if ($env:APPVEYOR_REPO_TAG -eq "true") {
         nuget install secure-file -ExcludeVersion
         secure-file\tools\secure-file -decrypt GoogleTestExtension\Keys\Key_Release.snk.enc -secret $env:RELEASE_KEY_PASSWORD
+    } else {
+        # $blockRdp = $true
+        iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
 before_build: 
 - cmd: >-
@@ -27,7 +24,7 @@ before_build:
 
     cd TestAdapter.Tests
 
-    IgnoreTests TestExecutorSequentialTests.cs::CancelingExecutorStopsTestExecution, TestExecutorParallelTests.cs::ParallelTestExecutionSpeedsUpTestExecution
+    IgnoreTests TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
 
     cd ..\..
 - ps: nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
