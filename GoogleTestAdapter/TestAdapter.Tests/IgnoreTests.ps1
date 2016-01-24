@@ -14,5 +14,9 @@ foreach ($test in $tests) {
 	$replacement = '[$1,Ignore]$2' + $testname
 
 	$testcode = [IO.File]::ReadAllText($testclass)
-	$testcode -replace $regex, $replacement | Set-Content $testclass
+	if (([regex]::Matches($testcode, $regex)).count -eq 0) {
+		Write-Output ("Warning - test not found: " + $test)
+	} else {
+		$testcode -replace $regex, $replacement | Set-Content $testclass
+	}
 }
