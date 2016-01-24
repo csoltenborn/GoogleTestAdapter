@@ -17,17 +17,12 @@ install:
         iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
 before_build: 
-- cmd: >-
-    cd GoogleTestAdapter
+- ps: >-
+    Start-Process -WorkingDirectory GoogleTestAdapter -FilePath SetVersion.bat -ArgumentList $env:APPVEYOR_BUILD_VERSION
 
-    SetVersion %APPVEYOR_BUILD_VERSION%
+    Start-Process -WorkingDirectory GoogleTestAdapter\TestAdapter.Tests -FilePath IgnoreTests.bat -ArgumentList TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
 
-    cd TestAdapter.Tests
-
-    IgnoreTests TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
-
-    cd ..\..
-- ps: nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
+    nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
 build:
   project: GoogleTestAdapter\GoogleTestAdapter.sln
   parallel: true
