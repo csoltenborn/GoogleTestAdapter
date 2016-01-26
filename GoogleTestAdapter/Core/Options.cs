@@ -292,14 +292,6 @@ namespace GoogleTestAdapter
             }
         }
 
-
-        public const string OptionDevelopmentMode = "Development mode";
-        public const bool OptionDevelopmentModeDefaultValue = false;
-        public const string OptionDevelopmentModeDescription =
-            "If true, dialogs will open which help to debug test discovery and execution code (which is executed in processes different to the one Visual Studio runs in).";
-
-        public virtual bool DevelopmentMode => XmlOptions.DevelopmentMode ?? OptionDevelopmentModeDefaultValue;
-
         #endregion
 
     }

@@ -75,7 +75,6 @@ namespace GoogleTestAdapterVSIX
             runSettings.BatchForTestTeardown = parallelizationOptions.BatchForTestTeardown;
 
             runSettings.ReportWaitPeriod = advancedOptions.ReportWaitPeriod;
-            runSettings.DevelopmentMode = advancedOptions.DevelopmentMode;
 
             return runSettings;
         }

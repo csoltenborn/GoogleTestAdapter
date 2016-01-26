@@ -81,7 +81,6 @@
     <Compile Include="Framework\DebuggedProcessLauncher.cs" />
     <Compile Include="Framework\VsTestFrameworkLogger.cs" />
     <Compile Include="Framework\VSTestFrameworkReporter.cs" />
-    <Compile Include="Helpers\DebugHelper.cs" />
     <Compile Include="Helpers\Throttle.cs" />
     <Compile Include="Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="Settings\IGlobalRunSettings.cs" />

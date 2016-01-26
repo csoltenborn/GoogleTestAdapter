@@ -15,16 +15,6 @@ namespace GoogleTestAdapterVSIX.OptionsPages
             set { SetAndNotify(ref reportWaitPeriod, value); }
         }
         private int reportWaitPeriod = Options.OptionReportWaitPeriodDefaultValue;
-
-        [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionDevelopmentMode)]
-        [Description(Options.OptionDevelopmentModeDescription)]
-        public bool DevelopmentMode
-        {
-            get { return developmentMode; }
-            set { SetAndNotify(ref developmentMode, value); }
-        }
-        private bool developmentMode = Options.OptionDevelopmentModeDefaultValue;
     }
 
 }

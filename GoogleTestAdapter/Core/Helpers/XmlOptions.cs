@@ -27,7 +27,6 @@
         string TraitsRegexesAfter { get; set; }
         string TraitsRegexesBefore { get; set; }
         bool? DebugMode { get; set; }
-        bool? DevelopmentMode { get; set; }
     }
 
     public static class XmlOptionsExtension
@@ -49,7 +48,6 @@
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;
             self.TraitsRegexesBefore = self.TraitsRegexesBefore ?? other.TraitsRegexesBefore;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
-            self.DevelopmentMode = self.DevelopmentMode ?? other.DevelopmentMode;
         }
     }
 

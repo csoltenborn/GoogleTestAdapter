@@ -86,8 +86,6 @@ namespace GoogleTestAdapter.TestAdapter
                 ILogger loggerAdapter = new VsTestFrameworkLogger(messageLogger);
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
             }
-
-            new DebugHelper(TestEnvironment).CheckDebugModeForExecutionCode();
         }
 
         private IEnumerable<Model.TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)

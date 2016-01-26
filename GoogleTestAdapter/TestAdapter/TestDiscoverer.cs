@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -7,7 +8,6 @@ using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Settings;
-using System;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -40,8 +40,6 @@ namespace GoogleTestAdapter.TestAdapter
                 TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
                 Discoverer = new GoogleTestDiscoverer(TestEnvironment);
             }
-
-            new DebugHelper(TestEnvironment).CheckDebugModeForDiscoveryCode();
 
             try
             {

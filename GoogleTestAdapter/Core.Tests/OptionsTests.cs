@@ -169,18 +169,6 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void DevelopmentMode__ReturnsValueOrDefault()
-        {
-            MockXmlOptions.Setup(o => o.DevelopmentMode).Returns((bool?)null);
-            bool result = TheOptions.DevelopmentMode;
-            Assert.AreEqual(Options.OptionDevelopmentModeDefaultValue, result);
-
-            MockXmlOptions.Setup(o => o.DevelopmentMode).Returns(!Options.OptionDevelopmentModeDefaultValue);
-            result = TheOptions.DevelopmentMode;
-            Assert.AreEqual(!Options.OptionDevelopmentModeDefaultValue, result);
-        }
-
-        [TestMethod]
         public void TestDiscoveryRegex__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.TestDiscoveryRegex).Returns((string)null);
