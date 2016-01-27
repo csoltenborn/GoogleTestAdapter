@@ -77,13 +77,13 @@ namespace GoogleTestAdapter
         public const string ExecutablePlaceholder = "$(Executable)";
 
         private const string DescriptionOfPlaceholdersForBatches =
-           TestDirPlaceholder + " - path of a directory which can be used by the tests" +
-           ThreadIdPlaceholder + "\n - id of thread executing the current tests" +
-           SolutionDirPlaceholder + "\n - directory of the solution";
+           TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
+           ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
+           SolutionDirPlaceholder + " - directory of the solution";
 
         private const string DescriptionOfPlaceholdersForExecutables =
-            DescriptionOfPlaceholdersForBatches +
-            ExecutablePlaceholder + "\n - executable containing the tests";
+            DescriptionOfPlaceholdersForBatches + "\n" +
+            ExecutablePlaceholder + " - executable containing the tests";
 
         #region GeneralOptionsPage
 
