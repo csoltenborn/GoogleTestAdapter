@@ -99,7 +99,7 @@ namespace GoogleTestAdapter.Runners
         private void RunBatch(string batchType, string workingDirectory, string batch, bool isBeingDebugged)
         {
             int batchExitCode;
-            new ProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(
+            new TestProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(
                 workingDirectory, batch, "", false, false, null, out batchExitCode);
             if (batchExitCode == 0)
             {

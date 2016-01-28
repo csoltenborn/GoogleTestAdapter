@@ -4,7 +4,7 @@ using GoogleTestAdapter.Framework;
 namespace GoogleTestAdapter.Helpers
 {
 
-    public class TestEnvironment
+    public class TestEnvironment : ILogger
     {
 
         private enum LogType { Normal, Debug }

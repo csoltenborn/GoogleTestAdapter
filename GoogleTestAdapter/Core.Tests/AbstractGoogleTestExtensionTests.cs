@@ -23,19 +23,19 @@ namespace GoogleTestAdapter
 
         protected const string Results0Batch = @"Tests\Returns0.bat";
         protected const string Results1Batch = @"Tests\Returns1.bat";
-        protected const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
-        protected const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
+        public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
+        public const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
 
         private const string X86Dir = TestdataDir + @"_x86\";
-        protected const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        protected const string X86ExternallyLinkedTests = X86Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        protected const string X86ExternallyLinkedTestsDll = X86Dir + @"ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll";
-        protected const string X86CrashingTests = X86Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+        public const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
+        public const string X86ExternallyLinkedTests = X86Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
+        public const string X86ExternallyLinkedTestsDll = X86Dir + @"ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll";
+        public const string X86CrashingTests = X86Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
 
         private const string X64Dir = TestdataDir + @"_x64\";
-        protected const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        protected const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        protected const string X64CrashingTests = X64Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+        public const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
+        public const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
+        public const string X64CrashingTests = X64Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
 
         protected const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         protected const string XmlFile2 = TestdataDir + @"SampleResult2.xml";

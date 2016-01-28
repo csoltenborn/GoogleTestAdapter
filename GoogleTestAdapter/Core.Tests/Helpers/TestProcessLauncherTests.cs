@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using GoogleTestAdapter.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
-    public class ProcessLauncherTests : AbstractGoogleTestExtensionTests
+    public class TestProcessLauncherTests : AbstractGoogleTestExtensionTests
     {
 
         [TestMethod]
         public void GetOutputOfCommand_WithSimpleCommand_ReturnsOutputOfCommand()
         {
-            List<string> output = new ProcessLauncher(TestEnvironment, false)
+            List<string> output = new TestProcessLauncher(TestEnvironment, false)
                 .GetOutputOfCommand(".", "cmd.exe", "/C \"echo 2\"", false, false, null);
 
             Assert.AreEqual(1, output.Count);
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Helpers
 
             try
             {
-                new ProcessLauncher(TestEnvironment, true)
+                new TestProcessLauncher(TestEnvironment, true)
                     .GetOutputOfCommand("theDir", "theCommand", "theParams", false, false, MockLauncher.Object);
                 Assert.Fail();
             }
@@ -49,14 +49,14 @@ namespace GoogleTestAdapter.Helpers
         [ExpectedException(typeof(Exception))]
         public void GetOutputOfCommand_ThrowsIfProcessReturnsErrorCode_Throws()
         {
-            new ProcessLauncher(TestEnvironment, false)
+            new TestProcessLauncher(TestEnvironment, false)
                 .GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, true, null);
         }
 
         [TestMethod]
         public void GetOutputOfCommand_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()
         {
-            new ProcessLauncher(TestEnvironment, false)
+            new TestProcessLauncher(TestEnvironment, false)
                 .GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, false, null);
         }
 

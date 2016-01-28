@@ -138,13 +138,25 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\Core\Framework\ILogger.cs">
+      <Link>Framework\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Helpers\ProcessLauncher.cs">
+      <Link>Helpers\ProcessLauncher.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Helpers\ProcessWaiter.cs">
+      <Link>Helpers\ProcessWaiter.cs</Link>
+    </Compile>
+    <Compile Include="Helpers\ConsoleLogger.cs" />
     <Compile Include="Helpers\RegistryKeyExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\TestStackWhiteExtensions.cs" />
     <Compile Include="Helpers\MessageBoxWithTimeout.cs" />
     <Compile Include="Model\TestRun.cs" />
+    <Compile Include="ResultChecker.cs" />
     <Compile Include="UiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ConsoleTests.cs" />
     <Compile Include="VS.cs" />
     <Compile Include="VsExperimentalInstance.cs" />
   </ItemGroup>
@@ -153,6 +165,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="UITestResults\ConsoleTests__Console_HardCrashingSampleTests_AreListedCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_HardCrashingSampleTests_AreRunCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_ListDiscoverers_DiscovererIsListed.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_ListExecutors_ExecutorIsListed.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_ListSettingsProviders_SettingsProviderIsListed.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_SampleTests_AreListedCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_SampleTests_AreRunCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X64ExternallyLinked_AreListedCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X64ExternallyLinked_AreRunCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X64StaticallyLinked_AreListedCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X64StaticallyLinked_AreRunCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X86ExternallyLinked_AreListedCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X86ExternallyLinked_AreRunCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X86StaticallyLinked_AreListedCorrectly.xml" />
+    <Content Include="UITestResults\ConsoleTests__Console_X86StaticallyLinked_AreRunCorrectly.xml" />
     <Content Include="UITestResults\UiTests__RunAllTests__AllTestsAreRun.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_Crashing_AddPasses.xml" />
@@ -162,7 +189,12 @@
     <Content Include="UITestResults\UiTests__RunSelectedTests_PointerParameterizedTests_CheckStringLength_0.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_TypedTests_0_CanIterate.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
+      <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
+      <Name>Core.Tests</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

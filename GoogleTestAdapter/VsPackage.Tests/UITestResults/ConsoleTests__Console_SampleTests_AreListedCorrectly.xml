@@ -1,0 +1,67 @@
+Microsoft (R) Test Execution Command Line Tool Version 14.0.24720.0
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+The following Tests are available:
+Information: Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
+
+    TheFixture.AddFails
+    TheFixture.AddPasses
+    TheFixture.Crash
+    TheFixture.AddPassesWithTraits
+    TheFixture.AddPassesWithTraits2
+    TheFixture.AddPassesWithTraits3
+    LongRunningTests.Test1
+    LongRunningTests.Test2
+    CommandArgs.TestDirectoryIsSet
+    TestMath.AddFails
+    TestMath.AddPasses
+    TestMath.Crash
+    TestMath.AddPassesWithTraits
+    TestMath.AddPassesWithTraits2
+    TestMath.AddPassesWithTraits3
+    TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
+    TypedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
+    TypedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
+    TypedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
+    TypedTests/1.CanIterate<std::array<int,3> >
+    TypedTests/1.CanDefeatMath<std::array<int,3> >
+    TypedTests/1.TwoTraits<std::array<int,3> >
+    TypedTests/1.ThreeTraits<std::array<int,3> >
+    TypedTests/2.CanIterate<MyStrangeArray>
+    TypedTests/2.CanDefeatMath<MyStrangeArray>
+    TypedTests/2.TwoTraits<MyStrangeArray>
+    TypedTests/2.ThreeTraits<MyStrangeArray>
+    Vec/TypeParameterizedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
+    Vec/TypeParameterizedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
+    Vec/TypeParameterizedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
+    Vec/TypeParameterizedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
+    Arr/TypeParameterizedTests/0.CanIterate<std::array<int,3> >
+    Arr/TypeParameterizedTests/0.CanDefeatMath<std::array<int,3> >
+    Arr/TypeParameterizedTests/0.TwoTraits<std::array<int,3> >
+    Arr/TypeParameterizedTests/0.ThreeTraits<std::array<int,3> >
+    Arr/TypeParameterizedTests/1.CanIterate<MyStrangeArray>
+    Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>
+    Arr/TypeParameterizedTests/1.TwoTraits<MyStrangeArray>
+    Arr/TypeParameterizedTests/1.ThreeTraits<MyStrangeArray>
+    PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>
+    PrimitivelyTypedTests/1.CanHasBigNumbers<int>
+    PrimitivelyTypedTests/2.CanHasBigNumbers<long>
+    InstantiationName/ParameterizedTests.Simple/0 [(1,)]
+    InstantiationName/ParameterizedTests.Simple/1 [(1,!)]
+    InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
+    InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
+    InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
+    InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]
+    InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]
+    InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]
+    InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
+    InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]
+    InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
+    InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]
+    ParameterizedTests.Simple/0 [(0,_)]
+    ParameterizedTests.SimpleTraits/0 [(0,_)]
+    ParameterizedTests.SimpleTraits2/0 [(0,_)]
+    ParameterizedTests.SimpleTraits3/0 [(0,_)]
+    PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]
+    PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
+    PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]

@@ -49,8 +49,8 @@ namespace GoogleTestAdapter.Helpers
 
             internal IList<TestCaseDescriptor> ParseListTestsOutput(string executable)
             {
-                ProcessLauncher launcher = new ProcessLauncher(TestEnvironment, false);
-                List<string> consoleOutput = launcher.GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, null);
+                ProcessLauncher launcher = new ProcessLauncher(TestEnvironment);
+                List<string> consoleOutput = launcher.GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false);
                 return ParseConsoleOutput(consoleOutput);
             }
 

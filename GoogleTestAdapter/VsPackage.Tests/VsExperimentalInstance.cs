@@ -17,7 +17,7 @@ namespace GoogleTestAdapterUiTests
 {
     public class VsExperimentalInstance
     {
-        public enum Versions { VS2012=11, VS2013=12, VS2015=14 }
+        public enum Versions { VS2012 = 11, VS2013 = 12, VS2015 = 14 }
 
         public readonly Versions Version;
         public readonly string Suffix;
@@ -44,7 +44,7 @@ namespace GoogleTestAdapterUiTests
 
         public void Clean()
         {
-            foreach(var dir in GetVsDirectories().Where(Directory.Exists))
+            foreach (var dir in GetVsDirectories().Where(Directory.Exists))
                 Directory.Delete(dir, true);
             foreach (var key in GetVsHkcuKeys().Where(Registry.CurrentUser.HasSubKey))
                 Registry.CurrentUser.DeleteSubKeyTree(key);
@@ -86,6 +86,11 @@ namespace GoogleTestAdapterUiTests
             return Application.Launch(new ProcessStartInfo(GetExePath(), $"/rootSuffix {Suffix}"));
         }
 
+        public static string GetVsTestConsolePath(Versions version)
+        {
+            return @"C:\Program Files (x86)\" + $"Microsoft Visual Studio {version:d}.0" + @"\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+        }
+
         private string GetExePath()
         {
             return @"C:\Program Files (x86)\" + $"Microsoft Visual Studio {Version:d}.0" + @"\Common7\IDE\devenv.exe";
@@ -94,7 +99,7 @@ namespace GoogleTestAdapterUiTests
         private IEnumerable<string> GetVsDirectories()
         {
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            foreach(var folder in new[]{ VersionAndSuffix, Suffix })
+            foreach (var folder in new[] { VersionAndSuffix, Suffix })
                 yield return Path.Combine(localAppData, @"Microsoft\VisualStudio", folder);
         }
 
