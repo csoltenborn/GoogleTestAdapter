@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ChildProcessDebuggingSettings IsEnabled="true" xmlns="http://schemas.microsoft.com/vstudio/ChildProcessDebuggingSettings/2014">
+  <DefaultRule Attach="false" />
+  <Rule IsEnabled="true" ProcessName="TE.ProcessHost.Managed.exe" EngineFilter="{92ef0900-2251-11d2-b72e-0000f87572ef}" />
+  <Rule IsEnabled="true" ProcessName="vstest.discoveryengine.exe" EngineFilter="{92ef0900-2251-11d2-b72e-0000f87572ef}" />
+  <Rule IsEnabled="true" ProcessName="vstest.discoveryengine.x86.exe" EngineFilter="{92ef0900-2251-11d2-b72e-0000f87572ef}" />
+  <Rule IsEnabled="true" ProcessName="vstest.executionengine.exe" EngineFilter="{92ef0900-2251-11d2-b72e-0000f87572ef}" />
+  <Rule IsEnabled="true" ProcessName="vstest.executionengine.x86.exe" EngineFilter="{92ef0900-2251-11d2-b72e-0000f87572ef}" />
+</ChildProcessDebuggingSettings>
