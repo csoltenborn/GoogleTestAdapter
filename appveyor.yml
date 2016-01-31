@@ -46,7 +46,7 @@ test_script:
 
     $TestExitCode = $LASTEXITCODE
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:\"TestCategory=End to end\" GoogleTestAdapter\VsPackage.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapter..VsPackage]*DialogPage -[GoogleTestAdapter.VsPackage]*TestExtensionOptionsPage -[GoogleTestAdapter.DiaResolver]*StubMemoryStream -[FluentAssertions*]*" -output:OpenCover_CoverageData.xml -returntargetcode -mergeoutput
+    & VsTest.Console GoogleTestAdapter\VsPackage.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.dll GoogleTestAdapter\VsPackage.Tests.Generated\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
 
     if ($LASTEXITCODE -ne 0) {
         $TestExitCode = $LASTEXITCODE

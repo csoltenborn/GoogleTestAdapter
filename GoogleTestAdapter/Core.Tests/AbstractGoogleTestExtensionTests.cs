@@ -43,7 +43,7 @@ namespace GoogleTestAdapter
         protected const string XmlFileBroken_InvalidStatusAttibute = TestdataDir + @"SampleResult1 _Broken_InvalidStatusAttribute.xml";
 
         protected const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution" + GoogleTestConstants.SettingsExtension;
-        protected const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
+        public const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
         protected const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
 
         protected const string DummyExecutable = "ff.exe";

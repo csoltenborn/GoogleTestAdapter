@@ -1,5 +1,4 @@
-Microsoft (R) Test Execution Command Line Tool Version 14.0.24720.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright (c) Microsoft Corporation.  All rights reserved.
 
 Starting test execution, please wait...
 Information: Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
@@ -8,7 +7,7 @@ Information: Running 4 tests...
 
 Information: Test execution completed.
 
-Failed   because it CRASHED!
+Failed   Crashing.TheCrash
 
 Skipped  Crashing.AddFails
 

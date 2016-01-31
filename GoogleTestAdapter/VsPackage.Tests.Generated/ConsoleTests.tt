@@ -1,0 +1,247 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)Core.Tests\bin\Debug\GoogleTestAdapter.Core.Tests.dll" #>
+<#@ assembly name="$(SolutionDir)TestAdapter.Tests\bin\Debug\GoogleTestAdapter.TestAdapter.Tests.dll" #>
+<#@ assembly name="$(SolutionDir)VsPackage.Tests\bin\Debug\GoogleTestAdapter.VsPackage.Tests.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="GoogleTestAdapter" #>
+<#@ import namespace="GoogleTestAdapter.VsPackage.Helpers" #>
+<#@ output extension=".cs" #>
+<#
+//    System.Diagnostics.Debugger.Launch();
+//    System.Diagnostics.Debugger.Break();
+	string csvFile = this.Host.ResolvePath("GTA_Console.csv");
+	TestcaseCsvReader reader = new TestcaseCsvReader(csvFile);
+#>
+using System.IO;
+using System.Runtime.CompilerServices;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GoogleTestAdapterUiTests;
+
+namespace GoogleTestAdapter.VsPackage.GeneratedTests
+{
+
+	public abstract class AbstractConsoleTests
+	{
+		private readonly string solutionFile;
+		protected readonly string testAdapterDir;
+
+		public AbstractConsoleTests()
+		{
+			AbstractConsoleIntegrationTests.GetDirectories(out testAdapterDir, out solutionFile);
+		}
+
+        private void RunTestsAndCheckOutput(string solutionFile, string typeName, string arguments, [CallerMemberName] string testCaseName = null)
+        {
+            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(solutionFile, arguments, testCaseName);
+			string projectDir = Path.Combine(Path.GetDirectoryName(solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
+            new ResultChecker(Path.Combine(projectDir, "GoldenFiles"), Path.Combine(projectDir, "TestErrors"))
+				.CheckResults(resultString, typeName, testCaseName);
+        }
+
+        protected abstract string GetAdapterIntegration();
+
+		<#
+		List<Line> lines = reader.GetObjects();
+		IDictionary<string, string> executables = new Dictionary<string, string>();
+		foreach (Line line in lines)
+		{
+			if (!executables.ContainsKey(line.TestFile))
+				executables.Add(line.TestFile, line.ActualTestFile);
+		#>
+
+		public virtual void <#= line.MethodName #>()
+		{
+			string arguments = GetAdapterIntegration();
+			arguments += @"<#= line.Arguments #>";
+            RunTestsAndCheckOutput(solutionFile, GetType().Name, arguments);
+		}
+		<# } #>
+
+		<# foreach (string executable in executables.Keys) { #>
+
+		public virtual void List_TestsOf_<#= executable #>()
+		{
+			string arguments = GetAdapterIntegration() + @" /ListTests:""<#= executables[executable] #>"" /Logger:Console";
+            RunTestsAndCheckOutput(solutionFile, GetType().Name, arguments);
+		}
+		<# } #>
+
+	}
+
+
+	[TestClass]
+	public class ConsoleDllTests : AbstractConsoleTests
+	{
+        protected override string GetAdapterIntegration()
+        {
+            return @"/TestAdapterPath:" + testAdapterDir;
+        }
+
+		#region method stubs for code coverage
+
+		<# foreach (Line line in lines) { #>
+
+		[TestMethod]
+        [TestCategory("End to end")]
+		public override void <#= line.MethodName #>()
+		{
+			base.<#= line.MethodName #>();
+		}
+		<# } #>
+
+		<# foreach (string executable in executables.Keys) { #>
+
+		[TestMethod]
+        [TestCategory("End to end")]
+		public override void List_TestsOf_<#= executable #>()
+		{
+			base.List_TestsOf_<#= executable #>();
+		}
+		<# } #>
+
+		#endregion
+	}
+
+	[TestClass]
+	public class ConsoleVsixTests : AbstractConsoleTests
+	{
+        [ClassInitialize]
+        public static void InstallVsix(TestContext testContext)
+        {
+            VS.SetupVanillaVsExperimentalInstance("");
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            VS.CleanVsExperimentalInstance();
+        }
+
+        protected override string GetAdapterIntegration()
+        {
+            return @"/UseVsixExtensions:true";
+        }
+
+		#region method stubs for code coverage
+		<# foreach (Line line in lines) { #>
+
+		[TestMethod]
+        [TestCategory("End to end")]
+		public override void <#= line.MethodName #>()
+		{
+			base.<#= line.MethodName #>();
+		}
+		<# } #>
+
+		<# foreach (string executable in executables.Keys) { #>
+
+		[TestMethod]
+        [TestCategory("End to end")]
+		public override void List_TestsOf_<#= executable #>()
+		{
+			base.List_TestsOf_<#= executable #>();
+		}
+		<# } #>
+
+		#endregion
+
+	}
+
+}
+
+<#+
+
+    class Line
+    {
+        internal string TestFile;
+        internal string ActualTestFile;
+		internal bool SettingsFile;
+		internal string ActualSettingsFile;
+		internal string TestCaseFilter;
+		internal bool EnableCodeCoverage;
+		internal bool InIsolation;
+
+		internal string MethodName 
+		{
+			get 
+			{
+				string codeCoverage = EnableCodeCoverage ? "Coverage" : "NoCoverage";
+				string isolation = InIsolation ? "Isolation" : "NoIsolation";
+				string result = TestFile + "_" + SettingsFile + "_" + TestCaseFilter + "_" + codeCoverage + "_" + isolation;
+				result = result.Replace("=", "_");
+				result = result.Replace("|", "_");
+				return result;
+			}
+		}
+
+		internal string Arguments
+		{
+			get
+			{
+				string arguments = " \"\"" + ActualTestFile + "\"\"";
+
+				if (SettingsFile)
+					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
+
+				if (!"none".Equals(TestCaseFilter))
+					arguments += " /TestCaseFilter:\"\"" + TestCaseFilter + "\"\"";
+
+				if (EnableCodeCoverage)
+					arguments += " /EnableCodeCoverage";
+
+				if (InIsolation)
+					arguments += " /InIsolation";
+
+				return arguments;
+			}
+		}
+    }
+	
+    class TestcaseCsvReader : CsvReader<Line>
+    {
+        internal TestcaseCsvReader(string csvFile) : base(csvFile, '\t', true) { }
+
+        protected override Line GetObject(string[] columns)
+        {
+            Line line = new Line();
+			line.TestFile = columns[0];
+			line.ActualTestFile = GetActualFile(columns[0]);
+			line.SettingsFile = bool.Parse(columns[1]);
+			if (line.SettingsFile)
+				line.ActualSettingsFile = AbstractGoogleTestExtensionTests.UserTestSettings;
+			else
+				line.ActualSettingsFile = "";
+			line.TestCaseFilter = columns[2];
+			line.EnableCodeCoverage = bool.Parse(columns[3]);
+			line.InIsolation = bool.Parse(columns[4]);
+			return line;
+        }
+
+		private string GetActualFile(string key)
+		{
+			switch(key)
+			{
+				case "SampleTests":
+					return AbstractGoogleTestExtensionTests.SampleTests;
+				case "HardCrashingSampleTests":
+					return AbstractGoogleTestExtensionTests.HardCrashingSampleTests;
+				case "X861":
+					return AbstractGoogleTestExtensionTests.X86StaticallyLinkedTests;
+				case "X862":
+					return AbstractGoogleTestExtensionTests.X86ExternallyLinkedTests;
+				case "X641":
+					return AbstractGoogleTestExtensionTests.X64StaticallyLinkedTests;
+				case "X642":
+					return AbstractGoogleTestExtensionTests.X64ExternallyLinkedTests;
+				default:
+					throw new Exception("Unknown test executable key: " + key);
+			}
+		}
+
+    }
+
+#>

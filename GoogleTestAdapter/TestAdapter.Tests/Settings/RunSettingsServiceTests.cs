@@ -61,9 +61,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
 
-            // 1: from global, 2: from solution, 3: from user test settings
+            // 1: from global, 2: from solution, 3, ShuffleTests: from user test settings
             AssertContainsSetting(xml, "AdditionalTestExecutionParam", "Global");
-            AssertContainsSetting(xml, "BatchForTestTeardown", "User");
+            AssertContainsSetting(xml, "ShuffleTests", "true");
             AssertContainsSetting(xml, "NrOfTestRepetitions", "1");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
@@ -86,10 +86,10 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
 
-            // 1: from global, 2: from solution, 3: from user test settings
+            // 1: from global, 2: from solution, 3, ShuffleTests: from user test settings
             AssertContainsSetting(xml, "AdditionalTestExecutionParam", "Global");
             AssertContainsSetting(xml, "BatchForTestSetup", "Solution");
-            AssertContainsSetting(xml, "BatchForTestTeardown", "User");
+            AssertContainsSetting(xml, "ShuffleTests", "true");
             AssertContainsSetting(xml, "NrOfTestRepetitions", "2");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
@@ -113,7 +113,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         private void AssertContainsSetting(XmlDocument xml, string nodeName, string value)
         {
             XmlNodeList list = xml.GetElementsByTagName(nodeName);
-            Assert.IsTrue(list.Count == 1);
+            Assert.AreEqual(1, list.Count);
             XmlNode node = list.Item(0);
             Assert.AreEqual(value, node.InnerText);
         }

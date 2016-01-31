@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GoogleTestAdapterUiTests;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -12,10 +11,19 @@ namespace GoogleTestAdapter.VsPackage
     {
         private const bool overwriteTestResults = false;
 
+        private readonly string goldenFilesDirectory;
+        private readonly string testErrorsDirectory;
+
+        public ResultChecker(string goldenFilesDir, string testErrorsDir)
+        {
+            goldenFilesDirectory = goldenFilesDir;
+            testErrorsDirectory = testErrorsDir;
+        }
+
         public void CheckResults(string testResults, string typeName, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(VS.UiTestsDirectory, "UITestResults", typeName + "__" + testCaseName + ".xml");
-            string resultFile = Path.Combine(VS.UiTestsDirectory, "TestErrors", this.GetType().Name + "__" + testCaseName + ".xml");
+            string expectationFile = Path.Combine(goldenFilesDirectory, typeName + "__" + testCaseName + ".xml");
+            string resultFile = Path.Combine(testErrorsDirectory, this.GetType().Name + "__" + testCaseName + ".xml");
 
             if (!File.Exists(expectationFile))
             {
@@ -67,14 +75,14 @@ namespace GoogleTestAdapter.VsPackage
                 if (expectedResult[i] != result[i])
                 {
                     areEqual = false;
-                    messages.Add($"First difference at position {i}, "
-                        + $"expected: {expectedResult[i]}, actual: {result[i]}, "
-                        + $"context: '{GetContext(expectedResult, i)}' and '{GetContext(result, i)}'");
+                    messages.Add($"First difference at position {i}\n"
+                        + $"context 1: '{GetContext(expectedResult, i)}'\n"
+                        + $"context 2: '{GetContext(result, i)}'");
                     break;
                 }
             }
 
-            msg = string.Join("; ", messages);
+            msg = string.Join("\n", messages);
             return areEqual;
         }
 

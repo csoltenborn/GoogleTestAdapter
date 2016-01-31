@@ -1,0 +1,15 @@
+Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+Information: Found 2 tests in executable C:\Users\chris\git\GoogleTestAdapter\GoogleTestAdapter\Core.Tests\bin\Debug\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe
+
+Information: Running 2 tests...
+
+Information: Test execution completed.
+
+Failed   FooTest.MethodBarDoesAbc
+
+Passed   FooTest.DoesXyz
+
+Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.
+Test execution time: ${RunTime}

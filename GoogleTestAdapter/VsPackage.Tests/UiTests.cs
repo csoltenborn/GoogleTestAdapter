@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.IO;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
 using GoogleTestAdapterUiTests.Helpers;
@@ -15,7 +16,8 @@ namespace GoogleTestAdapterUiTests
         [ClassInitialize]
         public static void SetupVanillaVsExperimentalInstance(TestContext testContext)
         {
-            VS.SetupVanillaVsExperimentalInstance();
+            VS.SetupVanillaVsExperimentalInstance("GoogleTestAdapterUiTests");
+            VS.LaunchVsExperimentalInstance();
         }
 
         [TestInitialize]
@@ -89,7 +91,8 @@ namespace GoogleTestAdapterUiTests
             try
             {
                 VS.TestExplorer.RunAllTests();
-                new ResultChecker().CheckResults(VS.TestExplorer.Parser.ParseTestResults().ToXML(), this.GetType().Name);
+                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"))
+                    .CheckResults(VS.TestExplorer.Parser.ParseTestResults().ToXML(), this.GetType().Name);
             }
             catch (AutomationException exception)
             {
@@ -159,7 +162,9 @@ namespace GoogleTestAdapterUiTests
             try
             {
                 VS.TestExplorer.RunSelectedTests(displayNames);
-                new ResultChecker().CheckResults(testCaseName, this.GetType().Name);
+                string result = VS.TestExplorer.Parser.ParseTestResults().ToXML();
+                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"))
+                    .CheckResults(result, GetType().Name, testCaseName);
             }
             catch (AutomationException exception)
             {

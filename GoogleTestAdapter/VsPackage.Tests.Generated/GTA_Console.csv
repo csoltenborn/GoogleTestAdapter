@@ -1,0 +1,9 @@
+TestFile	Settings	TestCaseFilter	EnableCodeCoverage	InIsolation
+HardCrashingSampleTests	true	none	true	false
+HardCrashingSampleTests	false	none	false	true
+X862	true	none	false	false
+SampleTests	true	none	true	true
+X862	false	none	true	true
+X861	true	none	true	false
+SampleTests	false	none	false	false
+X861	false	none	false	true
