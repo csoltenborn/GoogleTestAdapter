@@ -75,6 +75,7 @@ namespace GoogleTestAdapterUiTests
             string resultString = string.Join("\n", output);
             string baseDir = Directory.GetParent(Path.GetDirectoryName(solutionFile)).FullName;
             resultString = resultString.ReplaceIgnoreCase(baseDir, "${BaseDir}");
+            resultString = Regex.Replace(resultString, @"\\(Debug|Release)\\", @"\${ConfigurationName}\");
             resultString = Regex.Replace(resultString, @"Test execution time: .*", "Test execution time: ${RunTime}");
             resultString = VS.TestExplorer.Parser.NormalizePointerInfo(resultString);
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");

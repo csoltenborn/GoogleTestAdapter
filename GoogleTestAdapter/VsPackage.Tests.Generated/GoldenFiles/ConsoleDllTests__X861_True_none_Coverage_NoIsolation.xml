@@ -3,7 +3,7 @@ Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright 
 Starting test execution, please wait...
 Warning: Could not find diagnostic data adapter 'Code Coverage'. Make sure diagnostic data adapter is installed and try again.
 
-Information: Found 2 tests in executable ${BaseDir}\GoogleTestAdapter\Core.Tests\bin\Debug\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe
+Information: Found 2 tests in executable ${BaseDir}\GoogleTestAdapter\Core.Tests\bin\${ConfigurationName}\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe
 
 Information: Running 2 tests...
 
