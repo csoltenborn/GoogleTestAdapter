@@ -101,7 +101,7 @@ namespace GoogleTestAdapter.TestResults
             return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
-                DisplayName = " ",
+                DisplayName = testCase.DisplayName,
                 Outcome = TestOutcome.Passed,
                 ErrorMessage = "",
                 Duration = duration
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.TestResults
             return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
-                DisplayName = crashed ? "because it CRASHED!" : " ",
+                DisplayName = testCase.DisplayName,
                 Outcome = TestOutcome.Failed,
                 ErrorMessage = errorMessage,
                 Duration = duration

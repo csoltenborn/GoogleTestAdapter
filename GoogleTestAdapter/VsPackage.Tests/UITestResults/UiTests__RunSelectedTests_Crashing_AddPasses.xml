@@ -4,7 +4,7 @@
     <description>Passed Tests</description>
     <TestCase>
       <Name>Crashing.AddPasses</Name>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - Crashing.AddPasses</Result>
       <Source>crashingtests.cpp line 21</Source>
     </TestCase>
   </TestGroup>

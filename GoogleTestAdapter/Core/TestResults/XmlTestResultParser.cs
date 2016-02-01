@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.TestResults
             TestResult testResult = new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
-                DisplayName = " "
+                DisplayName = testCase.DisplayName
             };
 
             string duration = testcaseNode.Attributes["time"].InnerText;

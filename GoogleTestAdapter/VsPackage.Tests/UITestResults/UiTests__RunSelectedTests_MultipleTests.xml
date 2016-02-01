@@ -5,7 +5,7 @@
     <TestCase>
       <Name>ParameterizedTests.Simple/0 [(0,_)]</Name>
       <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
-      <Result>Test Failed -  </Result>
+      <Result>Test Failed - ParameterizedTests.Simple/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 23</Source>
       <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:24
 Value of: GetParam().i
@@ -23,30 +23,30 @@ Expected: ""</Error>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Result>
       <Source>typeparameterizedtests.cpp line 53</Source>
     </TestCase>
     <TestCase>
       <Name>Crashing.AddPasses</Name>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - Crashing.AddPasses</Result>
       <Source>crashingtests.cpp line 21</Source>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits/0</FullyQualifiedName>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]</Result>
       <Source>parameterizedtests.cpp line 28</Source>
     </TestCase>
     <TestCase>
       <Name>PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Name>
       <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/0</FullyQualifiedName>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/0 [(004768E0 pointing to "", 0)]</Result>
       <Source>parameterizedtests.cpp line 63</Source>
     </TestCase>
     <TestCase>
       <Name>TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.CanIterate</FullyQualifiedName>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 21</Source>
     </TestCase>
   </TestGroup>

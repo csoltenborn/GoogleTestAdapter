@@ -5,7 +5,7 @@
     <TestCase>
       <Name>Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/1.CanDefeatMath</FullyQualifiedName>
-      <Result>Test Passed -  </Result>
+      <Result>Test Passed - Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;</Result>
       <Source>typeparameterizedtests.cpp line 53</Source>
     </TestCase>
   </TestGroup>
