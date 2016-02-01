@@ -87,7 +87,7 @@ namespace GoogleTestAdapterUiTests
             resultString = VS.TestExplorer.Parser.NormalizePointerInfo(resultString);
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");
 
-            string hasCoveragePattern = "Attachments:\n[.\\s]*\\.coverage\n\n";
+            string hasCoveragePattern = @"Attachments:\n.*\.coverage\n\n";
             if (Regex.IsMatch(resultString, hasCoveragePattern))
             {
                 resultString = Regex.Replace(resultString, hasCoveragePattern, "");
