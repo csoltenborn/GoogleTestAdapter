@@ -183,7 +183,7 @@ Expected: ""</Error>
     <TestCase>
       <Name>PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]</Name>
       <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/2</FullyQualifiedName>
-      <Result>Test Failed - PointerParameterizedTests.CheckStringLength/2 [(00435010 pointing to "ooops", 23)]</Result>
+      <Result>Test Failed - PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]</Result>
       <Source>parameterizedtests.cpp line 63</Source>
       <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:64
 Value of: strlen(GetParam().first)
@@ -396,13 +396,13 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
     <TestCase>
       <Name>PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Name>
       <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/0</FullyQualifiedName>
-      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/0 [(004275A0 pointing to "", 0)]</Result>
+      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Result>
       <Source>parameterizedtests.cpp line 63</Source>
     </TestCase>
     <TestCase>
       <Name>PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]</Name>
       <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/1</FullyQualifiedName>
-      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/1 [(00435080 pointing to "Test", 4)]</Result>
+      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]</Result>
       <Source>parameterizedtests.cpp line 63</Source>
     </TestCase>
     <TestCase>

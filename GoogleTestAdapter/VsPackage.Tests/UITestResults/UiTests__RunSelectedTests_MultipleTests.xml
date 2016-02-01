@@ -40,7 +40,7 @@ Expected: ""</Error>
     <TestCase>
       <Name>PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Name>
       <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/0</FullyQualifiedName>
-      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/0 [(004768E0 pointing to "", 0)]</Result>
+      <Result>Test Passed - PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]</Result>
       <Source>parameterizedtests.cpp line 63</Source>
     </TestCase>
     <TestCase>

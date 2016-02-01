@@ -111,7 +111,7 @@ namespace GoogleTestAdapterUiTests
                         case "testResultSummaryText Failed":
                         case "testResultSummaryText Skipped":
                         case "testResultSummaryText Passed":
-                            testResult.Result += label.Text;
+                            testResult.Result += Regex.Replace(label.Text, "([0-9A-F]{8}){1,2} pointing to", "${MemoryLocation} pointing to");
                             break;
                         case "errorMessageItem":
                             testResult.Error += label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "$(SolutionDir)");
