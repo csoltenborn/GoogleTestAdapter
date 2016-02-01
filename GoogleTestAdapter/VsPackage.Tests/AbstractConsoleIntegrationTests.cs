@@ -74,11 +74,32 @@ namespace GoogleTestAdapterUiTests
 
             string resultString = string.Join("\n", output);
             string baseDir = Directory.GetParent(Path.GetDirectoryName(solutionFile)).FullName;
+            resultString = NormalizeOutput(resultString, baseDir);
+
+            return resultString;
+        }
+
+        private static string NormalizeOutput(string resultString, string baseDir)
+        {
             resultString = resultString.ReplaceIgnoreCase(baseDir, "${BaseDir}");
             resultString = Regex.Replace(resultString, @"\\(Debug|Release)\\", @"\${ConfigurationName}\");
             resultString = Regex.Replace(resultString, @"Test execution time: .*", "Test execution time: ${RunTime}");
             resultString = VS.TestExplorer.Parser.NormalizePointerInfo(resultString);
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");
+
+            string hasCoveragePattern = "Attachments:\n[.\\s]*\\.coverage\n\n";
+            if (Regex.IsMatch(resultString, hasCoveragePattern))
+            {
+                resultString = Regex.Replace(resultString, hasCoveragePattern, "");
+                resultString += "\n\nGoogle Test Adapter Coverage Marker";
+            }
+
+            string noDataAdapterPattern = "Warning: Could not find diagnostic data adapter 'Code Coverage'. Make sure diagnostic data adapter is installed and try again.\n\n";
+            if (Regex.IsMatch(resultString, noDataAdapterPattern))
+            {
+                resultString = Regex.Replace(resultString, noDataAdapterPattern, "");
+                resultString += "\n\nGoogle Test Adapter Coverage Marker";
+            }
 
             return resultString;
         }

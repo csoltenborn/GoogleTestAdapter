@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.VsPackage
         public void CheckResults(string testResults, string typeName, [CallerMemberName] string testCaseName = null)
         {
             string expectationFile = Path.Combine(goldenFilesDirectory, typeName + "__" + testCaseName + ".xml");
-            string resultFile = Path.Combine(testErrorsDirectory, this.GetType().Name + "__" + testCaseName + ".xml");
+            string resultFile = Path.Combine(testErrorsDirectory, typeName + "__" + testCaseName + ".xml");
 
             if (!File.Exists(expectationFile))
             {
