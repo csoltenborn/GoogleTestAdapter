@@ -1,8 +1,8 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(SolutionDir)Core.Tests\bin\Debug\GoogleTestAdapter.Core.Tests.dll" #>
-<#@ assembly name="$(SolutionDir)TestAdapter.Tests\bin\Debug\GoogleTestAdapter.TestAdapter.Tests.dll" #>
-<#@ assembly name="$(SolutionDir)VsPackage.Tests\bin\Debug\GoogleTestAdapter.VsPackage.Tests.dll" #>
+<#@ assembly name="$(SolutionDir)Core.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.Core.Tests.dll" #>
+<#@ assembly name="$(SolutionDir)TestAdapter.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.TestAdapter.Tests.dll" #>
+<#@ assembly name="$(SolutionDir)VsPackage.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.VsPackage.Tests.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Text" #>
