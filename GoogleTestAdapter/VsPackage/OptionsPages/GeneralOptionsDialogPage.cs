@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
-using GoogleTestAdapter;
 
-namespace GoogleTestAdapterVSIX.OptionsPages
+namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     public class GeneralOptionsDialogPage : NotifyingDialogPage
