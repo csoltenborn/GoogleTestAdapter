@@ -73,7 +73,8 @@ namespace GoogleTestAdapterUiTests
             List<string> output = launcher.GetOutputOfCommand(workingDir, command, arguments, false, false, out resultCode);
 
             string resultString = string.Join("\n", output);
-            resultString = resultString.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "${SolutionDir}");
+            string baseDir = Directory.GetParent(Path.GetDirectoryName(solutionFile)).FullName;
+            resultString = resultString.ReplaceIgnoreCase(baseDir, "${BaseDir}");
             resultString = Regex.Replace(resultString, @"Test execution time: .*", "Test execution time: ${RunTime}");
             resultString = VS.TestExplorer.Parser.NormalizePointerInfo(resultString);
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");

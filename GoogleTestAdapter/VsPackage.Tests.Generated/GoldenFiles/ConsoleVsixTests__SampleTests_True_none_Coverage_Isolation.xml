@@ -3,7 +3,7 @@ Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright 
 Starting test execution, please wait...
 Warning: Could not find diagnostic data adapter 'Code Coverage'. Make sure diagnostic data adapter is installed and try again.
 
-Information: Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
+Information: Found 61 tests in executable ${BaseDir}\SampleTests\Debug\Tests.exe
 
 Information: Running 61 tests...
 

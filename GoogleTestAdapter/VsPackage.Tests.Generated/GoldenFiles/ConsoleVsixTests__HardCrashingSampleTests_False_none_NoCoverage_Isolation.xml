@@ -1,7 +1,7 @@
 Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright (c) Microsoft Corporation.  All rights reserved.
 
 Starting test execution, please wait...
-Information: Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
+Information: Found 4 tests in executable ${BaseDir}\SampleTests\Debug\CrashingTests.exe
 
 Information: Running 4 tests...
 
