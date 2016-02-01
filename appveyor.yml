@@ -52,6 +52,11 @@ test_script:
         $TestExitCode = $LASTEXITCODE
     }
 
+    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
+        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
+        Push-AppveyorArtifact TestErrors.zip
+    }
+
     & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
 
     if ($TestExitCode -ne 0) {
