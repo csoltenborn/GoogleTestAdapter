@@ -9,6 +9,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter" #>
 <#@ import namespace="GoogleTestAdapter.VsPackage.Helpers" #>
+<#@ import namespace="GoogleTestAdapterUiTests" #>
 <#@ output extension=".cs" #>
 <#
 //    System.Diagnostics.Debugger.Launch();
@@ -106,6 +107,7 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 		#endregion
 	}
 
+	<# if (AbstractConsoleIntegrationTests.IsRunningOnBuildServer()) { #>
 	[TestClass]
 	public class ConsoleVsixTests : AbstractConsoleTests
 	{
@@ -150,6 +152,55 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 		#endregion
 
 	}
+
+    [TestClass]
+    public class ConsoleVsixIntegrationTests : AbstractConsoleIntegrationTests
+    {
+
+        [ClassInitialize]
+        public static void InstallVsix(TestContext testContext)
+        {
+            VS.SetupVanillaVsExperimentalInstance("");
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            VS.CleanVsExperimentalInstance();
+        }
+
+        protected override string GetAdapterIntegration()
+        {
+            return @"/UseVsixExtensions:true";
+        }
+
+        #region method stubs for code coverage
+
+        [TestMethod]
+        [TestCategory("End to end")]
+        public override void Console_ListDiscoverers_DiscovererIsListed()
+        {
+            base.Console_ListDiscoverers_DiscovererIsListed();
+        }
+
+        [TestMethod]
+        [TestCategory("End to end")]
+        public override void Console_ListExecutors_ExecutorIsListed()
+        {
+            base.Console_ListExecutors_ExecutorIsListed();
+        }
+
+        [TestMethod]
+        [TestCategory("End to end")]
+        public override void Console_ListSettingsProviders_SettingsProviderIsListed()
+        {
+            base.Console_ListSettingsProviders_SettingsProviderIsListed();
+        }
+
+        #endregion
+
+    }
+	<# } #>
 
 }
 

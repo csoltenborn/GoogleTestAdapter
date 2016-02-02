@@ -370,6 +370,8 @@ namespace GoogleTestAdapterUiTests
 
         public static void SetupVanillaVsExperimentalInstance(string suffix)
         {
+            AskIfNotOnBuildServerAndProductiveVS(suffix);
+
             try
             {
                 visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, suffix);
@@ -451,6 +453,24 @@ namespace GoogleTestAdapterUiTests
             Window fileOpenDialog = mainWindow.ModalWindow(dialogTitle);
             fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = file;
             fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
+        }
+
+        private static void AskIfNotOnBuildServerAndProductiveVS(string suffix)
+        {
+            if (string.IsNullOrEmpty(suffix) && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
+            {
+                MessageBoxResult result = MessageBoxWithTimeout.Show("Really launch tests? This will delete a potentially installed GoogleTestAdapter extension from your productive VisualStudio instance and install this build instead!",
+                    "Warning!", MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        break;
+                    case MessageBoxResult.No:
+                    case MessageBoxResult.Cancel:
+                        Assert.Inconclusive(" Didn't get confirmation to execute tests. Cancelling...");
+                        break;
+                }
+            }
         }
 
         private static bool AskToCleanIfExists(VsExperimentalInstance visualStudioInstance)

@@ -149,7 +149,6 @@
     <Compile Include="..\Core\Helpers\ProcessWaiter.cs">
       <Link>Helpers\ProcessWaiter.cs</Link>
     </Compile>
-    <Compile Include="ConsoleVsixIntegrationTests.cs" />
     <Compile Include="ConsoleDllIntegrationTests.cs" />
     <Compile Include="Helpers\ConsoleLogger.cs" />
     <Compile Include="Helpers\CsvReader.cs" />

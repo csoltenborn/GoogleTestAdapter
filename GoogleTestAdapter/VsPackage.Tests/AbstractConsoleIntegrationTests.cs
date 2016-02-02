@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -77,6 +78,11 @@ namespace GoogleTestAdapterUiTests
             resultString = NormalizeOutput(resultString, baseDir);
 
             return resultString;
+        }
+
+        public static bool IsRunningOnBuildServer()
+        {
+            return Environment.GetEnvironmentVariable("APPVEYOR") != null;
         }
 
         private static string NormalizeOutput(string resultString, string baseDir)
