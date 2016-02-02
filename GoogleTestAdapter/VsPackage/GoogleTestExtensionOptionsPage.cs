@@ -5,11 +5,10 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using GoogleTestAdapter;
-using GoogleTestAdapterVSIX.OptionsPages;
+using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.TestAdapter.Settings;
 
-namespace GoogleTestAdapterVSIX
+namespace GoogleTestAdapter.VsPackage
 {
 
     [PackageRegistration(UseManagedResourcesOnly = true)]

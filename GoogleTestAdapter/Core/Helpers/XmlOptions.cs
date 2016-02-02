@@ -3,12 +3,12 @@
 
     /*
     To add a new option, make the following changes:
-    - add (nullable!) property to IXMLOptions
-	- add property and according constants to class Options
-    - handle property in method XmlOptionsExtension.GetUnsetValuesFrom()
-    - handle property in method GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
-    - handle property serialization in class GoogleTestAdapter.VS.Settings.RunSettings
-    - add Options UI integration to one of the classes in GoogleTestAdapterVSIX/OptionsPages
+    - add (nullable!) property to GoogleTestAdapter.Helpers.IXMLOptions
+    - add property and according constants to class GoogleTestAdapter.Options
+    - handle property in method GoogleTestAdapter.Helpers.XmlOptionsExtension.GetUnsetValuesFrom()
+    - handle property serialization in class GoogleTestAdapter.TestAdapter.Settings.RunSettings
+    - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
+    - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     */
     public interface IXmlOptions
     {

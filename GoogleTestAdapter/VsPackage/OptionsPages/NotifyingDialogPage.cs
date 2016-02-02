@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Shell;
 
-namespace GoogleTestAdapterVSIX.OptionsPages
+namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     public abstract class NotifyingDialogPage : DialogPage, INotifyPropertyChanged
