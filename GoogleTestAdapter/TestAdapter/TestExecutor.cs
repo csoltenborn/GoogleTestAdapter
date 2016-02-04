@@ -40,6 +40,12 @@ namespace GoogleTestAdapter.TestAdapter
                 IEnumerable<Model.TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(executables);
 
+                TestCaseFilter filter = new TestCaseFilter(runContext);
+                List<TestCase> vsTestCases =
+                    filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
+                allTestCasesInExecutables =
+                    allTestCasesInExecutables.Where(tc => vsTestCases.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName));
+
                 DoRunTests(allTestCasesInExecutables, allTestCasesInExecutables, runContext, frameworkHandle);
             }
             catch (Exception e)
@@ -50,6 +56,9 @@ namespace GoogleTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<TestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            TestCaseFilter filter = new TestCaseFilter(runContext);
+            vsTestCasesToRun = filter.Filter(vsTestCasesToRun);
+
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
