@@ -3,83 +3,123 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
 {
 
-    internal class TestCaseFilter
+    public class TestCaseFilter
     {
-
-        private static readonly List<string> supportedProperties;
-        private static readonly Dictionary<string, TestProperty> supportedPropertiesCache;
-
-        static TestCaseFilter()
-        {
-            supportedPropertiesCache = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
-            supportedPropertiesCache["FullyQualifiedName"] = TestCaseProperties.FullyQualifiedName;
-            supportedPropertiesCache["Name"] = TestCaseProperties.DisplayName;
-            supportedPropertiesCache["DisplayName"] = TestCaseProperties.DisplayName;
-            supportedPropertiesCache["Line"] = TestCaseProperties.LineNumber;
-            supportedPropertiesCache["LineNumber"] = TestCaseProperties.LineNumber;
-            supportedPropertiesCache["CodeFilePath"] = TestCaseProperties.CodeFilePath;
-            supportedPropertiesCache["SourceFile"] = TestCaseProperties.CodeFilePath;
-            supportedPropertiesCache["ExecutorUri"] = TestCaseProperties.ExecutorUri;
-            supportedPropertiesCache["Uri"] = TestCaseProperties.ExecutorUri;
-            supportedPropertiesCache["Id"] = TestCaseProperties.Id;
-            supportedPropertiesCache["Source"] = TestCaseProperties.Source;
-            supportedPropertiesCache["TestExecutable"] = TestCaseProperties.Source;
-
-            supportedProperties = new List<string>();
-            supportedProperties.AddRange(supportedPropertiesCache.Keys);
-        }
-
-        private static TestProperty PropertyProvider(string propertyName)
-        {
-            TestProperty testProperty;
-            supportedPropertiesCache.TryGetValue(propertyName, out testProperty);
-            return testProperty;
-        }
-
-        private static object PropertyValueProvider(TestCase currentTest, string propertyName)
-        {
-            TestProperty testProperty = PropertyProvider(propertyName);
-            if (testProperty != null && currentTest.Properties.Contains(testProperty))
-            {
-                return currentTest.GetPropertyValue(testProperty);
-            }
-            return null;
-        }
-
-
         private readonly IRunContext runContext;
+        private readonly TestEnvironment testEnvironment;
 
-        internal TestCaseFilter(IRunContext runContext)
+        private readonly IDictionary<string, TestProperty> testProperties = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, TestProperty> traitProperties = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
+
+        private IEnumerable<string> TestProperties => testProperties.Keys;
+        private IEnumerable<string> TraitProperties => traitProperties.Keys;
+        private IEnumerable<string> AllProperties => TestProperties.Union(TraitProperties);
+
+        public TestCaseFilter(IRunContext runContext, ISet<string> traitNames, TestEnvironment testEnvironment)
         {
             this.runContext = runContext;
+            this.testEnvironment = testEnvironment;
+
+            InitProperties(traitNames);
         }
 
         public IEnumerable<TestCase> Filter(IEnumerable<TestCase> testCases)
         {
-            ITestCaseFilterExpression filterExpression = runContext.GetTestCaseFilter(supportedProperties, PropertyProvider);
-            if (filterExpression == null)
-            {
-                return testCases;
-            }
-            return testCases.Where(testCase => Matches(testCase, filterExpression));
+            ITestCaseFilterExpression filterExpression = GetFilterExpression();
+            return filterExpression == null ? testCases : testCases.Where(testCase => Matches(testCase, filterExpression));
         }
 
         public bool Matches(TestCase testCase)
         {
-            return Matches(testCase, runContext.GetTestCaseFilter(supportedProperties, PropertyProvider));
+            ITestCaseFilterExpression filterExpression = GetFilterExpression();
+            return filterExpression == null ? true : Matches(testCase, filterExpression);
+        }
+
+
+        private void InitProperties(ISet<string> traitNames)
+        {
+            testProperties[nameof(TestCaseProperties.FullyQualifiedName)] = TestCaseProperties.FullyQualifiedName;
+            testProperties[nameof(TestCaseProperties.DisplayName)] = TestCaseProperties.DisplayName;
+            testProperties[nameof(TestCaseProperties.LineNumber)] = TestCaseProperties.LineNumber;
+            testProperties[nameof(TestCaseProperties.CodeFilePath)] = TestCaseProperties.CodeFilePath;
+            testProperties[nameof(TestCaseProperties.ExecutorUri)] = TestCaseProperties.ExecutorUri;
+            testProperties[nameof(TestCaseProperties.Id)] = TestCaseProperties.Id;
+            testProperties[nameof(TestCaseProperties.Source)] = TestCaseProperties.Source;
+
+            foreach (string traitName in traitNames)
+            {
+                var traitTestProperty = TestProperty.Find(traitName) ??
+                      TestProperty.Register(traitName, traitName, typeof(string), typeof(TestCase));
+                traitProperties[traitName] = traitTestProperty;
+            }
+        }
+
+        private TestProperty PropertyProvider(string propertyName)
+        {
+            TestProperty testProperty;
+
+            testProperties.TryGetValue(propertyName, out testProperty);
+
+            if (testProperty == null)
+                traitProperties.TryGetValue(propertyName, out testProperty);
+
+            return testProperty;
+        }
+
+        private object PropertyValueProvider(TestCase currentTest, string propertyName)
+        {
+            TestProperty testProperty = PropertyProvider(propertyName);
+            if (testProperty == null)
+                return null;
+
+            if (currentTest.Properties.Contains(testProperty))
+                return currentTest.GetPropertyValue(testProperty);
+
+            if (TraitProperties.Contains(propertyName))
+                return GetTraitValues(currentTest, propertyName);
+
+            return null;
+        }
+
+        private ITestCaseFilterExpression GetFilterExpression()
+        {
+            ITestCaseFilterExpression filterExpression = runContext.GetTestCaseFilter(AllProperties, PropertyProvider);
+
+            string message = filterExpression == null
+                    ? $"No test case filter provided"
+                    : $"Test case filter: {filterExpression.TestCaseFilterValue}";
+            testEnvironment.DebugInfo(message);
+
+            return filterExpression;
+        }
+
+        private object GetTraitValues(TestCase testCase, string traitName)
+        {
+            IList<string> traitValues
+                = testCase.Traits.Where(t => t.Name == traitName).Select(t => t.Value).ToList();
+
+            if (traitValues.Count > 1)
+                return traitValues;
+
+            return traitValues.SingleOrDefault();
         }
 
         private bool Matches(TestCase testCase, ITestCaseFilterExpression filterExpression)
         {
-            if (filterExpression == null)
-            {
-                return true;
-            }
-            return filterExpression.MatchTestCase(testCase, propertyName => PropertyValueProvider(testCase, propertyName));
+            bool matches =
+                filterExpression.MatchTestCase(testCase, propertyName => PropertyValueProvider(testCase, propertyName));
+
+            string message = matches
+                ? $"{testCase.DisplayName} matches {filterExpression.TestCaseFilterValue}"
+                : $"{testCase.DisplayName} does not match {filterExpression.TestCaseFilterValue}";
+            testEnvironment.DebugInfo(message);
+
+            return matches;
         }
 
     }

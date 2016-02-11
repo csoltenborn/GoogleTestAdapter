@@ -165,7 +165,7 @@ namespace GoogleTestAdapter
         public void GetTestsFromExecutable_SampleTests_FindsTypeParameterizedTestWithThreeTraits()
         {
             //ThreeTraits, Author, IBM, Category, Integration, Class, Simple
-            Trait[] traits = { new Trait("Author", "HAL"), new Trait("TestCategory", "Unit"), new Trait("Class", "Cake"), };
+            Trait[] traits = { new Trait("Author", "HAL"), new Trait("TestCategory", "Unit"), new Trait("Type", "Medium"), };
             AssertFindsTestWithTraits("Vec/TypeParameterizedTests/0.ThreeTraits", traits);
             AssertFindsTestWithTraits("Arr/TypeParameterizedTests/0.ThreeTraits", traits);
             AssertFindsTestWithTraits("Arr/TypeParameterizedTests/1.ThreeTraits", traits);

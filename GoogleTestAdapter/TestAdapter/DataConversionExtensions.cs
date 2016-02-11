@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -48,6 +49,11 @@ namespace GoogleTestAdapter.TestAdapter
             result.DisplayName = testResult.DisplayName;
             result.Duration = testResult.Duration;
             result.ErrorMessage = testResult.ErrorMessage;
+            result.Messages.Add(new TestResultMessage(TestResultMessage.StandardErrorCategory, "My stderr message"));
+            result.Messages.Add(new TestResultMessage(TestResultMessage.StandardOutCategory, "My stdout message"));
+            result.Messages.Add(new TestResultMessage(TestResultMessage.AdditionalInfoCategory, "My info message"));
+            result.Messages.Add(new TestResultMessage(TestResultMessage.DebugTraceCategory, "My debug message"));
+            result.ErrorStackTrace = "My stack trace";
             return result;
         }
 

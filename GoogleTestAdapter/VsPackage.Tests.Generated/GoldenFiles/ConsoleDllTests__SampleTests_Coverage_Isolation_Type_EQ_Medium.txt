@@ -1,0 +1,36 @@
+Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+Information: Found 61 tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\Tests.exe
+
+Information: Running 7 tests...
+
+Information: Test execution completed.
+
+Failed   Vec/TypeParameterizedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
+Failed   Arr/TypeParameterizedTests/0.ThreeTraits<std::array<int,3> >
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
+Passed   Arr/TypeParameterizedTests/1.ThreeTraits<MyStrangeArray>
+Passed   InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
+Failed   InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
+Failed   ParameterizedTests.SimpleTraits3/0 [(0,_)]
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
+
+Total tests: 7. Passed: 2. Failed: 5. Skipped: 0.
+Test execution time: ${RunTime}
+
+Google Test Adapter Coverage Marker

@@ -8,13 +8,21 @@ Information: Running 4 tests...
 Information: Test execution completed.
 
 Failed   Crashing.TheCrash
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Skipped  Crashing.AddFails
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Skipped  Crashing.AddPasses
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Skipped  Crashing.LongRunning
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 
 Total tests: 4. Passed: 0. Failed: 1. Skipped: 3.
 Test execution time: ${RunTime}

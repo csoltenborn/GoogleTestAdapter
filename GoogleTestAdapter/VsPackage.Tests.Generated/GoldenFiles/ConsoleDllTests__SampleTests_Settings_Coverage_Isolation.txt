@@ -8,97 +8,161 @@ Information: Running 61 tests...
 Information: Test execution completed.
 
 Failed   TheFixture.Crash
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TheFixture.AddPassesWithTraits2
 Failed   TheFixture.AddFails
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TheFixture.AddPasses
 Passed   TheFixture.AddPassesWithTraits3
 Passed   TheFixture.AddPassesWithTraits
 Failed   LongRunningTests.Test2
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   LongRunningTests.Test1
 Failed   CommandArgs.TestDirectoryIsSet
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   TestMath.Crash
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TestMath.AddPassesWithTraits2
 Failed   TestMath.AddFails
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TestMath.AddPassesWithTraits3
 Passed   TestMath.AddPasses
 Passed   TestMath.AddPassesWithTraits
 Failed   TypedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   TypedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
 Failed   TypedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   TypedTests/1.TwoTraits<std::array<int,3> >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   TypedTests/1.ThreeTraits<std::array<int,3> >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TypedTests/1.CanIterate<std::array<int,3> >
 Failed   TypedTests/1.CanDefeatMath<std::array<int,3> >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   TypedTests/2.TwoTraits<MyStrangeArray>
 Passed   TypedTests/2.ThreeTraits<MyStrangeArray>
 Passed   TypedTests/2.CanDefeatMath<MyStrangeArray>
 Passed   TypedTests/2.CanIterate<MyStrangeArray>
 Failed   Vec/TypeParameterizedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   Vec/TypeParameterizedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   Vec/TypeParameterizedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
 Failed   Vec/TypeParameterizedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   Arr/TypeParameterizedTests/0.ThreeTraits<std::array<int,3> >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   Arr/TypeParameterizedTests/0.CanIterate<std::array<int,3> >
 Failed   Arr/TypeParameterizedTests/0.CanDefeatMath<std::array<int,3> >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   Arr/TypeParameterizedTests/0.TwoTraits<std::array<int,3> >
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   Arr/TypeParameterizedTests/1.TwoTraits<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.ThreeTraits<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.CanIterate<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>
 Failed   PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   PrimitivelyTypedTests/1.CanHasBigNumbers<int>
 Passed   PrimitivelyTypedTests/2.CanHasBigNumbers<long>
 Failed   InstantiationName/ParameterizedTests.Simple/1 [(1,!)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
 Passed   InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]
 Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   InstantiationName/ParameterizedTests.Simple/0 [(1,)]
 Passed   InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]
 Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   ParameterizedTests.Simple/0 [(0,_)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   ParameterizedTests.SimpleTraits/0 [(0,_)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   ParameterizedTests.SimpleTraits2/0 [(0,_)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Failed   ParameterizedTests.SimpleTraits3/0 [(0,_)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]
 Failed   PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
 
 Total tests: 61. Passed: 29. Failed: 32. Skipped: 0.

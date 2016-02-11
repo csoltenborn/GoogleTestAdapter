@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GoogleTestAdapter.Model
 {
     public enum TestOutcome { Passed, Failed, Skipped, None, NotFound }
+
+    public class TestResultMessage
+    {
+
+    }
 
     public class TestResult
     {
@@ -14,6 +20,8 @@ namespace GoogleTestAdapter.Model
         public TestOutcome Outcome { get; set; }
         public string ErrorMessage { get; set; }
         public TimeSpan Duration { get; set; }
+
+        public IList<TestResultMessage> Messages { get; } = new List<TestResultMessage>();
 
         public TestResult(TestCase testCase)
         {

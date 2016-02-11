@@ -13,5 +13,3 @@ Failed   FooTest.MethodBarDoesAbc
 
 Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.
 Test execution time: ${RunTime}
-
-Google Test Adapter Coverage Marker

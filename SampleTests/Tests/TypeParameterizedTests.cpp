@@ -58,7 +58,7 @@ TYPED_TEST_P_TRAITS2(TypeParameterizedTests, TwoTraits, Author, HAL, TestCategor
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_P_TRAITS3(TypeParameterizedTests, ThreeTraits, Author, HAL, TestCategory, Unit, Class, Cake) {
+TYPED_TEST_P_TRAITS3(TypeParameterizedTests, ThreeTraits, Author, HAL, TestCategory, Unit, Type, Medium) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 

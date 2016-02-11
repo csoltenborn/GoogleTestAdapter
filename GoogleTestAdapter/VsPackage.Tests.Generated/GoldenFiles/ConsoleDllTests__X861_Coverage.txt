@@ -8,8 +8,12 @@ Information: Running 2 tests...
 Information: Test execution completed.
 
 Failed   FooTest.MethodBarDoesAbc
-
+Standard Output Messages:
+   My stdout messageAdditional Information Messages:
+   My info message
 Passed   FooTest.DoesXyz
 
 Total tests: 2. Passed: 1. Failed: 1. Skipped: 0.
 Test execution time: ${RunTime}
+
+Google Test Adapter Coverage Marker

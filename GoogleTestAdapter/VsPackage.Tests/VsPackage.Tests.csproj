@@ -171,6 +171,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="UITestResults\UiTests__RunAllTests__AllTestsAreRun.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_Crashing_AddPasses.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0.xml" />
