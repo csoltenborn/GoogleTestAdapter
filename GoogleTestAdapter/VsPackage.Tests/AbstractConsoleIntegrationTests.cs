@@ -105,7 +105,7 @@ namespace GoogleTestAdapterUiTests
                 hasCoveragePattern = @"Attachments:\n.*\.coverage\n";
                 if (Regex.IsMatch(resultString, hasCoveragePattern))
                 {
-                    resultString = Regex.Replace(resultString, hasCoveragePattern, "");
+                    resultString = Regex.Replace(resultString, hasCoveragePattern, "\n");
                     resultString += "\n\nGoogle Test Adapter Coverage Marker";
                 }
             }
