@@ -91,7 +91,7 @@ namespace GoogleTestAdapterUiTests
             try
             {
                 VS.TestExplorer.RunAllTests();
-                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"))
+                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"), ".xml")
                     .CheckResults(VS.TestExplorer.Parser.ParseTestResults().ToXML(), this.GetType().Name);
             }
             catch (AutomationException exception)
@@ -163,7 +163,7 @@ namespace GoogleTestAdapterUiTests
             {
                 VS.TestExplorer.RunSelectedTests(displayNames);
                 string result = VS.TestExplorer.Parser.ParseTestResults().ToXML();
-                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"))
+                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"), ".xml")
                     .CheckResults(result, GetType().Name, testCaseName);
             }
             catch (AutomationException exception)

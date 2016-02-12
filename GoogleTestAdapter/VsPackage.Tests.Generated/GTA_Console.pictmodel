@@ -1,7 +1,7 @@
 # TestFiles are mapped to actual executables in TestcaseCsvReader
 TestFile: SampleTests, HardCrashingSampleTests, X861, X862, X641, X642
 Settings: true, false
-TestCaseFilter: none, TestCategory=Unit, TestCategory=Unit|Type=Medium, TestCategory=Unit|Type=Small
+TestCaseFilter: none, DisplayName=TestMath.AddPassesWithTraits, Type=Small, DisplayName=TestMath.AddPassesWithTraits|Type=Small, TestCategory=Unit&Type=Medium, TestCategory=NotExisting, *NotExisting=Foo
 EnableCodeCoverage: true, false
 InIsolation: true, false
 
@@ -11,6 +11,3 @@ IF [TestCaseFilter] <> "none" THEN [TestFile] = "SampleTests";
 # X64 currently does not work (#21)
 [TestFile] <> "X641";
 [TestFile] <> "X642";
-
-# TestCaseFilter currently does not work (# TODO)
-[TestCaseFilter] = "none";

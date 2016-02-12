@@ -41,7 +41,7 @@ TEST(TestMath, Crash)
 	EXPECT_EQ(20, Add(*pInt, 10));
 }
 
-TEST_TRAITS1(TestMath, AddPassesWithTraits, Type, Small)
+TEST_TRAITS1(TestMath, AddPassesWithTraits, Type, Medium)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }

@@ -76,7 +76,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void GetTestsFromExecutable_SampleTests_FindsMathTestWithOneTrait()
         {
-            Trait[] traits = { new Trait("Type", "Small") };
+            Trait[] traits = { new Trait("Type", "Medium") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
@@ -238,7 +238,7 @@ namespace GoogleTestAdapter
         {
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
 
-            Trait[] traits = { new Trait("Type", "Small") };
+            Trait[] traits = { new Trait("Type", "Medium") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
         }
 
@@ -255,7 +255,7 @@ namespace GoogleTestAdapter
         [TestMethod]
         public void GetTestsFromExecutable_RegexAfterFromOptions_AfterTraitOverridesTraitFromTest()
         {
-            Trait[] traits = { new Trait("Type", "Small") };
+            Trait[] traits = { new Trait("Type", "Medium") };
             AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
 
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());

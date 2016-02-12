@@ -13,17 +13,19 @@ namespace GoogleTestAdapter.VsPackage
 
         private readonly string goldenFilesDirectory;
         private readonly string testErrorsDirectory;
+        private readonly string fileExtension;
 
-        public ResultChecker(string goldenFilesDir, string testErrorsDir)
+        public ResultChecker(string goldenFilesDir, string testErrorsDir, string fileExtension)
         {
             goldenFilesDirectory = goldenFilesDir;
             testErrorsDirectory = testErrorsDir;
+            this.fileExtension = fileExtension;
         }
 
         public void CheckResults(string testResults, string typeName, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(goldenFilesDirectory, typeName + "__" + testCaseName + ".xml");
-            string resultFile = Path.Combine(testErrorsDirectory, typeName + "__" + testCaseName + ".xml");
+            string expectationFile = Path.Combine(goldenFilesDirectory, typeName + "__" + testCaseName + fileExtension);
+            string resultFile = Path.Combine(testErrorsDirectory, typeName + "__" + testCaseName + fileExtension);
 
             if (!File.Exists(expectationFile))
             {
@@ -37,6 +39,7 @@ namespace GoogleTestAdapter.VsPackage
             if (!stringsAreEqual)
             {
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (overwriteTestResults)
                 {
                     File.WriteAllText(expectationFile, testResults);
@@ -50,7 +53,7 @@ namespace GoogleTestAdapter.VsPackage
                 }
 #pragma warning restore CS0162
             }
-            else if (stringsAreEqual && File.Exists(resultFile))
+            else if (File.Exists(resultFile))
             {
                 File.Delete(resultFile);
             }

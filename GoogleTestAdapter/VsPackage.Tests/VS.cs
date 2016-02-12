@@ -83,6 +83,7 @@ namespace GoogleTestAdapterUiTests
                     Assert.AreEqual(testNode.Nodes.Count, 0, "Test case tree node expected to have no children.");
 
                     SearchCriteria isControlTypeLabel = SearchCriteria.ByControlType(typeof(Label), WindowsFramework.Wpf);
+                    // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
                     foreach (Label label in GetTestExplorerDetailsPanel().GetMultiple(isControlTypeLabel))
                     {
                         if (label.IsOffScreen || string.IsNullOrWhiteSpace(label.Text))
@@ -347,6 +348,7 @@ namespace GoogleTestAdapterUiTests
         private static readonly string noSettingsFile;
 
         private static bool keepDirtyVsInstance = keepDirtyInstanceInit;
+        private static bool? installIntoProductiveVS = null;
 
         private static VsExperimentalInstance visualStudioInstance;
         private static Application application;
@@ -384,7 +386,7 @@ namespace GoogleTestAdapterUiTests
                 {
                     if (!keepDirtyVsInstance)
                     {
-                        keepDirtyVsInstance = AskToCleanIfExists(visualStudioInstance);
+                        keepDirtyVsInstance = AskToCleanIfExists();
                     }
                     if (!keepDirtyVsInstance)
                     {
@@ -443,7 +445,7 @@ namespace GoogleTestAdapterUiTests
 
         public static string GetOutput()
         {
-            IUIItem outputWindow = VS.mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
+            IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
             return outputWindow.Get<TextBox>("WpfTextView").Text;
         }
 
@@ -457,26 +459,33 @@ namespace GoogleTestAdapterUiTests
 
         private static void AskIfNotOnBuildServerAndProductiveVS(string suffix)
         {
-            if (string.IsNullOrEmpty(suffix) && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
+            if (string.IsNullOrEmpty(suffix)
+                && installIntoProductiveVS == null
+                && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
             {
-                MessageBoxResult result = MessageBoxWithTimeout.Show("Really launch tests? This will delete a potentially installed GoogleTestAdapter extension from your productive VisualStudio instance and install this build instead!",
+                MessageBoxResult result = MessageBoxWithTimeout.Show(
+                    "Really launch tests? This will delete a potentially installed GoogleTestAdapter extension "
+                    + "from your productive VisualStudio instance and install this build instead!",
                     "Warning!", MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
+                        installIntoProductiveVS = true;
                         break;
-                    case MessageBoxResult.No:
-                    case MessageBoxResult.Cancel:
-                        Assert.Inconclusive(" Didn't get confirmation to execute tests. Cancelling...");
+                    default:
+                        installIntoProductiveVS = false;
                         break;
                 }
             }
+
+            if (installIntoProductiveVS.HasValue && !installIntoProductiveVS.Value)
+                Assert.Inconclusive("Didn't get confirmation to execute tests. Cancelling...");
         }
 
-        private static bool AskToCleanIfExists(VsExperimentalInstance visualStudioInstance)
+        private static bool AskToCleanIfExists()
         {
             bool keepDirtyInstance = false;
-            if (visualStudioInstance.Exists())
+            if (visualStudioInstance.Exists() && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
             {
                 var instanceExists = $"The experimental instance '{visualStudioInstance.VersionAndSuffix}' already exists.";
                 var willReset = "\nShould it be deleted before going on with the tests?";
