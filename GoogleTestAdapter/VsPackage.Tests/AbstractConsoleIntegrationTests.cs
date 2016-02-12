@@ -93,11 +93,21 @@ namespace GoogleTestAdapterUiTests
             resultString = VS.TestExplorer.Parser.NormalizePointerInfo(resultString);
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");
 
-            string hasCoveragePattern = @"Attachments:\n.*\.coverage\n";
+            string hasCoveragePattern = @"Attachments:\n.*\.coverage\n\n";
             if (Regex.IsMatch(resultString, hasCoveragePattern))
             {
                 resultString = Regex.Replace(resultString, hasCoveragePattern, "");
                 resultString += "\n\nGoogle Test Adapter Coverage Marker";
+            }
+            else
+            {
+                // workaround for build server - wtf?
+                hasCoveragePattern = @"Attachments:\n.*\.coverage\n";
+                if (Regex.IsMatch(resultString, hasCoveragePattern))
+                {
+                    resultString = Regex.Replace(resultString, hasCoveragePattern, "");
+                    resultString += "\n\nGoogle Test Adapter Coverage Marker";
+                }
             }
 
             string noDataAdapterPattern = "Warning: Could not find diagnostic data adapter 'Code Coverage'. Make sure diagnostic data adapter is installed and try again.\n\n";
