@@ -147,15 +147,8 @@
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if exist "$(ProjectDir)GTA_Console.csv" (
-  mv "$(ProjectDir)GTA_Console.csv" "$(ProjectDir)seed"
-  echo "Generating test data using existing data as seed"
-  $(ProjectDir)pict\pict.exe $(ProjectDir)GTA_Console.pictmodel -a:# -e:"$(ProjectDir)seed" &gt;"$(ProjectDir)GTA_Console.csv"
-  del "$(ProjectDir)seed"
-) else (
-  echo "Generating test data from scratch"
-  $(ProjectDir)pict\pict.exe $(ProjectDir)GTA_Console.pictmodel -a:# &gt;"$(ProjectDir)GTA_Console.csv"
-)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Clarius.TransformOnBuild-unofficial.1.20\build\Clarius.TransformOnBuild-unofficial.targets" Condition="Exists('..\packages\Clarius.TransformOnBuild-unofficial.1.20\build\Clarius.TransformOnBuild-unofficial.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
