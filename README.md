@@ -125,9 +125,13 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 * Matthew Manela, author of Chutzpah Test Adapter
 
 #### Tools
-* [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
+* [ReSharper](https://www.jetbrains.com/resharper/) - awesome VS extension for .NET development, including refactoring, static analysis etc.
+  * thanks to [JetBrains](https://www.jetbrains.com/) for providing free licenses for our developers!
 * [AppVeyor](http://www.appveyor.com/) - awesome .NET CI build services
+  * thanks for providing free services for open source projects!
 * [Coveralls](https://coveralls.io/) - code coverage visualization facilities
+  * thanks for providing free services for open source projects!
+* [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
 * [Coveralls.net](https://github.com/csmacnz/coveralls.net) - uploads code coverage data to Coveralls
 
 

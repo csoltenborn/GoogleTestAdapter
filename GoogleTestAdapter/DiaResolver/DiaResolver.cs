@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Dia;
-using System.Runtime.InteropServices;
+// ReSharper disable InconsistentNaming
 
 namespace GoogleTestAdapter.DiaResolver
 {
@@ -58,7 +58,7 @@ namespace GoogleTestAdapter.DiaResolver
             try
             {
                 Type comType = Type.GetTypeFromCLSID(clsid);
-                DiaDataSource = (IDiaDataSource)System.Activator.CreateInstance(comType);
+                DiaDataSource = (IDiaDataSource)Activator.CreateInstance(comType);
                 return true;
             }
             catch (Exception)

@@ -149,12 +149,12 @@ namespace GoogleTestAdapter.Helpers
                 List<string> result = new List<string>();
 
                 // remove instance number
-                string suite = descriptor.Suite.Substring(0, descriptor.Suite.LastIndexOf("/"));
+                string suite = descriptor.Suite.Substring(0, descriptor.Suite.LastIndexOf("/", StringComparison.Ordinal));
 
                 // remove prefix
                 if (suite.Contains("/"))
                 {
-                    int index = suite.IndexOf("/");
+                    int index = suite.IndexOf("/", StringComparison.Ordinal);
                     suite = suite.Substring(index + 1, suite.Length - index - 1);
                 }
 

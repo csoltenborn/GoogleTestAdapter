@@ -12,7 +12,9 @@ namespace GoogleTestAdapter.Scheduling
     [XmlRoot]
     public class GtaTestDurations
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Executable { get; set; }
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
     }
 
@@ -40,15 +42,7 @@ namespace GoogleTestAdapter.Scheduling
         private static object Lock { get; } = new object();
         private static readonly TestDuration Default = new TestDuration();
 
-
         private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GtaTestDurations));
-        private TestEnvironment TestEnvironment { get; }
-
-
-        public TestDurationSerializer(TestEnvironment testEnvironment)
-        {
-            this.TestEnvironment = testEnvironment;
-        }
 
 
         public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)

@@ -137,7 +137,7 @@ namespace GoogleTestAdapter.TestAdapter
             IEnumerable<Model.TestCase> allTestCasesInExecutables, IEnumerable<Model.TestCase> testCasesToRun,
             IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            var reporter = new VsTestFrameworkReporter(null, frameworkHandle, TestEnvironment);
+            var reporter = new VsTestFrameworkReporter(null, frameworkHandle);
             IDebuggedProcessLauncher launcher = new DebuggedProcessLauncher(frameworkHandle);
             Executor = new GoogleTestExecutor(TestEnvironment);
             Executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,

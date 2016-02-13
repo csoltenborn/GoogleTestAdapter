@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Microsoft.VisualStudio.Shell;
@@ -29,6 +30,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             IRunSettingsConfigurationInfo configurationInfo, ILogger logger)
         {
             XPathNavigator userRunSettingsNavigator = userRunSettingDocument.CreateNavigator();
+            Debug.Assert(userRunSettingsNavigator != null, "userRunSettingsNavigator == null!");
             if (!userRunSettingsNavigator.MoveToChild("RunSettings", ""))
             {
                 logger.Log(MessageLevel.Warning, "RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...");
@@ -87,6 +89,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         protected virtual string GetSolutionSettingsXmlFile()
         {
             DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            Debug.Assert(dte != null, "dte == null!");
             return Path.ChangeExtension(dte.Solution.FullName, GoogleTestConstants.SettingsExtension);
         }
 

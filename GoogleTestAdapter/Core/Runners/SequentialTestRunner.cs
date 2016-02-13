@@ -63,9 +63,9 @@ namespace GoogleTestAdapter.Runners
         {
             string resultXmlFile = Path.GetTempFileName();
             string workingDir = Path.GetDirectoryName(executable);
-            TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
+            var serializer = new TestDurationSerializer();
 
-            CommandLineGenerator generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
+            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (Canceled)

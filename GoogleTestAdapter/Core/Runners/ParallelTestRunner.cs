@@ -79,7 +79,7 @@ namespace GoogleTestAdapter.Runners
 
         private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun)
         {
-            TestDurationSerializer serializer = new TestDurationSerializer(TestEnvironment);
+            var serializer = new TestDurationSerializer();
             IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
 
             ITestsSplitter splitter;

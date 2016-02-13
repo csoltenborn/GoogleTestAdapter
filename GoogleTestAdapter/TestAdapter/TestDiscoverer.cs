@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
-using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter
@@ -43,7 +42,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             try
             {
-                VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null, TestEnvironment);
+                VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null);
                 Discoverer.DiscoverTests(executables, reporter);
             }
             catch (Exception e)

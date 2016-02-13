@@ -60,9 +60,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public int? ReportWaitPeriod { get; set; }
         public bool ShouldSerializeReportWaitPeriod() { return ReportWaitPeriod != null; }
 
-        public bool? DevelopmentMode { get; set; }
-        public bool ShouldSerializeDevelopmentMode() { return DevelopmentMode != null; }
-
 
         public override XmlElement ToXml()
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;

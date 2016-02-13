@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Framework;
-using System;
+using GoogleTestAdapter.TestAdapter.Helpers;
 
-namespace GoogleTestAdapter.TestAdapter.Helpers
+namespace GoogleTestAdapter.TestAdapter.Framework
 {
     class VsTestFrameworkReporter : ITestFrameworkReporter
     {
@@ -14,16 +14,13 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         private IFrameworkHandle FrameworkHandle { get; }
         private ITestCaseDiscoverySink Sink { get; }
 
-        private TestEnvironment TestEnvironment { get; }
-
         private Throttle Throttle { get; }
 
 
-        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle, TestEnvironment testEnvironment)
+        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle)
         {
             Sink = sink;
             FrameworkHandle = frameworkHandle;
-            TestEnvironment = testEnvironment;
 
             // This is part of a workaround for a Visual Studio bug (see issue #15).
             // If test results are reported too quickly (100 or more in 500ms), the
