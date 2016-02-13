@@ -5,20 +5,20 @@ using System.Threading;
 namespace GoogleTestAdapter.Helpers
 {
 
-    class ProcessWaiter
+    public class ProcessWaiter
     {
-        internal int ProcessExitCode { get; private set; } = -1;
+        public int ProcessExitCode { get; private set; } = -1;
         private bool Exited { get; set; } = false;
 
 
-        internal ProcessWaiter(Process process)
+        public ProcessWaiter(Process process)
         {
             process.EnableRaisingEvents = true;
             process.Exited += OnExited;
         }
 
 
-        internal int WaitForExit()
+        public int WaitForExit()
         {
             lock (this)
             {

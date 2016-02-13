@@ -29,11 +29,11 @@ TYPED_TEST(TypedTests, CanDefeatMath) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_TRAITS2(TypedTests, TwoTraits, Author, IBM, Category, Integration) {
+TYPED_TEST_TRAITS2(TypedTests, TwoTraits, Author, IBM, TestCategory, Integration) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_TRAITS3(TypedTests, ThreeTraits, Author, IBM, Category, Integration, Class, Simple) {
+TYPED_TEST_TRAITS3(TypedTests, ThreeTraits, Author, IBM, TestCategory, Integration, Class, Simple) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
@@ -54,11 +54,11 @@ TYPED_TEST_P(TypeParameterizedTests, CanDefeatMath) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_P_TRAITS2(TypeParameterizedTests, TwoTraits, Author, HAL, Category, Unit) {
+TYPED_TEST_P_TRAITS2(TypeParameterizedTests, TwoTraits, Author, HAL, TestCategory, Unit) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_P_TRAITS3(TypeParameterizedTests, ThreeTraits, Author, HAL, Category, Unit, Class, Cake) {
+TYPED_TEST_P_TRAITS3(TypeParameterizedTests, ThreeTraits, Author, HAL, TestCategory, Unit, Class, Cake) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 

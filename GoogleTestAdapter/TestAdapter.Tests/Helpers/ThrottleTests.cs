@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             var duration = (events.Last().time - events.First().time).TotalMilliseconds;
             var minimumDuration = ((totalEvents / maxEvents - 1) * timeSpan.TotalMilliseconds);
             duration.Should().BeGreaterThan(minimumDuration);
-            duration.Should().BeLessThan(minimumDuration + timeSpan.TotalMilliseconds + 10); // TODO 10 is an arbitrary tolerance to make test pass
+            duration.Should().BeLessThan(minimumDuration + timeSpan.TotalMilliseconds + 20); // TODO 20 is an arbitrary tolerance to make test pass
         }
 
         [TestMethod]

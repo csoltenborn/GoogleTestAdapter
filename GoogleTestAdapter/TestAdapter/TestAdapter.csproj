@@ -56,11 +56,18 @@
     <Reference Include="envdte90a, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.Shell.11.11.0.0\lib\net45\Microsoft.VisualStudio.Shell.11.0.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
@@ -73,7 +80,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +87,7 @@
     <Compile Include="Framework\DebuggedProcessLauncher.cs" />
     <Compile Include="Framework\VsTestFrameworkLogger.cs" />
     <Compile Include="Framework\VSTestFrameworkReporter.cs" />
+    <Compile Include="Helpers\TestCaseFilter.cs" />
     <Compile Include="Helpers\Throttle.cs" />
     <Compile Include="Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="Settings\IGlobalRunSettings.cs" />
@@ -122,6 +129,6 @@
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>$(DevEnvDir)CommonExtensions\Microsoft\TestWindow\vstest.console.exe</StartProgram>
-    <StartArguments>/TestAdapterPath:"$(TargetDir)" "$(SolutionDir)..\SampleTests\Debug\Tests.exe"</StartArguments>
+    <StartArguments>"$(SolutionDir)..\SampleTests\Debug\Tests.exe" /TestCaseFilter:"Name=Foo" /TestAdapterPath:"$(TargetDir)"</StartArguments>
   </PropertyGroup>
 </Project>

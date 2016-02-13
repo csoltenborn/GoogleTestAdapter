@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <GoogleTestAdapter>
-    <BatchForTestTeardown>User</BatchForTestTeardown>
+    <ShuffleTests>true</ShuffleTests>
     <MaxNrOfThreads>3</MaxNrOfThreads>
     <ShuffleTestsSeed>3</ShuffleTestsSeed>
     <ReportWaitPeriod>3</ReportWaitPeriod>

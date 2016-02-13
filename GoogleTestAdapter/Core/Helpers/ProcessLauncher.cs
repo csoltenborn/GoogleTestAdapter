@@ -8,35 +8,25 @@ namespace GoogleTestAdapter.Helpers
 
     public class ProcessLauncher
     {
-        private TestEnvironment TestEnvironment { get; }
-        private bool IsBeingDebugged { get; }
+        private readonly ILogger Logger;
 
-        public ProcessLauncher(TestEnvironment testEnvironment, bool isBeingDebugged)
+        public ProcessLauncher(ILogger logger)
         {
-            TestEnvironment = testEnvironment;
-            IsBeingDebugged = isBeingDebugged;
+            Logger = logger;
         }
 
-
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher)
+            bool throwIfError)
         {
             int dummy;
-            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, debuggedLauncher, out dummy);
+            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, out dummy);
         }
 
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher, out int processExitCode)
+            bool throwIfError, out int processExitCode)
         {
             List<string> output = new List<string>();
-            if (IsBeingDebugged)
-            {
-                processExitCode = LaunchProcessWithDebuggerAttached(workingDirectory, command, param, printTestOutput, debuggedLauncher);
-            }
-            else
-            {
-                processExitCode = LaunchProcess(workingDirectory, command, param, printTestOutput, throwIfError, output);
-            }
+            processExitCode = LaunchProcess(workingDirectory, command, param, printTestOutput, throwIfError, output);
             return output;
         }
 
@@ -58,13 +48,13 @@ namespace GoogleTestAdapter.Helpers
                 ProcessWaiter waiter = new ProcessWaiter(process);
                 if (printTestOutput)
                 {
-                    TestEnvironment.LogInfo(
+                    Logger.LogInfo(
                         ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
                 }
                 ReadTheStream(process, output, printTestOutput, throwIfError);
                 if (printTestOutput)
                 {
-                    TestEnvironment.LogInfo("<<<<<<<<<<<<<<< End of Output");
+                    Logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
                 }
                 return waiter.WaitForExit();
             }
@@ -72,23 +62,6 @@ namespace GoogleTestAdapter.Helpers
             {
                 process?.Dispose();
             }
-        }
-
-        private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command, string param, bool printTestOutput,
-            IDebuggedProcessLauncher handle)
-        {
-            TestEnvironment.LogInfo("Attaching debugger to " + command);
-            if (printTestOutput)
-            {
-                TestEnvironment.DebugInfo(
-                    "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
-            }
-            int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param);
-            Process process = Process.GetProcessById(processId);
-            ProcessWaiter waiter = new ProcessWaiter(process);
-            waiter.WaitForExit();
-            process.Dispose();
-            return waiter.ProcessExitCode;
         }
 
         // ReSharper disable once UnusedParameter.Local
@@ -100,7 +73,7 @@ namespace GoogleTestAdapter.Helpers
                 streamContent.Add(line);
                 if (printTestOutput)
                 {
-                    TestEnvironment.LogInfo(line);
+                    Logger.LogInfo(line);
                 }
             }
             if ((throwIfError && process.ExitCode != 0))

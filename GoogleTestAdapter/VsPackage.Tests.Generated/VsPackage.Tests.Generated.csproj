@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{032BEBF7-2D2B-4CFD-B53D-E3D21B3AC9D6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GoogleTestAdapter.VsPackage</RootNamespace>
+    <AssemblyName>GoogleTestAdapter.VsPackage.Tests.Generated</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="ConsoleTests.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ConsoleTests.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VsPackage.Tests\VsPackage.Tests.csproj">
+      <Project>{b9c827b5-dc90-4a78-b477-852eae1196af}</Project>
+      <Name>VsPackage.Tests</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ConsoleTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ConsoleTests.cs</LastGenOutput>
+    </Content>
+    <Content Include="GoldenFiles\ConsoleDllTests__HardCrashingSampleTests.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__HardCrashingSampleTests_Settings_Coverage_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_HardCrashingSampleTests.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_SampleTests.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_X861.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_X862.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__NEG_SampleTests_Coverage_NotExisting_EQ_Foo.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__NEG_SampleTests_Settings_Isolation_NotExisting_EQ_Foo.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Coverage_Isolation_DisplayName_EQ_TestMath_AddPassesWithTraits_OR_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Coverage_Isolation_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Coverage_TestCategory_EQ_NotExisting.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Coverage_TestCategory_EQ_Unit_AND_Type_EQ_Medium.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Isolation_DisplayName_EQ_TestMath_AddPassesWithTraits.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_Coverage_DisplayName_EQ_TestMath_AddPassesWithTraits.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_Coverage_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_DisplayName_EQ_TestMath_AddPassesWithTraits_OR_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_Isolation_TestCategory_EQ_NotExisting.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_Isolation_TestCategory_EQ_Unit_AND_Type_EQ_Medium.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__X861_Coverage.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__X861_Settings_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__X862_Coverage_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleDllTests__X862_Settings.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__HardCrashingSampleTests.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__HardCrashingSampleTests_Settings_Coverage_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__List_TestsOf_HardCrashingSampleTests.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__List_TestsOf_SampleTests.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__List_TestsOf_X861.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__List_TestsOf_X862.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__NEG_SampleTests_Coverage_NotExisting_EQ_Foo.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__NEG_SampleTests_Settings_Isolation_NotExisting_EQ_Foo.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Coverage_Isolation_DisplayName_EQ_TestMath_AddPassesWithTraits_OR_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Coverage_Isolation_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Coverage_TestCategory_EQ_NotExisting.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Coverage_TestCategory_EQ_Unit_AND_Type_EQ_Medium.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Isolation_DisplayName_EQ_TestMath_AddPassesWithTraits.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Settings_Coverage_DisplayName_EQ_TestMath_AddPassesWithTraits.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Settings_Coverage_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Settings_DisplayName_EQ_TestMath_AddPassesWithTraits_OR_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Settings_Isolation_TestCategory_EQ_NotExisting.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Settings_Isolation_TestCategory_EQ_Unit_AND_Type_EQ_Medium.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__SampleTests_Settings_Type_EQ_Small.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__X861_Coverage.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__X861_Settings_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__X862_Coverage_Isolation.txt" />
+    <Content Include="GoldenFiles\ConsoleVsixTests__X862_Settings.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GTA_Console.csv" />
+    <None Include="GTA_Console.pictmodel" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if exist "$(ProjectDir)GTA_Console.csv" (
+  mv "$(ProjectDir)GTA_Console.csv" "$(ProjectDir)seed"
+  echo "Generating test data using existing data as seed"
+  $(ProjectDir)pict\pict.exe $(ProjectDir)GTA_Console.pictmodel -a:# -e:"$(ProjectDir)seed" &gt;"$(ProjectDir)GTA_Console.csv"
+  del "$(ProjectDir)seed"
+) else (
+  echo "Generating test data from scratch"
+  $(ProjectDir)pict\pict.exe $(ProjectDir)GTA_Console.pictmodel -a:# &gt;"$(ProjectDir)GTA_Console.csv"
+)</PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\Clarius.TransformOnBuild-unofficial.1.20\build\Clarius.TransformOnBuild-unofficial.targets" Condition="Exists('..\packages\Clarius.TransformOnBuild-unofficial.1.20\build\Clarius.TransformOnBuild-unofficial.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Clarius.TransformOnBuild-unofficial.1.20\build\Clarius.TransformOnBuild-unofficial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Clarius.TransformOnBuild-unofficial.1.20\build\Clarius.TransformOnBuild-unofficial.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

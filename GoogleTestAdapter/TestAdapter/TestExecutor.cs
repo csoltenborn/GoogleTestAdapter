@@ -37,8 +37,15 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
-                IEnumerable<Model.TestCase> allTestCasesInExecutables =
-                    GetAllTestCasesInExecutables(executables);
+
+                IList<Model.TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
+
+                ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
+                TestCaseFilter filter = new TestCaseFilter(runContext, allTraitNames, TestEnvironment);
+                List<TestCase> vsTestCases =
+                    filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
+                allTestCasesInExecutables =
+                    allTestCasesInExecutables.Where(tc => vsTestCases.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToList();
 
                 DoRunTests(allTestCasesInExecutables, allTestCasesInExecutables, runContext, frameworkHandle);
             }
@@ -53,6 +60,12 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+
+                var vsTestCasesToRunAsArray = vsTestCasesToRun as TestCase[] ?? vsTestCasesToRun.ToArray();
+                ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(DataConversionExtensions.ToTestCase));
+                TestCaseFilter filter = new TestCaseFilter(runContext, allTraitNames, TestEnvironment);
+                vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
+
                 IEnumerable<Model.TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
@@ -105,6 +118,19 @@ namespace GoogleTestAdapter.TestAdapter
             }
 
             return allTestCasesInExecutables;
+        }
+
+        private ISet<string> GetAllTraitNames(IEnumerable<Model.TestCase> testCases)
+        {
+            HashSet<string> allTraitNames = new HashSet<string>();
+            foreach (Model.TestCase testCase in testCases)
+            {
+                foreach (Model.Trait trait in testCase.Traits)
+                {
+                    allTraitNames.Add(trait.Name);
+                }
+            }
+            return allTraitNames;
         }
 
         private void DoRunTests(

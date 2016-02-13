@@ -17,7 +17,7 @@ namespace GoogleTestAdapterUiTests
 {
     public class VsExperimentalInstance
     {
-        public enum Versions { VS2012=11, VS2013=12, VS2015=14 }
+        public enum Versions { VS2012 = 11, VS2013 = 12, VS2015 = 14 }
 
         public readonly Versions Version;
         public readonly string Suffix;
@@ -25,9 +25,6 @@ namespace GoogleTestAdapterUiTests
 
         public VsExperimentalInstance(Versions version, string suffix)
         {
-            if (string.IsNullOrWhiteSpace(suffix))
-                throw new ArgumentException("suffix may not be empty");
-
             Version = version;
             Suffix = suffix;
             VersionAndSuffix = $"{Version:d}.0{Suffix}";
@@ -44,7 +41,10 @@ namespace GoogleTestAdapterUiTests
 
         public void Clean()
         {
-            foreach(var dir in GetVsDirectories().Where(Directory.Exists))
+            if (string.IsNullOrEmpty(Suffix))
+                throw new InvalidOperationException("We do not want to clean the non-experimental VS instance.");
+
+            foreach (var dir in GetVsDirectories().Where(Directory.Exists))
                 Directory.Delete(dir, true);
             foreach (var key in GetVsHkcuKeys().Where(Registry.CurrentUser.HasSubKey))
                 Registry.CurrentUser.DeleteSubKeyTree(key);
@@ -75,15 +75,35 @@ namespace GoogleTestAdapterUiTests
             using (var settings = ExternalSettingsManager.CreateForApplication(GetExePath(), Suffix))
             {
                 var ems = new ExtensionManagerService(settings);
-                var vsix = ExtensionManagerService.CreateInstallableExtension(vsixPath);
+                IInstallableExtension vsix = ExtensionManagerService.CreateInstallableExtension(vsixPath);
+
+                if (ems.IsInstalled(vsix))
+                {
+                    IInstalledExtension installedVsix = ems.GetInstalledExtension(vsix.Header.Identifier);
+                    ems.Uninstall(installedVsix);
+                    if (ems.IsInstalled(vsix))
+                        throw new InvalidOperationException("Could not uninstall already installed GoogleTestAdapter.");
+                }
+
                 ems.Install(vsix, perMachine: false);
+                if (!ems.IsInstalled(vsix))
+                    throw new InvalidOperationException("Could not install GoogleTestAdapter.");
+
                 ems.Close();
             }
         }
 
         public Application Launch()
         {
-            return Application.Launch(new ProcessStartInfo(GetExePath(), $"/rootSuffix {Suffix}"));
+            ProcessStartInfo startInfo = string.IsNullOrEmpty(Suffix)
+                ? new ProcessStartInfo(GetExePath())
+                : new ProcessStartInfo(GetExePath(), $"/rootSuffix {Suffix}");
+            return Application.Launch(startInfo);
+        }
+
+        public static string GetVsTestConsolePath(Versions version)
+        {
+            return @"C:\Program Files (x86)\" + $"Microsoft Visual Studio {version:d}.0" + @"\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
         }
 
         private string GetExePath()
@@ -94,7 +114,7 @@ namespace GoogleTestAdapterUiTests
         private IEnumerable<string> GetVsDirectories()
         {
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            foreach(var folder in new[]{ VersionAndSuffix, Suffix })
+            foreach (var folder in new[] { VersionAndSuffix, Suffix })
                 yield return Path.Combine(localAppData, @"Microsoft\VisualStudio", folder);
         }
 

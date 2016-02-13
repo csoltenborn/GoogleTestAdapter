@@ -16,6 +16,8 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -120,6 +122,7 @@
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="TestStack.White, Version=0.13.0.0, Culture=neutral, PublicKeyToken=2672efbf3e161801, processorArchitecture=MSIL">
       <HintPath>..\packages\TestStack.White.0.13.3\lib\net40\TestStack.White.dll</HintPath>
@@ -138,19 +141,35 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="..\Core\Framework\ILogger.cs">
+      <Link>Framework\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Helpers\ProcessLauncher.cs">
+      <Link>Helpers\ProcessLauncher.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Helpers\ProcessWaiter.cs">
+      <Link>Helpers\ProcessWaiter.cs</Link>
+    </Compile>
+    <Compile Include="ConsoleDllIntegrationTests.cs" />
+    <Compile Include="Helpers\ConsoleLogger.cs" />
+    <Compile Include="Helpers\CsvReader.cs" />
     <Compile Include="Helpers\RegistryKeyExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\TestStackWhiteExtensions.cs" />
     <Compile Include="Helpers\MessageBoxWithTimeout.cs" />
     <Compile Include="Model\TestRun.cs" />
+    <Compile Include="ResultChecker.cs" />
     <Compile Include="UiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AbstractConsoleIntegrationTests.cs" />
     <Compile Include="VS.cs" />
     <Compile Include="VsExperimentalInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="UITestResults\UiTests__RunAllTests__AllTestsAreRun.xml" />
@@ -162,7 +181,15 @@
     <Content Include="UITestResults\UiTests__RunSelectedTests_PointerParameterizedTests_CheckStringLength_0.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_TypedTests_0_CanIterate.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
+      <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
+      <Name>Core.Tests</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
@@ -183,6 +210,10 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

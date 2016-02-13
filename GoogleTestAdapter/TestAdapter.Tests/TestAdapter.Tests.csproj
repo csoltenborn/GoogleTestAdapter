@@ -76,7 +76,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -86,6 +88,7 @@
     <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
     <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
     <Compile Include="Helpers\ThrottleTests.cs" />
+    <Compile Include="Helpers\TestCaseFilterTests.cs" />
     <Compile Include="TestDiscovererTests.cs" />
     <Compile Include="TestExecutorParallelTests.cs" />
     <Compile Include="TestExecutorSequentialTests.cs" />

@@ -33,7 +33,7 @@ TEST_F_TRAITS2(TheFixture, AddPassesWithTraits2, Type, Small, Author, CSO)
 	EXPECT_EQ(20, Add(10, 10));
 }
 
-TEST_F_TRAITS3(TheFixture, AddPassesWithTraits3, Type, Small, Author, CSO, Category, Integration)
+TEST_F_TRAITS3(TheFixture, AddPassesWithTraits3, Type, Small, Author, CSO, TestCategory, Integration)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }
