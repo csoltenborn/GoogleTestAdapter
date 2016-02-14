@@ -7,8 +7,7 @@
       <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.Simple/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 23</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:24
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: 0
 Expected: 1
 
@@ -16,6 +15,7 @@ $(SolutionDir)\tests\parameterizedtests.cpp:25
 Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:24 in $(SolutionDir)\tests\parameterizedtests.cpp:line 24.</Stacktrace>
     </TestCase>
   </TestGroup>
   <TestGroup>
@@ -27,9 +27,9 @@ Expected: ""</Error>
       <Source>typeparameterizedtests.cpp line 53</Source>
     </TestCase>
     <TestCase>
-      <Name>Crashing.AddPasses</Name>
-      <Result>Test Passed - Crashing.AddPasses</Result>
-      <Source>crashingtests.cpp line 21</Source>
+      <Name>Crashing.AddPassesAfterCrash</Name>
+      <Result>Test Passed - Crashing.AddPassesAfterCrash</Result>
+      <Source>crashingtests.cpp line 31</Source>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]</Name>
@@ -51,7 +51,7 @@ Expected: ""</Error>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
+Found 6 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
 Running 6 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'

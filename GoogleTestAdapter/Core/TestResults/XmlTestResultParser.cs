@@ -105,8 +105,10 @@ namespace GoogleTestAdapter.TestResults
                     }
                     else
                     {
+                        ErrorMessageParser parser = new ErrorMessageParser(failureNodes, testResult.TestCase.CodeFilePath);
                         testResult.Outcome = TestOutcome.Failed;
-                        testResult.ErrorMessage = CreateErrorMessage(failureNodes);
+                        testResult.ErrorMessage = parser.ErrorMessage;
+                        testResult.ErrorStackTrace = parser.ErrorStackTrace;
                     }
                     break;
                 case "notrun":
@@ -119,12 +121,6 @@ namespace GoogleTestAdapter.TestResults
             }
 
             return testResult;
-        }
-
-        private string CreateErrorMessage(XmlNodeList failureNodes)
-        {
-            IEnumerable<string> errorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText);
-            return string.Join("\n\n", errorMessages);
         }
 
         private TimeSpan ParseDuration(string durationString)

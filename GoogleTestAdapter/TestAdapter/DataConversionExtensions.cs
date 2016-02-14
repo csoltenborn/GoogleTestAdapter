@@ -48,6 +48,7 @@ namespace GoogleTestAdapter.TestAdapter
             result.DisplayName = testResult.DisplayName;
             result.Duration = testResult.Duration;
             result.ErrorMessage = testResult.ErrorMessage;
+            result.ErrorStackTrace = testResult.ErrorStackTrace;
             return result;
         }
 

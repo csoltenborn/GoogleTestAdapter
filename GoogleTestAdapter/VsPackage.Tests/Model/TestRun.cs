@@ -55,10 +55,12 @@ namespace GoogleTestAdapterUiTests.Model
         public string Result = string.Empty;
         public string Source = string.Empty;
         public string Error = string.Empty;
+        public string Stacktrace = string.Empty;
         public string Unexpected = string.Empty;
         public bool ShouldSerializeFullyQualifiedName() { return !string.IsNullOrWhiteSpace(FullyQualifiedName); }
         public bool ShouldSerializeError() { return !string.IsNullOrWhiteSpace(Error); }
         public bool ShouldSerializeUnexpected() { return !string.IsNullOrWhiteSpace(Unexpected); }
+        public bool ShouldSerializeStacktrace() { return !string.IsNullOrWhiteSpace(Stacktrace); }
     }
 
 }

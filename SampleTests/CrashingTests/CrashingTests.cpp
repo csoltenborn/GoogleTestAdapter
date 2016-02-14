@@ -7,17 +7,27 @@
 
 extern "C" void CrashReallyHard(void);
 
+TEST(Crashing, AddFailsBeforeCrash)
+{
+	EXPECT_EQ(1000, Add(10, 10));
+}
+
+TEST(Crashing, AddPassesBeforeCrash)
+{
+	EXPECT_EQ(20, Add(10, 10));
+}
+
 TEST(Crashing, TheCrash)
 {
 	CrashReallyHard();
 }
 
-TEST(Crashing, AddFails)
+TEST(Crashing, AddFailsAfterCrash)
 {
 	EXPECT_EQ(1000, Add(10, 10));
 }
 
-TEST(Crashing, AddPasses)
+TEST(Crashing, AddPassesAfterCrash)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }

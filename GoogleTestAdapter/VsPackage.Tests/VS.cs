@@ -122,9 +122,14 @@ namespace GoogleTestAdapterUiTests
                         case "errorMessageItem":
                             testResult.Error += label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "$(SolutionDir)");
                             break;
+                        case "hyperlinkText":
+                            testResult.Stacktrace = label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "$(SolutionDir)");
+                            break;
                         case "sourceTextHeader":
                         case "noSourceAvailableToolTip":
                         case "elapsedTimeText":
+                        case "Stacktraceheader":
+                        case "StackFramePanel":
                             // ignore
                             break;
                         default:
@@ -210,7 +215,14 @@ namespace GoogleTestAdapterUiTests
                         {
                             if (node.Text.StartsWith(displayName))
                             {
-                                result.Add(displayName, node);
+                                if (result.ContainsKey(displayName))
+                                {
+                                    int x = 0;
+                                }
+                                else
+                                {
+                                    result.Add(displayName, node);
+                                }
                             }
                         }
                     }

@@ -114,12 +114,15 @@ namespace GoogleTestAdapter.TestResults
             {
                 CrashedTestCase = testCase;
             }
+
+            ErrorMessageParser parser = new ErrorMessageParser(errorMessage, testCase.CodeFilePath);
             return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = testCase.DisplayName,
                 Outcome = TestOutcome.Failed,
-                ErrorMessage = errorMessage,
+                ErrorMessage = parser.ErrorMessage,
+                ErrorStackTrace = parser.ErrorStackTrace,
                 Duration = duration
             };
         }

@@ -7,29 +7,38 @@
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed - Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 53</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:54
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:54 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 54.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.ThreeTraits</FullyQualifiedName>
       <Result>Test Failed - Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 61</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:62
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:62 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 62.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>Arr/TypeParameterizedTests/0.TwoTraits</FullyQualifiedName>
       <Result>Test Failed - Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 57</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:58
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:58 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 58.</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>Crashing.AddFailsBeforeCrash</Name>
+      <Result>Test Failed - Crashing.AddFailsBeforeCrash</Result>
+      <Source>crashingtests.cpp line 11</Source>
+      <Error>Message: error: Value of: Add(10, 10)
+  Actual: 20
+Expected: 1000</Error>
+      <Stacktrace>   at crashingtests.cpp:12 in $(SolutionDir)\crashingtests\crashingtests.cpp:line 12.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Crashing.TheCrash</Name>
       <Result>Test Failed - Crashing.TheCrash</Result>
-      <Source>crashingtests.cpp line 11</Source>
+      <Source>crashingtests.cpp line 21</Source>
       <Error>Message: !! This is probably the test that crashed !!</Error>
     </TestCase>
     <TestCase>
@@ -37,96 +46,95 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <FullyQualifiedName>InstantiationName/ParameterizedTests.Simple/1</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.Simple/1 [(1,!)]</Result>
       <Source>parameterizedtests.cpp line 23</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:25
-Value of: GetParam().s
+      <Error>Message: Value of: GetParam().s
   Actual: "!"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:25 in $(SolutionDir)\tests\parameterizedtests.cpp:line 25.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.Simple/2 [(-1,)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.Simple/2</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.Simple/2 [(-1,)]</Result>
       <Source>parameterizedtests.cpp line 23</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:24
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: -1
 Expected: 1</Error>
+      <Stacktrace>   at parameterizedtests.cpp:24 in $(SolutionDir)\tests\parameterizedtests.cpp:line 24.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits/1</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]</Result>
       <Source>parameterizedtests.cpp line 28</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:30
-Value of: GetParam().s
+      <Error>Message: Value of: GetParam().s
   Actual: "!"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:30 in $(SolutionDir)\tests\parameterizedtests.cpp:line 30.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits/2</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]</Result>
       <Source>parameterizedtests.cpp line 28</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:29
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: -1
 Expected: 1</Error>
+      <Stacktrace>   at parameterizedtests.cpp:29 in $(SolutionDir)\tests\parameterizedtests.cpp:line 29.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits2/1</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]</Result>
       <Source>parameterizedtests.cpp line 33</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:35
-Value of: GetParam().s
+      <Error>Message: Value of: GetParam().s
   Actual: "!"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:35 in $(SolutionDir)\tests\parameterizedtests.cpp:line 35.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits2/2</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]</Result>
       <Source>parameterizedtests.cpp line 33</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:34
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: -1
 Expected: 1</Error>
+      <Stacktrace>   at parameterizedtests.cpp:34 in $(SolutionDir)\tests\parameterizedtests.cpp:line 34.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits3/1</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]</Result>
       <Source>parameterizedtests.cpp line 38</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:40
-Value of: GetParam().s
+      <Error>Message: Value of: GetParam().s
   Actual: "!"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:40 in $(SolutionDir)\tests\parameterizedtests.cpp:line 40.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]</Name>
       <FullyQualifiedName>InstantiationName/ParameterizedTests.SimpleTraits3/2</FullyQualifiedName>
       <Result>Test Failed - InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]</Result>
       <Source>parameterizedtests.cpp line 38</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:39
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: -1
 Expected: 1</Error>
+      <Stacktrace>   at parameterizedtests.cpp:39 in $(SolutionDir)\tests\parameterizedtests.cpp:line 39.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>LongRunningTests.Test2</Name>
       <Result>Test Failed - LongRunningTests.Test2</Result>
       <Source>longrunningtests.cpp line 11</Source>
-      <Error>Message: $(SolutionDir)\tests\longrunningtests.cpp:13
-Value of: 2
+      <Error>Message: Value of: 2
 Expected: 1</Error>
+      <Stacktrace>   at longrunningtests.cpp:13 in $(SolutionDir)\tests\longrunningtests.cpp:line 13.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>ParameterizedTests.Simple/0 [(0,_)]</Name>
       <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.Simple/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 23</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:24
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: 0
 Expected: 1
 
@@ -134,14 +142,14 @@ $(SolutionDir)\tests\parameterizedtests.cpp:25
 Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:24 in $(SolutionDir)\tests\parameterizedtests.cpp:line 24.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>ParameterizedTests.SimpleTraits/0 [(0,_)]</Name>
       <FullyQualifiedName>ParameterizedTests.SimpleTraits/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.SimpleTraits/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 28</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:29
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: 0
 Expected: 1
 
@@ -149,14 +157,14 @@ $(SolutionDir)\tests\parameterizedtests.cpp:30
 Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:29 in $(SolutionDir)\tests\parameterizedtests.cpp:line 29.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>ParameterizedTests.SimpleTraits2/0 [(0,_)]</Name>
       <FullyQualifiedName>ParameterizedTests.SimpleTraits2/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.SimpleTraits2/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 33</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:34
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: 0
 Expected: 1
 
@@ -164,14 +172,14 @@ $(SolutionDir)\tests\parameterizedtests.cpp:35
 Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:34 in $(SolutionDir)\tests\parameterizedtests.cpp:line 34.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>ParameterizedTests.SimpleTraits3/0 [(0,_)]</Name>
       <FullyQualifiedName>ParameterizedTests.SimpleTraits3/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.SimpleTraits3/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 38</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:39
-Value of: GetParam().i
+      <Error>Message: Value of: GetParam().i
   Actual: 0
 Expected: 1
 
@@ -179,36 +187,37 @@ $(SolutionDir)\tests\parameterizedtests.cpp:40
 Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
+      <Stacktrace>   at parameterizedtests.cpp:39 in $(SolutionDir)\tests\parameterizedtests.cpp:line 39.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]</Name>
       <FullyQualifiedName>PointerParameterizedTests.CheckStringLength/2</FullyQualifiedName>
       <Result>Test Failed - PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]</Result>
       <Source>parameterizedtests.cpp line 63</Source>
-      <Error>Message: $(SolutionDir)\tests\parameterizedtests.cpp:64
-Value of: strlen(GetParam().first)
+      <Error>Message: Value of: strlen(GetParam().first)
   Actual: 5
 Expected: GetParam().second
 Which is: 23</Error>
+      <Stacktrace>   at parameterizedtests.cpp:64 in $(SolutionDir)\tests\parameterizedtests.cpp:line 64.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;</Name>
       <FullyQualifiedName>PrimitivelyTypedTests/0.CanHasBigNumbers</FullyQualifiedName>
       <Result>Test Failed - PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;</Result>
       <Source>typeparameterizedtests.cpp line 83</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:87
-Value of: sum
+      <Error>Message: Value of: sum
   Actual: '\x82' (-126)
 Expected: 130</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:87 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 87.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TestMath.AddFails</Name>
       <Result>Test Failed - TestMath.AddFails</Result>
       <Source>basictests.cpp line 29</Source>
-      <Error>Message: $(SolutionDir)\tests\basictests.cpp:30
-Value of: Add(10, 10)
+      <Error>Message: Value of: Add(10, 10)
   Actual: 20
 Expected: 1000</Error>
+      <Stacktrace>   at basictests.cpp:30 in $(SolutionDir)\tests\basictests.cpp:line 30.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TestMath.Crash</Name>
@@ -221,10 +230,10 @@ SEH exception with code 0xc0000005 thrown in the test body.</Error>
       <Name>TheFixture.AddFails</Name>
       <Result>Test Failed - TheFixture.AddFails</Result>
       <Source>fixturetests.cpp line 11</Source>
-      <Error>Message: $(SolutionDir)\tests\fixturetests.cpp:12
-Value of: Add(10, 10)
+      <Error>Message: Value of: Add(10, 10)
   Actual: 20
 Expected: 1000</Error>
+      <Stacktrace>   at fixturetests.cpp:12 in $(SolutionDir)\tests\fixturetests.cpp:line 12.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TheFixture.Crash</Name>
@@ -238,92 +247,92 @@ SEH exception with code 0xc0000005 thrown in the test body.</Error>
       <FullyQualifiedName>TypedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed - TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 28</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:29
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:29 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 29.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.ThreeTraits</FullyQualifiedName>
       <Result>Test Failed - TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 36</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:37
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:37 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 37.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/0.TwoTraits</FullyQualifiedName>
       <Result>Test Failed - TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 32</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:33
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:33 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 33.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed - TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 28</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:29
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:29 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 29.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.ThreeTraits</FullyQualifiedName>
       <Result>Test Failed - TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 36</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:37
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:37 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 37.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;</Name>
       <FullyQualifiedName>TypedTests/1.TwoTraits</FullyQualifiedName>
       <Result>Test Failed - TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 32</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:33
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:33 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 33.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.CanDefeatMath</FullyQualifiedName>
       <Result>Test Failed - Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 53</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:54
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:54 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 54.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.ThreeTraits</FullyQualifiedName>
       <Result>Test Failed - Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 61</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:62
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:62 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 62.</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Name>
       <FullyQualifiedName>Vec/TypeParameterizedTests/0.TwoTraits</FullyQualifiedName>
       <Result>Test Failed - Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;</Result>
       <Source>typeparameterizedtests.cpp line 57</Source>
-      <Error>Message: $(SolutionDir)\tests\typeparameterizedtests.cpp:58
-Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Error>Message: Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Error>
+      <Stacktrace>   at typeparameterizedtests.cpp:58 in $(SolutionDir)\tests\typeparameterizedtests.cpp:line 58.</Stacktrace>
     </TestCase>
   </TestGroup>
   <TestGroup>
     <description>Skipped Tests</description>
     <TestCase>
-      <Name>Crashing.AddFails</Name>
-      <Result>Test Skipped - Crashing.AddFails</Result>
-      <Source>crashingtests.cpp line 16</Source>
+      <Name>Crashing.AddFailsAfterCrash</Name>
+      <Result>Test Skipped - Crashing.AddFailsAfterCrash</Result>
+      <Source>crashingtests.cpp line 26</Source>
       <Error>Message: reason is probably a crash of test Crashing.TheCrash</Error>
     </TestCase>
     <TestCase>
-      <Name>Crashing.AddPasses</Name>
-      <Result>Test Skipped - Crashing.AddPasses</Result>
-      <Source>crashingtests.cpp line 21</Source>
+      <Name>Crashing.AddPassesAfterCrash</Name>
+      <Result>Test Skipped - Crashing.AddPassesAfterCrash</Result>
+      <Source>crashingtests.cpp line 31</Source>
       <Error>Message: reason is probably a crash of test Crashing.TheCrash</Error>
     </TestCase>
     <TestCase>
       <Name>Crashing.LongRunning</Name>
       <Result>Test Skipped - Crashing.LongRunning</Result>
-      <Source>crashingtests.cpp line 26</Source>
+      <Source>crashingtests.cpp line 36</Source>
       <Error>Message: reason is probably a crash of test Crashing.TheCrash</Error>
     </TestCase>
   </TestGroup>
@@ -363,6 +372,11 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Name>CommandArgs.TestDirectoryIsSet</Name>
       <Result>Test Passed - CommandArgs.TestDirectoryIsSet</Result>
       <Source>basictests.cpp line 23</Source>
+    </TestCase>
+    <TestCase>
+      <Name>Crashing.AddPassesBeforeCrash</Name>
+      <Result>Test Passed - Crashing.AddPassesBeforeCrash</Result>
+      <Source>crashingtests.cpp line 16</Source>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.Simple/0 [(1,)]</Name>
@@ -501,11 +515,11 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
+Found 6 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
-Running 65 tests...
+Running 67 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
-========== Run test finished: 65 run (${RunTime}) ==========
+========== Run test finished: 67 run (${RunTime}) ==========
 </TestOutput>
 </TestRun>

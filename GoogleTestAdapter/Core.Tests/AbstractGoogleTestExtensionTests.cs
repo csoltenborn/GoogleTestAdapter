@@ -115,9 +115,14 @@ namespace GoogleTestAdapter
                     .ToList();
         }
 
+        protected static TestCase ToTestCase(string name, string executable, string sourceFile)
+        {
+            return new TestCase(name, executable, name, sourceFile, 0);
+        }
+
         protected static TestCase ToTestCase(string name, string executable)
         {
-            return new TestCase(name, executable, name, "", 0);
+            return ToTestCase(name, executable, "");
         }
 
         protected static TestCase ToTestCase(string name)

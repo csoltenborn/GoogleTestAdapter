@@ -3,13 +3,13 @@
   <TestGroup>
     <description>Passed Tests</description>
     <TestCase>
-      <Name>Crashing.AddPasses</Name>
-      <Result>Test Passed - Crashing.AddPasses</Result>
-      <Source>crashingtests.cpp line 21</Source>
+      <Name>Crashing.AddPassesAfterCrash</Name>
+      <Result>Test Passed - Crashing.AddPassesAfterCrash</Result>
+      <Source>crashingtests.cpp line 31</Source>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 4 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
+Found 6 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Running 1 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.

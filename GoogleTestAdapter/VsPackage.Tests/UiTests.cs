@@ -104,7 +104,7 @@ namespace GoogleTestAdapterUiTests
         [TestCategory("UI")]
         public void RunSelectedTests_Crashing_AddPasses()
         {
-            RunTest("Crashing.AddPasses");
+            RunTest("Crashing.AddPassesAfterCrash");
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace GoogleTestAdapterUiTests
         [TestCategory("UI")]
         public void RunSelectedTests_MultipleTests()
         {
-            RunTests(new[] { "Crashing.AddPasses", "ParameterizedTests.Simple/0",
+            RunTests(new[] { "Crashing.AddPassesAfterCrash", "ParameterizedTests.Simple/0",
                 "InstantiationName/ParameterizedTests.SimpleTraits/0", "PointerParameterizedTests.CheckStringLength/0",
                 "TypedTests/0.CanIterate", "Arr/TypeParameterizedTests/1.CanDefeatMath" });
         }

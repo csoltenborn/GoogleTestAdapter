@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -96,22 +97,23 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void GetTestResults_CompleteOutput_ParsedCorrectly()
         {
-            List<Model.TestResult> results = ComputeTestResults(Complete);
+            List<TestResult> results = ComputeTestResults(Complete);
 
             Assert.AreEqual(3, results.Count);
 
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Failed, results[0].Outcome);
+            Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
+            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Passed, results[1].Outcome);
+            Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Failed, results[2].Outcome);
+            Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
             Assert.IsFalse(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(9), results[2].Duration);
         }
@@ -119,17 +121,18 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void GetTestResults_OutputWithImmediateCrash_CorrectResultHasCrashText()
         {
-            List<Model.TestResult> results = ComputeTestResults(CrashesImmediately);
+            List<TestResult> results = ComputeTestResults(CrashesImmediately);
 
             Assert.AreEqual(2, results.Count);
 
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Failed, results[0].Outcome);
+            Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
+            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Failed, results[1].Outcome);
+            Assert.AreEqual(TestOutcome.Failed, results[1].Outcome);
             Assert.IsTrue(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
         }
@@ -137,22 +140,23 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void GetTestResults_OutputWithCrashAfterErrorMessage_CorrectResultHasCrashText()
         {
-            List<Model.TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
+            List<TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
             Assert.AreEqual(3, results.Count);
 
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Failed, results[0].Outcome);
+            Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
             Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
+            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
 
             Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Passed, results[1].Outcome);
+            Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
             Assert.IsFalse(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
 
             Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Failed, results[2].Outcome);
+            Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
             Assert.IsTrue(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
             Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[2].Duration);
         }
@@ -160,11 +164,12 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void GetTestResults_OutputWithInvalidDurationUnit_DefaultDurationIsUsedAndWarningIsProduced()
         {
-            List<Model.TestResult> results = ComputeTestResults(WrongDurationUnit);
+            List<TestResult> results = ComputeTestResults(WrongDurationUnit);
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
             Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[0].Duration);
+            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
@@ -173,17 +178,20 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void GetTestResults_OutputWithConsoleOutput_ConsoleOutputIsIgnored()
         {
-            List<Model.TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
+            List<TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
 
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual("TestMath.AddPasses", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(Model.TestOutcome.Passed, results[0].Outcome);
+            Assert.AreEqual(TestOutcome.Passed, results[0].Outcome);
         }
 
 
-        private List<Model.TestResult> ComputeTestResults(List<string> consoleOutput)
+        private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {
-            IEnumerable<Model.TestCase> cases = CreateDummyTestCases("TestMath.AddFails", "TestMath.Crash", "TestMath.AddPasses");
+            IList<TestCase> cases = new List<TestCase>();
+            cases.Add(ToTestCase("TestMath.AddFails", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            cases.Add(ToTestCase("TestMath.Crash", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            cases.Add(ToTestCase("TestMath.AddPasses", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
             StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment);
             return parser.GetTestResults();
         }

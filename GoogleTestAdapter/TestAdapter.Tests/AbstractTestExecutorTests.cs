@@ -118,7 +118,7 @@ namespace GoogleTestAdapter.TestAdapter
             TestExecutor executor = new TestExecutor(TestEnvironment);
             executor.RunTests(HardCrashingSampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
-            CheckMockInvocations(0, 1, 0, 3);
+            CheckMockInvocations(1, 2, 0, 3);
         }
 
         [TestMethod]

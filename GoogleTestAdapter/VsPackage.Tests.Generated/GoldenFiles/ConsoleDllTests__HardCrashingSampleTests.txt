@@ -1,20 +1,23 @@
 Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright (c) Microsoft Corporation.  All rights reserved.
 
 Starting test execution, please wait...
-Information: Found 4 tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\CrashingTests.exe
+Information: Found 6 tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\CrashingTests.exe
 
-Information: Running 4 tests...
+Information: Running 6 tests...
 
 Information: Test execution completed.
 
+Failed   Crashing.AddFailsBeforeCrash
+
+Passed   Crashing.AddPassesBeforeCrash
 Failed   Crashing.TheCrash
 
-Skipped  Crashing.AddFails
+Skipped  Crashing.AddFailsAfterCrash
 
-Skipped  Crashing.AddPasses
+Skipped  Crashing.AddPassesAfterCrash
 
 Skipped  Crashing.LongRunning
 
 
-Total tests: 4. Passed: 0. Failed: 1. Skipped: 3.
+Total tests: 6. Passed: 1. Failed: 2. Skipped: 3.
 Test execution time: ${RunTime}

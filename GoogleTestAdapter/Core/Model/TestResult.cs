@@ -13,6 +13,7 @@ namespace GoogleTestAdapter.Model
 
         public TestOutcome Outcome { get; set; }
         public string ErrorMessage { get; set; }
+        public string ErrorStackTrace { get; set; }
         public TimeSpan Duration { get; set; }
 
         public TestResult(TestCase testCase)
