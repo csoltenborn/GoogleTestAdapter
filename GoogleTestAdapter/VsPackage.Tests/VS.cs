@@ -215,14 +215,7 @@ namespace GoogleTestAdapterUiTests
                         {
                             if (node.Text.StartsWith(displayName))
                             {
-                                if (result.ContainsKey(displayName))
-                                {
-                                    int x = 0;
-                                }
-                                else
-                                {
-                                    result.Add(displayName, node);
-                                }
+                                result.Add(displayName, node);
                             }
                         }
                     }
