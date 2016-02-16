@@ -10,36 +10,6 @@ namespace GoogleTestAdapter.TestResults
 
     public class ErrorMessageParser
     {
-        private static readonly string ExceptionMessageAt;
-        private static readonly string ExceptionMessageIn;
-        private static readonly string ExceptionMessageLine;
-
-        static ErrorMessageParser()
-        {
-            try
-            {
-                throw new Exception();
-            }
-            catch (Exception e)
-            {
-                string pattern = @"   ([a-zA-Z]+) .*\) ([a-zA-Z]+) .*:([a-zA-Z]+) [0-9]+";
-                Match match = Regex.Match(e.StackTrace, pattern);
-                if (match.Success)
-                {
-                    ExceptionMessageAt = match.Groups[1].Value;
-                    ExceptionMessageIn = match.Groups[2].Value;
-                    ExceptionMessageLine = match.Groups[3].Value;
-                }
-                else
-                {
-                    ExceptionMessageAt = "at";
-                    ExceptionMessageIn = "in";
-                    ExceptionMessageLine = "line";
-                }
-            }
-        }
-
-
         public string ErrorMessage { get; }
         public string ErrorStackTrace { get; }
 
@@ -73,13 +43,9 @@ namespace GoogleTestAdapter.TestResults
             Match match = Regex.Match(errorMessage, pattern);
             if (match.Success)
             {
-                string at = ExceptionMessageAt;
-                string _in = ExceptionMessageIn;
-                string line = ExceptionMessageLine;
-
                 string fileName = Path.GetFileName(sourceFile);
                 string lineNumber = match.Groups[1].Value;
-                stackTrace = $"   {at} {fileName}:{lineNumber} {_in} {sourceFile}:{line} {lineNumber}.";
+                stackTrace = $"at {fileName}:{lineNumber} in {sourceFile}:line {lineNumber}{Environment.NewLine}";
 
                 errorMessage = errorMessage.Replace(match.Groups[0].Value, "").Trim();
             }

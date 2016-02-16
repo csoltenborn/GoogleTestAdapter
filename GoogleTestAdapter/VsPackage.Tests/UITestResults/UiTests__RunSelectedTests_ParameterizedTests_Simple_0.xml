@@ -15,7 +15,7 @@ $(SolutionDir)\tests\parameterizedtests.cpp:25
 Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
-      <Stacktrace>   at parameterizedtests.cpp:24 in $(SolutionDir)\tests\parameterizedtests.cpp:line 24.</Stacktrace>
+      <Stacktrace>parameterizedtests.cpp:24</Stacktrace>
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
