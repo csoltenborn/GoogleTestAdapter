@@ -121,7 +121,7 @@ namespace GoogleTestAdapter.TestResults
                 ComputerName = Environment.MachineName,
                 DisplayName = testCase.DisplayName,
                 Outcome = TestOutcome.Failed,
-                ErrorMessage = parser.ErrorMessage,
+                ErrorMessage = crashed ? CrashText : parser.ErrorMessage,
                 ErrorStackTrace = parser.ErrorStackTrace,
                 Duration = duration
             };

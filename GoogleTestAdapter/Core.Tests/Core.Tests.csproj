@@ -75,6 +75,7 @@
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
+    <Compile Include="TestResults\ErrorMessageParserTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />

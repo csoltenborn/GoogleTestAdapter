@@ -105,7 +105,8 @@ namespace GoogleTestAdapter.TestResults
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
-            string ErrorMsg = @"Value of: animals.size()
+            string ErrorMsg = @"
+Value of: animals.size()
   Actual: 1
 Expected: 3
 Should get three animals";
@@ -123,7 +124,7 @@ Should get three animals";
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
-            string errorMsg = @"Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0";
+            string errorMsg = "\n" + @"Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0";
             AssertTestResultIsFailure(results[0], errorMsg);
             Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"someSimpleParameterizedTest.cpp"));
         }
@@ -150,14 +151,13 @@ Should get three animals";
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
-            string ErrorMsg = @"Value of: output_filepath
+            string ErrorMsg = @"
+#1 - Value of: output_filepath
   Actual: ""this/package/testdata/myoutputfile.dat""
 Expected: input_filepath
 Which is: ""this/package/testdata/myinputfile.dat""
 Something's not right!!
-
-c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:41
-Value of: 56456
+#2 - Value of: 56456
 Expected: 12312
 Something's wrong :(";
             AssertTestResultIsFailure(results[0], ErrorMsg);

@@ -7,15 +7,14 @@
       <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.Simple/0 [(0,_)]</Result>
       <Source>parameterizedtests.cpp line 23</Source>
-      <Error>Message: Value of: GetParam().i
+      <Error>Message: 
+#1 - Value of: GetParam().i
   Actual: 0
 Expected: 1
-
-$(SolutionDir)\tests\parameterizedtests.cpp:25
-Value of: GetParam().s
+#2 - Value of: GetParam().s
   Actual: "_"
 Expected: ""</Error>
-      <Stacktrace>parameterizedtests.cpp:24</Stacktrace>
+      <Stacktrace>#2 - parameterizedtests.cpp:25</Stacktrace>
     </TestCase>
   </TestGroup>
   <TestGroup>
