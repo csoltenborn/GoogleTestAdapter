@@ -13,11 +13,11 @@ namespace GoogleTestAdapter.TestResults
         public string ErrorMessage { get; private set; }
         public string ErrorStackTrace { get; private set; }
 
+        private IList<string> ErrorMessages { get; }
+        private string SourceFile { get; }
+
         private Regex ColonRegex { get; set; }
         private Regex BracketsRegex { get; set; }
-
-        private IList<string> ErrorMessages { get; } 
-        private string SourceFile { get; }
 
         public ErrorMessageParser(string completeErrorMessage, string sourceFile)
         {
@@ -36,44 +36,23 @@ namespace GoogleTestAdapter.TestResults
         private void InitRegexPatterns(string sourceFile)
         {
             string escapedSourceFile = Regex.Escape(sourceFile);
-            ColonRegex = new Regex(escapedSourceFile + ":([0-9]+)", RegexOptions.Compiled);
-            BracketsRegex = new Regex(escapedSourceFile + @"\(([0-9]+)\):", RegexOptions.Compiled);
+            ColonRegex = new Regex($"{escapedSourceFile}:([0-9]+)", RegexOptions.Compiled);
+            BracketsRegex = new Regex($@"{escapedSourceFile}\(([0-9]+)\):", RegexOptions.Compiled);
         }
 
         public void Parse()
         {
-            if (ErrorMessages.Count == 0)
+            switch (ErrorMessages.Count)
             {
-                ErrorMessage = "";
-                ErrorStackTrace = "";
-            }
-            else if (ErrorMessages.Count == 1)
-            {
-                string errorMessage = ErrorMessages[0];
-                string stackTrace;
-                if (!CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, ColonRegex))
-                    CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, BracketsRegex);
-
-                ErrorMessage = $"\n{errorMessage}";
-                ErrorStackTrace = stackTrace;
-            }
-            else
-            {
-                List<string> finalErrorMessages = new List<string>();
-                List<string> finalStackTraces = new List<string>();
-                for (int i = 0; i < ErrorMessages.Count; i++)
-                {
-                    string errorMessage = ErrorMessages[i];
-                    string stackTrace;
-                    if (!CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, ColonRegex, i + 1))
-                        CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, BracketsRegex, i + 1);
-
-                    finalErrorMessages.Add($"#{i + 1} - {errorMessage}");
-                    finalStackTraces.Add(stackTrace);
-                }
-
-                ErrorMessage = "\n" + string.Join("\n", finalErrorMessages);
-                ErrorStackTrace = string.Join("", finalStackTraces);
+                case 0:
+                    ErrorMessage = "";
+                    ErrorStackTrace = ""; break;
+                case 1:
+                    HandleSingleFailure();
+                    break;
+                default:
+                    HandleMultipleFailures();
+                    break;
             }
         }
 
@@ -109,19 +88,55 @@ namespace GoogleTestAdapter.TestResults
             return errorMessages;
         }
 
-        private bool CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, Regex pattern, int msgNumber = 0)
+        private void HandleSingleFailure()
         {
-            stackTrace = "";
+            string errorMessage = ErrorMessages[0];
+            string stackTrace;
+            if (!CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, ColonRegex))
+                CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, BracketsRegex);
+
+            ErrorMessage = $"\n{errorMessage}";
+            ErrorStackTrace = stackTrace;
+        }
+
+        private void HandleMultipleFailures()
+        {
+            List<string> finalErrorMessages = new List<string>();
+            List<string> finalStackTraces = new List<string>();
+            for (int i = 0; i < ErrorMessages.Count; i++)
+            {
+                string errorMessage = ErrorMessages[i];
+
+                int msgId = i + 1;
+                string stackTrace;
+                if (!CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, ColonRegex, msgId))
+                    CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, BracketsRegex, msgId);
+
+                finalErrorMessages.Add($"#{msgId} - {errorMessage}");
+                finalStackTraces.Add(stackTrace);
+            }
+
+            ErrorMessage = "\n" + string.Join("\n", finalErrorMessages);
+            ErrorStackTrace = string.Join("", finalStackTraces);
+        }
+
+        private bool CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, Regex pattern, int msgId = 0)
+        {
             Match match = pattern.Match(errorMessage);
             if (match.Success)
             {
                 string fileName = Path.GetFileName(SourceFile);
                 string lineNumber = match.Groups[1].Value;
-                string msgReference = msgNumber == 0 ? "" : $"#{msgNumber} - ";
+                string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
 
                 stackTrace = $"at {msgReference}{fileName}:{lineNumber} in {SourceFile}:line {lineNumber}{Environment.NewLine}";
-                errorMessage = errorMessage.Replace(match.Groups[0].Value, "").Trim();
+                errorMessage = errorMessage.Replace(match.Value, "").Trim();
             }
+            else
+            {
+                stackTrace = "";
+            }
+
             return match.Success;
         }
 
