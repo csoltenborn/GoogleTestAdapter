@@ -116,6 +116,7 @@ namespace GoogleTestAdapter.TestResults
             }
 
             ErrorMessageParser parser = new ErrorMessageParser(errorMessage, testCase.CodeFilePath);
+            parser.Parse();
             return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,

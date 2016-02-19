@@ -106,6 +106,7 @@ namespace GoogleTestAdapter.TestResults
                     else
                     {
                         ErrorMessageParser parser = new ErrorMessageParser(failureNodes, testResult.TestCase.CodeFilePath);
+                        parser.Parse();
                         testResult.Outcome = TestOutcome.Failed;
                         testResult.ErrorMessage = parser.ErrorMessage;
                         testResult.ErrorStackTrace = parser.ErrorStackTrace;
