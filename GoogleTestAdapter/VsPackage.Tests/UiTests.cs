@@ -154,6 +154,7 @@ namespace GoogleTestAdapterUiTests
 
         private void RunTest(string displayName, [CallerMemberName] string testCaseName = null)
         {
+            // ReSharper disable once ExplicitCallerInfoArgument
             RunTests(new[] { displayName }, testCaseName);
         }
 
@@ -164,6 +165,7 @@ namespace GoogleTestAdapterUiTests
                 VS.TestExplorer.RunSelectedTests(displayNames);
                 string result = VS.TestExplorer.Parser.ParseTestResults().ToXML();
                 new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"), ".xml")
+                    // ReSharper disable once ExplicitCallerInfoArgument
                     .CheckResults(result, GetType().Name, testCaseName);
             }
             catch (AutomationException exception)

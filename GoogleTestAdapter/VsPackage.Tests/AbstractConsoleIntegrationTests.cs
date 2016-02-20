@@ -92,6 +92,7 @@ namespace GoogleTestAdapterUiTests
             resultString = Regex.Replace(resultString, @"Test execution time: .*", "Test execution time: ${RunTime}");
             resultString = VS.TestExplorer.Parser.NormalizePointerInfo(resultString);
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");
+            resultString = Regex.Replace(resultString, "Found [0-9]+ tests in executable", "Found ${NrOfTests} tests in executable");
 
             string hasCoveragePattern = @"Attachments:\n.*\.coverage\n\n";
             if (Regex.IsMatch(resultString, hasCoveragePattern))

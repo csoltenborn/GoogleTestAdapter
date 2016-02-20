@@ -143,6 +143,83 @@ Expected: 1</Error>
       <Stacktrace>longrunningtests.cpp:13</Stacktrace>
     </TestCase>
     <TestCase>
+      <Name>MessageParserTests.ExpectAndAssert</Name>
+      <Result>Test Failed - MessageParserTests.ExpectAndAssert</Result>
+      <Source>scopedtracestests.cpp line 26</Source>
+      <Error>Message: 
+#1 - Value of: 2
+Expected: 1
+#2 - Value of: 2
+Expected: 1</Error>
+      <Stacktrace>#2 - scopedtracestests.cpp:28</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ExpectInOtherFile</Name>
+      <Result>Test Failed - MessageParserTests.ExpectInOtherFile</Result>
+      <Source>scopedtracestests.cpp line 37</Source>
+      <Error>Message: 
+Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>main.cpp:27</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ExpectInOtherMethod</Name>
+      <Result>Test Failed - MessageParserTests.ExpectInOtherMethod</Result>
+      <Source>scopedtracestests.cpp line 32</Source>
+      <Error>Message: 
+Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>scopedtracestests.cpp:12</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ExpectInOtherMethodAndFile</Name>
+      <Result>Test Failed - MessageParserTests.ExpectInOtherMethodAndFile</Result>
+      <Source>scopedtracestests.cpp line 42</Source>
+      <Error>Message: 
+#1 - Value of: i
+  Actual: 1
+Expected: 0
+#2 - Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>#2 - main.cpp:27</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ScopedTraceInSameFile</Name>
+      <Result>Test Failed - MessageParserTests.ScopedTraceInSameFile</Result>
+      <Source>scopedtracestests.cpp line 48</Source>
+      <Error>Message: 
+#1 - Value of: i
+  Actual: 1
+Expected: 0
+Google Test trace:
+$(SolutionDir)\tests\scopedtracestests.cpp(50): Scoped
+#2 - Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>#2 - scopedtracestests.cpp:12</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.SimpleAssert</Name>
+      <Result>Test Failed - MessageParserTests.SimpleAssert</Result>
+      <Source>scopedtracestests.cpp line 16</Source>
+      <Error>Message: 
+Value of: 2
+Expected: 1</Error>
+      <Stacktrace>scopedtracestests.cpp:17</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.SimpleExpect</Name>
+      <Result>Test Failed - MessageParserTests.SimpleExpect</Result>
+      <Source>scopedtracestests.cpp line 21</Source>
+      <Error>Message: 
+Value of: 2
+Expected: 1</Error>
+      <Stacktrace>scopedtracestests.cpp:22</Stacktrace>
+    </TestCase>
+    <TestCase>
       <Name>ParameterizedTests.Simple/0 [(0,_)]</Name>
       <FullyQualifiedName>ParameterizedTests.Simple/0</FullyQualifiedName>
       <Result>Test Failed - ParameterizedTests.Simple/0 [(0,_)]</Result>
@@ -539,11 +616,11 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 6 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
-Found 61 tests in executable ${SolutionDir}\Debug\Tests.exe
-Running 67 tests...
+Found ${NrOfTests} tests in executable ${SolutionDir}\Debug\CrashingTests.exe
+Found ${NrOfTests} tests in executable ${SolutionDir}\Debug\Tests.exe
+Running 74 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
-========== Run test finished: 67 run (${RunTime}) ==========
+========== Run test finished: 74 run (${RunTime}) ==========
 </TestOutput>
 </TestRun>

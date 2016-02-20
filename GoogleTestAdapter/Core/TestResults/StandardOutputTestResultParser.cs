@@ -20,13 +20,15 @@ namespace GoogleTestAdapter.TestResults
         private List<string> ConsoleOutput { get; }
         private List<TestCase> TestCasesRun { get; }
         private TestEnvironment TestEnvironment { get; }
+        private string BaseDir { get; }
 
 
-        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment)
+        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment, string baseDir)
         {
             this.ConsoleOutput = consoleOutput.ToList();
             this.TestCasesRun = testCasesRun.ToList();
             this.TestEnvironment = testEnvironment;
+            BaseDir = baseDir;
         }
 
 
@@ -115,7 +117,7 @@ namespace GoogleTestAdapter.TestResults
                 CrashedTestCase = testCase;
             }
 
-            ErrorMessageParser parser = new ErrorMessageParser(errorMessage, testCase.CodeFilePath);
+            ErrorMessageParser parser = new ErrorMessageParser(errorMessage, BaseDir);
             parser.Parse();
             return new TestResult(testCase)
             {

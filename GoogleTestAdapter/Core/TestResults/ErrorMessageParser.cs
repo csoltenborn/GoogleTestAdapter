@@ -10,34 +10,33 @@ namespace GoogleTestAdapter.TestResults
 
     public class ErrorMessageParser
     {
+        private static readonly string FilenameRegex = "[^" + Regex.Escape(new string(Path.GetInvalidPathChars())) + "]";
+
         public string ErrorMessage { get; private set; }
         public string ErrorStackTrace { get; private set; }
 
         private IList<string> ErrorMessages { get; }
-        private string SourceFile { get; }
 
         private Regex ColonRegex { get; set; }
         private Regex BracketsRegex { get; set; }
 
-        public ErrorMessageParser(string completeErrorMessage, string sourceFile)
+        public ErrorMessageParser(string completeErrorMessage, string baseDir)
         {
-            InitRegexPatterns(sourceFile);
-            SourceFile = sourceFile;
+            InitRegexPatterns(baseDir);
             ErrorMessages = SplitErrorMessage(completeErrorMessage);
         }
 
-        public ErrorMessageParser(XmlNodeList failureNodes, string sourceFile)
+        public ErrorMessageParser(XmlNodeList failureNodes, string baseDir)
         {
-            InitRegexPatterns(sourceFile);
-            SourceFile = sourceFile;
+            InitRegexPatterns(baseDir);
             ErrorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText).ToList();
         }
 
-        private void InitRegexPatterns(string sourceFile)
+        private void InitRegexPatterns(string baseDir)
         {
-            string escapedSourceFile = Regex.Escape(sourceFile);
-            ColonRegex = new Regex($"{escapedSourceFile}:([0-9]+)", RegexOptions.Compiled);
-            BracketsRegex = new Regex($@"{escapedSourceFile}\(([0-9]+)\):", RegexOptions.Compiled);
+            string escapedBaseDir = Regex.Escape(baseDir);
+            ColonRegex = new Regex($@"({escapedBaseDir}{FilenameRegex}*):([0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            BracketsRegex = new Regex($@"({escapedBaseDir}{FilenameRegex}*)\(([0-9]+)\):", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public void Parse()
@@ -125,11 +124,12 @@ namespace GoogleTestAdapter.TestResults
             Match match = pattern.Match(errorMessage);
             if (match.Success)
             {
-                string fileName = Path.GetFileName(SourceFile);
-                string lineNumber = match.Groups[1].Value;
+                string fullFileName = match.Groups[1].Value;
+                string fileName = Path.GetFileName(fullFileName);
+                string lineNumber = match.Groups[2].Value;
                 string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
 
-                stackTrace = $"at {msgReference}{fileName}:{lineNumber} in {SourceFile}:line {lineNumber}{Environment.NewLine}";
+                stackTrace = $"at {msgReference}{fileName}:{lineNumber} in {fullFileName}:line {lineNumber}{Environment.NewLine}";
                 errorMessage = errorMessage.Replace(match.Value, "").Trim();
             }
             else

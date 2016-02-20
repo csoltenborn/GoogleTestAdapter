@@ -192,7 +192,7 @@ namespace GoogleTestAdapter.TestResults
             cases.Add(ToTestCase("TestMath.AddFails", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
             cases.Add(ToTestCase("TestMath.Crash", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
             cases.Add(ToTestCase("TestMath.AddPasses", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment);
+            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
             return parser.GetTestResults();
         }
 

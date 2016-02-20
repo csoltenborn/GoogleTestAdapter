@@ -9,7 +9,7 @@
     </TestCase>
   </TestGroup>
   <TestOutput>------ Run test started ------
-Found 6 tests in executable ${SolutionDir}\Debug\CrashingTests.exe
+Found ${NrOfTests} tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Running 1 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.

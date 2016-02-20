@@ -136,6 +136,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="BasicTests.cpp" />
     <ClCompile Include="ParameterizedTests.cpp" />
+    <ClCompile Include="ScopedTracesTests.cpp" />
     <ClCompile Include="TypeParameterizedTests.cpp" />
   </ItemGroup>
   <ItemGroup>

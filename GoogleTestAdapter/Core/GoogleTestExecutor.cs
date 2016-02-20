@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
                 ComputeTestRunner(reporter, isBeingDebugged, solutionDirectory);
             }
 
-            Runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, null, isBeingDebugged, launcher);
+            Runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, isBeingDebugged, launcher);
             TestEnvironment.LogInfo("Test execution completed.");
         }
 

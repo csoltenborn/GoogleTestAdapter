@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken_InvalidStatusAttibute, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFileBroken_InvalidStatusAttibute, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(0, results.Count);
@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(2, results.Count);
@@ -69,7 +69,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment, "");
             try
             {
                 parser.GetTestResults();
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -101,7 +101,7 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<Model.TestCase> testCases = ToTestCase("AnimalsTest.testGetEnoughAnimals",
                 DummyExecutable, @"x:\prod\company\util\util.cpp").Yield();
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -120,7 +120,7 @@ Should get three animals";
             IEnumerable<Model.TestCase> testCases = ToTestCase("ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)",
                 DummyExecutable, @"someSimpleParameterizedTest.cpp").Yield();
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile1, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -134,7 +134,7 @@ Should get three animals";
         {
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("FooTest.DoesXyz");
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);
@@ -147,7 +147,7 @@ Should get three animals";
             IEnumerable<Model.TestCase> testCases = ToTestCase("FooTest.MethodBarDoesAbc", DummyExecutable,
                 @"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp").Yield();
 
-            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment);
+            XmlTestResultParser parser = new XmlTestResultParser(testCases, XmlFile2, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
             Assert.AreEqual(1, results.Count);

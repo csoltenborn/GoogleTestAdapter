@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
@@ -44,6 +44,7 @@ namespace GoogleTestAdapter.Runners
                     executable,
                     allTestCasesAsArray.Where(tc => tc.Source == executable),
                     groupedTestCases[executable],
+                    baseDir,
                     finalParameters,
                     isBeingDebugged,
                     debuggedLauncher);
@@ -58,7 +59,7 @@ namespace GoogleTestAdapter.Runners
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable,
-            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string userParameters,
+            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string userParameters,
             bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             string resultXmlFile = Path.GetTempFileName();
@@ -77,20 +78,20 @@ namespace GoogleTestAdapter.Runners
 
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new TestProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
-                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput);
+                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
 
                 FrameworkReporter.ReportTestResults(results);
                 serializer.UpdateTestDurations(results);
             }
         }
 
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir)
         {
             List<TestResult> testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment);
-            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, TestEnvironment);
+            XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment, baseDir);
+            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, TestEnvironment, baseDir);
 
             testResults.AddRange(xmlParser.GetTestResults());
 

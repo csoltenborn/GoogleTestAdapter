@@ -18,13 +18,15 @@ namespace GoogleTestAdapter.TestResults
 
 
         private TestEnvironment TestEnvironment { get; }
+        private string BaseDir { get; }
         private string XmlResultFile { get; }
         private List<TestCase> TestCasesRun { get; }
 
 
-        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment)
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment, string baseDir)
         {
             this.TestEnvironment = testEnvironment;
+            this.BaseDir = baseDir;
             this.XmlResultFile = xmlResultFile;
             this.TestCasesRun = testCasesRun.ToList();
         }
@@ -105,7 +107,7 @@ namespace GoogleTestAdapter.TestResults
                     }
                     else
                     {
-                        ErrorMessageParser parser = new ErrorMessageParser(failureNodes, testResult.TestCase.CodeFilePath);
+                        ErrorMessageParser parser = new ErrorMessageParser(failureNodes, BaseDir);
                         parser.Parse();
                         testResult.Outcome = TestOutcome.Failed;
                         testResult.ErrorMessage = parser.ErrorMessage;

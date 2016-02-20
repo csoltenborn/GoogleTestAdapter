@@ -24,7 +24,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
             string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             List<Thread> threads;
@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.Runners
                 DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
                 threads = new List<Thread>();
-                RunTests(allTestCases, testCasesToRun, threads, isBeingDebugged, debuggedLauncher);
+                RunTests(allTestCases, testCasesToRun, baseDir, threads, isBeingDebugged, debuggedLauncher);
             }
 
             foreach (Thread thread in threads)
@@ -54,7 +54,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.Runners
                 ITestRunner runner = new PreparingTestRunner(threadId++, SolutionDirectory, FrameworkReporter, TestEnvironment);
                 TestRunners.Add(runner);
 
-                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, null, isBeingDebugged, debuggedLauncher));
+                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, isBeingDebugged, debuggedLauncher));
                 threads.Add(thread);
 
                 thread.Start();

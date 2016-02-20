@@ -288,7 +288,7 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            Assert.AreEqual(61, testCases.Count);
+            Assert.AreEqual(68, testCases.Count);
 
             TestCase testCase =
                testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
