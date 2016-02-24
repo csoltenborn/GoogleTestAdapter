@@ -78,6 +78,12 @@ namespace GoogleTestAdapter.DiaResolver
             }
 
             string pdb = Path.ChangeExtension(binary, ".pdb");
+            if (!File.Exists(pdb))
+            {
+                ErrorMessages.Add($"Couldn't find the .pdb file of file '{binary}' (which should be '{pdb}'). You will not get any source locations for your tests.");
+                return;
+            }
+
             FileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
             DiaDataSource.loadDataFromIStream(new DiaMemoryStream(FileStream));
 
