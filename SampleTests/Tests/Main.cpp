@@ -26,3 +26,9 @@ void CheckIfZeroInMain(int i)
 {
 	EXPECT_EQ(0, i);
 }
+
+void HelpMethodWithScopedTrace()
+{
+	SCOPED_TRACE("Main HelperMethod");
+	CheckIfZeroInMain(1);
+}

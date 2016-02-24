@@ -10,7 +10,14 @@ namespace GoogleTestAdapter.TestResults
 
     public class ErrorMessageParser
     {
-        private static readonly string FilenameRegex = "[^" + Regex.Escape(new string(Path.GetInvalidPathChars())) + "]";
+        private static readonly string ValidCharRegex;
+
+        static ErrorMessageParser()
+        {
+            IEnumerable<char> invalidChars =
+                Path.GetInvalidFileNameChars().Where(c => Path.GetInvalidPathChars().Contains(c));
+            ValidCharRegex = "[^" + Regex.Escape(new string(invalidChars.ToArray())) + "]";
+        }
 
         public string ErrorMessage { get; private set; }
         public string ErrorStackTrace { get; private set; }
@@ -19,6 +26,7 @@ namespace GoogleTestAdapter.TestResults
 
         private Regex ColonRegex { get; set; }
         private Regex BracketsRegex { get; set; }
+        private Regex ScopedTraceRegex { get; set; }
 
         public ErrorMessageParser(string completeErrorMessage, string baseDir)
         {
@@ -35,8 +43,9 @@ namespace GoogleTestAdapter.TestResults
         private void InitRegexPatterns(string baseDir)
         {
             string escapedBaseDir = Regex.Escape(baseDir);
-            ColonRegex = new Regex($@"({escapedBaseDir}{FilenameRegex}*):([0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            BracketsRegex = new Regex($@"({escapedBaseDir}{FilenameRegex}*)\(([0-9]+)\):", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            ColonRegex = new Regex($@"({escapedBaseDir}{ValidCharRegex}*):([0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            BracketsRegex = new Regex($@"({escapedBaseDir}{ValidCharRegex}*)\(([0-9]+)\):", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            ScopedTraceRegex = new Regex($@"Google Test trace:\s*({escapedBaseDir}{ValidCharRegex}*)\(([0-9]+)\): (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public void Parse()
@@ -59,6 +68,7 @@ namespace GoogleTestAdapter.TestResults
         {
             List<Match> allMatches = new List<Match>();
 
+            HashSet<Match> scopedTraceMatches = new HashSet<Match>();
             MatchCollection matches = ColonRegex.Matches(errorMessage);
             for (int i = 0; i < matches.Count; i++)
                 allMatches.Add(matches[i]);
@@ -66,6 +76,13 @@ namespace GoogleTestAdapter.TestResults
             matches = BracketsRegex.Matches(errorMessage);
             for (int i = 0; i < matches.Count; i++)
                 allMatches.Add(matches[i]);
+
+            matches = ScopedTraceRegex.Matches(errorMessage);
+            for (int i = 0; i < matches.Count; i++)
+            {
+                allMatches.Add(matches[i]);
+                scopedTraceMatches.Add(matches[i]);
+            }
 
             allMatches.Sort((x, y) => x.Index.CompareTo(y.Index));
 
@@ -105,6 +122,9 @@ namespace GoogleTestAdapter.TestResults
             for (int i = 0; i < ErrorMessages.Count; i++)
             {
                 string errorMessage = ErrorMessages[i];
+
+                if (ScopedTraceRegex.IsMatch(errorMessage))
+                    Console.WriteLine("");
 
                 int msgId = i + 1;
                 string stackTrace;
