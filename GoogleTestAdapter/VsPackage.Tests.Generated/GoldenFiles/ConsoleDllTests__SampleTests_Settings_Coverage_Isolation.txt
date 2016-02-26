@@ -3,7 +3,7 @@ Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright 
 Starting test execution, please wait...
 Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\Tests.exe
 
-Information: Running 68 tests...
+Information: Running 72 tests...
 
 Information: Test execution completed.
 
@@ -28,25 +28,33 @@ Failed   TestMath.AddFails
 Passed   TestMath.AddPassesWithTraits
 Failed   TestMath.Crash
 
-Failed   MessageParserTests.ExpectInOtherFile
-
 Failed   MessageParserTests.ExpectInOtherMethod
 
-Failed   MessageParserTests.ScopedTraceInSameFile
-
-Failed   MessageParserTests.ExpectAndAssert
+Failed   MessageParserTests.ScopedTraceInTestMethodANdHelperMethod
 
 Failed   MessageParserTests.SimpleExpect
 
+Failed   MessageParserTests.ExpectInOtherFile
+
+Failed   MessageParserTests.TwoScopedTracesInTestMethod
+
 Failed   MessageParserTests.SimpleAssert
 
-Failed   MessageParserTests.ExpectInOtherMethodAndFile
+Failed   MessageParserTests.ExpectInTestAndMethodAndOtherFile
+
+Failed   MessageParserTests.ExpectAndAssert
+
+Failed   MessageParserTests.ScopedTraceInTestMethod
+
+Failed   MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod
+
+Failed   MessageParserTests.ScopedTraceInHelperMethod
+
+Passed   TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
+Failed   TypedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
 
 Failed   TypedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
 
-Failed   TypedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
-
-Passed   TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
 Failed   TypedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
 
 Failed   TypedTests/1.CanDefeatMath<std::array<int,3> >
@@ -57,65 +65,65 @@ Failed   TypedTests/1.TwoTraits<std::array<int,3> >
 
 Passed   TypedTests/1.CanIterate<std::array<int,3> >
 Passed   TypedTests/2.CanIterate<MyStrangeArray>
-Passed   TypedTests/2.TwoTraits<MyStrangeArray>
 Passed   TypedTests/2.CanDefeatMath<MyStrangeArray>
+Passed   TypedTests/2.TwoTraits<MyStrangeArray>
 Passed   TypedTests/2.ThreeTraits<MyStrangeArray>
-Failed   Vec/TypeParameterizedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
-
 Failed   Vec/TypeParameterizedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
 
 Passed   Vec/TypeParameterizedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
+Failed   Vec/TypeParameterizedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
+
 Failed   Vec/TypeParameterizedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
 
 Passed   Arr/TypeParameterizedTests/0.CanIterate<std::array<int,3> >
-Failed   Arr/TypeParameterizedTests/0.ThreeTraits<std::array<int,3> >
-
 Failed   Arr/TypeParameterizedTests/0.TwoTraits<std::array<int,3> >
+
+Failed   Arr/TypeParameterizedTests/0.ThreeTraits<std::array<int,3> >
 
 Failed   Arr/TypeParameterizedTests/0.CanDefeatMath<std::array<int,3> >
 
+Passed   Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.TwoTraits<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.ThreeTraits<MyStrangeArray>
-Passed   Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.CanIterate<MyStrangeArray>
 Failed   PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>
 
 Passed   PrimitivelyTypedTests/1.CanHasBigNumbers<int>
 Passed   PrimitivelyTypedTests/2.CanHasBigNumbers<long>
-Passed   InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
 
+Passed   InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]
 Failed   InstantiationName/ParameterizedTests.Simple/1 [(1,!)]
 
+Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
+Passed   InstantiationName/ParameterizedTests.Simple/0 [(1,)]
 Failed   InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]
 
-Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
+Failed   InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
 
 Failed   InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]
 
-Passed   InstantiationName/ParameterizedTests.Simple/0 [(1,)]
-Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
 
 Passed   InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
 
 Failed   InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]
-
-Failed   ParameterizedTests.SimpleTraits/0 [(0,_)]
 
 Failed   ParameterizedTests.SimpleTraits3/0 [(0,_)]
 
 Failed   ParameterizedTests.Simple/0 [(0,_)]
 
+Failed   ParameterizedTests.SimpleTraits/0 [(0,_)]
+
 Failed   ParameterizedTests.SimpleTraits2/0 [(0,_)]
 
+Passed   PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
 Failed   PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]
 
 Passed   PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]
-Passed   PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
 
-Total tests: 68. Passed: 29. Failed: 39. Skipped: 0.
+Total tests: 72. Passed: 29. Failed: 43. Skipped: 0.
 Test execution time: ${RunTime}
 
 Google Test Adapter Coverage Marker

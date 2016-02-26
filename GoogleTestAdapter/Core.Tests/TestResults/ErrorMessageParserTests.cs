@@ -24,7 +24,7 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void Parse_SingleErrorMessage_MessageIsParsedWithoutLink()
         {
-            string errorString = $"{FullPathOfDummyExecutable}:42\nExpected: Foo\nActual: Bar";
+            string errorString = $"{FullPathOfDummyExecutable}:42: error: Expected: Foo\nActual: Bar";
 
             ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
@@ -36,8 +36,8 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void Parse_TwoErrorMessages_BothMessagesAreParsedWithLinks()
         {
-            string errorString = $"{FullPathOfDummyExecutable}:37\nExpected: Yes\nActual: Maybe";
-            errorString += $"\n{FullPathOfDummyExecutable}:42\nExpected: Foo\nActual: Bar";
+            string errorString = $"{FullPathOfDummyExecutable}:37: error: Expected: Yes\nActual: Maybe";
+            errorString += $"\n{FullPathOfDummyExecutable}:42: Failure\nExpected: Foo\nActual: Bar";
 
             ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
@@ -50,8 +50,8 @@ namespace GoogleTestAdapter.TestResults
         [TestMethod]
         public void Parse_DifferentlyFormattedErrorMessages_BothMessagesAreParsedInCorrectOrder()
         {
-            string errorString = $"{FullPathOfDummyExecutable}(37):\nExpected: Yes\nActual: Maybe";
-            errorString += $"\n{FullPathOfDummyExecutable}:42\nExpected: Foo\nActual: Bar";
+            string errorString = $"{FullPathOfDummyExecutable}(37): error: Expected: Yes\nActual: Maybe";
+            errorString += $"\n{FullPathOfDummyExecutable}:42: error: Expected: Foo\nActual: Bar";
 
             ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();

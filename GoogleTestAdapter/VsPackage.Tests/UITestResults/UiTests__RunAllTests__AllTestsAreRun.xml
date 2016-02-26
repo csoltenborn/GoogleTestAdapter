@@ -34,7 +34,7 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Result>Test Failed - Crashing.AddFailsBeforeCrash</Result>
       <Source>crashingtests.cpp line 11</Source>
       <Error>Message: 
-error: Value of: Add(10, 10)
+Value of: Add(10, 10)
   Actual: 20
 Expected: 1000</Error>
       <Stacktrace>crashingtests.cpp:12</Stacktrace>
@@ -145,18 +145,18 @@ Expected: 1</Error>
     <TestCase>
       <Name>MessageParserTests.ExpectAndAssert</Name>
       <Result>Test Failed - MessageParserTests.ExpectAndAssert</Result>
-      <Source>scopedtracestests.cpp line 26</Source>
+      <Source>scopedtracestests.cpp line 32</Source>
       <Error>Message: 
-#1 - Value of: 2
-Expected: 1
-#2 - Value of: 2
-Expected: 1</Error>
-      <Stacktrace>#2 - scopedtracestests.cpp:28</Stacktrace>
+#1 - Value of: 4
+Expected: 3
+#2 - Value of: 5
+Expected: 4</Error>
+      <Stacktrace>#2 - scopedtracestests.cpp:34</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>MessageParserTests.ExpectInOtherFile</Name>
       <Result>Test Failed - MessageParserTests.ExpectInOtherFile</Result>
-      <Source>scopedtracestests.cpp line 37</Source>
+      <Source>scopedtracestests.cpp line 43</Source>
       <Error>Message: 
 Value of: i
   Actual: 1
@@ -166,7 +166,7 @@ Expected: 0</Error>
     <TestCase>
       <Name>MessageParserTests.ExpectInOtherMethod</Name>
       <Result>Test Failed - MessageParserTests.ExpectInOtherMethod</Result>
-      <Source>scopedtracestests.cpp line 32</Source>
+      <Source>scopedtracestests.cpp line 38</Source>
       <Error>Message: 
 Value of: i
   Actual: 1
@@ -174,50 +174,89 @@ Expected: 0</Error>
       <Stacktrace>scopedtracestests.cpp:12</Stacktrace>
     </TestCase>
     <TestCase>
-      <Name>MessageParserTests.ExpectInOtherMethodAndFile</Name>
-      <Result>Test Failed - MessageParserTests.ExpectInOtherMethodAndFile</Result>
-      <Source>scopedtracestests.cpp line 42</Source>
-      <Error>Message: 
-#1 - Value of: i
-  Actual: 1
-Expected: 0
-#2 - Value of: i
-  Actual: 1
-Expected: 0</Error>
-      <Stacktrace>#2 - main.cpp:27</Stacktrace>
-    </TestCase>
-    <TestCase>
-      <Name>MessageParserTests.ScopedTraceInSameFile</Name>
-      <Result>Test Failed - MessageParserTests.ScopedTraceInSameFile</Result>
+      <Name>MessageParserTests.ExpectInTestAndMethodAndOtherFile</Name>
+      <Result>Test Failed - MessageParserTests.ExpectInTestAndMethodAndOtherFile</Result>
       <Source>scopedtracestests.cpp line 48</Source>
       <Error>Message: 
+#1 - Value of: 6
+Expected: 5
+#2 - Value of: i
+  Actual: 1
+Expected: 0
+#3 - Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>#3 - main.cpp:27</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ScopedTraceInHelperMethod</Name>
+      <Result>Test Failed - MessageParserTests.ScopedTraceInHelperMethod</Result>
+      <Source>scopedtracestests.cpp line 70</Source>
+      <Error>Message: 
+Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>--&gt;HelperMethod</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ScopedTraceInTestMethod</Name>
+      <Result>Test Failed - MessageParserTests.ScopedTraceInTestMethod</Result>
+      <Source>scopedtracestests.cpp line 55</Source>
+      <Error>Message: 
+Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>--&gt;TestMethod</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ScopedTraceInTestMethodANdHelperMethod</Name>
+      <Result>Test Failed - MessageParserTests.ScopedTraceInTestMethodANdHelperMethod</Result>
+      <Source>scopedtracestests.cpp line 75</Source>
+      <Error>Message: 
+Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>--&gt;TestMethod</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod</Name>
+      <Result>Test Failed - MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod</Result>
+      <Source>scopedtracestests.cpp line 81</Source>
+      <Error>Message: 
 #1 - Value of: i
   Actual: 1
 Expected: 0
-Google Test trace:
-$(SolutionDir)\tests\scopedtracestests.cpp(50): Scoped
-#2 - Value of: i
-  Actual: 1
+#2 - Value of: 1
 Expected: 0</Error>
-      <Stacktrace>#2 - scopedtracestests.cpp:12</Stacktrace>
+      <Stacktrace>--&gt;TestMethod</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>MessageParserTests.SimpleAssert</Name>
       <Result>Test Failed - MessageParserTests.SimpleAssert</Result>
-      <Source>scopedtracestests.cpp line 16</Source>
+      <Source>scopedtracestests.cpp line 22</Source>
       <Error>Message: 
 Value of: 2
 Expected: 1</Error>
-      <Stacktrace>scopedtracestests.cpp:17</Stacktrace>
+      <Stacktrace>scopedtracestests.cpp:23</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>MessageParserTests.SimpleExpect</Name>
       <Result>Test Failed - MessageParserTests.SimpleExpect</Result>
-      <Source>scopedtracestests.cpp line 21</Source>
+      <Source>scopedtracestests.cpp line 27</Source>
       <Error>Message: 
-Value of: 2
-Expected: 1</Error>
-      <Stacktrace>scopedtracestests.cpp:22</Stacktrace>
+Value of: 3
+Expected: 2</Error>
+      <Stacktrace>scopedtracestests.cpp:28</Stacktrace>
+    </TestCase>
+    <TestCase>
+      <Name>MessageParserTests.TwoScopedTracesInTestMethod</Name>
+      <Result>Test Failed - MessageParserTests.TwoScopedTracesInTestMethod</Result>
+      <Source>scopedtracestests.cpp line 61</Source>
+      <Error>Message: 
+Value of: i
+  Actual: 1
+Expected: 0</Error>
+      <Stacktrace>--&gt;TestMethod Outer</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>ParameterizedTests.Simple/0 [(0,_)]</Name>
@@ -618,9 +657,9 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
   <TestOutput>------ Run test started ------
 Found ${NrOfTests} tests in executable ${SolutionDir}\Debug\CrashingTests.exe
 Found ${NrOfTests} tests in executable ${SolutionDir}\Debug\Tests.exe
-Running 74 tests...
+Running 78 tests...
 Warning: Test teardown batch returned exit code 1, executed command: '${SolutionDir}\Tests\Returns1.bat'
 Test execution completed.
-========== Run test finished: 74 run (${RunTime}) ==========
+========== Run test finished: 78 run (${RunTime}) ==========
 </TestOutput>
 </TestRun>

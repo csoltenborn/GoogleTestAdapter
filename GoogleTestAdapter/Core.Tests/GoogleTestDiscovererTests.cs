@@ -288,7 +288,7 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            Assert.AreEqual(68, testCases.Count);
+            Assert.AreEqual(72, testCases.Count);
 
             TestCase testCase =
                testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
@@ -352,6 +352,7 @@ namespace GoogleTestAdapter
             AssertFindsParameterizedTest(fullyQualifiedName, new Regex(Regex.Escape(displayName)));
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private void AssertFindsParameterizedTest(string fullyQualifiedName, Regex displayNameRegex)
         {
             Assert.IsTrue(File.Exists(SampleTests), "Build SampleTests in Debug mode before executing this test");

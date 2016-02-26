@@ -23,8 +23,12 @@ Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${Con
     MessageParserTests.ExpectAndAssert
     MessageParserTests.ExpectInOtherMethod
     MessageParserTests.ExpectInOtherFile
-    MessageParserTests.ExpectInOtherMethodAndFile
-    MessageParserTests.ScopedTraceInSameFile
+    MessageParserTests.ExpectInTestAndMethodAndOtherFile
+    MessageParserTests.ScopedTraceInTestMethod
+    MessageParserTests.TwoScopedTracesInTestMethod
+    MessageParserTests.ScopedTraceInHelperMethod
+    MessageParserTests.ScopedTraceInTestMethodANdHelperMethod
+    MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod
     TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
     TypedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
     TypedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >

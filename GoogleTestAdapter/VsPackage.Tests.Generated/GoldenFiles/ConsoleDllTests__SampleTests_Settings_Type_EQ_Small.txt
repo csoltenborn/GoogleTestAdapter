@@ -12,13 +12,13 @@ Passed   TheFixture.AddPassesWithTraits2
 Passed   TheFixture.AddPassesWithTraits3
 Passed   TestMath.AddPassesWithTraits3
 Passed   TestMath.AddPassesWithTraits2
+Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
+
 Passed   InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]
+Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
 Failed   InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]
 
 Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
-
-Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
 
 Failed   InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]
 

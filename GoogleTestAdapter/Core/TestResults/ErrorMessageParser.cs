@@ -12,6 +12,11 @@ namespace GoogleTestAdapter.TestResults
     {
         private static readonly string ValidCharRegex;
 
+        private Regex SplitRegex { get; set; }
+        private Regex ParseRegex { get; set; }
+        private Regex ScopedTraceStartRegex { get; set; }
+        private Regex ScopedTraceRegex { get; set; }
+
         static ErrorMessageParser()
         {
             IEnumerable<char> invalidChars =
@@ -24,14 +29,10 @@ namespace GoogleTestAdapter.TestResults
 
         private IList<string> ErrorMessages { get; }
 
-        private Regex ColonRegex { get; set; }
-        private Regex BracketsRegex { get; set; }
-        private Regex ScopedTraceRegex { get; set; }
-
-        public ErrorMessageParser(string completeErrorMessage, string baseDir)
+        public ErrorMessageParser(string consoleOutput, string baseDir)
         {
             InitRegexPatterns(baseDir);
-            ErrorMessages = SplitErrorMessage(completeErrorMessage);
+            ErrorMessages = SplitConsoleOutput(consoleOutput);
         }
 
         public ErrorMessageParser(XmlNodeList failureNodes, string baseDir)
@@ -43,9 +44,15 @@ namespace GoogleTestAdapter.TestResults
         private void InitRegexPatterns(string baseDir)
         {
             string escapedBaseDir = Regex.Escape(baseDir);
-            ColonRegex = new Regex($@"({escapedBaseDir}{ValidCharRegex}*):([0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            BracketsRegex = new Regex($@"({escapedBaseDir}{ValidCharRegex}*)\(([0-9]+)\):", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            ScopedTraceRegex = new Regex($@"Google Test trace:\s*({escapedBaseDir}{ValidCharRegex}*)\(([0-9]+)\): (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            string file = $"({escapedBaseDir}{ValidCharRegex}*)";
+            string line = "([0-9]+)";
+            string fileAndLine = $@"{file}((:{line})|(\({line}\):))";
+            string error = @"((error: )|(Failure\n))";
+
+            ParseRegex = new Regex($"{fileAndLine}(:? {error})?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            SplitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            ScopedTraceStartRegex = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            ScopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public void Parse()
@@ -64,42 +71,23 @@ namespace GoogleTestAdapter.TestResults
             }
         }
 
-        private IList<string> SplitErrorMessage(string errorMessage)
+        private IList<string> SplitConsoleOutput(string errorMessage)
         {
-            List<Match> allMatches = new List<Match>();
+            MatchCollection matches = SplitRegex.Matches(errorMessage);
+            if (matches.Count == 0)
+                return new List<string>();
 
-            HashSet<Match> scopedTraceMatches = new HashSet<Match>();
-            MatchCollection matches = ColonRegex.Matches(errorMessage);
-            for (int i = 0; i < matches.Count; i++)
-                allMatches.Add(matches[i]);
-
-            matches = BracketsRegex.Matches(errorMessage);
-            for (int i = 0; i < matches.Count; i++)
-                allMatches.Add(matches[i]);
-
-            matches = ScopedTraceRegex.Matches(errorMessage);
-            for (int i = 0; i < matches.Count; i++)
+            var errorMessages = new List<string>();
+            int startIndex, length;
+            for (int i = 0; i < matches.Count - 1; i++)
             {
-                allMatches.Add(matches[i]);
-                scopedTraceMatches.Add(matches[i]);
-            }
-
-            allMatches.Sort((x, y) => x.Index.CompareTo(y.Index));
-
-            List<string> errorMessages = new List<string>();
-            if (allMatches.Count > 0)
-            {
-                int startIndex, length;
-                for (int i = 0; i < allMatches.Count - 1; i++)
-                {
-                    startIndex = allMatches[i].Index;
-                    length = allMatches[i + 1].Index - startIndex;
-                    errorMessages.Add(errorMessage.Substring(startIndex, length));
-                }
-                startIndex = allMatches[allMatches.Count - 1].Index;
-                length = errorMessage.Length - startIndex;
+                startIndex = matches[i].Index;
+                length = matches[i + 1].Index - startIndex;
                 errorMessages.Add(errorMessage.Substring(startIndex, length));
             }
+            startIndex = matches[matches.Count - 1].Index;
+            length = errorMessage.Length - startIndex;
+            errorMessages.Add(errorMessage.Substring(startIndex, length));
 
             return errorMessages;
         }
@@ -108,8 +96,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string errorMessage = ErrorMessages[0];
             string stackTrace;
-            if (!CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, ColonRegex))
-                CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, BracketsRegex);
+            CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace);
 
             ErrorMessage = $"\n{errorMessage}";
             ErrorStackTrace = stackTrace;
@@ -122,14 +109,9 @@ namespace GoogleTestAdapter.TestResults
             for (int i = 0; i < ErrorMessages.Count; i++)
             {
                 string errorMessage = ErrorMessages[i];
-
-                if (ScopedTraceRegex.IsMatch(errorMessage))
-                    Console.WriteLine("");
-
                 int msgId = i + 1;
                 string stackTrace;
-                if (!CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, ColonRegex, msgId))
-                    CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, BracketsRegex, msgId);
+                CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, msgId);
 
                 finalErrorMessages.Add($"#{msgId} - {errorMessage}");
                 finalStackTraces.Add(stackTrace);
@@ -139,25 +121,41 @@ namespace GoogleTestAdapter.TestResults
             ErrorStackTrace = string.Join("", finalStackTraces);
         }
 
-        private bool CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, Regex pattern, int msgId = 0)
+        private void CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, int msgId = 0)
         {
-            Match match = pattern.Match(errorMessage);
-            if (match.Success)
-            {
-                string fullFileName = match.Groups[1].Value;
-                string fileName = Path.GetFileName(fullFileName);
-                string lineNumber = match.Groups[2].Value;
-                string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
-
-                stackTrace = $"at {msgReference}{fileName}:{lineNumber} in {fullFileName}:line {lineNumber}{Environment.NewLine}";
-                errorMessage = errorMessage.Replace(match.Value, "").Trim();
-            }
-            else
+            Match match = ParseRegex.Match(errorMessage);
+            if (!match.Success)
             {
                 stackTrace = "";
+                return;
             }
 
-            return match.Success;
+            string fullFileName = match.Groups[1].Value;
+            string fileName = Path.GetFileName(fullFileName);
+            string lineNumber = match.Groups[4]. Value;
+            if (string.IsNullOrEmpty(lineNumber))
+                lineNumber = match.Groups[6].Value;
+
+            string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
+
+            stackTrace = $"at {msgReference}{fileName}:{lineNumber} in {fullFileName}:line {lineNumber}{Environment.NewLine}";
+            errorMessage = errorMessage.Replace(match.Value, "").Trim();
+
+            match = ScopedTraceStartRegex.Match(errorMessage);
+            if (match.Success)
+            {
+                string scopedTraces = errorMessage.Substring(match.Index + match.Value.Length);
+                errorMessage = errorMessage.Substring(0, match.Index).Trim();
+                MatchCollection matches = ScopedTraceRegex.Matches(scopedTraces);
+                foreach (Match traceMatch in matches)
+                {
+                    fullFileName = traceMatch.Groups[1].Value;
+                    lineNumber = traceMatch.Groups[2].Value;
+                    string traceMessage = traceMatch.Groups[3].Value.Trim();
+
+                    stackTrace += $"at -->{traceMessage} in {fullFileName}:line {lineNumber}{Environment.NewLine}";
+                }
+            }
         }
 
     }
