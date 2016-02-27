@@ -97,7 +97,7 @@ namespace GoogleTestAdapter.VsPackage
 
             // exception messages are localized (thanks, MS). Add your own language here...
             resultString = resultString.Replace("   bei ", "   at ");
-            resultString = resultString.Replace(":Zeile ", ":line ");
+            resultString = Regex.Replace(resultString, @":Zeile ([0-9]+)\.", ":line $1");
 
             string hasCoveragePattern = @"Attachments:\n.*\.coverage\n\n";
             if (Regex.IsMatch(resultString, hasCoveragePattern))
