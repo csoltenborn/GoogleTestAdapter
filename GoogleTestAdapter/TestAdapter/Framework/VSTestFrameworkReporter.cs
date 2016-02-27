@@ -15,12 +15,17 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private ITestCaseDiscoverySink Sink { get; }
 
         private Throttle Throttle { get; }
+        private bool IsRunningInsideVisualStudio { get; }
 
+        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink) : this(sink, null, false) { }
 
-        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle)
+        public VsTestFrameworkReporter(IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio) : this(null, frameworkHandle, isRunningInsideVisualStudio) { }
+
+        private VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio)
         {
             Sink = sink;
             FrameworkHandle = frameworkHandle;
+            IsRunningInsideVisualStudio = isRunningInsideVisualStudio;
 
             // This is part of a workaround for a Visual Studio bug (see issue #15).
             // If test results are reported too quickly (100 or more in 500ms), the
@@ -66,6 +71,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 foreach (Model.TestResult testResult in testResults)
                 {
+                    if (IsRunningInsideVisualStudio)
+                        testResult.ErrorMessage = Environment.NewLine + testResult.ErrorMessage;
+                    else if (testResult.ErrorStackTrace != null)
+                        testResult.ErrorStackTrace = testResult.ErrorStackTrace.Trim();
+
                     ReportTestResult(testResult);
                 }
             }

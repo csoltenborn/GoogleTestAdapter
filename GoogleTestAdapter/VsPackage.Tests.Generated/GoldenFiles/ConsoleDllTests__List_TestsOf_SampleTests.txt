@@ -75,3 +75,4 @@ Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${Con
     PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]
     PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
     PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]
+

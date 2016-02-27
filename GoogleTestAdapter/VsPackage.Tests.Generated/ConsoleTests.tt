@@ -8,6 +8,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter" #>
+<#@ import namespace="GoogleTestAdapter.VsPackage" #>
 <#@ import namespace="GoogleTestAdapter.VsPackage.Helpers" #>
 <#@ import namespace="GoogleTestAdapterUiTests" #>
 <#@ output extension=".cs" #>
@@ -37,7 +38,7 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 
         private void RunTestsAndCheckOutput(string solutionFile, string typeName, string arguments, [CallerMemberName] string testCaseName = null)
         {
-            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(solutionFile, arguments, testCaseName);
+            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(solutionFile, arguments);
 			string projectDir = Path.Combine(Path.GetDirectoryName(solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
             new ResultChecker(Path.Combine(projectDir, "GoldenFiles"), Path.Combine(projectDir, "TestErrors"), ".txt")
 				.CheckResults(resultString, typeName, testCaseName);

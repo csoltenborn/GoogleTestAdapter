@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             try
             {
-                VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink, null);
+                VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink);
                 Discoverer.DiscoverTests(executables, reporter);
             }
             catch (Exception e)

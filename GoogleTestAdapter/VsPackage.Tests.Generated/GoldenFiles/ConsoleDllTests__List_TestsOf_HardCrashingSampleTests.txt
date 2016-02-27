@@ -9,3 +9,4 @@ Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${Con
     Crashing.AddFailsAfterCrash
     Crashing.AddPassesAfterCrash
     Crashing.LongRunning
+

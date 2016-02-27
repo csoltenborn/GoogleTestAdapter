@@ -2,24 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GoogleTestAdapter.Helpers;
-using GoogleTestAdapterUiTests.Helpers;
 using GoogleTestAdapter.VsPackage.Helpers;
+using GoogleTestAdapterUiTests;
+using GoogleTestAdapterUiTests.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapterUiTests
+namespace GoogleTestAdapter.VsPackage
 {
 
     public abstract class AbstractConsoleIntegrationTests
     {
-        protected readonly string testAdapterDir;
-        private readonly string solutionFile;
+        protected readonly string TestAdapterDir;
+        private readonly string _solutionFile;
 
-        public AbstractConsoleIntegrationTests()
+        protected AbstractConsoleIntegrationTests()
         {
-            GetDirectories(out testAdapterDir, out solutionFile);
+            GetDirectories(out TestAdapterDir, out _solutionFile);
         }
 
         protected abstract string GetAdapterIntegration();
@@ -40,8 +39,8 @@ namespace GoogleTestAdapterUiTests
         [TestCategory("End to end")]
         public virtual void Console_ListDiscoverers_DiscovererIsListed()
         {
-            string arguments = CreateListDiscoverersArguments(testAdapterDir);
-            string output = RunExecutableAndGetOutput(solutionFile, arguments);
+            string arguments = CreateListDiscoverersArguments();
+            string output = RunExecutableAndGetOutput(_solutionFile, arguments);
             Assert.IsTrue(output.Contains(@"executor://GoogleTestRunner/v1"));
         }
 
@@ -49,8 +48,8 @@ namespace GoogleTestAdapterUiTests
         [TestCategory("End to end")]
         public virtual void Console_ListExecutors_ExecutorIsListed()
         {
-            string arguments = CreateListExecutorsArguments(testAdapterDir);
-            string output = RunExecutableAndGetOutput(solutionFile, arguments);
+            string arguments = CreateListExecutorsArguments();
+            string output = RunExecutableAndGetOutput(_solutionFile, arguments);
             Assert.IsTrue(output.Contains(@"executor://GoogleTestRunner/v1"));
         }
 
@@ -58,22 +57,24 @@ namespace GoogleTestAdapterUiTests
         [TestCategory("End to end")]
         public virtual void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
-            string arguments = CreateListSettingsProvidersArguments(testAdapterDir);
-            string output = RunExecutableAndGetOutput(solutionFile, arguments);
+            string arguments = CreateListSettingsProvidersArguments();
+            string output = RunExecutableAndGetOutput(_solutionFile, arguments);
             Assert.IsTrue(output.Contains(@"GoogleTestAdapter"));
         }
 
 
-        public static string RunExecutableAndGetOutput(string solutionFile, string arguments, [CallerMemberName] string testCaseName = null)
+        public static string RunExecutableAndGetOutput(string solutionFile, string arguments)
         {
             string command = VsExperimentalInstance.GetVsTestConsolePath(VsExperimentalInstance.Versions.VS2015);
             string workingDir = "";
 
-            ProcessLauncher launcher = new ProcessLauncher(new ConsoleLogger());
-            int resultCode;
-            List<string> output = launcher.GetOutputOfCommand(workingDir, command, arguments, false, false, out resultCode);
+            TestProcessLauncher launcher = new TestProcessLauncher();
+            List<string> standardOut;
+            List<string> standardErr;
+            launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out standardErr);
 
-            string resultString = string.Join("\n", output);
+            string resultString = string.Join("\n", standardOut) + "\n\n" + string.Join("\n", standardErr);
+            // ReSharper disable once AssignNullToNotNullAttribute
             string baseDir = Directory.GetParent(Path.GetDirectoryName(solutionFile)).FullName;
             resultString = NormalizeOutput(resultString, baseDir);
 
@@ -121,17 +122,17 @@ namespace GoogleTestAdapterUiTests
             return resultString;
         }
 
-        private string CreateListDiscoverersArguments(string testAdapterDir)
+        private string CreateListDiscoverersArguments()
         {
             return GetAdapterIntegration() + @" /ListDiscoverers /Logger:Console";
         }
 
-        private string CreateListExecutorsArguments(string testAdapterDir)
+        private string CreateListExecutorsArguments()
         {
             return GetAdapterIntegration() + @" /ListExecutors /Logger:Console";
         }
 
-        private string CreateListSettingsProvidersArguments(string testAdapterDir)
+        private string CreateListSettingsProvidersArguments()
         {
             return GetAdapterIntegration() + @" /ListSettingsProviders /Logger:Console";
         }

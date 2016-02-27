@@ -144,9 +144,6 @@
     <Compile Include="..\Core\Framework\ILogger.cs">
       <Link>Framework\ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\Core\Helpers\ProcessLauncher.cs">
-      <Link>Helpers\ProcessLauncher.cs</Link>
-    </Compile>
     <Compile Include="..\Core\Helpers\ProcessWaiter.cs">
       <Link>Helpers\ProcessWaiter.cs</Link>
     </Compile>
@@ -158,6 +155,7 @@
     <Compile Include="Helpers\TestStackWhiteExtensions.cs" />
     <Compile Include="Helpers\MessageBoxWithTimeout.cs" />
     <Compile Include="Model\TestRun.cs" />
+    <Compile Include="Helpers\TestProcessLauncher.cs" />
     <Compile Include="ResultChecker.cs" />
     <Compile Include="UiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

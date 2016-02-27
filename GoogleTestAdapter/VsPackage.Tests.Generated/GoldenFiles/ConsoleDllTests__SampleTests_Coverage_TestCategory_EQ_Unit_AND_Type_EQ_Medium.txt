@@ -13,4 +13,6 @@ Warning: No test is available in the provided sources. Make sure that installed 
 Information: Additionally, you can try specifying '/UseVsixExtensions' command if the test discoverer & executor is installed on the machine as vsix extensions and your installation supports vsix extensions. Example: vstest.console.exe myTests.dll /UseVsixExtensions:true
 
 
+
+
 Google Test Adapter Coverage Marker

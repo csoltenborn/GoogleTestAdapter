@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GoogleTestAdapterUiTests;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -10,7 +9,7 @@ namespace GoogleTestAdapter.VsPackage
 
         protected override string GetAdapterIntegration()
         {
-            return @"/TestAdapterPath:" + testAdapterDir;
+            return @"/TestAdapterPath:" + TestAdapterDir;
         }
 
         #region method stubs for code coverage

@@ -22,6 +22,7 @@ using TestStack.White.WindowsAPI;
 using TestStack.White.UIItems.Scrolling;
 using GoogleTestAdapterUiTests.Helpers;
 using GoogleTestAdapterUiTests.Model;
+using GoogleTestAdapter.VsPackage;
 
 namespace GoogleTestAdapterUiTests
 {

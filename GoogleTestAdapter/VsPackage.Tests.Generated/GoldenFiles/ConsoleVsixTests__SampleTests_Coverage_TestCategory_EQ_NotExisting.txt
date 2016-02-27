@@ -11,4 +11,6 @@ Warning: No test is available in the provided sources. Make sure that installed 
 
 
 
+
+
 Google Test Adapter Coverage Marker

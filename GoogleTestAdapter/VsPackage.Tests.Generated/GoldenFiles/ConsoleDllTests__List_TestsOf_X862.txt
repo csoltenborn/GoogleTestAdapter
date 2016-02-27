@@ -5,3 +5,4 @@ Information: Found ${NrOfTests} tests in executable ${BaseDir}\GoogleTestAdapter
 
     BarTest.MethodBarDoesAbc
     BarTest.DoesXyz
+

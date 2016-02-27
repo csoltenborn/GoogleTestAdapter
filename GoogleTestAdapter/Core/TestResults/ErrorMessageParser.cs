@@ -98,7 +98,7 @@ namespace GoogleTestAdapter.TestResults
             string stackTrace;
             CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace);
 
-            ErrorMessage = $"\n{errorMessage}";
+            ErrorMessage = $"{errorMessage}";
             ErrorStackTrace = stackTrace;
         }
 
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.TestResults
                 finalStackTraces.Add(stackTrace);
             }
 
-            ErrorMessage = "\n" + string.Join("\n", finalErrorMessages);
+            ErrorMessage = string.Join("\n", finalErrorMessages);
             ErrorStackTrace = string.Join("", finalStackTraces);
         }
 

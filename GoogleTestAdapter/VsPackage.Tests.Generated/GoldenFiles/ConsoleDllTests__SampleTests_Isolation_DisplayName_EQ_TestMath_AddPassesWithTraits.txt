@@ -12,3 +12,4 @@ Passed   TestMath.AddPassesWithTraits
 Total tests: 1. Passed: 1. Failed: 0. Skipped: 0.
 Test Run Successful.
 Test execution time: ${RunTime}
+
