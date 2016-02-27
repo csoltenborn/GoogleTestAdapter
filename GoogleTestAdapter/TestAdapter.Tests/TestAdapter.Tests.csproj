@@ -86,6 +86,7 @@
     <Compile Include="AbstractTestExecutorTests.cs" />
     <Compile Include="AbstractVSTests.cs" />
     <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
+    <Compile Include="Framework\VsTestFrameworkReporterTests.cs" />
     <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
     <Compile Include="Helpers\ThrottleTests.cs" />
     <Compile Include="Helpers\TestCaseFilterTests.cs" />

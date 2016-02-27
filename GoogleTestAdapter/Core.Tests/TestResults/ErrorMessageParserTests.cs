@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.TestResults
             ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("\nExpected: Foo\nActual: Bar", parser.ErrorMessage);
+            Assert.AreEqual("Expected: Foo\nActual: Bar", parser.ErrorMessage);
             Assert.IsTrue(parser.ErrorStackTrace.Contains($"{DummyExecutable}:42"));
         }
 
@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.TestResults
             ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("\n#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar", parser.ErrorMessage);
+            Assert.AreEqual("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar", parser.ErrorMessage);
             Assert.IsTrue(parser.ErrorStackTrace.Contains($"#1 - {DummyExecutable}:37"));
             Assert.IsTrue(parser.ErrorStackTrace.Contains($"#2 - {DummyExecutable}:42"));
         }
@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.TestResults
             ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("\n#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar", parser.ErrorMessage);
+            Assert.AreEqual("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar", parser.ErrorMessage);
             Assert.IsTrue(parser.ErrorStackTrace.Contains($"#1 - {DummyExecutable}:37"));
             Assert.IsTrue(parser.ErrorStackTrace.Contains($"#2 - {DummyExecutable}:42"));
         }
