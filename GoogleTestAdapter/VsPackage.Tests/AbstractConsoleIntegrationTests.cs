@@ -95,6 +95,9 @@ namespace GoogleTestAdapter.VsPackage
             resultString = Regex.Replace(resultString, @"Version .*\s*Copyright", "Version ${ToolVersion} Copyright");
             resultString = Regex.Replace(resultString, "Found [0-9]+ tests in executable", "Found ${NrOfTests} tests in executable");
 
+            // exception messages are localized (thanks, MS). Add your own language here...
+            resultString = resultString.Replace("   bei ", "   at ");
+
             string hasCoveragePattern = @"Attachments:\n.*\.coverage\n\n";
             if (Regex.IsMatch(resultString, hasCoveragePattern))
             {
