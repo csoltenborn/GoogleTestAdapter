@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <GoogleTestAdapter>
+    <ShuffleTests>true</ShuffleTests>
+    <MaxNrOfThreads>3</MaxNrOfThreads>
+    <ShuffleTestsSeed>3</ShuffleTestsSeed>
+  </GoogleTestAdapter>
+</RunSettings>

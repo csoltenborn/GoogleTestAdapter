@@ -273,7 +273,7 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 			line.ActualTestFile = GetActualFile(columns[0]);
 			line.SettingsFile = bool.Parse(columns[1]);
 			if (line.SettingsFile)
-				line.ActualSettingsFile = AbstractGoogleTestExtensionTests.UserTestSettings;
+				line.ActualSettingsFile = AbstractGoogleTestExtensionTests.UserTestSettingsForGeneratedTests;
 			else
 				line.ActualSettingsFile = "";
 			line.TestCaseFilter = columns[2];
