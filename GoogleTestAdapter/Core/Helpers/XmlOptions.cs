@@ -20,7 +20,6 @@
         int? NrOfTestRepetitions { get; set; }
         bool? ParallelTestExecution { get; set; }
         bool? PrintTestOutput { get; set; }
-        int? ReportWaitPeriod { get; set; }
         bool? RunDisabledTests { get; set; }
         bool? ShuffleTests { get; set; }
         int? ShuffleTestsSeed { get; set; }
@@ -43,7 +42,6 @@
             self.NrOfTestRepetitions = self.NrOfTestRepetitions ?? other.NrOfTestRepetitions;
             self.ParallelTestExecution = self.ParallelTestExecution ?? other.ParallelTestExecution;
             self.PrintTestOutput = self.PrintTestOutput ?? other.PrintTestOutput;
-            self.ReportWaitPeriod = self.ReportWaitPeriod ?? other.ReportWaitPeriod;
             self.RunDisabledTests = self.RunDisabledTests ?? other.RunDisabledTests;
             self.ShuffleTests = self.ShuffleTests ?? other.ShuffleTests;
             self.ShuffleTestsSeed = self.ShuffleTestsSeed ?? other.ShuffleTestsSeed;

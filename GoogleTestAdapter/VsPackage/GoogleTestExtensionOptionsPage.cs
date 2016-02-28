@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.VsPackage
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), Options.CategoryName, Options.PageGeneralName, 0, 0, true)]
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.CategoryName, Options.PageParallelizationName, 0, 0, true)]
-    [ProvideOptionPage(typeof(AdvancedOptionsDialogPage), Options.CategoryName, Options.PageAdvancedName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.CategoryName, Options.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     public sealed class GoogleTestExtensionOptionsPage : Package
     {
@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.VsPackage
         private IGlobalRunSettingsInternal globalRunSettings;
         private GeneralOptionsDialogPage generalOptions;
         private ParallelizationOptionsDialogPage parallelizationOptions;
-        private AdvancedOptionsDialogPage advancedOptions;
+        private GoogleTestOptionsDialogPage googleTestOptions;
 
 
         override protected void Initialize()
@@ -37,13 +37,13 @@ namespace GoogleTestAdapter.VsPackage
 
             generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
             parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
-            advancedOptions = (AdvancedOptionsDialogPage)GetDialogPage(typeof(AdvancedOptionsDialogPage));
+            googleTestOptions = (GoogleTestOptionsDialogPage)GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
             globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
             generalOptions.PropertyChanged += OptionsChanged;
             parallelizationOptions.PropertyChanged += OptionsChanged;
-            advancedOptions.PropertyChanged += OptionsChanged;
+            googleTestOptions.PropertyChanged += OptionsChanged;
         }
 
 
@@ -58,23 +58,22 @@ namespace GoogleTestAdapter.VsPackage
 
             runSettings.PrintTestOutput = generalOptions.PrintTestOutput;
             runSettings.TestDiscoveryRegex = generalOptions.TestDiscoveryRegex;
-            runSettings.CatchExceptions = generalOptions.CatchExceptions;
-            runSettings.BreakOnFailure = generalOptions.BreakOnFailure;
-            runSettings.RunDisabledTests = generalOptions.RunDisabledTests;
-            runSettings.NrOfTestRepetitions = generalOptions.NrOfTestRepetitions;
-            runSettings.ShuffleTests = generalOptions.ShuffleTests;
-            runSettings.ShuffleTestsSeed = generalOptions.ShuffleTestsSeed;
             runSettings.TraitsRegexesBefore = generalOptions.TraitsRegexesBefore;
             runSettings.TraitsRegexesAfter = generalOptions.TraitsRegexesAfter;
             runSettings.DebugMode = generalOptions.DebugMode;
             runSettings.AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams;
+            runSettings.BatchForTestSetup = generalOptions.BatchForTestSetup;
+            runSettings.BatchForTestTeardown = generalOptions.BatchForTestTeardown;
+
+            runSettings.CatchExceptions = googleTestOptions.CatchExceptions;
+            runSettings.BreakOnFailure = googleTestOptions.BreakOnFailure;
+            runSettings.RunDisabledTests = googleTestOptions.RunDisabledTests;
+            runSettings.NrOfTestRepetitions = googleTestOptions.NrOfTestRepetitions;
+            runSettings.ShuffleTests = googleTestOptions.ShuffleTests;
+            runSettings.ShuffleTestsSeed = googleTestOptions.ShuffleTestsSeed;
 
             runSettings.ParallelTestExecution = parallelizationOptions.EnableParallelTestExecution;
             runSettings.MaxNrOfThreads = parallelizationOptions.MaxNrOfThreads;
-            runSettings.BatchForTestSetup = parallelizationOptions.BatchForTestSetup;
-            runSettings.BatchForTestTeardown = parallelizationOptions.BatchForTestTeardown;
-
-            runSettings.ReportWaitPeriod = advancedOptions.ReportWaitPeriod;
 
             return runSettings;
         }

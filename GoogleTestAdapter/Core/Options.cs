@@ -69,7 +69,7 @@ namespace GoogleTestAdapter
         public const string CategoryName = "Google Test Adapter";
         public const string PageGeneralName = "General";
         public const string PageParallelizationName = "Parallelization";
-        public const string PageAdvancedName = "Advanced";
+        public const string PageGoogleTestName = "Google Test";
 
         private const string SolutionDirPlaceholder = "$(SolutionDir)";
         public const string TestDirPlaceholder = "$(TestDir)";
@@ -87,24 +87,6 @@ namespace GoogleTestAdapter
 
         #region GeneralOptionsPage
 
-        public const string OptionCatchExceptions = "Catch exceptions";
-        public const bool OptionCatchExceptionsDefaultValue = true;
-        public const string OptionCatchExceptionsDescription =
-            "Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.\n"
-            + "Google Test option:" + GoogleTestConstants.CatchExceptions;
-
-        public virtual bool CatchExceptions => XmlOptions.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
-
-
-        public const string OptionBreakOnFailure = "Break on failure";
-        public const bool OptionBreakOnFailureDefaultValue = false;
-        public const string OptionBreakOnFailureDescription =
-            "If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.\n"
-            + "Google Test option:" + GoogleTestConstants.BreakOnFailure;
-
-        public virtual bool BreakOnFailure => XmlOptions.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
-
-
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;
         public const string OptionPrintTestOutputDescription =
@@ -120,66 +102,6 @@ namespace GoogleTestAdapter
             + TestFinderRegex;
 
         public virtual string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
-
-
-        public const string OptionRunDisabledTests = "Also run disabled tests";
-        public const bool OptionRunDisabledTestsDefaultValue = false;
-        public const string OptionRunDisabledTestsDescription =
-            "If true, all (selected) tests will be run, even if they have been disabled.\n"
-            + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
-
-        public virtual bool RunDisabledTests => XmlOptions.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
-
-
-        public const string OptionNrOfTestRepetitions = "Number of test repetitions";
-        public const int OptionNrOfTestRepetitionsDefaultValue = 1;
-        public const string OptionNrOfTestRepetitionsDescription =
-            "Tests will be run for the selected number of times (-1: infinite).\n"
-            + "Google Test option:" + GoogleTestConstants.NrOfRepetitionsOption;
-
-        public virtual int NrOfTestRepetitions
-        {
-            get
-            {
-                int nrOfRepetitions = XmlOptions.NrOfTestRepetitions ?? OptionNrOfTestRepetitionsDefaultValue;
-                if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
-                {
-                    nrOfRepetitions = OptionNrOfTestRepetitionsDefaultValue;
-                }
-                return nrOfRepetitions;
-            }
-        }
-
-
-        public const string OptionShuffleTests = "Shuffle tests per execution";
-        public const bool OptionShuffleTestsDefaultValue = false;
-        public const string OptionShuffleTestsDescription =
-            "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
-            + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
-
-        public virtual bool ShuffleTests => XmlOptions.ShuffleTests ?? OptionShuffleTestsDefaultValue;
-
-
-        public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
-        public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
-        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<n<"
-                                                           + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
-                                                           + ": The given seed is used. See note of option '"
-                                                           + OptionShuffleTests
-                                                           + "'.";
-
-        public virtual int ShuffleTestsSeed
-        {
-            get
-            {
-                int seed = XmlOptions.ShuffleTestsSeed ?? OptionShuffleTestsSeedDefaultValue;
-                if (seed < GoogleTestConstants.ShuffleTestsSeedMinValue || seed > GoogleTestConstants.ShuffleTestsSeedMaxValue)
-                {
-                    seed = OptionShuffleTestsSeedDefaultValue;
-                }
-                return seed;
-            }
-        }
 
 
         public const string TraitsRegexesPairSeparator = "//||//";
@@ -239,6 +161,24 @@ namespace GoogleTestAdapter
 
         public virtual string AdditionalTestExecutionParam => XmlOptions.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
+
+        public const string OptionBatchForTestSetup = "Test setup batch file";
+        public const string OptionBatchForTestSetupDefaultValue = "";
+        public const string OptionBatchForTestSetupDescription =
+            "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
+            + DescriptionOfPlaceholdersForBatches;
+
+        public virtual string BatchForTestSetup => XmlOptions.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
+
+
+        public const string OptionBatchForTestTeardown = "Test teardown batch file";
+        public const string OptionBatchForTestTeardownDefaultValue = "";
+        public const string OptionBatchForTestTeardownDescription =
+            "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
+            + DescriptionOfPlaceholdersForBatches;
+
+        public virtual string BatchForTestTeardown => XmlOptions.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
+
         #endregion
 
         #region ParallelizationOptionsPage
@@ -269,44 +209,85 @@ namespace GoogleTestAdapter
             }
         }
 
-
-        public const string OptionBatchForTestSetup = "Test setup batch file";
-        public const string OptionBatchForTestSetupDefaultValue = "";
-        public const string OptionBatchForTestSetupDescription =
-            "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
-            + DescriptionOfPlaceholdersForBatches;
-
-        public virtual string BatchForTestSetup => XmlOptions.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
-
-
-        public const string OptionBatchForTestTeardown = "Test teardown batch file";
-        public const string OptionBatchForTestTeardownDefaultValue = "";
-        public const string OptionBatchForTestTeardownDescription =
-            "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
-            + DescriptionOfPlaceholdersForBatches;
-
-        public virtual string BatchForTestTeardown => XmlOptions.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
-
         #endregion
 
-        #region AdvancedOptionsPage
+        #region GoogleTestOptionsPage
 
-        public const string OptionReportWaitPeriod = "Wait period during result reporting";
-        public const int OptionReportWaitPeriodDefaultValue = 0;
-        public const string OptionReportWaitPeriodDescription =
-            "Sometimes, not all TestResults are recognized by VS. This is probably due to inter process communication - if anybody has a clean solution for this, please provide a patch. Until then, use this option to ovetcome such problems.\n" +
-            "During test reporting, 0: do not pause at all, n: pause for 1ms every nth test (the higher, the faster; 1 is slowest)";
+        public const string OptionCatchExceptions = "Catch exceptions";
+        public const bool OptionCatchExceptionsDefaultValue = true;
+        public const string OptionCatchExceptionsDescription =
+            "Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.\n"
+            + "Google Test option:" + GoogleTestConstants.CatchExceptions;
 
-        public virtual int ReportWaitPeriod
+        public virtual bool CatchExceptions => XmlOptions.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
+
+
+        public const string OptionBreakOnFailure = "Break on failure";
+        public const bool OptionBreakOnFailureDefaultValue = false;
+        public const string OptionBreakOnFailureDescription =
+            "If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.\n"
+            + "Google Test option:" + GoogleTestConstants.BreakOnFailure;
+
+        public virtual bool BreakOnFailure => XmlOptions.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
+
+
+        public const string OptionRunDisabledTests = "Also run disabled tests";
+        public const bool OptionRunDisabledTestsDefaultValue = false;
+        public const string OptionRunDisabledTestsDescription =
+            "If true, all (selected) tests will be run, even if they have been disabled.\n"
+            + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
+
+        public virtual bool RunDisabledTests => XmlOptions.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
+
+
+        public const string OptionNrOfTestRepetitions = "Number of test repetitions";
+        public const int OptionNrOfTestRepetitionsDefaultValue = 1;
+        public const string OptionNrOfTestRepetitionsDescription =
+            "Tests will be run for the selected number of times (-1: infinite).\n"
+            + "Google Test option:" + GoogleTestConstants.NrOfRepetitionsOption;
+
+        public virtual int NrOfTestRepetitions
         {
             get
             {
-                int period = XmlOptions.ReportWaitPeriod ?? OptionReportWaitPeriodDefaultValue;
-                if (period < 0)
+                int nrOfRepetitions = XmlOptions.NrOfTestRepetitions ?? OptionNrOfTestRepetitionsDefaultValue;
+                if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
                 {
-                    period = OptionReportWaitPeriodDefaultValue;
+                    nrOfRepetitions = OptionNrOfTestRepetitionsDefaultValue;
                 }
-                return period;
+                return nrOfRepetitions;
+            }
+        }
+
+
+        public const string OptionShuffleTests = "Shuffle tests per execution";
+        public const bool OptionShuffleTestsDefaultValue = false;
+        public const string OptionShuffleTestsDescription =
+            "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
+            + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
+
+        public virtual bool ShuffleTests => XmlOptions.ShuffleTests ?? OptionShuffleTestsDefaultValue;
+
+
+        public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
+        public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
+        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<n<"
+                                                           + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
+                                                           + ": The given seed is used. See note of option '"
+                                                           + OptionShuffleTests
+                                                           + "'.\n"
+            + "Google Test option:" + GoogleTestConstants.ShuffleTestsSeedOption;
+
+        public virtual int ShuffleTestsSeed
+        {
+            get
+            {
+                int seed = XmlOptions.ShuffleTestsSeed ?? OptionShuffleTestsSeedDefaultValue;
+                if (seed < GoogleTestConstants.ShuffleTestsSeedMinValue || seed > GoogleTestConstants.ShuffleTestsSeedMaxValue)
+                {
+                    seed = OptionShuffleTestsSeedDefaultValue;
+                }
+                return seed;
             }
         }
 

@@ -75,16 +75,6 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void ReportWaitPeriod_InvalidValue_ReturnsDefaultValue()
-        {
-            MockXmlOptions.Setup(o => o.ReportWaitPeriod).Returns(-1);
-            Assert.AreEqual(Options.OptionReportWaitPeriodDefaultValue, TheOptions.ReportWaitPeriod);
-
-            MockXmlOptions.Setup(o => o.ReportWaitPeriod).Returns(4711);
-            Assert.AreEqual(4711, TheOptions.ReportWaitPeriod);
-        }
-
-        [TestMethod]
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder);

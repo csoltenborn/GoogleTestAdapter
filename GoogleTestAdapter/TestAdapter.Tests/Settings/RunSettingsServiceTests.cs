@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "NrOfTestRepetitions", "1");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
-            AssertContainsSetting(xml, "ReportWaitPeriod", "3");
+            AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
 
             mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Warning), It.Is<string>(s => s.Contains("could not be parsed"))),
                 Times.Exactly(1));
@@ -93,7 +93,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "NrOfTestRepetitions", "2");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
-            AssertContainsSetting(xml, "ReportWaitPeriod", "3");
+            AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
         }
 
         private RunSettingsService SetupRunSettingsService(Mock<ILogger> mockLogger, string solutionRunSettingsFile)
@@ -102,7 +102,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             globalRunSettings.AdditionalTestExecutionParam = "Global";
             globalRunSettings.NrOfTestRepetitions = 1;
             globalRunSettings.MaxNrOfThreads = 1;
-            globalRunSettings.ReportWaitPeriod = 1;
+            globalRunSettings.TraitsRegexesBefore = "Global";
 
             Mock<IGlobalRunSettings> mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
             mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalRunSettings);

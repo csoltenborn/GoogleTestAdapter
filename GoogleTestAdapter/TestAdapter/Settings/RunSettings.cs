@@ -63,9 +63,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public string BatchForTestTeardown { get; set; }
         public bool ShouldSerializeBatchForTestTeardown() { return BatchForTestTeardown != null; }
 
-        public int? ReportWaitPeriod { get; set; }
-        public bool ShouldSerializeReportWaitPeriod() { return ReportWaitPeriod != null; }
-
 
         public override XmlElement ToXml()
         {

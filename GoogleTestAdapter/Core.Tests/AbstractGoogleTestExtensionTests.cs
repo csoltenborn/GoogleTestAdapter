@@ -81,8 +81,6 @@ namespace GoogleTestAdapter
         [TestInitialize]
         virtual public void SetUp()
         {
-            MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
-
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(Options.OptionNrOfTestRepetitionsDefaultValue);

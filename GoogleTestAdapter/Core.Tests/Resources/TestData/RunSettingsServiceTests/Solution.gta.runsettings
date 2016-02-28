@@ -4,6 +4,6 @@
 		<BatchForTestSetup>Solution</BatchForTestSetup>
 		<NrOfTestRepetitions>2</NrOfTestRepetitions>
 		<ShuffleTestsSeed>2</ShuffleTestsSeed>
-		<ReportWaitPeriod>2</ReportWaitPeriod>
+		<TraitsRegexesBefore>Solution</TraitsRegexesBefore>
 	</GoogleTestAdapter>
 </RunSettings>
