@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
@@ -58,22 +59,22 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             lock (Lock)
             {
-                foreach (Model.TestCase testCase in testCases)
+                foreach (TestCase testCase in testCases)
                 {
                     FrameworkHandle.RecordStart(DataConversionExtensions.ToVsTestCase(testCase));
                 }
             }
         }
 
-        public void ReportTestResults(IEnumerable<Model.TestResult> testResults)
+        public void ReportTestResults(IEnumerable<TestResult> testResults)
         {
             lock (Lock)
             {
-                foreach (Model.TestResult testResult in testResults)
+                foreach (TestResult testResult in testResults)
                 {
-                    if (IsRunningInsideVisualStudio)
+                    if (IsRunningInsideVisualStudio && (testResult.Outcome == TestOutcome.Failed || testResult.Outcome == TestOutcome.Skipped))
                         testResult.ErrorMessage = Environment.NewLine + testResult.ErrorMessage;
-                    else if (testResult.ErrorStackTrace != null)
+                    if (!IsRunningInsideVisualStudio && testResult.ErrorStackTrace != null)
                         testResult.ErrorStackTrace = testResult.ErrorStackTrace.Trim();
 
                     ReportTestResult(testResult);

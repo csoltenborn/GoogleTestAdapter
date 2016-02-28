@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.VsPackage
 {
     public class ResultChecker
     {
-        private const bool overwriteTestResults = false;
+        internal const bool OverwriteTestResults = false;
 
         private readonly string goldenFilesDirectory;
         private readonly string testErrorsDirectory;
@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.VsPackage
             {
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (overwriteTestResults)
+                if (OverwriteTestResults)
                 {
                     File.WriteAllText(expectationFile, testResults);
                     Assert.Inconclusive("Test results changed and have been overwritten. Differences: " + msg);

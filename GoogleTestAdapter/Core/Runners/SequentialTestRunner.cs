@@ -106,15 +106,25 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
+                string errorMessage, errorStackTrace = null;
+                if (consoleParser.CrashedTestCase == null)
+                {
+                    errorMessage = "";
+                }
+                else
+                {
+                    errorMessage = "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
+                    errorStackTrace = ErrorMessageParser.GetStackTraceEntry("crash suspect",
+                        consoleParser.CrashedTestCase.CodeFilePath, consoleParser.CrashedTestCase.LineNumber.ToString());
+                }
                 foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
                 {
-                    string errorMsg = consoleParser.CrashedTestCase == null ? ""
-                        : "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
                     testResults.Add(new TestResult(testCase)
                     {
                         ComputerName = Environment.MachineName,
                         Outcome = TestOutcome.Skipped,
-                        ErrorMessage = errorMsg
+                        ErrorMessage = errorMessage,
+                        ErrorStackTrace = errorStackTrace
                     });
                 }
             }

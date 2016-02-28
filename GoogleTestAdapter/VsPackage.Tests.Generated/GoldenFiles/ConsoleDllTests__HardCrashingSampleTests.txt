@@ -31,8 +31,11 @@ at crashingtests.cpp:12 in ${BaseDir}\sampletests\crashingtests\crashingtests.cp
    !! This is probably the test that crashed !!
 Error Message:
    reason is probably a crash of test Crashing.TheCrash
-Error Message:
+Stack Trace:
+at crash suspect in ${BaseDir}\sampletests\crashingtests\crashingtests.cpp:line 21Error Message:
    reason is probably a crash of test Crashing.TheCrash
-Error Message:
+Stack Trace:
+at crash suspect in ${BaseDir}\sampletests\crashingtests\crashingtests.cpp:line 21Error Message:
    reason is probably a crash of test Crashing.TheCrash
-Test Run Failed.
+Stack Trace:
+at crash suspect in ${BaseDir}\sampletests\crashingtests\crashingtests.cpp:line 21Test Run Failed.

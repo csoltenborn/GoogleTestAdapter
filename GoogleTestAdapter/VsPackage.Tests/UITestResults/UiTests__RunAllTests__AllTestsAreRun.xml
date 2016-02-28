@@ -43,7 +43,8 @@ Expected: 1000</Error>
       <Name>Crashing.TheCrash</Name>
       <Result>Test Failed - Crashing.TheCrash</Result>
       <Source>crashingtests.cpp line 21</Source>
-      <Error>Message: !! This is probably the test that crashed !!</Error>
+      <Error>Message: 
+!! This is probably the test that crashed !!</Error>
     </TestCase>
     <TestCase>
       <Name>InstantiationName/ParameterizedTests.Simple/1 [(1,!)]</Name>
@@ -461,19 +462,25 @@ Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container
       <Name>Crashing.AddFailsAfterCrash</Name>
       <Result>Test Skipped - Crashing.AddFailsAfterCrash</Result>
       <Source>crashingtests.cpp line 26</Source>
-      <Error>Message: reason is probably a crash of test Crashing.TheCrash</Error>
+      <Error>Message: 
+reason is probably a crash of test Crashing.TheCrash</Error>
+      <Stacktrace>crash suspect</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Crashing.AddPassesAfterCrash</Name>
       <Result>Test Skipped - Crashing.AddPassesAfterCrash</Result>
       <Source>crashingtests.cpp line 31</Source>
-      <Error>Message: reason is probably a crash of test Crashing.TheCrash</Error>
+      <Error>Message: 
+reason is probably a crash of test Crashing.TheCrash</Error>
+      <Stacktrace>crash suspect</Stacktrace>
     </TestCase>
     <TestCase>
       <Name>Crashing.LongRunning</Name>
       <Result>Test Skipped - Crashing.LongRunning</Result>
       <Source>crashingtests.cpp line 36</Source>
-      <Error>Message: reason is probably a crash of test Crashing.TheCrash</Error>
+      <Error>Message: 
+reason is probably a crash of test Crashing.TheCrash</Error>
+      <Stacktrace>crash suspect</Stacktrace>
     </TestCase>
   </TestGroup>
   <TestGroup>

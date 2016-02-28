@@ -83,7 +83,11 @@ namespace GoogleTestAdapter.VsPackage
 
         public static bool IsRunningOnBuildServer()
         {
-            return Environment.GetEnvironmentVariable("APPVEYOR") != null;
+#pragma warning disable 162
+            // ReSharper disable once RedundantLogicalConditionalExpressionOperand
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            return ResultChecker.OverwriteTestResults || Environment.GetEnvironmentVariable("APPVEYOR") != null;
+#pragma warning restore 162
         }
 
         private static string NormalizeOutput(string resultString, string baseDir)

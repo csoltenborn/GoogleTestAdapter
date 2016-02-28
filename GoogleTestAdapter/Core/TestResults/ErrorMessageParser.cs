@@ -121,6 +121,11 @@ namespace GoogleTestAdapter.TestResults
             ErrorStackTrace = string.Join("", finalStackTraces);
         }
 
+        public static string GetStackTraceEntry(string label, string fullFileName, string lineNumber)
+        {
+            return $"at {label} in {fullFileName}:line {lineNumber}{Environment.NewLine}";
+        }
+
         private void CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, int msgId = 0)
         {
             Match match = ParseRegex.Match(errorMessage);
@@ -138,7 +143,7 @@ namespace GoogleTestAdapter.TestResults
 
             string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
 
-            stackTrace = $"at {msgReference}{fileName}:{lineNumber} in {fullFileName}:line {lineNumber}{Environment.NewLine}";
+            stackTrace = GetStackTraceEntry($"{msgReference}{fileName}:{lineNumber}", fullFileName, lineNumber);
             errorMessage = errorMessage.Replace(match.Value, "").Trim();
 
             match = ScopedTraceStartRegex.Match(errorMessage);
