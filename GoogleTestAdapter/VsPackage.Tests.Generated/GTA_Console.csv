@@ -11,7 +11,7 @@ SampleTests	false	DisplayName=TestMath.AddPassesWithTraits|Type=Small	true	true
 SampleTests	true	TestCategory=Unit&Type=Medium	false	true
 X862	true	none	false	false
 X861	true	none	false	true
-SampleTests	true	*NotExisting=Foo	false	true
+# SampleTests	true	*NotExisting=Foo	false	true
 X861	false	none	true	false
 SampleTests	false	TestCategory=Unit&Type=Medium	true	false
 SampleTests	false	TestCategory=NotExisting	true	false
