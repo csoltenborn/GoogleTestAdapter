@@ -55,6 +55,8 @@ namespace GoogleTestAdapter.Runners
         public IEnumerable<Args> GetCommandLines()
         {
             string baseCommandLine = GetOutputpathParameter();
+            baseCommandLine += GetCatchExceptionsParameter();
+            baseCommandLine += GetBreakOnFailureParameter();
             baseCommandLine += GetAlsoRunDisabledTestsParameter();
             baseCommandLine += GetShuffleTestsParameter();
             baseCommandLine += GetTestsRepetitionsParameter();
@@ -63,7 +65,6 @@ namespace GoogleTestAdapter.Runners
             commandLines.AddRange(GetFinalCommandLines(baseCommandLine));
             return commandLines;
         }
-
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
@@ -148,6 +149,16 @@ namespace GoogleTestAdapter.Runners
         private string GetOutputpathParameter()
         {
             return GoogleTestConstants.GetResultXmlFileOption(ResultXmlFile);
+        }
+
+        private string GetCatchExceptionsParameter()
+        {
+            return GoogleTestConstants.GetCatchExceptionsOption(TestEnvironment.Options.CatchExceptions);
+        }
+
+        private string GetBreakOnFailureParameter()
+        {
+            return GoogleTestConstants.GetBreakOnFailureOption(TestEnvironment.Options.BreakOnFailure);
         }
 
         private string GetAlsoRunDisabledTestsParameter()

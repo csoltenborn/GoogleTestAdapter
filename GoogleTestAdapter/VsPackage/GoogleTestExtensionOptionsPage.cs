@@ -58,6 +58,8 @@ namespace GoogleTestAdapter.VsPackage
 
             runSettings.PrintTestOutput = generalOptions.PrintTestOutput;
             runSettings.TestDiscoveryRegex = generalOptions.TestDiscoveryRegex;
+            runSettings.CatchExceptions = generalOptions.CatchExceptions;
+            runSettings.BreakOnFailure = generalOptions.BreakOnFailure;
             runSettings.RunDisabledTests = generalOptions.RunDisabledTests;
             runSettings.NrOfTestRepetitions = generalOptions.NrOfTestRepetitions;
             runSettings.ShuffleTests = generalOptions.ShuffleTests;

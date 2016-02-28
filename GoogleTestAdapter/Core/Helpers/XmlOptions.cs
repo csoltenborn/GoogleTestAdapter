@@ -7,12 +7,15 @@
     - add property and according constants to class GoogleTestAdapter.Options
     - handle property in method GoogleTestAdapter.Helpers.XmlOptionsExtension.GetUnsetValuesFrom()
     - handle property serialization in class GoogleTestAdapter.TestAdapter.Settings.RunSettings
-    - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
+    - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
+    - add new option to Resources/AllTestSettings.gta.runsettings
     */
     public interface IXmlOptions
     {
         string AdditionalTestExecutionParam { get; set; }
+        bool? CatchExceptions { get; set; }
+        bool? BreakOnFailure { get; set; }
         int? MaxNrOfThreads { get; set; }
         int? NrOfTestRepetitions { get; set; }
         bool? ParallelTestExecution { get; set; }
@@ -34,6 +37,8 @@
         public static void GetUnsetValuesFrom(this IXmlOptions self, IXmlOptions other)
         {
             self.AdditionalTestExecutionParam = self.AdditionalTestExecutionParam ?? other.AdditionalTestExecutionParam;
+            self.CatchExceptions = self.CatchExceptions ?? other.CatchExceptions;
+            self.BreakOnFailure = self.BreakOnFailure ?? other.BreakOnFailure;
             self.MaxNrOfThreads = self.MaxNrOfThreads ?? other.MaxNrOfThreads;
             self.NrOfTestRepetitions = self.NrOfTestRepetitions ?? other.NrOfTestRepetitions;
             self.ParallelTestExecution = self.ParallelTestExecution ?? other.ParallelTestExecution;

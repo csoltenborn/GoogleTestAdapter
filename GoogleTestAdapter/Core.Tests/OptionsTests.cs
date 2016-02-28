@@ -109,6 +109,30 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public void CatchExceptions__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.CatchExceptions).Returns((bool?)null);
+            bool result = TheOptions.CatchExceptions;
+            Assert.AreEqual(Options.OptionCatchExceptionsDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.CatchExceptions).Returns(!Options.OptionCatchExceptionsDefaultValue);
+            result = TheOptions.CatchExceptions;
+            Assert.AreEqual(!Options.OptionCatchExceptionsDefaultValue, result);
+        }
+
+        [TestMethod]
+        public void BreakOnFailure__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.BreakOnFailure).Returns((bool?)null);
+            bool result = TheOptions.BreakOnFailure;
+            Assert.AreEqual(Options.OptionBreakOnFailureDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.BreakOnFailure).Returns(!Options.OptionBreakOnFailureDefaultValue);
+            result = TheOptions.BreakOnFailure;
+            Assert.AreEqual(!Options.OptionBreakOnFailureDefaultValue, result);
+        }
+
+        [TestMethod]
         public void PrintTestOutput__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.PrintTestOutput).Returns((bool?)null);

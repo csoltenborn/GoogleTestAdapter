@@ -11,6 +11,8 @@
         public const string ShuffleTestsOption = " --gtest_shuffle";
         public const string ShuffleTestsSeedOption = " --gtest_random_seed";
         public const string NrOfRepetitionsOption = " --gtest_repeat";
+        public const string CatchExceptions = " --gtest_catch_exceptions";
+        public const string BreakOnFailure = " --gtest_break_on_failure";
 
         public const int ShuffleTestsSeedDefaultValue = 0;
         public const string ShuffleTestsSeedMaxValueAsString = "99999";
@@ -27,6 +29,18 @@
         public static string GetResultXmlFileOption(string resultXmlFile)
         {
             return "--gtest_output=\"xml:" + resultXmlFile + "\"";
+        }
+
+        public static string GetCatchExceptionsOption(bool catchThem)
+        {
+            int optionValue = catchThem ? 1 : 0;
+            return $"{CatchExceptions}={optionValue}";
+        }
+
+        public static string GetBreakOnFailureOption(bool doBreak)
+        {
+            int optionValue = doBreak ? 1 : 0;
+            return $"{BreakOnFailure}={optionValue}";
         }
 
     }

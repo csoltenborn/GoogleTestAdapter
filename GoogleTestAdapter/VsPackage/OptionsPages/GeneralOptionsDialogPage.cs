@@ -26,6 +26,26 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string testDiscoveryRegex = Options.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionCatchExceptions)]
+        [Description(Options.OptionCatchExceptionsDescription)]
+        public bool CatchExceptions
+        {
+            get { return catchExceptions; }
+            set { SetAndNotify(ref catchExceptions, value); }
+        }
+        private bool catchExceptions = Options.OptionCatchExceptionsDefaultValue;
+
+        [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionBreakOnFailure)]
+        [Description(Options.OptionBreakOnFailureDescription)]
+        public bool BreakOnFailure
+        {
+            get { return breakOnFailure; }
+            set { SetAndNotify(ref breakOnFailure, value); }
+        }
+        private bool breakOnFailure = Options.OptionBreakOnFailureDefaultValue;
+
+        [Category(Options.CategoryName)]
         [DisplayName(Options.OptionRunDisabledTests)]
         [Description(Options.OptionRunDisabledTestsDescription)]
         public bool RunDisabledTests

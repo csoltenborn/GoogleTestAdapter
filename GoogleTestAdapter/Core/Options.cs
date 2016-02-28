@@ -87,6 +87,24 @@ namespace GoogleTestAdapter
 
         #region GeneralOptionsPage
 
+        public const string OptionCatchExceptions = "Catch exceptions";
+        public const bool OptionCatchExceptionsDefaultValue = true;
+        public const string OptionCatchExceptionsDescription =
+            "Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.\n"
+            + "Google Test option:" + GoogleTestConstants.CatchExceptions;
+
+        public virtual bool CatchExceptions => XmlOptions.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
+
+
+        public const string OptionBreakOnFailure = "Break on failure";
+        public const bool OptionBreakOnFailureDefaultValue = false;
+        public const string OptionBreakOnFailureDescription =
+            "If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.\n"
+            + "Google Test option:" + GoogleTestConstants.BreakOnFailure;
+
+        public virtual bool BreakOnFailure => XmlOptions.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
+
+
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;
         public const string OptionPrintTestOutputDescription =
