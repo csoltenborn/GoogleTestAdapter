@@ -21,6 +21,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
 
+        public bool? CatchExceptions { get; set; }
+        public bool ShouldSerializeCatchExceptions() { return CatchExceptions != null; }
+
+        public bool? BreakOnFailure { get; set; }
+        public bool ShouldSerializeBreakOnFailure() { return BreakOnFailure != null; }
+
         public bool? RunDisabledTests { get; set; }
         public bool ShouldSerializeRunDisabledTests() { return RunDisabledTests != null; }
 
@@ -56,9 +62,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         public string BatchForTestTeardown { get; set; }
         public bool ShouldSerializeBatchForTestTeardown() { return BatchForTestTeardown != null; }
-
-        public int? ReportWaitPeriod { get; set; }
-        public bool ShouldSerializeReportWaitPeriod() { return ReportWaitPeriod != null; }
 
 
         public override XmlElement ToXml()

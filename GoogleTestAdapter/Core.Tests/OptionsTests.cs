@@ -75,16 +75,6 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public void ReportWaitPeriod_InvalidValue_ReturnsDefaultValue()
-        {
-            MockXmlOptions.Setup(o => o.ReportWaitPeriod).Returns(-1);
-            Assert.AreEqual(Options.OptionReportWaitPeriodDefaultValue, TheOptions.ReportWaitPeriod);
-
-            MockXmlOptions.Setup(o => o.ReportWaitPeriod).Returns(4711);
-            Assert.AreEqual(4711, TheOptions.ReportWaitPeriod);
-        }
-
-        [TestMethod]
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder);
@@ -106,6 +96,30 @@ namespace GoogleTestAdapter
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.TestDirPlaceholder + ", " + Options.ThreadIdPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 4711);
             Assert.AreEqual("mydir, 4711", result);
+        }
+
+        [TestMethod]
+        public void CatchExceptions__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.CatchExceptions).Returns((bool?)null);
+            bool result = TheOptions.CatchExceptions;
+            Assert.AreEqual(Options.OptionCatchExceptionsDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.CatchExceptions).Returns(!Options.OptionCatchExceptionsDefaultValue);
+            result = TheOptions.CatchExceptions;
+            Assert.AreEqual(!Options.OptionCatchExceptionsDefaultValue, result);
+        }
+
+        [TestMethod]
+        public void BreakOnFailure__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.BreakOnFailure).Returns((bool?)null);
+            bool result = TheOptions.BreakOnFailure;
+            Assert.AreEqual(Options.OptionBreakOnFailureDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.BreakOnFailure).Returns(!Options.OptionBreakOnFailureDefaultValue);
+            result = TheOptions.BreakOnFailure;
+            Assert.AreEqual(!Options.OptionBreakOnFailureDefaultValue, result);
         }
 
         [TestMethod]

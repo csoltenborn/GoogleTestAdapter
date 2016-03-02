@@ -42,9 +42,13 @@ namespace GoogleTestAdapter
         protected const string XmlFileBroken = TestdataDir + @"SampleResult1_Broken.xml";
         protected const string XmlFileBroken_InvalidStatusAttibute = TestdataDir + @"SampleResult1 _Broken_InvalidStatusAttribute.xml";
 
+        // RunSettingsService tests
         protected const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution" + GoogleTestConstants.SettingsExtension;
         public const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
         protected const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
+
+        // settings for running generated tests
+        public const string UserTestSettingsForGeneratedTests = TestdataDir + "User.runsettings";
 
         protected const string DummyExecutable = "ff.exe";
 
@@ -81,12 +85,12 @@ namespace GoogleTestAdapter
         [TestInitialize]
         virtual public void SetUp()
         {
-            MockOptions.Setup(o => o.ReportWaitPeriod).Returns(1);
-
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(Options.OptionNrOfTestRepetitionsDefaultValue);
             MockOptions.Setup(o => o.PrintTestOutput).Returns(Options.OptionPrintTestOutputDefaultValue);
+            MockOptions.Setup(o => o.CatchExceptions).Returns(Options.OptionCatchExceptionsDefaultValue);
+            MockOptions.Setup(o => o.BreakOnFailure).Returns(Options.OptionBreakOnFailureDefaultValue);
             MockOptions.Setup(o => o.RunDisabledTests).Returns(Options.OptionRunDisabledTestsDefaultValue);
             MockOptions.Setup(o => o.ShuffleTests).Returns(Options.OptionShuffleTestsDefaultValue);
             MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(Options.OptionShuffleTestsSeedDefaultValue);

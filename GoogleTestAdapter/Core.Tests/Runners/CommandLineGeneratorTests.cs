@@ -11,6 +11,10 @@ namespace GoogleTestAdapter.Runners
     public class CommandLineGeneratorTests : AbstractGoogleTestExtensionTests
     {
 
+        private static readonly string DefaultArgs =
+            GoogleTestConstants.GetCatchExceptionsOption(Options.OptionCatchExceptionsDefaultValue) +
+            GoogleTestConstants.GetBreakOnFailureOption(Options.OptionBreakOnFailureDefaultValue);
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_UserParametersNull_Throws()
@@ -35,7 +39,37 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\"", commandLine);
+            Assert.AreEqual("--gtest_output=\"xml:\"" + DefaultArgs, commandLine);
+        }
+
+        [TestMethod]
+        public void GetCommandLines_CatchExceptionsOption_IsAppendedCorrectly()
+        {
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string catchExceptionsOption = GoogleTestConstants.GetCatchExceptionsOption(true);
+            Assert.IsTrue(commandLine.Contains(catchExceptionsOption), commandLine);
+
+            MockOptions.Setup(o => o.CatchExceptions).Returns(false);
+
+            commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            catchExceptionsOption = GoogleTestConstants.GetCatchExceptionsOption(false);
+            Assert.IsTrue(commandLine.Contains(catchExceptionsOption), commandLine);
+        }
+
+        [TestMethod]
+        public void GetCommandLines_BreakOnFailureOption_IsAppendedCorrectly()
+        {
+            IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
+            string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string breakOnFailureOption = GoogleTestConstants.GetBreakOnFailureOption(false);
+            Assert.IsTrue(commandLine.Contains(breakOnFailureOption), commandLine);
+
+            MockOptions.Setup(o => o.BreakOnFailure).Returns(true);
+
+            commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            breakOnFailureOption = GoogleTestConstants.GetBreakOnFailureOption(true);
+            Assert.IsTrue(commandLine.Contains(breakOnFailureOption), commandLine);
         }
 
         [TestMethod]
@@ -47,7 +81,7 @@ namespace GoogleTestAdapter.Runners
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
             string repetitionsOption = GoogleTestConstants.NrOfRepetitionsOption + "=4711";
-            Assert.AreEqual("--gtest_output=\"xml:\"" + repetitionsOption, commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs}{repetitionsOption}", commandLine);
         }
 
         [TestMethod]
@@ -58,7 +92,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> testCases = CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
             string commandLine = new CommandLineGenerator(testCases, testCases, DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\"" + GoogleTestConstants.ShuffleTestsOption, commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs}{GoogleTestConstants.ShuffleTestsOption}", commandLine);
         }
 
         [TestMethod]
@@ -72,7 +106,7 @@ namespace GoogleTestAdapter.Runners
 
             string shuffleTestsOption = GoogleTestConstants.ShuffleTestsOption
                 + GoogleTestConstants.ShuffleTestsSeedOption + "=4711";
-            Assert.AreEqual("--gtest_output=\"xml:\"" + shuffleTestsOption, commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs}{shuffleTestsOption}", commandLine);
         }
 
         [TestMethod]
@@ -85,7 +119,7 @@ namespace GoogleTestAdapter.Runners
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:", commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:", commandLine);
         }
 
         [TestMethod]
@@ -101,7 +135,7 @@ namespace GoogleTestAdapter.Runners
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=InstantiationName/ParameterizedTests.*:InstantiationName2/ParameterizedTests.SimpleTraits/0", commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=InstantiationName/ParameterizedTests.*:InstantiationName2/ParameterizedTests.SimpleTraits/0", commandLine);
         }
 
         [TestMethod]
@@ -118,7 +152,7 @@ namespace GoogleTestAdapter.Runners
             string commandLineFromBackwards = new CommandLineGenerator(allTestCases, testCasesReversed, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
-            string ExpectedCommandLine = "--gtest_output=\"xml:\" --gtest_filter=FooSuite.*:";
+            string ExpectedCommandLine = $"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:";
             Assert.AreEqual(ExpectedCommandLine, commandLine);
             Assert.AreEqual(ExpectedCommandLine, commandLineFromBackwards);
         }
@@ -132,7 +166,7 @@ namespace GoogleTestAdapter.Runners
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.BarTest:BarSuite.BazTest1", commandLine);
         }
 
         [TestMethod]
@@ -144,7 +178,7 @@ namespace GoogleTestAdapter.Runners
             string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
-            Assert.AreEqual("--gtest_output=\"xml:\" --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", commandLine);
+            Assert.AreEqual($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=BarSuite.BazTest1:FooSuite.BarTest", commandLine);
         }
 
         [TestMethod]
@@ -171,16 +205,16 @@ namespace GoogleTestAdapter.Runners
             string commandLine = commands[0].CommandLine;
             Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
             Assert.IsTrue(commandLine.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
-            Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite0.MyTest:"));
+            Assert.IsTrue(commandLine.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter=MyTestSuite0.MyTest:"));
 
             commandLine = commands[1].CommandLine;
             Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
             Assert.IsTrue(commandLine.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
-            Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            Assert.IsTrue(commandLine.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter="));
 
             commandLine = commands[2].CommandLine;
             Assert.IsTrue(commandLine.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
-            Assert.IsTrue(commandLine.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            Assert.IsTrue(commandLine.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter="));
 
             HashSet<Model.TestCase> testsAsSet = new HashSet<Model.TestCase>(testCases);
             HashSet<Model.TestCase> splittedTestsAsSet = new HashSet<Model.TestCase>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));
@@ -219,18 +253,18 @@ namespace GoogleTestAdapter.Runners
             string command = commands[0].CommandLine;
             Assert.IsTrue(command.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
             Assert.IsTrue(command.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
-            Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:MyTestSuite0.MyTest:"));
+            Assert.IsTrue(command.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:MyTestSuite0.MyTest:"));
 
             command = commands[1].CommandLine;
             Assert.IsTrue(command.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
             Assert.IsTrue(command.Length >= CommandLineGenerator.MaxCommandLength - lengthOfLongestTestname - DummyExecutable.Length - 1);
             Assert.IsFalse(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
-            Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            Assert.IsTrue(command.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter="));
 
             command = commands[2].CommandLine;
             Assert.IsTrue(command.Length < CommandLineGenerator.MaxCommandLength - DummyExecutable.Length);
-            Assert.IsFalse(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
-            Assert.IsTrue(command.StartsWith(@"--gtest_output=""xml:"" --gtest_filter="));
+            Assert.IsFalse(command.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter=MyTestSuite1.*:MyTestSuite5.*:"));
+            Assert.IsTrue(command.StartsWith($@"--gtest_output=""xml:""{DefaultArgs} --gtest_filter="));
 
             HashSet<Model.TestCase> testsAsSet = new HashSet<Model.TestCase>(testCases);
             HashSet<Model.TestCase> splittedTestsAsSet = new HashSet<Model.TestCase>(commands[0].TestCases.Union(commands[1].TestCases).Union(commands[2].TestCases));

@@ -77,7 +77,7 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="OptionsPages\AdvancedOptionsDialogPage.cs">
+    <Compile Include="OptionsPages\GoogleTestOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="OptionsPages\GeneralOptionsDialogPage.cs">
