@@ -18,7 +18,6 @@ namespace GoogleTestAdapter.Runners
         private TestEnvironment TestEnvironment { get; }
 
 
-
         public SequentialTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
         {
             FrameworkReporter = reporter;
@@ -114,7 +113,7 @@ namespace GoogleTestAdapter.Runners
                 else
                 {
                     errorMessage = "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
-                    errorStackTrace = ErrorMessageParser.GetStackTraceEntry("crash suspect",
+                    errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
                         consoleParser.CrashedTestCase.CodeFilePath, consoleParser.CrashedTestCase.LineNumber.ToString());
                 }
                 foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
