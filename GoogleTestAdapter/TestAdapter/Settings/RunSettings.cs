@@ -21,6 +21,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
 
+        public string PathExtension { get; set; }
+        public bool ShouldSerializePathExtension() { return PathExtension != null; }
+
         public bool? CatchExceptions { get; set; }
         public bool ShouldSerializeCatchExceptions() { return CatchExceptions != null; }
 

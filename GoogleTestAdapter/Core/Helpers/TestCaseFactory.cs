@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.Helpers
 
             internal IList<TestCaseDescriptor> ParseListTestsOutput(string executable)
             {
-                ProcessLauncher launcher = new ProcessLauncher(TestEnvironment);
+                ProcessLauncher launcher = new ProcessLauncher(TestEnvironment, TestEnvironment.Options.PathExtension);
                 List<string> consoleOutput = launcher.GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false);
                 return ParseConsoleOutput(consoleOutput);
             }
@@ -206,10 +206,10 @@ namespace GoogleTestAdapter.Helpers
             private const string TraitSeparator = "__GTA__";
             private const string TraitAppendix = "_GTA_TRAIT";
 
-            internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
+            internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, string pathExtension, List<string> errorMessages)
             {
                 List<TestCaseLocation> testCaseLocationsFound =
-                    FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, errorMessages).ToList();
+                    FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension, errorMessages).ToList();
 
                 if (testCaseLocationsFound.Count == 0)
                 {
@@ -224,7 +224,7 @@ namespace GoogleTestAdapter.Helpers
                         string importedBinary = Path.Combine(moduleDirectory, import);
                         if (File.Exists(importedBinary))
                         {
-                            testCaseLocationsFound.AddRange(FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, errorMessages));
+                            testCaseLocationsFound.AddRange(FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension, errorMessages));
                         }
                     }
                 }
@@ -233,9 +233,9 @@ namespace GoogleTestAdapter.Helpers
 
 
             private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
-                string binary, List<string> testMethodSignatures, string symbolFilterString, List<string> errorMessages)
+                string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension, List<string> errorMessages)
             {
-                DiaResolver.DiaResolver resolver = new DiaResolver.DiaResolver(binary);
+                DiaResolver.DiaResolver resolver = new DiaResolver.DiaResolver(binary, pathExtension);
                 IEnumerable<SourceFileLocation> allTestMethodSymbols = resolver.GetFunctions(symbolFilterString);
                 IEnumerable<SourceFileLocation> allTraitSymbols = resolver.GetFunctions("*" + TraitAppendix);
 
@@ -294,7 +294,7 @@ namespace GoogleTestAdapter.Helpers
         public IList<TestCase> CreateTestCases()
         {
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(TestEnvironment).ParseListTestsOutput(Executable);
-            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors);
+            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, TestEnvironment.Options.PathExtension);
 
             List<TestCase> result = new List<TestCase>();
             foreach (TestCaseDescriptor descriptor in testCaseDescriptors)
@@ -305,7 +305,7 @@ namespace GoogleTestAdapter.Helpers
             return result;
         }
 
-        private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors)
+        private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
         {
             List<string> testMethodSignatures = new List<string>();
             foreach (TestCaseDescriptor descriptor in testCaseDescriptors)
@@ -317,7 +317,7 @@ namespace GoogleTestAdapter.Helpers
             List<string> errorMessages = new List<string>();
 
             TestCaseResolver resolver = new TestCaseResolver();
-            List<TestCaseLocation> testCaseLocations = resolver.ResolveAllTestCases(Executable, testMethodSignatures, filterString, errorMessages);
+            List<TestCaseLocation> testCaseLocations = resolver.ResolveAllTestCases(Executable, testMethodSignatures, filterString, pathExtension, errorMessages);
 
             foreach (string errorMessage in errorMessages)
             {

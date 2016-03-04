@@ -26,6 +26,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string testDiscoveryRegex = Options.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionPathExtension)]
+        [Description(Options.OptionPathExtensionDescription)]
+        public string PathExtension
+        {
+            get { return pathExtension; }
+            set { SetAndNotify(ref pathExtension, value); }
+        }
+        private string pathExtension = Options.OptionPathExtensionDefaultValue;
+
+        [Category(Options.CategoryName)]
         [DisplayName(Options.OptionDebugMode)]
         [Description(Options.OptionDebugModeDescription)]
         public bool DebugMode

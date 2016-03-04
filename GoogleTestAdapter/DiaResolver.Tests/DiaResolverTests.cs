@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.Dia
             List<SourceFileLocation> locations = new List<SourceFileLocation>();
             List<string> errorMessages = new List<string>();
 
-            DiaResolver.DiaResolver resolver = new DiaResolver.DiaResolver(executable);
+            DiaResolver.DiaResolver resolver = new DiaResolver.DiaResolver(executable, "");
             locations.AddRange(resolver.GetFunctions(filter));
             errorMessages.AddRange(resolver.ErrorMessages);
 

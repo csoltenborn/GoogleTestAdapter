@@ -13,13 +13,13 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             DebuggedProcessLauncher launcher = new DebuggedProcessLauncher(MockFrameworkHandle.Object);
 
-            launcher.LaunchProcessWithDebuggerAttached("theCommand", "theDir", "theParams");
+            launcher.LaunchProcessWithDebuggerAttached("theCommand", "theDir", "theParams", "C:\\test");
 
             MockFrameworkHandle.Verify(fh => fh.LaunchProcessWithDebuggerAttached(
                 It.Is<string>(s => s == "theCommand"),
                 It.Is<string>(s => s == "theDir"),
                 It.Is<string>(s => s == "theParams"),
-                It.IsAny<IDictionary<string, string>>()
+                It.Is<IDictionary<string, string>>(d => d.ContainsKey("PATH") && d["PATH"].EndsWith(";C:\\test"))
                 ), Times.Exactly(1));
         }
 

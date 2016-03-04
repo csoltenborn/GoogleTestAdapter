@@ -9,10 +9,12 @@ namespace GoogleTestAdapter.Helpers
     public class ProcessLauncher
     {
         private readonly ILogger Logger;
+        private readonly string PathExtension;
 
-        public ProcessLauncher(ILogger logger)
+        public ProcessLauncher(ILogger logger, string pathExtension)
         {
             Logger = logger;
+            PathExtension = pathExtension;
         }
 
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
@@ -42,6 +44,13 @@ namespace GoogleTestAdapter.Helpers
                 CreateNoWindow = true,
                 WorkingDirectory = workingDirectory
             };
+
+            if (!string.IsNullOrEmpty(PathExtension))
+            {
+                string path = Environment.GetEnvironmentVariable("PATH");
+                processStartInfo.EnvironmentVariables["PATH"] = $"{path};{PathExtension}";
+            }
+
             Process process = Process.Start(processStartInfo);
             try
             {

@@ -68,6 +68,20 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public void GetTestsFromExecutable_WithPathExtension_FindsTestsWithLocation()
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(PathExtensionTestsExe);
+            Assert.AreEqual(0, testCases.Count);
+
+            MockOptions.Setup(o => o.PathExtension).Returns(PathExtensionTestsDllDir);
+
+            discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            testCases = discoverer.GetTestsFromExecutable(PathExtensionTestsExe);
+            Assert.AreEqual(72, testCases.Count);
+        }
+
+        [TestMethod]
         public void GetTestsFromExecutable_ExternallyLinkedX64Executable_FindsTestsWithLocation()
         {
             FindExternallyLinkedTests(X64ExternallyLinkedTests);

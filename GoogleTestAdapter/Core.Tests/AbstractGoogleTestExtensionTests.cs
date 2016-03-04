@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -31,6 +32,9 @@ namespace GoogleTestAdapter
         public const string X86ExternallyLinkedTests = X86Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
         public const string X86ExternallyLinkedTestsDll = X86Dir + @"ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll";
         public const string X86CrashingTests = X86Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+
+        public const string PathExtensionTestsExe = X86Dir + @"PathExtension\exe\Tests.exe";
+        public static readonly string PathExtensionTestsDllDir = Path.GetFullPath(X86Dir + @"PathExtension\lib");
 
         private const string X64Dir = TestdataDir + @"_x64\";
         public const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
@@ -100,6 +104,7 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.BatchForTestTeardown).Returns(Options.OptionBatchForTestTeardownDefaultValue);
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(Options.OptionEnableParallelTestExecutionDefaultValue);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Options.OptionMaxNrOfThreadsDefaultValue);
+            MockOptions.Setup(o => o.PathExtension).Returns(Options.OptionPathExtensionDefaultValue);
         }
 
         [TestCleanup]

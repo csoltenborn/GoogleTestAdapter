@@ -4,8 +4,8 @@
     /*
     To add a new option, make the following changes:
     - add (nullable!) property to GoogleTestAdapter.Helpers.IXMLOptions
-    - add property and according constants to class GoogleTestAdapter.Options
     - handle property in method GoogleTestAdapter.Helpers.XmlOptionsExtension.GetUnsetValuesFrom()
+    - add property and according constants to class GoogleTestAdapter.Options
     - handle property serialization in class GoogleTestAdapter.TestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
@@ -24,6 +24,7 @@
         bool? ShuffleTests { get; set; }
         int? ShuffleTestsSeed { get; set; }
         string TestDiscoveryRegex { get; set; }
+        string PathExtension { get; set; }
         string BatchForTestSetup { get; set; }
         string BatchForTestTeardown { get; set; }
         string TraitsRegexesAfter { get; set; }
@@ -46,6 +47,7 @@
             self.ShuffleTests = self.ShuffleTests ?? other.ShuffleTests;
             self.ShuffleTestsSeed = self.ShuffleTestsSeed ?? other.ShuffleTestsSeed;
             self.TestDiscoveryRegex = self.TestDiscoveryRegex ?? other.TestDiscoveryRegex;
+            self.PathExtension = self.PathExtension ?? other.PathExtension;
             self.BatchForTestSetup = self.BatchForTestSetup ?? other.BatchForTestSetup;
             self.BatchForTestTeardown = self.BatchForTestTeardown ?? other.BatchForTestTeardown;
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;

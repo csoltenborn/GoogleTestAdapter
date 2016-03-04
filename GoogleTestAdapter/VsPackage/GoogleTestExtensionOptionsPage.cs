@@ -58,6 +58,7 @@ namespace GoogleTestAdapter.VsPackage
 
             runSettings.PrintTestOutput = generalOptions.PrintTestOutput;
             runSettings.TestDiscoveryRegex = generalOptions.TestDiscoveryRegex;
+            runSettings.PathExtension = generalOptions.PathExtension;
             runSettings.TraitsRegexesBefore = generalOptions.TraitsRegexesBefore;
             runSettings.TraitsRegexesAfter = generalOptions.TraitsRegexesAfter;
             runSettings.DebugMode = generalOptions.DebugMode;

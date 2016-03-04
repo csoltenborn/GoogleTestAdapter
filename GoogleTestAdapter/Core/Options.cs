@@ -104,6 +104,14 @@ namespace GoogleTestAdapter
         public virtual string TestDiscoveryRegex => XmlOptions.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
+        public const string OptionPathExtension = "PATH extension";
+        public const string OptionPathExtensionDefaultValue = "";
+        public const string OptionPathExtensionDescription =
+            "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;C:\\MyOtherBins";
+
+        public virtual string PathExtension => XmlOptions.PathExtension ?? OptionPathExtensionDefaultValue;
+
+
         public const string TraitsRegexesPairSeparator = "//||//";
         public const string TraitsRegexesRegexSeparator = "///";
         public const string TraitsRegexesTraitSeparator = ",";

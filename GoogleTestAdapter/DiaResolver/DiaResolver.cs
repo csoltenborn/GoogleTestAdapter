@@ -15,8 +15,8 @@ namespace GoogleTestAdapter.DiaResolver
 
     internal class IDiaSessionAdapter : IDiaSession
     {
-        private IDiaSession140 DiaSession140;
-        private IDiaSession110 DiaSession110;
+        private readonly IDiaSession140 DiaSession140;
+        private readonly IDiaSession110 DiaSession110;
 
         public IDiaSessionAdapter(IDiaSession140 diaSession)
         {
@@ -27,10 +27,8 @@ namespace GoogleTestAdapter.DiaResolver
             DiaSession110 = diaSession;
         }
 
-        public IDiaSymbol globalScope
-        {
-            get { return DiaSession140?.globalScope ?? DiaSession110?.globalScope; }
-        }
+        public IDiaSymbol globalScope => DiaSession140?.globalScope ?? DiaSession110?.globalScope;
+
         public void findLinesByAddr(uint seg, uint offset, uint length, out IDiaEnumLineNumbers ppResult)
         {
             ppResult = null;
@@ -49,7 +47,7 @@ namespace GoogleTestAdapter.DiaResolver
 
         private Stream FileStream { get; }
         private IDiaDataSource DiaDataSource { get; set; }
-        private IDiaSession DiaSession { get; set; }
+        private IDiaSession DiaSession { get; }
 
         public List<string> ErrorMessages { get; } = new List<string>();
 
@@ -67,7 +65,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        public DiaResolver(string binary)
+        public DiaResolver(string binary, string pathExtension)
         {
             Binary = binary;
 
@@ -77,10 +75,10 @@ namespace GoogleTestAdapter.DiaResolver
                 return;
             }
 
-            string pdb = Path.ChangeExtension(binary, ".pdb");
-            if (!File.Exists(pdb))
+            string pdb = FindPdbFile(binary, pathExtension);
+            if (pdb == null)
             {
-                ErrorMessages.Add($"Couldn't find the .pdb file of file '{binary}' (which should be '{pdb}'). You will not get any source locations for your tests.");
+                ErrorMessages.Add($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
                 return;
             }
 
@@ -107,6 +105,23 @@ namespace GoogleTestAdapter.DiaResolver
             return GetSymbolNamesAndAddresses(diaSymbols).Select(ToSourceFileLocation);
         }
 
+
+        private string FindPdbFile(string binary, string pathExtension)
+        {
+            string pdb = Path.ChangeExtension(binary, ".pdb");
+            if (File.Exists(pdb))
+                return pdb;
+
+            pdb = Path.GetFileName(pdb);
+            if (pdb == null || File.Exists(pdb))
+                return pdb;
+
+            string path = Environment.GetEnvironmentVariable("PATH");
+            if (!string.IsNullOrEmpty(pathExtension))
+                path += $";{pathExtension}";            
+            var pathElements = path?.Split(';');
+            return pathElements?.Select(pe => Path.Combine(pe, pdb)).FirstOrDefault(File.Exists);
+        }
 
         /// From given symbol enumeration, extract name, section, offset and length
         private List<NativeSourceFileLocation> GetSymbolNamesAndAddresses(IDiaEnumSymbols diaSymbols)

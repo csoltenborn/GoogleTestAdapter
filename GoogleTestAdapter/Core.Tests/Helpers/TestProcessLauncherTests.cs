@@ -24,13 +24,13 @@ namespace GoogleTestAdapter.Helpers
         public void GetOutputOfCommand_WhenDebugging_InvokesDebuggedProcessLauncherCorrectly()
         {
             int processId = -4711;
-            Mock<IDebuggedProcessLauncher> MockLauncher = new Mock<IDebuggedProcessLauncher>();
-            MockLauncher.Setup(l => l.LaunchProcessWithDebuggerAttached(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(processId);
+            Mock<IDebuggedProcessLauncher> mockLauncher = new Mock<IDebuggedProcessLauncher>();
+            mockLauncher.Setup(l => l.LaunchProcessWithDebuggerAttached(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(processId);
 
             try
             {
                 new TestProcessLauncher(TestEnvironment, true)
-                    .GetOutputOfCommand("theDir", "theCommand", "theParams", false, false, MockLauncher.Object);
+                    .GetOutputOfCommand("theDir", "theCommand", "theParams", false, false, mockLauncher.Object);
                 Assert.Fail();
             }
             catch (ArgumentException e)
@@ -38,10 +38,11 @@ namespace GoogleTestAdapter.Helpers
                 Assert.IsTrue(e.Message.Contains(processId.ToString()));
             }
 
-            MockLauncher.Verify(l => l.LaunchProcessWithDebuggerAttached(
+            mockLauncher.Verify(l => l.LaunchProcessWithDebuggerAttached(
                 It.Is<string>(s => s == "theCommand"),
                 It.Is<string>(s => s == "theDir"),
-                It.Is<string>(s => s == "theParams")
+                It.Is<string>(s => s == "theParams"),
+                It.Is<string>(s => s == "")
                 ), Times.Exactly(1));
         }
 
