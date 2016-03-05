@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 It.Is<string>(s => s == "theCommand"),
                 It.Is<string>(s => s == "theDir"),
                 It.Is<string>(s => s == "theParams"),
-                It.Is<IDictionary<string, string>>(d => d.ContainsKey("PATH") && d["PATH"].EndsWith(";C:\\test"))
+                It.Is<IDictionary<string, string>>(d => d.ContainsKey("PATH") && d["PATH"].StartsWith("C:\\test;"))
                 ), Times.Exactly(1));
         }
 
