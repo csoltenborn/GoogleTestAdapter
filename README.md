@@ -11,9 +11,10 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * Sequential and parallel test execution
 * [Traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of custom C++ macros and/or trait assignment by regexes
 * Support for [value-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#value-parameterized-tests), [typed](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#typed-tests), and [type-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#type-parameterized-tests) tests
+* Google Test's runtime behavior ([handling of exceptions](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#disabling-catching-test-thrown-exceptions), [break on assertion failure](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#turning-assertion-failures-into-break-points)) can be controlled via VS options
 * Support for all Google Test command line options, including [test shuffling](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#shuffling-the-tests) and [test repetition](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#repeating-the-tests)
 * Support for [test case filters](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx)
-* Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md)s are linked to their source locations
+* Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#adding-traces-to-assertions)s are linked to their source locations
 * Identification of crashed tests
 * Test output can be piped to test console
 * Execution of parameterized batch files for test setup/teardown
@@ -33,7 +34,10 @@ Google Test Adapter can be installed in two ways:
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.3.0/GoogleTestAdapter-0.3.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
 
-After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are recognized by GTA. If they are not, configure a *Test discovery regex* at the same place.
+After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, you can try one of the following options:
+
+* Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place.
+* If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *Path extension* to add the directories containing these DLLs to the test executables' PATH variable.
 
 #### Configuration
 
@@ -49,14 +53,14 @@ Note that due to the overriding hierarchy described above, you probably want to 
 
 GTA has full support for traits, which can be assigned to tests in two ways:
 
-1. You can make use of the custom test macros provided in [GTA_Traits.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits.h), which contain macros for simple tests, tests with fixtures and parameterized tests, each with one, two, or three traits. 
-2. Combinations of regular expressions and traits can be specified under the GTA options: If a test's name matches one of these regular expressions, the according trait is assigned to that test. 
+* You can make use of the custom test macros provided in [GTA_Traits.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits.h), which contain macros for simple tests, tests with fixtures and parameterized tests, each with one, two, or three traits. 
+* Combinations of regular expressions and traits can be specified under the GTA options: If a test's name matches one of these regular expressions, the according trait is assigned to that test. 
 
 More precisely, traits are assigned to tests in three phases:
 
-1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression `*///Size,Medium` assigns the trait (Size,Medium) to all tests.
+1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression `.*///Size,Medium` assigns the trait (Size,Medium) to all tests.
 2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration `TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Size, Small)` will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
-3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `*# GetParam() = 0*///Size,Large` will make sure that all parameterized tests where the parameter starts with a 0 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2).
+3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `.*\[1.*\]///Size,Large` will make sure that all parameterized tests where the parameter starts with a 1 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2).
 
 #### Running tests from command line with `VSTest.Console.exe`
 
@@ -130,14 +134,8 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 * [ReSharper](https://www.jetbrains.com/resharper/) - awesome VS extension for .NET development, including refactoring, static analysis etc.
   * thanks to [JetBrains](https://www.jetbrains.com/) for providing free licenses for our developers!
 * [AppVeyor](http://www.appveyor.com/) - awesome .NET CI build services
-  * thanks for providing free services for open source projects!
+  * thanks for providing free services and great support for open source projects!
 * [Coveralls](https://coveralls.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
 * [Coveralls.net](https://github.com/csmacnz/coveralls.net) - uploads code coverage data to Coveralls
-
-
-### Contact
-
-* Christian Soltenborn (first_name@last_name.de)
-* Jonas Gefele (first_name@last_name.de)
