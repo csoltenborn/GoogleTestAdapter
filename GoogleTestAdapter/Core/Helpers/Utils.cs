@@ -29,6 +29,12 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
+        public static string GetExtendedPath(string pathExtension)
+        {
+            string path = Environment.GetEnvironmentVariable("PATH");
+            return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
+        }
+
     }
 
 }

@@ -118,7 +118,7 @@ namespace GoogleTestAdapter.DiaResolver
 
             string path = Environment.GetEnvironmentVariable("PATH");
             if (!string.IsNullOrEmpty(pathExtension))
-                path += $";{pathExtension}";            
+                path = $"{pathExtension};{path}";
             var pathElements = path?.Split(';');
             return pathElements?.Select(pe => Path.Combine(pe, pdb)).FirstOrDefault(File.Exists);
         }

@@ -46,10 +46,7 @@ namespace GoogleTestAdapter.Helpers
             };
 
             if (!string.IsNullOrEmpty(PathExtension))
-            {
-                string path = Environment.GetEnvironmentVariable("PATH");
-                processStartInfo.EnvironmentVariables["PATH"] = $"{path};{PathExtension}";
-            }
+                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(PathExtension);
 
             Process process = Process.Start(processStartInfo);
             try
