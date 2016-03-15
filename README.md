@@ -32,7 +32,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 Google Test Adapter can be installed in two ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
-* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.4.0/GoogleTestAdapter-0.4.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
+* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.4.1/GoogleTestAdapter-0.4.1.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
 
 After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, you can try one of the following options:
 
