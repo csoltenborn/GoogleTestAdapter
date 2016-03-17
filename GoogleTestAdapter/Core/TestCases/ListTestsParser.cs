@@ -6,27 +6,22 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.TestCases
 {
 
-    internal class ListTestsParser
+    public class ListTestsParser
     {
         private TestEnvironment TestEnvironment { get; }
+        private string TestNameSeparator { get; }
 
-        internal ListTestsParser(TestEnvironment testEnvironment)
+        public ListTestsParser(TestEnvironment testEnvironment)
         {
             TestEnvironment = testEnvironment;
+            TestNameSeparator = TestEnvironment.Options.TestNameSeparator;
         }
 
-        internal IList<TestCaseDescriptor> ParseListTestsOutput(string executable)
-        {
-            var launcher = new ProcessLauncher(TestEnvironment, TestEnvironment.Options.PathExtension);
-            List<string> consoleOutput = launcher.GetOutputOfCommand("", executable, GoogleTestConstants.ListTestsOption.Trim(), false, false);
-            return ParseConsoleOutput(consoleOutput);
-        }
-
-        private List<TestCaseDescriptor> ParseConsoleOutput(List<string> output)
+        public IList<TestCaseDescriptor> ParseListTestsOutput(List<string> consoleOutput)
         {
             var testCaseDescriptors = new List<TestCaseDescriptor>();
             string currentSuite = "";
-            foreach (string trimmedLine in output.Select(line => line.Trim('.', '\n', '\r')))
+            foreach (string trimmedLine in consoleOutput.Select(line => line.Trim('.', '\n', '\r')))
             {
                 if (trimmedLine.StartsWith("  "))
                 {
@@ -63,7 +58,10 @@ namespace GoogleTestAdapter.TestCases
             }
 
             string fullyQualifiedName = $"{suite}.{name}";
+
             string displayName = GetDisplayName(fullyQualifiedName, typeParam, param);
+            if (!string.IsNullOrEmpty(TestNameSeparator))
+                displayName = displayName.Replace("/", TestNameSeparator);
 
             return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName);
         }

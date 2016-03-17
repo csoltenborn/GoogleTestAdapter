@@ -153,6 +153,14 @@ namespace GoogleTestAdapter
         }
 
 
+        public const string OptionTestNameSeparator = "Test name separator";
+        public const string OptionTestNameSeparatorDefaultValue = "";
+        public const string OptionTestNameSeparatorDescription =
+            "Test names produced by Google Test might contain the character '/', which makes VS cut the name after the '/' if the test explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work - there might be more). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).";
+
+        public virtual string TestNameSeparator => XmlOptions.TestNameSeparator ?? OptionTestNameSeparatorDefaultValue;
+
+
         public const string OptionDebugMode = "Debug mode";
         public const bool OptionDebugModeDefaultValue = false;
         public const string OptionDebugModeDescription =

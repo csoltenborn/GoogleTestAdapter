@@ -10,6 +10,7 @@
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
     - add new option to Resources/AllTestSettings.gta.runsettings
+    - add default mock configuration in method AbstractGoogleTestExtensionTests.SetUp()
     */
     public interface IXmlOptions
     {
@@ -29,6 +30,7 @@
         string BatchForTestTeardown { get; set; }
         string TraitsRegexesAfter { get; set; }
         string TraitsRegexesBefore { get; set; }
+        string TestNameSeparator { get; set; }
         bool? DebugMode { get; set; }
     }
 
@@ -52,6 +54,7 @@
             self.BatchForTestTeardown = self.BatchForTestTeardown ?? other.BatchForTestTeardown;
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;
             self.TraitsRegexesBefore = self.TraitsRegexesBefore ?? other.TraitsRegexesBefore;
+            self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
         }
     }

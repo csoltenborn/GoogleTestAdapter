@@ -91,6 +91,7 @@ namespace GoogleTestAdapter
         {
             MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
+            MockOptions.Setup(o => o.TestNameSeparator).Returns(Options.OptionTestNameSeparatorDefaultValue);
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(Options.OptionNrOfTestRepetitionsDefaultValue);
             MockOptions.Setup(o => o.PrintTestOutput).Returns(Options.OptionPrintTestOutputDefaultValue);
             MockOptions.Setup(o => o.CatchExceptions).Returns(Options.OptionCatchExceptionsDefaultValue);

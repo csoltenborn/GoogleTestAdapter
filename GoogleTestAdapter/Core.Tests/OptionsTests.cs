@@ -195,6 +195,30 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public void TestNameSeparator__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.TestNameSeparator).Returns((string)null);
+            string result = TheOptions.TestNameSeparator;
+            Assert.AreEqual(Options.OptionTestNameSeparatorDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.TestNameSeparator).Returns("FooBar");
+            result = TheOptions.TestNameSeparator;
+            Assert.AreEqual("FooBar", result);
+        }
+
+        [TestMethod]
+        public void PathExtension__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.PathExtension).Returns((string)null);
+            string result = TheOptions.PathExtension;
+            Assert.AreEqual(Options.OptionPathExtensionDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.PathExtension).Returns("FooBar");
+            result = TheOptions.PathExtension;
+            Assert.AreEqual("FooBar", result);
+        }
+
+        [TestMethod]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);
