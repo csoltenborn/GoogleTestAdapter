@@ -50,19 +50,36 @@ namespace GoogleTestAdapter.VsPackage
             googleTestOptions.PropertyChanged += OptionsChanged;
 
             SwitchCatchExceptionsOptionCommand.Initialize(this);
+            SwitchBreakOnFailureOptionCommand.Initialize(this);
         }
 
-        internal bool CatchExtensions {
+        internal bool CatchExtensions
+        {
             get { return googleTestOptions.CatchExceptions; }
             set
             {
                 googleTestOptions.CatchExceptions = value;
-                var vsShell = (IVsUIShell)GetService(typeof(IVsUIShell));
-                if (vsShell != null)
-                {
-                    int hr = vsShell.UpdateCommandUI(0);
-                    ErrorHandler.ThrowOnFailure(hr);
-                }
+                RefreshVsUi();
+            }
+        }
+
+        internal bool BreakOnFailure
+        {
+            get { return googleTestOptions.BreakOnFailure; }
+            set
+            {
+                googleTestOptions.BreakOnFailure = value;
+                RefreshVsUi();
+            }
+        }
+
+        private void RefreshVsUi()
+        {
+            var vsShell = (IVsUIShell)GetService(typeof(IVsUIShell));
+            if (vsShell != null)
+            {
+                int hr = vsShell.UpdateCommandUI(0);
+                ErrorHandler.ThrowOnFailure(hr);
             }
         }
 

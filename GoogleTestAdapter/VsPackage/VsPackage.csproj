@@ -78,6 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\AbstractSwitchBooleanOptionCommand.cs" />
+    <Compile Include="Commands\SwitchBreakOnFailureOptionCommand.cs" />
     <Compile Include="OptionsPages\GoogleTestOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -72,6 +72,15 @@
           <ButtonText>Catch exceptions</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidGoogleTestExtensionOptionsPageCmdSet" id="SwitchBreakOnFailureOptionCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Break on failure</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -92,6 +101,12 @@
     <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
           id="SwitchCatchExceptionsOptionCommandId"
           context="UICONTEXT_SolutionHasMultipleProjects" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchBreakOnFailureOptionCommandId"
+          context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchBreakOnFailureOptionCommandId"
+          context="UICONTEXT_SolutionHasMultipleProjects" />
   </VisibilityConstraints>
 
   <Symbols>
@@ -102,6 +117,7 @@
     <GuidSymbol name="guidGoogleTestExtensionOptionsPageCmdSet" value="{e0d9835f-9c16-4d27-a9ad-4df7568650f7}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="SwitchCatchExceptionsOptionCommandId" value="0x0100" />
+      <IDSymbol name="SwitchBreakOnFailureOptionCommandId" value="0x0101" />
       <IDSymbol name="Toolbar" value="0x1000" />
       <IDSymbol name="ToolbarGroup" value="0x1050" />
     </GuidSymbol>
