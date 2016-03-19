@@ -72,6 +72,27 @@ namespace GoogleTestAdapter.TestCases
         }
 
         [TestMethod]
+        public void ParseListTestsOutput_TestWithTypeParamAndPrefix_CorrectParsing()
+        {
+            var consoleOutput = new List<string>
+            {
+                "Arr/TypeParameterizedTests/1.  # TypeParam = struct MyStrangeArray",
+                "  CanIterate",
+            };
+
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+                .ParseListTestsOutput(consoleOutput);
+
+            Assert.AreEqual(1, descriptors.Count);
+            Assert.AreEqual("Arr/TypeParameterizedTests/1", descriptors[0].Suite);
+            Assert.AreEqual("CanIterate", descriptors[0].Name);
+            Assert.IsNull(descriptors[0].Param);
+            Assert.AreEqual("MyStrangeArray", descriptors[0].TypeParam);
+            Assert.AreEqual("Arr/TypeParameterizedTests/1.CanIterate", descriptors[0].FullyQualifiedName);
+            Assert.AreEqual("Arr/TypeParameterizedTests/1.CanIterate<MyStrangeArray>", descriptors[0].DisplayName);
+        }
+
+        [TestMethod]
         public void ParseListTestsOutput_TestWithParamAndTestNameSeparator_CorrectParsing()
         {
             MockOptions.Setup(o => o.TestNameSeparator).Returns("::");
