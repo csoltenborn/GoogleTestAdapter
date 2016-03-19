@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -19,9 +20,8 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), Options.CategoryName, Options.PageGeneralName, 0, 0, true)]
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.CategoryName, Options.PageParallelizationName, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.CategoryName, Options.PageGoogleTestName, 0, 0, true)]
-    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     public sealed class GoogleTestExtensionOptionsPage : Package
     {
         public const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.VsPackage
         private GoogleTestOptionsDialogPage googleTestOptions;
 
 
-        override protected void Initialize()
+        protected override void Initialize()
         {
             base.Initialize();
 
@@ -51,6 +51,7 @@ namespace GoogleTestAdapter.VsPackage
 
             SwitchCatchExceptionsOptionCommand.Initialize(this);
             SwitchBreakOnFailureOptionCommand.Initialize(this);
+            SwitchParallelExecutionOptionCommand.Initialize(this);
         }
 
         internal bool CatchExtensions
@@ -73,12 +74,22 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
+        internal bool ParallelTestExecution
+        {
+            get { return parallelizationOptions.EnableParallelTestExecution; }
+            set
+            {
+                parallelizationOptions.EnableParallelTestExecution = value;
+                RefreshVsUi();
+            }
+        }
+
         private void RefreshVsUi()
         {
             var vsShell = (IVsUIShell)GetService(typeof(IVsUIShell));
             if (vsShell != null)
             {
-                int hr = vsShell.UpdateCommandUI(0);
+                int hr = vsShell.UpdateCommandUI(Convert.ToInt32(false));
                 ErrorHandler.ThrowOnFailure(hr);
             }
         }
@@ -90,31 +101,31 @@ namespace GoogleTestAdapter.VsPackage
 
         private RunSettings GetRunSettingsFromOptionPages()
         {
-            RunSettings runSettings = new RunSettings();
+            return new RunSettings
+            {
+                PrintTestOutput = generalOptions.PrintTestOutput,
+                TestDiscoveryRegex = generalOptions.TestDiscoveryRegex,
+                PathExtension = generalOptions.PathExtension,
+                TraitsRegexesBefore = generalOptions.TraitsRegexesBefore,
+                TraitsRegexesAfter = generalOptions.TraitsRegexesAfter,
+                TestNameSeparator = generalOptions.TestNameSeparator,
+                DebugMode = generalOptions.DebugMode,
+                AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams,
+                BatchForTestSetup = generalOptions.BatchForTestSetup,
+                BatchForTestTeardown = generalOptions.BatchForTestTeardown,
 
-            runSettings.PrintTestOutput = generalOptions.PrintTestOutput;
-            runSettings.TestDiscoveryRegex = generalOptions.TestDiscoveryRegex;
-            runSettings.PathExtension = generalOptions.PathExtension;
-            runSettings.TraitsRegexesBefore = generalOptions.TraitsRegexesBefore;
-            runSettings.TraitsRegexesAfter = generalOptions.TraitsRegexesAfter;
-            runSettings.TestNameSeparator = generalOptions.TestNameSeparator;
-            runSettings.DebugMode = generalOptions.DebugMode;
-            runSettings.AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams;
-            runSettings.BatchForTestSetup = generalOptions.BatchForTestSetup;
-            runSettings.BatchForTestTeardown = generalOptions.BatchForTestTeardown;
+                CatchExceptions = googleTestOptions.CatchExceptions,
+                BreakOnFailure = googleTestOptions.BreakOnFailure,
+                RunDisabledTests = googleTestOptions.RunDisabledTests,
+                NrOfTestRepetitions = googleTestOptions.NrOfTestRepetitions,
+                ShuffleTests = googleTestOptions.ShuffleTests,
+                ShuffleTestsSeed = googleTestOptions.ShuffleTestsSeed,
 
-            runSettings.CatchExceptions = googleTestOptions.CatchExceptions;
-            runSettings.BreakOnFailure = googleTestOptions.BreakOnFailure;
-            runSettings.RunDisabledTests = googleTestOptions.RunDisabledTests;
-            runSettings.NrOfTestRepetitions = googleTestOptions.NrOfTestRepetitions;
-            runSettings.ShuffleTests = googleTestOptions.ShuffleTests;
-            runSettings.ShuffleTestsSeed = googleTestOptions.ShuffleTestsSeed;
-
-            runSettings.ParallelTestExecution = parallelizationOptions.EnableParallelTestExecution;
-            runSettings.MaxNrOfThreads = parallelizationOptions.MaxNrOfThreads;
-
-            return runSettings;
+                ParallelTestExecution = parallelizationOptions.EnableParallelTestExecution,
+                MaxNrOfThreads = parallelizationOptions.MaxNrOfThreads
+            };
         }
+
     }
 
 }

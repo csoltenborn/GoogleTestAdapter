@@ -1,0 +1,4 @@
+flag.svg, source_code.svg, sitemap.svg
+Source: http://picol.org/index.php
+License: http://creativecommons.org/licenses/by/3.0/
+
