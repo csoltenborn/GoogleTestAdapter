@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.TestAdapter.Settings;
+using GoogleTestAdapter.VsPackage.Commands;
+using Microsoft.VisualStudio;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -18,6 +20,8 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.CategoryName, Options.PageParallelizationName, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.CategoryName, Options.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     public sealed class GoogleTestExtensionOptionsPage : Package
     {
         public const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
@@ -44,8 +48,23 @@ namespace GoogleTestAdapter.VsPackage
             generalOptions.PropertyChanged += OptionsChanged;
             parallelizationOptions.PropertyChanged += OptionsChanged;
             googleTestOptions.PropertyChanged += OptionsChanged;
+
+            SwitchCatchExceptionsOptionCommand.Initialize(this);
         }
 
+        internal bool CatchExtensions {
+            get { return googleTestOptions.CatchExceptions; }
+            set
+            {
+                googleTestOptions.CatchExceptions = value;
+                var vsShell = (IVsUIShell)GetService(typeof(IVsUIShell));
+                if (vsShell != null)
+                {
+                    int hr = vsShell.UpdateCommandUI(0);
+                    ErrorHandler.ThrowOnFailure(hr);
+                }
+            }
+        }
 
         private void OptionsChanged(object sender, PropertyChangedEventArgs e)
         {
