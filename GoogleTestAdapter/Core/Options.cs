@@ -79,7 +79,7 @@ namespace GoogleTestAdapter
         private const string DescriptionOfPlaceholdersForBatches =
            TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
            ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
-           SolutionDirPlaceholder + " - directory of the solution";
+           SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
 
         private const string DescriptionOfPlaceholdersForExecutables =
             DescriptionOfPlaceholdersForBatches + "\n" +
@@ -199,7 +199,7 @@ namespace GoogleTestAdapter
 
         #region ParallelizationOptionsPage
 
-        public const string OptionEnableParallelTestExecution = "Enable parallel test execution";
+        public const string OptionEnableParallelTestExecution = "Parallel test execution";
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
         public const string OptionEnableParallelTestExecutionDescription =
             "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";

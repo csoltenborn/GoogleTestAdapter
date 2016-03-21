@@ -12,6 +12,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * [Traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of custom C++ macros and/or trait assignment by regexes
 * Support for [value-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#value-parameterized-tests), [typed](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#typed-tests), and [type-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#type-parameterized-tests) tests
 * Google Test's runtime behavior ([handling of exceptions](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#disabling-catching-test-thrown-exceptions), [break on assertion failure](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#turning-assertion-failures-into-break-points)) can be controlled via VS options
+* Most important runtime options can be controlled via toolbar without entering VS's options
 * Support for all Google Test command line options, including [test shuffling](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#shuffling-the-tests) and [test repetition](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#repeating-the-tests)
 * Support for [test case filters](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx)
 * Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#adding-traces-to-assertions)s are linked to their source locations
@@ -49,6 +50,8 @@ GTA is configured following Visual Studio's approach of configuration inheritanc
 
 Note that due to the overriding hierarchy described above, you probably want to provide only a subset of the nodes under `GoogleTestAdapter` in your configuration files. For instance, providing the node `<DebugMode>true</DebugMode>` in a shared solution settings file will make sure that all sharing developers will run GTA with debug output, no matter what the developer's individual settings at *Tools/Options/Google Test Adapter* are (and unless the developer has selected a test settings file via VS, which would override the solution setting).
 
+The most important runtime options (i.e., *Parallel test execution*, *Break on failure*, and *Catch exceptions*) can also be set via a toolbar; this is equivalent to setting the according options via *Tools/Options/Google Test Adapter*.
+
 #### Assigning traits to tests
 
 GTA has full support for traits, which can be assigned to tests in two ways:
@@ -66,7 +69,7 @@ More precisely, traits are assigned to tests in three phases:
 
 GTA can be used to run tests from the command line, which can be done making use of VS's [VSTest.Console.exe](https://msdn.microsoft.com/en-us/library/jj155800.aspx). GTA supports all the tool's command line options, including `/UseVsixExtensions` and `/TestAdapterPath`.
 
-Note, however, that VSTest.Console.exe will not make use of GTA solution settings (if the solution containing the tests happens to use such settings). All settings to be used by VSTest.Console.exe need to be passed using the `/Settings` command line option. Note also that GTA currently has issues with running X64 tests via VSTest.Console.exe (see [#21](https://github.com/csoltenborn/GoogleTestAdapter/issues/21)).
+Note, however, that VSTest.Console.exe will not make use of GTA solution settings (if the solution containing the tests happens to use such settings). All settings to be used by VSTest.Console.exe need to be passed using the `/Settings` command line option. Note also that the `$(SolutionDir)` placeholder is neither available in the *Test setup/teardown batch file* options nor in the *Additional test execution parameters* option. Finally, note that GTA currently has issues with running X64 tests via VSTest.Console.exe (see [#21](https://github.com/csoltenborn/GoogleTestAdapter/issues/21)).
 
 The tests to be run can be selected via the `/TestCaseFilter` option. Filters need to follow the syntax as described in this [blog entry](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx). GTA supports the following test properties:
 
