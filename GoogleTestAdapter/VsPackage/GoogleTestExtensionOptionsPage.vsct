@@ -52,11 +52,21 @@
         </Strings>
       </Button>
 
+      <Button guid="guidGoogleTestExtensionOptionsPageCmdSet" id="SwitchPrintTestOutputOptionCommandId" priority="0x0104" type="Button">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" />
+        <Icon guid="toolbaricons" id="print_test_output" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Print test output</ButtonText>
+        </Strings>
+      </Button>
+
     </Buttons>
 
     <Bitmaps>
       <Bitmap guid="toolbaricons" href="Resources\toolbaricons.png" 
-              usedList="catch_exceptions, parallel_test_execution, break_on_failure"/>
+              usedList="catch_exceptions, parallel_test_execution, break_on_failure, print_test_output"/>
     </Bitmaps>
   </Commands>
 
@@ -79,6 +89,12 @@
     <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
           id="SwitchParallelExecutionOptionCommandId"
           context="UICONTEXT_SolutionHasMultipleProjects" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchPrintTestOutputOptionCommandId"
+          context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchPrintTestOutputOptionCommandId"
+          context="UICONTEXT_SolutionHasMultipleProjects" />
   </VisibilityConstraints>
 
   <Symbols>
@@ -89,6 +105,7 @@
       <IDSymbol name="SwitchCatchExceptionsOptionCommandId" value="0x0100" />
       <IDSymbol name="SwitchBreakOnFailureOptionCommandId" value="0x0101" />
       <IDSymbol name="SwitchParallelExecutionOptionCommandId" value="0x0102" />
+      <IDSymbol name="SwitchPrintTestOutputOptionCommandId" value="0x0103" />
       <IDSymbol name="Toolbar" value="0x1000" />
       <IDSymbol name="ToolbarGroup" value="0x1050" />
     </GuidSymbol>
@@ -97,6 +114,7 @@
       <IDSymbol name="catch_exceptions" value="1" />
       <IDSymbol name="parallel_test_execution" value="2" />
       <IDSymbol name="break_on_failure" value="3" />
+      <IDSymbol name="print_test_output" value="4" />
     </GuidSymbol>
 
   </Symbols>

@@ -78,6 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\AbstractSwitchBooleanOptionCommand.cs" />
+    <Compile Include="Commands\SwitchPrintTestOutputOptionCommand.cs" />
     <Compile Include="Commands\SwitchBreakOnFailureOptionCommand.cs" />
     <Compile Include="Commands\SwitchParallelExecutionOptionCommand.cs" />
     <Compile Include="OptionsPages\GoogleTestOptionsDialogPage.cs">

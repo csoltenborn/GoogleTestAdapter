@@ -3,6 +3,6 @@ To use picol svgs as icons within VS:
 2. Save as image.png
 
 
-To stack several icons into one VS resource, use ImageMagick command. For three icons:
+To stack several icons into one VS resource, use ImageMagick command.
 
-montage 1.png 2.png 3.png -background none -tile 3x1 -geometry +0+0 PNG32:out.png
+montage source_code.png sitemap.png flag.png viewer_text.png -background none -tile 4x1 -geometry +0+0 PNG32:toolbaricons.png

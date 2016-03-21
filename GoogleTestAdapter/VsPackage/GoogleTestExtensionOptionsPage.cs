@@ -52,6 +52,7 @@ namespace GoogleTestAdapter.VsPackage
             SwitchCatchExceptionsOptionCommand.Initialize(this);
             SwitchBreakOnFailureOptionCommand.Initialize(this);
             SwitchParallelExecutionOptionCommand.Initialize(this);
+            SwitchPrintTestOutputOptionCommand.Initialize(this);
         }
 
         internal bool CatchExtensions
@@ -80,6 +81,16 @@ namespace GoogleTestAdapter.VsPackage
             set
             {
                 parallelizationOptions.EnableParallelTestExecution = value;
+                RefreshVsUi();
+            }
+        }
+
+        internal bool PrintTestOutput
+        {
+            get { return generalOptions.PrintTestOutput; }
+            set
+            {
+                generalOptions.PrintTestOutput = value;
                 RefreshVsUi();
             }
         }
