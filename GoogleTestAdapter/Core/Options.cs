@@ -152,7 +152,14 @@ namespace GoogleTestAdapter
             }
         }
 
+        public const string OptionParseSymbolInformation = "Parse symbol information";
+        public const bool OptionParseSymbolInformationDefaultValue = true;
+        public const string OptionParseSymbolInformationDescription =
+            "Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).\n" +
+            "If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective.";
 
+        public virtual bool ParseSymbolInformation => XmlOptions.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
+        
         public const string OptionDebugMode = "Debug mode";
         public const bool OptionDebugModeDefaultValue = false;
         public const string OptionDebugModeDescription =

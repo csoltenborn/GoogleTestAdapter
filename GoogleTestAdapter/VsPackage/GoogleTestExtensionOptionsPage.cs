@@ -61,6 +61,7 @@ namespace GoogleTestAdapter.VsPackage
             runSettings.PathExtension = generalOptions.PathExtension;
             runSettings.TraitsRegexesBefore = generalOptions.TraitsRegexesBefore;
             runSettings.TraitsRegexesAfter = generalOptions.TraitsRegexesAfter;
+            runSettings.ParseSymbolInformation = generalOptions.ParseSymbolInformation;
             runSettings.DebugMode = generalOptions.DebugMode;
             runSettings.AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams;
             runSettings.BatchForTestSetup = generalOptions.BatchForTestSetup;

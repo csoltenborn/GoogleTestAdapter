@@ -19,5 +19,6 @@
 		<PathExtension>C:\fooDir;C:\barDir</PathExtension>
 		<TraitsRegexesAfter></TraitsRegexesAfter>
 		<TraitsRegexesBefore />
-	</GoogleTestAdapter>
+		<ParseSymbolInformation>true</ParseSymbolInformation>
+  </GoogleTestAdapter>
 </RunSettings>

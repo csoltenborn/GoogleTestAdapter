@@ -66,6 +66,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string traitsRegexesAfter = Options.OptionTraitsRegexesDefaultValue;
 
         [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionParseSymbolInformation)]
+        [Description(Options.OptionParseSymbolInformationDescription)]
+        public bool ParseSymbolInformation
+        {
+            get { return parseSymbolInformation; }
+            set { SetAndNotify(ref parseSymbolInformation, value); }
+        }
+        private bool parseSymbolInformation = Options.OptionParseSymbolInformationDefaultValue;
+
+        [Category(Options.CategoryName)]
         [DisplayName(Options.OptionAdditionalTestExecutionParams)]
         [Description(Options.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams

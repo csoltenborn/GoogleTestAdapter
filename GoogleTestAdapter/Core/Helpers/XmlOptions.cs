@@ -29,6 +29,7 @@
         string BatchForTestTeardown { get; set; }
         string TraitsRegexesAfter { get; set; }
         string TraitsRegexesBefore { get; set; }
+        bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
     }
 
@@ -52,6 +53,7 @@
             self.BatchForTestTeardown = self.BatchForTestTeardown ?? other.BatchForTestTeardown;
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;
             self.TraitsRegexesBefore = self.TraitsRegexesBefore ?? other.TraitsRegexesBefore;
+            self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
         }
     }
