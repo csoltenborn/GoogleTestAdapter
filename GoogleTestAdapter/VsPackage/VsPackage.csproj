@@ -230,6 +230,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Preview.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\toolbaricons.png" />
     <VSCTCompile Include="GoogleTestExtensionOptionsPage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
@@ -243,10 +247,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\GoogleTestExtensionOptionsPage.ico" />
-    <Content Include="Resources\Screenshot.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <Content Include="Resources\Screenshot.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\VSPackage.resx">
