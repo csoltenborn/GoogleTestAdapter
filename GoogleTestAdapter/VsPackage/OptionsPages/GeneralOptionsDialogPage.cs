@@ -66,6 +66,15 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string traitsRegexesAfter = Options.OptionTraitsRegexesDefaultValue;
 
         [Category(Options.CategoryName)]
+        [DisplayName(Options.OptionTestNameSeparator)]
+        [Description(Options.OptionTestNameSeparatorDescription)]
+        public string TestNameSeparator
+        {
+            get { return testNameSeparator; }
+            set { SetAndNotify(ref testNameSeparator, value); }
+        }
+        private string testNameSeparator = Options.OptionTestNameSeparatorDefaultValue;
+		
         [DisplayName(Options.OptionParseSymbolInformation)]
         [Description(Options.OptionParseSymbolInformationDescription)]
         public bool ParseSymbolInformation

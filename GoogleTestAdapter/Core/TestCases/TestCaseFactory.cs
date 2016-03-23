@@ -21,7 +21,9 @@ namespace GoogleTestAdapter.TestCases
 
         public IList<TestCase> CreateTestCases()
         {
-            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(TestEnvironment).ParseListTestsOutput(Executable);
+            var launcher = new ProcessLauncher(TestEnvironment, TestEnvironment.Options.PathExtension);
+            List<string> consoleOutput = launcher.GetOutputOfCommand("", Executable, GoogleTestConstants.ListTestsOption.Trim(), false, false);
+            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(TestEnvironment).ParseListTestsOutput(consoleOutput);
 
             if (TestEnvironment.Options.ParseSymbolInformation)
             {

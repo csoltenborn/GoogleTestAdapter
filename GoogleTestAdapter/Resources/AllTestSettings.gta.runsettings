@@ -17,8 +17,9 @@
 		<ShuffleTestsSeed>0</ShuffleTestsSeed>
 		<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
 		<PathExtension>C:\fooDir;C:\barDir</PathExtension>
-		<TraitsRegexesAfter></TraitsRegexesAfter>
+		<TraitsRegexesAfter />
 		<TraitsRegexesBefore />
+		<TestNameSeparator />
 		<ParseSymbolInformation>true</ParseSymbolInformation>
 	</GoogleTestAdapter>
 </RunSettings>

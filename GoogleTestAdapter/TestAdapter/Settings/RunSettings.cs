@@ -48,6 +48,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public string TraitsRegexesAfter { get; set; }
         public bool ShouldSerializeTraitsRegexesAfter() { return TraitsRegexesAfter != null; }
 
+        public string TestNameSeparator { get; set; }
+        public bool ShouldSerializeTestNameSeparator() { return TestNameSeparator != null; }
+
         public bool? DebugMode { get; set; }
         public bool ShouldSerializeDebugMode() { return DebugMode != null; }
 

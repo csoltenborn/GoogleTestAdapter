@@ -79,7 +79,7 @@ namespace GoogleTestAdapter
         private const string DescriptionOfPlaceholdersForBatches =
            TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
            ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
-           SolutionDirPlaceholder + " - directory of the solution";
+           SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
 
         private const string DescriptionOfPlaceholdersForExecutables =
             DescriptionOfPlaceholdersForBatches + "\n" +
@@ -152,6 +152,15 @@ namespace GoogleTestAdapter
             }
         }
 
+
+        public const string OptionTestNameSeparator = "Test name separator";
+        public const string OptionTestNameSeparatorDefaultValue = "";
+        public const string OptionTestNameSeparatorDescription =
+            "Test names produced by Google Test might contain the character '/', which makes VS cut the name after the '/' if the test explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work - there might be more). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).";
+
+        public virtual string TestNameSeparator => XmlOptions.TestNameSeparator ?? OptionTestNameSeparatorDefaultValue;
+
+
         public const string OptionParseSymbolInformation = "Parse symbol information";
         public const bool OptionParseSymbolInformationDefaultValue = true;
         public const string OptionParseSymbolInformationDescription =
@@ -198,7 +207,7 @@ namespace GoogleTestAdapter
 
         #region ParallelizationOptionsPage
 
-        public const string OptionEnableParallelTestExecution = "Enable parallel test execution";
+        public const string OptionEnableParallelTestExecution = "Parallel test execution";
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
         public const string OptionEnableParallelTestExecutionDescription =
             "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";
