@@ -20,5 +20,5 @@
 		<TraitsRegexesAfter></TraitsRegexesAfter>
 		<TraitsRegexesBefore />
 		<ParseSymbolInformation>true</ParseSymbolInformation>
-  </GoogleTestAdapter>
+	</GoogleTestAdapter>
 </RunSettings>
