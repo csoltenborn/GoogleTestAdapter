@@ -99,6 +99,7 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.RunDisabledTests).Returns(Options.OptionRunDisabledTestsDefaultValue);
             MockOptions.Setup(o => o.ShuffleTests).Returns(Options.OptionShuffleTestsDefaultValue);
             MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(Options.OptionShuffleTestsSeedDefaultValue);
+            MockOptions.Setup(o => o.ParseSymbolInformation).Returns(Options.OptionParseSymbolInformationDefaultValue);
             MockOptions.Setup(o => o.DebugMode).Returns(Options.OptionDebugModeDefaultValue);
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(Options.OptionAdditionalTestExecutionParamsDefaultValue);
             MockOptions.Setup(o => o.BatchForTestSetup).Returns(Options.OptionBatchForTestSetupDefaultValue);
