@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.TestAdapter
         public TestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
 
 
-        override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
+        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
             base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
 

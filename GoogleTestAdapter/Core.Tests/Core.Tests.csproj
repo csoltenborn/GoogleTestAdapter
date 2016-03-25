@@ -67,6 +67,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractGoogleTestExtensionTests.cs" />
+    <Compile Include="AbstractGoogleTestDiscovererTraitTests.cs" />
+    <Compile Include="GoogleTestDiscoverReleaseTraitTests.cs" />
+    <Compile Include="GoogleTestDiscoverDebugTraitTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
@@ -232,7 +235,9 @@
     copy "$(SolutionDir)Keys\Key_Debug.snk" "$(ProjectDir)Key.snk"
 )
 
-"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=Win32</PreBuildEvent>
+"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=Win32
+
+"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=Win32</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -241,4 +246,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterClean">
+    <RemoveDir Directories="$(SolutionDir)..\SampleTests\Debug" ContinueOnError="true" />
+    <RemoveDir Directories="$(SolutionDir)..\SampleTests\Release" ContinueOnError="true" />
+  </Target>
 </Project>

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "gtest\gtest.h"
-
+#ifndef DllExport
+	#define DllExport __declspec( dllexport )
+#endif
 
 #define GTA_TRAIT_(name, value) \
   name##__GTA__##value##_GTA_TRAIT
@@ -13,7 +15,7 @@
    public: \
     GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {} \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name, value)() {} \
+    DllExport static void GTA_TRAIT_(name, value)() {} \
    private: \
     static int AddToRegistry() { \
       GTA_TRAIT_(name, value)(); \
@@ -42,8 +44,8 @@
    public: \
     GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {} \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
-    static void GTA_TRAIT_(name2, value2)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name2, value2)() {} \
    private: \
     static int AddToRegistry() { \
       GTA_TRAIT_(name1, value1)(); \
@@ -73,9 +75,9 @@
    public: \
     GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {} \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
-    static void GTA_TRAIT_(name2, value2)() {} \
-    static void GTA_TRAIT_(name3, value3)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name2, value2)() {} \
+    DllExport static void GTA_TRAIT_(name3, value3)() {} \
    private: \
     static int AddToRegistry() { \
       GTA_TRAIT_(name1, value1)(); \
@@ -107,7 +109,7 @@ class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\
   GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() { GTA_TRAIT_(name, value)(); }\
  private:\
   virtual void TestBody();\
-  static void GTA_TRAIT_(name, value)() {} \
+  DllExport static void GTA_TRAIT_(name, value)() {} \
   static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;\
   GTEST_DISALLOW_COPY_AND_ASSIGN_(\
       GTEST_TEST_CLASS_NAME_(test_case_name, test_name));\
@@ -131,8 +133,8 @@ class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\
   GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() { GTA_TRAIT_(name1, value1)(); GTA_TRAIT_(name2, value2)(); }\
  private:\
   virtual void TestBody();\
-  static void GTA_TRAIT_(name1, value1)() {} \
-  static void GTA_TRAIT_(name2, value2)() {} \
+  DllExport static void GTA_TRAIT_(name1, value1)() {} \
+  DllExport static void GTA_TRAIT_(name2, value2)() {} \
   static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;\
   GTEST_DISALLOW_COPY_AND_ASSIGN_(\
       GTEST_TEST_CLASS_NAME_(test_case_name, test_name));\
@@ -156,9 +158,9 @@ class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) : public parent_class {\
   GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() { GTA_TRAIT_(name1, value1)(); GTA_TRAIT_(name2, value2)(); GTA_TRAIT_(name3, value3)(); }\
  private:\
   virtual void TestBody();\
-  static void GTA_TRAIT_(name1, value1)() {} \
-  static void GTA_TRAIT_(name2, value2)() {} \
-  static void GTA_TRAIT_(name3, value3)() {} \
+  DllExport static void GTA_TRAIT_(name1, value1)() {} \
+  DllExport static void GTA_TRAIT_(name2, value2)() {} \
+  DllExport static void GTA_TRAIT_(name3, value3)() {} \
   static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;\
   GTEST_DISALLOW_COPY_AND_ASSIGN_(\
       GTEST_TEST_CLASS_NAME_(test_case_name, test_name));\
@@ -215,7 +217,7 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
   }; \
   bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \
       ::testing::internal::TypeParameterizedTest< \
@@ -238,8 +240,8 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
-    static void GTA_TRAIT_(name2, value2)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name2, value2)() {} \
   }; \
   bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \
       ::testing::internal::TypeParameterizedTest< \
@@ -262,9 +264,9 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
-    static void GTA_TRAIT_(name2, value2)() {} \
-    static void GTA_TRAIT_(name3, value3)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name2, value2)() {} \
+    DllExport static void GTA_TRAIT_(name3, value3)() {} \
   }; \
   bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \
       ::testing::internal::TypeParameterizedTest< \
@@ -287,7 +289,7 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
   }; \
   static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \
       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\
@@ -307,8 +309,8 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
-    static void GTA_TRAIT_(name2, value2)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name2, value2)() {} \
   }; \
   static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \
       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\
@@ -328,9 +330,9 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
     virtual void TestBody(); \
-    static void GTA_TRAIT_(name1, value1)() {} \
-    static void GTA_TRAIT_(name2, value2)() {} \
-    static void GTA_TRAIT_(name3, value3)() {} \
+    DllExport static void GTA_TRAIT_(name1, value1)() {} \
+    DllExport static void GTA_TRAIT_(name2, value2)() {} \
+    DllExport static void GTA_TRAIT_(name3, value3)() {} \
   }; \
   static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \
       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\
