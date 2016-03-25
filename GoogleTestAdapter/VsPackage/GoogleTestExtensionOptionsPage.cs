@@ -120,6 +120,7 @@ namespace GoogleTestAdapter.VsPackage
                 TraitsRegexesBefore = generalOptions.TraitsRegexesBefore,
                 TraitsRegexesAfter = generalOptions.TraitsRegexesAfter,
                 TestNameSeparator = generalOptions.TestNameSeparator,
+                ParseSymbolInformation = generalOptions.ParseSymbolInformation,
                 DebugMode = generalOptions.DebugMode,
                 AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = generalOptions.BatchForTestSetup,

@@ -20,5 +20,6 @@
 		<TraitsRegexesAfter />
 		<TraitsRegexesBefore />
 		<TestNameSeparator />
+		<ParseSymbolInformation>true</ParseSymbolInformation>
 	</GoogleTestAdapter>
 </RunSettings>

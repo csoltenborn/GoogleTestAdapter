@@ -24,9 +24,16 @@ namespace GoogleTestAdapter.TestCases
             var launcher = new ProcessLauncher(TestEnvironment, TestEnvironment.Options.PathExtension);
             List<string> consoleOutput = launcher.GetOutputOfCommand("", Executable, GoogleTestConstants.ListTestsOption.Trim(), false, false);
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(TestEnvironment).ParseListTestsOutput(consoleOutput);
-            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, TestEnvironment.Options.PathExtension);
 
-            return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
+            if (TestEnvironment.Options.ParseSymbolInformation)
+            {
+                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, TestEnvironment.Options.PathExtension);
+                return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
+            }
+            else
+            {
+                return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor)).ToList();
+            }
         }
 
         private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
@@ -49,6 +56,14 @@ namespace GoogleTestAdapter.TestCases
             }
 
             return testCaseLocations;
+        }
+
+        private TestCase CreateTestCase(TestCaseDescriptor descriptor)
+        {
+            var testCase = new TestCase(
+                descriptor.FullyQualifiedName, Executable, descriptor.DisplayName, "", 0);
+            testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, new List<Trait>()));
+            return testCase;
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, List<TestCaseLocation> testCaseLocations)

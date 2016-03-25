@@ -74,6 +74,15 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set { SetAndNotify(ref testNameSeparator, value); }
         }
         private string testNameSeparator = Options.OptionTestNameSeparatorDefaultValue;
+		
+        [DisplayName(Options.OptionParseSymbolInformation)]
+        [Description(Options.OptionParseSymbolInformationDescription)]
+        public bool ParseSymbolInformation
+        {
+            get { return parseSymbolInformation; }
+            set { SetAndNotify(ref parseSymbolInformation, value); }
+        }
+        private bool parseSymbolInformation = Options.OptionParseSymbolInformationDefaultValue;
 
         [Category(Options.CategoryName)]
         [DisplayName(Options.OptionAdditionalTestExecutionParams)]
