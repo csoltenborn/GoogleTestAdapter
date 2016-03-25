@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.DiaResolver
         }
     }
 
-    public sealed class DiaResolver
+    internal sealed class DiaResolver : IDiaResolver
     {
         private static readonly Guid Dia140 = new Guid("e6756135-1e65-4d17-8576-610761398c3c");
         private static readonly Guid Dia120 = new Guid("3bfcea48-620f-4b6b-81f7-b9af75454c7d");
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        public DiaResolver(string binary, string pathExtension)
+        internal DiaResolver(string binary, string pathExtension)
         {
             Binary = binary;
 

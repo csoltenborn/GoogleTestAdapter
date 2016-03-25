@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -11,12 +12,14 @@ namespace GoogleTestAdapter.TestCases
     {
         private TestEnvironment TestEnvironment { get; }
         private string Executable { get; }
+        private IDiaResolverFactory DiaResolverFactory { get; }
         private MethodSignatureCreator SignatureCreator { get; } = new MethodSignatureCreator();
 
-        public TestCaseFactory(string executable, TestEnvironment testEnvironment)
+        public TestCaseFactory(string executable, TestEnvironment testEnvironment, IDiaResolverFactory diaResolverFactory)
         {
             TestEnvironment = testEnvironment;
             Executable = executable;
+            DiaResolverFactory = diaResolverFactory;
         }
 
         public IList<TestCase> CreateTestCases()
@@ -47,7 +50,7 @@ namespace GoogleTestAdapter.TestCases
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
             var errorMessages = new List<string>();
 
-            var resolver = new TestCaseResolver();
+            var resolver = new TestCaseResolver(DiaResolverFactory);
             List<TestCaseLocation> testCaseLocations = resolver.ResolveAllTestCases(Executable, testMethodSignatures, filterString, pathExtension, errorMessages);
 
             foreach (string errorMessage in errorMessages)

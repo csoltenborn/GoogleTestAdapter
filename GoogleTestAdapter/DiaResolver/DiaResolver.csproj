@@ -50,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiaMemoryStream.cs" />
+    <Compile Include="DefaultDiaResolverFactory.cs" />
+    <Compile Include="IDiaResolver.cs" />
+    <Compile Include="IDiaResolverFactory.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="DiaResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

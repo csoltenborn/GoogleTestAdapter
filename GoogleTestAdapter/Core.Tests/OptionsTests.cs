@@ -135,6 +135,18 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public void ParseSymbolInformation__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.ParseSymbolInformation).Returns((bool?)null);
+            bool result = TheOptions.ParseSymbolInformation;
+            Assert.AreEqual(Options.OptionParseSymbolInformationDefaultValue, result);
+
+            MockXmlOptions.Setup(o => o.ParseSymbolInformation).Returns(!Options.OptionParseSymbolInformationDefaultValue);
+            result = TheOptions.ParseSymbolInformation;
+            Assert.AreEqual(!Options.OptionParseSymbolInformationDefaultValue, result);
+        }
+
+        [TestMethod]
         public void RunDisabledTests__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.RunDisabledTests).Returns((bool?)null);

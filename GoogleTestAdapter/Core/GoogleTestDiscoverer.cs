@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
@@ -14,10 +15,12 @@ namespace GoogleTestAdapter
         private static readonly Regex CompiledTestFinderRegex = new Regex(Options.TestFinderRegex, RegexOptions.Compiled);
 
         private TestEnvironment TestEnvironment { get; }
+        private IDiaResolverFactory DiaResolverFactory { get; }
 
-        public GoogleTestDiscoverer(TestEnvironment testEnviroment)
+        public GoogleTestDiscoverer(TestEnvironment testEnviroment, IDiaResolverFactory diaResolverFactory = null)
         {
             TestEnvironment = testEnviroment;
+            DiaResolverFactory = diaResolverFactory ?? DefaultDiaResolverFactory.Instance;
         }
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
@@ -32,7 +35,7 @@ namespace GoogleTestAdapter
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
         {
-            TestCaseFactory factory = new TestCaseFactory(executable, TestEnvironment);
+            TestCaseFactory factory = new TestCaseFactory(executable, TestEnvironment, DiaResolverFactory);
             IList<TestCase> testCases = factory.CreateTestCases();
 
             TestEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);

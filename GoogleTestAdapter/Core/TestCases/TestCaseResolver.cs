@@ -14,6 +14,13 @@ namespace GoogleTestAdapter.TestCases
         private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
 
+        private IDiaResolverFactory DiaResolverFactory { get; }
+
+        internal TestCaseResolver(IDiaResolverFactory diaResolverFactory)
+        {
+            DiaResolverFactory = diaResolverFactory;
+        }
+
         internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, string pathExtension, List<string> errorMessages)
         {
             List<TestCaseLocation> testCaseLocationsFound =
@@ -43,17 +50,18 @@ namespace GoogleTestAdapter.TestCases
         private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
             string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension, List<string> errorMessages)
         {
-            var resolver = new DiaResolver.DiaResolver(binary, pathExtension);
-            IEnumerable<SourceFileLocation> allTestMethodSymbols = resolver.GetFunctions(symbolFilterString);
-            IEnumerable<SourceFileLocation> allTraitSymbols = resolver.GetFunctions("*" + TraitAppendix);
+            IDiaResolver diaResolver = DiaResolverFactory.Create(binary, pathExtension);
+
+            IEnumerable<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
+            IEnumerable<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
 
             IEnumerable<TestCaseLocation> result = allTestMethodSymbols
                 .Where(nsfl => testMethodSignatures.Any(tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
                 .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
                 .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
 
-            errorMessages.AddRange(resolver.ErrorMessages);
-            resolver.Dispose();
+            errorMessages.AddRange(diaResolver.ErrorMessages);
+            diaResolver.Dispose();
 
             return result;
         }

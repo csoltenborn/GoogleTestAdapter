@@ -163,6 +163,10 @@
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DiaResolver\DiaResolver.csproj">
+      <Project>{FDC95D92-5E1E-4BDF-AA35-181851FCE755}</Project>
+      <Name>DiaResolver</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

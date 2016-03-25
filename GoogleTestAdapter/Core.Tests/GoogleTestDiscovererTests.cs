@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -74,7 +75,7 @@ namespace GoogleTestAdapter
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(PathExtensionTestsExe);
-            Assert.AreEqual(72, testCases.Count);
+            Assert.AreEqual(NrOfSampleTests, testCases.Count);
         }
 
         [TestMethod]
@@ -286,6 +287,50 @@ namespace GoogleTestAdapter
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
+        internal class FakeDiaResolverFactory : IDiaResolverFactory
+        {
+            internal Mock<IDiaResolver> MockDiaResolver { get; } = new Mock<IDiaResolver>();
+
+            public IDiaResolver Create(string binary, string pathExtensions)
+            {
+                return MockDiaResolver.Object;
+            }
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_ParseSymbolInformation_DiaResolverIsCreated()
+        {
+            Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
+            Mock<IDiaResolver> mockResolver = new Mock<IDiaResolver>();
+            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>())).Returns(mockResolver.Object);
+            mockResolver.Setup(r => r.GetFunctions(It.IsAny<string>())).Returns(new List<SourceFileLocation>());
+            mockResolver.Setup(r => r.ErrorMessages).Returns(new List<string>());
+
+            new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object).GetTestsFromExecutable(SampleTests);
+
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>()), Times.AtLeastOnce);
+        }
+
+        [TestMethod]
+        public void GetTestsFromExecutable_DoNotParseSymbolInformation_DiaIsNotInvoked()
+        {
+            Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
+            MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object)
+                .GetTestsFromExecutable(SampleTests);
+
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            Assert.AreEqual(NrOfSampleTests, testCases.Count);
+            foreach (TestCase testCase in testCases)
+            {
+                Assert.AreEqual("", testCase.CodeFilePath);
+                Assert.AreEqual(0, testCase.LineNumber);
+                Assert.AreEqual(SampleTests, testCase.Source);
+                Assert.IsFalse(string.IsNullOrEmpty(testCase.DisplayName));
+                Assert.IsFalse(string.IsNullOrEmpty(testCase.FullyQualifiedName));
+            }
+        }
 
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
         {
@@ -298,7 +343,7 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            Assert.AreEqual(72, testCases.Count);
+            Assert.AreEqual(NrOfSampleTests, testCases.Count);
 
             TestCase testCase =
                testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");

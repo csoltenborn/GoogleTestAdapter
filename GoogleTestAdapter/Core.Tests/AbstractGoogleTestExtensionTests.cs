@@ -25,6 +25,7 @@ namespace GoogleTestAdapter
         protected const string Results0Batch = @"Tests\Returns0.bat";
         protected const string Results1Batch = @"Tests\Returns1.bat";
         public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
+        public const int NrOfSampleTests = 72;
         public const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
 
         private const string X86Dir = TestdataDir + @"_x86\";
@@ -77,7 +78,6 @@ namespace GoogleTestAdapter
                 return _allTestCasesOfSampleTests;
             }
         }
-
 
 
         protected AbstractGoogleTestExtensionTests()
