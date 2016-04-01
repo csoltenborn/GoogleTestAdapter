@@ -66,9 +66,16 @@ namespace GoogleTestAdapter
         }
 
 
-        public const string CategoryName = "Google Test Adapter";
+        public const string OptionsCategoryName = "Google Test Adapter";
+
+        public const string CategoryTestExecutionName = "Test execution";
+        public const string CategoryTraitsName = "Regexes for trait assignment";
+        public const string CategoryRuntimeBehaviorName = "Runtime behavior";
+        public const string CategoryParallelizationName = "Parallelization";
+        public const string CategoryMiscName = "Misc";
+
         public const string PageGeneralName = "General";
-        public const string PageParallelizationName = "Parallelization";
+        public const string PageParallelizationName = CategoryParallelizationName;
         public const string PageGoogleTestName = "Google Test";
 
         private const string SolutionDirPlaceholder = "$(SolutionDir)";
@@ -130,7 +137,7 @@ namespace GoogleTestAdapter
                                                  + TraitsRegexesRegexSeparator + "Type"
                                                  + TraitsRegexesTraitSeparator + "Medium";
 
-        public const string OptionTraitsRegexesBefore = "Regex for setting test traits before test execution";
+        public const string OptionTraitsRegexesBefore = "Before test discovery";
 
         public virtual List<RegexTraitPair> TraitsRegexesBefore
         {
@@ -141,7 +148,7 @@ namespace GoogleTestAdapter
             }
         }
 
-        public const string OptionTraitsRegexesAfter = "Regex for setting test traits after test execution";
+        public const string OptionTraitsRegexesAfter = "After test discovery";
 
         public virtual List<RegexTraitPair> TraitsRegexesAfter
         {
@@ -169,7 +176,7 @@ namespace GoogleTestAdapter
 
         public virtual bool ParseSymbolInformation => XmlOptions.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
         
-        public const string OptionDebugMode = "Debug mode";
+        public const string OptionDebugMode = "Print debug info";
         public const bool OptionDebugModeDefaultValue = false;
         public const string OptionDebugModeDescription =
             "If true, debug output will be printed to the test console.";

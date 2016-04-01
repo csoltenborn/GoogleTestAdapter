@@ -17,9 +17,9 @@ namespace GoogleTestAdapter.VsPackage
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), Options.CategoryName, Options.PageGeneralName, 0, 0, true)]
-    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.CategoryName, Options.PageParallelizationName, 0, 0, true)]
-    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.CategoryName, Options.PageGoogleTestName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), Options.OptionsCategoryName, Options.PageGeneralName, 0, 0, true)]
+    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.OptionsCategoryName, Options.PageParallelizationName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.OptionsCategoryName, Options.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class GoogleTestExtensionOptionsPage : Package
