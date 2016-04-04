@@ -7,5 +7,6 @@ namespace GoogleTestAdapter.DiaResolver
     {
         List<string> ErrorMessages { get; }
         IEnumerable<SourceFileLocation> GetFunctions(string symbolFilterString);
+        string ExtractPdbPath(string binary);
     }
 }

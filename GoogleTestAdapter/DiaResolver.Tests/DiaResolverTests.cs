@@ -41,12 +41,39 @@ namespace GoogleTestAdapter.Dia
             DoResolveTest(X64ExternallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
         }
 
+        [TestMethod]
+        public void ExtractPDB_X64()
+        {
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(X64ExternallyLinkedTests, "");
+            string pdb = resolver.ExtractPdbPath(X64StaticallyLinkedTests);
+            string executableName = System.IO.Path.GetFileNameWithoutExtension(X64StaticallyLinkedTests);
+            string pdbName = System.IO.Path.GetFileNameWithoutExtension(pdb);
+
+            Assert.AreEqual(executableName, pdbName);
+
+            resolver.Dispose();
+        }
+
+        [TestMethod]
+        public void ExtractPDB_X86()
+        {
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(X86ExternallyLinkedTests, "");
+            string pdb = resolver.ExtractPdbPath(X86StaticallyLinkedTests);
+            string executableName = System.IO.Path.GetFileNameWithoutExtension(X86StaticallyLinkedTests);
+            string pdbName = System.IO.Path.GetFileNameWithoutExtension(pdb);
+
+            Assert.AreEqual(executableName, pdbName);
+
+            resolver.Dispose();
+        }
+
+
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
         {
             List<SourceFileLocation> locations = new List<SourceFileLocation>();
             List<string> errorMessages = new List<string>();
 
-           IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "");
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "");
             locations.AddRange(resolver.GetFunctions(filter));
             errorMessages.AddRange(resolver.ErrorMessages);
 
