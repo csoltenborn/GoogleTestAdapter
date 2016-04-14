@@ -92,6 +92,12 @@ Tests are run sequentially by default. If parallel test execution is enabled, th
 
 Note that GTA remembers the durations of the executed tests to improve test scheduling for later test runs. The durations are stored in files with endings `.gta.testdurations` - make sure your version control system ignores these files.
 
+### Trouble shooting
+
+No source locations and traits are found for my tests!
+
+* The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved. Rebuilding your solution should regenerate the pdb at an appropriate location.
+* The test executable's project has the option *Linker/Debugging/Generate debug info* set to `No` or `Optimize for faster linking (/DEBUG:FASTLINK)`, resulting in a pdb not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting to `true` or `Optimize for debugging (/DEBUG)` and rebuild your solution.
 
 ### Building, testing, debugging
 
