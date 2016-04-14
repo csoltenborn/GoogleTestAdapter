@@ -48,17 +48,8 @@ namespace GoogleTestAdapter.TestCases
             }
 
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
-            var errorMessages = new List<string>();
-
-            var resolver = new TestCaseResolver(DiaResolverFactory);
-            List<TestCaseLocation> testCaseLocations = resolver.ResolveAllTestCases(Executable, testMethodSignatures, filterString, pathExtension, errorMessages);
-
-            foreach (string errorMessage in errorMessages)
-            {
-                TestEnvironment.LogWarning(errorMessage);
-            }
-
-            return testCaseLocations;
+            var resolver = new TestCaseResolver(DiaResolverFactory, TestEnvironment);
+            return resolver.ResolveAllTestCases(Executable, testMethodSignatures, filterString, pathExtension);
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor)
