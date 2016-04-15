@@ -13,7 +13,7 @@ install:
         nuget install secure-file -ExcludeVersion
         secure-file\tools\secure-file -decrypt GoogleTestAdapter\Keys\Key_Release.snk.enc -secret $env:RELEASE_KEY_PASSWORD
     } else {
-        # $blockRdp = $true
+        $blockRdp = $true
         iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
 before_build: 
