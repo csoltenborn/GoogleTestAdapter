@@ -1,5 +1,5 @@
 version: 0.5.1.{build}
-os: Previous Visual Studio 2015
+#os: Previous Visual Studio 2015
 configuration: Release
 platform: Any CPU
 environment:
@@ -69,13 +69,3 @@ artifacts:
   name: GoogleTestAdapter
 - path: OpenCover_CoverageData.xml
   name: OpenCover coverage data
-deploy:
-  provider: GitHub
-  auth_token:
-    secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
-  description: 'TODO provide release notes'
-  draft: true
-  prerelease: true
-  on:
-    branch: master
-    appveyor_repo_tag: true
