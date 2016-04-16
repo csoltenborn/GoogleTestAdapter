@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter
 {

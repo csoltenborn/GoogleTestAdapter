@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Settings;
 

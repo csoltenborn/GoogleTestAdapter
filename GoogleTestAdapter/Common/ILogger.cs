@@ -1,4 +1,4 @@
-﻿namespace GoogleTestAdapter.Framework
+﻿namespace GoogleTestAdapter.Common
 {
 
     public interface ILogger

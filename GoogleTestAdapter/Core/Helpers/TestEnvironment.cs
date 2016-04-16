@@ -1,5 +1,5 @@
 ﻿using System;
-using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Helpers
 {

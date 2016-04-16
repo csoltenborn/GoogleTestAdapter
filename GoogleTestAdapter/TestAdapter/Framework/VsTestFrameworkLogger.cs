@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Framework;
+﻿using GoogleTestAdapter.Common;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
