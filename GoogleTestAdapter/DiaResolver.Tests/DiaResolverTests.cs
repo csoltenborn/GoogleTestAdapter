@@ -44,27 +44,25 @@ namespace GoogleTestAdapter.Dia
         [TestMethod]
         public void ExtractPDB_X64()
         {
-            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(X64ExternallyLinkedTests, "");
-            string pdb = resolver.ExtractPdbPath(X64StaticallyLinkedTests);
+            NativeMethods.PDBPathExtractor extractor = new NativeMethods.PDBPathExtractor(X64StaticallyLinkedTests, new List<string>());
+
+            string pdb = extractor.pdbPath;
             string executableName = System.IO.Path.GetFileNameWithoutExtension(X64StaticallyLinkedTests);
             string pdbName = System.IO.Path.GetFileNameWithoutExtension(pdb);
 
             Assert.AreEqual(executableName, pdbName);
-
-            resolver.Dispose();
         }
 
         [TestMethod]
         public void ExtractPDB_X86()
         {
-            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(X86ExternallyLinkedTests, "");
-            string pdb = resolver.ExtractPdbPath(X86StaticallyLinkedTests);
+            NativeMethods.PDBPathExtractor extractor = new NativeMethods.PDBPathExtractor(X86StaticallyLinkedTests, new List<string>());
+
+            string pdb = extractor.pdbPath;
             string executableName = System.IO.Path.GetFileNameWithoutExtension(X86StaticallyLinkedTests);
             string pdbName = System.IO.Path.GetFileNameWithoutExtension(pdb);
 
             Assert.AreEqual(executableName, pdbName);
-
-            resolver.Dispose();
         }
 
 
