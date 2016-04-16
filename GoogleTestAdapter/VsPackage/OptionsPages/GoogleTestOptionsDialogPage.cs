@@ -5,7 +5,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
     public class GoogleTestOptionsDialogPage : NotifyingDialogPage
     {
-        [Category(Options.CategoryName)]
+        #region Runtime behavior
+
+        [Category(Options.CategoryRuntimeBehaviorName)]
         [DisplayName(Options.OptionCatchExceptions)]
         [Description(Options.OptionCatchExceptionsDescription)]
         public bool CatchExceptions
@@ -15,7 +17,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool catchExceptions = Options.OptionCatchExceptionsDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryRuntimeBehaviorName)]
         [DisplayName(Options.OptionBreakOnFailure)]
         [Description(Options.OptionBreakOnFailureDescription)]
         public bool BreakOnFailure
@@ -25,7 +27,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool breakOnFailure = Options.OptionBreakOnFailureDefaultValue;
 
-        [Category(Options.CategoryName)]
+        #endregion
+
+        #region Test execution
+
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionRunDisabledTests)]
         [Description(Options.OptionRunDisabledTestsDescription)]
         public bool RunDisabledTests
@@ -35,7 +41,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool runDisabledTests = Options.OptionRunDisabledTestsDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionNrOfTestRepetitions)]
         [Description(Options.OptionNrOfTestRepetitionsDescription)]
         public int NrOfTestRepetitions
@@ -45,7 +51,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private int nrOfTestRepetitions = Options.OptionNrOfTestRepetitionsDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionShuffleTests)]
         [Description(Options.OptionShuffleTestsDescription)]
         public bool ShuffleTests
@@ -55,7 +61,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool shuffleTests = Options.OptionShuffleTestsDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionShuffleTestsSeed)]
         [Description(Options.OptionShuffleTestsSeedDescription)]
         public int ShuffleTestsSeed
@@ -65,6 +71,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private int shuffleTestsSeed = Options.OptionShuffleTestsSeedDefaultValue;
 
+        #endregion
     }
 
 }

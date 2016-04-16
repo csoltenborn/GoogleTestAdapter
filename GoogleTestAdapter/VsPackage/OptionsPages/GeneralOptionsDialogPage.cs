@@ -5,17 +5,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
     public class GeneralOptionsDialogPage : NotifyingDialogPage
     {
-        [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionPrintTestOutput)]
-        [Description(Options.OptionPrintTestOutputDescription)]
-        public bool PrintTestOutput
-        {
-            get { return printTestOutput; }
-            set { SetAndNotify(ref printTestOutput, value); }
-        }
-        private bool printTestOutput = Options.OptionPrintTestOutputDefaultValue;
+        #region Test execution
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionTestDiscoveryRegex)]
         [Description(Options.OptionTestDiscoveryRegexDescription)]
         public string TestDiscoveryRegex
@@ -25,7 +17,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string testDiscoveryRegex = Options.OptionTestDiscoveryRegexDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionPathExtension)]
         [Description(Options.OptionPathExtensionDescription)]
         public string PathExtension
@@ -35,56 +27,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string pathExtension = Options.OptionPathExtensionDefaultValue;
 
-        [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionDebugMode)]
-        [Description(Options.OptionDebugModeDescription)]
-        public bool DebugMode
-        {
-            get { return debugMode; }
-            set { SetAndNotify(ref debugMode, value); }
-        }
-        private bool debugMode = Options.OptionDebugModeDefaultValue;
-
-        [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionTraitsRegexesBefore)]
-        [Description(Options.OptionTraitsDescription)]
-        public string TraitsRegexesBefore
-        {
-            get { return traitsRegexesBefore; }
-            set { SetAndNotify(ref traitsRegexesBefore, value); }
-        }
-        private string traitsRegexesBefore = Options.OptionTraitsRegexesDefaultValue;
-
-        [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionTraitsRegexesAfter)]
-        [Description(Options.OptionTraitsDescription)]
-        public string TraitsRegexesAfter
-        {
-            get { return traitsRegexesAfter; }
-            set { SetAndNotify(ref traitsRegexesAfter, value); }
-        }
-        private string traitsRegexesAfter = Options.OptionTraitsRegexesDefaultValue;
-
-        [Category(Options.CategoryName)]
-        [DisplayName(Options.OptionTestNameSeparator)]
-        [Description(Options.OptionTestNameSeparatorDescription)]
-        public string TestNameSeparator
-        {
-            get { return testNameSeparator; }
-            set { SetAndNotify(ref testNameSeparator, value); }
-        }
-        private string testNameSeparator = Options.OptionTestNameSeparatorDefaultValue;
-		
-        [DisplayName(Options.OptionParseSymbolInformation)]
-        [Description(Options.OptionParseSymbolInformationDescription)]
-        public bool ParseSymbolInformation
-        {
-            get { return parseSymbolInformation; }
-            set { SetAndNotify(ref parseSymbolInformation, value); }
-        }
-        private bool parseSymbolInformation = Options.OptionParseSymbolInformationDefaultValue;
-
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionAdditionalTestExecutionParams)]
         [Description(Options.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams
@@ -94,7 +37,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string additionalTestExecutionParams = Options.OptionAdditionalTestExecutionParamsDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionBatchForTestSetup)]
         [Description(Options.OptionBatchForTestSetupDescription)]
         public string BatchForTestSetup
@@ -104,7 +47,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string batchForTestSetup = Options.OptionBatchForTestSetupDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryTestExecutionName)]
         [DisplayName(Options.OptionBatchForTestTeardown)]
         [Description(Options.OptionBatchForTestTeardownDescription)]
         public string BatchForTestTeardown
@@ -113,6 +56,76 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set { SetAndNotify(ref batchForTestTeardown, value); }
         }
         private string batchForTestTeardown = Options.OptionBatchForTestTeardownDefaultValue;
+
+        #endregion
+
+        #region Traits
+
+        [Category(Options.CategoryTraitsName)]
+        [DisplayName(Options.OptionTraitsRegexesBefore)]
+        [Description(Options.OptionTraitsDescription)]
+        public string TraitsRegexesBefore
+        {
+            get { return traitsRegexesBefore; }
+            set { SetAndNotify(ref traitsRegexesBefore, value); }
+        }
+        private string traitsRegexesBefore = Options.OptionTraitsRegexesDefaultValue;
+
+        [Category(Options.CategoryTraitsName)]
+        [DisplayName(Options.OptionTraitsRegexesAfter)]
+        [Description(Options.OptionTraitsDescription)]
+        public string TraitsRegexesAfter
+        {
+            get { return traitsRegexesAfter; }
+            set { SetAndNotify(ref traitsRegexesAfter, value); }
+        }
+        private string traitsRegexesAfter = Options.OptionTraitsRegexesDefaultValue;
+
+        #endregion
+
+        #region Misc
+
+        [Category(Options.CategoryMiscName)]
+        [DisplayName(Options.OptionPrintTestOutput)]
+        [Description(Options.OptionPrintTestOutputDescription)]
+        public bool PrintTestOutput
+        {
+            get { return printTestOutput; }
+            set { SetAndNotify(ref printTestOutput, value); }
+        }
+        private bool printTestOutput = Options.OptionPrintTestOutputDefaultValue;
+
+        [Category(Options.CategoryMiscName)]
+        [DisplayName(Options.OptionTestNameSeparator)]
+        [Description(Options.OptionTestNameSeparatorDescription)]
+        public string TestNameSeparator
+        {
+            get { return testNameSeparator; }
+            set { SetAndNotify(ref testNameSeparator, value); }
+        }
+        private string testNameSeparator = Options.OptionTestNameSeparatorDefaultValue;
+
+        [Category(Options.CategoryMiscName)]
+        [DisplayName(Options.OptionParseSymbolInformation)]
+        [Description(Options.OptionParseSymbolInformationDescription)]
+        public bool ParseSymbolInformation
+        {
+            get { return parseSymbolInformation; }
+            set { SetAndNotify(ref parseSymbolInformation, value); }
+        }
+        private bool parseSymbolInformation = Options.OptionParseSymbolInformationDefaultValue;
+
+        [Category(Options.CategoryMiscName)]
+        [DisplayName(Options.OptionDebugMode)]
+        [Description(Options.OptionDebugModeDescription)]
+        public bool DebugMode
+        {
+            get { return debugMode; }
+            set { SetAndNotify(ref debugMode, value); }
+        }
+        private bool debugMode = Options.OptionDebugModeDefaultValue;
+
+        #endregion
     }
 
 }

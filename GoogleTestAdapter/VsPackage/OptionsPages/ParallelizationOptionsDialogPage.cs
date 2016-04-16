@@ -5,7 +5,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
     public class ParallelizationOptionsDialogPage : NotifyingDialogPage
     {
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryParallelizationName)]
         [DisplayName(Options.OptionEnableParallelTestExecution)]
         [Description(Options.OptionEnableParallelTestExecutionDescription)]
         public bool EnableParallelTestExecution
@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool enableParallelTestExecution = Options.OptionEnableParallelTestExecutionDefaultValue;
 
-        [Category(Options.CategoryName)]
+        [Category(Options.CategoryParallelizationName)]
         [DisplayName(Options.OptionMaxNrOfThreads)]
         [Description(Options.OptionMaxNrOfThreadsDescription)]
         public int MaxNrOfThreads
