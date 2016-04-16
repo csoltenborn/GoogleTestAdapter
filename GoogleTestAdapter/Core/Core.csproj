@@ -51,7 +51,6 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />
-    <Compile Include="Helpers\ProcessWaiter.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="TestCases\ListTestsParser.cs" />
     <Compile Include="TestCases\MethodSignatureCreator.cs" />

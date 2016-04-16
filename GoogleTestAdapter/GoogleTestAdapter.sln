@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GTA_Traits.h = GTA_Traits.h
 		..\LICENSE.txt = ..\LICENSE.txt
 		..\README.md = ..\README.md
+		SetVersion.bat = SetVersion.bat
+		SetVersion.ps1 = SetVersion.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaResolver", "DiaResolver\DiaResolver.csproj", "{FDC95D92-5E1E-4BDF-AA35-181851FCE755}"

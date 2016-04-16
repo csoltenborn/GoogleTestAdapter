@@ -1,5 +1,7 @@
 Param([parameter(Mandatory=$true)] [string] $version)
 
+$common_assembly_info = "Common\Properties\AssemblyInfo.cs"
+
 $core_assembly_info = "Core\Properties\AssemblyInfo.cs"
 $coretests_assembly_info = "Core.Tests\Properties\AssemblyInfo.cs"
 
@@ -14,6 +16,8 @@ $vsixtests_assembly_info = "VsPackage.Tests\Properties\AssemblyInfo.cs"
 
 $vsix_manifest = "VsPackage\source.extension.vsixmanifest"
 
+
+(Get-Content $common_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $common_assembly_info
 
 (Get-Content $core_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $core_assembly_info
 (Get-Content $coretests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $coretests_assembly_info
