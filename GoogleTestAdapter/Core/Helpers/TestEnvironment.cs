@@ -4,7 +4,7 @@ using GoogleTestAdapter.Common;
 namespace GoogleTestAdapter.Helpers
 {
 
-    public class TestEnvironment : ILogger
+    public class TestEnvironment : LoggerBase
     {
 
         private enum LogType { Normal, Debug }
@@ -21,27 +21,24 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        public void LogInfo(string message)
+        public override void Log(Severity severity, string message)
         {
-            if (ShouldBeLogged(LogType.Normal))
-            {
-                Logger.LogInfo(message);
-            }
-        }
+            if (!ShouldBeLogged(LogType.Normal))
+                return;
 
-        public void LogWarning(string message)
-        {
-            if (ShouldBeLogged(LogType.Normal))
+            switch (severity)
             {
-                Logger.LogWarning(message);
-            }
-        }
-
-        public void LogError(string message)
-        {
-            if (ShouldBeLogged(LogType.Normal))
-            {
-                Logger.LogError(message);
+                case Severity.Info:
+                    Logger.LogInfo(message);
+                    break;
+                case Severity.Warning:
+                    Logger.LogWarning(message);
+                    break;
+                case Severity.Error:
+                    Logger.LogError(message);
+                    break;
+                default:
+                    throw new Exception($"Unknown enum literal: {severity}");
             }
         }
 

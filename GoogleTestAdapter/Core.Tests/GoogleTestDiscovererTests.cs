@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -116,13 +117,12 @@ namespace GoogleTestAdapter
         {
             Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
             Mock<IDiaResolver> mockResolver = new Mock<IDiaResolver>();
-            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>())).Returns(mockResolver.Object);
+            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>())).Returns(mockResolver.Object);
             mockResolver.Setup(r => r.GetFunctions(It.IsAny<string>())).Returns(new List<SourceFileLocation>());
-            mockResolver.Setup(r => r.ErrorMessages).Returns(new List<string>());
 
             new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object).GetTestsFromExecutable(SampleTests);
 
-            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>()), Times.AtLeastOnce);
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.AtLeastOnce);
         }
 
         [TestMethod]
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter
             IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object)
                 .GetTestsFromExecutable(SampleTests);
 
-            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.Never);
             Assert.AreEqual(NrOfSampleTests, testCases.Count);
             foreach (TestCase testCase in testCases)
             {

@@ -1,10 +1,11 @@
-﻿using GoogleTestAdapter.Common;
+﻿using System;
+using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
 
-    public class VsTestFrameworkLogger : ILogger
+    public class VsTestFrameworkLogger : LoggerBase
     {
 
         private static readonly object Lock = new object();
@@ -17,19 +18,22 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
 
-        public void LogInfo(string message)
+        public override void Log(Severity severity, string message)
         {
-            LogSafe(TestMessageLevel.Informational, message);
-        }
-
-        public void LogWarning(string message)
-        {
-            LogSafe(TestMessageLevel.Warning, $"Warning: {message}");
-        }
-
-        public void LogError(string message)
-        {
-            LogSafe(TestMessageLevel.Error, $"ERROR: {message}");
+            switch (severity)
+            {
+                case Severity.Info:
+                    LogSafe(TestMessageLevel.Informational, message);
+                    break;
+                case Severity.Warning:
+                    LogSafe(TestMessageLevel.Warning, $"Warning: {message}");
+                    break;
+                case Severity.Error:
+                    LogSafe(TestMessageLevel.Error, $"ERROR: {message}");
+                    break;
+                default:
+                    throw new Exception($"Unknown enum literal: {severity}");
+            }
         }
 
 

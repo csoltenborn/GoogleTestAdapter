@@ -31,14 +31,8 @@ namespace GoogleTestAdapter.TestCases
 
             if (testCaseLocationsFound.Count == 0)
             {
-                List<string> errorMessages = new List<string>();
-                var parser = new NativeMethods.ImportsParser(executable, errorMessages);
+                var parser = new NativeMethods.ImportsParser(executable, TestEnvironment);
                 List<string> imports = parser.Imports;
-
-                foreach (string errorMessage in errorMessages)
-                {
-                    TestEnvironment.LogWarning(errorMessage);
-                }
 
                 string moduleDirectory = Path.GetDirectoryName(executable);
 
@@ -59,9 +53,8 @@ namespace GoogleTestAdapter.TestCases
         private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
             string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            using (IDiaResolver diaResolver = DiaResolverFactory.Create(binary, pathExtension))
+            using (IDiaResolver diaResolver = DiaResolverFactory.Create(binary, pathExtension, TestEnvironment))
             {
-                string exceptionErrorMsg = null;
                 try
                 {
                     IEnumerable<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
@@ -74,18 +67,9 @@ namespace GoogleTestAdapter.TestCases
                 }
                 catch (Exception e)
                 {
-                    exceptionErrorMsg = $"Exception while resolving test locations and traits in {binary}\n{e}";
+                    if (TestEnvironment.Options.DebugMode)
+                        TestEnvironment.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
                     return new TestCaseLocation[0];
-                }
-                finally
-                {
-                    foreach (string errorMessage in diaResolver.ErrorMessages)
-                    {
-                        TestEnvironment.LogWarning(errorMessage);
-                    }
-
-                    if (exceptionErrorMsg != null && TestEnvironment.Options.DebugMode)
-                        TestEnvironment.LogError(exceptionErrorMsg);
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.DiaResolver
 {
@@ -95,7 +96,7 @@ namespace GoogleTestAdapter.DiaResolver
 
             public List<string> Imports { get; } = new List<string>();
 
-            public ImportsParser(string executable, List<string> errorMessages)
+            public ImportsParser(string executable, ILogger logger)
             {
                 fixed (LOADED_IMAGE* fixedLoadedImage = &_loadedImage)
                 {
@@ -112,7 +113,7 @@ namespace GoogleTestAdapter.DiaResolver
                         }
                         if (!UnMapAndLoad(ref _loadedImage))
                         {
-                            errorMessages.Add("UnMapAndLoad failed!");
+                            logger.LogError("UnMapAndLoad failed!");
                         }
                     }
                 }
