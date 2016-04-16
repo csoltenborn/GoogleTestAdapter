@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\IDebuggedProcessLauncher.cs" />
-    <Compile Include="Framework\ILogger.cs" />
     <Compile Include="Framework\ITestFrameworkReporter.cs" />
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
@@ -88,6 +87,10 @@
     <Content Include="Resources\GTA_Traits.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DiaResolver\DiaResolver.csproj">
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>

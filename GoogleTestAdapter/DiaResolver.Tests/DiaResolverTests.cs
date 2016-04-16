@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using GoogleTestAdapter.Common;
+using GoogleTestAdapter.DiaResolver.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GoogleTestAdapter.DiaResolver;
 
-namespace GoogleTestAdapter.Dia
+namespace GoogleTestAdapter.DiaResolver
 {
 
     [TestClass]
@@ -69,11 +70,10 @@ namespace GoogleTestAdapter.Dia
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
         {
             List<SourceFileLocation> locations = new List<SourceFileLocation>();
-            List<string> errorMessages = new List<string>();
+            FakeLogger fakeLogger = new FakeLogger();
 
-            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "");
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger);
             locations.AddRange(resolver.GetFunctions(filter));
-            errorMessages.AddRange(resolver.ErrorMessages);
 
             if (disposeResolver)
             {
@@ -81,7 +81,7 @@ namespace GoogleTestAdapter.Dia
             }
 
             Assert.AreEqual(expectedLocations, locations.Count);
-            Assert.AreEqual(expectedErrorMessages, errorMessages.Count);
+            Assert.AreEqual(expectedErrorMessages, fakeLogger.MessagesOfType(Severity.Warning, Severity.Error).Count);
         }
 
     }

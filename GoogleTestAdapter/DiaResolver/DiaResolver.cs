@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Dia;
+using GoogleTestAdapter.Common;
+
 // ReSharper disable InconsistentNaming
 
 namespace GoogleTestAdapter.DiaResolver
@@ -44,12 +46,11 @@ namespace GoogleTestAdapter.DiaResolver
         private static readonly Guid Dia110 = new Guid("761D3BCD-1304-41D5-94E8-EAC54E4AC172");
 
         private string Binary { get; }
+        private ILogger Logger { get; }
 
         private Stream FileStream { get; }
         private IDiaDataSource DiaDataSource { get; set; }
         private IDiaSession DiaSession { get; }
-
-        public List<string> ErrorMessages { get; } = new List<string>();
 
         private bool TryCreateDiaInstance(Guid clsid)
         {
@@ -65,20 +66,21 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        internal DiaResolver(string binary, string pathExtension)
+        internal DiaResolver(string binary, string pathExtension, ILogger logger)
         {
             Binary = binary;
+            Logger = logger;
 
             if (!TryCreateDiaInstance(Dia140) && !TryCreateDiaInstance(Dia120) && !TryCreateDiaInstance(Dia110))
             {
-                ErrorMessages.Add("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
+                Logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
                 return;
             }
 
             string pdb = FindPdbFile(binary, pathExtension);
             if (pdb == null)
             {
-                ErrorMessages.Add($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
+                Logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
                 return;
             }
 
@@ -164,7 +166,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
             else
             {
-                ErrorMessages.Add("Failed to locate line number for " + nativeSymbol);
+                Logger.LogWarning("Failed to locate line number for " + nativeSymbol);
                 return new SourceFileLocation(Binary, "", 0);
             }
         }

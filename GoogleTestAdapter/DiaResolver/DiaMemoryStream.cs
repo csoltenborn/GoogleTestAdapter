@@ -55,52 +55,52 @@ namespace GoogleTestAdapter.DiaResolver
 
         void IStream.Clone(out IStream ppstm)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.Clone");
         }
 
         void IStream.Commit(uint grfCommitFlags)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.Commit");
         }
 
         void IStream.LockRegion(_ULARGE_INTEGER libOffset, _ULARGE_INTEGER cb, uint dwLockType)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.LockRegion");
         }
 
         void IStream.RemoteCopyTo(IStream pstm, _ULARGE_INTEGER cb, out _ULARGE_INTEGER pcbRead, out _ULARGE_INTEGER pcbWritten)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.RemoteCopyTo");
         }
 
         void ISequentialStream.RemoteRead(out byte pv, uint cb, out uint pcbRead)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("ISequentialStream.RemoteRead");
         }
 
         void ISequentialStream.RemoteWrite(ref byte pv, uint cb, out uint pcbWritten)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("ISequentialStream.RemoteWrite");
         }
 
         void IStream.RemoteWrite(ref byte pv, uint cb, out uint pcbWritten)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.RemoteWrite");
         }
 
         void IStream.Revert()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.Revert");
         }
 
         void IStream.SetSize(_ULARGE_INTEGER libNewSize)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.SetSize");
         }
 
         void IStream.UnlockRegion(_ULARGE_INTEGER libOffset, _ULARGE_INTEGER cb, uint dwLockType)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("IStream.UnlockRegion");
         }
 
     }

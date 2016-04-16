@@ -1,5 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master) [![Coverage Status](https://coveralls.io/repos/csoltenborn/GoogleTestAdapter/badge.svg?branch=master&service=github)](https://coveralls.io/github/csoltenborn/GoogleTestAdapter?branch=master)
 
+
 ### Google Test Adapter
 
 Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements.
@@ -27,6 +28,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 * See [releases](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
+
 ### Usage
 
 #### Installation
@@ -36,10 +38,7 @@ Google Test Adapter can be installed in two ways:
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.5.1/GoogleTestAdapter-0.5.1.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
 
-After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, you can try one of the following options:
-
-* <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place.
-* If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
+After restarting VS, your tests will be displayed in the test explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
 #### Configuration
 
@@ -76,13 +75,17 @@ Note, however, that VSTest.Console.exe will not make use of GTA solution setting
 
 * DisplayName
 * FullyQualifiedName
+* Type
+* Author
+* TestCategory
 * Source (i.e., binary containing the test)
 * CodeFilePath (i.e., source file containing the test)
+* Class
 * LineNumber
 * Id 
 * ExecutorUri
 
-Additionally, traits can be used in test case filters. E.g., all tests having a `TestCategory` of `Unit` can be executed by means of the filter `/TestCaseFilter:"TestCategory=Unit"`.
+Additionally, traits can be used in test case filters. E.g., all tests having a `Duration` of `short` can be executed by means of the filter `/TestCaseFilter:"Duration=short"`.
 
 #### <a name="parallelization"></a>Parallelization
 
@@ -91,6 +94,17 @@ Tests are run sequentially by default. If parallel test execution is enabled, th
 <a name="batch_files"></a>If you need to perform some setup or teardown tasks in addition to the setup/teardown methods of your test code, you can do so by configuring test setup/teardown batch files, to which you can pass several values such as solution directory or test directory for exclusive usage of the tests (this is again not restricted to parallel test execution).
 
 Note that GTA remembers the durations of the executed tests to improve test scheduling for later test runs. The durations are stored in files with endings `.gta.testdurations` - make sure your version control system ignores these files.
+
+
+### <a name="trouble_shooting"></a>Trouble shooting
+
+None or not all of my tests show up!
+* <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place.
+* If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
+
+No source locations and traits are found for my tests!
+* The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved. Rebuilding your solution should regenerate the pdb at an appropriate location.
+* The test executable's project has the option *Linker/Debugging/Generate debug info* set to `No` or `Optimize for faster linking (/DEBUG:FASTLINK)`, resulting in a pdb not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting to `Yes` or `Optimize for debugging (/DEBUG)` and rebuild your solution.
 
 
 ### Building, testing, debugging
@@ -121,7 +135,6 @@ Note that different parts of GTA will run in different processes which are spawn
 * `vstest.executionengine.exe` (platform X64: `TestExecutor`)
 
 A convenient way to get your debugger attached is to use Microsoft's [Child Process Debugging Power Tool](https://visualstudiogallery.msdn.microsoft.com/a1141bff-463f-465f-9b6d-d29b7b503d7a). We have the `GoogleTestAdapter.ChildProcessDbgSettings` already precofigured for you. Alternatively, you can add [``System.Diagnostics.Debugger.Break()``](https://msdn.microsoft.com/en-US/library/system.diagnostics.debugger.break) statements in places of interest.
-
 
 #### Contributions
 

@@ -88,14 +88,22 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private ITestCaseFilterExpression GetFilterExpression()
         {
-            ITestCaseFilterExpression filterExpression = RunContext.GetTestCaseFilter(AllProperties, PropertyProvider);
+            try
+            {
+                ITestCaseFilterExpression filterExpression = RunContext.GetTestCaseFilter(AllProperties, PropertyProvider);
 
-            string message = filterExpression == null
-                    ? "No test case filter provided"
-                    : $"Test case filter: {filterExpression.TestCaseFilterValue}";
-            TestEnvironment.DebugInfo(message);
+                string message = filterExpression == null
+                        ? "No test case filter provided"
+                        : $"Test case filter: {filterExpression.TestCaseFilterValue}";
+                TestEnvironment.DebugInfo(message);
 
-            return filterExpression;
+                return filterExpression;
+            }
+            catch (TestPlatformFormatException e)
+            {
+                TestEnvironment.LogWarning(e.Message);
+                return null;
+            }
         }
 
         private object GetTraitValues(TestCase testCase, string traitName)
