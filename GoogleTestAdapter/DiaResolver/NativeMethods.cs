@@ -557,6 +557,16 @@ namespace GoogleTestAdapter.DiaResolver
                             directory = &(optHeader64->DataDirectory) + 6;
                         }
 
+                        // return if no debugging information is available
+                        if (directory->Size == 0)
+                        {
+                            if (!UnMapAndLoad(ref _loadedImage))
+                            {
+                                errorMessages.Add("UnMapAndLoad failed!");
+                            }
+                            return;
+                        }
+
                         // get information on all sections. This is required to
                         // map addresses to correct offsets
                         uint numberOfSections = fixedLoadedImage->NumbOfSections;
@@ -577,6 +587,16 @@ namespace GoogleTestAdapter.DiaResolver
                         int offset = (int)AddressToOffset((int)directory->VirtualAddress, sections);
 
                         IMAGE_DEBUG_DIRECTORY* dbg_dir = (IMAGE_DEBUG_DIRECTORY*)((int)fixedLoadedImage->MappedAddress + (int)offset);
+
+                        // return if no debugging information is available
+                        if (dbg_dir->SizeOfData == 0)
+                        {
+                            if (!UnMapAndLoad(ref _loadedImage))
+                            {
+                                errorMessages.Add("UnMapAndLoad failed!");
+                            }
+                            return;
+                        }
 
                         offset = (int)AddressToOffset((int)dbg_dir->AddressOfRawData, sections);
                         PdbInfo* pdbInfo = (PdbInfo*)((int)fixedLoadedImage->MappedAddress + (int)offset);
