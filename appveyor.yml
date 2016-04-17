@@ -39,9 +39,13 @@ after_build:
 
     $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\Resources\ReleaseNotes\" + $version + ".md")).ToString()
 
-    $releaseNotes = [IO.File]::ReadAllLines($releaseNotesFile) -join '\n'
+    $releaseNotes = ([IO.File]::ReadAllLines($releaseNotesFile) -join '\n')
 
     Write-Output("Release notes: " + $releaseNotes)
+
+    [Environment]::SetEnvironmentVariable("ReleaseNotes", $releaseNotes, "User")
+
+    Write-Output("Release notes env: " + $env:ReleaseNotes)
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
@@ -79,7 +83,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
-  description: $(releaseNotes)
+  description: $(ReleaseNotes)
   draft: true
   prerelease: true
   on:
