@@ -8,9 +8,9 @@ namespace GoogleTestAdapter.VsPackage.Commands
     {
         private static Guid CommandSet { get; } = new Guid("e0d9835f-9c16-4d27-a9ad-4df7568650f7");
 
-        protected GoogleTestExtensionOptionsPage Package { get; }
+        protected IGoogleTestExtensionOptionsPage Package { get; }
 
-        protected AbstractSwitchBooleanOptionCommand(GoogleTestExtensionOptionsPage package, int commandId)
+        protected AbstractSwitchBooleanOptionCommand(IGoogleTestExtensionOptionsPage package, int commandId)
         {
             if (package == null)
                 throw new ArgumentNullException(nameof(package));

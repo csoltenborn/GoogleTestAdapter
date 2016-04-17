@@ -33,6 +33,7 @@
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
+        bool? ShowReleaseNotes { get; set; }
     }
 
     public static class XmlOptionsExtension
@@ -58,6 +59,7 @@
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
+            self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
         }
     }
 

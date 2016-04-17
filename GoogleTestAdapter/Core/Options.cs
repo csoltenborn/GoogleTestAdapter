@@ -175,13 +175,21 @@ namespace GoogleTestAdapter
             "If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective.";
 
         public virtual bool ParseSymbolInformation => XmlOptions.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
-        
+
         public const string OptionDebugMode = "Print debug info";
         public const bool OptionDebugModeDefaultValue = false;
         public const string OptionDebugModeDescription =
             "If true, debug output will be printed to the test console.";
 
         public virtual bool DebugMode => XmlOptions.DebugMode ?? OptionDebugModeDefaultValue;
+
+
+        public const string OptionShowReleaseNotes = "Show release notes after update";
+        public const bool OptionShowReleaseNotesDefaultValue = true;
+        public const string OptionShowReleaseNotesDescription =
+            "If true, a dialog with release notes is shown after the extension has been updated.";
+
+        public virtual bool ShowReleaseNotes => XmlOptions.ShowReleaseNotes ?? OptionShowReleaseNotesDefaultValue;
 
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";

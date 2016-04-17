@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
+using GoogleTestAdapter.VsPackage.ReleaseNotes;
 using Microsoft.VisualStudio;
 
 namespace GoogleTestAdapter.VsPackage
@@ -22,7 +23,7 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.OptionsCategoryName, Options.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class GoogleTestExtensionOptionsPage : Package
+    public sealed class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage
     {
         public const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
 
@@ -53,9 +54,21 @@ namespace GoogleTestAdapter.VsPackage
             SwitchBreakOnFailureOptionCommand.Initialize(this);
             SwitchParallelExecutionOptionCommand.Initialize(this);
             SwitchPrintTestOutputOptionCommand.Initialize(this);
+
+            ReleaseNotesDisplayer displayer = new ReleaseNotesDisplayer(this);
+            displayer.DisplayReleaseNotesIfNecessary();
         }
 
-        internal bool CatchExtensions
+        public bool ShowReleaseNotes
+        {
+            get { return generalOptions.ShowReleaseNotes; }
+            set
+            {
+                generalOptions.ShowReleaseNotes = value;
+            }
+        }
+
+        public bool CatchExtensions
         {
             get { return googleTestOptions.CatchExceptions; }
             set
@@ -65,7 +78,7 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
-        internal bool BreakOnFailure
+        public bool BreakOnFailure
         {
             get { return googleTestOptions.BreakOnFailure; }
             set
@@ -75,7 +88,7 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
-        internal bool ParallelTestExecution
+        public bool ParallelTestExecution
         {
             get { return parallelizationOptions.EnableParallelTestExecution; }
             set
@@ -85,7 +98,7 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
-        internal bool PrintTestOutput
+        public bool PrintTestOutput
         {
             get { return generalOptions.PrintTestOutput; }
             set
@@ -122,6 +135,7 @@ namespace GoogleTestAdapter.VsPackage
                 TestNameSeparator = generalOptions.TestNameSeparator,
                 ParseSymbolInformation = generalOptions.ParseSymbolInformation,
                 DebugMode = generalOptions.DebugMode,
+                ShowReleaseNotes = generalOptions.ShowReleaseNotes,
                 AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = generalOptions.BatchForTestTeardown,

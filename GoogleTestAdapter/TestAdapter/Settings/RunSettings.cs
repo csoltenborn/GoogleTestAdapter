@@ -54,6 +54,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public bool? DebugMode { get; set; }
         public bool ShouldSerializeDebugMode() { return DebugMode != null; }
 
+        public bool? ShowReleaseNotes { get; set; }
+        public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
+
         public bool? ParseSymbolInformation { get; set; }
         public bool ShouldSerializeParseSymbolInformation() { return ParseSymbolInformation != null; }
 

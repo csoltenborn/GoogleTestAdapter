@@ -36,13 +36,17 @@ after_build:
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
 
     Copy-Item -Path $sourceFile -Destination $targetFile
+
+    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\Resources\ReleaseNotes\" + $version + ".md")).ToString()
+
+    $releaseNotes = [IO.File]::ReadAllLines($releaseNotesFile) -join '\n'
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
     $coveralls = (Resolve-Path "GoogleTestAdapter/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapter..VsPackage]*DialogPage -[GoogleTestAdapter.VsPackage]*TestExtensionOptionsPage -[GoogleTestAdapter.DiaResolver]*StubMemoryStream -[FluentAssertions*]*" -output:OpenCover_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapter..VsPackage]*DialogPage -[GoogleTestAdapter.VsPackage]*TestExtensionOptionsPage -[GoogleTestAdapter.DiaResolver]*StubMemoryStream -[FluentAssertions*]*" -output:OpenCover_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
@@ -73,9 +77,8 @@ deploy:
   provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
-  description: 'TODO provide release notes'
+  description: $(releaseNotes)
   draft: true
   prerelease: true
   on:
-    branch: master
-    appveyor_repo_tag: true
+    branch: #48_DisplayReleaseNotesAfterUpdate

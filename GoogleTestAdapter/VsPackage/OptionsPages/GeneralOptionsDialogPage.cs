@@ -125,6 +125,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool debugMode = Options.OptionDebugModeDefaultValue;
 
+        [Category(Options.CategoryMiscName)]
+        [DisplayName(Options.OptionShowReleaseNotes)]
+        [Description(Options.OptionShowReleaseNotesDescription)]
+        public bool ShowReleaseNotes
+        {
+            get { return showReleaseNotes; }
+            set { SetAndNotify(ref showReleaseNotes, value); }
+        }
+        private bool showReleaseNotes = Options.OptionShowReleaseNotesDefaultValue;
+
         #endregion
     }
 

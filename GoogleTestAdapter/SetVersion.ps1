@@ -13,6 +13,7 @@ $testadaptertests_assembly_info = "TestAdapter.Tests\Properties\AssemblyInfo.cs"
 
 $vsix_assembly_info = "VsPackage\Properties\AssemblyInfo.cs"
 $vsixtests_assembly_info = "VsPackage.Tests\Properties\AssemblyInfo.cs"
+$vsixunittests_assembly_info = "VsPackage.Tests.Unit\Properties\AssemblyInfo.cs"
 
 $vsix_manifest = "VsPackage\source.extension.vsixmanifest"
 
@@ -30,5 +31,6 @@ $vsix_manifest = "VsPackage\source.extension.vsixmanifest"
 
 (Get-Content $vsix_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsix_assembly_info
 (Get-Content $vsixtests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsixtests_assembly_info
+(Get-Content $vsixunittests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsixunittests_assembly_info
 
 (Get-Content $vsix_manifest) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsix_manifest
