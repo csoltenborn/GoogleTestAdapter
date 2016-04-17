@@ -81,4 +81,4 @@ deploy:
   draft: true
   prerelease: true
   on:
-    branch: \#48_DisplayReleaseNotesAfterUpdate
+    branch: '#48_DisplayReleaseNotesAfterUpdate'
