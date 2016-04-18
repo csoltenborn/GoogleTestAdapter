@@ -23,6 +23,14 @@ before_build:
     Start-Process -WorkingDirectory GoogleTestAdapter\TestAdapter.Tests -FilePath IgnoreTests.bat -ArgumentList TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
 
     nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
+
+    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\Resources\ReleaseNotes\" + $version + ".md")).ToString()
+
+    $releaseNotes = ([IO.File]::ReadAllLines($releaseNotesFile) -join '\n')
+
+    Write-Output("Release notes: " + $releaseNotes)
+
+    [IO.File]::WriteAllText("C:\\GTAReleaseNotes.txt", $releaseNotes)
 build:
   project: GoogleTestAdapter\GoogleTestAdapter.sln
   parallel: true
@@ -36,14 +44,6 @@ after_build:
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
 
     Copy-Item -Path $sourceFile -Destination $targetFile
-
-    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\Resources\ReleaseNotes\" + $version + ".md")).ToString()
-
-    $releaseNotes = ([IO.File]::ReadAllLines($releaseNotesFile) -join '\n')
-
-    Write-Output("Release notes: " + $releaseNotes)
-
-    [IO.File]::WriteAllText("C:\\TheReleaseNotes.txt", $releaseNotes)
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
@@ -73,15 +73,12 @@ test_script:
         exit $TestExitCode
     }
 before_deploy:
-- set /p RELEASE_NOTES=<"C:\\TheReleaseNotes.txt"
-- echo %RELEASE_NOTES%
+- set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
 - path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: GoogleTestAdapter
-- path: OpenCover_CoverageData.xml
-  name: OpenCover coverage data
-- path: TheReleaseNotes.txt
-  name: Release notes
+#- path: OpenCover_CoverageData.xml
+#  name: OpenCover coverage data
 deploy:
   provider: GitHub
   auth_token:
