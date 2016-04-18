@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using CommonMark;
 
@@ -15,24 +14,23 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         public ReleaseNotesCreator(Version oldVersion, Version newVersion)
         {
-            if (newVersion < oldVersion)
-                throw new ArgumentException($"{nameof(newVersion)} must be > {nameof(oldVersion)}");
-
-            OldVersion = Versions.LastOrDefault(v => v <= oldVersion) ?? Versions[0];
-            NewVersion = Versions.FirstOrDefault(v => v >= newVersion) ?? Versions.Last();
+            OldVersion = oldVersion;
+            NewVersion = newVersion;
         }
 
         private string CreateMarkdown()
         {
             if (OldVersion == NewVersion)
-                return null;
+                return "";
 
             string releaseNotes = CreateHeader();
-            for (int i = Versions.Length - 1; i > Array.IndexOf(Versions, OldVersion); i--)
+
+            int startIndex = Array.IndexOf(Versions, NewVersion);
+            int endIndex = OldVersion == null ? -1 : Array.IndexOf(Versions, OldVersion);
+            for (int i = startIndex; i > endIndex; i--)
             {
                 releaseNotes += CreateEntry(Versions[i]);
             }
-            releaseNotes += CreateFooter();
 
             return releaseNotes;
         }
@@ -48,13 +46,19 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private string CreateHeader()
         {
-            string header = "";
+            string fromVersion = OldVersion == null ? "" : $" from V{ToDisplayName(OldVersion)}";
 
+            string header = "";
             header += $"### Google Test Adapter: Release notes{Environment.NewLine}";
             header += Environment.NewLine;
-            header += $"Google Test Adapter has been updated from version {ToDisplayName(OldVersion)} to {ToDisplayName(NewVersion)}. " 
-                + "The changes to your formerly installed version are listed below. " 
-                + $"A [complete revision history](https://github.com/csoltenborn/GoogleTestAdapter/releases) is available at GitHub.{Environment.NewLine}";
+            header += "Google Test Adapter has been updated";
+            header += $"{fromVersion} to V{ToDisplayName(NewVersion)}. ";
+
+            if (OldVersion == null)
+                header += $"The complete version history is listed below. Future updates will only list changes to the formerly installed version.{Environment.NewLine}";
+            else
+                header += "The changes to your formerly installed version are listed below. "
+                    + $"A [complete revision history](https://github.com/csoltenborn/GoogleTestAdapter/releases) is available at GitHub.{Environment.NewLine}";
 
             return header;
         }
@@ -75,11 +79,6 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             entry += $"{releaseNoteEntry}{Environment.NewLine}";
 
             return entry;
-        }
-
-        private string CreateFooter()
-        {
-            return "";
         }
 
         private string ReadReleaseNotesFile(Version version)

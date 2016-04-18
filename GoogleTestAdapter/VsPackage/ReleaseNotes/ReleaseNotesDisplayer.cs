@@ -30,9 +30,9 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             Version lastVersion, currentVersion;
             UpdateLastVersion(out lastVersion, out currentVersion);
 
-            //lastVersion = new Version(0, 1, 0, 0);
-            //currentVersion = new Version(0, 6, 0, 0);
-            if (!ThePackage.ShowReleaseNotes || lastVersion >= currentVersion)
+            //lastVersion = null;
+            //currentVersion = new Version(0, 4, 0, 0);
+            if (!ThePackage.ShowReleaseNotes || (lastVersion != null && lastVersion >= currentVersion))
                 return;
 
             var creator = new ReleaseNotesCreator(lastVersion, currentVersion);
@@ -44,13 +44,18 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             var settingsManager = new ShellSettingsManager(ThePackage);
             var settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
-            currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-
-            string lastVersionString = settingsStore.GetString(CollectionName, VersionPropertyName, currentVersion.ToString());
-            lastVersion = Version.Parse(lastVersionString);
-
             if (!settingsStore.CollectionExists(CollectionName))
                 settingsStore.CreateCollection(CollectionName);
+
+            lastVersion = null;
+            if (settingsStore.PropertyExists(CollectionName, VersionPropertyName))
+            {
+                string lastVersionString = settingsStore.GetString(CollectionName, VersionPropertyName);
+                lastVersion = Version.Parse(lastVersionString);
+            }
+
+            currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            currentVersion = new Version(currentVersion.Major, currentVersion.Minor, 0, currentVersion.Revision);
 
             settingsStore.SetString(CollectionName, VersionPropertyName, currentVersion.ToString());
         }
