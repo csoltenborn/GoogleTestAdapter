@@ -43,9 +43,9 @@ after_build:
 
     Write-Output("Release notes: " + $releaseNotes)
 
-    [Environment]::SetEnvironmentVariable("ReleaseNotes", $releaseNotes, "User")
+    set release_description=$releaseNotes
 
-    Write-Output("Release notes env: " + $env:ReleaseNotes)
+    Write-Output("Release notes: " + $env:release_description)
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
@@ -83,7 +83,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
-  description: $(ReleaseNotes)
+  description: $(release_description)
   draft: true
   prerelease: true
   on:
