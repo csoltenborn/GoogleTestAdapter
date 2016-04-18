@@ -43,7 +43,7 @@ after_build:
 
     Write-Output("Release notes: " + $releaseNotes)
 
-    ([IO.File]::WriteAllText("TheReleaseNotes.txt", $releaseNotes)
+    [IO.File]::WriteAllText("TheReleaseNotes.txt", $releaseNotes)
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
