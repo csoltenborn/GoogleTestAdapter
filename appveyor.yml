@@ -43,9 +43,7 @@ after_build:
 
     Write-Output("Release notes: " + $releaseNotes)
 
-    set release_description=$releaseNotes
-
-    Write-Output("Release notes: " + $env:release_description)
+    ([IO.File]::WriteAllText("TheReleaseNotes.txt", $releaseNotes)
 test_script:
 - ps: >-
     $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
@@ -74,16 +72,21 @@ test_script:
     if ($TestExitCode -ne 0) {
         exit $TestExitCode
     }
+before_deploy:
+- set /p RELEASE_NOTES=<TheReleaseNotes.txt
+- echo %RELEASE_NOTES%
 artifacts:
 - path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: GoogleTestAdapter
 - path: OpenCover_CoverageData.xml
   name: OpenCover coverage data
+- path: TheReleaseNotes.txt
+  name: Release notes
 deploy:
   provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
-  description: $(release_description)
+  description: $(RELEASE_NOTES)
   draft: true
   prerelease: true
   on:
