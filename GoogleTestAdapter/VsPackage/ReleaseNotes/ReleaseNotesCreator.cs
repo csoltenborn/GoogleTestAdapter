@@ -37,6 +37,10 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         public string CreateHtml()
         {
+            string markDown = CreateMarkdown();
+            if (string.IsNullOrEmpty(markDown))
+                return "";
+
             string html = "<!DOCTYPE html><html><body>";
             html += CommonMarkConverter.Convert(CreateMarkdown());
             html += "</body></html>";
