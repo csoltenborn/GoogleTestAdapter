@@ -50,7 +50,7 @@ test_script:
 
     $coveralls = (Resolve-Path "GoogleTestAdapter/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[GoogleTestAdapter..VsPackage]*DialogPage -[GoogleTestAdapter.VsPackage]*TestExtensionOptionsPage -[GoogleTestAdapter.DiaResolver]*StubMemoryStream -[FluentAssertions*]* -[CommonMark*]*" -output:OpenCover_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*]*.Designer.cs -[GoogleTestAdapter.VsPackage]*DialogPage -[GoogleTestAdapter.VsPackage]*TestExtensionOptionsPage -[GoogleTestAdapter.VsPackage]*Switch*OptionCommand -[GoogleTestAdapter.DiaResolver]*StubMemoryStream -[FluentAssertions*]* -[CommonMark*]*" -output:OpenCover_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
