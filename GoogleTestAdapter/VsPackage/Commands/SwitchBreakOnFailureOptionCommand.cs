@@ -4,14 +4,14 @@
     internal sealed class SwitchBreakOnFailureOptionCommand : AbstractSwitchBooleanOptionCommand
     {
 
-        private SwitchBreakOnFailureOptionCommand(GoogleTestExtensionOptionsPage package) : base(package, 0x0101) {}
+        private SwitchBreakOnFailureOptionCommand(IGoogleTestExtensionOptionsPage package) : base(package, 0x0101) {}
 
         private static SwitchBreakOnFailureOptionCommand Instance
         {
             get; set;
         }
 
-        internal static void Initialize(GoogleTestExtensionOptionsPage package)
+        internal static void Initialize(IGoogleTestExtensionOptionsPage package)
         {
             Instance = new SwitchBreakOnFailureOptionCommand(package);
         }

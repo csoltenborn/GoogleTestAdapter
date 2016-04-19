@@ -4,14 +4,14 @@
     internal sealed class SwitchParallelExecutionOptionCommand : AbstractSwitchBooleanOptionCommand
     {
 
-        private SwitchParallelExecutionOptionCommand(GoogleTestExtensionOptionsPage package) : base(package, 0x0102) {}
+        private SwitchParallelExecutionOptionCommand(IGoogleTestExtensionOptionsPage package) : base(package, 0x0102) {}
 
         private static SwitchParallelExecutionOptionCommand Instance
         {
             get; set;
         }
 
-        internal static void Initialize(GoogleTestExtensionOptionsPage package)
+        internal static void Initialize(IGoogleTestExtensionOptionsPage package)
         {
             Instance = new SwitchParallelExecutionOptionCommand(package);
         }

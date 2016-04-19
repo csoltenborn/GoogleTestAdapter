@@ -4,14 +4,14 @@
     internal sealed class SwitchPrintTestOutputOptionCommand : AbstractSwitchBooleanOptionCommand
     {
 
-        private SwitchPrintTestOutputOptionCommand(GoogleTestExtensionOptionsPage package) : base(package, 0x0103) {}
+        private SwitchPrintTestOutputOptionCommand(IGoogleTestExtensionOptionsPage package) : base(package, 0x0103) {}
 
         private static SwitchPrintTestOutputOptionCommand Instance
         {
             get; set;
         }
 
-        internal static void Initialize(GoogleTestExtensionOptionsPage package)
+        internal static void Initialize(IGoogleTestExtensionOptionsPage package)
         {
             Instance = new SwitchPrintTestOutputOptionCommand(package);
         }
