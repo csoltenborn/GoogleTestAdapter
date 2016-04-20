@@ -9,24 +9,24 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
     {
         private static Version[] Versions => History.Versions;
 
-        private Version OldVersion { get; }
-        private Version NewVersion { get; }
+        private Version FormerlyInstalledVersion { get; }
+        private Version CurrentVersion { get; }
 
-        public ReleaseNotesCreator(Version oldVersion, Version newVersion)
+        public ReleaseNotesCreator(Version formerlyInstalledVersion, Version currentVersion)
         {
-            OldVersion = oldVersion;
-            NewVersion = newVersion;
+            FormerlyInstalledVersion = formerlyInstalledVersion;
+            CurrentVersion = currentVersion;
         }
 
         private string CreateMarkdown()
         {
-            if (OldVersion == NewVersion)
+            if (FormerlyInstalledVersion == CurrentVersion)
                 return "";
 
             string releaseNotes = CreateHeader();
 
-            int startIndex = Array.IndexOf(Versions, NewVersion);
-            int endIndex = OldVersion == null ? -1 : Array.IndexOf(Versions, OldVersion);
+            int startIndex = Array.IndexOf(Versions, CurrentVersion);
+            int endIndex = FormerlyInstalledVersion == null ? -1 : Array.IndexOf(Versions, FormerlyInstalledVersion);
             for (int i = startIndex; i > endIndex; i--)
             {
                 releaseNotes += CreateEntry(Versions[i]);
@@ -50,15 +50,15 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private string CreateHeader()
         {
-            string fromVersion = OldVersion == null ? "" : $" from V{ToDisplayName(OldVersion)}";
+            string fromVersion = FormerlyInstalledVersion == null ? "" : $" from V{ToDisplayName(FormerlyInstalledVersion)}";
 
             string header = "";
             header += $"### Google Test Adapter: Release notes{Environment.NewLine}";
             header += Environment.NewLine;
             header += "Google Test Adapter has been updated";
-            header += $"{fromVersion} to V{ToDisplayName(NewVersion)}. ";
+            header += $"{fromVersion} to V{ToDisplayName(CurrentVersion)}. ";
 
-            if (OldVersion == null)
+            if (FormerlyInstalledVersion == null)
                 header += $"The complete version history is listed below. Future updates will only list changes to the formerly installed version.{Environment.NewLine}";
             else
                 header += "The changes to your formerly installed version are listed below. "
@@ -87,18 +87,24 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private string ReadReleaseNotesFile(Version version)
         {
+            Stream stream = null;
             try
             {
-                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ToResourceName(version)))
+                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ToResourceName(version));
                 // ReSharper disable once AssignNullToNotNullAttribute
                 using (var reader = new StreamReader(stream))
                 {
+                    stream = null;
                     return reader.ReadToEnd().Trim();
                 }
             }
             catch (Exception)
             {
                 return "";
+            }
+            finally
+            {
+                stream?.Dispose();
             }
         }
 

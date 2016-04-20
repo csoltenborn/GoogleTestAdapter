@@ -27,19 +27,19 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private void DoDisplayReleaseNotesIfNecessary()
         {
-            Version lastVersion, currentVersion;
-            UpdateLastVersion(out lastVersion, out currentVersion);
+            Version formerlyInstalledVErsion, currentVersion;
+            UpdateLastVersion(out formerlyInstalledVErsion, out currentVersion);
 
-            //lastVersion = null;
+            //formerlyInstalledVersion = null;
             //currentVersion = new Version(0, 4, 0, 0);
-            if (!ThePackage.ShowReleaseNotes || (lastVersion != null && lastVersion >= currentVersion))
+            if (!ThePackage.ShowReleaseNotes || (formerlyInstalledVErsion != null && formerlyInstalledVErsion >= currentVersion))
                 return;
 
-            var creator = new ReleaseNotesCreator(lastVersion, currentVersion);
+            var creator = new ReleaseNotesCreator(formerlyInstalledVErsion, currentVersion);
             DisplayReleaseNotes(creator.CreateHtml());
         }
 
-        private void UpdateLastVersion(out Version lastVersion, out Version currentVersion)
+        private void UpdateLastVersion(out Version formerlyInstalledVersion, out Version currentVersion)
         {
             var settingsManager = new ShellSettingsManager(ThePackage);
             var settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
@@ -47,11 +47,11 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             if (!settingsStore.CollectionExists(CollectionName))
                 settingsStore.CreateCollection(CollectionName);
 
-            lastVersion = null;
+            formerlyInstalledVersion = null;
             if (settingsStore.PropertyExists(CollectionName, VersionPropertyName))
             {
                 string lastVersionString = settingsStore.GetString(CollectionName, VersionPropertyName);
-                lastVersion = Version.Parse(lastVersionString);
+                formerlyInstalledVersion = Version.Parse(lastVersionString);
             }
 
             currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
