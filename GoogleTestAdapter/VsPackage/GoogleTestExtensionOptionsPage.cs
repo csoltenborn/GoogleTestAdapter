@@ -1,7 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -9,7 +12,6 @@ using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
-using Microsoft.VisualStudio;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -25,87 +27,108 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage
     {
-        public const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
+        private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
 
-        private IGlobalRunSettingsInternal globalRunSettings;
-        private GeneralOptionsDialogPage generalOptions;
-        private ParallelizationOptionsDialogPage parallelizationOptions;
-        private GoogleTestOptionsDialogPage googleTestOptions;
+        private IGlobalRunSettingsInternal _globalRunSettings;
 
+        private GeneralOptionsDialogPage _generalOptions;
+        private ParallelizationOptionsDialogPage _parallelizationOptions;
+        private GoogleTestOptionsDialogPage _googleTestOptions;
 
         protected override void Initialize()
         {
             base.Initialize();
 
             var componentModel = (IComponentModel)GetGlobalService(typeof(SComponentModel));
-            globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
 
-            generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
-            parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
-            googleTestOptions = (GoogleTestOptionsDialogPage)GetDialogPage(typeof(GoogleTestOptionsDialogPage));
+            _generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
+            _parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            _googleTestOptions = (GoogleTestOptionsDialogPage)GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
-            globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
+            _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
-            generalOptions.PropertyChanged += OptionsChanged;
-            parallelizationOptions.PropertyChanged += OptionsChanged;
-            googleTestOptions.PropertyChanged += OptionsChanged;
+            _generalOptions.PropertyChanged += OptionsChanged;
+            _parallelizationOptions.PropertyChanged += OptionsChanged;
+            _googleTestOptions.PropertyChanged += OptionsChanged;
 
             SwitchCatchExceptionsOptionCommand.Initialize(this);
             SwitchBreakOnFailureOptionCommand.Initialize(this);
             SwitchParallelExecutionOptionCommand.Initialize(this);
             SwitchPrintTestOutputOptionCommand.Initialize(this);
 
-            ReleaseNotesDisplayer displayer = new ReleaseNotesDisplayer(this);
-            displayer.DisplayReleaseNotesIfNecessary();
-        }
-
-        public bool ShowReleaseNotes
-        {
-            get { return generalOptions.ShowReleaseNotes; }
-            set
-            {
-                generalOptions.ShowReleaseNotes = value;
-            }
+            var thread = new Thread(DisplayReleaseNotesIfNecessary);
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
         }
 
         public bool CatchExtensions
         {
-            get { return googleTestOptions.CatchExceptions; }
+            get { return _googleTestOptions.CatchExceptions; }
             set
             {
-                googleTestOptions.CatchExceptions = value;
+                _googleTestOptions.CatchExceptions = value;
                 RefreshVsUi();
             }
         }
 
         public bool BreakOnFailure
         {
-            get { return googleTestOptions.BreakOnFailure; }
+            get { return _googleTestOptions.BreakOnFailure; }
             set
             {
-                googleTestOptions.BreakOnFailure = value;
-                RefreshVsUi();
-            }
-        }
-
-        public bool ParallelTestExecution
-        {
-            get { return parallelizationOptions.EnableParallelTestExecution; }
-            set
-            {
-                parallelizationOptions.EnableParallelTestExecution = value;
+                _googleTestOptions.BreakOnFailure = value;
                 RefreshVsUi();
             }
         }
 
         public bool PrintTestOutput
         {
-            get { return generalOptions.PrintTestOutput; }
+            get { return _generalOptions.PrintTestOutput; }
             set
             {
-                generalOptions.PrintTestOutput = value;
+                _generalOptions.PrintTestOutput = value;
                 RefreshVsUi();
             }
+        }
+
+        public bool ParallelTestExecution
+        {
+            get { return _parallelizationOptions.EnableParallelTestExecution; }
+            set
+            {
+                _parallelizationOptions.EnableParallelTestExecution = value;
+                RefreshVsUi();
+            }
+        }
+
+        private void DisplayReleaseNotesIfNecessary()
+        {
+            var versionProvider = new VersionProvider(this);
+
+            Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
+            Version currentVersion = versionProvider.CurrentVersion;
+
+            versionProvider.UpdateLastVersion();
+
+            if (!_generalOptions.ShowReleaseNotes
+                || (formerlyInstalledVersion != null && formerlyInstalledVersion >= currentVersion))
+                return;
+
+            var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion);
+            DisplayReleaseNotes(creator.CreateHtml());
+        }
+
+        private void DisplayReleaseNotes(string html)
+        {
+            string htmlFile = Path.GetTempFileName();
+            File.WriteAllText(htmlFile, html);
+
+            var dialog = new ReleaseNotesDialog { HtmlFile = new Uri($"file://{htmlFile}") };
+            dialog.ShowReleaseNotesChanged +=
+                (sender, args) => _generalOptions.ShowReleaseNotes = dialog.ShowReleaseNotes;
+            dialog.Closed += (sender, args) => File.Delete(htmlFile);
+            dialog.ShowDialog();
         }
 
         private void RefreshVsUi()
@@ -120,35 +143,35 @@ namespace GoogleTestAdapter.VsPackage
 
         private void OptionsChanged(object sender, PropertyChangedEventArgs e)
         {
-            globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
+            _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
         }
 
         private RunSettings GetRunSettingsFromOptionPages()
         {
             return new RunSettings
             {
-                PrintTestOutput = generalOptions.PrintTestOutput,
-                TestDiscoveryRegex = generalOptions.TestDiscoveryRegex,
-                PathExtension = generalOptions.PathExtension,
-                TraitsRegexesBefore = generalOptions.TraitsRegexesBefore,
-                TraitsRegexesAfter = generalOptions.TraitsRegexesAfter,
-                TestNameSeparator = generalOptions.TestNameSeparator,
-                ParseSymbolInformation = generalOptions.ParseSymbolInformation,
-                DebugMode = generalOptions.DebugMode,
-                ShowReleaseNotes = generalOptions.ShowReleaseNotes,
-                AdditionalTestExecutionParam = generalOptions.AdditionalTestExecutionParams,
-                BatchForTestSetup = generalOptions.BatchForTestSetup,
-                BatchForTestTeardown = generalOptions.BatchForTestTeardown,
+                PrintTestOutput = _generalOptions.PrintTestOutput,
+                TestDiscoveryRegex = _generalOptions.TestDiscoveryRegex,
+                PathExtension = _generalOptions.PathExtension,
+                TraitsRegexesBefore = _generalOptions.TraitsRegexesBefore,
+                TraitsRegexesAfter = _generalOptions.TraitsRegexesAfter,
+                TestNameSeparator = _generalOptions.TestNameSeparator,
+                ParseSymbolInformation = _generalOptions.ParseSymbolInformation,
+                DebugMode = _generalOptions.DebugMode,
+                ShowReleaseNotes = _generalOptions.ShowReleaseNotes,
+                AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
+                BatchForTestSetup = _generalOptions.BatchForTestSetup,
+                BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
 
-                CatchExceptions = googleTestOptions.CatchExceptions,
-                BreakOnFailure = googleTestOptions.BreakOnFailure,
-                RunDisabledTests = googleTestOptions.RunDisabledTests,
-                NrOfTestRepetitions = googleTestOptions.NrOfTestRepetitions,
-                ShuffleTests = googleTestOptions.ShuffleTests,
-                ShuffleTestsSeed = googleTestOptions.ShuffleTestsSeed,
+                CatchExceptions = _googleTestOptions.CatchExceptions,
+                BreakOnFailure = _googleTestOptions.BreakOnFailure,
+                RunDisabledTests = _googleTestOptions.RunDisabledTests,
+                NrOfTestRepetitions = _googleTestOptions.NrOfTestRepetitions,
+                ShuffleTests = _googleTestOptions.ShuffleTests,
+                ShuffleTestsSeed = _googleTestOptions.ShuffleTestsSeed,
 
-                ParallelTestExecution = parallelizationOptions.EnableParallelTestExecution,
-                MaxNrOfThreads = parallelizationOptions.MaxNrOfThreads
+                ParallelTestExecution = _parallelizationOptions.EnableParallelTestExecution,
+                MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads
             };
         }
 

@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReleaseNotesDialog));
             this.RootPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.WebBrowser = new System.Windows.Forms.WebBrowser();
-            this.ShowReleaseNotesCheckBox = new System.Windows.Forms.CheckBox();
-            this.OkButton = new System.Windows.Forms.Button();
             this.NavigationPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.BackButton = new System.Windows.Forms.Button();
             this.ForwardButton = new System.Windows.Forms.Button();
+            this.WebBrowser = new System.Windows.Forms.WebBrowser();
             this.OkButtonPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.ShowReleaseNotesCheckBox = new System.Windows.Forms.CheckBox();
+            this.OkButton = new System.Windows.Forms.Button();
             this.RootPanel.SuspendLayout();
             this.NavigationPanel.SuspendLayout();
             this.OkButtonPanel.SuspendLayout();
@@ -61,41 +61,6 @@
             this.RootPanel.Size = new System.Drawing.Size(784, 561);
             this.RootPanel.TabIndex = 0;
             // 
-            // WebBrowser
-            // 
-            this.WebBrowser.AllowWebBrowserDrop = false;
-            this.RootPanel.SetColumnSpan(this.WebBrowser, 2);
-            this.WebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WebBrowser.IsWebBrowserContextMenuEnabled = false;
-            this.WebBrowser.Location = new System.Drawing.Point(3, 38);
-            this.WebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.WebBrowser.Name = "WebBrowser";
-            this.WebBrowser.ScriptErrorsSuppressed = true;
-            this.WebBrowser.Size = new System.Drawing.Size(778, 485);
-            this.WebBrowser.TabIndex = 0;
-            this.WebBrowser.WebBrowserShortcutsEnabled = false;
-            // 
-            // ShowReleaseNotesCheckBox
-            // 
-            this.ShowReleaseNotesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.ShowReleaseNotesCheckBox.AutoSize = true;
-            this.ShowReleaseNotesCheckBox.Location = new System.Drawing.Point(3, 6);
-            this.ShowReleaseNotesCheckBox.Name = "ShowReleaseNotesCheckBox";
-            this.ShowReleaseNotesCheckBox.Size = new System.Drawing.Size(179, 17);
-            this.ShowReleaseNotesCheckBox.TabIndex = 1;
-            this.ShowReleaseNotesCheckBox.Text = "Show release notes after update";
-            this.ShowReleaseNotesCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // OkButton
-            // 
-            this.OkButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.OkButton.Location = new System.Drawing.Point(351, 3);
-            this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 23);
-            this.OkButton.TabIndex = 2;
-            this.OkButton.Text = "OK";
-            this.OkButton.UseVisualStyleBackColor = true;
-            // 
             // NavigationPanel
             // 
             this.NavigationPanel.AutoSize = true;
@@ -110,6 +75,7 @@
             // 
             // BackButton
             // 
+            this.BackButton.AccessibleName = "Go back";
             this.BackButton.Enabled = false;
             this.BackButton.Location = new System.Drawing.Point(3, 3);
             this.BackButton.Name = "BackButton";
@@ -120,6 +86,7 @@
             // 
             // ForwardButton
             // 
+            this.ForwardButton.AccessibleName = "Go forward";
             this.ForwardButton.Enabled = false;
             this.ForwardButton.Location = new System.Drawing.Point(32, 3);
             this.ForwardButton.Name = "ForwardButton";
@@ -127,6 +94,21 @@
             this.ForwardButton.TabIndex = 1;
             this.ForwardButton.Text = ">";
             this.ForwardButton.UseVisualStyleBackColor = true;
+            // 
+            // WebBrowser
+            // 
+            this.WebBrowser.AccessibleName = "Browser";
+            this.WebBrowser.AllowWebBrowserDrop = false;
+            this.RootPanel.SetColumnSpan(this.WebBrowser, 2);
+            this.WebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WebBrowser.IsWebBrowserContextMenuEnabled = false;
+            this.WebBrowser.Location = new System.Drawing.Point(3, 38);
+            this.WebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.WebBrowser.Name = "WebBrowser";
+            this.WebBrowser.ScriptErrorsSuppressed = true;
+            this.WebBrowser.Size = new System.Drawing.Size(778, 485);
+            this.WebBrowser.TabIndex = 0;
+            this.WebBrowser.WebBrowserShortcutsEnabled = false;
             // 
             // OkButtonPanel
             // 
@@ -146,10 +128,37 @@
             this.OkButtonPanel.Size = new System.Drawing.Size(778, 29);
             this.OkButtonPanel.TabIndex = 4;
             // 
+            // ShowReleaseNotesCheckBox
+            // 
+            this.ShowReleaseNotesCheckBox.AccessibleName = "Show release notes after extension has been updated";
+            this.ShowReleaseNotesCheckBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.ShowReleaseNotesCheckBox.AutoSize = true;
+            this.ShowReleaseNotesCheckBox.Location = new System.Drawing.Point(3, 6);
+            this.ShowReleaseNotesCheckBox.Name = "ShowReleaseNotesCheckBox";
+            this.ShowReleaseNotesCheckBox.Size = new System.Drawing.Size(179, 17);
+            this.ShowReleaseNotesCheckBox.TabIndex = 1;
+            this.ShowReleaseNotesCheckBox.Text = "Show release notes after update";
+            this.ShowReleaseNotesCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // OkButton
+            // 
+            this.OkButton.AccessibleName = "Close release notes dialog";
+            this.OkButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.OkButton.Location = new System.Drawing.Point(351, 3);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(75, 23);
+            this.OkButton.TabIndex = 2;
+            this.OkButton.Text = "OK";
+            this.OkButton.UseVisualStyleBackColor = true;
+            // 
             // ReleaseNotesDialog
             // 
+            this.AcceptButton = this.OkButton;
+            this.AccessibleName = "Release notes of Google Test Adapter";
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.OkButton;
+            this.CausesValidation = false;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.RootPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

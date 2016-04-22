@@ -7,7 +7,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
     {
         internal event EventHandler ShowReleaseNotesChanged;
 
-        public ReleaseNotesDialog(bool showReleaseNotes = true)
+        public ReleaseNotesDialog()
         {
             InitializeComponent();
 
@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             WebBrowser.CanGoForwardChanged += (sender, args) => ForwardButton.Enabled = WebBrowser.CanGoForward;
             ForwardButton.Click += (sender, args) => WebBrowser.GoForward();
 
-            ShowReleaseNotesCheckBox.Checked = showReleaseNotes;
+            ShowReleaseNotesCheckBox.Checked = true;
             ShowReleaseNotesCheckBox.CheckedChanged += (sender, args) => ShowReleaseNotesChanged?.Invoke(this, args);
 
             OkButton.Click += (sender, args) => Close();
