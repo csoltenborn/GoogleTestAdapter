@@ -1,18 +1,18 @@
-﻿namespace GoogleTestAdapter.Helpers
+﻿namespace GoogleTestAdapter.Settings
 {
 
     /*
     To add a new option, make the following changes:
-    - add (nullable!) property to GoogleTestAdapter.Helpers.IXMLOptions
-    - handle property in method GoogleTestAdapter.Helpers.XmlOptionsExtension.GetUnsetValuesFrom()
-    - add property and according constants to class GoogleTestAdapter.Options
+    - add (nullable!) property to GoogleTestAdapter.Settings.IGoogleTestAdapterSettings
+    - handle property in method GoogleTestAdapter.Settings.GoogleTestAdapterSettingsExtensions.GetUnsetValuesFrom()
+    - add property and according constants to class GoogleTestAdapter.Settings.SettingsWrapper
     - handle property serialization in class GoogleTestAdapter.TestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
     - add new option to Resources/AllTestSettings.gta.runsettings
     - add default mock configuration in method AbstractGoogleTestExtensionTests.SetUp()
     */
-    public interface IXmlOptions
+    public interface IGoogleTestAdapterSettings
     {
         string AdditionalTestExecutionParam { get; set; }
         bool? CatchExceptions { get; set; }
@@ -36,9 +36,9 @@
         bool? ShowReleaseNotes { get; set; }
     }
 
-    public static class XmlOptionsExtension
+    public static class GoogleTestAdapterSettingsExtensions
     {
-        public static void GetUnsetValuesFrom(this IXmlOptions self, IXmlOptions other)
+        public static void GetUnsetValuesFrom(this IGoogleTestAdapterSettings self, IGoogleTestAdapterSettings other)
         {
             self.AdditionalTestExecutionParam = self.AdditionalTestExecutionParam ?? other.AdditionalTestExecutionParam;
             self.CatchExceptions = self.CatchExceptions ?? other.CatchExceptions;

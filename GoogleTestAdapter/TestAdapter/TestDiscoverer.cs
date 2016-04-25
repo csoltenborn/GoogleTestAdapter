@@ -31,12 +31,12 @@ namespace GoogleTestAdapter.TestAdapter
         {
             ILogger loggerAdapter = new VsTestFrameworkLogger(logger);
 
-            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options)) // check whether we have a mock
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(GoogleTestAdapter.Settings.SettingsWrapper)) // check whether we have a mock
             {
                 var settingsProvider = discoveryContext.RunSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
 
-                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
+                TestEnvironment = new TestEnvironment(new GoogleTestAdapter.Settings.SettingsWrapper(ourRunSettings, loggerAdapter), loggerAdapter);
                 Discoverer = new GoogleTestDiscoverer(TestEnvironment);
             }
 

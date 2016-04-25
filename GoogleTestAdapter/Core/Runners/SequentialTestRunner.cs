@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Runners
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
-                string finalParameters = userParameters.Replace(Options.ExecutablePlaceholder, executable);
+                string finalParameters = userParameters.Replace(Settings.SettingsWrapper.ExecutablePlaceholder, executable);
                 if (Canceled)
                 {
                     break;

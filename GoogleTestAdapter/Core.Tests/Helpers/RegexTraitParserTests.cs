@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter.Helpers
@@ -74,13 +75,13 @@ namespace GoogleTestAdapter.Helpers
         private string CreateTraitsRegex(string regex, string name, string value)
         {
             return regex +
-                Options.TraitsRegexesRegexSeparator + name +
-                Options.TraitsRegexesTraitSeparator + value;
+                SettingsWrapper.TraitsRegexesRegexSeparator + name +
+                SettingsWrapper.TraitsRegexesTraitSeparator + value;
         }
 
         private string ConcatTraitsRegexes(params string[] regexes)
         {
-            return string.Join(Options.TraitsRegexesPairSeparator, regexes);
+            return string.Join(SettingsWrapper.TraitsRegexesPairSeparator, regexes);
         }
 
     }

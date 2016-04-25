@@ -12,8 +12,8 @@ namespace GoogleTestAdapter.Runners
     {
 
         private static readonly string DefaultArgs =
-            GoogleTestConstants.GetCatchExceptionsOption(Options.OptionCatchExceptionsDefaultValue) +
-            GoogleTestConstants.GetBreakOnFailureOption(Options.OptionBreakOnFailureDefaultValue);
+            GoogleTestConstants.GetCatchExceptionsOption(Settings.SettingsWrapper.OptionCatchExceptionsDefaultValue) +
+            GoogleTestConstants.GetBreakOnFailureOption(Settings.SettingsWrapper.OptionBreakOnFailureDefaultValue);
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

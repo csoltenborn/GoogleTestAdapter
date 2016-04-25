@@ -92,13 +92,13 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
-            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(Options))
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(GoogleTestAdapter.Settings.SettingsWrapper))
             {
                 var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
 
                 ILogger loggerAdapter = new VsTestFrameworkLogger(messageLogger);
-                TestEnvironment = new TestEnvironment(new Options(ourRunSettings, loggerAdapter), loggerAdapter);
+                TestEnvironment = new TestEnvironment(new GoogleTestAdapter.Settings.SettingsWrapper(ourRunSettings, loggerAdapter), loggerAdapter);
             }
         }
 

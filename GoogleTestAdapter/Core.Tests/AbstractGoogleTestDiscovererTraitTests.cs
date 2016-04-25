@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter

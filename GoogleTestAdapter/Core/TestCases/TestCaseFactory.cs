@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestCases
 {

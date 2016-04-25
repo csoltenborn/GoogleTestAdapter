@@ -121,6 +121,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GenerateCSV.bat" />
     <None Include="GTA_Console.csv" />
     <None Include="GTA_Console.pictmodel" />
     <None Include="packages.config" />

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -7,133 +8,133 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
     {
         #region Test execution
 
-        [Category(Options.CategoryTestExecutionName)]
-        [DisplayName(Options.OptionTestDiscoveryRegex)]
-        [Description(Options.OptionTestDiscoveryRegexDescription)]
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionTestDiscoveryRegex)]
+        [Description(SettingsWrapper.OptionTestDiscoveryRegexDescription)]
         public string TestDiscoveryRegex
         {
             get { return testDiscoveryRegex; }
             set { SetAndNotify(ref testDiscoveryRegex, value); }
         }
-        private string testDiscoveryRegex = Options.OptionTestDiscoveryRegexDefaultValue;
+        private string testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
-        [Category(Options.CategoryTestExecutionName)]
-        [DisplayName(Options.OptionPathExtension)]
-        [Description(Options.OptionPathExtensionDescription)]
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionPathExtension)]
+        [Description(SettingsWrapper.OptionPathExtensionDescription)]
         public string PathExtension
         {
             get { return pathExtension; }
             set { SetAndNotify(ref pathExtension, value); }
         }
-        private string pathExtension = Options.OptionPathExtensionDefaultValue;
+        private string pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
-        [Category(Options.CategoryTestExecutionName)]
-        [DisplayName(Options.OptionAdditionalTestExecutionParams)]
-        [Description(Options.OptionAdditionalTestExecutionParamsDescription)]
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]
+        [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams
         {
             get { return additionalTestExecutionParams; }
             set { SetAndNotify(ref additionalTestExecutionParams, value); }
         }
-        private string additionalTestExecutionParams = Options.OptionAdditionalTestExecutionParamsDefaultValue;
+        private string additionalTestExecutionParams = SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue;
 
-        [Category(Options.CategoryTestExecutionName)]
-        [DisplayName(Options.OptionBatchForTestSetup)]
-        [Description(Options.OptionBatchForTestSetupDescription)]
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionBatchForTestSetup)]
+        [Description(SettingsWrapper.OptionBatchForTestSetupDescription)]
         public string BatchForTestSetup
         {
             get { return batchForTestSetup; }
             set { SetAndNotify(ref batchForTestSetup, value); }
         }
-        private string batchForTestSetup = Options.OptionBatchForTestSetupDefaultValue;
+        private string batchForTestSetup = SettingsWrapper.OptionBatchForTestSetupDefaultValue;
 
-        [Category(Options.CategoryTestExecutionName)]
-        [DisplayName(Options.OptionBatchForTestTeardown)]
-        [Description(Options.OptionBatchForTestTeardownDescription)]
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionBatchForTestTeardown)]
+        [Description(SettingsWrapper.OptionBatchForTestTeardownDescription)]
         public string BatchForTestTeardown
         {
             get { return batchForTestTeardown; }
             set { SetAndNotify(ref batchForTestTeardown, value); }
         }
-        private string batchForTestTeardown = Options.OptionBatchForTestTeardownDefaultValue;
+        private string batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
 
         #endregion
 
         #region Traits
 
-        [Category(Options.CategoryTraitsName)]
-        [DisplayName(Options.OptionTraitsRegexesBefore)]
-        [Description(Options.OptionTraitsDescription)]
+        [Category(SettingsWrapper.CategoryTraitsName)]
+        [DisplayName(SettingsWrapper.OptionTraitsRegexesBefore)]
+        [Description(SettingsWrapper.OptionTraitsDescription)]
         public string TraitsRegexesBefore
         {
             get { return traitsRegexesBefore; }
             set { SetAndNotify(ref traitsRegexesBefore, value); }
         }
-        private string traitsRegexesBefore = Options.OptionTraitsRegexesDefaultValue;
+        private string traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
-        [Category(Options.CategoryTraitsName)]
-        [DisplayName(Options.OptionTraitsRegexesAfter)]
-        [Description(Options.OptionTraitsDescription)]
+        [Category(SettingsWrapper.CategoryTraitsName)]
+        [DisplayName(SettingsWrapper.OptionTraitsRegexesAfter)]
+        [Description(SettingsWrapper.OptionTraitsDescription)]
         public string TraitsRegexesAfter
         {
             get { return traitsRegexesAfter; }
             set { SetAndNotify(ref traitsRegexesAfter, value); }
         }
-        private string traitsRegexesAfter = Options.OptionTraitsRegexesDefaultValue;
+        private string traitsRegexesAfter = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
         #endregion
 
         #region Misc
 
-        [Category(Options.CategoryMiscName)]
-        [DisplayName(Options.OptionPrintTestOutput)]
-        [Description(Options.OptionPrintTestOutputDescription)]
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionPrintTestOutput)]
+        [Description(SettingsWrapper.OptionPrintTestOutputDescription)]
         public bool PrintTestOutput
         {
             get { return printTestOutput; }
             set { SetAndNotify(ref printTestOutput, value); }
         }
-        private bool printTestOutput = Options.OptionPrintTestOutputDefaultValue;
+        private bool printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
 
-        [Category(Options.CategoryMiscName)]
-        [DisplayName(Options.OptionTestNameSeparator)]
-        [Description(Options.OptionTestNameSeparatorDescription)]
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionTestNameSeparator)]
+        [Description(SettingsWrapper.OptionTestNameSeparatorDescription)]
         public string TestNameSeparator
         {
             get { return testNameSeparator; }
             set { SetAndNotify(ref testNameSeparator, value); }
         }
-        private string testNameSeparator = Options.OptionTestNameSeparatorDefaultValue;
+        private string testNameSeparator = SettingsWrapper.OptionTestNameSeparatorDefaultValue;
 
-        [Category(Options.CategoryMiscName)]
-        [DisplayName(Options.OptionParseSymbolInformation)]
-        [Description(Options.OptionParseSymbolInformationDescription)]
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionParseSymbolInformation)]
+        [Description(SettingsWrapper.OptionParseSymbolInformationDescription)]
         public bool ParseSymbolInformation
         {
             get { return parseSymbolInformation; }
             set { SetAndNotify(ref parseSymbolInformation, value); }
         }
-        private bool parseSymbolInformation = Options.OptionParseSymbolInformationDefaultValue;
+        private bool parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
 
-        [Category(Options.CategoryMiscName)]
-        [DisplayName(Options.OptionDebugMode)]
-        [Description(Options.OptionDebugModeDescription)]
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionDebugMode)]
+        [Description(SettingsWrapper.OptionDebugModeDescription)]
         public bool DebugMode
         {
             get { return debugMode; }
             set { SetAndNotify(ref debugMode, value); }
         }
-        private bool debugMode = Options.OptionDebugModeDefaultValue;
+        private bool debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
 
-        [Category(Options.CategoryMiscName)]
-        [DisplayName(Options.OptionShowReleaseNotes)]
-        [Description(Options.OptionShowReleaseNotesDescription)]
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionShowReleaseNotes)]
+        [Description(SettingsWrapper.OptionShowReleaseNotesDescription)]
         public bool ShowReleaseNotes
         {
             get { return showReleaseNotes; }
             set { SetAndNotify(ref showReleaseNotes, value); }
         }
-        private bool showReleaseNotes = Options.OptionShowReleaseNotesDefaultValue;
+        private bool showReleaseNotes = SettingsWrapper.OptionShowReleaseNotesDefaultValue;
 
         #endregion
     }

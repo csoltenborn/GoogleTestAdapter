@@ -8,6 +8,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
@@ -20,9 +21,9 @@ namespace GoogleTestAdapter.VsPackage
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), Options.OptionsCategoryName, Options.PageGeneralName, 0, 0, true)]
-    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), Options.OptionsCategoryName, Options.PageParallelizationName, 0, 0, true)]
-    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), Options.OptionsCategoryName, Options.PageGoogleTestName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), SettingsWrapper.OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
+    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), SettingsWrapper.OptionsCategoryName, SettingsWrapper.PageParallelizationName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), SettingsWrapper.OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage

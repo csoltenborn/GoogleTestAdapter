@@ -58,11 +58,11 @@
     <Compile Include="TestCases\TestCaseFactory.cs" />
     <Compile Include="Helpers\TestEnvironment.cs" />
     <Compile Include="Helpers\Utils.cs" />
-    <Compile Include="Helpers\XmlOptions.cs" />
+    <Compile Include="Settings\IGoogleTestAdapterSettings.cs" />
     <Compile Include="Model\TestCase.cs" />
     <Compile Include="Model\TestResult.cs" />
     <Compile Include="Model\Trait.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="Settings\SettingsWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runners\CommandLineGenerator.cs" />
     <Compile Include="Runners\ITestRunner.cs" />

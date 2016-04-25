@@ -10,11 +10,11 @@ namespace GoogleTestAdapter.Helpers
         private enum LogType { Normal, Debug }
 
 
-        public Options Options { get; }
+        public Settings.SettingsWrapper Options { get; }
         private ILogger Logger { get; }
 
 
-        public TestEnvironment(Options options, ILogger logger)
+        public TestEnvironment(Settings.SettingsWrapper options, ILogger logger)
         {
             this.Options = options;
             this.Logger = logger;

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using EnvDTE;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {

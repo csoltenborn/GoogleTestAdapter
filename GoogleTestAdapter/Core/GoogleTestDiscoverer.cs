@@ -12,7 +12,7 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
-        private static readonly Regex CompiledTestFinderRegex = new Regex(Options.TestFinderRegex, RegexOptions.Compiled);
+        private static readonly Regex CompiledTestFinderRegex = new Regex(Settings.SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
         private TestEnvironment TestEnvironment { get; }
         private IDiaResolverFactory DiaResolverFactory { get; }
@@ -53,7 +53,7 @@ namespace GoogleTestAdapter
             string regexUsed;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexUsed = Options.TestFinderRegex;
+                regexUsed = Settings.SettingsWrapper.TestFinderRegex;
                 matches = CompiledTestFinderRegex.IsMatch(executable);
             }
             else

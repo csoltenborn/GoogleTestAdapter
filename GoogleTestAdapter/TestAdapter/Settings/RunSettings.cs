@@ -3,13 +3,13 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
 
     [XmlRoot(GoogleTestConstants.SettingsName)]
-    public class RunSettings : TestRunSettings, IXmlOptions
+    public class RunSettings : TestRunSettings, IGoogleTestAdapterSettings
     {
         public RunSettings()
             : base(GoogleTestConstants.SettingsName)
