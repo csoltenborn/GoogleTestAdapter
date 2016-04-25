@@ -3,8 +3,7 @@ os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
 environment:
-  COVERALLS_REPO_TOKEN:
-    secure: bFVGoXLR4/8VSClNH2s5qhXfJNwbJPbggNv6grvl+JaITuMkHLqvCw+48T0uKyFI
+  COVERALLS_REPO_TOKEN: sdXh3Vu3Pfz0xXbJuWTYSRT88Oq5s7zNV
   RELEASE_KEY_PASSWORD:
     secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
 install:
@@ -65,9 +64,7 @@ test_script:
         Push-AppveyorArtifact TestErrors.zip
     }
 
-    if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
-        & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
-    }
+    & $coveralls --opencover -i OpenCover_CoverageData.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID --serviceName AppVeyor
 
     if ($TestExitCode -ne 0) {
         exit $TestExitCode
