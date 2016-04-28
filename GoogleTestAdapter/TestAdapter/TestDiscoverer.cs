@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Settings;
 
@@ -31,12 +32,12 @@ namespace GoogleTestAdapter.TestAdapter
         {
             ILogger loggerAdapter = new VsTestFrameworkLogger(logger);
 
-            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(GoogleTestAdapter.Settings.SettingsWrapper)) // check whether we have a mock
+            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
                 var settingsProvider = discoveryContext.RunSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
 
-                TestEnvironment = new TestEnvironment(new GoogleTestAdapter.Settings.SettingsWrapper(ourRunSettings, loggerAdapter), loggerAdapter);
+                TestEnvironment = new TestEnvironment(new SettingsWrapper(ourRunSettings, loggerAdapter), loggerAdapter);
                 Discoverer = new GoogleTestDiscoverer(TestEnvironment);
             }
 

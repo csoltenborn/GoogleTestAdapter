@@ -4,6 +4,7 @@ using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -53,7 +54,7 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Exactly(1));
 
             MockFrameworkHandle.Reset();
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + GoogleTestAdapter.Settings.SettingsWrapper.TestDirPlaceholder + "\"");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + SettingsWrapper.TestDirPlaceholder + "\"");
 
             executor = new TestExecutor(TestEnvironment);
             executor.RunTests(DataConversionExtensions.ToVsTestCase(testCase).Yield(), MockRunContext.Object, MockFrameworkHandle.Object);

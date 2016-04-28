@@ -6,13 +6,14 @@ using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestCases;
 
 namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
-        private static readonly Regex CompiledTestFinderRegex = new Regex(Settings.SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
+        private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
         private TestEnvironment TestEnvironment { get; }
         private IDiaResolverFactory DiaResolverFactory { get; }
@@ -53,7 +54,7 @@ namespace GoogleTestAdapter
             string regexUsed;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexUsed = Settings.SettingsWrapper.TestFinderRegex;
+                regexUsed = SettingsWrapper.TestFinderRegex;
                 matches = CompiledTestFinderRegex.IsMatch(executable);
             }
             else

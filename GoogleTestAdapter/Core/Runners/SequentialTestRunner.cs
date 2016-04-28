@@ -7,6 +7,7 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -34,7 +35,7 @@ namespace GoogleTestAdapter.Runners
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
-                string finalParameters = userParameters.Replace(Settings.SettingsWrapper.ExecutablePlaceholder, executable);
+                string finalParameters = userParameters.Replace(SettingsWrapper.ExecutablePlaceholder, executable);
                 if (Canceled)
                 {
                     break;

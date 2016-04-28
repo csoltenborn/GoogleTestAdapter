@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -12,8 +13,8 @@ namespace GoogleTestAdapter.Runners
     {
 
         private static readonly string DefaultArgs =
-            GoogleTestConstants.GetCatchExceptionsOption(Settings.SettingsWrapper.OptionCatchExceptionsDefaultValue) +
-            GoogleTestConstants.GetBreakOnFailureOption(Settings.SettingsWrapper.OptionBreakOnFailureDefaultValue);
+            GoogleTestConstants.GetCatchExceptionsOption(SettingsWrapper.OptionCatchExceptionsDefaultValue) +
+            GoogleTestConstants.GetBreakOnFailureOption(SettingsWrapper.OptionBreakOnFailureDefaultValue);
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -152,9 +153,9 @@ namespace GoogleTestAdapter.Runners
             string commandLineFromBackwards = new CommandLineGenerator(allTestCases, testCasesReversed, DummyExecutable.Length, "", "", TestEnvironment)
                 .GetCommandLines().First().CommandLine;
 
-            string ExpectedCommandLine = $"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:";
-            Assert.AreEqual(ExpectedCommandLine, commandLine);
-            Assert.AreEqual(ExpectedCommandLine, commandLineFromBackwards);
+            string expectedCommandLine = $"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:";
+            Assert.AreEqual(expectedCommandLine, commandLine);
+            Assert.AreEqual(expectedCommandLine, commandLineFromBackwards);
         }
 
         [TestMethod]
