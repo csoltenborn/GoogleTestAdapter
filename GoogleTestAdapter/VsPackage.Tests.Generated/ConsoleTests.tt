@@ -21,6 +21,9 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+<# if (AbstractConsoleIntegrationTests.IsRunningOnBuildServer()) { #>
+using GoogleTestAdapterUiTests;
+<# } #>
 
 namespace GoogleTestAdapter.VsPackage
 {
