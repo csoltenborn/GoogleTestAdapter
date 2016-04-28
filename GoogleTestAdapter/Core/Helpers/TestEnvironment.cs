@@ -1,5 +1,6 @@
 ﻿using System;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -10,11 +11,11 @@ namespace GoogleTestAdapter.Helpers
         private enum LogType { Normal, Debug }
 
 
-        public Settings.SettingsWrapper Options { get; }
+        public SettingsWrapper Options { get; }
         private ILogger Logger { get; }
 
 
-        public TestEnvironment(Settings.SettingsWrapper options, ILogger logger)
+        public TestEnvironment(SettingsWrapper options, ILogger logger)
         {
             this.Options = options;
             this.Logger = logger;

@@ -21,26 +21,27 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GoogleTestAdapterUiTests;
 
-namespace GoogleTestAdapter.VsPackage.GeneratedTests
+namespace GoogleTestAdapter.VsPackage
 {
 
 	public abstract class AbstractConsoleTests
 	{
-		private readonly string solutionFile;
-		protected readonly string testAdapterDir;
+		private readonly string _solutionFile;
+		protected readonly string TestAdapterDir;
 
-		public AbstractConsoleTests()
+		protected AbstractConsoleTests()
 		{
-			AbstractConsoleIntegrationTests.GetDirectories(out testAdapterDir, out solutionFile);
+			AbstractConsoleIntegrationTests.GetDirectories(out TestAdapterDir, out _solutionFile);
 		}
 
-        private void RunTestsAndCheckOutput(string solutionFile, string typeName, string arguments, [CallerMemberName] string testCaseName = null)
+        private void RunTestsAndCheckOutput(string typeName, string arguments, [CallerMemberName] string testCaseName = null)
         {
-            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(solutionFile, arguments);
-			string projectDir = Path.Combine(Path.GetDirectoryName(solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
+            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(_solutionFile, arguments);
+            // ReSharper disable once AssignNullToNotNullAttribute
+			string projectDir = Path.Combine(Path.GetDirectoryName(_solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
             new ResultChecker(Path.Combine(projectDir, "GoldenFiles"), Path.Combine(projectDir, "TestErrors"), ".txt")
+                // ReSharper disable once ExplicitCallerInfoArgument
 				.CheckResults(resultString, typeName, testCaseName);
         }
 
@@ -59,7 +60,7 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 		{
 			string arguments = GetAdapterIntegration();
 			arguments += @"<#= line.Arguments #>";
-            RunTestsAndCheckOutput(solutionFile, GetType().Name, arguments);
+            RunTestsAndCheckOutput(GetType().Name, arguments);
 		}
 		<# } #>
 
@@ -68,7 +69,7 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 		public virtual void List_TestsOf_<#= executable #>()
 		{
 			string arguments = GetAdapterIntegration() + @" /ListTests:""<#= executables[executable] #>"" /Logger:Console";
-            RunTestsAndCheckOutput(solutionFile, GetType().Name, arguments);
+            RunTestsAndCheckOutput(GetType().Name, arguments);
 		}
 		<# } #>
 
@@ -80,7 +81,7 @@ namespace GoogleTestAdapter.VsPackage.GeneratedTests
 	{
         protected override string GetAdapterIntegration()
         {
-            return @"/TestAdapterPath:" + testAdapterDir;
+            return @"/TestAdapterPath:" + TestAdapterDir;
         }
 
 		#region method stubs for code coverage
