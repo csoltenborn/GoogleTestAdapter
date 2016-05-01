@@ -107,10 +107,15 @@ namespace GoogleTestAdapter.DiaResolver
             return GetSymbolNamesAndAddresses(diaSymbols).Select(ToSourceFileLocation);
         }
 
-
         private string FindPdbFile(string binary, string pathExtension)
         {
-            string pdb = Path.ChangeExtension(binary, ".pdb");
+            NativeMethods.PDBPathExtractor pdbExtractor = 
+                new NativeMethods.PDBPathExtractor(binary, new List<String>());
+            string pdb = pdbExtractor.pdbPath;
+            if (pdb != null && File.Exists(pdb))
+                return pdb;
+
+            pdb = Path.ChangeExtension(binary, ".pdb");
             if (File.Exists(pdb))
                 return pdb;
 

@@ -42,12 +42,37 @@ namespace GoogleTestAdapter.DiaResolver
             DoResolveTest(X64ExternallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
         }
 
+        [TestMethod]
+        public void ExtractPDB_X64()
+        {
+            NativeMethods.PDBPathExtractor extractor = new NativeMethods.PDBPathExtractor(X64StaticallyLinkedTests, new List<string>());
+
+            string pdb = extractor.pdbPath;
+            string executableName = System.IO.Path.GetFileNameWithoutExtension(X64StaticallyLinkedTests);
+            string pdbName = System.IO.Path.GetFileNameWithoutExtension(pdb);
+
+            Assert.AreEqual(executableName, pdbName);
+        }
+
+        [TestMethod]
+        public void ExtractPDB_X86()
+        {
+            NativeMethods.PDBPathExtractor extractor = new NativeMethods.PDBPathExtractor(X86StaticallyLinkedTests, new List<string>());
+
+            string pdb = extractor.pdbPath;
+            string executableName = System.IO.Path.GetFileNameWithoutExtension(X86StaticallyLinkedTests);
+            string pdbName = System.IO.Path.GetFileNameWithoutExtension(pdb);
+
+            Assert.AreEqual(executableName, pdbName);
+        }
+
+
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
         {
             List<SourceFileLocation> locations = new List<SourceFileLocation>();
             FakeLogger fakeLogger = new FakeLogger();
 
-           IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger);
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger);
             locations.AddRange(resolver.GetFunctions(filter));
 
             if (disposeResolver)
