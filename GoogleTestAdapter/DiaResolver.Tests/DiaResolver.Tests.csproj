@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="DiaResolverTests.cs" />
     <Compile Include="Helpers\FakeLogger.cs" />
-    <Compile Include="ImportsParserTests.cs" />
+    <Compile Include="PeParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

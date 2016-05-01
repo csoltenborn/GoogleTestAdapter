@@ -9,6 +9,24 @@ using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.DiaResolver
 {
+    internal class NativeSourceFileLocation
+    {
+        /*
+        Test methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::TestBody
+        Trait methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::<trait name>__GTA__<trait value>_GTA_TRAIT
+        */
+        internal string Symbol;
+        internal uint AddressSection;
+        internal uint AddressOffset;
+        internal uint Length;
+
+        public override string ToString()
+        {
+            return Symbol;
+        }
+    }
+
+
     internal interface IDiaSession
     {
         IDiaSymbol globalScope { get; }
@@ -109,9 +127,7 @@ namespace GoogleTestAdapter.DiaResolver
 
         private string FindPdbFile(string binary, string pathExtension)
         {
-            NativeMethods.PDBPathExtractor pdbExtractor = 
-                new NativeMethods.PDBPathExtractor(binary, new List<String>());
-            string pdb = pdbExtractor.pdbPath;
+            string pdb = PeParser.ExtractPdbPath(binary, Logger);
             if (pdb != null && File.Exists(pdb))
                 return pdb;
 
@@ -169,6 +185,16 @@ namespace GoogleTestAdapter.DiaResolver
                 Logger.LogWarning("Failed to locate line number for " + nativeSymbol);
                 return new SourceFileLocation(Binary, "", 0);
             }
+        }
+
+        private enum NameSearchOptions : uint
+        {
+            NsNone = 0x0u,
+            NsfCaseSensitive = 0x1u,
+            NsfCaseInsensitive = 0x2u,
+            NsfFNameExt = 0x4u,
+            NsfRegularExpression = 0x8u,
+            NsfUndecoratedName = 0x10u
         }
 
         private IDiaEnumSymbols FindFunctionsByRegex(string pattern)

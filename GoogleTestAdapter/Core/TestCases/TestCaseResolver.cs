@@ -31,8 +31,7 @@ namespace GoogleTestAdapter.TestCases
 
             if (testCaseLocationsFound.Count == 0)
             {
-                var parser = new NativeMethods.ImportsParser(executable, TestEnvironment);
-                List<string> imports = parser.Imports;
+                List<string> imports = PeParser.ParseImports(executable, TestEnvironment);
 
                 string moduleDirectory = Path.GetDirectoryName(executable);
 
