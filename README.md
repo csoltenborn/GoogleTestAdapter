@@ -100,6 +100,7 @@ Note that GTA remembers the durations of the executed tests to improve test sche
 
 None or not all of my tests show up!
 * <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place.
+* Your test executable can not run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 
 No source locations and traits are found for my tests!
@@ -151,6 +152,7 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 #### Tools
 * [ReSharper](https://www.jetbrains.com/resharper/) - awesome VS extension for .NET development, including refactoring, static analysis etc.
   * thanks to [JetBrains](https://www.jetbrains.com/) for providing free licenses for our developers!
+  * note that JetBrains' [Resharper C++](https://www.jetbrains.com/resharper-cpp/) can also run tests written using Google Test
 * [AppVeyor](http://www.appveyor.com/) - awesome .NET CI build services
   * thanks for providing free services and great support for open source projects!
 * [Coveralls](https://coveralls.io/) - code coverage visualization facilities
