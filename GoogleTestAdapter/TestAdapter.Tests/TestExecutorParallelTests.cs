@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -42,13 +44,14 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void RunTests_ParallelTestExecution_SpeedsUpTestExecution()
         {
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(false);
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment);
-            IEnumerable<string> testsToRun = SampleTests.Yield();
+            IEnumerable<string> testsToRun = TestResources.SampleTests.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
@@ -58,15 +61,15 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
             executor = new TestExecutor(TestEnvironment);
-            testsToRun = SampleTests.Yield();
+            testsToRun = TestResources.SampleTests.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
             long parallelDuration = stopwatch.ElapsedMilliseconds;
 
-            Assert.IsTrue(sequentialDuration > 4000, sequentialDuration.ToString()); // 2 long tests, 2 seconds per test
-            Assert.IsTrue(parallelDuration > 2000, parallelDuration.ToString());
-            Assert.IsTrue(parallelDuration < 3500, parallelDuration.ToString()); // 2 seconds per long test + some time for the rest
+            sequentialDuration.Should().BeGreaterThan(4000); // 2 long tests, 2 seconds per test
+            parallelDuration.Should().BeGreaterThan(2000);
+            parallelDuration.Should().BeLessThan(4000); // 2 seconds per long test + some time for the rest
         }
 
 

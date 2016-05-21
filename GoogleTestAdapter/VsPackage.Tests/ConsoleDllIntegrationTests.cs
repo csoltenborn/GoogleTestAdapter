@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -15,21 +16,21 @@ namespace GoogleTestAdapter.VsPackage
         #region method stubs for code coverage
 
         [TestMethod]
-        [TestCategory("End to end")]
+        [TestCategory(EndToEnd)]
         public override void Console_ListDiscoverers_DiscovererIsListed()
         {
             base.Console_ListDiscoverers_DiscovererIsListed();
         }
 
         [TestMethod]
-        [TestCategory("End to end")]
+        [TestCategory(EndToEnd)]
         public override void Console_ListExecutors_ExecutorIsListed()
         {
             base.Console_ListExecutors_ExecutorIsListed();
         }
 
         [TestMethod]
-        [TestCategory("End to end")]
+        [TestCategory(EndToEnd)]
         public override void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
             base.Console_ListSettingsProviders_SettingsProviderIsListed();

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Automation;
+using FluentAssertions;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,6 +32,7 @@ namespace GoogleTestAdapterUiTests
 
         public static class TestExplorer
         {
+            private const double Tolerance = 0.01;
 
             public static class Parser
             {
@@ -40,7 +42,7 @@ namespace GoogleTestAdapterUiTests
                     ScrollToTop();
 
                     TestRun testResults = new TestRun();
-                    string tmp = GetOutput().ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "${SolutionDir}");
+                    string tmp = GetOutput().ReplaceIgnoreCase(Path.GetDirectoryName(SolutionFile), "${SolutionDir}");
                     tmp = Regex.Replace(tmp, "Found [0-9]+ tests in executable", "Found ${NrOfTests} tests in executable");
                     testResults.testOutput = Regex.Replace(tmp, @"(========== Run test finished: [0-9]+ run )\([0-9:,\.]+\)( ==========)", "$1($${RunTime})$2");
 
@@ -82,7 +84,7 @@ namespace GoogleTestAdapterUiTests
                 {
                     TestCase testResult = new TestCase();
                     testNode.Get<Label>("TestListViewDisplayNameTextBlock").Click();
-                    Assert.AreEqual(testNode.Nodes.Count, 0, "Test case tree node expected to have no children.");
+                    testNode.Nodes.Count.Should().Be(0, "Test case tree node expected to have no children.");
 
                     SearchCriteria isControlTypeLabel = SearchCriteria.ByControlType(typeof(Label), WindowsFramework.Wpf);
                     // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
@@ -122,10 +124,10 @@ namespace GoogleTestAdapterUiTests
                             testResult.Result += NormalizePointerInfo(label.Text);
                             break;
                         case "errorMessageItem":
-                            testResult.Error += label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "$(SolutionDir)");
+                            testResult.Error += label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(SolutionFile), "$(SolutionDir)");
                             break;
                         case "hyperlinkText":
-                            testResult.Stacktrace = label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(solutionFile), "$(SolutionDir)");
+                            testResult.Stacktrace = label.Text.ReplaceIgnoreCase(Path.GetDirectoryName(SolutionFile), "$(SolutionDir)");
                             break;
                         case "sourceTextHeader":
                         case "noSourceAvailableToolTip":
@@ -199,7 +201,7 @@ namespace GoogleTestAdapterUiTests
                         string missingTestCases = string.Join(", ", namesToBeFound);
                         throw new AutomationException(
                             $"Could not find test cases {missingTestCases} in test explorer",
-                            Debug.Details(testExplorer.AutomationElement));
+                            Debug.Details(_testExplorer.AutomationElement));
                     }
 
                     return result;
@@ -228,25 +230,25 @@ namespace GoogleTestAdapterUiTests
 
             public static void SelectTestSettingsFile(string settingsFile)
             {
-                mainWindow.VsMenuBarMenuItems("Test", "Test Settings", "Select Test Settings File").Click();
+                _mainWindow.VsMenuBarMenuItems("Test", "Test Settings", "Select Test Settings File").Click();
                 FillFileDialog("Open Settings File", settingsFile);
             }
 
             public static void UnselectTestSettingsFile()
             {
-                SelectTestSettingsFile(noSettingsFile);
+                SelectTestSettingsFile(NoSettingsFile);
             }
 
             public static void OpenTestExplorer()
             {
-                if (testExplorer == null)
+                if (_testExplorer == null)
                 {
-                    mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
-                    testExplorer = mainWindow.Get<UIItem>("TestWindowToolWindowControl");
+                    _mainWindow.VsMenuBarMenuItems("Test", "Windows", "Test Explorer").Click();
+                    _testExplorer = _mainWindow.Get<UIItem>("TestWindowToolWindowControl");
                 }
 
-                ProgressBar delayIndicator = testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
-                mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
+                ProgressBar delayIndicator = _testExplorer.Get<ProgressBar>("delayIndicatorProgressBar");
+                _mainWindow.WaitTill(() => delayIndicator.IsOffScreen);
             }
 
             public static void RunAllTests()
@@ -263,9 +265,9 @@ namespace GoogleTestAdapterUiTests
 
             private static void RunTestsAndWait(string whichTests)
             {
-                mainWindow.VsMenuBarMenuItems("Test", "Run", whichTests).Click();
-                ProgressBar progressIndicator = testExplorer.Get<ProgressBar>("runProgressBar");
-                mainWindow.WaitTill(() => progressIndicator.Value == progressIndicator.Maximum);
+                _mainWindow.VsMenuBarMenuItems("Test", "Run", whichTests).Click();
+                ProgressBar progressIndicator = _testExplorer.Get<ProgressBar>("runProgressBar");
+                _mainWindow.WaitTill(() => Math.Abs(progressIndicator.Value - progressIndicator.Maximum) < Tolerance);
             }
 
             private static void ScrollToTop()
@@ -275,12 +277,12 @@ namespace GoogleTestAdapterUiTests
 
             private static Tree GetTestCaseTree()
             {
-                return testExplorer.Get<Tree>("TestsTreeView");
+                return _testExplorer.Get<Tree>("TestsTreeView");
             }
 
             private static Panel GetTestExplorerDetailsPanel()
             {
-                return testExplorer.Get<Panel>("LeftSelectionControl");
+                return _testExplorer.Get<Panel>("LeftSelectionControl");
             }
 
             private static void ClickNode(TreeNode node)
@@ -298,6 +300,7 @@ namespace GoogleTestAdapterUiTests
                 return SafeIsNodeOnScreen(testGroupNode);
             }
 
+            // ReSharper disable once UnusedMethodReturnValue.Local
             private static bool EnsureTestCaseNodeIsOnScreen(TreeNode node)
             {
                 if (SafeIsNodeOnScreen(node))
@@ -340,65 +343,64 @@ namespace GoogleTestAdapterUiTests
         } // class TestExplorer
 
 
-        private const bool keepDirtyInstanceInit = false;
+        private const bool KeepDirtyInstanceInit = false;
 
         private static readonly TimeSpan TimeOut = TimeSpan.FromMinutes(1);
         private static readonly int TimeOutInMs = (int)TimeOut.TotalMilliseconds;
-        private const int WaitingTimeInMs = 500;
 
 
         public static string UiTestsDirectory { get; }
         public static string UserSettingsFile { get; }
 
-        private static readonly string vsixPath;
-        private static readonly string solutionFile;
-        private static readonly string noSettingsFile;
+        private static readonly string VsixPath;
+        private static readonly string SolutionFile;
+        private static readonly string NoSettingsFile;
 
-        private static bool keepDirtyVsInstance = keepDirtyInstanceInit;
-        private static bool? installIntoProductiveVS = null;
+        private static bool _keepDirtyVsInstance = KeepDirtyInstanceInit;
+        private static bool? _installIntoProductiveVs = null;
 
-        private static VsExperimentalInstance visualStudioInstance;
-        private static Application application;
-        private static Window mainWindow;
-        private static IUIItem testExplorer;
+        private static VsExperimentalInstance _visualStudioInstance;
+        private static Application _application;
+        private static Window _mainWindow;
+        private static IUIItem _testExplorer;
 
         static VS()
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
             Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\VsPackage.Tests.*\\bin\\(Debug|Release)\\GoogleTestAdapter.VsPackage.Tests.*.dll$");
-            Assert.IsTrue(match.Success);
+            match.Success.Should().BeTrue();
 
             string basePath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
-            vsixPath = Path.Combine(basePath, @"GoogleTestAdapter\VsPackage\bin", debugOrRelease, @"GoogleTestAdapter.VsPackage.vsix");
-            solutionFile = Path.Combine(basePath, @"SampleTests\SampleTests.sln");
+            VsixPath = Path.Combine(basePath, @"GoogleTestAdapter\VsPackage\bin", debugOrRelease, @"GoogleTestAdapter.VsPackage.vsix");
+            SolutionFile = Path.Combine(basePath, @"SampleTests\SampleTests.sln");
             UiTestsDirectory = Path.Combine(basePath, @"GoogleTestAdapter\VsPackage.Tests");
             UserSettingsFile = Path.Combine(basePath, @"SampleTests\NonDeterministic.runsettings");
-            noSettingsFile = Path.Combine(basePath, @"SampleTests\No.runsettings");
+            NoSettingsFile = Path.Combine(basePath, @"SampleTests\No.runsettings");
         }
 
         public static void SetupVanillaVsExperimentalInstance(string suffix)
         {
-            AskIfNotOnBuildServerAndProductiveVS(suffix);
+            AskIfNotOnBuildServerAndProductiveVs(suffix);
 
             try
             {
-                visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, suffix);
+                _visualStudioInstance = new VsExperimentalInstance(VsExperimentalInstance.Versions.VS2015, suffix);
                 if (string.IsNullOrEmpty(suffix))
                 {
-                    keepDirtyVsInstance = true;
-                    visualStudioInstance.InstallExtension(vsixPath);
+                    _keepDirtyVsInstance = true;
+                    _visualStudioInstance.InstallExtension(VsixPath);
                 }
                 else
                 {
-                    if (!keepDirtyVsInstance)
+                    if (!_keepDirtyVsInstance)
                     {
-                        keepDirtyVsInstance = AskToCleanIfExists();
+                        _keepDirtyVsInstance = AskToCleanIfExists();
                     }
-                    if (!keepDirtyVsInstance)
+                    if (!_keepDirtyVsInstance)
                     {
-                        visualStudioInstance.FirstTimeInitialization();
-                        visualStudioInstance.InstallExtension(vsixPath);
+                        _visualStudioInstance.FirstTimeInitialization();
+                        _visualStudioInstance.InstallExtension(VsixPath);
                     }
                 }
             }
@@ -410,64 +412,64 @@ namespace GoogleTestAdapterUiTests
 
         public static void LaunchVsExperimentalInstance()
         {
-            application = visualStudioInstance.Launch();
+            _application = _visualStudioInstance.Launch();
             CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(
                 c => { c.BusyTimeout = c.FindWindowTimeout = TimeOutInMs; });
 
-            mainWindow = application.GetWindow(
+            _mainWindow = _application.GetWindow(
                 SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
                 InitializeOption.NoCache);
         }
 
         public static void CleanVsExperimentalInstance()
         {
-            mainWindow?.Dispose();
-            application?.Dispose();
+            _mainWindow?.Dispose();
+            _application?.Dispose();
 
-            testExplorer = null;
-            mainWindow = null;
-            application = null;
+            _testExplorer = null;
+            _mainWindow = null;
+            _application = null;
 
-            if (!keepDirtyVsInstance)
+            if (!_keepDirtyVsInstance)
             {
                 // wait for removal of locks on some files we want to delete
                 // TODO: find more reliable method than using Sleep()
                 Thread.Sleep(TimeSpan.FromSeconds(1));
-                visualStudioInstance.Clean();
+                _visualStudioInstance.Clean();
             }
-            visualStudioInstance = null;
+            _visualStudioInstance = null;
         }
 
 
         public static void OpenSolution()
         {
-            mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
-            FillFileDialog("Open Project", solutionFile);
+            _mainWindow.VsMenuBarMenuItems("File", "Open", "Project/Solution...").Click();
+            FillFileDialog("Open Project", SolutionFile);
         }
 
         public static void CloseSolution()
         {
-            mainWindow.VsMenuBarMenuItems("File", "Close Solution").Click();
+            _mainWindow.VsMenuBarMenuItems("File", "Close Solution").Click();
         }
 
         public static string GetOutput()
         {
-            IUIItem outputWindow = mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
+            IUIItem outputWindow = _mainWindow.Get(SearchCriteria.ByText("Output").AndByClassName("GenericPane"), TimeSpan.FromSeconds(10));
             return outputWindow.Get<TextBox>("WpfTextView").Text;
         }
 
 
         private static void FillFileDialog(string dialogTitle, string file)
         {
-            Window fileOpenDialog = mainWindow.ModalWindow(dialogTitle);
+            Window fileOpenDialog = _mainWindow.ModalWindow(dialogTitle);
             fileOpenDialog.Get<TextBox>(SearchCriteria.ByAutomationId("1148") /* File name: */).Text = file;
             fileOpenDialog.Get<Button>(SearchCriteria.ByAutomationId("1") /* Open */).Click();
         }
 
-        private static void AskIfNotOnBuildServerAndProductiveVS(string suffix)
+        private static void AskIfNotOnBuildServerAndProductiveVs(string suffix)
         {
             if (string.IsNullOrEmpty(suffix)
-                && installIntoProductiveVS == null
+                && _installIntoProductiveVs == null
                 && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
             {
                 MessageBoxResult result = MessageBoxWithTimeout.Show(
@@ -477,31 +479,31 @@ namespace GoogleTestAdapterUiTests
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        installIntoProductiveVS = true;
+                        _installIntoProductiveVs = true;
                         break;
                     default:
-                        installIntoProductiveVS = false;
+                        _installIntoProductiveVs = false;
                         break;
                 }
             }
 
-            if (installIntoProductiveVS.HasValue && !installIntoProductiveVS.Value)
+            if (_installIntoProductiveVs.HasValue && !_installIntoProductiveVs.Value)
                 Assert.Inconclusive("Didn't get confirmation to execute tests. Cancelling...");
         }
 
         private static bool AskToCleanIfExists()
         {
             bool keepDirtyInstance = false;
-            if (visualStudioInstance.Exists() && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
+            if (_visualStudioInstance.Exists() && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
             {
-                var instanceExists = $"The experimental instance '{visualStudioInstance.VersionAndSuffix}' already exists.";
+                var instanceExists = $"The experimental instance '{_visualStudioInstance.VersionAndSuffix}' already exists.";
                 var willReset = "\nShould it be deleted before going on with the tests?";
 
                 MessageBoxResult result = MessageBoxWithTimeout.Show(instanceExists + willReset, "Warning!", MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        visualStudioInstance.Clean();
+                        _visualStudioInstance.Clean();
                         break;
                     case MessageBoxResult.No:
                         keepDirtyInstance = true;

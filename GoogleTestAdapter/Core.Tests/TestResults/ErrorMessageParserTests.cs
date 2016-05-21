@@ -1,5 +1,6 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -12,53 +13,57 @@ namespace GoogleTestAdapter.TestResults
         private const string FullPathOfDummyExecutable = BaseDir + DummyExecutable;
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Parse_EmptyString_EmptyResults()
         {
-            ErrorMessageParser parser = new ErrorMessageParser("", BaseDir);
+            var parser = new ErrorMessageParser("", BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("", parser.ErrorMessage);
-            Assert.AreEqual("", parser.ErrorStackTrace);
+            parser.ErrorMessage.Should().Be("");
+            parser.ErrorStackTrace.Should().Be("");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Parse_SingleErrorMessage_MessageIsParsedWithoutLink()
         {
             string errorString = $"{FullPathOfDummyExecutable}:42: error: Expected: Foo\nActual: Bar";
 
-            ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("Expected: Foo\nActual: Bar", parser.ErrorMessage);
-            Assert.IsTrue(parser.ErrorStackTrace.Contains($"{DummyExecutable}:42"));
+            parser.ErrorMessage.Should().Be("Expected: Foo\nActual: Bar");
+            parser.ErrorStackTrace.Should().Contain($"{DummyExecutable}:42");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Parse_TwoErrorMessages_BothMessagesAreParsedWithLinks()
         {
             string errorString = $"{FullPathOfDummyExecutable}:37: error: Expected: Yes\nActual: Maybe";
             errorString += $"\n{FullPathOfDummyExecutable}:42: Failure\nExpected: Foo\nActual: Bar";
 
-            ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar", parser.ErrorMessage);
-            Assert.IsTrue(parser.ErrorStackTrace.Contains($"#1 - {DummyExecutable}:37"));
-            Assert.IsTrue(parser.ErrorStackTrace.Contains($"#2 - {DummyExecutable}:42"));
+            parser.ErrorMessage.Should().Be("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar");
+            parser.ErrorStackTrace.Should().Contain($"#1 - {DummyExecutable}:37");
+            parser.ErrorStackTrace.Should().Contain($"#2 - {DummyExecutable}:42");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Parse_DifferentlyFormattedErrorMessages_BothMessagesAreParsedInCorrectOrder()
         {
             string errorString = $"{FullPathOfDummyExecutable}(37): error: Expected: Yes\nActual: Maybe";
             errorString += $"\n{FullPathOfDummyExecutable}:42: error: Expected: Foo\nActual: Bar";
 
-            ErrorMessageParser parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString, BaseDir);
             parser.Parse();
 
-            Assert.AreEqual("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar", parser.ErrorMessage);
-            Assert.IsTrue(parser.ErrorStackTrace.Contains($"#1 - {DummyExecutable}:37"));
-            Assert.IsTrue(parser.ErrorStackTrace.Contains($"#2 - {DummyExecutable}:42"));
+            parser.ErrorMessage.Should().Be("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar");
+            parser.ErrorStackTrace.Should().Contain($"#1 - {DummyExecutable}:37");
+            parser.ErrorStackTrace.Should().Contain($"#2 - {DummyExecutable}:42");
         }
 
     }

@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using FluentAssertions;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
-    public class RegexTraitParserTests : AbstractGoogleTestExtensionTests
+    public class RegexTraitParserTests : AbstractCoreTests
     {
         private RegexTraitParser Parser { get; set; }
 
@@ -19,38 +21,42 @@ namespace GoogleTestAdapter.Helpers
 
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ParseTraitsRegexesString_UnparsableString_FailsNicely()
         {
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("vrr<erfwe");
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.Count);
+            result.Should().NotBeNull();
+            result.Count.Should().Be(0);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ParseTraitsRegexesString_EmptyString_EmptyResult()
         {
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("");
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.Count);
+            result.Should().NotBeNull();
+            result.Count.Should().Be(0);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ParseTraitsRegexesString_OneRegex_ParsedCorrectly()
         {
             string optionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
 
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString(optionsString);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual("MyTest*", result[0].Regex);
-            Assert.AreEqual("Type", result[0].Trait.Name);
-            Assert.AreEqual("Small", result[0].Trait.Value);
+            result.Should().NotBeNull();
+            result.Count.Should().Be(1);
+            result[0].Regex.Should().Be("MyTest*");
+            result[0].Trait.Name.Should().Be("Type");
+            result[0].Trait.Value.Should().Be("Small");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ParseTraitsRegexesString_TwoRegexes_ParsedCorrectly()
         {
             string optionsString = ConcatTraitsRegexes(
@@ -59,16 +65,16 @@ namespace GoogleTestAdapter.Helpers
 
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString(optionsString);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
 
-            Assert.AreEqual("MyTest*", result[0].Regex);
-            Assert.AreEqual("Type", result[0].Trait.Name);
-            Assert.AreEqual("Small", result[0].Trait.Value);
+            result[0].Regex.Should().Be("MyTest*");
+            result[0].Trait.Name.Should().Be("Type");
+            result[0].Trait.Value.Should().Be("Small");
 
-            Assert.AreEqual("*MyOtherTest*", result[1].Regex);
-            Assert.AreEqual("Category", result[1].Trait.Name);
-            Assert.AreEqual("Integration", result[1].Trait.Value);
+            result[1].Regex.Should().Be("*MyOtherTest*");
+            result[1].Trait.Name.Should().Be("Category");
+            result[1].Trait.Value.Should().Be("Integration");
         }
 
 

@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
 using GoogleTestAdapterUiTests.Helpers;
 using GoogleTestAdapter.VsPackage;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -41,14 +43,14 @@ namespace GoogleTestAdapterUiTests
 
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunAllTests_GlobalAndSolutionSettings_BatchTeardownWarning()
         {
             try
             {
                 VS.TestExplorer.RunAllTests();
 
-                Assert.IsTrue(VS.GetOutput().Contains(BatchTeardownWarning));
+                VS.GetOutput().Should().Contain(BatchTeardownWarning);
             }
             catch (AutomationException exception)
             {
@@ -57,7 +59,7 @@ namespace GoogleTestAdapterUiTests
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunAllTests_UserSettings_ShuffledTestExecutionAndNoBatchWarning()
         {
             try
@@ -69,9 +71,9 @@ namespace GoogleTestAdapterUiTests
                     VS.TestExplorer.RunAllTests();
 
                     string output = VS.GetOutput();
-                    Assert.IsTrue(output.Contains("--gtest_shuffle"));
-                    Assert.IsTrue(output.Contains("--gtest_repeat=3"));
-                    Assert.IsFalse(output.Contains(BatchTeardownWarning));
+                    output.Should().Contain("--gtest_shuffle");
+                    output.Should().Contain("--gtest_repeat=3");
+                    output.Should().NotContain(BatchTeardownWarning);
                 }
                 finally
                 {
@@ -85,7 +87,7 @@ namespace GoogleTestAdapterUiTests
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunAllTests__AllTestsAreRun()
         {
             try
@@ -101,49 +103,49 @@ namespace GoogleTestAdapterUiTests
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_Crashing_AddPasses()
         {
             RunTest("Crashing.AddPassesAfterCrash");
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_ParameterizedTests_Simple_0()
         {
             RunTest("ParameterizedTests.Simple/0");
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0()
         {
             RunTest("InstantiationName/ParameterizedTests.SimpleTraits/0");
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_PointerParameterizedTests_CheckStringLength_0()
         {
             RunTest("PointerParameterizedTests.CheckStringLength/0");
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_TypedTests_0_CanIterate()
         {
             RunTest("TypedTests/0.CanIterate");
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath()
         {
             RunTest("Arr/TypeParameterizedTests/1.CanDefeatMath");
         }
 
         [TestMethod]
-        [TestCategory("UI")]
+        [TestCategory(Ui)]
         public void RunSelectedTests_MultipleTests()
         {
             RunTests(new[] { "Crashing.AddPassesAfterCrash", "ParameterizedTests.Simple/0",

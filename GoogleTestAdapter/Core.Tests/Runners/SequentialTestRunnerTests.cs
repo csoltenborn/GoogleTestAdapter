@@ -1,24 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using FluentAssertions;
 using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Runners
 {
     [TestClass]
-    public class SequentialTestRunnerTests : AbstractGoogleTestExtensionTests
+    public class SequentialTestRunnerTests : AbstractCoreTests
     {
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void RunTests_CancelingDuringTestExecution_StopsTestExecution()
         {
-            List<TestCase> allTestCases = AllTestCasesOfSampleTests;
-            List<TestCase> testCasesToRun = GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<TestCase> allTestCases = TestDataCreator.AllTestCasesOfSampleTests;
+            List<TestCase> testCasesToRun = TestDataCreator.GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
 
-            Stopwatch stopwatch = new Stopwatch();
-            ITestRunner runner = new SequentialTestRunner(MockFrameworkReporter.Object, TestEnvironment);
-            Thread thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", false, null));
+            var stopwatch = new Stopwatch();
+            var runner = new SequentialTestRunner(MockFrameworkReporter.Object, TestEnvironment);
+            var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", false, null));
 
             stopwatch.Start();
             thread.Start();
@@ -27,8 +30,8 @@ namespace GoogleTestAdapter.Runners
             thread.Join();
             stopwatch.Stop();
 
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds > 2000); // 1st test should be executed
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds < 3000); // 2nd test should not be executed 
+            stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(2000); // 1st test should be executed
+            stopwatch.ElapsedMilliseconds.Should().BeLessThan(3000); // 2nd test should not be executed 
         }
 
     }

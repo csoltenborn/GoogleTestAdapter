@@ -1,46 +1,50 @@
 ﻿using System.Xml;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
 
-    class RunSettingsServiceUnderTest : RunSettingsService
-    {
-        private string SolutionRunSettingsFile { get; }
-
-        internal RunSettingsServiceUnderTest(IGlobalRunSettings globalRunSettings, string solutionRunSettingsFile) : base(globalRunSettings)
-        {
-            SolutionRunSettingsFile = solutionRunSettingsFile;
-        }
-
-        protected override string GetSolutionSettingsXmlFile()
-        {
-            return SolutionRunSettingsFile;
-        }
-    }
-
     [TestClass]
-    public class RunSettingsServiceTests : AbstractGoogleTestExtensionTests
+    public class RunSettingsServiceTests : AbstractCoreTests
     {
+
+        private class RunSettingsServiceUnderTest : RunSettingsService
+        {
+            private readonly string _solutionRunSettingsFile;
+
+            internal RunSettingsServiceUnderTest(IGlobalRunSettings globalRunSettings, string solutionRunSettingsFile) : base(globalRunSettings)
+            {
+                _solutionRunSettingsFile = solutionRunSettingsFile;
+            }
+
+            protected override string GetSolutionSettingsXmlFile()
+            {
+                return _solutionRunSettingsFile;
+            }
+        }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Constructor__InstanceHasCorrectName()
         {
-            Assert.AreEqual(GoogleTestConstants.SettingsName, new RunSettingsService(null).Name);
+            new RunSettingsService(null).Name.Should().Be(GoogleTestConstants.SettingsName);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void AddRunSettings_UserSettingsWithoutRunSettingsNode_Warning()
         {
-            Mock<ILogger> mockLogger = new Mock<ILogger>();
-            Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
+            var mockLogger = new Mock<ILogger>();
+            var mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
 
-            RunSettingsService service = SetupRunSettingsService(mockLogger, XmlFileBroken);
+            RunSettingsService service = SetupRunSettingsService(TestResources.XmlFileBroken);
 
-            XmlDocument xml = new XmlDocument();
-            xml.Load(UserTestSettingsWithoutRunSettingsNode);
+            var xml = new XmlDocument();
+            xml.Load(TestResources.UserTestSettingsWithoutRunSettingsNode);
 
             service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
 
@@ -49,15 +53,16 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void AddRunSettings_BrokenSolutionSettings_Warning()
         {
-            Mock<ILogger> mockLogger = new Mock<ILogger>();
-            Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
+            var mockLogger = new Mock<ILogger>();
+            var mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
 
-            RunSettingsService service = SetupRunSettingsService(mockLogger, XmlFileBroken);
+            RunSettingsService service = SetupRunSettingsService(TestResources.XmlFileBroken);
 
-            XmlDocument xml = new XmlDocument();
-            xml.Load(UserTestSettings);
+            var xml = new XmlDocument();
+            xml.Load(TestResources.UserTestSettings);
 
             service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
 
@@ -74,15 +79,16 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void AddRunSettings_GlobalAndSolutionAndUserSettings_CorrectOverridingHierarchy()
         {
-            Mock<ILogger> mockLogger = new Mock<ILogger>();
-            Mock<IRunSettingsConfigurationInfo> mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
+            var mockLogger = new Mock<ILogger>();
+            var mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
 
-            RunSettingsService service = SetupRunSettingsService(mockLogger, SolutionTestSettings);
+            RunSettingsService service = SetupRunSettingsService(TestResources.SolutionTestSettings);
 
-            XmlDocument xml = new XmlDocument();
-            xml.Load(UserTestSettings);
+            var xml = new XmlDocument();
+            xml.Load(TestResources.UserTestSettings);
 
             service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
 
@@ -96,13 +102,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
         }
 
-        private RunSettingsService SetupRunSettingsService(Mock<ILogger> mockLogger, string solutionRunSettingsFile)
+        private RunSettingsService SetupRunSettingsService(string solutionRunSettingsFile)
         {
-            RunSettings globalRunSettings = new RunSettings();
-            globalRunSettings.AdditionalTestExecutionParam = "Global";
-            globalRunSettings.NrOfTestRepetitions = 1;
-            globalRunSettings.MaxNrOfThreads = 1;
-            globalRunSettings.TraitsRegexesBefore = "Global";
+            var globalRunSettings = new RunSettings
+            {
+                AdditionalTestExecutionParam = "Global",
+                NrOfTestRepetitions = 1,
+                MaxNrOfThreads = 1,
+                TraitsRegexesBefore = "Global"
+            };
 
             Mock<IGlobalRunSettings> mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
             mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalRunSettings);
@@ -113,9 +121,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         private void AssertContainsSetting(XmlDocument xml, string nodeName, string value)
         {
             XmlNodeList list = xml.GetElementsByTagName(nodeName);
-            Assert.AreEqual(1, list.Count);
+            list.Count.Should().Be(1);
+
             XmlNode node = list.Item(0);
-            Assert.AreEqual(value, node.InnerText);
+            node.Should().NotBeNull();
+            // ReSharper disable once PossibleNullReferenceException
+            node.InnerText.Should().Be(value);
         }
 
     }

@@ -1,50 +1,55 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
-    public class TestEnvironmentTests : AbstractGoogleTestExtensionTests
+    public class TestEnvironmentTests : AbstractCoreTests
     {
-        private TestEnvironment Environment;
+        private TestEnvironment _environment;
 
         [TestInitialize]
         public override void SetUp()
         {
             base.SetUp();
 
-            Environment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
+            _environment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
         }
 
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogWarning_ProducesWarningOnLogger()
         {
-            Environment.LogWarning("foo");
+            _environment.LogWarning("foo");
 
             MockLogger.Verify(l => l.LogWarning(It.Is<string>(s => s.Contains("foo"))), Times.Exactly(1));
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogError_ProducesErrorOnLogger()
         {
-            Environment.LogError("bar");
+            _environment.LogError("bar");
 
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void DebugInfo_InDebugMode_ProducesInfoOnLogger()
         {
             MockOptions.Setup(o => o.DebugMode).Returns(true);
-            Environment.DebugInfo("bar");
+            _environment.DebugInfo("bar");
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
         [TestMethod]
+        [TestCategory(Unit)]
         public void DebugInfo_NotInDebugMode_DoesNotProduceLogging()
         {
             MockOptions.Setup(o => o.DebugMode).Returns(false);
-            Environment.DebugInfo("bar");
+            _environment.DebugInfo("bar");
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Never());
         }
 

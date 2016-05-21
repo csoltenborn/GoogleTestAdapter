@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
 {
     [TestClass]
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-    public class TestCaseFilterTests : AbstractVSTests
+    public class TestCaseFilterTests : AbstractTestAdapterTests
     {
-        readonly Mock<ITestCaseFilterExpression> MockFilterExpression = new Mock<ITestCaseFilterExpression>();
-        readonly ISet<string> traitNames = new HashSet<string>();
+        private readonly Mock<ITestCaseFilterExpression> _mockFilterExpression = new Mock<ITestCaseFilterExpression>();
+        private readonly ISet<string> _traitNames = new HashSet<string>();
 
         [TestInitialize]
         public override void SetUp()
@@ -24,7 +26,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
             MockRunContext.Setup(rc => rc.GetTestCaseFilter(
                     It.IsAny<IEnumerable<string>>(), It.IsAny<Func<string, TestProperty>>()))
-                .Returns(MockFilterExpression.Object);
+                .Returns(_mockFilterExpression.Object);
         }
 
         [TestCleanup]
@@ -32,84 +34,90 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             base.TearDown();
 
-            MockFilterExpression.Reset();
-            traitNames.Clear();
+            _mockFilterExpression.Reset();
+            _traitNames.Clear();
         }
 
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Filter_NoFilterExpressionProvided_NoFiltering()
         {
             MockRunContext.Setup(rc => rc.GetTestCaseFilter(
                     It.IsAny<IEnumerable<string>>(), It.IsAny<Func<string, TestProperty>>()))
                 .Returns((ITestCaseFilterExpression)null);
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
+            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases, filteredTestCases);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Filter_ExpressionAcceptsAnything_NoFiltering()
         {
-            MockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(true);
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(true);
+            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases, filteredTestCases);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Filter_ExpressionMatchesNothing_EmptyResult()
         {
-            MockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(false);
-            IEnumerable<TestCase> testCases = CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(false);
+            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(new List<TestCase>(), filteredTestCases);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Filter_ExpressionMatchesDisplayName_CorrectFiltering()
         {
-            List<TestCase> testCases = CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
-            MockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases[0].Yield(), filteredTestCases);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Matches_ExpressionMatchesDisplayName_CorrectFiltering()
         {
-            List<TestCase> testCases = CreateDummyTestCases("Foo.Bar").Select(DataConversionExtensions.ToVsTestCase).ToList();
-            MockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar").Select(DataConversionExtensions.ToVsTestCase).ToList();
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
             bool matches = filter.Matches(testCases[0]);
 
-            Assert.IsTrue(matches);
+            matches.Should().BeTrue();
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Filter_Trait_CorrectFiltering()
         {
-            List<TestCase> testCases = CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
             testCases[0].Traits.Add(new Trait("MyTrait", "value1"));
             SetupFilterToAcceptTraitForTestCase(testCases[0], "MyTrait", "value1");
             testCases[1].Traits.Add(new Trait("MyTrait", "value2"));
             SetupFilterToAcceptTraitForTestCase(testCases[1], "MyTrait", "value2");
-            traitNames.Add("MyTrait");
+            _traitNames.Add("MyTrait");
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases, filteredTestCases);
@@ -117,13 +125,13 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private void SetupFilterToAcceptTraitForTestCase(TestCase testCase, string traitName, string traitValue)
         {
-            MockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCase), It.Is<Func<string, object>>(f => f(traitName).ToString() == traitValue))).Returns(true);
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCase), It.Is<Func<string, object>>(f => f(traitName).ToString() == traitValue))).Returns(true);
         }
 
 
         private static void AssertAreEqual(IEnumerable<TestCase> testCases1, IEnumerable<TestCase> testCases2)
         {
-            Assert.AreEqual(testCases1.Count(), testCases2.Count());
+            testCases1.Count().ShouldBeEquivalentTo(testCases2.Count());
 
             IEnumerator<TestCase> enumerator1 = testCases1.GetEnumerator();
             IEnumerator<TestCase> enumerator2 = testCases2.GetEnumerator();
@@ -135,14 +143,14 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private static void AssertAreEqual(TestCase testCase1, TestCase testCase2)
         {
-            Assert.AreEqual(testCase1.FullyQualifiedName, testCase2.FullyQualifiedName);
-            Assert.AreEqual(testCase1.DisplayName, testCase2.DisplayName);
-            Assert.AreEqual(testCase1.CodeFilePath, testCase2.CodeFilePath);
-            Assert.AreEqual(testCase1.Source, testCase2.Source);
-            Assert.AreEqual(testCase1.LineNumber, testCase2.LineNumber);
-            Assert.AreEqual(testCase1.Id, testCase2.Id);
-            Assert.AreEqual(testCase1.ExecutorUri, testCase2.ExecutorUri);
-            Assert.AreEqual(testCase1.Traits.Count(), testCase2.Traits.Count());
+            testCase1.FullyQualifiedName.ShouldBeEquivalentTo(testCase2.FullyQualifiedName);
+            testCase1.DisplayName.ShouldBeEquivalentTo(testCase2.DisplayName);
+            testCase1.CodeFilePath.ShouldBeEquivalentTo(testCase2.CodeFilePath);
+            testCase1.Source.ShouldBeEquivalentTo(testCase2.Source);
+            testCase1.LineNumber.ShouldBeEquivalentTo(testCase2.LineNumber);
+            testCase1.Id.ShouldBeEquivalentTo(testCase2.Id);
+            testCase1.ExecutorUri.ShouldBeEquivalentTo(testCase2.ExecutorUri);
+            testCase1.Traits.Count().ShouldBeEquivalentTo(testCase2.Traits.Count());
         }
 
     }

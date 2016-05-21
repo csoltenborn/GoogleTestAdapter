@@ -60,6 +60,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
+      <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
+      <Name>Core.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VsPackage.Tests\VsPackage.Tests.csproj">
       <Project>{b9c827b5-dc90-4a78-b477-852eae1196af}</Project>
       <Name>VsPackage.Tests</Name>

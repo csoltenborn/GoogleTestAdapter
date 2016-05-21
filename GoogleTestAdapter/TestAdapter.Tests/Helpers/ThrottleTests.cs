@@ -3,67 +3,71 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
 {
     [TestClass]
     public class ThrottleTests
     {
-        public IEnumerable<int> Enumerator { get; private set; }
-
         struct Event
         {
-            public int id;
-            public DateTime time;
+            public int Id;
+            public DateTime Time;
         }
 
-        private static List<Event> events = new List<Event>();
-        private const int maxEvents = 10;
-        private const int totalEvents = 100;
-        private static readonly TimeSpan timeSpan = TimeSpan.FromMilliseconds(100);
+        private static readonly List<Event> Events = new List<Event>();
+        private const int MaxEvents = 10;
+        private const int TotalEvents = 100;
+        private static readonly TimeSpan TimeSpan = TimeSpan.FromMilliseconds(100);
 
         [ClassInitialize]
         public static void GenerateEventList(TestContext context)
         {
-            var throttle = new Throttle(maxEvents, timeSpan);
-            for (int i = 0; i < totalEvents; i++)
+            var throttle = new Throttle(MaxEvents, TimeSpan);
+            for (int i = 0; i < TotalEvents; i++)
             {
+                var id = i;
                 throttle.Execute(() =>
                 {
-                    events.Add(new Event { id = i, time = DateTime.Now });
+                    Events.Add(new Event { Id = id, Time = DateTime.Now });
                 });
             }
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void EventsAreInOrder()
         {
-            events.Count.Should().Be(totalEvents);
-            for (int i = 0; i < events.Count; i++)
-                events[i].id.Should().Be(i);
+            Events.Count.Should().Be(TotalEvents);
+            for (int i = 0; i < Events.Count; i++)
+                Events[i].Id.Should().Be(i);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void DoesNotTakeMuchLongerThanExpected()
         {
-            var duration = (events.Last().time - events.First().time).TotalMilliseconds;
-            var minimumDuration = ((totalEvents / maxEvents - 1) * timeSpan.TotalMilliseconds);
+            var duration = (Events.Last().Time - Events.First().Time).TotalMilliseconds;
+            var minimumDuration = ((TotalEvents / MaxEvents - 1) * TimeSpan.TotalMilliseconds);
             duration.Should().BeGreaterThan(minimumDuration);
-            duration.Should().BeLessThan(minimumDuration + timeSpan.TotalMilliseconds + 20); // TODO 20 is an arbitrary tolerance to make test pass
+            duration.Should().BeLessThan(minimumDuration + TimeSpan.TotalMilliseconds + 20); // TODO 20 is an arbitrary tolerance to make test pass
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void HasNoTimeFrameWithTooManyElements()
         {
-            var firstEvent = events.First().time;
-            var lastEvent = events.Last().time;
+            var firstEvent = Events.First().Time;
+            var lastEvent = Events.Last().Time;
             var step = TimeSpan.FromMilliseconds(77);
 
             for (DateTime start = firstEvent; start < lastEvent; start += step)
             {
-                var end = start + timeSpan;
-                var eventsInTimeFrame = events.Where(e => e.time >= start && e.time <= end);
-                eventsInTimeFrame.Count().Should().BeLessOrEqualTo(maxEvents);
+                var theStart = start;
+                var theEnd = start + TimeSpan;
+                var eventsInTimeFrame = Events.Where(e => e.Time >= theStart && e.Time <= theEnd);
+                eventsInTimeFrame.Count().Should().BeLessOrEqualTo(MaxEvents);
             }
         }
     }

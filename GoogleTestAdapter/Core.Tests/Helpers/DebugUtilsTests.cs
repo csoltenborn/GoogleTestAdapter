@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -9,6 +10,7 @@ namespace GoogleTestAdapter.Helpers
     {
 
         [TestMethod]
+        [TestCategory(Unit)]
         [ExpectedException(typeof(ArgumentNullException))]
         public void AssertIsNotNull_Null_ThrowsException()
         {
@@ -16,6 +18,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         [ExpectedException(typeof(ArgumentException))]
         public void AssertIsNull_NotNull_ThrowsException()
         {

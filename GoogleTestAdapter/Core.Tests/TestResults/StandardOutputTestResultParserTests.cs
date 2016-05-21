@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
-    public class StandardOutputTestResultParserTests : AbstractGoogleTestExtensionTests
+    public class StandardOutputTestResultParserTests : AbstractCoreTests
     {
         private string[] ConsoleOutput1 { get; } = {
             @"[==========] Running 3 tests from 1 test case.",
@@ -95,103 +97,110 @@ namespace GoogleTestAdapter.TestResults
 
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_CompleteOutput_ParsedCorrectly()
         {
             List<TestResult> results = ComputeTestResults(Complete);
 
-            Assert.AreEqual(3, results.Count);
+            results.Count.Should().Be(3);
 
-            Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
-            Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
-            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+            results[0].Outcome.Should().Be(TestOutcome.Failed);
+            results[0].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(3));
+            results[0].ErrorStackTrace.Should()
+                .Contain(
+                    @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
 
-            Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
-            Assert.IsFalse(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
+            results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
+            results[1].Outcome.Should().Be(TestOutcome.Passed);
+            results[1].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(1));
 
-            Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
-            Assert.IsFalse(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(9), results[2].Duration);
+            results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
+            results[2].Outcome.Should().Be(TestOutcome.Failed);
+            results[2].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[2].Duration.Should().Be(TimeSpan.FromMilliseconds(9));
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithImmediateCrash_CorrectResultHasCrashText()
         {
             List<TestResult> results = ComputeTestResults(CrashesImmediately);
 
-            Assert.AreEqual(2, results.Count);
+            results.Count.Should().Be(2);
 
-            Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
-            Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
-            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+            results[0].Outcome.Should().Be(TestOutcome.Failed);
+            results[0].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(3));
+            results[0].ErrorStackTrace.Should().Contain(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
 
-            Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Failed, results[1].Outcome);
-            Assert.IsTrue(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[1].Duration);
+            results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
+            results[1].Outcome.Should().Be(TestOutcome.Failed);
+            results[1].ErrorMessage.Should().Contain(StandardOutputTestResultParser.CrashText);
+            results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(0));
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithCrashAfterErrorMessage_CorrectResultHasCrashText()
         {
             List<TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
-            Assert.AreEqual(3, results.Count);
+            results.Count.Should().Be(3);
 
-            Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Failed, results[0].Outcome);
-            Assert.IsFalse(results[0].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(3), results[0].Duration);
-            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+            results[0].Outcome.Should().Be(TestOutcome.Failed);
+            results[0].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(3));
+            results[0].ErrorStackTrace.Should().Contain(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
 
-            Assert.AreEqual("TestMath.AddPasses", results[1].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Passed, results[1].Outcome);
-            Assert.IsFalse(results[1].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[1].Duration);
+            results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
+            results[1].Outcome.Should().Be(TestOutcome.Passed);
+            results[1].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(1));
 
-            Assert.AreEqual("TestMath.Crash", results[2].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Failed, results[2].Outcome);
-            Assert.IsTrue(results[2].ErrorMessage.Contains(StandardOutputTestResultParser.CrashText));
-            Assert.AreEqual(TimeSpan.FromMilliseconds(0), results[2].Duration);
+            results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
+            results[2].Outcome.Should().Be(TestOutcome.Failed);
+            results[2].ErrorMessage.Should().Contain(StandardOutputTestResultParser.CrashText);
+            results[2].Duration.Should().Be(TimeSpan.FromMilliseconds(0));
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithInvalidDurationUnit_DefaultDurationIsUsedAndWarningIsProduced()
         {
             List<TestResult> results = ComputeTestResults(WrongDurationUnit);
 
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual("TestMath.AddFails", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TimeSpan.FromMilliseconds(1), results[0].Duration);
-            Assert.IsTrue(results[0].ErrorStackTrace.Contains(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            results.Count.Should().Be(1);
+            results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+            results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(1));
+            results[0].ErrorStackTrace.Should().Contain(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithConsoleOutput_ConsoleOutputIsIgnored()
         {
             List<TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
 
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual("TestMath.AddPasses", results[0].TestCase.FullyQualifiedName);
-            Assert.AreEqual(TestOutcome.Passed, results[0].Outcome);
+            results.Count.Should().Be(1);
+            results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
+            results[0].Outcome.Should().Be(TestOutcome.Passed);
         }
 
 
         private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {
             IList<TestCase> cases = new List<TestCase>();
-            cases.Add(ToTestCase("TestMath.AddFails", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            cases.Add(ToTestCase("TestMath.Crash", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            cases.Add(ToTestCase("TestMath.AddPasses", DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            cases.Add(TestDataCreator.ToTestCase("TestMath.AddFails", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            cases.Add(TestDataCreator.ToTestCase("TestMath.Crash", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
+            cases.Add(TestDataCreator.ToTestCase("TestMath.AddPasses", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
             StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
             return parser.GetTestResults();
         }

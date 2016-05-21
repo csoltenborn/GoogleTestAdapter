@@ -7,7 +7,7 @@ using Moq;
 namespace GoogleTestAdapter.TestAdapter
 {
 
-    public abstract class AbstractVSTests : AbstractGoogleTestExtensionTests
+    public abstract class AbstractTestAdapterTests : AbstractCoreTests
     {
         protected readonly Mock<IRunContext> MockRunContext = new Mock<IRunContext>();
         protected readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             base.SetUp();
 
-            MockRunContext.Setup(rc => rc.SolutionDirectory).Returns(Path.GetFullPath(SampleTestsSolutionDir));
+            MockRunContext.Setup(rc => rc.SolutionDirectory).Returns(Path.GetFullPath(TestResources.SampleTestsSolutionDir));
         }
 
         [TestCleanup]

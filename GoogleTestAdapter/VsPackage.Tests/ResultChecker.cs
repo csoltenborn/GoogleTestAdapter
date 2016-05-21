@@ -11,21 +11,21 @@ namespace GoogleTestAdapter.VsPackage
     {
         internal const bool OverwriteTestResults = false;
 
-        private readonly string goldenFilesDirectory;
-        private readonly string testErrorsDirectory;
-        private readonly string fileExtension;
+        private readonly string _goldenFilesDirectory;
+        private readonly string _testErrorsDirectory;
+        private readonly string _fileExtension;
 
         public ResultChecker(string goldenFilesDir, string testErrorsDir, string fileExtension)
         {
-            goldenFilesDirectory = goldenFilesDir;
-            testErrorsDirectory = testErrorsDir;
-            this.fileExtension = fileExtension;
+            _goldenFilesDirectory = goldenFilesDir;
+            _testErrorsDirectory = testErrorsDir;
+            this._fileExtension = fileExtension;
         }
 
         public void CheckResults(string testResults, string typeName, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(goldenFilesDirectory, typeName + "__" + testCaseName + fileExtension);
-            string resultFile = Path.Combine(testErrorsDirectory, typeName + "__" + testCaseName + fileExtension);
+            string expectationFile = Path.Combine(_goldenFilesDirectory, typeName + "__" + testCaseName + _fileExtension);
+            string resultFile = Path.Combine(_testErrorsDirectory, typeName + "__" + testCaseName + _fileExtension);
 
             if (!File.Exists(expectationFile))
             {
@@ -41,12 +41,15 @@ namespace GoogleTestAdapter.VsPackage
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (OverwriteTestResults)
+                // ReSharper disable HeuristicUnreachableCode
                 {
                     File.WriteAllText(expectationFile, testResults);
                     Assert.Inconclusive("Test results changed and have been overwritten. Differences: " + msg);
                 }
+                // ReSharper restore HeuristicUnreachableCode
                 else
                 {
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     Directory.CreateDirectory(Path.GetDirectoryName(resultFile));
                     File.WriteAllText(resultFile, testResults);
                     Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile + ". Differences: " + msg);

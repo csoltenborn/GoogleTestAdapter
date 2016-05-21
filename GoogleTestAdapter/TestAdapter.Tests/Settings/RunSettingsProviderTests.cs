@@ -1,36 +1,41 @@
 ﻿using System.Xml;
 using System.Xml.XPath;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
 
     [TestClass]
-    public class RunSettingsProviderTests : AbstractGoogleTestExtensionTests
+    public class RunSettingsProviderTests
     {
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Constructor__InstanceHasCorrectName()
         {
-            Assert.AreEqual(GoogleTestConstants.SettingsName, new RunSettingsProvider().Name);
+            new RunSettingsProvider().Name.Should().Be(GoogleTestConstants.SettingsName);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void Load_SolutionSettings_SettingsAreMerged()
         {
-            RunSettingsProvider provider = new RunSettingsProvider();
-            Assert.IsNull(provider.Settings);
+            var provider = new RunSettingsProvider();
+            provider.Settings.Should().BeNull();
 
-            XmlDocument settingsDoc = new XmlDocument();
-            settingsDoc.Load(SolutionTestSettings);
+            var settingsDoc = new XmlDocument();
+            settingsDoc.Load(TestResources.SolutionTestSettings);
             XPathNavigator navigator = settingsDoc.CreateNavigator();
-            Assert.IsTrue(navigator.MoveToChild("RunSettings", ""));
-            Assert.IsTrue(navigator.MoveToChild(GoogleTestConstants.SettingsName, ""));
+
+            navigator.MoveToChild("RunSettings", "").Should().BeTrue();
+            navigator.MoveToChild(GoogleTestConstants.SettingsName, "").Should().BeTrue();
 
             provider.Load(navigator.ReadSubtree());
 
-            Assert.IsNotNull(provider.Settings);
-            Assert.AreEqual("Solution", provider.Settings.BatchForTestSetup);
+            provider.Settings.Should().NotBeNull();
+            provider.Settings.BatchForTestSetup.Should().Be("Solution");
         }
 
     }

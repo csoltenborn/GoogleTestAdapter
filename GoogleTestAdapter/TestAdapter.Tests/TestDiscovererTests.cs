@@ -3,21 +3,24 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
 using GoogleTestAdapter.Helpers;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
 {
 
     [TestClass]
-    public class TestDiscovererTests : AbstractGoogleTestExtensionTests
+    public class TestDiscovererTests : AbstractCoreTests
     {
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void DiscoverTests_WithDefaultRegex_RegistersFoundTestsAtDiscoverySink()
         {
             CheckForDiscoverySinkCalls(2);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void DiscoverTests_WithCustomNonMatchingRegex_DoesNotFindTests()
         {
             CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
@@ -31,8 +34,8 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
 
             TestDiscoverer discoverer = new TestDiscoverer(TestEnvironment);
-            Mock<IMessageLogger> MockVsLogger = new Mock<IMessageLogger>();
-            discoverer.DiscoverTests(X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, MockVsLogger.Object, mockDiscoverySink.Object);
+            Mock<IMessageLogger> mockVsLogger = new Mock<IMessageLogger>();
+            discoverer.DiscoverTests(TestResources.X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, mockVsLogger.Object, mockDiscoverySink.Object);
 
             mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>()), Times.Exactly(expectedNrOfTests));
         }

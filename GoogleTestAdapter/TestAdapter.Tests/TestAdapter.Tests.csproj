@@ -84,10 +84,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractTestExecutorTests.cs" />
-    <Compile Include="AbstractVSTests.cs" />
+    <Compile Include="AbstractTestAdapterTests.cs" />
     <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
-    <Compile Include="Framework\VsTestFrameworkReporterTests.cs" />
-    <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
+    <Compile Include="Framework\TestAdapterTestFrameworkReporterTests.cs" />
+    <Compile Include="Framework\TestAdapterTestFrameworkLoggerTests.cs" />
     <Compile Include="Helpers\ThrottleTests.cs" />
     <Compile Include="Helpers\TestCaseFilterTests.cs" />
     <Compile Include="TestDiscovererTests.cs" />

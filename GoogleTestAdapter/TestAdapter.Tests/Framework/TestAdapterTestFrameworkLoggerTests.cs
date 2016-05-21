@@ -1,28 +1,30 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
     [TestClass]
-    public class VsTestFrameworkLoggerTests : AbstractVSTests
+    public class TestAdapterTestFrameworkLoggerTests : AbstractTestAdapterTests
     {
 
-        private VsTestFrameworkLogger Logger;
+        private VsTestFrameworkLogger _logger;
 
         [TestInitialize]
         public override void SetUp()
         {
             base.SetUp();
 
-            Logger = new VsTestFrameworkLogger(MockVsLogger.Object);
+            _logger = new VsTestFrameworkLogger(MockVsLogger.Object);
         }
 
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogInfo_Null_NonEmptyString()
         {
-            Logger.LogInfo(null);
+            _logger.LogInfo(null);
 
             MockVsLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
@@ -31,9 +33,10 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogInfo_EmptyString_NonEmptyString()
         {
-            Logger.LogInfo("");
+            _logger.LogInfo("");
 
             MockVsLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
@@ -42,9 +45,10 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogInfo_Whitespace_NonEmptyString()
         {
-            Logger.LogInfo("\n");
+            _logger.LogInfo("\n");
 
             MockVsLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Informational),
@@ -53,9 +57,10 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogWarning_Foo_WarningAndFoo()
         {
-            Logger.LogWarning("foo");
+            _logger.LogWarning("foo");
 
             MockVsLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Warning),
@@ -64,9 +69,10 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void LogError_Foo_ErrorAndFoo()
         {
-            Logger.LogError("foo");
+            _logger.LogError("foo");
 
             MockVsLogger.Verify(l => l.SendMessage(
                 It.Is<TestMessageLevel>(tml => tml == TestMessageLevel.Error),

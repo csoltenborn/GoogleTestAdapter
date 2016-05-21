@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using FluentAssertions;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -15,7 +16,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         public TestExecutorSequentialTests() : base(false, 1) { }
 
-        override protected void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
+        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
             base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
 
@@ -37,9 +38,10 @@ namespace GoogleTestAdapter.TestAdapter
 
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void RunTests_CancelingExecutor_StopsTestExecution()
         {
-            List<Model.TestCase> testCasesToRun = GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment);

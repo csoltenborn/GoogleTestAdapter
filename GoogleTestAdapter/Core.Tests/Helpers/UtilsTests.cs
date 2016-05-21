@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -8,6 +10,7 @@ namespace GoogleTestAdapter.Helpers
     {
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void DeleteDirectory_CanNotBeDeleted_ReturnsFalseAndMessage()
         {
             string dir = Utils.GetTempDirectory();
@@ -16,25 +19,26 @@ namespace GoogleTestAdapter.Helpers
             string errorMessage;
             bool result = Utils.DeleteDirectory(dir, out errorMessage);
 
-            Assert.IsFalse(result);
-            Assert.IsTrue(errorMessage.Contains(dir));
+            result.Should().BeFalse();
+            errorMessage.Should().Contain(dir);
 
             RemoveReadonlyFlag(dir);
 
             result = Utils.DeleteDirectory(dir, out errorMessage);
 
-            Assert.IsTrue(result);
-            Assert.IsNull(errorMessage);
+            result.Should().BeTrue();
+            errorMessage.Should().BeNull();
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void GetTempDirectory__DirectoryDoesExistAndCanBeDeleted()
         {
             string dir = Utils.GetTempDirectory();
+            Directory.Exists(dir).Should().BeTrue();
 
-            Assert.IsTrue(Directory.Exists(dir));
             string errorMessage;
-            Assert.IsTrue(Utils.DeleteDirectory(dir, out errorMessage));
+            Utils.DeleteDirectory(dir, out errorMessage).Should().BeTrue();
         }
 
         private void SetReadonlyFlag(string dir)

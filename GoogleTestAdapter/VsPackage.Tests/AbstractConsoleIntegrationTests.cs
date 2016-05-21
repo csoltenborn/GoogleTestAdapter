@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using FluentAssertions;
 using GoogleTestAdapter.VsPackage.Helpers;
 using GoogleTestAdapterUiTests;
 using GoogleTestAdapterUiTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -27,7 +29,7 @@ namespace GoogleTestAdapter.VsPackage
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
             Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\VsPackage.Tests.*\\bin\\(Debug|Release)\\GoogleTestAdapter.VsPackage.Tests.*.dll$");
-            Assert.IsTrue(match.Success);
+            match.Success.Should().BeTrue();
             string basePath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
             testAdapterDir = Path.Combine(basePath, @"GoogleTestAdapter\TestAdapter\bin", debugOrRelease);
@@ -36,30 +38,30 @@ namespace GoogleTestAdapter.VsPackage
 
 
         [TestMethod]
-        [TestCategory("End to end")]
+        [TestCategory(EndToEnd)]
         public virtual void Console_ListDiscoverers_DiscovererIsListed()
         {
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            Assert.IsTrue(output.Contains(@"executor://GoogleTestRunner/v1"));
+            output.Should().Contain(@"executor://GoogleTestRunner/v1");
         }
 
         [TestMethod]
-        [TestCategory("End to end")]
+        [TestCategory(EndToEnd)]
         public virtual void Console_ListExecutors_ExecutorIsListed()
         {
             string arguments = CreateListExecutorsArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            Assert.IsTrue(output.Contains(@"executor://GoogleTestRunner/v1"));
+            output.Should().Contain(@"executor://GoogleTestRunner/v1");
         }
 
         [TestMethod]
-        [TestCategory("End to end")]
+        [TestCategory(EndToEnd)]
         public virtual void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
             string arguments = CreateListSettingsProvidersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            Assert.IsTrue(output.Contains(@"GoogleTestAdapter"));
+            output.Should().Contain(@"GoogleTestAdapter");
         }
 
 

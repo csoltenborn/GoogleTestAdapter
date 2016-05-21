@@ -44,12 +44,21 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions, Version=4.6.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.6.1\lib\net45\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.6.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.6.1\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -66,7 +75,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AbstractGoogleTestExtensionTests.cs" />
+    <Compile Include="AbstractCoreTests.cs" />
     <Compile Include="AbstractGoogleTestDiscovererTraitTests.cs" />
     <Compile Include="GoogleTestDiscoverReleaseTraitTests.cs" />
     <Compile Include="GoogleTestDiscoverDebugTraitTests.cs" />
@@ -78,6 +87,9 @@
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
     <Compile Include="TestCases\ListTestsParserTests.cs" />
+    <Compile Include="TestDataCreator.cs" />
+    <Compile Include="TestMetadata.cs" />
+    <Compile Include="TestResources.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
     <Compile Include="TestResults\ErrorMessageParserTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />

@@ -2,19 +2,22 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestDiscovererTests : AbstractGoogleTestExtensionTests
+    public class GoogleTestDiscovererTests : AbstractCoreTests
     {
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_MatchingExamples_AreMatched()
         {
             AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
@@ -25,6 +28,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_NotMatchingExamples_AreNotMatched()
         {
             AssertIsGoogleTestExecutable("MyGoogleTes.exe", false);
@@ -34,6 +38,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithRegexFromOptions_MatchesCorrectly()
         {
             AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
@@ -42,49 +47,56 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithUnparsableRegexFromOptions_ProducesErrorMessage()
         {
             bool result = new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable("my.exe", "d[ddd[");
 
-            Assert.IsFalse(result);
+            result.Should().BeFalse();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("'d[ddd['"))), Times.Exactly(1));
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_StaticallyLinkedX86Executable_FindsTestsWitLocation()
         {
-            FindStaticallyLinkedTests(X86StaticallyLinkedTests);
+            FindStaticallyLinkedTests(TestResources.X86StaticallyLinkedTests);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests_FindsTestsWithLocation()
         {
-            FindSampleTests(SampleTests);
+            FindSampleTests(TestResources.SampleTests);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_ExternallyLinkedX86Executable_FindsTestsWithLocation()
         {
-            FindExternallyLinkedTests(X86ExternallyLinkedTests);
+            FindExternallyLinkedTests(TestResources.X86ExternallyLinkedTests);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_WithPathExtension_FindsTestsWithLocation()
         {
-            MockOptions.Setup(o => o.PathExtension).Returns(PathExtensionTestsDllDir);
+            MockOptions.Setup(o => o.PathExtension).Returns(TestResources.PathExtensionTestsDllDir);
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(PathExtensionTestsExe);
-            Assert.AreEqual(NrOfSampleTests, testCases.Count);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
+            testCases.Count.Should().Be(TestResources.NrOfSampleTests);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_ExternallyLinkedX64Executable_FindsTestsWithLocation()
         {
-            FindExternallyLinkedTests(X64ExternallyLinkedTests);
+            FindExternallyLinkedTests(TestResources.X64ExternallyLinkedTests);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests_FindsParameterizedTests()
         {
             AssertFindsParameterizedTest(
@@ -97,6 +109,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests_FindsTypedTests()
         {
             AssertFindsParameterizedTest(
@@ -113,6 +126,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_ParseSymbolInformation_DiaResolverIsCreated()
         {
             Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
@@ -120,36 +134,38 @@ namespace GoogleTestAdapter
             mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>())).Returns(mockResolver.Object);
             mockResolver.Setup(r => r.GetFunctions(It.IsAny<string>())).Returns(new List<SourceFileLocation>());
 
-            new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object).GetTestsFromExecutable(SampleTests);
+            new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object).GetTestsFromExecutable(TestResources.SampleTests);
 
             mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.AtLeastOnce);
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_DoNotParseSymbolInformation_DiaIsNotInvoked()
         {
             Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
 
             IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object)
-                .GetTestsFromExecutable(SampleTests);
+                .GetTestsFromExecutable(TestResources.SampleTests);
 
             mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.Never);
-            Assert.AreEqual(NrOfSampleTests, testCases.Count);
+            testCases.Count.Should().Be(TestResources.NrOfSampleTests);
             foreach (TestCase testCase in testCases)
             {
-                Assert.AreEqual("", testCase.CodeFilePath);
-                Assert.AreEqual(0, testCase.LineNumber);
-                Assert.AreEqual(SampleTests, testCase.Source);
-                Assert.IsFalse(string.IsNullOrEmpty(testCase.DisplayName));
-                Assert.IsFalse(string.IsNullOrEmpty(testCase.FullyQualifiedName));
+                testCase.CodeFilePath.Should().Be("");
+                testCase.LineNumber.Should().Be(0);
+                testCase.Source.Should().Be(TestResources.SampleTests);
+                testCase.DisplayName.Should().NotBeNullOrEmpty();
+                testCase.FullyQualifiedName.Should().NotBeNullOrEmpty();
             }
         }
 
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
         {
-            Assert.AreEqual(isGoogleTestExecutable,
-                new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable(executable, regex));
+            new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable(executable, regex)
+                .Should()
+                .Be(isGoogleTestExecutable);
         }
 
         private void FindSampleTests(string location)
@@ -157,14 +173,14 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            Assert.AreEqual(NrOfSampleTests, testCases.Count);
+            testCases.Count.Should().Be(TestResources.NrOfSampleTests);
 
             TestCase testCase =
                testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
 
-            Assert.AreEqual("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>", testCase.DisplayName);
-            Assert.IsTrue(testCase.CodeFilePath.EndsWith(@"sampletests\tests\typeparameterizedtests.cpp"));
-            Assert.AreEqual(53, testCase.LineNumber);
+            testCase.DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>");
+            testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\typeparameterizedtests.cpp");
+            testCase.LineNumber.Should().Be(53);
         }
 
         private void FindStaticallyLinkedTests(string location)
@@ -172,15 +188,15 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            Assert.AreEqual(2, testCases.Count);
+            testCases.Count.Should().Be(2);
 
-            Assert.AreEqual("FooTest.MethodBarDoesAbc", testCases[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[0].CodeFilePath);
-            Assert.AreEqual(36, testCases[0].LineNumber);
+            testCases[0].DisplayName.Should().Be("FooTest.MethodBarDoesAbc");
+            testCases[0].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp");
+            testCases[0].LineNumber.Should().Be(36);
 
-            Assert.AreEqual("FooTest.DoesXyz", testCases[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp", testCases[1].CodeFilePath);
-            Assert.AreEqual(45, testCases[1].LineNumber);
+            testCases[1].DisplayName.Should().Be("FooTest.DoesXyz");
+            testCases[1].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp");
+            testCases[1].LineNumber.Should().Be(45);
         }
 
         private void FindExternallyLinkedTests(string location)
@@ -188,15 +204,15 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            Assert.AreEqual(2, testCases.Count);
+            testCases.Count.Should().Be(2);
 
-            Assert.AreEqual("BarTest.MethodBarDoesAbc", testCases[0].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[0].CodeFilePath);
-            Assert.AreEqual(36, testCases[0].LineNumber);
+            testCases[0].DisplayName.Should().Be("BarTest.MethodBarDoesAbc");
+            testCases[0].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp");
+            testCases[0].LineNumber.Should().Be(36);
 
-            Assert.AreEqual("BarTest.DoesXyz", testCases[1].DisplayName);
-            Assert.AreEqual(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp", testCases[1].CodeFilePath);
-            Assert.AreEqual(44, testCases[1].LineNumber);
+            testCases[1].DisplayName.Should().Be("BarTest.DoesXyz");
+            testCases[1].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp");
+            testCases[1].LineNumber.Should().Be(44);
         }
 
         private void AssertFindsParameterizedTest(string fullyQualifiedName, string displayName)
@@ -207,13 +223,15 @@ namespace GoogleTestAdapter
         // ReSharper disable once UnusedParameter.Local
         private void AssertFindsParameterizedTest(string fullyQualifiedName, Regex displayNameRegex)
         {
-            Assert.IsTrue(File.Exists(SampleTests), "Build SampleTests in Debug mode before executing this test");
+            File.Exists(TestResources.SampleTests)
+                .Should()
+                .BeTrue("Build SampleTests in Debug mode before executing this test");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
-            IList<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTests);
+            IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.SampleTests);
 
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);
-            Assert.IsTrue(displayNameRegex.IsMatch(testCase.DisplayName));
+            displayNameRegex.IsMatch(testCase.DisplayName).Should().BeTrue();
         }
 
     }

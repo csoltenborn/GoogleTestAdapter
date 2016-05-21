@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Common;
 
@@ -7,40 +6,35 @@ namespace GoogleTestAdapter.DiaResolver.Helpers
 {
     public class FakeLogger : LoggerBase
     {
-        public IList<string> Infos { get; } = new List<string>();
-        public IList<string> Warnings { get; } = new List<string>();
-        public IList<string> Errors { get; } = new List<string>();
+        private readonly IDictionary<Severity, IList<string>> _messages = new Dictionary<Severity, IList<string>>();
+
+        public IList<string> Infos => GetMessages(Severity.Info);
+        public IList<string> Warnings => GetMessages(Severity.Warning);
+        public IList<string> Errors => GetMessages(Severity.Error);
 
         public IList<string> All => Infos.Concat(Warnings).Concat(Errors).ToList();
 
         public IList<string> MessagesOfType(params Severity[] severities)
         {
-            var messages = new List<string>();
-            if (severities.Contains(Severity.Info))
-                messages.AddRange(Infos);
-            if (severities.Contains(Severity.Warning))
-                messages.AddRange(Warnings);
-            if (severities.Contains(Severity.Error))
-                messages.AddRange(Errors);
-            return messages;
+            return _messages.Where(p => severities.Contains(p.Key)).SelectMany(p => p.Value).ToList();
         }
 
         public override void Log(Severity severity, string message)
         {
-            switch (severity)
-            {
-                case Severity.Info:
-                    Infos.Add(message);
-                    break;
-                case Severity.Warning:
-                    Warnings.Add(message);
-                    break;
-                case Severity.Error:
-                    Errors.Add(message);
-                    break;
-                default:
-                    throw new Exception();
-            }
+            GetMessages(severity).Add(message);
         }
+
+        private IList<string> GetMessages(Severity severity)
+        {
+            IList<string> messages;
+            if (!_messages.TryGetValue(severity, out messages))
+            {
+                messages = new List<string>();
+                _messages.Add(severity, messages);
+            }
+            return messages;
+        }
+
     }
+
 }

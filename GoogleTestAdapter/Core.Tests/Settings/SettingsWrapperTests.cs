@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Settings
 {
 
     [TestClass]
-    public class SettingsWrapperTests : AbstractGoogleTestExtensionTests
+    public class SettingsWrapperTests : AbstractCoreTests
     {
 
         private Mock<IGoogleTestAdapterSettings> MockXmlOptions { get; } = new Mock<IGoogleTestAdapterSettings>();
@@ -32,257 +34,277 @@ namespace GoogleTestAdapter.Settings
 
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void NrOfTestRepitions_InvalidValue_ReturnsDefaultValue()
         {
             MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(-2);
-            Assert.AreEqual(SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue, TheOptions.NrOfTestRepetitions);
+            TheOptions.NrOfTestRepetitions.Should().Be(SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue);
 
             MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(0);
-            Assert.AreEqual(SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue, TheOptions.NrOfTestRepetitions);
+
+            TheOptions.NrOfTestRepetitions.Should().Be(SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue);
 
             MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(4711);
-            Assert.AreEqual(4711, TheOptions.NrOfTestRepetitions);
+            TheOptions.NrOfTestRepetitions.Should().Be(4711);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ShuffleTestsSeed_InvalidValue_ReturnsDefaultValue()
         {
             MockXmlOptions.Setup(o => o.ShuffleTestsSeed).Returns(-1);
-            Assert.AreEqual(SettingsWrapper.OptionShuffleTestsSeedDefaultValue, TheOptions.ShuffleTestsSeed);
+            TheOptions.ShuffleTestsSeed.Should().Be(SettingsWrapper.OptionShuffleTestsSeedDefaultValue);
 
             MockXmlOptions.Setup(o => o.ShuffleTestsSeed).Returns(1000000);
-            Assert.AreEqual(SettingsWrapper.OptionShuffleTestsSeedDefaultValue, TheOptions.ShuffleTestsSeed);
+            TheOptions.ShuffleTestsSeed.Should().Be(SettingsWrapper.OptionShuffleTestsSeedDefaultValue);
 
             MockXmlOptions.Setup(o => o.ShuffleTestsSeed).Returns(4711);
-            Assert.AreEqual(4711, TheOptions.ShuffleTestsSeed);
+            TheOptions.ShuffleTestsSeed.Should().Be(4711);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void MaxNrOfThreads_InvalidValue_ReturnsDefaultValue()
         {
             MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(-1);
-            Assert.AreEqual(Environment.ProcessorCount, TheOptions.MaxNrOfThreads);
+            TheOptions.MaxNrOfThreads.Should().Be(Environment.ProcessorCount);
 
             MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount + 1);
-            Assert.AreEqual(Environment.ProcessorCount, TheOptions.MaxNrOfThreads);
+            TheOptions.MaxNrOfThreads.Should().Be(Environment.ProcessorCount);
 
             if (Environment.ProcessorCount > 1)
             {
                 MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount - 1);
-                Assert.AreEqual(Environment.ProcessorCount - 1, TheOptions.MaxNrOfThreads);
+                TheOptions.MaxNrOfThreads.Should().Be(Environment.ProcessorCount - 1);
             }
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder);
             string result = TheOptions.GetUserParameters("", "mydir", 0);
-            Assert.AreEqual("mydir", result);
+            result.Should().Be("mydir");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + " " + SettingsWrapper.TestDirPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 0);
-            Assert.AreEqual("mydir mydir", result);
+            result.Should().Be("mydir mydir");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder.ToLower());
             result = TheOptions.GetUserParameters("", "mydir", 0);
-            Assert.AreEqual(SettingsWrapper.TestDirPlaceholder.ToLower(), result);
+            result.Should().Be(SettingsWrapper.TestDirPlaceholder.ToLower());
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.ThreadIdPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 4711);
-            Assert.AreEqual("4711", result);
+            result.Should().Be("4711");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder);
             result = TheOptions.GetUserParameters("", "mydir", 4711);
-            Assert.AreEqual("mydir, 4711", result);
+            result.Should().Be("mydir, 4711");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void CatchExceptions__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.CatchExceptions).Returns((bool?)null);
             bool result = TheOptions.CatchExceptions;
-            Assert.AreEqual(SettingsWrapper.OptionCatchExceptionsDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionCatchExceptionsDefaultValue);
 
             MockXmlOptions.Setup(o => o.CatchExceptions).Returns(!SettingsWrapper.OptionCatchExceptionsDefaultValue);
             result = TheOptions.CatchExceptions;
-            Assert.AreEqual(!SettingsWrapper.OptionCatchExceptionsDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionCatchExceptionsDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void BreakOnFailure__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BreakOnFailure).Returns((bool?)null);
             bool result = TheOptions.BreakOnFailure;
-            Assert.AreEqual(SettingsWrapper.OptionBreakOnFailureDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionBreakOnFailureDefaultValue);
 
             MockXmlOptions.Setup(o => o.BreakOnFailure).Returns(!SettingsWrapper.OptionBreakOnFailureDefaultValue);
             result = TheOptions.BreakOnFailure;
-            Assert.AreEqual(!SettingsWrapper.OptionBreakOnFailureDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionBreakOnFailureDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void PrintTestOutput__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.PrintTestOutput).Returns((bool?)null);
             bool result = TheOptions.PrintTestOutput;
-            Assert.AreEqual(SettingsWrapper.OptionPrintTestOutputDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionPrintTestOutputDefaultValue);
 
             MockXmlOptions.Setup(o => o.PrintTestOutput).Returns(!SettingsWrapper.OptionPrintTestOutputDefaultValue);
             result = TheOptions.PrintTestOutput;
-            Assert.AreEqual(!SettingsWrapper.OptionPrintTestOutputDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionPrintTestOutputDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ParseSymbolInformation__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.ParseSymbolInformation).Returns((bool?)null);
             bool result = TheOptions.ParseSymbolInformation;
-            Assert.AreEqual(SettingsWrapper.OptionParseSymbolInformationDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionParseSymbolInformationDefaultValue);
 
             MockXmlOptions.Setup(o => o.ParseSymbolInformation).Returns(!SettingsWrapper.OptionParseSymbolInformationDefaultValue);
             result = TheOptions.ParseSymbolInformation;
-            Assert.AreEqual(!SettingsWrapper.OptionParseSymbolInformationDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionParseSymbolInformationDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void RunDisabledTests__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.RunDisabledTests).Returns((bool?)null);
             bool result = TheOptions.RunDisabledTests;
-            Assert.AreEqual(SettingsWrapper.OptionRunDisabledTestsDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionRunDisabledTestsDefaultValue);
 
             MockXmlOptions.Setup(o => o.RunDisabledTests).Returns(!SettingsWrapper.OptionRunDisabledTestsDefaultValue);
             result = TheOptions.RunDisabledTests;
-            Assert.AreEqual(!SettingsWrapper.OptionRunDisabledTestsDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionRunDisabledTestsDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ShuffleTests__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.ShuffleTests).Returns((bool?)null);
             bool result = TheOptions.ShuffleTests;
-            Assert.AreEqual(SettingsWrapper.OptionShuffleTestsDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionShuffleTestsDefaultValue);
 
             MockXmlOptions.Setup(o => o.ShuffleTests).Returns(!SettingsWrapper.OptionShuffleTestsDefaultValue);
             result = TheOptions.ShuffleTests;
-            Assert.AreEqual(!SettingsWrapper.OptionShuffleTestsDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionShuffleTestsDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void DebugMode__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.DebugMode).Returns((bool?)null);
             bool result = TheOptions.DebugMode;
-            Assert.AreEqual(SettingsWrapper.OptionDebugModeDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionDebugModeDefaultValue);
 
             MockXmlOptions.Setup(o => o.DebugMode).Returns(!SettingsWrapper.OptionDebugModeDefaultValue);
             result = TheOptions.DebugMode;
-            Assert.AreEqual(!SettingsWrapper.OptionDebugModeDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionDebugModeDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void ParallelTestExecution__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.ParallelTestExecution).Returns((bool?)null);
             bool result = TheOptions.ParallelTestExecution;
-            Assert.AreEqual(SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue);
 
             MockXmlOptions.Setup(o => o.ParallelTestExecution).Returns(!SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue);
             result = TheOptions.ParallelTestExecution;
-            Assert.AreEqual(!SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue, result);
+            result.Should().Be(!SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue);
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void TestDiscoveryRegex__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.TestDiscoveryRegex).Returns((string)null);
             string result = TheOptions.TestDiscoveryRegex;
-            Assert.AreEqual(SettingsWrapper.OptionTestDiscoveryRegexDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionTestDiscoveryRegexDefaultValue);
 
             MockXmlOptions.Setup(o => o.TestDiscoveryRegex).Returns("FooBar");
             result = TheOptions.TestDiscoveryRegex;
-            Assert.AreEqual("FooBar", result);
+            result.Should().Be("FooBar");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void TestNameSeparator__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.TestNameSeparator).Returns((string)null);
             string result = TheOptions.TestNameSeparator;
-            Assert.AreEqual(SettingsWrapper.OptionTestNameSeparatorDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionTestNameSeparatorDefaultValue);
 
             MockXmlOptions.Setup(o => o.TestNameSeparator).Returns("FooBar");
             result = TheOptions.TestNameSeparator;
-            Assert.AreEqual("FooBar", result);
+            result.Should().Be("FooBar");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void PathExtension__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.PathExtension).Returns((string)null);
             string result = TheOptions.PathExtension;
-            Assert.AreEqual(SettingsWrapper.OptionPathExtensionDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionPathExtensionDefaultValue);
 
             MockXmlOptions.Setup(o => o.PathExtension).Returns("FooBar");
             result = TheOptions.PathExtension;
-            Assert.AreEqual("FooBar", result);
+            result.Should().Be("FooBar");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);
             string result = TheOptions.BatchForTestTeardown;
-            Assert.AreEqual(SettingsWrapper.OptionBatchForTestTeardownDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionBatchForTestTeardownDefaultValue);
 
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns("FooBar");
             result = TheOptions.BatchForTestTeardown;
-            Assert.AreEqual("FooBar", result);
+            result.Should().Be("FooBar");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestSetup__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns((string)null);
             string result = TheOptions.BatchForTestSetup;
-            Assert.AreEqual(SettingsWrapper.OptionBatchForTestSetupDefaultValue, result);
+            result.Should().Be(SettingsWrapper.OptionBatchForTestSetupDefaultValue);
 
             MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns("FooBar");
             result = TheOptions.BatchForTestSetup;
-            Assert.AreEqual("FooBar", result);
+            result.Should().Be("FooBar");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void TraitsRegexesBefore__ReturnsParsedValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.TraitsRegexesBefore).Returns((string)null);
             List<RegexTraitPair> result = TheOptions.TraitsRegexesBefore;
-            CollectionAssert.AreEqual(new List<RegexTraitPair>(), result);
+            result.Should().Equal(new List<RegexTraitPair>());
 
             MockXmlOptions.Setup(o => o.TraitsRegexesBefore).Returns("Foo///Bar,Baz");
             result = TheOptions.TraitsRegexesBefore;
-            Assert.AreEqual(1, result.Count);
+            result.Count.Should().Be(1);
             RegexTraitPair resultPair = result[0];
-            Assert.AreEqual("Foo", resultPair.Regex);
-            Assert.AreEqual("Bar", resultPair.Trait.Name);
-            Assert.AreEqual("Baz", resultPair.Trait.Value);
+            resultPair.Regex.Should().Be("Foo");
+            resultPair.Trait.Name.Should().Be("Bar");
+            resultPair.Trait.Value.Should().Be("Baz");
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void TraitsRegexesAfter__ReturnsParsedValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.TraitsRegexesAfter).Returns((string)null);
             List<RegexTraitPair> result = TheOptions.TraitsRegexesAfter;
-            CollectionAssert.AreEqual(new List<RegexTraitPair>(), result);
+            result.Should().Equal(new List<RegexTraitPair>());
 
             MockXmlOptions.Setup(o => o.TraitsRegexesAfter).Returns("Foo///Bar,Baz");
             result = TheOptions.TraitsRegexesAfter;
-            Assert.AreEqual(1, result.Count);
+            result.Count.Should().Be(1);
             RegexTraitPair resultPair = result[0];
-            Assert.AreEqual("Foo", resultPair.Regex);
-            Assert.AreEqual("Bar", resultPair.Trait.Name);
-            Assert.AreEqual("Baz", resultPair.Trait.Value);
+            resultPair.Regex.Should().Be("Foo");
+            resultPair.Trait.Name.Should().Be("Bar");
+            resultPair.Trait.Value.Should().Be("Baz");
         }
 
     }
