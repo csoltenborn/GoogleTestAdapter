@@ -3,19 +3,15 @@
 <#@ assembly name="$(SolutionDir)Core.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.Core.Tests.dll" #>
 <#@ assembly name="$(SolutionDir)TestAdapter.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.TestAdapter.Tests.dll" #>
 <#@ assembly name="$(SolutionDir)VsPackage.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.VsPackage.Tests.dll" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.IO" #>
-<#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter" #>
 <#@ import namespace="GoogleTestAdapter.VsPackage" #>
 <#@ import namespace="GoogleTestAdapter.VsPackage.Helpers" #>
-<#@ import namespace="GoogleTestAdapterUiTests" #>
 <#@ output extension=".cs" #>
 <#
 //    System.Diagnostics.Debugger.Launch();
 //    System.Diagnostics.Debugger.Break();
-	string csvFile = this.Host.ResolvePath("GTA_Console.csv");
+	string csvFile = Host.ResolvePath("GTA_Console.csv");
 	TestcaseCsvReader reader = new TestcaseCsvReader(csvFile);
 #>
 using System.IO;
@@ -239,7 +235,7 @@ namespace GoogleTestAdapter.VsPackage
 				result = result.Replace("&", "_AND_");
 
 				if (result.Contains("*"))
-					result = "NEG_" + result.Replace("*", "");;
+					result = "NEG_" + result.Replace("*", "");
 
 				return result;
 			}
@@ -274,18 +270,19 @@ namespace GoogleTestAdapter.VsPackage
 
         protected override Line GetObject(string[] columns)
         {
-            Line line = new Line();
-			line.TestFile = columns[0];
-			line.ActualTestFile = GetActualFile(columns[0]);
-			line.SettingsFile = bool.Parse(columns[1]);
-			if (line.SettingsFile)
-				line.ActualSettingsFile = TestResources.UserTestSettingsForGeneratedTests;
-			else
-				line.ActualSettingsFile = "";
-			line.TestCaseFilter = columns[2];
-			line.EnableCodeCoverage = bool.Parse(columns[3]);
-			line.InIsolation = bool.Parse(columns[4]);
-			return line;
+            bool settingsFile = bool.Parse(columns[1]);
+            return new Line
+            {
+                TestFile = columns[0],
+                ActualTestFile = GetActualFile(columns[0]),
+                SettingsFile = settingsFile,
+                TestCaseFilter = columns[2],
+                EnableCodeCoverage = bool.Parse(columns[3]),
+                InIsolation = bool.Parse(columns[4]),
+				ActualSettingsFile = settingsFile 
+					? TestResources.UserTestSettingsForGeneratedTests 
+					: ""
+            };
         }
 
 		private string GetActualFile(string key)
