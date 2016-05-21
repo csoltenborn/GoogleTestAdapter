@@ -10,7 +10,7 @@ foreach ($test in $tests) {
 	$testclass = $data[0]
 	$testname = $data[1]
 
-	$regex = '\[(.*TestMethod.*)\](\s*public\s+void\s+)' + $testname
+	$regex = '\[(.*TestMethod.*)\](\s*\[TestCategory\(.*\)\]\s*public\s+void\s+)' + $testname
 	$replacement = '[$1,Ignore]$2' + $testname
 
 	$testcode = [IO.File]::ReadAllText($testclass)
@@ -20,3 +20,4 @@ foreach ($test in $tests) {
 		$testcode -replace $regex, $replacement | Set-Content $testclass
 	}
 }
+
