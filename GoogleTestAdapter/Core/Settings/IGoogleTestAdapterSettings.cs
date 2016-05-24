@@ -10,7 +10,7 @@
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
     - add new option to Resources/AllTestSettings.gta.runsettings
-    - add default mock configuration in method AbstractGoogleTestExtensionTests.SetUp()
+    - add default mock configuration in method AbstractCoreTests.SetUp()
     */
     public interface IGoogleTestAdapterSettings
     {
@@ -33,6 +33,7 @@
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
+        bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
     }
 
@@ -59,6 +60,7 @@
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
+            self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
         }
     }

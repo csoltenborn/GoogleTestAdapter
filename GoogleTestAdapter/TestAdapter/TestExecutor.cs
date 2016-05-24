@@ -97,9 +97,10 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
-
-                ILogger loggerAdapter = new VsTestFrameworkLogger(messageLogger);
-                TestEnvironment = new TestEnvironment(new SettingsWrapper(ourRunSettings, loggerAdapter), loggerAdapter);
+                SettingsWrapper settingsWrapper = new SettingsWrapper(ourRunSettings);
+                ILogger loggerAdapter = new VsTestFrameworkLogger(messageLogger, settingsWrapper);
+                TestEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
+                settingsWrapper.RegexTraitParser = new RegexTraitParser(TestEnvironment);
             }
         }
 

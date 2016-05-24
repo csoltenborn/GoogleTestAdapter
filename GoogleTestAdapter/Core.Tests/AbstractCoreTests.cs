@@ -44,6 +44,7 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(SettingsWrapper.OptionShuffleTestsSeedDefaultValue);
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(SettingsWrapper.OptionParseSymbolInformationDefaultValue);
             MockOptions.Setup(o => o.DebugMode).Returns(SettingsWrapper.OptionDebugModeDefaultValue);
+            MockOptions.Setup(o => o.TimestampOutput).Returns(SettingsWrapper.OptionTimestampOutputDefaultValue);
             MockOptions.Setup(o => o.ShowReleaseNotes).Returns(SettingsWrapper.OptionShowReleaseNotesDefaultValue);
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
             MockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);

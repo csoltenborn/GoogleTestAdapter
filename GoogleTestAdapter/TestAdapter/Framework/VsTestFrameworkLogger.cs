@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
@@ -9,12 +11,14 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     {
 
         private static readonly object Lock = new object();
+        private readonly SettingsWrapper _settings;
 
         private IMessageLogger Logger { get; }
 
-        public VsTestFrameworkLogger(IMessageLogger logger)
+        public VsTestFrameworkLogger(IMessageLogger logger, SettingsWrapper settings)
         {
             Logger = logger;
+            _settings = settings;
         }
 
 
@@ -39,6 +43,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         private void LogSafe(TestMessageLevel level, string message)
         {
+            if (_settings.TimestampOutput)
+            {
+                string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                message = $"{timestamp} - {message ?? ""}";
+            }
+
             if (string.IsNullOrWhiteSpace(message))
             {
                 // Visual Studio 2013 is very picky about empty lines...

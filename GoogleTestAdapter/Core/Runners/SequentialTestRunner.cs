@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Runners
 {
     public class SequentialTestRunner : ITestRunner
     {
-        private bool Canceled { get; set; } = false;
+        private bool Canceled { get; set; }
 
         private ITestFrameworkReporter FrameworkReporter { get; }
         private TestEnvironment TestEnvironment { get; }
@@ -32,6 +32,7 @@ namespace GoogleTestAdapter.Runners
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
+            TestEnvironment.DebugInfo($"Computed testcase groups for {groupedTestCases.Keys.Count} executables");
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
@@ -67,6 +68,7 @@ namespace GoogleTestAdapter.Runners
             var serializer = new TestDurationSerializer();
 
             var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
+            TestEnvironment.DebugInfo($"Computed {generator.GetCommandLines().Count()} arguments");
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (Canceled)
@@ -75,13 +77,16 @@ namespace GoogleTestAdapter.Runners
                 }
 
                 FrameworkReporter.ReportTestsStarted(arguments.TestCases);
-
                 TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new TestProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
+                TestEnvironment.DebugInfo("Execution finished of command '" + executable + " " + arguments.CommandLine + "'.");
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
+                TestEnvironment.DebugInfo($"Collected {results.Count()} test results");
 
                 FrameworkReporter.ReportTestResults(results);
+                TestEnvironment.DebugInfo($"Reported {results.Count()} test results");
                 serializer.UpdateTestDurations(results);
+                TestEnvironment.DebugInfo($"Updated {results.Count()} test durations");
             }
         }
 

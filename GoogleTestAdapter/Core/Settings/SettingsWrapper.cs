@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -23,15 +22,12 @@ namespace GoogleTestAdapter.Settings
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
         private IGoogleTestAdapterSettings TheSettings { get; }
-        private TestEnvironment TestEnvironment { get; }
-        private RegexTraitParser RegexTraitParser { get; }
+        public RegexTraitParser RegexTraitParser { private get; set; }
 
 
-        public SettingsWrapper(IGoogleTestAdapterSettings settings, ILogger logger)
+        public SettingsWrapper(IGoogleTestAdapterSettings settings)
         {
             this.TheSettings = settings;
-            this.TestEnvironment = new TestEnvironment(this, logger);
-            this.RegexTraitParser = new RegexTraitParser(TestEnvironment);
         }
 
         public SettingsWrapper() { }
@@ -182,6 +178,14 @@ namespace GoogleTestAdapter.Settings
             "If true, debug output will be printed to the test console.";
 
         public virtual bool DebugMode => TheSettings.DebugMode ?? OptionDebugModeDefaultValue;
+
+
+        public const string OptionTimestampOutput = "Timestamp output";
+        public const bool OptionTimestampOutputDefaultValue = false;
+        public const string OptionTimestampOutputDescription =
+            "If true, a timestamp is added to test and debug output.";
+
+        public virtual bool TimestampOutput => TheSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
 
 
         public const string OptionShowReleaseNotes = "Show release notes after update";

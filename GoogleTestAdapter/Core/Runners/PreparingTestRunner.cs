@@ -104,13 +104,12 @@ namespace GoogleTestAdapter.Runners
             if (batchExitCode == 0)
             {
                 TestEnvironment.DebugInfo(
-                    "Successfully ran " + batchType + "batch '" + batch + "'");
+                    $"Successfully ran {batchType} batch \'{batch}\'");
             }
             else
             {
                 TestEnvironment.LogWarning(
-                    batchType + " batch returned exit code " + batchExitCode
-                    + ", executed command: '" + batch + "'");
+                    $"{batchType} batch returned exit code {batchExitCode}, executed command: \'{batch}\'");
             }
         }
 

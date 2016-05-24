@@ -6,8 +6,9 @@
 		<BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
 		<BreakOnFailure>false</BreakOnFailure>
 		<CatchExceptions>true</CatchExceptions>
-		<DebugMode>false</DebugMode>
-		<ShowReleaseNotes>true</ShowReleaseNotes>
+    <DebugMode>false</DebugMode>
+    <TimestampOutput>false</TimestampOutput>
+    <ShowReleaseNotes>true</ShowReleaseNotes>
 		<MaxNrOfThreads>4</MaxNrOfThreads>
 		<NrOfTestRepetitions>1</NrOfTestRepetitions>
 		<ParallelTestExecution>false</ParallelTestExecution>

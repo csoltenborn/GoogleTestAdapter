@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using static GoogleTestAdapter.TestMetadata.TestCategories;
@@ -21,7 +22,10 @@ namespace GoogleTestAdapter.Settings
         {
             base.SetUp();
 
-            TheOptions = new SettingsWrapper(MockXmlOptions.Object, MockLogger.Object);
+            TheOptions = new SettingsWrapper(MockXmlOptions.Object)
+            {
+                RegexTraitParser = new RegexTraitParser(TestEnvironment)
+            };
         }
 
         [TestCleanup]

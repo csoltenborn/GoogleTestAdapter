@@ -30,14 +30,15 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            ILogger loggerAdapter = new VsTestFrameworkLogger(logger);
-
             if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
                 var settingsProvider = discoveryContext.RunSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+                SettingsWrapper settingsWrapper = new SettingsWrapper(ourRunSettings);
+                ILogger loggerAdapter = new VsTestFrameworkLogger(logger, settingsWrapper);
+                TestEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
+                settingsWrapper.RegexTraitParser = new RegexTraitParser(TestEnvironment);
 
-                TestEnvironment = new TestEnvironment(new SettingsWrapper(ourRunSettings, loggerAdapter), loggerAdapter);
                 Discoverer = new GoogleTestDiscoverer(TestEnvironment);
             }
 

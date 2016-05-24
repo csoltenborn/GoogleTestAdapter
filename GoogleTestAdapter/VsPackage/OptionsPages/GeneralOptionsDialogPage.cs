@@ -127,6 +127,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private bool debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionTimestampOutput)]
+        [Description(SettingsWrapper.OptionTimestampOutputDescription)]
+        public bool TimestampOutput
+        {
+            get { return timestampOutput; }
+            set { SetAndNotify(ref timestampOutput, value); }
+        }
+        private bool timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
+
+        [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionShowReleaseNotes)]
         [Description(SettingsWrapper.OptionShowReleaseNotesDescription)]
         public bool ShowReleaseNotes
