@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
+using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
@@ -12,11 +13,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     {
         private static readonly object Lock = new object();
 
-        private IFrameworkHandle FrameworkHandle { get; }
-        private ITestCaseDiscoverySink Sink { get; }
+        private readonly IFrameworkHandle _frameworkHandle;
+        private readonly ITestCaseDiscoverySink _sink;
 
-        private Throttle Throttle { get; }
-        private bool IsRunningInsideVisualStudio { get; }
+        private readonly Throttle _throttle;
+        private readonly bool _isRunningInsideVisualStudio;
 
         public VsTestFrameworkReporter(ITestCaseDiscoverySink sink) : this(sink, null, false) { }
 
@@ -24,9 +25,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         private VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio)
         {
-            Sink = sink;
-            FrameworkHandle = frameworkHandle;
-            IsRunningInsideVisualStudio = isRunningInsideVisualStudio;
+            _sink = sink;
+            _frameworkHandle = frameworkHandle;
+            _isRunningInsideVisualStudio = isRunningInsideVisualStudio;
 
             // This is part of a workaround for a Visual Studio bug (see issue #15).
             // If test results are reported too quickly (100 or more in 500ms), the
@@ -40,28 +41,28 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             //      work item have finished. The closest approximation is to add a
             //      work item which will be scheduled after all others and let it
             //      sleep for a short time.
-            Throttle = new Throttle(99, TimeSpan.FromMilliseconds(500));
+            _throttle = new Throttle(99, TimeSpan.FromMilliseconds(500));
         }
 
 
-        public void ReportTestsFound(IEnumerable<Model.TestCase> testCases)
-        {
-            lock (Lock)
-            {
-                foreach (Model.TestCase testCase in testCases)
-                {
-                    Sink.SendTestCase(DataConversionExtensions.ToVsTestCase(testCase));
-                }
-            }
-        }
-
-        public void ReportTestsStarted(IEnumerable<Model.TestCase> testCases)
+        public void ReportTestsFound(IEnumerable<TestCase> testCases)
         {
             lock (Lock)
             {
                 foreach (TestCase testCase in testCases)
                 {
-                    FrameworkHandle.RecordStart(DataConversionExtensions.ToVsTestCase(testCase));
+                    _sink.SendTestCase(testCase.ToVsTestCase());
+                }
+            }
+        }
+
+        public void ReportTestsStarted(IEnumerable<TestCase> testCases)
+        {
+            lock (Lock)
+            {
+                foreach (TestCase testCase in testCases)
+                {
+                    _frameworkHandle.RecordStart(testCase.ToVsTestCase());
                 }
             }
         }
@@ -72,9 +73,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 foreach (TestResult testResult in testResults)
                 {
-                    if (IsRunningInsideVisualStudio && (testResult.Outcome == TestOutcome.Failed || testResult.Outcome == TestOutcome.Skipped))
+                    if (_isRunningInsideVisualStudio && (testResult.Outcome == TestOutcome.Failed || testResult.Outcome == TestOutcome.Skipped))
                         testResult.ErrorMessage = Environment.NewLine + testResult.ErrorMessage;
-                    if (!IsRunningInsideVisualStudio && testResult.ErrorStackTrace != null)
+                    if (!_isRunningInsideVisualStudio && testResult.ErrorStackTrace != null)
                         testResult.ErrorStackTrace = testResult.ErrorStackTrace.Trim();
 
                     ReportTestResult(testResult);
@@ -83,15 +84,15 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
 
-        private void ReportTestResult(Model.TestResult testResult)
+        private void ReportTestResult(TestResult testResult)
         {
-            Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult result = testResult.ToVsTestResult();
-            Throttle.Execute(delegate
+            VsTestResult result = testResult.ToVsTestResult();
+            _throttle.Execute(delegate
             {
                 // This is part of a workaround for a Visual Studio bug. See above.
-                FrameworkHandle.RecordResult(result);
+                _frameworkHandle.RecordResult(result);
             });
-            FrameworkHandle.RecordEnd(result.TestCase, result.Outcome);
+            _frameworkHandle.RecordEnd(result.TestCase, result.Outcome);
         }
 
         internal void AllTestsFinished()

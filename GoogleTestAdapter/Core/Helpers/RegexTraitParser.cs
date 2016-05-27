@@ -6,18 +6,18 @@ namespace GoogleTestAdapter.Helpers
 {
     public class RegexTraitParser
     {
-        private TestEnvironment TestEnvironment { get; }
+        private readonly TestEnvironment _testEnvironment;
 
 
         public RegexTraitParser(TestEnvironment testEnvironment)
         {
-            this.TestEnvironment = testEnvironment;
+            _testEnvironment = testEnvironment;
         }
 
 
         public List<RegexTraitPair> ParseTraitsRegexesString(string option)
         {
-            List<RegexTraitPair> result = new List<RegexTraitPair>();
+            var result = new List<RegexTraitPair>();
 
             string[] pairs = option.Split(
                 new[] { SettingsWrapper.TraitsRegexesPairSeparator },
@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.Helpers
                 }
                 catch (Exception e)
                 {
-                    TestEnvironment.LogError(
+                    _testEnvironment.LogError(
                         "Could not parse pair '" + pair + "', exception message: " + e.Message);
                 }
             }

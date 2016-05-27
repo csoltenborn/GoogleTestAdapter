@@ -11,15 +11,15 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
         private const string CollectionName = "GoogleTestAdapter";
         private const string VersionPropertyName = "LastStartedVersion";
 
-        private WritableSettingsStore SettingsStore { get; }
+        private readonly WritableSettingsStore _settingsStore;
 
         internal VersionProvider(IServiceProvider serviceProvider)
         {
             var settingsManager = new ShellSettingsManager(serviceProvider);
-            SettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            _settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
-            if (!SettingsStore.CollectionExists(CollectionName))
-                SettingsStore.CreateCollection(CollectionName);
+            if (!_settingsStore.CollectionExists(CollectionName))
+                _settingsStore.CreateCollection(CollectionName);
         }
 
         internal Version FormerlyInstalledVersion
@@ -27,9 +27,9 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             get
             {
                 Version formerlyInstalledVersion = null;
-                if (SettingsStore.PropertyExists(CollectionName, VersionPropertyName))
+                if (_settingsStore.PropertyExists(CollectionName, VersionPropertyName))
                 {
-                    string versionString = SettingsStore.GetString(CollectionName, VersionPropertyName);
+                    string versionString = _settingsStore.GetString(CollectionName, VersionPropertyName);
                     formerlyInstalledVersion = Version.Parse(versionString);
                 }
                 return formerlyInstalledVersion;
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         internal void UpdateLastVersion()
         {
-            SettingsStore.SetString(CollectionName, VersionPropertyName, CurrentVersion.ToString());
+            _settingsStore.SetString(CollectionName, VersionPropertyName, CurrentVersion.ToString());
         }
 
     }

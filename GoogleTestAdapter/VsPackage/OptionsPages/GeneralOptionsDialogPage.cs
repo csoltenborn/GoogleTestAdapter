@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class GeneralOptionsDialogPage : NotifyingDialogPage
     {
         #region Test execution
@@ -13,50 +15,50 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTestDiscoveryRegexDescription)]
         public string TestDiscoveryRegex
         {
-            get { return testDiscoveryRegex; }
-            set { SetAndNotify(ref testDiscoveryRegex, value); }
+            get { return _testDiscoveryRegex; }
+            set { SetAndNotify(ref _testDiscoveryRegex, value); }
         }
-        private string testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
+        private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionPathExtension)]
         [Description(SettingsWrapper.OptionPathExtensionDescription)]
         public string PathExtension
         {
-            get { return pathExtension; }
-            set { SetAndNotify(ref pathExtension, value); }
+            get { return _pathExtension; }
+            set { SetAndNotify(ref _pathExtension, value); }
         }
-        private string pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
+        private string _pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]
         [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams
         {
-            get { return additionalTestExecutionParams; }
-            set { SetAndNotify(ref additionalTestExecutionParams, value); }
+            get { return _additionalTestExecutionParams; }
+            set { SetAndNotify(ref _additionalTestExecutionParams, value); }
         }
-        private string additionalTestExecutionParams = SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue;
+        private string _additionalTestExecutionParams = SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionBatchForTestSetup)]
         [Description(SettingsWrapper.OptionBatchForTestSetupDescription)]
         public string BatchForTestSetup
         {
-            get { return batchForTestSetup; }
-            set { SetAndNotify(ref batchForTestSetup, value); }
+            get { return _batchForTestSetup; }
+            set { SetAndNotify(ref _batchForTestSetup, value); }
         }
-        private string batchForTestSetup = SettingsWrapper.OptionBatchForTestSetupDefaultValue;
+        private string _batchForTestSetup = SettingsWrapper.OptionBatchForTestSetupDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionBatchForTestTeardown)]
         [Description(SettingsWrapper.OptionBatchForTestTeardownDescription)]
         public string BatchForTestTeardown
         {
-            get { return batchForTestTeardown; }
-            set { SetAndNotify(ref batchForTestTeardown, value); }
+            get { return _batchForTestTeardown; }
+            set { SetAndNotify(ref _batchForTestTeardown, value); }
         }
-        private string batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
+        private string _batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
 
         #endregion
 
@@ -67,20 +69,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTraitsDescription)]
         public string TraitsRegexesBefore
         {
-            get { return traitsRegexesBefore; }
-            set { SetAndNotify(ref traitsRegexesBefore, value); }
+            get { return _traitsRegexesBefore; }
+            set { SetAndNotify(ref _traitsRegexesBefore, value); }
         }
-        private string traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
+        private string _traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
         [Category(SettingsWrapper.CategoryTraitsName)]
         [DisplayName(SettingsWrapper.OptionTraitsRegexesAfter)]
         [Description(SettingsWrapper.OptionTraitsDescription)]
         public string TraitsRegexesAfter
         {
-            get { return traitsRegexesAfter; }
-            set { SetAndNotify(ref traitsRegexesAfter, value); }
+            get { return _traitsRegexesAfter; }
+            set { SetAndNotify(ref _traitsRegexesAfter, value); }
         }
-        private string traitsRegexesAfter = SettingsWrapper.OptionTraitsRegexesDefaultValue;
+        private string _traitsRegexesAfter = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
         #endregion
 
@@ -91,60 +93,60 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionPrintTestOutputDescription)]
         public bool PrintTestOutput
         {
-            get { return printTestOutput; }
-            set { SetAndNotify(ref printTestOutput, value); }
+            get { return _printTestOutput; }
+            set { SetAndNotify(ref _printTestOutput, value); }
         }
-        private bool printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
+        private bool _printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionTestNameSeparator)]
         [Description(SettingsWrapper.OptionTestNameSeparatorDescription)]
         public string TestNameSeparator
         {
-            get { return testNameSeparator; }
-            set { SetAndNotify(ref testNameSeparator, value); }
+            get { return _testNameSeparator; }
+            set { SetAndNotify(ref _testNameSeparator, value); }
         }
-        private string testNameSeparator = SettingsWrapper.OptionTestNameSeparatorDefaultValue;
+        private string _testNameSeparator = SettingsWrapper.OptionTestNameSeparatorDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionParseSymbolInformation)]
         [Description(SettingsWrapper.OptionParseSymbolInformationDescription)]
         public bool ParseSymbolInformation
         {
-            get { return parseSymbolInformation; }
-            set { SetAndNotify(ref parseSymbolInformation, value); }
+            get { return _parseSymbolInformation; }
+            set { SetAndNotify(ref _parseSymbolInformation, value); }
         }
-        private bool parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
+        private bool _parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionDebugMode)]
         [Description(SettingsWrapper.OptionDebugModeDescription)]
         public bool DebugMode
         {
-            get { return debugMode; }
-            set { SetAndNotify(ref debugMode, value); }
+            get { return _debugMode; }
+            set { SetAndNotify(ref _debugMode, value); }
         }
-        private bool debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
+        private bool _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionTimestampOutput)]
         [Description(SettingsWrapper.OptionTimestampOutputDescription)]
         public bool TimestampOutput
         {
-            get { return timestampOutput; }
-            set { SetAndNotify(ref timestampOutput, value); }
+            get { return _timestampOutput; }
+            set { SetAndNotify(ref _timestampOutput, value); }
         }
-        private bool timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
+        private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionShowReleaseNotes)]
         [Description(SettingsWrapper.OptionShowReleaseNotesDescription)]
         public bool ShowReleaseNotes
         {
-            get { return showReleaseNotes; }
-            set { SetAndNotify(ref showReleaseNotes, value); }
+            get { return _showReleaseNotes; }
+            set { SetAndNotify(ref _showReleaseNotes, value); }
         }
-        private bool showReleaseNotes = SettingsWrapper.OptionShowReleaseNotesDefaultValue;
+        private bool _showReleaseNotes = SettingsWrapper.OptionShowReleaseNotesDefaultValue;
 
         #endregion
     }

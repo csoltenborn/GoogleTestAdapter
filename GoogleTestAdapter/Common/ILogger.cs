@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace GoogleTestAdapter.Common
+﻿namespace GoogleTestAdapter.Common
 {
 
     public enum Severity { Info, Warning, Error }

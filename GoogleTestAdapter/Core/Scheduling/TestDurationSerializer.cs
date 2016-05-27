@@ -28,12 +28,10 @@ namespace GoogleTestAdapter.Scheduling
         }
 
         [XmlAttribute]
-        public string Test
-        { get; set; }
+        public string Test { get; set; }
 
         [XmlAttribute]
-        public int Duration
-        { get; set; }
+        public int Duration { get; set; }
     }
 
 
@@ -42,13 +40,13 @@ namespace GoogleTestAdapter.Scheduling
         private static object Lock { get; } = new object();
         private static readonly TestDuration Default = new TestDuration();
 
-        private XmlSerializer Serializer { get; } = new XmlSerializer(typeof(GtaTestDurations));
+        private readonly XmlSerializer _serializer = new XmlSerializer(typeof(GtaTestDurations));
 
 
         public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
             IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
-            IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
+            var durations = new Dictionary<TestCase, int>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string executable in groupedTestcases.Keys)
             {
@@ -73,14 +71,18 @@ namespace GoogleTestAdapter.Scheduling
 
         private IDictionary<TestCase, int> ReadTestDurations(string executable, List<TestCase> testcases)
         {
-            IDictionary<TestCase, int> durations = new Dictionary<TestCase, int>();
+            var durations = new Dictionary<TestCase, int>();
             string durationsFile = GetDurationsFile(executable);
             if (!File.Exists(durationsFile))
             {
                 return durations;
             }
 
-            GtaTestDurations container = LoadTestDurations(durationsFile);
+            GtaTestDurations container;
+            lock (Lock)
+            {
+                container = LoadTestDurations(durationsFile);
+            }
 
             foreach (TestCase testcase in testcases)
             {
@@ -115,16 +117,16 @@ namespace GoogleTestAdapter.Scheduling
 
         private GtaTestDurations LoadTestDurations(string durationsFile)
         {
-            FileStream fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            GtaTestDurations container = Serializer.Deserialize(fileStream) as GtaTestDurations;
+            var fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+            GtaTestDurations container = _serializer.Deserialize(fileStream) as GtaTestDurations;
             fileStream.Close();
             return container;
         }
 
         private void SaveTestDurations(GtaTestDurations durations, string durationsFile)
         {
-            TextWriter fileStream = new StreamWriter(durationsFile);
-            Serializer.Serialize(fileStream, durations);
+            var fileStream = new StreamWriter(durationsFile);
+            _serializer.Serialize(fileStream, durations);
             fileStream.Close();
         }
 

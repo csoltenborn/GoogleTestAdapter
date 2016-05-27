@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.Common
     public class ProcessWaiter
     {
         public int ProcessExitCode { get; private set; } = -1;
-        private bool Exited { get; set; } = false;
+        private bool _exited;
 
 
         public ProcessWaiter(Process process)
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.Common
         {
             lock (this)
             {
-                while (!Exited)
+                while (!_exited)
                 {
                     Monitor.Wait(this);
                 }
@@ -33,13 +33,13 @@ namespace GoogleTestAdapter.Common
 
         private void OnExited(object sender, EventArgs e)
         {
-            Process process = sender as Process;
+            var process = sender as Process;
             if (process != null)
             {
                 lock (this)
                 {
                     ProcessExitCode = process.ExitCode;
-                    Exited = true;
+                    _exited = true;
 
                     process.Exited -= OnExited;
 

@@ -17,29 +17,29 @@ namespace GoogleTestAdapter.TestResults
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
 
-        private TestEnvironment TestEnvironment { get; }
-        private string BaseDir { get; }
-        private string XmlResultFile { get; }
-        private List<TestCase> TestCasesRun { get; }
+        private readonly TestEnvironment _testEnvironment;
+        private readonly string _baseDir;
+        private readonly string _xmlResultFile;
+        private readonly List<TestCase> _testCasesRun;
 
 
         public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment, string baseDir)
         {
-            this.TestEnvironment = testEnvironment;
-            this.BaseDir = baseDir;
-            this.XmlResultFile = xmlResultFile;
-            this.TestCasesRun = testCasesRun.ToList();
+            _testEnvironment = testEnvironment;
+            _baseDir = baseDir;
+            _xmlResultFile = xmlResultFile;
+            _testCasesRun = testCasesRun.ToList();
         }
 
 
         public List<TestResult> GetTestResults()
         {
-            if (File.Exists(XmlResultFile))
+            if (File.Exists(_xmlResultFile))
             {
                 return ParseTestResults();
             }
 
-            TestEnvironment.LogWarning(ErrorMsgNoXmlFile);
+            _testEnvironment.LogWarning(ErrorMsgNoXmlFile);
             return new List<TestResult>();
         }
 
@@ -48,12 +48,12 @@ namespace GoogleTestAdapter.TestResults
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private List<TestResult> ParseTestResults()
         {
-            List<TestResult> testResults = new List<TestResult>();
+            var testResults = new List<TestResult>();
             try
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(XmlResultFile);
-                TestEnvironment.DebugInfo("Loaded test results from " + XmlResultFile);
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(_xmlResultFile);
+                _testEnvironment.DebugInfo("Loaded test results from " + _xmlResultFile);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
@@ -64,11 +64,11 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                TestEnvironment.DebugWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                _testEnvironment.DebugWarning("Test result file " + _xmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
             catch (NullReferenceException e)
             {
-                TestEnvironment.DebugWarning("Test result file " + XmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                _testEnvironment.DebugWarning("Test result file " + _xmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
 
             return testResults;
@@ -81,13 +81,13 @@ namespace GoogleTestAdapter.TestResults
             string testCaseName = testcaseNode.Attributes["name"].InnerText;
             string qualifiedName = className + "." + testCaseName;
 
-            TestCase testCase = TestCasesRun.FindTestcase(qualifiedName);
+            TestCase testCase = _testCasesRun.FindTestcase(qualifiedName);
             if (testCase == null)
             {
                 return null;
             }
 
-            TestResult testResult = new TestResult(testCase)
+            var testResult = new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = testCase.DisplayName
@@ -107,7 +107,7 @@ namespace GoogleTestAdapter.TestResults
                     }
                     else
                     {
-                        ErrorMessageParser parser = new ErrorMessageParser(failureNodes, BaseDir);
+                        var parser = new ErrorMessageParser(failureNodes, _baseDir);
                         parser.Parse();
                         testResult.Outcome = TestOutcome.Failed;
                         testResult.ErrorMessage = parser.ErrorMessage;
@@ -119,7 +119,7 @@ namespace GoogleTestAdapter.TestResults
                     break;
                 default:
                     string msg = "Unknown testcase status: " + testCaseStatus;
-                    TestEnvironment.LogError(msg);
+                    _testEnvironment.LogError(msg);
                     throw new Exception(msg);
             }
 

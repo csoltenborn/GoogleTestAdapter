@@ -15,41 +15,42 @@ namespace GoogleTestAdapter.TestAdapter
     [FileExtension(".exe")]
     public class TestDiscoverer : ITestDiscoverer
     {
-        private TestEnvironment TestEnvironment { get; set; }
-        private GoogleTestDiscoverer Discoverer { get; set; }
+        private TestEnvironment _testEnvironment;
+        private GoogleTestDiscoverer _discoverer;
 
+        // ReSharper disable once UnusedMember.Global
         public TestDiscoverer() : this(null) { }
 
         public TestDiscoverer(TestEnvironment testEnvironment)
         {
-            TestEnvironment = testEnvironment;
-            Discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            _testEnvironment = testEnvironment;
+            _discoverer = new GoogleTestDiscoverer(_testEnvironment);
         }
 
 
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            if (TestEnvironment == null || TestEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
+            if (_testEnvironment == null || _testEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
                 var settingsProvider = discoveryContext.RunSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
                 RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
                 SettingsWrapper settingsWrapper = new SettingsWrapper(ourRunSettings);
                 ILogger loggerAdapter = new VsTestFrameworkLogger(logger, settingsWrapper);
-                TestEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
-                settingsWrapper.RegexTraitParser = new RegexTraitParser(TestEnvironment);
+                _testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
+                settingsWrapper.RegexTraitParser = new RegexTraitParser(_testEnvironment);
 
-                Discoverer = new GoogleTestDiscoverer(TestEnvironment);
+                _discoverer = new GoogleTestDiscoverer(_testEnvironment);
             }
 
             try
             {
                 VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink);
-                Discoverer.DiscoverTests(executables, reporter);
+                _discoverer.DiscoverTests(executables, reporter);
             }
             catch (Exception e)
             {
-                TestEnvironment.LogError("Exception while discovering tests: " + e);
+                _testEnvironment.LogError("Exception while discovering tests: " + e);
             }
 
         }

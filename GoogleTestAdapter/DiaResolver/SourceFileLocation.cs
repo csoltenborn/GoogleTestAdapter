@@ -1,9 +1,6 @@
 ﻿namespace GoogleTestAdapter.DiaResolver
 {
 
-    /*
-    Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::TestBody
-    */
     public class SourceFileLocation
     {
         public string Symbol { get; }

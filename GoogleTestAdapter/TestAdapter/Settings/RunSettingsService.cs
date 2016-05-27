@@ -16,14 +16,14 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     [SettingsName(GoogleTestConstants.SettingsName)]
     public class RunSettingsService : IRunSettingsService
     {
-        public string Name { get { return GoogleTestConstants.SettingsName; } }
+        public string Name => GoogleTestConstants.SettingsName;
 
-        private IGlobalRunSettings globalRunSettings;
+        private readonly IGlobalRunSettings _globalRunSettings;
 
         [ImportingConstructor]
         public RunSettingsService([Import(typeof(IGlobalRunSettings))] IGlobalRunSettings globalRunSettings)
         {
-            this.globalRunSettings = globalRunSettings;
+            this._globalRunSettings = globalRunSettings;
         }
 
         public IXPathNavigable AddRunSettings(IXPathNavigable userRunSettingDocument,
@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 logger.LogException(e);
             }
 
-            finalRunSettings.GetUnsetValuesFrom(globalRunSettings.RunSettings);
+            finalRunSettings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
 
             userRunSettingsNavigator.AppendChild(finalRunSettings.ToXml().CreateNavigator());
             userRunSettingsNavigator.MoveToRoot();

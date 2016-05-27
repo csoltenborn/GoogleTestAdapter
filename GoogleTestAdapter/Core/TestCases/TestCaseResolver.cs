@@ -15,13 +15,13 @@ namespace GoogleTestAdapter.TestCases
         private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
 
-        private IDiaResolverFactory DiaResolverFactory { get; }
-        private TestEnvironment TestEnvironment { get; }
+        private readonly IDiaResolverFactory _diaResolverFactory;
+        private readonly TestEnvironment _testEnvironment;
 
         internal TestCaseResolver(IDiaResolverFactory diaResolverFactory, TestEnvironment testEnvironment)
         {
-            DiaResolverFactory = diaResolverFactory;
-            TestEnvironment = testEnvironment;
+            _diaResolverFactory = diaResolverFactory;
+            _testEnvironment = testEnvironment;
         }
 
         internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.TestCases
 
             if (testCaseLocationsFound.Count == 0)
             {
-                List<string> imports = PeParser.ParseImports(executable, TestEnvironment);
+                List<string> imports = PeParser.ParseImports(executable, _testEnvironment);
 
                 string moduleDirectory = Path.GetDirectoryName(executable);
 
@@ -52,12 +52,12 @@ namespace GoogleTestAdapter.TestCases
         private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
             string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            using (IDiaResolver diaResolver = DiaResolverFactory.Create(binary, pathExtension, TestEnvironment))
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _testEnvironment))
             {
                 try
                 {
-                    IEnumerable<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
-                    IEnumerable<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
+                    IList<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
+                    IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
 
                     return allTestMethodSymbols
                         .Where(nsfl => testMethodSignatures.Any(tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
@@ -66,8 +66,8 @@ namespace GoogleTestAdapter.TestCases
                 }
                 catch (Exception e)
                 {
-                    if (TestEnvironment.Options.DebugMode)
-                        TestEnvironment.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
+                    if (_testEnvironment.Options.DebugMode)
+                        _testEnvironment.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
                     return new TestCaseLocation[0];
                 }
             }

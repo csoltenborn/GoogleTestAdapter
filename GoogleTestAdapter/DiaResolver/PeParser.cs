@@ -133,18 +133,18 @@ namespace GoogleTestAdapter.DiaResolver
 
         public static List<string> ParseImports(string executable, ILogger logger)
         {
-            var Imports = new List<string>();
+            var imports = new List<string>();
             ParsePeFile(executable, logger, (image) =>
             {
                 uint size = 0u;
                 var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 1, &size);
                 while (directoryEntry->OriginalFirstThunk != 0u)
                 {
-                    Imports.Add(GetString(image, directoryEntry->Name));
+                    imports.Add(GetString(image, directoryEntry->Name));
                     directoryEntry++;
                 }
             });
-            return Imports;
+            return imports;
         }
 
         private static string GetString(LOADED_IMAGE image, uint offset)
@@ -166,10 +166,10 @@ namespace GoogleTestAdapter.DiaResolver
             ParsePeFile(executable, logger, (image) =>
             {
                 uint size = 0u;
-                var dbg_dir = (IMAGE_DEBUG_DIRECTORY*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 6, &size);
-                if (dbg_dir->SizeOfData > 0)
+                var dbgDir = (IMAGE_DEBUG_DIRECTORY*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 6, &size);
+                if (dbgDir->SizeOfData > 0)
                 {
-                    var pdbInfo = (PdbInfo*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, dbg_dir->AddressOfRawData, IntPtr.Zero);
+                    var pdbInfo = (PdbInfo*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, dbgDir->AddressOfRawData, IntPtr.Zero);
                     pdbPath = Marshal.PtrToStringAnsi(new IntPtr(&pdbInfo->PdbFileName));
                 }
             });

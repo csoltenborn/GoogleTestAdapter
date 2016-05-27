@@ -10,17 +10,17 @@ namespace GoogleTestAdapter.Runners
 {
     public class ParallelTestRunner : ITestRunner
     {
-        private ITestFrameworkReporter FrameworkReporter { get; }
-        private TestEnvironment TestEnvironment { get; }
-        private List<ITestRunner> TestRunners { get; } = new List<ITestRunner>();
-        private string SolutionDirectory { get; }
+        private readonly ITestFrameworkReporter _frameworkReporter;
+        private readonly TestEnvironment _testEnvironment;
+        private readonly List<ITestRunner> _testRunners = new List<ITestRunner>();
+        private readonly string _solutionDirectory;
 
 
         public ParallelTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment, string solutionDirectory)
         {
-            FrameworkReporter = reporter;
-            TestEnvironment = testEnvironment;
-            SolutionDirectory = solutionDirectory;
+            _frameworkReporter = reporter;
+            _testEnvironment = testEnvironment;
+            _solutionDirectory = solutionDirectory;
         }
 
 
@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.Runners
         {
             lock (this)
             {
-                foreach (ITestRunner runner in TestRunners)
+                foreach (ITestRunner runner in _testRunners)
                 {
                     runner.Cancel();
                 }
@@ -61,16 +61,16 @@ namespace GoogleTestAdapter.Runners
             ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
-            TestEnvironment.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
-            TestEnvironment.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
+            _testEnvironment.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
+            _testEnvironment.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
 
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                ITestRunner runner = new PreparingTestRunner(threadId++, SolutionDirectory, FrameworkReporter, TestEnvironment);
-                TestRunners.Add(runner);
+                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _testEnvironment);
+                _testRunners.Add(runner);
 
-                Thread thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, isBeingDebugged, debuggedLauncher));
+                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, isBeingDebugged, debuggedLauncher));
                 threads.Add(thread);
 
                 thread.Start();
@@ -85,13 +85,13 @@ namespace GoogleTestAdapter.Runners
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)
             {
-                splitter = new NumberBasedTestsSplitter(testCasesToRun, TestEnvironment);
-                TestEnvironment.DebugInfo("Using splitter based on number of tests");
+                splitter = new NumberBasedTestsSplitter(testCasesToRun, _testEnvironment);
+                _testEnvironment.DebugInfo("Using splitter based on number of tests");
             }
             else
             {
-                splitter = new DurationBasedTestsSplitter(durations, TestEnvironment);
-                TestEnvironment.DebugInfo("Using splitter based on test durations");
+                splitter = new DurationBasedTestsSplitter(durations, _testEnvironment);
+                _testEnvironment.DebugInfo("Using splitter based on test durations");
             }
 
             return splitter;

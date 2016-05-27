@@ -7,11 +7,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 {
     public class DebuggedProcessLauncher : IDebuggedProcessLauncher
     {
-        private IFrameworkHandle FrameworkHandle { get; }
+        private readonly IFrameworkHandle _frameworkHandle;
 
         public DebuggedProcessLauncher(IFrameworkHandle handle)
         {
-            FrameworkHandle = handle;
+            _frameworkHandle = handle;
         }
 
         public int LaunchProcessWithDebuggerAttached(string command, string workingDirectory, string param, string pathExtension)
@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             IDictionary<string, string> envVariables = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(pathExtension))
                 envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
-            return FrameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, envVariables);
+            return _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, envVariables);
         }
     }
 

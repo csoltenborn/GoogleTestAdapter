@@ -12,10 +12,10 @@ namespace GoogleTestAdapter.TestResults
     {
         private static readonly string ValidCharRegex;
 
-        private Regex SplitRegex { get; }
-        private Regex ParseRegex { get; }
-        private Regex ScopedTraceStartRegex { get; }
-        private Regex ScopedTraceRegex { get; }
+        private readonly Regex _splitRegex;
+        private readonly Regex _parseRegex;
+        private readonly Regex _scopedTraceStartRegex;
+        private readonly Regex _scopedTraceRegex;
 
         static ErrorMessageParser()
         {
@@ -47,10 +47,10 @@ namespace GoogleTestAdapter.TestResults
             string fileAndLine = $@"{file}((:{line})|(\({line}\):))";
             string error = @"((error: )|(Failure\n))";
 
-            ParseRegex = new Regex($"{fileAndLine}(:? {error})?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            SplitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            ScopedTraceStartRegex = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            ScopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _parseRegex = new Regex($"{fileAndLine}(:? {error})?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _splitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _scopedTraceStartRegex = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _scopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public void Parse()
@@ -77,7 +77,7 @@ namespace GoogleTestAdapter.TestResults
 
         private IList<string> SplitConsoleOutput(string errorMessage)
         {
-            MatchCollection matches = SplitRegex.Matches(errorMessage);
+            MatchCollection matches = _splitRegex.Matches(errorMessage);
             if (matches.Count == 0)
                 return new List<string>();
 
@@ -127,7 +127,7 @@ namespace GoogleTestAdapter.TestResults
 
         private void CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, int msgId = 0)
         {
-            Match match = ParseRegex.Match(errorMessage);
+            Match match = _parseRegex.Match(errorMessage);
             if (!match.Success)
             {
                 stackTrace = "";
@@ -145,12 +145,12 @@ namespace GoogleTestAdapter.TestResults
             stackTrace = CreateStackTraceEntry($"{msgReference}{fileName}:{lineNumber}", fullFileName, lineNumber);
             errorMessage = errorMessage.Replace(match.Value, "").Trim();
 
-            match = ScopedTraceStartRegex.Match(errorMessage);
+            match = _scopedTraceStartRegex.Match(errorMessage);
             if (match.Success)
             {
                 string scopedTraces = errorMessage.Substring(match.Index + match.Value.Length);
                 errorMessage = errorMessage.Substring(0, match.Index).Trim();
-                MatchCollection matches = ScopedTraceRegex.Matches(scopedTraces);
+                MatchCollection matches = _scopedTraceRegex.Matches(scopedTraces);
                 foreach (Match traceMatch in matches)
                 {
                     fullFileName = traceMatch.Groups[1].Value;

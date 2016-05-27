@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Dia;
 using GoogleTestAdapter.Common;
-
-// ReSharper disable InconsistentNaming
 
 namespace GoogleTestAdapter.DiaResolver
 {
     internal class NativeSourceFileLocation
     {
-        /*
-        Test methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::TestBody
-        Trait methods: Symbol=[<namespace>::]<test_case_name>_<test_name>_Test::<trait name>__GTA__<trait value>_GTA_TRAIT
-        */
         internal string Symbol;
         internal uint AddressSection;
         internal uint AddressOffset;
@@ -27,33 +22,34 @@ namespace GoogleTestAdapter.DiaResolver
     }
 
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal interface IDiaSession
     {
         IDiaSymbol globalScope { get; }
         void findLinesByAddr(uint seg, uint offset, uint length, out IDiaEnumLineNumbers ppResult);
     }
 
-    internal class IDiaSessionAdapter : IDiaSession
+    internal class DiaSessionAdapter : IDiaSession
     {
-        private readonly IDiaSession140 DiaSession140;
-        private readonly IDiaSession110 DiaSession110;
+        private readonly IDiaSession140 _diaSession140;
+        private readonly IDiaSession110 _diaSession110;
 
-        public IDiaSessionAdapter(IDiaSession140 diaSession)
+        public DiaSessionAdapter(IDiaSession140 diaSession)
         {
-            DiaSession140 = diaSession;
+            _diaSession140 = diaSession;
         }
-        public IDiaSessionAdapter(IDiaSession110 diaSession)
+        public DiaSessionAdapter(IDiaSession110 diaSession)
         {
-            DiaSession110 = diaSession;
+            _diaSession110 = diaSession;
         }
 
-        public IDiaSymbol globalScope => DiaSession140?.globalScope ?? DiaSession110?.globalScope;
+        public IDiaSymbol globalScope => _diaSession140?.globalScope ?? _diaSession110?.globalScope;
 
         public void findLinesByAddr(uint seg, uint offset, uint length, out IDiaEnumLineNumbers ppResult)
         {
             ppResult = null;
-            DiaSession140?.findLinesByAddr(seg, offset, length, out ppResult);
-            DiaSession110?.findLinesByAddr(seg, offset, length, out ppResult);
+            _diaSession140?.findLinesByAddr(seg, offset, length, out ppResult);
+            _diaSession110?.findLinesByAddr(seg, offset, length, out ppResult);
         }
     }
 
@@ -63,19 +59,19 @@ namespace GoogleTestAdapter.DiaResolver
         private static readonly Guid Dia120 = new Guid("3bfcea48-620f-4b6b-81f7-b9af75454c7d");
         private static readonly Guid Dia110 = new Guid("761D3BCD-1304-41D5-94E8-EAC54E4AC172");
 
-        private string Binary { get; }
-        private ILogger Logger { get; }
+        private readonly string _binary;
+        private readonly ILogger _logger;
+        private readonly Stream _fileStream;
+        private readonly IDiaSession _diaSession;
 
-        private Stream FileStream { get; }
-        private IDiaDataSource DiaDataSource { get; set; }
-        private IDiaSession DiaSession { get; }
+        private IDiaDataSource _diaDataSource;
 
         private bool TryCreateDiaInstance(Guid clsid)
         {
             try
             {
                 Type comType = Type.GetTypeFromCLSID(clsid);
-                DiaDataSource = (IDiaDataSource)Activator.CreateInstance(comType);
+                _diaDataSource = (IDiaDataSource)Activator.CreateInstance(comType);
                 return true;
             }
             catch (Exception)
@@ -86,48 +82,48 @@ namespace GoogleTestAdapter.DiaResolver
 
         internal DiaResolver(string binary, string pathExtension, ILogger logger)
         {
-            Binary = binary;
-            Logger = logger;
+            _binary = binary;
+            _logger = logger;
 
             if (!TryCreateDiaInstance(Dia140) && !TryCreateDiaInstance(Dia120) && !TryCreateDiaInstance(Dia110))
             {
-                Logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
+                _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
                 return;
             }
 
             string pdb = FindPdbFile(binary, pathExtension);
             if (pdb == null)
             {
-                Logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
+                _logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
                 return;
             }
 
-            FileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
-            DiaDataSource.loadDataFromIStream(new DiaMemoryStream(FileStream));
+            _fileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
+            _diaDataSource.loadDataFromIStream(new DiaMemoryStream(_fileStream));
 
-            dynamic diaSession110or140;
-            DiaDataSource.openSession(out diaSession110or140);
-            DiaSession = new IDiaSessionAdapter(diaSession110or140);
+            dynamic diaSession110Or140;
+            _diaDataSource.openSession(out diaSession110Or140);
+            _diaSession = new DiaSessionAdapter(diaSession110Or140);
         }
 
         public void Dispose()
         {
-            FileStream?.Dispose();
+            _fileStream?.Dispose();
         }
 
 
-        public IEnumerable<SourceFileLocation> GetFunctions(string symbolFilterString)
+        public IList<SourceFileLocation> GetFunctions(string symbolFilterString)
         {
-            if (DiaDataSource == null) // Silently return when DIA failed to load
+            if (_diaDataSource == null) // Silently return when DIA failed to load
                 return new SourceFileLocation[0];
 
             IDiaEnumSymbols diaSymbols = FindFunctionsByRegex(symbolFilterString);
-            return GetSymbolNamesAndAddresses(diaSymbols).Select(ToSourceFileLocation);
+            return GetSymbolNamesAndAddresses(diaSymbols).Select(ToSourceFileLocation).ToList();
         }
 
         private string FindPdbFile(string binary, string pathExtension)
         {
-            string pdb = PeParser.ExtractPdbPath(binary, Logger);
+            string pdb = PeParser.ExtractPdbPath(binary, _logger);
             if (pdb != null && File.Exists(pdb))
                 return pdb;
 
@@ -147,9 +143,9 @@ namespace GoogleTestAdapter.DiaResolver
         }
 
         /// From given symbol enumeration, extract name, section, offset and length
-        private List<NativeSourceFileLocation> GetSymbolNamesAndAddresses(IDiaEnumSymbols diaSymbols)
+        private IList<NativeSourceFileLocation> GetSymbolNamesAndAddresses(IDiaEnumSymbols diaSymbols)
         {
-            List<NativeSourceFileLocation> locations = new List<NativeSourceFileLocation>();
+            var locations = new List<NativeSourceFileLocation>();
             foreach (IDiaSymbol diaSymbol in diaSymbols)
             {
                 locations.Add(new NativeSourceFileLocation()
@@ -157,7 +153,7 @@ namespace GoogleTestAdapter.DiaResolver
                     Symbol = diaSymbol.name,
                     AddressSection = diaSymbol.addressSection,
                     AddressOffset = diaSymbol.addressOffset,
-                    Length = (UInt32)diaSymbol.length
+                    Length = (uint)diaSymbol.length
                 });
             }
             return locations;
@@ -166,27 +162,27 @@ namespace GoogleTestAdapter.DiaResolver
         private SourceFileLocation ToSourceFileLocation(NativeSourceFileLocation nativeSymbol)
         {
             IDiaEnumLineNumbers lineNumbers = GetLineNumbers(nativeSymbol.AddressSection, nativeSymbol.AddressOffset, nativeSymbol.Length);
-            if (lineNumbers.count > 0)
+            if (lineNumbers.count <= 0)
             {
-                SourceFileLocation result = null;
-                foreach (IDiaLineNumber lineNumber in lineNumbers)
+                _logger.LogWarning("Failed to locate line number for " + nativeSymbol);
+                return new SourceFileLocation(_binary, "", 0);
+            }
+
+            SourceFileLocation result = null;
+            foreach (IDiaLineNumber lineNumber in lineNumbers)
+            {
+                if (result == null)
                 {
-                    if (result == null)
-                    {
-                        result = new SourceFileLocation(
-                            nativeSymbol.Symbol, lineNumber.sourceFile.fileName,
-                            lineNumber.lineNumber);
-                    }
+                    result = new SourceFileLocation(
+                        nativeSymbol.Symbol, lineNumber.sourceFile.fileName,
+                        lineNumber.lineNumber);
+                    // do not break to make sure all lineNumbers are enumerated - not sure if this is necessary
                 }
-                return result;
             }
-            else
-            {
-                Logger.LogWarning("Failed to locate line number for " + nativeSymbol);
-                return new SourceFileLocation(Binary, "", 0);
-            }
+            return result;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private enum NameSearchOptions : uint
         {
             NsNone = 0x0u,
@@ -200,14 +196,14 @@ namespace GoogleTestAdapter.DiaResolver
         private IDiaEnumSymbols FindFunctionsByRegex(string pattern)
         {
             IDiaEnumSymbols result;
-            DiaSession.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.NsfRegularExpression, out result);
+            _diaSession.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.NsfRegularExpression, out result);
             return result;
         }
 
         private IDiaEnumLineNumbers GetLineNumbers(uint addressSection, uint addressOffset, uint length)
         {
             IDiaEnumLineNumbers linenumbers;
-            DiaSession.findLinesByAddr(addressSection, addressOffset, length, out linenumbers);
+            _diaSession.findLinesByAddr(addressSection, addressOffset, length, out linenumbers);
             return linenumbers;
         }
 

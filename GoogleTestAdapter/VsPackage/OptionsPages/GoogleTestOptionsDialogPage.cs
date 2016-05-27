@@ -13,20 +13,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionCatchExceptionsDescription)]
         public bool CatchExceptions
         {
-            get { return catchExceptions; }
-            set { SetAndNotify(ref catchExceptions, value); }
+            get { return _catchExceptions; }
+            set { SetAndNotify(ref _catchExceptions, value); }
         }
-        private bool catchExceptions = SettingsWrapper.OptionCatchExceptionsDefaultValue;
+        private bool _catchExceptions = SettingsWrapper.OptionCatchExceptionsDefaultValue;
 
         [Category(SettingsWrapper.CategoryRuntimeBehaviorName)]
         [DisplayName(SettingsWrapper.OptionBreakOnFailure)]
         [Description(SettingsWrapper.OptionBreakOnFailureDescription)]
         public bool BreakOnFailure
         {
-            get { return breakOnFailure; }
-            set { SetAndNotify(ref breakOnFailure, value); }
+            get { return _breakOnFailure; }
+            set { SetAndNotify(ref _breakOnFailure, value); }
         }
-        private bool breakOnFailure = SettingsWrapper.OptionBreakOnFailureDefaultValue;
+        private bool _breakOnFailure = SettingsWrapper.OptionBreakOnFailureDefaultValue;
 
         #endregion
 
@@ -37,40 +37,40 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionRunDisabledTestsDescription)]
         public bool RunDisabledTests
         {
-            get { return runDisabledTests; }
-            set { SetAndNotify(ref runDisabledTests, value); }
+            get { return _runDisabledTests; }
+            set { SetAndNotify(ref _runDisabledTests, value); }
         }
-        private bool runDisabledTests = SettingsWrapper.OptionRunDisabledTestsDefaultValue;
+        private bool _runDisabledTests = SettingsWrapper.OptionRunDisabledTestsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionNrOfTestRepetitions)]
         [Description(SettingsWrapper.OptionNrOfTestRepetitionsDescription)]
         public int NrOfTestRepetitions
         {
-            get { return nrOfTestRepetitions; }
-            set { SetAndNotify(ref nrOfTestRepetitions, value); }
+            get { return _nrOfTestRepetitions; }
+            set { SetAndNotify(ref _nrOfTestRepetitions, value); }
         }
-        private int nrOfTestRepetitions = SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue;
+        private int _nrOfTestRepetitions = SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionShuffleTests)]
         [Description(SettingsWrapper.OptionShuffleTestsDescription)]
         public bool ShuffleTests
         {
-            get { return shuffleTests; }
-            set { SetAndNotify(ref shuffleTests, value); }
+            get { return _shuffleTests; }
+            set { SetAndNotify(ref _shuffleTests, value); }
         }
-        private bool shuffleTests = SettingsWrapper.OptionShuffleTestsDefaultValue;
+        private bool _shuffleTests = SettingsWrapper.OptionShuffleTestsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionShuffleTestsSeed)]
         [Description(SettingsWrapper.OptionShuffleTestsSeedDescription)]
         public int ShuffleTestsSeed
         {
-            get { return shuffleTestsSeed; }
-            set { SetAndNotify(ref shuffleTestsSeed, value); }
+            get { return _shuffleTestsSeed; }
+            set { SetAndNotify(ref _shuffleTestsSeed, value); }
         }
-        private int shuffleTestsSeed = SettingsWrapper.OptionShuffleTestsSeedDefaultValue;
+        private int _shuffleTestsSeed = SettingsWrapper.OptionShuffleTestsSeedDefaultValue;
 
         #endregion
     }

@@ -8,13 +8,11 @@ namespace GoogleTestAdapter.TestCases
 
     public class ListTestsParser
     {
-        private TestEnvironment TestEnvironment { get; }
-        private string TestNameSeparator { get; }
+        private readonly string _testNameSeparator;
 
         public ListTestsParser(TestEnvironment testEnvironment)
         {
-            TestEnvironment = testEnvironment;
-            TestNameSeparator = TestEnvironment.Options.TestNameSeparator;
+            _testNameSeparator = testEnvironment.Options.TestNameSeparator;
         }
 
         public IList<TestCaseDescriptor> ParseListTestsOutput(List<string> consoleOutput)
@@ -60,8 +58,8 @@ namespace GoogleTestAdapter.TestCases
             string fullyQualifiedName = $"{suite}.{name}";
 
             string displayName = GetDisplayName(fullyQualifiedName, typeParam, param);
-            if (!string.IsNullOrEmpty(TestNameSeparator))
-                displayName = displayName.Replace("/", TestNameSeparator);
+            if (!string.IsNullOrEmpty(_testNameSeparator))
+                displayName = displayName.Replace("/", _testNameSeparator);
 
             return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName);
         }

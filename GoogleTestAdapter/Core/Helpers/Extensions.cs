@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.Helpers
 
         internal static IDictionary<string, List<TestCase>> GroupByExecutable(this IEnumerable<TestCase> testcases)
         {
-            Dictionary<string, List<TestCase>> groupedTestCases = new Dictionary<string, List<TestCase>>();
+            var groupedTestCases = new Dictionary<string, List<TestCase>>();
             foreach (TestCase testCase in testcases)
             {
                 List<TestCase> group;

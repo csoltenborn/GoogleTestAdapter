@@ -11,20 +11,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionEnableParallelTestExecutionDescription)]
         public bool EnableParallelTestExecution
         {
-            get { return enableParallelTestExecution; }
-            set { SetAndNotify(ref enableParallelTestExecution, value); }
+            get { return _enableParallelTestExecution; }
+            set { SetAndNotify(ref _enableParallelTestExecution, value); }
         }
-        private bool enableParallelTestExecution = SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue;
+        private bool _enableParallelTestExecution = SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue;
 
         [Category(SettingsWrapper.CategoryParallelizationName)]
         [DisplayName(SettingsWrapper.OptionMaxNrOfThreads)]
         [Description(SettingsWrapper.OptionMaxNrOfThreadsDescription)]
         public int MaxNrOfThreads
         {
-            get { return maxNrOfThreads; }
-            set { SetAndNotify(ref maxNrOfThreads, value); }
+            get { return _maxNrOfThreads; }
+            set { SetAndNotify(ref _maxNrOfThreads, value); }
         }
-        private int maxNrOfThreads = SettingsWrapper.OptionMaxNrOfThreadsDefaultValue;
+        private int _maxNrOfThreads = SettingsWrapper.OptionMaxNrOfThreadsDefaultValue;
     }
 
 }

@@ -6,7 +6,7 @@ namespace GoogleTestAdapter.Model
 
     public class TestResult
     {
-        public TestCase TestCase { get; set; }
+        public TestCase TestCase { get; }
 
         public string ComputerName { get; set; }
         public string DisplayName { get; set; }

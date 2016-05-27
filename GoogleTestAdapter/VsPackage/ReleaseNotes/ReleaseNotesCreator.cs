@@ -9,24 +9,24 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
     {
         private static Version[] Versions => History.Versions;
 
-        private Version FormerlyInstalledVersion { get; }
-        private Version CurrentVersion { get; }
+        private readonly Version _formerlyInstalledVersion;
+        private readonly Version _currentVersion;
 
         public ReleaseNotesCreator(Version formerlyInstalledVersion, Version currentVersion)
         {
-            FormerlyInstalledVersion = formerlyInstalledVersion;
-            CurrentVersion = currentVersion;
+            _formerlyInstalledVersion = formerlyInstalledVersion;
+            _currentVersion = currentVersion;
         }
 
         private string CreateMarkdown()
         {
-            if (FormerlyInstalledVersion == CurrentVersion)
+            if (_formerlyInstalledVersion == _currentVersion)
                 return "";
 
             string releaseNotes = CreateHeader();
 
-            int startIndex = Array.IndexOf(Versions, CurrentVersion);
-            int endIndex = FormerlyInstalledVersion == null ? -1 : Array.IndexOf(Versions, FormerlyInstalledVersion);
+            int startIndex = Array.IndexOf(Versions, _currentVersion);
+            int endIndex = _formerlyInstalledVersion == null ? -1 : Array.IndexOf(Versions, _formerlyInstalledVersion);
             for (int i = startIndex; i > endIndex; i--)
             {
                 releaseNotes += CreateEntry(Versions[i]);
@@ -50,15 +50,15 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private string CreateHeader()
         {
-            string fromVersion = FormerlyInstalledVersion == null ? "" : $" from V{ToDisplayName(FormerlyInstalledVersion)}";
+            string fromVersion = _formerlyInstalledVersion == null ? "" : $" from V{ToDisplayName(_formerlyInstalledVersion)}";
 
             string header = "";
             header += $"### Google Test Adapter: Release notes{Environment.NewLine}";
             header += Environment.NewLine;
             header += "Google Test Adapter has been updated";
-            header += $"{fromVersion} to V{ToDisplayName(CurrentVersion)}. ";
+            header += $"{fromVersion} to V{ToDisplayName(_currentVersion)}. ";
 
-            if (FormerlyInstalledVersion == null)
+            if (_formerlyInstalledVersion == null)
                 header += $"The complete version history is listed below. Future updates will only list changes to the formerly installed version.{Environment.NewLine}";
             else
                 header += "The changes to your formerly installed version are listed below. "

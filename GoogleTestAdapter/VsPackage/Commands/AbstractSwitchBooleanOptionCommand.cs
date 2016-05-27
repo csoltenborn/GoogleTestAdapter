@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.VsPackage.Commands
     {
         private static Guid CommandSet { get; } = new Guid("e0d9835f-9c16-4d27-a9ad-4df7568650f7");
 
-        protected IGoogleTestExtensionOptionsPage Package { get; }
+        protected readonly IGoogleTestExtensionOptionsPage Package;
 
         protected AbstractSwitchBooleanOptionCommand(IGoogleTestExtensionOptionsPage package, int commandId)
         {

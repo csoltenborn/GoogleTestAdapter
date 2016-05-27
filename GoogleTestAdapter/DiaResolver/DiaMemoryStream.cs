@@ -7,20 +7,20 @@ namespace GoogleTestAdapter.DiaResolver
 
     class DiaMemoryStream : StubMemoryStream
     {
-        private Stream PdbFile { get; }
+        private readonly Stream _pdbFile;
 
         internal DiaMemoryStream(Stream pdbFile)
         {
-            this.PdbFile = pdbFile;
+            _pdbFile = pdbFile;
         }
 
-        unsafe public override void RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
+        public override unsafe void RemoteRead(out byte buffer, uint bufferSize, out uint bytesRead)
         {
             fixed (byte* addressOfBuffer = &buffer)
             {
                 for (bytesRead = 0; bytesRead < bufferSize; bytesRead++)
                 {
-                    var nextByte = PdbFile.ReadByte();
+                    var nextByte = _pdbFile.ReadByte();
                     if (nextByte == -1)
                         return;
                     addressOfBuffer[bytesRead] = (byte)nextByte;
@@ -28,18 +28,18 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        unsafe public override void RemoteSeek(_LARGE_INTEGER offset, uint seekOrigin, out _ULARGE_INTEGER newPosition)
+        public override void RemoteSeek(_LARGE_INTEGER offset, uint seekOrigin, out _ULARGE_INTEGER newPosition)
         {
-            newPosition.QuadPart = (ulong)PdbFile.Seek(offset.QuadPart, (SeekOrigin)seekOrigin);
+            newPosition.QuadPart = (ulong)_pdbFile.Seek(offset.QuadPart, (SeekOrigin)seekOrigin);
         }
 
-        unsafe public override void Stat(out tagSTATSTG pstatstg, uint grfStatFlag)
+        public override void Stat(out tagSTATSTG pstatstg, uint grfStatFlag)
         {
             pstatstg = new tagSTATSTG
             {
                 cbSize = new _ULARGE_INTEGER
                 {
-                    QuadPart = (ulong)PdbFile.Length
+                    QuadPart = (ulong)_pdbFile.Length
                 }
             };
         }
@@ -49,9 +49,9 @@ namespace GoogleTestAdapter.DiaResolver
 
     abstract class StubMemoryStream : IStream
     {
-        unsafe public abstract void RemoteRead(out byte pv, uint cb, out uint pcbRead);
-        unsafe public abstract void RemoteSeek(_LARGE_INTEGER dlibMove, uint dwOrigin, out _ULARGE_INTEGER plibNewPosition);
-        unsafe public abstract void Stat(out tagSTATSTG pstatstg, uint grfStatFlag);
+        public abstract void RemoteRead(out byte pv, uint cb, out uint pcbRead);
+        public abstract void RemoteSeek(_LARGE_INTEGER dlibMove, uint dwOrigin, out _ULARGE_INTEGER plibNewPosition);
+        public abstract void Stat(out tagSTATSTG pstatstg, uint grfStatFlag);
 
         void IStream.Clone(out IStream ppstm)
         {

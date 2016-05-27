@@ -16,8 +16,8 @@ namespace GoogleTestAdapter.Runners
 
             internal Args(List<TestCase> testCases, string commandLine)
             {
-                this.TestCases = testCases ?? new List<TestCase>();
-                this.CommandLine = commandLine ?? "";
+                TestCases = testCases ?? new List<TestCase>();
+                CommandLine = commandLine ?? "";
             }
         }
 
@@ -25,12 +25,12 @@ namespace GoogleTestAdapter.Runners
         public const int MaxCommandLength = 8191;
 
 
-        private int LengthOfExecutableString { get; }
-        private IEnumerable<TestCase> AllTestCases { get; }
-        private IEnumerable<TestCase> TestCasesToRun { get; }
-        private string ResultXmlFile { get; }
-        private TestEnvironment TestEnvironment { get; }
-        private string UserParameters { get; }
+        private readonly int _lengthOfExecutableString;
+        private readonly IEnumerable<TestCase> _allTestCases;
+        private readonly IEnumerable<TestCase> _testCasesToRun;
+        private readonly string _resultXmlFile;
+        private readonly TestEnvironment _testEnvironment;
+        private readonly string _userParameters;
 
 
         public CommandLineGenerator(
@@ -43,12 +43,12 @@ namespace GoogleTestAdapter.Runners
                 throw new ArgumentNullException(nameof(userParameters));
             }
 
-            this.LengthOfExecutableString = lengthOfExecutableString;
-            this.AllTestCases = allTestCases;
-            this.TestCasesToRun = testCasesToRun;
-            this.ResultXmlFile = resultXmlFile;
-            this.TestEnvironment = testEnvironment;
-            this.UserParameters = userParameters;
+            _lengthOfExecutableString = lengthOfExecutableString;
+            _allTestCases = allTestCases;
+            _testCasesToRun = testCasesToRun;
+            _resultXmlFile = resultXmlFile;
+            _testEnvironment = testEnvironment;
+            _userParameters = userParameters;
         }
 
 
@@ -61,18 +61,18 @@ namespace GoogleTestAdapter.Runners
             baseCommandLine += GetShuffleTestsParameter();
             baseCommandLine += GetTestsRepetitionsParameter();
 
-            List<Args> commandLines = new List<Args>();
+            var commandLines = new List<Args>();
             commandLines.AddRange(GetFinalCommandLines(baseCommandLine));
             return commandLines;
         }
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
-            List<Args> commandLines = new List<Args>();
+            var commandLines = new List<Args>();
             string userParam = GetAdditionalUserParameter();
             if (AllTestCasesOfExecutableAreRun())
             {
-                commandLines.Add(new Args(TestCasesToRun.ToList(), baseCommandLine + userParam));
+                commandLines.Add(new Args(_testCasesToRun.ToList(), baseCommandLine + userParam));
                 return commandLines;
             }
 
@@ -82,16 +82,16 @@ namespace GoogleTestAdapter.Runners
             string baseCommandLineWithFilter = baseCommandLine + suitesFilter;
 
             List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
-            List<TestCase> testCasesRunBySuite = TestCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
+            List<TestCase> testCasesRunBySuite = _testCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
             if (testCasesNotRunBySuite.Count == 0)
             {
-                commandLines.Add(new Args(TestCasesToRun.ToList(), baseCommandLineWithFilter + userParam));
+                commandLines.Add(new Args(_testCasesToRun.ToList(), baseCommandLineWithFilter + userParam));
                 return commandLines;
             }
 
             List<TestCase> includedTestCases;
             int remainingLength = MaxCommandLength
-                - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1;
+                - baseCommandLineWithFilter.Length - _lengthOfExecutableString - userParam.Length - 1;
             string commandLine = baseCommandLineWithFilter +
                 JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
             includedTestCases.AddRange(testCasesRunBySuite);
@@ -103,7 +103,7 @@ namespace GoogleTestAdapter.Runners
             while (testCasesNotRunBySuite.Count > 0)
             {
                 remainingLength = MaxCommandLength
-                    - baseCommandLineWithFilter.Length - LengthOfExecutableString - userParam.Length - 1;
+                    - baseCommandLineWithFilter.Length - _lengthOfExecutableString - userParam.Length - 1;
                 commandLine = baseCommandLineWithFilter +
                               JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
                 commandLines.Add(new Args(includedTestCases, commandLine + userParam));
@@ -143,41 +143,41 @@ namespace GoogleTestAdapter.Runners
 
         private string GetAdditionalUserParameter()
         {
-            return UserParameters.Length == 0 ? "" : " " + UserParameters;
+            return _userParameters.Length == 0 ? "" : " " + _userParameters;
         }
 
         private string GetOutputpathParameter()
         {
-            return GoogleTestConstants.GetResultXmlFileOption(ResultXmlFile);
+            return GoogleTestConstants.GetResultXmlFileOption(_resultXmlFile);
         }
 
         private string GetCatchExceptionsParameter()
         {
-            return GoogleTestConstants.GetCatchExceptionsOption(TestEnvironment.Options.CatchExceptions);
+            return GoogleTestConstants.GetCatchExceptionsOption(_testEnvironment.Options.CatchExceptions);
         }
 
         private string GetBreakOnFailureParameter()
         {
-            return GoogleTestConstants.GetBreakOnFailureOption(TestEnvironment.Options.BreakOnFailure);
+            return GoogleTestConstants.GetBreakOnFailureOption(_testEnvironment.Options.BreakOnFailure);
         }
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return TestEnvironment.Options.RunDisabledTests
+            return _testEnvironment.Options.RunDisabledTests
                 ? GoogleTestConstants.AlsoRunDisabledTestsOption
                 : "";
         }
 
         private string GetShuffleTestsParameter()
         {
-            if (!TestEnvironment.Options.ShuffleTests)
+            if (!_testEnvironment.Options.ShuffleTests)
             {
                 return "";
             }
 
             string option = GoogleTestConstants.ShuffleTestsOption;
 
-            int seed = TestEnvironment.Options.ShuffleTestsSeed;
+            int seed = _testEnvironment.Options.ShuffleTestsSeed;
             if (seed != GoogleTestConstants.ShuffleTestsSeedDefaultValue)
             {
                 option += GoogleTestConstants.ShuffleTestsSeedOption + "=" + seed;
@@ -188,7 +188,7 @@ namespace GoogleTestAdapter.Runners
 
         private string GetTestsRepetitionsParameter()
         {
-            int nrOfRepetitions = TestEnvironment.Options.NrOfTestRepetitions;
+            int nrOfRepetitions = _testEnvironment.Options.NrOfTestRepetitions;
             if (nrOfRepetitions == 1)
             {
                 return "";
@@ -203,16 +203,16 @@ namespace GoogleTestAdapter.Runners
 
         private bool AllTestCasesOfExecutableAreRun()
         {
-            HashSet<TestCase> allTestCasesAsSet = new HashSet<TestCase>(AllTestCases);
-            HashSet<TestCase> testCasesToRunAsSet = new HashSet<TestCase>(TestCasesToRun);
+            var allTestCasesAsSet = new HashSet<TestCase>(_allTestCases);
+            var testCasesToRunAsSet = new HashSet<TestCase>(_testCasesToRun);
             return allTestCasesAsSet.SetEquals(testCasesToRunAsSet);
         }
 
         private List<TestCase> GetTestCasesNotRunBySuite(List<string> suitesRunningAllTests)
         {
-            List<TestCase> testCasesNotRunBySuite = new List<TestCase>();
+            var testCasesNotRunBySuite = new List<TestCase>();
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (TestCase testCase in TestCasesToRun)
+            foreach (TestCase testCase in _testCasesToRun)
             {
                 bool isRunBySuite = suitesRunningAllTests.Any(s => s == testCase.GetTestsuiteName_CommandLineGenerator());
                 if (!isRunBySuite)
@@ -225,12 +225,12 @@ namespace GoogleTestAdapter.Runners
 
         private List<string> GetSuitesRunningAllTests()
         {
-            List<string> suitesRunningAllTests = new List<string>();
+            var suitesRunningAllTests = new List<string>();
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string suite in GetAllSuitesOfTestCasesToRun())
             {
-                List<TestCase> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(TestCasesToRun, suite);
-                List<TestCase> allMatchingTestCases = GetAllMatchingTestCases(AllTestCases, suite);
+                List<TestCase> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(_testCasesToRun, suite);
+                List<TestCase> allMatchingTestCases = GetAllMatchingTestCases(_allTestCases, suite);
                 if (allMatchingTestCasesToBeRun.Count == allMatchingTestCases.Count)
                 {
                     suitesRunningAllTests.Add(suite);
@@ -241,7 +241,7 @@ namespace GoogleTestAdapter.Runners
 
         private List<string> GetAllSuitesOfTestCasesToRun()
         {
-            return TestCasesToRun.Select(tc => tc.GetTestsuiteName_CommandLineGenerator()).Distinct().ToList();
+            return _testCasesToRun.Select(tc => tc.GetTestsuiteName_CommandLineGenerator()).Distinct().ToList();
         }
 
         private List<TestCase> GetAllMatchingTestCases(IEnumerable<TestCase> cases, string suite)

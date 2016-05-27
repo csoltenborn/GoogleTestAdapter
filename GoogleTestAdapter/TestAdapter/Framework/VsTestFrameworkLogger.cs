@@ -9,15 +9,14 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
     public class VsTestFrameworkLogger : LoggerBase
     {
-
         private static readonly object Lock = new object();
-        private readonly SettingsWrapper _settings;
 
-        private IMessageLogger Logger { get; }
+        private readonly SettingsWrapper _settings;
+        private readonly IMessageLogger _logger;
 
         public VsTestFrameworkLogger(IMessageLogger logger, SettingsWrapper settings)
         {
-            Logger = logger;
+            _logger = logger;
             _settings = settings;
         }
 
@@ -58,7 +57,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
             lock (Lock)
             {
-                Logger.SendMessage(level, message);
+                _logger.SendMessage(level, message);
             }
         }
 

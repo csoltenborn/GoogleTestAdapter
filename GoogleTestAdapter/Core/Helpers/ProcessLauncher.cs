@@ -8,13 +8,13 @@ namespace GoogleTestAdapter.Helpers
 
     public class ProcessLauncher
     {
-        private readonly ILogger Logger;
-        private readonly string PathExtension;
+        private readonly ILogger _logger;
+        private readonly string _pathExtension;
 
         public ProcessLauncher(ILogger logger, string pathExtension)
         {
-            Logger = logger;
-            PathExtension = pathExtension;
+            _logger = logger;
+            _pathExtension = pathExtension;
         }
 
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
@@ -27,7 +27,7 @@ namespace GoogleTestAdapter.Helpers
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
             bool throwIfError, out int processExitCode)
         {
-            List<string> output = new List<string>();
+            var output = new List<string>();
             processExitCode = LaunchProcess(workingDirectory, command, param, printTestOutput, throwIfError, output);
             return output;
         }
@@ -36,7 +36,7 @@ namespace GoogleTestAdapter.Helpers
         private int LaunchProcess(string workingDirectory, string command, string param, bool printTestOutput,
             bool throwIfError, List<string> output)
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo(command, param)
+            var processStartInfo = new ProcessStartInfo(command, param)
             {
                 RedirectStandardOutput = true,
                 RedirectStandardError = false,
@@ -45,22 +45,22 @@ namespace GoogleTestAdapter.Helpers
                 WorkingDirectory = workingDirectory
             };
 
-            if (!string.IsNullOrEmpty(PathExtension))
-                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(PathExtension);
+            if (!string.IsNullOrEmpty(_pathExtension))
+                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(_pathExtension);
 
             Process process = Process.Start(processStartInfo);
             try
             {
-                ProcessWaiter waiter = new ProcessWaiter(process);
+                var waiter = new ProcessWaiter(process);
                 if (printTestOutput)
                 {
-                    Logger.LogInfo(
+                    _logger.LogInfo(
                         ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
                 }
                 ReadTheStream(process, output, printTestOutput, throwIfError);
                 if (printTestOutput)
                 {
-                    Logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
+                    _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
                 }
                 return waiter.WaitForExit();
             }
@@ -79,7 +79,7 @@ namespace GoogleTestAdapter.Helpers
                 streamContent.Add(line);
                 if (printTestOutput)
                 {
-                    Logger.LogInfo(line);
+                    _logger.LogInfo(line);
                 }
             }
             if ((throwIfError && process.ExitCode != 0))

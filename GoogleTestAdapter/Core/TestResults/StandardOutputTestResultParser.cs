@@ -17,24 +17,24 @@ namespace GoogleTestAdapter.TestResults
 
         public TestCase CrashedTestCase { get; private set; }
 
-        private List<string> ConsoleOutput { get; }
-        private List<TestCase> TestCasesRun { get; }
-        private TestEnvironment TestEnvironment { get; }
-        private string BaseDir { get; }
+        private readonly List<string> _consoleOutput;
+        private readonly List<TestCase> _testCasesRun;
+        private readonly TestEnvironment _testEnvironment;
+        private readonly string _baseDir;
 
 
         public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment, string baseDir)
         {
-            this.ConsoleOutput = consoleOutput.ToList();
-            this.TestCasesRun = testCasesRun.ToList();
-            this.TestEnvironment = testEnvironment;
-            BaseDir = baseDir;
+            _consoleOutput = consoleOutput.ToList();
+            _testCasesRun = testCasesRun.ToList();
+            _testEnvironment = testEnvironment;
+            _baseDir = baseDir;
         }
 
 
         public List<TestResult> GetTestResults()
         {
-            List<TestResult> testResults = new List<TestResult>();
+            var testResults = new List<TestResult>();
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);
             while (indexOfNextTestcase >= 0)
             {
@@ -49,22 +49,22 @@ namespace GoogleTestAdapter.TestResults
         {
             int currentLineIndex = indexOfTestcase;
 
-            string line = ConsoleOutput[currentLineIndex++];
+            string line = _consoleOutput[currentLineIndex++];
             string qualifiedTestname = RemovePrefix(line).Trim();
             TestCase testCase = FindTestcase(qualifiedTestname);
 
-            if (currentLineIndex >= ConsoleOutput.Count)
+            if (currentLineIndex >= _consoleOutput.Count)
             {
                 return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), true, CrashText);
             }
 
-            line = ConsoleOutput[currentLineIndex++];
+            line = _consoleOutput[currentLineIndex++];
 
             string errorMsg = "";
-            while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex < ConsoleOutput.Count)
+            while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex < _consoleOutput.Count)
             {
                 errorMsg += line + "\n";
-                line = ConsoleOutput[currentLineIndex++];
+                line = _consoleOutput[currentLineIndex++];
             }
             if (IsFailedLine(line))
             {
@@ -92,7 +92,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                TestEnvironment.LogWarning("Could not parse duration in line '" + line + "'");
+                _testEnvironment.LogWarning("Could not parse duration in line '" + line + "'");
             }
 
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.TestResults
                 CrashedTestCase = testCase;
             }
 
-            ErrorMessageParser parser = new ErrorMessageParser(errorMessage, BaseDir);
+            var parser = new ErrorMessageParser(errorMessage, _baseDir);
             parser.Parse();
             return new TestResult(testCase)
             {
@@ -132,9 +132,9 @@ namespace GoogleTestAdapter.TestResults
 
         private int FindIndexOfNextTestcase(int currentIndex)
         {
-            while (currentIndex < ConsoleOutput.Count)
+            while (currentIndex < _consoleOutput.Count)
             {
-                string line = ConsoleOutput[currentIndex];
+                string line = _consoleOutput[currentIndex];
                 if (IsRunLine(line))
                 {
                     return currentIndex;
@@ -146,7 +146,7 @@ namespace GoogleTestAdapter.TestResults
 
         private TestCase FindTestcase(string qualifiedTestname)
         {
-            return TestCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
+            return _testCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
         }
 
         private bool IsRunLine(string line)

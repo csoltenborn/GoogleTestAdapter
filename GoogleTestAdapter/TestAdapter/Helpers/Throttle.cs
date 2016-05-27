@@ -6,29 +6,29 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 {
     public class Throttle
     {
-        private int maxEventsPerTimeSpan;
-        private TimeSpan timeSpan;
-        private Queue<DateTime> eventTimesHistory;
+        private readonly int _maxEventsPerTimeSpan;
+        private readonly TimeSpan _timeSpan;
+        private readonly Queue<DateTime> _eventTimesHistory;
 
         public Throttle(int maxEventsPerTimeSpan, TimeSpan timeSpan)
         {
-            this.maxEventsPerTimeSpan = maxEventsPerTimeSpan;
-            this.timeSpan = timeSpan;
-            eventTimesHistory = new Queue<DateTime>(maxEventsPerTimeSpan);
+            _maxEventsPerTimeSpan = maxEventsPerTimeSpan;
+            _timeSpan = timeSpan;
+            _eventTimesHistory = new Queue<DateTime>(maxEventsPerTimeSpan);
         }
 
         public void Execute(Action task)
         {
-            if (eventTimesHistory.Count == maxEventsPerTimeSpan)
+            if (_eventTimesHistory.Count == _maxEventsPerTimeSpan)
             {
-                var otherEventTime = eventTimesHistory.Dequeue();
+                var otherEventTime = _eventTimesHistory.Dequeue();
                 var timePassed = DateTime.Now - otherEventTime;
-                if (timePassed < timeSpan)
-                    Thread.Sleep(timeSpan - timePassed);
+                if (timePassed < _timeSpan)
+                    Thread.Sleep(_timeSpan - timePassed);
             }
 
             task.Invoke();
-            eventTimesHistory.Enqueue(DateTime.Now);
+            _eventTimesHistory.Enqueue(DateTime.Now);
         }
     }
 }

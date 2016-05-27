@@ -10,20 +10,20 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
     public class TestCaseFilter
     {
-        private IRunContext RunContext { get; }
-        private TestEnvironment TestEnvironment { get; }
+        private readonly IRunContext _runContext;
+        private readonly TestEnvironment _testEnvironment;
 
-        private IDictionary<string, TestProperty> TestPropertiesMap { get; } = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
-        private IDictionary<string, TestProperty> TraitPropertiesMap { get; } = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, TestProperty> _testPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, TestProperty> _traitPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
 
-        private IEnumerable<string> TestProperties => TestPropertiesMap.Keys;
-        private IEnumerable<string> TraitProperties => TraitPropertiesMap.Keys;
+        private IEnumerable<string> TestProperties => _testPropertiesMap.Keys;
+        private IEnumerable<string> TraitProperties => _traitPropertiesMap.Keys;
         private IEnumerable<string> AllProperties => TestProperties.Union(TraitProperties);
 
         public TestCaseFilter(IRunContext runContext, ISet<string> traitNames, TestEnvironment testEnvironment)
         {
-            this.RunContext = runContext;
-            this.TestEnvironment = testEnvironment;
+            _runContext = runContext;
+            _testEnvironment = testEnvironment;
 
             InitProperties(traitNames);
         }
@@ -43,19 +43,19 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private void InitProperties(ISet<string> traitNames)
         {
-            TestPropertiesMap[nameof(TestCaseProperties.FullyQualifiedName)] = TestCaseProperties.FullyQualifiedName;
-            TestPropertiesMap[nameof(TestCaseProperties.DisplayName)] = TestCaseProperties.DisplayName;
-            TestPropertiesMap[nameof(TestCaseProperties.LineNumber)] = TestCaseProperties.LineNumber;
-            TestPropertiesMap[nameof(TestCaseProperties.CodeFilePath)] = TestCaseProperties.CodeFilePath;
-            TestPropertiesMap[nameof(TestCaseProperties.ExecutorUri)] = TestCaseProperties.ExecutorUri;
-            TestPropertiesMap[nameof(TestCaseProperties.Id)] = TestCaseProperties.Id;
-            TestPropertiesMap[nameof(TestCaseProperties.Source)] = TestCaseProperties.Source;
+            _testPropertiesMap[nameof(TestCaseProperties.FullyQualifiedName)] = TestCaseProperties.FullyQualifiedName;
+            _testPropertiesMap[nameof(TestCaseProperties.DisplayName)] = TestCaseProperties.DisplayName;
+            _testPropertiesMap[nameof(TestCaseProperties.LineNumber)] = TestCaseProperties.LineNumber;
+            _testPropertiesMap[nameof(TestCaseProperties.CodeFilePath)] = TestCaseProperties.CodeFilePath;
+            _testPropertiesMap[nameof(TestCaseProperties.ExecutorUri)] = TestCaseProperties.ExecutorUri;
+            _testPropertiesMap[nameof(TestCaseProperties.Id)] = TestCaseProperties.Id;
+            _testPropertiesMap[nameof(TestCaseProperties.Source)] = TestCaseProperties.Source;
 
             foreach (string traitName in traitNames)
             {
                 var traitTestProperty = TestProperty.Find(traitName) ??
                       TestProperty.Register(traitName, traitName, typeof(string), typeof(TestCase));
-                TraitPropertiesMap[traitName] = traitTestProperty;
+                _traitPropertiesMap[traitName] = traitTestProperty;
             }
         }
 
@@ -63,10 +63,10 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             TestProperty testProperty;
 
-            TestPropertiesMap.TryGetValue(propertyName, out testProperty);
+            _testPropertiesMap.TryGetValue(propertyName, out testProperty);
 
             if (testProperty == null)
-                TraitPropertiesMap.TryGetValue(propertyName, out testProperty);
+                _traitPropertiesMap.TryGetValue(propertyName, out testProperty);
 
             return testProperty;
         }
@@ -90,18 +90,18 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             try
             {
-                ITestCaseFilterExpression filterExpression = RunContext.GetTestCaseFilter(AllProperties, PropertyProvider);
+                ITestCaseFilterExpression filterExpression = _runContext.GetTestCaseFilter(AllProperties, PropertyProvider);
 
                 string message = filterExpression == null
                         ? "No test case filter provided"
                         : $"Test case filter: {filterExpression.TestCaseFilterValue}";
-                TestEnvironment.DebugInfo(message);
+                _testEnvironment.DebugInfo(message);
 
                 return filterExpression;
             }
             catch (TestPlatformFormatException e)
             {
-                TestEnvironment.LogWarning(e.Message);
+                _testEnvironment.LogWarning(e.Message);
                 return null;
             }
         }
@@ -125,7 +125,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             string message = matches
                 ? $"{testCase.DisplayName} matches {filterExpression.TestCaseFilterValue}"
                 : $"{testCase.DisplayName} does not match {filterExpression.TestCaseFilterValue}";
-            TestEnvironment.DebugInfo(message);
+            _testEnvironment.DebugInfo(message);
 
             return matches;
         }

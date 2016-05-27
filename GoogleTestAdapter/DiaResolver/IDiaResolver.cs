@@ -5,6 +5,6 @@ namespace GoogleTestAdapter.DiaResolver
 {
     public interface IDiaResolver : IDisposable
     {
-        IEnumerable<SourceFileLocation> GetFunctions(string symbolFilterString);
+        IList<SourceFileLocation> GetFunctions(string symbolFilterString);
     }
 }

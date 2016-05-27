@@ -11,56 +11,56 @@ namespace GoogleTestAdapter
     public class GoogleTestExecutor
     {
 
-        private TestEnvironment TestEnvironment { get; }
+        private readonly TestEnvironment _testEnvironment;
 
-        private ITestRunner Runner { get; set; }
-        private bool Canceled { get; set; } = false;
+        private ITestRunner _runner;
+        private bool _canceled;
 
         public GoogleTestExecutor(TestEnvironment testEnvironment)
         {
-            TestEnvironment = testEnvironment;
+            _testEnvironment = testEnvironment;
         }
 
 
         public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            TestEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
+            _testEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 
             lock (this)
             {
-                if (Canceled)
+                if (_canceled)
                 {
                     return;
                 }
                 ComputeTestRunner(reporter, isBeingDebugged, solutionDirectory);
             }
 
-            Runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, isBeingDebugged, launcher);
-            TestEnvironment.LogInfo("Test execution completed.");
+            _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, isBeingDebugged, launcher);
+            _testEnvironment.LogInfo("Test execution completed.");
         }
 
         public void Cancel()
         {
             lock (this)
             {
-                Canceled = true;
-                Runner?.Cancel();
+                _canceled = true;
+                _runner?.Cancel();
             }
         }
 
         private void ComputeTestRunner(ITestFrameworkReporter reporter, bool isBeingDebugged, string solutionDirectory)
         {
-            if (TestEnvironment.Options.ParallelTestExecution && !isBeingDebugged)
+            if (_testEnvironment.Options.ParallelTestExecution && !isBeingDebugged)
             {
-                Runner = new ParallelTestRunner(reporter, TestEnvironment, solutionDirectory);
+                _runner = new ParallelTestRunner(reporter, _testEnvironment, solutionDirectory);
             }
             else
             {
-                Runner = new PreparingTestRunner(0, solutionDirectory, reporter, TestEnvironment);
-                if (TestEnvironment.Options.ParallelTestExecution && isBeingDebugged)
+                _runner = new PreparingTestRunner(0, solutionDirectory, reporter, _testEnvironment);
+                if (_testEnvironment.Options.ParallelTestExecution && isBeingDebugged)
                 {
-                    TestEnvironment.DebugInfo(
+                    _testEnvironment.DebugInfo(
                         "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
                 }
             }

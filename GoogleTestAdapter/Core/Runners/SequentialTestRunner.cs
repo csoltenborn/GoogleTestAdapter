@@ -13,16 +13,16 @@ namespace GoogleTestAdapter.Runners
 {
     public class SequentialTestRunner : ITestRunner
     {
-        private bool Canceled { get; set; }
+        private bool _canceled;
 
-        private ITestFrameworkReporter FrameworkReporter { get; }
-        private TestEnvironment TestEnvironment { get; }
+        private readonly ITestFrameworkReporter _frameworkReporter;
+        private readonly TestEnvironment _testEnvironment;
 
 
         public SequentialTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
         {
-            FrameworkReporter = reporter;
-            TestEnvironment = testEnvironment;
+            _frameworkReporter = reporter;
+            _testEnvironment = testEnvironment;
         }
 
 
@@ -32,12 +32,12 @@ namespace GoogleTestAdapter.Runners
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
-            TestEnvironment.DebugInfo($"Computed testcase groups for {groupedTestCases.Keys.Count} executables");
+            _testEnvironment.DebugInfo($"Computed testcase groups for {groupedTestCases.Keys.Count} executables");
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
                 string finalParameters = userParameters.Replace(SettingsWrapper.ExecutablePlaceholder, executable);
-                if (Canceled)
+                if (_canceled)
                 {
                     break;
                 }
@@ -54,7 +54,7 @@ namespace GoogleTestAdapter.Runners
 
         public void Cancel()
         {
-            Canceled = true;
+            _canceled = true;
         }
 
 
@@ -67,36 +67,36 @@ namespace GoogleTestAdapter.Runners
             string workingDir = Path.GetDirectoryName(executable);
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, TestEnvironment);
-            TestEnvironment.DebugInfo($"Computed {generator.GetCommandLines().Count()} arguments");
+            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _testEnvironment);
+            _testEnvironment.DebugInfo($"Computed {generator.GetCommandLines().Count()} arguments");
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
-                if (Canceled)
+                if (_canceled)
                 {
                     break;
                 }
 
-                FrameworkReporter.ReportTestsStarted(arguments.TestCases);
-                TestEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
-                List<string> consoleOutput = new TestProcessLauncher(TestEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, TestEnvironment.Options.PrintTestOutput && !TestEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
-                TestEnvironment.DebugInfo("Execution finished of command '" + executable + " " + arguments.CommandLine + "'.");
+                _frameworkReporter.ReportTestsStarted(arguments.TestCases);
+                _testEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
+                List<string> consoleOutput = new TestProcessLauncher(_testEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, _testEnvironment.Options.PrintTestOutput && !_testEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
+                _testEnvironment.DebugInfo("Execution finished of command '" + executable + " " + arguments.CommandLine + "'.");
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
-                TestEnvironment.DebugInfo($"Collected {results.Count()} test results");
+                _testEnvironment.DebugInfo($"Collected {results.Count()} test results");
 
-                FrameworkReporter.ReportTestResults(results);
-                TestEnvironment.DebugInfo($"Reported {results.Count()} test results");
+                _frameworkReporter.ReportTestResults(results);
+                _testEnvironment.DebugInfo($"Reported {results.Count()} test results");
                 serializer.UpdateTestDurations(results);
-                TestEnvironment.DebugInfo($"Updated {results.Count()} test durations");
+                _testEnvironment.DebugInfo($"Updated {results.Count()} test durations");
             }
         }
 
         private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir)
         {
-            List<TestResult> testResults = new List<TestResult>();
+            var testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            XmlTestResultParser xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, TestEnvironment, baseDir);
-            StandardOutputTestResultParser consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, TestEnvironment, baseDir);
+            var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _testEnvironment, baseDir);
+            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _testEnvironment, baseDir);
 
             testResults.AddRange(xmlParser.GetTestResults());
 

@@ -7,8 +7,8 @@ namespace GoogleTestAdapter.Settings
 {
     public class RegexTraitPair
     {
-        public string Regex { get; set; }
-        public Trait Trait { get; set; }
+        public string Regex { get; }
+        public Trait Trait { get; }
 
         public RegexTraitPair(string regex, string name, string value)
         {
@@ -21,15 +21,16 @@ namespace GoogleTestAdapter.Settings
     {
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
-        private IGoogleTestAdapterSettings TheSettings { get; }
+        private readonly IGoogleTestAdapterSettings _theSettings;
         public RegexTraitParser RegexTraitParser { private get; set; }
 
 
         public SettingsWrapper(IGoogleTestAdapterSettings settings)
         {
-            this.TheSettings = settings;
+            this._theSettings = settings;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
 
@@ -95,7 +96,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionPrintTestOutputDescription =
             "Print the output of the Google Test executable(s) to the Tests Output window.";
 
-        public virtual bool PrintTestOutput => TheSettings.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
+        public virtual bool PrintTestOutput => _theSettings.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
 
 
         public const string OptionTestDiscoveryRegex = "Regex for test discovery";
@@ -104,7 +105,7 @@ namespace GoogleTestAdapter.Settings
             "If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: "
             + TestFinderRegex;
 
-        public virtual string TestDiscoveryRegex => TheSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
+        public virtual string TestDiscoveryRegex => _theSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
         public const string OptionPathExtension = "PATH extension";
@@ -112,7 +113,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionPathExtensionDescription =
             "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;C:\\MyOtherBins";
 
-        public virtual string PathExtension => TheSettings.PathExtension ?? OptionPathExtensionDefaultValue;
+        public virtual string PathExtension => _theSettings.PathExtension ?? OptionPathExtensionDefaultValue;
 
 
         public const string TraitsRegexesPairSeparator = "//||//";
@@ -139,7 +140,7 @@ namespace GoogleTestAdapter.Settings
         {
             get
             {
-                string option = TheSettings.TraitsRegexesBefore ?? OptionTraitsRegexesDefaultValue;
+                string option = _theSettings.TraitsRegexesBefore ?? OptionTraitsRegexesDefaultValue;
                 return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
@@ -150,7 +151,7 @@ namespace GoogleTestAdapter.Settings
         {
             get
             {
-                string option = TheSettings.TraitsRegexesAfter ?? OptionTraitsRegexesDefaultValue;
+                string option = _theSettings.TraitsRegexesAfter ?? OptionTraitsRegexesDefaultValue;
                 return RegexTraitParser.ParseTraitsRegexesString(option);
             }
         }
@@ -161,7 +162,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionTestNameSeparatorDescription =
             "Test names produced by Google Test might contain the character '/', which makes VS cut the name after the '/' if the test explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work - there might be more). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).";
 
-        public virtual string TestNameSeparator => TheSettings.TestNameSeparator ?? OptionTestNameSeparatorDefaultValue;
+        public virtual string TestNameSeparator => _theSettings.TestNameSeparator ?? OptionTestNameSeparatorDefaultValue;
 
 
         public const string OptionParseSymbolInformation = "Parse symbol information";
@@ -170,14 +171,14 @@ namespace GoogleTestAdapter.Settings
             "Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).\n" +
             "If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective.";
 
-        public virtual bool ParseSymbolInformation => TheSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
+        public virtual bool ParseSymbolInformation => _theSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
 
         public const string OptionDebugMode = "Print debug info";
         public const bool OptionDebugModeDefaultValue = false;
         public const string OptionDebugModeDescription =
             "If true, debug output will be printed to the test console.";
 
-        public virtual bool DebugMode => TheSettings.DebugMode ?? OptionDebugModeDefaultValue;
+        public virtual bool DebugMode => _theSettings.DebugMode ?? OptionDebugModeDefaultValue;
 
 
         public const string OptionTimestampOutput = "Timestamp output";
@@ -185,7 +186,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionTimestampOutputDescription =
             "If true, a timestamp is added to test and debug output.";
 
-        public virtual bool TimestampOutput => TheSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
+        public virtual bool TimestampOutput => _theSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
 
 
         public const string OptionShowReleaseNotes = "Show release notes after update";
@@ -193,7 +194,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionShowReleaseNotesDescription =
             "If true, a dialog with release notes is shown after the extension has been updated.";
 
-        public virtual bool ShowReleaseNotes => TheSettings.ShowReleaseNotes ?? OptionShowReleaseNotesDefaultValue;
+        public virtual bool ShowReleaseNotes => _theSettings.ShowReleaseNotes ?? OptionShowReleaseNotesDefaultValue;
 
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
@@ -202,7 +203,7 @@ namespace GoogleTestAdapter.Settings
             "Additional parameters for Google Test executable. Placeholders:\n"
             + DescriptionOfPlaceholdersForExecutables;
 
-        public virtual string AdditionalTestExecutionParam => TheSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
+        public virtual string AdditionalTestExecutionParam => _theSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
 
         public const string OptionBatchForTestSetup = "Test setup batch file";
@@ -211,7 +212,7 @@ namespace GoogleTestAdapter.Settings
             "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholdersForBatches;
 
-        public virtual string BatchForTestSetup => TheSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
+        public virtual string BatchForTestSetup => _theSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
 
         public const string OptionBatchForTestTeardown = "Test teardown batch file";
@@ -220,7 +221,7 @@ namespace GoogleTestAdapter.Settings
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
             + DescriptionOfPlaceholdersForBatches;
 
-        public virtual string BatchForTestTeardown => TheSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
+        public virtual string BatchForTestTeardown => _theSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
         #endregion
 
@@ -231,7 +232,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionEnableParallelTestExecutionDescription =
             "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";
 
-        public virtual bool ParallelTestExecution => TheSettings.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
+        public virtual bool ParallelTestExecution => _theSettings.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
 
 
         public const string OptionMaxNrOfThreads = "Maximum number of threads";
@@ -243,7 +244,7 @@ namespace GoogleTestAdapter.Settings
         {
             get
             {
-                int result = TheSettings.MaxNrOfThreads ?? OptionMaxNrOfThreadsDefaultValue;
+                int result = _theSettings.MaxNrOfThreads ?? OptionMaxNrOfThreadsDefaultValue;
                 if (result <= 0 || result > Environment.ProcessorCount)
                 {
                     result = Environment.ProcessorCount;
@@ -262,7 +263,7 @@ namespace GoogleTestAdapter.Settings
             "Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.\n"
             + "Google Test option:" + GoogleTestConstants.CatchExceptions;
 
-        public virtual bool CatchExceptions => TheSettings.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
+        public virtual bool CatchExceptions => _theSettings.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
 
 
         public const string OptionBreakOnFailure = "Break on failure";
@@ -271,7 +272,7 @@ namespace GoogleTestAdapter.Settings
             "If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.\n"
             + "Google Test option:" + GoogleTestConstants.BreakOnFailure;
 
-        public virtual bool BreakOnFailure => TheSettings.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
+        public virtual bool BreakOnFailure => _theSettings.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
 
 
         public const string OptionRunDisabledTests = "Also run disabled tests";
@@ -280,7 +281,7 @@ namespace GoogleTestAdapter.Settings
             "If true, all (selected) tests will be run, even if they have been disabled.\n"
             + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
 
-        public virtual bool RunDisabledTests => TheSettings.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
+        public virtual bool RunDisabledTests => _theSettings.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
 
 
         public const string OptionNrOfTestRepetitions = "Number of test repetitions";
@@ -293,7 +294,7 @@ namespace GoogleTestAdapter.Settings
         {
             get
             {
-                int nrOfRepetitions = TheSettings.NrOfTestRepetitions ?? OptionNrOfTestRepetitionsDefaultValue;
+                int nrOfRepetitions = _theSettings.NrOfTestRepetitions ?? OptionNrOfTestRepetitionsDefaultValue;
                 if (nrOfRepetitions == 0 || nrOfRepetitions < -1)
                 {
                     nrOfRepetitions = OptionNrOfTestRepetitionsDefaultValue;
@@ -309,7 +310,7 @@ namespace GoogleTestAdapter.Settings
             "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
             + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
 
-        public virtual bool ShuffleTests => TheSettings.ShuffleTests ?? OptionShuffleTestsDefaultValue;
+        public virtual bool ShuffleTests => _theSettings.ShuffleTests ?? OptionShuffleTestsDefaultValue;
 
 
         public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
@@ -325,7 +326,7 @@ namespace GoogleTestAdapter.Settings
         {
             get
             {
-                int seed = TheSettings.ShuffleTestsSeed ?? OptionShuffleTestsSeedDefaultValue;
+                int seed = _theSettings.ShuffleTestsSeed ?? OptionShuffleTestsSeedDefaultValue;
                 if (seed < GoogleTestConstants.ShuffleTestsSeedMinValue || seed > GoogleTestConstants.ShuffleTestsSeedMaxValue)
                 {
                     seed = OptionShuffleTestsSeedDefaultValue;
