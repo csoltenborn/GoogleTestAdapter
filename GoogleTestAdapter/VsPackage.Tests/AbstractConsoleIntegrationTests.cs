@@ -105,19 +105,26 @@ namespace GoogleTestAdapter.VsPackage
             resultString = resultString.Replace("   bei ", "   at ");
             resultString = Regex.Replace(resultString, @":Zeile ([0-9]+)\.", ":line $1");
 
-            string hasCoveragePattern = @"Attachments:\n.*\.coverage\n\n";
-            if (Regex.IsMatch(resultString, hasCoveragePattern))
+            string testExecutionCompletedPattern = @".*Test execution completed, overall duration: .*\n";
+            if (Regex.IsMatch(resultString, testExecutionCompletedPattern))
             {
-                resultString = Regex.Replace(resultString, hasCoveragePattern, "");
+                resultString = Regex.Replace(resultString, testExecutionCompletedPattern, "");
+                resultString += "\n\nTest execution completed, overall duration: ${OverallDuration}\n";
+            }
+
+            string coveragePattern = @"Attachments:\n.*\.coverage\n\n";
+            if (Regex.IsMatch(resultString, coveragePattern))
+            {
+                resultString = Regex.Replace(resultString, coveragePattern, "");
                 resultString += "\n\nGoogle Test Adapter Coverage Marker";
             }
             else
             {
                 // workaround for build server - wtf?
-                hasCoveragePattern = @"Attachments:\n.*\.coverage\n";
-                if (Regex.IsMatch(resultString, hasCoveragePattern))
+                coveragePattern = @"Attachments:\n.*\.coverage\n";
+                if (Regex.IsMatch(resultString, coveragePattern))
                 {
-                    resultString = Regex.Replace(resultString, hasCoveragePattern, "");
+                    resultString = Regex.Replace(resultString, coveragePattern, "");
                     resultString += "\nGoogle Test Adapter Coverage Marker";
                 }
             }
@@ -127,6 +134,12 @@ namespace GoogleTestAdapter.VsPackage
             {
                 resultString = Regex.Replace(resultString, noDataAdapterPattern, "");
                 resultString += "\n\nGoogle Test Adapter Coverage Marker";
+            }
+
+            string emptyLinePattern = @"\n\n";
+            while (Regex.IsMatch(resultString, emptyLinePattern))
+            {
+                resultString = Regex.Replace(resultString, emptyLinePattern, "\n");
             }
 
             return resultString;

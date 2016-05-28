@@ -52,7 +52,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(0);
+            results.Count.Should().Be(1);
             MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -77,7 +77,7 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment, "");
-            parser.Invoking(p => p.GetTestResults()).ShouldThrow<Exception>();
+            parser.Invoking(p => p.GetTestResults()).ShouldNotThrow<Exception>();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Foo"))), Times.Exactly(1));
         }
 
@@ -85,7 +85,7 @@ namespace GoogleTestAdapter.TestResults
         [TestCategory(Unit)]
         public void GetTestResults_Sample1_FindsPassedParameterizedResult()
         {
-            IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7  # GetParam() = (false, 200, 0)");
+            IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7");
 
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();
@@ -116,7 +116,7 @@ Should get three animals";
         [TestCategory(Unit)]
         public void GetTestResults_Sample1_FindsParamterizedFailureResult()
         {
-            IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("ParameterizedTestsTest1/AllEnabledTest.TestInstance/11  # GetParam() = (true, 0, 100)", TestDataCreator.DummyExecutable, @"someSimpleParameterizedTest.cpp").Yield();
+            IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("ParameterizedTestsTest1/AllEnabledTest.TestInstance/11", TestDataCreator.DummyExecutable, @"someSimpleParameterizedTest.cpp").Yield();
 
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment, "");
             List<Model.TestResult> results = parser.GetTestResults();

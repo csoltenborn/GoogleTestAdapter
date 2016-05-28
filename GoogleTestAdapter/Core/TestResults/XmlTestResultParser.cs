@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.TestResults
         private readonly TestEnvironment _testEnvironment;
         private readonly string _baseDir;
         private readonly string _xmlResultFile;
-        private readonly List<TestCase> _testCasesRun;
+        private readonly IDictionary<string, TestCase> _testCasesMap;
 
 
         public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment, string baseDir)
@@ -28,7 +28,7 @@ namespace GoogleTestAdapter.TestResults
             _testEnvironment = testEnvironment;
             _baseDir = baseDir;
             _xmlResultFile = xmlResultFile;
-            _testCasesRun = testCasesRun.ToList();
+            _testCasesMap = testCasesRun.ToDictionary(tc => tc.FullyQualifiedName, tc => tc);
         }
 
 
@@ -59,14 +59,11 @@ namespace GoogleTestAdapter.TestResults
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
                 {
                     XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
-                    testResults.AddRange(testcaseNodes.Cast<XmlNode>().Select(ParseTestResult).Where(xn => xn != null));
+                    testResults.AddRange(testcaseNodes.AsParallel().Cast<XmlNode>().Select(TryParseTestResult).Where(tr => tr != null));
+                    _testEnvironment.DebugInfo($"Parsed XML test results of suite '{testsuiteNode.Attributes["name"]?.InnerText ?? "<unkown suite>"}'");
                 }
             }
             catch (XmlException e)
-            {
-                _testEnvironment.DebugWarning("Test result file " + _xmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
-            }
-            catch (NullReferenceException e)
             {
                 _testEnvironment.DebugWarning("Test result file " + _xmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
             }
@@ -74,18 +71,28 @@ namespace GoogleTestAdapter.TestResults
             return testResults;
         }
 
+        private TestResult TryParseTestResult(XmlNode testcaseNode)
+        {
+            try
+            {
+                return ParseTestResult(testcaseNode);
+            }
+            catch (Exception e)
+            {
+                _testEnvironment.DebugWarning(
+                    $"XmlNode could not be parsed: \'{GetQualifiedName(testcaseNode)}\'. Exception message: {e.Message}");
+                return null;
+            }
+        }
+
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private TestResult ParseTestResult(XmlNode testcaseNode)
         {
-            string className = testcaseNode.Attributes["classname"].InnerText;
-            string testCaseName = testcaseNode.Attributes["name"].InnerText;
-            string qualifiedName = className + "." + testCaseName;
+            string qualifiedName = GetQualifiedName(testcaseNode);
 
-            TestCase testCase = _testCasesRun.FindTestcase(qualifiedName);
-            if (testCase == null)
-            {
+            TestCase testCase;
+            if (!_testCasesMap.TryGetValue(qualifiedName, out testCase))
                 return null;
-            }
 
             var testResult = new TestResult(testCase)
             {
@@ -124,6 +131,18 @@ namespace GoogleTestAdapter.TestResults
             }
 
             return testResult;
+        }
+
+        private string GetQualifiedName(XmlNode testcaseNode)
+        {
+            if (testcaseNode == null)
+                return "<XmlNode is null>";
+            if (testcaseNode.Attributes == null)
+                return "<XmlNode has no attributes>";
+
+            string className = testcaseNode.Attributes["classname"]?.InnerText ?? "<unknown classname>";
+            string testCaseName = testcaseNode.Attributes["name"]?.InnerText ?? "<unknown testcasename>";
+            return $"{className}.{testCaseName}";
         }
 
         private TimeSpan ParseDuration(string durationString)
