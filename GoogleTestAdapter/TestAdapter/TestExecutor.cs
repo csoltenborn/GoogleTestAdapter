@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
+using ExtensionUriAttribute = Microsoft.VisualStudio.TestPlatform.ObjectModel.ExtensionUriAttribute;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -37,15 +39,15 @@ namespace GoogleTestAdapter.TestAdapter
         {
             try
             {
-                InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+                InitOrRefreshTestEnvironment(runContext.RunSettings, frameworkHandle);
 
-                IList<Model.TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
+                IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
 
                 ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
                 var filter = new TestCaseFilter(runContext, allTraitNames, _testEnvironment);
-                List<TestCase> vsTestCasesToRun =
+                List<VsTestCase> vsTestCasesToRun =
                     filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
-                IEnumerable<Model.TestCase> testCasesToRun =
+                IEnumerable<TestCase> testCasesToRun =
                     allTestCasesInExecutables.Where(tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToList();
 
                 DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
@@ -56,21 +58,21 @@ namespace GoogleTestAdapter.TestAdapter
             }
         }
 
-        public void RunTests(IEnumerable<TestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        public void RunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             try
             {
-                InitTestEnvironment(runContext.RunSettings, frameworkHandle);
+                InitOrRefreshTestEnvironment(runContext.RunSettings, frameworkHandle);
 
-                var vsTestCasesToRunAsArray = vsTestCasesToRun as TestCase[] ?? vsTestCasesToRun.ToArray();
+                var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
                 ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(DataConversionExtensions.ToTestCase));
                 var filter = new TestCaseFilter(runContext, allTraitNames, _testEnvironment);
                 vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
 
-                IEnumerable<Model.TestCase> allTestCasesInExecutables =
+                IEnumerable<TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
-                IEnumerable<Model.TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
+                IEnumerable<TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
                 DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
             }
             catch (Exception e)
@@ -89,23 +91,26 @@ namespace GoogleTestAdapter.TestAdapter
             }
         }
 
-
-        private void InitTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
+        internal static TestEnvironment CreateTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
-            if (_testEnvironment == null || _testEnvironment.Options.GetType() == typeof(SettingsWrapper))
-            {
-                var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
-                var settingsWrapper = new SettingsWrapper(ourRunSettings);
-                var loggerAdapter = new VsTestFrameworkLogger(messageLogger, settingsWrapper);
-                _testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
-                settingsWrapper.RegexTraitParser = new RegexTraitParser(_testEnvironment);
-            }
+            var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
+            RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+            var settingsWrapper = new SettingsWrapper(ourRunSettings);
+            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, settingsWrapper);
+            TestEnvironment testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
+            settingsWrapper.RegexTraitParser = new RegexTraitParser(testEnvironment);
+            return testEnvironment;
         }
 
-        private IEnumerable<Model.TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
+        private void InitOrRefreshTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
-            var allTestCasesInExecutables = new List<Model.TestCase>();
+            if (_testEnvironment == null || _testEnvironment.Options.GetType() == typeof(SettingsWrapper))
+                _testEnvironment = CreateTestEnvironment(runSettings, messageLogger);
+        }
+
+        private IEnumerable<TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
+        {
+            var allTestCasesInExecutables = new List<TestCase>();
 
             var discoverer = new GoogleTestDiscoverer(_testEnvironment);
             foreach (string executable in executables.OrderBy(e => e))
@@ -122,12 +127,12 @@ namespace GoogleTestAdapter.TestAdapter
             return allTestCasesInExecutables;
         }
 
-        private ISet<string> GetAllTraitNames(IEnumerable<Model.TestCase> testCases)
+        private ISet<string> GetAllTraitNames(IEnumerable<TestCase> testCases)
         {
             var allTraitNames = new HashSet<string>();
-            foreach (Model.TestCase testCase in testCases)
+            foreach (TestCase testCase in testCases)
             {
-                foreach (Model.Trait trait in testCase.Traits)
+                foreach (Trait trait in testCase.Traits)
                 {
                     allTraitNames.Add(trait.Name);
                 }
@@ -136,7 +141,7 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         private void DoRunTests(
-            IEnumerable<Model.TestCase> allTestCasesInExecutables, IEnumerable<Model.TestCase> testCasesToRun,
+            IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun,
             IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
