@@ -20,14 +20,12 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             // only in introduction
             Version version = History.Versions.First();
-            MatchCollection firstVersionMatches = Regex.Matches(html,
-                $"{version.Major}.{version.Minor}.{version.Revision}");
+            MatchCollection firstVersionMatches = Regex.Matches(html, version.ToString());
             firstVersionMatches.Count.Should().Be(1);
 
             // in introduction and version list
             version = History.Versions.Last();
-            MatchCollection lastVersionMatches = Regex.Matches(html, 
-                $"{version.Major}.{version.Minor}.{version.Revision}");
+            MatchCollection lastVersionMatches = Regex.Matches(html, version.ToString());
             lastVersionMatches.Count.Should().Be(2);
 
             firstVersionMatches[0].Index.Should().BeLessThan(lastVersionMatches[0].Index);
@@ -36,7 +34,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             for (int i = 1; i < History.Versions.Length - 1; i++)
             {
                 version = History.Versions[i];
-                html.Should().Contain($"{version.Major}.{version.Minor}.{version.Revision}", $"Version {version} is missing in HTML file");
+                html.Should().Contain(version.ToString(), $"Version {version} is missing in HTML file");
             }
         }
 
@@ -50,14 +48,12 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             // only in version list
             Version version = History.Versions.First();
-            MatchCollection firstVersionMatches = Regex.Matches(html,
-                $"{version.Major}.{version.Minor}.{version.Revision}");
+            MatchCollection firstVersionMatches = Regex.Matches(html, version.ToString());
             firstVersionMatches.Count.Should().Be(1);
 
             // in introduction and version list
             version = History.Versions.Last();
-            MatchCollection lastVersionMatches = Regex.Matches(html, 
-                $"{version.Major}.{version.Minor}.{version.Revision}");
+            MatchCollection lastVersionMatches = Regex.Matches(html, version.ToString());
             lastVersionMatches.Count.Should().Be(2);
 
             firstVersionMatches[0].Index.Should().BeGreaterThan(lastVersionMatches[0].Index);
@@ -66,7 +62,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             for (int i = 1; i < History.Versions.Length - 1; i++)
             {
                 version = History.Versions[i];
-                html.Should().Contain($"{version.Major}.{version.Minor}.{version.Revision}", $"Version {version} is missing in HTML file");
+                html.Should().Contain(version.ToString(), $"Version {version} is missing in HTML file");
             }
         }
 

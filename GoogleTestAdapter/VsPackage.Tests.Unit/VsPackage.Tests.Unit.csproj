@@ -67,6 +67,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ReleaseNotes\HistoryTests.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

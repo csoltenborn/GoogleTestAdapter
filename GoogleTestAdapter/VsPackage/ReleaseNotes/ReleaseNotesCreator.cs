@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             Stream stream = null;
             try
             {
-                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ToResourceName(version));
+                stream = Assembly.GetAssembly(typeof(History)).GetManifestResourceStream(History.GetResourceName(version));
                 // ReSharper disable once AssignNullToNotNullAttribute
                 using (var reader = new StreamReader(stream))
                 {
@@ -108,15 +108,9 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             }
         }
 
-        private string ToResourceName(Version version)
-        {
-            string versionString = $"{version.Major}.{version.Minor}.{version.Revision}";
-            return $"GoogleTestAdapter.VsPackage.Resources.ReleaseNotes.{versionString}.md";
-        }
-
         private string ToDisplayName(Version version)
         {
-            return $"{version.Major}.{version.Minor}.{version.Revision}";
+            return version.ToString();
         }
 
     }
