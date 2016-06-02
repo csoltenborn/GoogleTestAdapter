@@ -9,7 +9,8 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
     internal class VersionProvider
     {
         private const string CollectionName = "GoogleTestAdapter";
-        private const string VersionPropertyName = "LastStartedVersion";
+        private const string OldVersionPropertyName = "LastStartedVersion"; // TODO remove for release 1.0
+        private const string VersionPropertyName = "LastVersion";
 
         private readonly WritableSettingsStore _settingsStore;
 
@@ -20,19 +21,20 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             if (!_settingsStore.CollectionExists(CollectionName))
                 _settingsStore.CreateCollection(CollectionName);
+
+            if (_settingsStore.PropertyExists(CollectionName, OldVersionPropertyName))
+                _settingsStore.DeleteProperty(CollectionName, OldVersionPropertyName);
         }
 
         internal Version FormerlyInstalledVersion
         {
             get
             {
-                Version formerlyInstalledVersion = null;
-                if (_settingsStore.PropertyExists(CollectionName, VersionPropertyName))
-                {
-                    string versionString = _settingsStore.GetString(CollectionName, VersionPropertyName);
-                    formerlyInstalledVersion = Version.Parse(versionString);
-                }
-                return formerlyInstalledVersion;
+                if (!_settingsStore.PropertyExists(CollectionName, VersionPropertyName))
+                    return null;
+
+                string versionString = _settingsStore.GetString(CollectionName, VersionPropertyName);
+                return Version.Parse(versionString);
             }
         }
 
@@ -40,8 +42,8 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
         {
             get
             {
-                Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                return new Version(currentVersion.Major, currentVersion.Minor, 0, currentVersion.Revision);
+                Version currentVersion = Assembly.GetAssembly(typeof(History)).GetName().Version;
+                return new Version(currentVersion.Major, currentVersion.Minor, currentVersion.Build);
             }
         }
 

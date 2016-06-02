@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
-using GoogleTestAdapter.TestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -33,13 +31,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             if (_testEnvironment == null || _testEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
-                var settingsProvider = discoveryContext.RunSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-                RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
-                SettingsWrapper settingsWrapper = new SettingsWrapper(ourRunSettings);
-                ILogger loggerAdapter = new VsTestFrameworkLogger(logger, settingsWrapper);
-                _testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
-                settingsWrapper.RegexTraitParser = new RegexTraitParser(_testEnvironment);
-
+                _testEnvironment = TestExecutor.CreateTestEnvironment(discoveryContext.RunSettings, logger);
                 _discoverer = new GoogleTestDiscoverer(_testEnvironment);
             }
 
