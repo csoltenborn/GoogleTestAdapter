@@ -18,7 +18,7 @@ public:
 typedef ::testing::Types<std::vector<int>, std::array<int, 3>, MyStrangeArray> IntContainerTypes;
 TYPED_TEST_CASE(TypedTests, IntContainerTypes);
 
-TYPED_TEST_TRAITS1(TypedTests, CanIterate, Author, JOG) {
+TYPED_TEST_TRAITS(TypedTests, CanIterate, Author, JOG) {
 	int sum = 0;
 	for (int value : this->container)
 		sum += value;
@@ -29,11 +29,11 @@ TYPED_TEST(TypedTests, CanDefeatMath) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_TRAITS2(TypedTests, TwoTraits, Author, IBM, TestCategory, Integration) {
+TYPED_TEST_TRAITS(TypedTests, TwoTraits, Author, IBM, TestCategory, Integration) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_TRAITS3(TypedTests, ThreeTraits, Author, IBM, TestCategory, Integration, Class, Simple) {
+TYPED_TEST_TRAITS(TypedTests, ThreeTraits, Author, IBM, TestCategory, Integration, Class, Simple) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
@@ -43,7 +43,7 @@ class TypeParameterizedTests : public TypedTests<int_container_type> {};
 
 TYPED_TEST_CASE_P(TypeParameterizedTests);
 
-TYPED_TEST_P_TRAITS1(TypeParameterizedTests, CanIterate, Author, CSO) {
+TYPED_TEST_P_TRAITS(TypeParameterizedTests, CanIterate, Author, CSO) {
 	int sum = 0;
 	for (int value : this->container)
 		sum += value;
@@ -54,11 +54,11 @@ TYPED_TEST_P(TypeParameterizedTests, CanDefeatMath) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_P_TRAITS2(TypeParameterizedTests, TwoTraits, Author, HAL, TestCategory, Unit) {
+TYPED_TEST_P_TRAITS(TypeParameterizedTests, TwoTraits, Author, HAL, TestCategory, Unit) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-TYPED_TEST_P_TRAITS3(TypeParameterizedTests, ThreeTraits, Author, HAL, TestCategory, Unit, Class, Cake) {
+TYPED_TEST_P_TRAITS(TypeParameterizedTests, ThreeTraits, Author, HAL, TestCategory, Unit, Class, Cake) {
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 

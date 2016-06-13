@@ -23,17 +23,17 @@ TEST_F(TheFixture, Crash)
 	EXPECT_EQ(20, Add(*pInt, 10));
 }
 
-TEST_F_TRAITS1(TheFixture, AddPassesWithTraits, Type, Small)
+TEST_F_TRAITS(TheFixture, AddPassesWithTraits, Type, Small)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }
 
-TEST_F_TRAITS2(TheFixture, AddPassesWithTraits2, Type, Small, Author, CSO)
+TEST_F_TRAITS(TheFixture, AddPassesWithTraits2, Type, Small, Author, CSO)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }
 
-TEST_F_TRAITS3(TheFixture, AddPassesWithTraits3, Type, Small, Author, CSO, TestCategory, Integration)
+TEST_F_TRAITS(TheFixture, AddPassesWithTraits3, Type, Small, Author, CSO, TestCategory, Integration)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }

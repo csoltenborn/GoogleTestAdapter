@@ -25,17 +25,17 @@ TEST_P(ParameterizedTests, Simple) {
 	EXPECT_EQ("", GetParam().s);
 }
 
-TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Type, Small) {
+TEST_P_TRAITS(ParameterizedTests, SimpleTraits, Type, Small) {
 	EXPECT_EQ(1, GetParam().i);
 	EXPECT_EQ("", GetParam().s);
 }
 
-TEST_P_TRAITS2(ParameterizedTests, SimpleTraits2, Type, Small, Author, CSO) {
+TEST_P_TRAITS(ParameterizedTests, SimpleTraits2, Type, Small, Author, CSO) {
 	EXPECT_EQ(1, GetParam().i);
 	EXPECT_EQ("", GetParam().s);
 }
 
-TEST_P_TRAITS3(ParameterizedTests, SimpleTraits3, Type, Medium, Author, MSI, TestCategory, Integration) {
+TEST_P_TRAITS(ParameterizedTests, SimpleTraits3, Type, Medium, Author, MSI, TestCategory, Integration) {
 	EXPECT_EQ(1, GetParam().i);
 	EXPECT_EQ("", GetParam().s);
 }
