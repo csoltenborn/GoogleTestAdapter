@@ -125,11 +125,13 @@ namespace GoogleTestAdapter.VsPackage
             string htmlFile = Path.GetTempFileName();
             File.WriteAllText(htmlFile, html);
 
-            var dialog = new ReleaseNotesDialog { HtmlFile = new Uri($"file://{htmlFile}") };
-            dialog.ShowReleaseNotesChanged +=
-                (sender, args) => _generalOptions.ShowReleaseNotes = dialog.ShowReleaseNotes;
-            dialog.Closed += (sender, args) => File.Delete(htmlFile);
-            dialog.ShowDialog();
+            using (var dialog = new ReleaseNotesDialog {HtmlFile = new Uri($"file://{htmlFile}")})
+            {
+                dialog.ShowReleaseNotesChanged +=
+                    (sender, args) => _generalOptions.ShowReleaseNotes = args.ShowReleaseNotes;
+                dialog.Closed += (sender, args) => File.Delete(htmlFile);
+                dialog.ShowDialog();
+            }
         }
 
         private void RefreshVsUi()
