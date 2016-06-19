@@ -85,7 +85,7 @@ namespace GoogleTestAdapter
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
-            testCases.Count.Should().Be(TestResources.NrOfSampleTests);
+            testCases.Count.Should().Be(TestResources.NrOfPathExtensionTests);
         }
 
         [TestMethod]

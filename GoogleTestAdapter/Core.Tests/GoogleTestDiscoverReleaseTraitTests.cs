@@ -58,21 +58,9 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public override void GetTestsFromExecutable_SampleTests_FindsMathTestWithOneTrait()
+        public override void GetTestsFromExecutable_SampleTests_FindsAllAmountsOfTraits()
         {
-            base.GetTestsFromExecutable_SampleTests_FindsMathTestWithOneTrait();
-        }
-
-        [TestMethod]
-        public override void GetTestsFromExecutable_SampleTests_FindsMathTestWithThreeTraits()
-        {
-            base.GetTestsFromExecutable_SampleTests_FindsMathTestWithThreeTraits();
-        }
-
-        [TestMethod]
-        public override void GetTestsFromExecutable_SampleTests_FindsMathTestWithTwoTraits()
-        {
-            base.GetTestsFromExecutable_SampleTests_FindsMathTestWithTwoTraits();
+            base.GetTestsFromExecutable_SampleTests_FindsAllAmountsOfTraits();
         }
 
         [TestMethod]

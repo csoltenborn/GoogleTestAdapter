@@ -3,138 +3,144 @@ Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright 
 Starting test execution, please wait...
 Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\Tests.exe
 
-Information: Running 72 tests...
+Information: Running 78 tests...
 
 Information: Test execution completed.
 
-Passed   TheFixture.AddPassesWithTraits
-Passed   TheFixture.AddPassesWithTraits2
-Passed   TheFixture.AddPasses
-Passed   TheFixture.AddPassesWithTraits3
-Failed   TheFixture.AddFails
-
 Failed   TheFixture.Crash
 
-Passed   LongRunningTests.Test1
+Passed   TheFixture.AddPasses
+Failed   TheFixture.AddFails
+
+Passed   TheFixture.AddPassesWithTraits
+Passed   TheFixture.AddPassesWithTraits2
+Passed   TheFixture.AddPassesWithTraits3
 Failed   LongRunningTests.Test2
 
+Passed   LongRunningTests.Test1
 Failed   CommandArgs.TestDirectoryIsSet
 
+Failed   TestMath.Crash
+
 Passed   TestMath.AddPasses
-Passed   TestMath.AddPassesWithTraits3
-Passed   TestMath.AddPassesWithTraits2
 Failed   TestMath.AddFails
 
 Passed   TestMath.AddPassesWithTraits
-Failed   TestMath.Crash
+Passed   Traits.With4Traits
+Passed   Traits.With5Traits
+Passed   Traits.With1Traits
+Passed   Traits.With6Traits
+Passed   Traits.With7Traits
+Passed   Traits.With8Traits
+Passed   Traits.With3Traits
+Passed   Traits.With2Traits
+Failed   MessageParserTests.ScopedTraceInHelperMethod
 
 Failed   MessageParserTests.ExpectInOtherMethod
 
-Failed   MessageParserTests.ScopedTraceInTestMethodANdHelperMethod
-
-Failed   MessageParserTests.SimpleExpect
-
-Failed   MessageParserTests.ExpectInOtherFile
+Failed   MessageParserTests.ExpectInTestAndMethodAndOtherFile
 
 Failed   MessageParserTests.TwoScopedTracesInTestMethod
 
 Failed   MessageParserTests.SimpleAssert
 
-Failed   MessageParserTests.ExpectInTestAndMethodAndOtherFile
+Failed   MessageParserTests.ScopedTraceInTestMethodANdHelperMethod
 
 Failed   MessageParserTests.ExpectAndAssert
+
+Failed   MessageParserTests.ExpectInOtherFile
+
+Failed   MessageParserTests.SimpleExpect
 
 Failed   MessageParserTests.ScopedTraceInTestMethod
 
 Failed   MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod
 
-Failed   MessageParserTests.ScopedTraceInHelperMethod
-
 Passed   TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
-Failed   TypedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
+Failed   TypedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
 
 Failed   TypedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
 
-Failed   TypedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
-
-Failed   TypedTests/1.CanDefeatMath<std::array<int,3> >
+Failed   TypedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
 
 Failed   TypedTests/1.ThreeTraits<std::array<int,3> >
 
+Passed   TypedTests/1.CanIterate<std::array<int,3> >
+Failed   TypedTests/1.CanDefeatMath<std::array<int,3> >
+
 Failed   TypedTests/1.TwoTraits<std::array<int,3> >
 
-Passed   TypedTests/1.CanIterate<std::array<int,3> >
 Passed   TypedTests/2.CanIterate<MyStrangeArray>
-Passed   TypedTests/2.CanDefeatMath<MyStrangeArray>
 Passed   TypedTests/2.TwoTraits<MyStrangeArray>
 Passed   TypedTests/2.ThreeTraits<MyStrangeArray>
-Failed   Vec/TypeParameterizedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
-
-Passed   Vec/TypeParameterizedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
+Passed   TypedTests/2.CanDefeatMath<MyStrangeArray>
 Failed   Vec/TypeParameterizedTests/0.CanDefeatMath<std::vector<int,std::allocator<int> > >
 
 Failed   Vec/TypeParameterizedTests/0.TwoTraits<std::vector<int,std::allocator<int> > >
 
+Failed   Vec/TypeParameterizedTests/0.ThreeTraits<std::vector<int,std::allocator<int> > >
+
+Passed   Vec/TypeParameterizedTests/0.CanIterate<std::vector<int,std::allocator<int> > >
 Passed   Arr/TypeParameterizedTests/0.CanIterate<std::array<int,3> >
+Failed   Arr/TypeParameterizedTests/0.CanDefeatMath<std::array<int,3> >
+
 Failed   Arr/TypeParameterizedTests/0.TwoTraits<std::array<int,3> >
 
 Failed   Arr/TypeParameterizedTests/0.ThreeTraits<std::array<int,3> >
 
-Failed   Arr/TypeParameterizedTests/0.CanDefeatMath<std::array<int,3> >
-
 Passed   Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>
-Passed   Arr/TypeParameterizedTests/1.TwoTraits<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.ThreeTraits<MyStrangeArray>
 Passed   Arr/TypeParameterizedTests/1.CanIterate<MyStrangeArray>
+Passed   Arr/TypeParameterizedTests/1.TwoTraits<MyStrangeArray>
 Failed   PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>
 
 Passed   PrimitivelyTypedTests/1.CanHasBigNumbers<int>
 Passed   PrimitivelyTypedTests/2.CanHasBigNumbers<long>
-Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
+Failed   InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
+
+Passed   InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
 
 Passed   InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.Simple/1 [(1,!)]
-
-Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
 Passed   InstantiationName/ParameterizedTests.Simple/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]
-
-Failed   InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]
 
 Failed   InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]
 
-Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
-
-Passed   InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]
-Failed   InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
+Failed   InstantiationName/ParameterizedTests.Simple/1 [(1,!)]
 
 Failed   InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]
 
-Failed   ParameterizedTests.SimpleTraits3/0 [(0,_)]
+Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]
 
-Failed   ParameterizedTests.Simple/0 [(0,_)]
+Failed   InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]
+
+Failed   ParameterizedTests.SimpleTraits2/0 [(0,_)]
+
+Failed   ParameterizedTests.SimpleTraits3/0 [(0,_)]
 
 Failed   ParameterizedTests.SimpleTraits/0 [(0,_)]
 
-Failed   ParameterizedTests.SimpleTraits2/0 [(0,_)]
+Failed   ParameterizedTests.Simple/0 [(0,_)]
 
 Passed   PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
 Failed   PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]
 
 Passed   PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]
 
-Total tests: 72. Passed: 29. Failed: 43. Skipped: 0.
+Total tests: 78. Passed: 35. Failed: 43. Skipped: 0.
 Test execution time: ${RunTime}
 
+Error Message:
+   unknown file
+SEH exception with code 0xc0000005 thrown in the test body.
 Error Message:
    Value of: Add(10, 10)
   Actual: 20
 Expected: 1000
 Stack Trace:
 at fixturetests.cpp:12 in ${BaseDir}\sampletests\tests\fixturetests.cpp:line 12Error Message:
-   unknown file
-SEH exception with code 0xc0000005 thrown in the test body.
-Error Message:
    Value of: 2
 Expected: 1
 Stack Trace:
@@ -142,46 +148,25 @@ at longrunningtests.cpp:13 in ${BaseDir}\sampletests\tests\longrunningtests.cpp:
    Expected: ("") != (TEST_DIRECTORY.c_str()), actual: "" vs ""
 Stack Trace:
 at basictests.cpp:24 in ${BaseDir}\sampletests\tests\basictests.cpp:line 24Error Message:
+   unknown file
+SEH exception with code 0xc0000005 thrown in the test body.
+Error Message:
    Value of: Add(10, 10)
   Actual: 20
 Expected: 1000
 Stack Trace:
 at basictests.cpp:30 in ${BaseDir}\sampletests\tests\basictests.cpp:line 30Error Message:
-   unknown file
-SEH exception with code 0xc0000005 thrown in the test body.
-Error Message:
+   Value of: i
+  Actual: 1
+Expected: 0
+Stack Trace:
+at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
+at -->HelperMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 17Error Message:
    Value of: i
   Actual: 1
 Expected: 0
 Stack Trace:
 at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12Error Message:
-   Value of: i
-  Actual: 1
-Expected: 0
-Stack Trace:
-at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
-at -->HelperMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 17
-at -->TestMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 76Error Message:
-   Value of: 3
-Expected: 2
-Stack Trace:
-at scopedtracestests.cpp:28 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 28Error Message:
-   Value of: i
-  Actual: 1
-Expected: 0
-Stack Trace:
-at main.cpp:27 in ${BaseDir}\sampletests\tests\main.cpp:line 27Error Message:
-   Value of: i
-  Actual: 1
-Expected: 0
-Stack Trace:
-at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
-at -->TestMethod Inner in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 64
-at -->TestMethod Outer in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 62Error Message:
-   Value of: 2
-Expected: 1
-Stack Trace:
-at scopedtracestests.cpp:23 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 23Error Message:
    #1 - Value of: 6
 Expected: 5
 #2 - Value of: i
@@ -194,6 +179,24 @@ Stack Trace:
 at #1 - scopedtracestests.cpp:49 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 49
 at #2 - scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
 at #3 - main.cpp:27 in ${BaseDir}\sampletests\tests\main.cpp:line 27Error Message:
+   Value of: i
+  Actual: 1
+Expected: 0
+Stack Trace:
+at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
+at -->TestMethod Inner in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 64
+at -->TestMethod Outer in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 62Error Message:
+   Value of: 2
+Expected: 1
+Stack Trace:
+at scopedtracestests.cpp:23 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 23Error Message:
+   Value of: i
+  Actual: 1
+Expected: 0
+Stack Trace:
+at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
+at -->HelperMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 17
+at -->TestMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 76Error Message:
    #1 - Value of: 4
 Expected: 3
 #2 - Value of: 5
@@ -201,6 +204,15 @@ Expected: 4
 Stack Trace:
 at #1 - scopedtracestests.cpp:33 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 33
 at #2 - scopedtracestests.cpp:34 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 34Error Message:
+   Value of: i
+  Actual: 1
+Expected: 0
+Stack Trace:
+at main.cpp:27 in ${BaseDir}\sampletests\tests\main.cpp:line 27Error Message:
+   Value of: 3
+Expected: 2
+Stack Trace:
+at scopedtracestests.cpp:28 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 28Error Message:
    Value of: i
   Actual: 1
 Expected: 0
@@ -218,30 +230,30 @@ at -->HelperMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 17
 at -->TestMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 82
 at #2 - scopedtracestests.cpp:84 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 84
 at -->TestMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 82Error Message:
-   Value of: i
-  Actual: 1
-Expected: 0
-Stack Trace:
-at scopedtracestests.cpp:12 in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 12
-at -->HelperMethod in ${BaseDir}\sampletests\tests\scopedtracestests.cpp:line 17Error Message:
-   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
-Stack Trace:
-at typeparameterizedtests.cpp:37 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 37Error Message:
-   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
-Stack Trace:
-at typeparameterizedtests.cpp:33 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 33Error Message:
    Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
 Stack Trace:
 at typeparameterizedtests.cpp:29 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 29Error Message:
    Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
 Stack Trace:
-at typeparameterizedtests.cpp:29 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 29Error Message:
+at typeparameterizedtests.cpp:33 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 33Error Message:
    Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
 Stack Trace:
 at typeparameterizedtests.cpp:37 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 37Error Message:
    Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
 Stack Trace:
+at typeparameterizedtests.cpp:37 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 37Error Message:
+   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+Stack Trace:
+at typeparameterizedtests.cpp:29 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 29Error Message:
+   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+Stack Trace:
 at typeparameterizedtests.cpp:33 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 33Error Message:
+   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+Stack Trace:
+at typeparameterizedtests.cpp:54 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 54Error Message:
+   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+Stack Trace:
+at typeparameterizedtests.cpp:58 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 58Error Message:
    Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
 Stack Trace:
 at typeparameterizedtests.cpp:62 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 62Error Message:
@@ -253,13 +265,7 @@ Stack Trace:
 at typeparameterizedtests.cpp:58 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 58Error Message:
    Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
 Stack Trace:
-at typeparameterizedtests.cpp:58 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 58Error Message:
-   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
-Stack Trace:
 at typeparameterizedtests.cpp:62 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 62Error Message:
-   Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
-Stack Trace:
-at typeparameterizedtests.cpp:54 in ${BaseDir}\sampletests\tests\typeparameterizedtests.cpp:line 54Error Message:
    Value of: sum
   Actual: '\x82' (-126)
 Expected: 130
@@ -269,22 +275,17 @@ at typeparameterizedtests.cpp:87 in ${BaseDir}\sampletests\tests\typeparameteriz
   Actual: -1
 Expected: 1
 Stack Trace:
-at parameterizedtests.cpp:34 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 34Error Message:
+at parameterizedtests.cpp:24 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 24Error Message:
    Value of: GetParam().s
   Actual: "!"
 Expected: ""
 Stack Trace:
-at parameterizedtests.cpp:25 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 25Error Message:
+at parameterizedtests.cpp:30 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 30Error Message:
    Value of: GetParam().i
   Actual: -1
 Expected: 1
 Stack Trace:
-at parameterizedtests.cpp:29 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 29Error Message:
-   Value of: GetParam().i
-  Actual: -1
-Expected: 1
-Stack Trace:
-at parameterizedtests.cpp:24 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 24Error Message:
+at parameterizedtests.cpp:34 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 34Error Message:
    Value of: GetParam().i
   Actual: -1
 Expected: 1
@@ -294,17 +295,31 @@ at parameterizedtests.cpp:39 in ${BaseDir}\sampletests\tests\parameterizedtests.
   Actual: "!"
 Expected: ""
 Stack Trace:
-at parameterizedtests.cpp:30 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 30Error Message:
-   Value of: GetParam().s
-  Actual: "!"
-Expected: ""
-Stack Trace:
-at parameterizedtests.cpp:40 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 40Error Message:
+at parameterizedtests.cpp:25 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 25Error Message:
    Value of: GetParam().s
   Actual: "!"
 Expected: ""
 Stack Trace:
 at parameterizedtests.cpp:35 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 35Error Message:
+   Value of: GetParam().s
+  Actual: "!"
+Expected: ""
+Stack Trace:
+at parameterizedtests.cpp:40 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 40Error Message:
+   Value of: GetParam().i
+  Actual: -1
+Expected: 1
+Stack Trace:
+at parameterizedtests.cpp:29 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 29Error Message:
+   #1 - Value of: GetParam().i
+  Actual: 0
+Expected: 1
+#2 - Value of: GetParam().s
+  Actual: "_"
+Expected: ""
+Stack Trace:
+at #1 - parameterizedtests.cpp:34 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 34
+at #2 - parameterizedtests.cpp:35 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 35Error Message:
    #1 - Value of: GetParam().i
   Actual: 0
 Expected: 1
@@ -321,15 +336,6 @@ Expected: 1
   Actual: "_"
 Expected: ""
 Stack Trace:
-at #1 - parameterizedtests.cpp:24 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 24
-at #2 - parameterizedtests.cpp:25 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 25Error Message:
-   #1 - Value of: GetParam().i
-  Actual: 0
-Expected: 1
-#2 - Value of: GetParam().s
-  Actual: "_"
-Expected: ""
-Stack Trace:
 at #1 - parameterizedtests.cpp:29 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 29
 at #2 - parameterizedtests.cpp:30 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 30Error Message:
    #1 - Value of: GetParam().i
@@ -339,8 +345,8 @@ Expected: 1
   Actual: "_"
 Expected: ""
 Stack Trace:
-at #1 - parameterizedtests.cpp:34 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 34
-at #2 - parameterizedtests.cpp:35 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 35Error Message:
+at #1 - parameterizedtests.cpp:24 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 24
+at #2 - parameterizedtests.cpp:25 in ${BaseDir}\sampletests\tests\parameterizedtests.cpp:line 25Error Message:
    Value of: strlen(GetParam().first)
   Actual: 5
 Expected: GetParam().second

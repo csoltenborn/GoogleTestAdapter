@@ -33,17 +33,43 @@
     GTA_TRAITS_MARKER6(name2, value2, name3, value3, name4, value4)
 #define GTA_TRAITS_MARKER10(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5) \
     GTA_TRAITS_MARKER2(name1, value1) \
-    GTA_TRAITS_MARKER6(name2, value2, name3, value3, name4, value4, name5, value5)
+    GTA_TRAITS_MARKER8(name2, value2, name3, value3, name4, value4, name5, value5)
 #define GTA_TRAITS_MARKER12(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6) \
     GTA_TRAITS_MARKER2(name1, value1) \
-    GTA_TRAITS_MARKER6(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6)
+    GTA_TRAITS_MARKER10(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6)
 #define GTA_TRAITS_MARKER14(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7) \
     GTA_TRAITS_MARKER2(name1, value1) \
-    GTA_TRAITS_MARKER6(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7)
+    GTA_TRAITS_MARKER12(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7)
 #define GTA_TRAITS_MARKER16(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7, name8, value8) \
     GTA_TRAITS_MARKER2(name1, value1) \
-    GTA_TRAITS_MARKER6(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7, name8, value8)
+    GTA_TRAITS_MARKER14(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7, name8, value8)
 #define GTA_TRAITS_MARKER(...) VA_NARGS_CALL_OVERLOAD(GTA_TRAITS_MARKER, __VA_ARGS__)
+
+#define GTA_TRAITS_CALL2(name1, value1) \
+    name1##__GTA__##value1##_GTA_TRAIT();
+#define GTA_TRAITS_CALL4(name1, value1, name2, value2) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL2(name2, value2)
+#define GTA_TRAITS_CALL6(name1, value1, name2, value2, name3, value3) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL4(name2, value2, name3, value3)
+#define GTA_TRAITS_CALL8(name1, value1, name2, value2, name3, value3, name4, value4) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL6(name2, value2, name3, value3, name4, value4)
+#define GTA_TRAITS_CALL10(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL8(name2, value2, name3, value3, name4, value4, name5, value5)
+#define GTA_TRAITS_CALL12(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL10(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6)
+#define GTA_TRAITS_CALL14(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL12(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7)
+#define GTA_TRAITS_CALL16(name1, value1, name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7, name8, value8) \
+    GTA_TRAITS_CALL2(name1, value1) \
+    GTA_TRAITS_CALL14(name2, value2, name3, value3, name4, value4, name5, value5, name6, value6, name7, value7, name8, value8)
+#define GTA_TRAITS_CALL(...) VA_NARGS_CALL_OVERLOAD(GTA_TRAITS_CALL, __VA_ARGS__)
+
 
 #define TEST_P_TRAITS(test_case_name, test_name, ...) \
   class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) \
@@ -116,6 +142,10 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
   template <typename gtest_TypeParam_> \
   class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \
       : public CaseName<gtest_TypeParam_> { \
+   public:\
+     GTEST_TEST_CLASS_NAME_(CaseName, TestName)() { \
+       GTA_TRAITS_CALL(__VA_ARGS__) \
+     }\
    private: \
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \
@@ -138,7 +168,9 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
   template <typename gtest_TypeParam_> \
   class TestName : public CaseName<gtest_TypeParam_> { \
    public:\
-     TestName() {}\
+     TestName() {\
+       GTA_TRAITS_CALL(__VA_ARGS__) \
+	 }\
    private: \
     typedef CaseName<gtest_TypeParam_> TestFixture; \
     typedef gtest_TypeParam_ TypeParam; \

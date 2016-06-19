@@ -19,26 +19,14 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public virtual void GetTestsFromExecutable_SampleTests_FindsMathTestWithOneTrait()
+        public virtual void GetTestsFromExecutable_SampleTests_FindsAllAmountsOfTraits()
         {
-            Trait[] traits = { new Trait("Type", "Medium") };
-            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
-        public virtual void GetTestsFromExecutable_SampleTests_FindsMathTestWithTwoTraits()
-        {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO") };
-            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits2", traits);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
-        public virtual void GetTestsFromExecutable_SampleTests_FindsMathTestWithThreeTraits()
-        {
-            Trait[] traits = { new Trait("Type", "Small"), new Trait("Author", "CSO"), new Trait("TestCategory", "Integration") };
-            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits3", traits);
+            var traits = new List<Trait>();
+            for (int i = 1; i <= 8; i++)
+            {
+                traits.Add(new Trait($"Trait{i}", $"Equals{i}"));
+                AssertFindsTestWithTraits($"Traits.With{i}Traits", traits.ToArray());
+            }
         }
 
         [TestMethod]
@@ -223,7 +211,7 @@ namespace GoogleTestAdapter
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTestToUse).ToList();
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count == traits.Length && tc.DisplayName.StartsWith(displayName));
-            testCase.Should().NotBeNull();
+            testCase.Should().NotBeNull($"Test not found: {displayName}, {traits.Length}");
 
             foreach (Trait trait in traits)
             {

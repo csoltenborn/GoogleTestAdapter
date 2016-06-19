@@ -3,15 +3,13 @@ Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright 
 Starting test execution, please wait...
 Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\Tests.exe
 
-Information: Running 13 tests...
+Information: Running 11 tests...
 
 Information: Test execution completed.
 
 Passed   TheFixture.AddPassesWithTraits
 Passed   TheFixture.AddPassesWithTraits2
 Passed   TheFixture.AddPassesWithTraits3
-Passed   TestMath.AddPassesWithTraits2
-Passed   TestMath.AddPassesWithTraits3
 Passed   InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]
 Failed   InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]
 
@@ -27,7 +25,7 @@ Failed   ParameterizedTests.SimpleTraits/0 [(0,_)]
 Failed   ParameterizedTests.SimpleTraits2/0 [(0,_)]
 
 
-Total tests: 13. Passed: 7. Failed: 6. Skipped: 0.
+Total tests: 11. Passed: 5. Failed: 6. Skipped: 0.
 Test execution time: ${RunTime}
 
 Error Message:

@@ -16,8 +16,14 @@ Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${Con
     TestMath.AddPasses
     TestMath.Crash
     TestMath.AddPassesWithTraits
-    TestMath.AddPassesWithTraits2
-    TestMath.AddPassesWithTraits3
+    Traits.With8Traits
+    Traits.With7Traits
+    Traits.With6Traits
+    Traits.With5Traits
+    Traits.With4Traits
+    Traits.With3Traits
+    Traits.With2Traits
+    Traits.With1Traits
     MessageParserTests.SimpleAssert
     MessageParserTests.SimpleExpect
     MessageParserTests.ExpectAndAssert
