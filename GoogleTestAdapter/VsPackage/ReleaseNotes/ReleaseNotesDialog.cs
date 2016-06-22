@@ -5,7 +5,12 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
     public partial class ReleaseNotesDialog : Form
     {
-        internal event EventHandler ShowReleaseNotesChanged;
+        internal class ShowReleaseNotesChangedEventArgs : EventArgs
+        {
+            internal bool ShowReleaseNotes { get; set; }
+        }
+
+        internal event EventHandler<ShowReleaseNotesChangedEventArgs> ShowReleaseNotesChanged;
 
         public ReleaseNotesDialog()
         {
@@ -18,7 +23,8 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             ForwardButton.Click += (sender, args) => WebBrowser.GoForward();
 
             ShowReleaseNotesCheckBox.Checked = true;
-            ShowReleaseNotesCheckBox.CheckedChanged += (sender, args) => ShowReleaseNotesChanged?.Invoke(this, args);
+            ShowReleaseNotesCheckBox.CheckedChanged += 
+                (sender, args) => ShowReleaseNotesChanged?.Invoke(this, new ShowReleaseNotesChangedEventArgs { ShowReleaseNotes = ShowReleaseNotesCheckBox.Checked });
 
             OkButton.Click += (sender, args) => Close();
         }
@@ -28,8 +34,6 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             get { return WebBrowser.Url; }
             set { WebBrowser.Url = value; }
         }
-
-        internal bool ShowReleaseNotes => ShowReleaseNotesCheckBox.Checked;
 
     }
 
