@@ -69,6 +69,10 @@ test_script:
     if ($TestExitCode -ne 0) {
         exit $TestExitCode
     }
+after_test: 
+- "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+- pip install codecov
+- codecov -f "OpenCover_CoverageData.xml"
 before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
