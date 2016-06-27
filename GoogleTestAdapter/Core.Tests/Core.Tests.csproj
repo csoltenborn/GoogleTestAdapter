@@ -77,10 +77,12 @@
   <ItemGroup>
     <Compile Include="AbstractCoreTests.cs" />
     <Compile Include="AbstractGoogleTestDiscovererTraitTests.cs" />
+    <Compile Include="CiSupport.cs" />
     <Compile Include="GoogleTestDiscoverReleaseTraitTests.cs" />
     <Compile Include="GoogleTestDiscoverDebugTraitTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="Helpers\DebugUtilsTests.cs" />
+    <Compile Include="Helpers\FakeLogger.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\UtilsTests.cs" />

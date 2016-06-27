@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.Framework;
 using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
@@ -203,6 +207,35 @@ namespace GoogleTestAdapter.TestAdapter
             MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup.ToLower()))),
                 Times.AtLeastOnce());
+        }
+
+        [TestMethod]
+        [TestCategory(Load)]
+        public virtual void RunTests_LoadTests_CorrectTestResults()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            int nrOfTestcases = new GoogleTestDiscoverer(TestEnvironment).GetTestsFromExecutable(TestResources.LoadTests).Count;
+            stopwatch.Stop();
+            int discoveryTimeInMs = (int)stopwatch.ElapsedMilliseconds;
+
+            int nrOfPassedTests = nrOfTestcases / 2;
+            int nrOfFailedTests = nrOfTestcases - nrOfPassedTests;
+
+            stopwatch.Restart();
+            RunAndVerifyTests(TestResources.LoadTests, nrOfPassedTests, nrOfFailedTests, 0);
+            stopwatch.Stop();
+            var actualDuration = stopwatch.Elapsed;
+
+            int throttleTimeInMs = nrOfTestcases / VsTestFrameworkReporter.NrOfTestsBeforeThrottling * VsTestFrameworkReporter.ThrottleDurationInMs;
+            var minDuration = TimeSpan.FromMilliseconds(discoveryTimeInMs + throttleTimeInMs +
+                              VsTestFrameworkReporter.SleepingTimeAfterAllTestsInMs);
+
+            int timeForProcessingTestsInMs = nrOfTestcases * CiSupport.GetWeightedDuration(2);
+            int overheadInMs = CiSupport.GetWeightedDuration(2000);
+            var maxDuration = TimeSpan.FromMilliseconds(minDuration.TotalMilliseconds + timeForProcessingTestsInMs + overheadInMs);
+
+            actualDuration.Should().BeGreaterThan(minDuration);
+            actualDuration.Should().BeLessOrEqualTo(maxDuration);
         }
 
 

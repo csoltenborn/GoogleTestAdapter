@@ -83,12 +83,12 @@ namespace GoogleTestAdapter.VsPackage
             return resultString;
         }
 
-        public static bool IsRunningOnBuildServer()
+        public static bool ShouldGenerateVsixTests()
         {
 #pragma warning disable 162
             // ReSharper disable once RedundantLogicalConditionalExpressionOperand
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            return ResultChecker.OverwriteTestResults || Environment.GetEnvironmentVariable("APPVEYOR") != null;
+            return ResultChecker.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
 #pragma warning restore 162
         }
 

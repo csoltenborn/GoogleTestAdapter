@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -159,6 +161,23 @@ namespace GoogleTestAdapter
                 testCase.DisplayName.Should().NotBeNullOrEmpty();
                 testCase.FullyQualifiedName.Should().NotBeNullOrEmpty();
             }
+        }
+
+        [TestMethod]
+        [TestCategory(Load)]
+        public void GetTestsFromExecutable_LoadTests_AreFoundInReasonableTime()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests);
+            stopwatch.Stop();
+            var actualDuration = stopwatch.Elapsed;
+
+            int testParsingDurationInMs = CiSupport.GetWeightedDuration(0.5 * testCases.Count); // .5ms per test (discovery and processing)
+            int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
+            var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);
+
+            actualDuration.Should().BeLessThan(maxDuration);
         }
 
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")

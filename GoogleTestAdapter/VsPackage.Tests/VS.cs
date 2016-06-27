@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Automation;
 using FluentAssertions;
+using GoogleTestAdapter;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +24,6 @@ using TestStack.White.WindowsAPI;
 using TestStack.White.UIItems.Scrolling;
 using GoogleTestAdapterUiTests.Helpers;
 using GoogleTestAdapterUiTests.Model;
-using GoogleTestAdapter.VsPackage;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -357,7 +357,7 @@ namespace GoogleTestAdapterUiTests
         private static readonly string NoSettingsFile;
 
         private static bool _keepDirtyVsInstance = KeepDirtyInstanceInit;
-        private static bool? _installIntoProductiveVs = null;
+        private static bool? _installIntoProductiveVs;
 
         private static VsExperimentalInstance _visualStudioInstance;
         private static Application _application;
@@ -470,7 +470,7 @@ namespace GoogleTestAdapterUiTests
         {
             if (string.IsNullOrEmpty(suffix)
                 && _installIntoProductiveVs == null
-                && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
+                && !CiSupport.IsRunningOnBuildServer)
             {
                 MessageBoxResult result = MessageBoxWithTimeout.Show(
                     "Really launch tests? This will delete a potentially installed GoogleTestAdapter extension "
@@ -494,7 +494,7 @@ namespace GoogleTestAdapterUiTests
         private static bool AskToCleanIfExists()
         {
             bool keepDirtyInstance = false;
-            if (_visualStudioInstance.Exists() && !AbstractConsoleIntegrationTests.IsRunningOnBuildServer())
+            if (_visualStudioInstance.Exists() && !CiSupport.IsRunningOnBuildServer)
             {
                 var instanceExists = $"The experimental instance '{_visualStudioInstance.VersionAndSuffix}' already exists.";
                 var willReset = "\nShould it be deleted before going on with the tests?";

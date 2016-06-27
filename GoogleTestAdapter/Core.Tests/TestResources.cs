@@ -22,6 +22,8 @@ namespace GoogleTestAdapter
         public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
         public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests.exe";
 
+        public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests.exe");
+
         public const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
 
         public const string X86Dir = TestdataDir + @"_x86\";
@@ -48,4 +50,5 @@ namespace GoogleTestAdapter
         public const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
         public const string UserTestSettingsForGeneratedTests = TestdataDir + "User.runsettings";
     }
+
 }
