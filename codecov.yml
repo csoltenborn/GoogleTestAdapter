@@ -1,0 +1,7 @@
+coverage:
+  precision: 2
+  round: down
+  range: "50...90"
+
+comment:
+  layout: "header, diff, changes"
