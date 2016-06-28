@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master) [![Coverage Status](https://coveralls.io/repos/csoltenborn/GoogleTestAdapter/badge.svg?branch=master&service=github)](https://coveralls.io/github/csoltenborn/GoogleTestAdapter?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master) [![codecov](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
 
 
 ### Google Test Adapter
@@ -62,7 +62,7 @@ GTA has full support for [traits](http://blogs.msdn.com/b/visualstudioalm/archiv
 More precisely, traits are assigned to tests in three phases:
 
 1. Traits are assigned to tests which match one of the regular expressions specified in the *traits before* option. For instance, the expression `.*///Size,Medium` assigns the trait (Size,Medium) to all tests.
-2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration `TEST_P_TRAITS1(ParameterizedTests, SimpleTraits, Size, Small)` will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
+2. Traits added to tests via test macros are assigned to the according tests, overriding traits from the first phase. For instance, the test declaration `TEST_P_TRAITS(ParameterizedTests, SimpleTraits, Size, Small)` will make sure that all test instances of test ParameterizedTest.SimpleTraits will be assigned the trait (Size,Small) (and override the Size trait assigned from the first phase).
 3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `.*\[1.*\]///Size,Large` will make sure that all parameterized tests where the parameter starts with a 1 will be assigned the trait (Size,Large) (and override the traits assigned by phases 1 and 2).
 
 #### <a name="vstest_console"></a>Running tests from command line with `VSTest.Console.exe`
@@ -159,7 +159,7 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
   * note that JetBrains' [Resharper C++](https://www.jetbrains.com/resharper-cpp/) can also run tests written using Google Test
 * [AppVeyor](http://www.appveyor.com/) - awesome .NET CI build services
   * thanks for providing free services and great support for open source projects!
-* [Coveralls](https://coveralls.io/) - code coverage visualization facilities
+* [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
 * [Coveralls.net](https://github.com/csmacnz/coveralls.net) - uploads code coverage data to Coveralls
