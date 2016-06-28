@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.TestResults
 
         private ErrorMessageParser(string baseDir)
         {
-            string escapedBaseDir = Regex.Escape(baseDir);
+            string escapedBaseDir = Regex.Escape(baseDir ?? "");
             string file = $"({escapedBaseDir}{ValidCharRegex}*)";
             string line = "([0-9]+)";
             string fileAndLine = $@"{file}((:{line})|(\({line}\):))";
