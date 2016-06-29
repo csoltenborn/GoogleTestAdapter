@@ -18,6 +18,6 @@ foreach ($test in $tests) {
 		Write-Output ("Warning - test not found: " + $test)
 	} else {
 		$testcode -replace $regex, $replacement | Set-Content $testclass
+		Write-Output ("Info - ignoring test: " + $test)
 	}
 }
-
