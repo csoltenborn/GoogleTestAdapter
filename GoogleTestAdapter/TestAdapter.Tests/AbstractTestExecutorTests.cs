@@ -209,7 +209,7 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.AtLeastOnce());
         }
 
-        [TestMethod]
+        [TestMethod,Ignore]
         [TestCategory(Load)]
         public virtual void RunTests_LoadTests_CorrectTestResults()
         {
