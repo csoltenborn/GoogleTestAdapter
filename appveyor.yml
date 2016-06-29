@@ -18,7 +18,7 @@ before_build:
 - ps: >-
     Start-Process -WorkingDirectory GoogleTestAdapter -FilePath SetVersion.bat -ArgumentList $env:APPVEYOR_BUILD_VERSION
 
-    Start-Process -WorkingDirectory GoogleTestAdapter\TestAdapter.Tests -FilePath IgnoreTests.bat -ArgumentList TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution TestExecutorParallelTests.cs::RunTests_LoadTests_CorrectTestResults TestExecutorSequentialTests.cs::RunTests_LoadTests_CorrectTestResults
+    Start-Process -WorkingDirectory GoogleTestAdapter\TestAdapter.Tests -FilePath IgnoreTests.bat -ArgumentList TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution,TestExecutorParallelTests.cs::RunTests_LoadTests_CorrectTestResults,TestExecutorSequentialTests.cs::RunTests_LoadTests_CorrectTestResults
 
     nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
 build:
