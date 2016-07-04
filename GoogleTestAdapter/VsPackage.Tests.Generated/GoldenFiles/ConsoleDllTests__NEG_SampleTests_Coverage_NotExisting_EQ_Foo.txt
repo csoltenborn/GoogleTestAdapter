@@ -3,9 +3,9 @@ Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright 
 Starting test execution, please wait...
 Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\Tests.exe
 
-Warning: Warning: No tests matched the filter because it contains one or more properties that are not valid (*NotExisting). Specify filter expression containing valid properties (FullyQualifiedName, DisplayName, LineNumber, CodeFilePath, ExecutorUri, Id, Source, Type, Author, TestCategory, Class) and try again.
+Warning: Warning: No tests matched the filter because it contains one or more properties that are not valid (*NotExisting). Specify filter expression containing valid properties (FullyQualifiedName, DisplayName, LineNumber, CodeFilePath, ExecutorUri, Id, Source, Type, Author, TestCategory, Trait8, Trait2, Trait3, Trait1, Trait6, Trait7, Trait4, Trait5, Class) and try again.
 
-Information: Running 72 tests...
+Information: Running 78 tests...
 
 Information: Test execution completed.
 
@@ -28,8 +28,14 @@ Passed   TestMath.AddPasses
 Failed   TestMath.Crash
 
 Passed   TestMath.AddPassesWithTraits
-Passed   TestMath.AddPassesWithTraits2
-Passed   TestMath.AddPassesWithTraits3
+Passed   Traits.With8Traits
+Passed   Traits.With7Traits
+Passed   Traits.With6Traits
+Passed   Traits.With5Traits
+Passed   Traits.With4Traits
+Passed   Traits.With3Traits
+Passed   Traits.With2Traits
+Passed   Traits.With1Traits
 Failed   MessageParserTests.SimpleAssert
 
 Failed   MessageParserTests.SimpleExpect
@@ -125,7 +131,7 @@ Passed   PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} point
 Failed   PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]
 
 
-Total tests: 72. Passed: 29. Failed: 43. Skipped: 0.
+Total tests: 78. Passed: 35. Failed: 43. Skipped: 0.
 Test execution time: ${RunTime}
 
 Error Message:

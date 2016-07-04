@@ -41,19 +41,47 @@ TEST(TestMath, Crash)
 	EXPECT_EQ(20, Add(*pInt, 10));
 }
 
-TEST_TRAITS1(TestMath, AddPassesWithTraits, Type, Medium)
+TEST_TRAITS(TestMath, AddPassesWithTraits, Type, Medium)
 {
 	EXPECT_EQ(20, Add(10, 10));
 }
 
-TEST_TRAITS2(TestMath, AddPassesWithTraits2, Type, Small, Author, CSO)
+TEST_TRAITS(Traits, With8Traits, Trait1, Equals1, Trait2, Equals2, Trait3, Equals3, Trait4, Equals4, Trait5, Equals5, Trait6, Equals6, Trait7, Equals7, Trait8, Equals8)
 {
-	EXPECT_EQ(20, Add(10, 10));
+	EXPECT_EQ(1, 1);
 }
 
-TEST_TRAITS3(TestMath, AddPassesWithTraits3, Type, Small, Author, CSO, TestCategory, Integration)
+TEST_TRAITS(Traits, With7Traits, Trait1, Equals1, Trait2, Equals2, Trait3, Equals3, Trait4, Equals4, Trait5, Equals5, Trait6, Equals6, Trait7, Equals7)
 {
-	EXPECT_EQ(20, Add(10, 10));
+	EXPECT_EQ(1, 1);
 }
 
+TEST_TRAITS(Traits, With6Traits, Trait1, Equals1, Trait2, Equals2, Trait3, Equals3, Trait4, Equals4, Trait5, Equals5, Trait6, Equals6)
+{
+	EXPECT_EQ(1, 1);
+}
 
+TEST_TRAITS(Traits, With5Traits, Trait1, Equals1, Trait2, Equals2, Trait3, Equals3, Trait4, Equals4, Trait5, Equals5)
+{
+	EXPECT_EQ(1, 1);
+}
+
+TEST_TRAITS(Traits, With4Traits, Trait1, Equals1, Trait2, Equals2, Trait3, Equals3, Trait4, Equals4)
+{
+	EXPECT_EQ(1, 1);
+}
+
+TEST_TRAITS(Traits, With3Traits, Trait1, Equals1, Trait2, Equals2, Trait3, Equals3)
+{
+	EXPECT_EQ(1, 1);
+}
+
+TEST_TRAITS(Traits, With2Traits, Trait1, Equals1, Trait2, Equals2)
+{
+	EXPECT_EQ(1, 1);
+}
+
+TEST_TRAITS(Traits, With1Traits, Trait1, Equals1)
+{
+	EXPECT_EQ(1, 1);
+}
