@@ -17,7 +17,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-<# if (AbstractConsoleIntegrationTests.IsRunningOnBuildServer()) { #>
+<# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
 using GoogleTestAdapterUiTests;
 <# } #>
 using static GoogleTestAdapter.TestMetadata.TestCategories;
@@ -109,7 +109,7 @@ namespace GoogleTestAdapter.VsPackage
 		#endregion
 	}
 
-	<# if (AbstractConsoleIntegrationTests.IsRunningOnBuildServer()) { #>
+	<# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
 	[TestClass]
 	public class ConsoleVsixTests : AbstractConsoleTests
 	{
@@ -291,6 +291,8 @@ namespace GoogleTestAdapter.VsPackage
 			{
 				case "SampleTests":
 					return TestResources.SampleTests;
+				case "LoadTests":
+					return TestResources.LoadTests;
 				case "HardCrashingSampleTests":
 					return TestResources.HardCrashingSampleTests;
 				case "X861":

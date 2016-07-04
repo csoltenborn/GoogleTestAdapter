@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
@@ -43,10 +43,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private void LogSafe(TestMessageLevel level, string message)
         {
             if (_settings.TimestampOutput)
-            {
-                string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                message = $"{timestamp} - {message ?? ""}";
-            }
+                Utils.TimestampMessage(ref message);
 
             if (string.IsNullOrWhiteSpace(message))
             {

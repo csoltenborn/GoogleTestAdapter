@@ -37,7 +37,6 @@ namespace GoogleTestAdapter
             }
 
             _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, isBeingDebugged, launcher);
-            _testEnvironment.LogInfo("Test execution completed.");
         }
 
         public void Cancel()

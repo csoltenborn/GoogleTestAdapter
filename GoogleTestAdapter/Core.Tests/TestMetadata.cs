@@ -8,6 +8,7 @@
             public const string Integration = "Integration";
             public const string EndToEnd = "End to end";
             public const string Ui = "UI";
+            public const string Load = "Load";
         }
     }
 }

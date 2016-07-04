@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -10,11 +11,11 @@ namespace GoogleTestAdapter.Scheduling
 {
     [Serializable]
     [XmlRoot]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public class GtaTestDurations
     {
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Executable { get; set; }
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public List<TestDuration> TestDurations { get; set; } = new List<TestDuration>();
     }
 
@@ -38,7 +39,6 @@ namespace GoogleTestAdapter.Scheduling
     public class TestDurationSerializer
     {
         private static object Lock { get; } = new object();
-        private static readonly TestDuration Default = new TestDuration();
 
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(GtaTestDurations));
 
@@ -47,7 +47,6 @@ namespace GoogleTestAdapter.Scheduling
         {
             IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
             var durations = new Dictionary<TestCase, int>();
-            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string executable in groupedTestcases.Keys)
             {
                 durations = durations.Union(ReadTestDurations(executable, groupedTestcases[executable])).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -84,13 +83,12 @@ namespace GoogleTestAdapter.Scheduling
                 container = LoadTestDurations(durationsFile);
             }
 
+            IDictionary<string, TestDuration> durationsMap = container.TestDurations.ToDictionary(x => x.Test, x => x);
             foreach (TestCase testcase in testcases)
             {
-                TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testcase.FullyQualifiedName);
-                if (!pair.Equals(Default))
-                {
+                TestDuration pair;
+                if (durationsMap.TryGetValue(testcase.FullyQualifiedName, out pair))
                     durations.Add(testcase, pair.Duration);
-                }
             }
 
             return durations;
@@ -102,32 +100,34 @@ namespace GoogleTestAdapter.Scheduling
             GtaTestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GtaTestDurations();
             container.Executable = Path.GetFullPath(executable);
 
-            foreach (TestResult testResult in testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
+            IDictionary<string, TestDuration> durations = container.TestDurations.ToDictionary(x => x.Test, x => x);
+            foreach (TestResult testResult in 
+                testresults.Where(tr => tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))
             {
-                TestDuration pair = container.TestDurations.FirstOrDefault(p => p.Test == testResult.TestCase.FullyQualifiedName);
-                if (!pair.Equals(Default))
-                {
-                    container.TestDurations.Remove(pair);
-                }
-                container.TestDurations.Add(new TestDuration(testResult.TestCase.FullyQualifiedName, GetDuration(testResult)));
+                durations[testResult.TestCase.FullyQualifiedName] =
+                    new TestDuration(testResult.TestCase.FullyQualifiedName, GetDuration(testResult));
             }
+
+            container.TestDurations.Clear();
+            container.TestDurations.AddRange(durations.Values);
 
             SaveTestDurations(container, durationsFile);
         }
 
         private GtaTestDurations LoadTestDurations(string durationsFile)
         {
-            var fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            GtaTestDurations container = _serializer.Deserialize(fileStream) as GtaTestDurations;
-            fileStream.Close();
-            return container;
+            using (var fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                return _serializer.Deserialize(fileStream) as GtaTestDurations;
+            }
         }
 
         private void SaveTestDurations(GtaTestDurations durations, string durationsFile)
         {
-            var fileStream = new StreamWriter(durationsFile);
-            _serializer.Serialize(fileStream, durations);
-            fileStream.Close();
+            using (var fileStream = new StreamWriter(durationsFile))
+            {
+                _serializer.Serialize(fileStream, durations);
+            }
         }
 
         private IDictionary<string, List<TestResult>> GroupTestResultsByExecutable(IEnumerable<TestResult> testresults)

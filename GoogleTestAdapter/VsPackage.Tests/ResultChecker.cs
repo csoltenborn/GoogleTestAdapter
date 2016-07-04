@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.VsPackage
         {
             _goldenFilesDirectory = goldenFilesDir;
             _testErrorsDirectory = testErrorsDir;
-            this._fileExtension = fileExtension;
+            _fileExtension = fileExtension;
         }
 
         public void CheckResults(string testResults, string typeName, [CallerMemberName] string testCaseName = null)
@@ -39,14 +39,13 @@ namespace GoogleTestAdapter.VsPackage
             if (!stringsAreEqual)
             {
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)
+                // ReSharper disable HeuristicUnreachableCode
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (OverwriteTestResults)
-                // ReSharper disable HeuristicUnreachableCode
                 {
                     File.WriteAllText(expectationFile, testResults);
                     Assert.Inconclusive("Test results changed and have been overwritten. Differences: " + msg);
                 }
-                // ReSharper restore HeuristicUnreachableCode
                 else
                 {
                     // ReSharper disable once AssignNullToNotNullAttribute
@@ -54,6 +53,7 @@ namespace GoogleTestAdapter.VsPackage
                     File.WriteAllText(resultFile, testResults);
                     Assert.Fail("Test result doesn't match expectation. Result written to: " + resultFile + ". Differences: " + msg);
                 }
+                // ReSharper restore HeuristicUnreachableCode
 #pragma warning restore CS0162
             }
             else if (File.Exists(resultFile))
@@ -82,8 +82,8 @@ namespace GoogleTestAdapter.VsPackage
                 {
                     areEqual = false;
                     messages.Add($"First difference at position {i}\n"
-                        + $"context 1: '{GetContext(expectedResult, i)}'\n"
-                        + $"context 2: '{GetContext(result, i)}'");
+                        + $"==> Context 1:\n'{GetContext(expectedResult, i)}'\n"
+                        + $"==> Context 2:\n'{GetContext(result, i)}'");
                     break;
                 }
             }
@@ -92,7 +92,7 @@ namespace GoogleTestAdapter.VsPackage
             return areEqual;
         }
 
-        private string GetContext(string result, int position, int contextLength = 40)
+        private string GetContext(string result, int position, int contextLength = 100)
         {
             int leftContextLength = contextLength / 2;
             int rightContextLength = contextLength - leftContextLength;

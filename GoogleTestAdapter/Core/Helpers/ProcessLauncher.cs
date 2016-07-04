@@ -82,7 +82,7 @@ namespace GoogleTestAdapter.Helpers
                     _logger.LogInfo(line);
                 }
             }
-            if ((throwIfError && process.ExitCode != 0))
+            if (throwIfError && process.ExitCode != 0)
             {
                 throw new Exception("Process exited with return code " + process.ExitCode);
             }

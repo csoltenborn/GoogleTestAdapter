@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Helpers
@@ -11,11 +10,6 @@ namespace GoogleTestAdapter.Helpers
         public static IEnumerable<T> Yield<T>(this T item)
         {
             yield return item;
-        }
-
-        internal static TestCase FindTestcase(this IEnumerable<TestCase> testcases, string qualifiedName)
-        {
-            return testcases.FirstOrDefault(testcase => testcase.FullyQualifiedName.Split(' ')[0] == qualifiedName);
         }
 
         internal static IDictionary<string, List<TestCase>> GroupByExecutable(this IEnumerable<TestCase> testcases)

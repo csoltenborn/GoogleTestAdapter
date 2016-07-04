@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace GoogleTestAdapter.Helpers
@@ -35,6 +36,11 @@ namespace GoogleTestAdapter.Helpers
             return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
         }
 
+        public static void TimestampMessage(ref string message)
+        {
+            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            message = $"{timestamp} - {message ?? ""}";
+        }
     }
 
 }

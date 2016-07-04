@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using ExtensionUriAttribute = Microsoft.VisualStudio.TestPlatform.ObjectModel.ExtensionUriAttribute;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
@@ -39,6 +40,8 @@ namespace GoogleTestAdapter.TestAdapter
         {
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 InitOrRefreshTestEnvironment(runContext.RunSettings, frameworkHandle);
 
                 IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
@@ -47,10 +50,10 @@ namespace GoogleTestAdapter.TestAdapter
                 var filter = new TestCaseFilter(runContext, allTraitNames, _testEnvironment);
                 List<VsTestCase> vsTestCasesToRun =
                     filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
-                IEnumerable<TestCase> testCasesToRun =
-                    allTestCasesInExecutables.Where(tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToList();
+                ICollection<TestCase> testCasesToRun =
+                    allTestCasesInExecutables.Where(tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
 
-                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle, stopwatch);
             }
             catch (Exception e)
             {
@@ -62,6 +65,8 @@ namespace GoogleTestAdapter.TestAdapter
         {
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 InitOrRefreshTestEnvironment(runContext.RunSettings, frameworkHandle);
 
                 var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
@@ -72,8 +77,8 @@ namespace GoogleTestAdapter.TestAdapter
                 IEnumerable<TestCase> allTestCasesInExecutables =
                     GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
-                IEnumerable<TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase);
-                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+                ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase).ToArray();
+                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle, stopwatch);
             }
             catch (Exception e)
             {
@@ -141,8 +146,8 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         private void DoRunTests(
-            IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun,
-            IRunContext runContext, IFrameworkHandle frameworkHandle)
+            IEnumerable<TestCase> allTestCasesInExecutables, ICollection<TestCase> testCasesToRun,
+            IRunContext runContext, IFrameworkHandle frameworkHandle, Stopwatch stopwatch)
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio);
@@ -151,6 +156,9 @@ namespace GoogleTestAdapter.TestAdapter
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
                 runContext.IsBeingDebugged, runContext.SolutionDirectory);
             reporter.AllTestsFinished();
+
+            stopwatch.Stop();
+            _testEnvironment.LogInfo($"Test execution completed, overall duration: {stopwatch.Elapsed}.");
         }
 
     }

@@ -11,6 +11,10 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 {
     public class VsTestFrameworkReporter : ITestFrameworkReporter
     {
+        public const int NrOfTestsBeforeThrottling = 99;
+        public const int ThrottleDurationInMs = 500;
+        public const int SleepingTimeAfterAllTestsInMs = 1000;
+
         private static readonly object Lock = new object();
 
         private readonly IFrameworkHandle _frameworkHandle;
@@ -41,7 +45,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             //      work item have finished. The closest approximation is to add a
             //      work item which will be scheduled after all others and let it
             //      sleep for a short time.
-            _throttle = new Throttle(99, TimeSpan.FromMilliseconds(500));
+            _throttle = new Throttle(NrOfTestsBeforeThrottling, TimeSpan.FromMilliseconds(ThrottleDurationInMs));
         }
 
 
@@ -99,7 +103,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             // This is part of a workaround for a Visual Studio bug. See above.
             bool done = false;
-            ThreadPool.QueueUserWorkItem(delegate { Thread.Sleep(1000); done = true; });
+            ThreadPool.QueueUserWorkItem(delegate { Thread.Sleep(SleepingTimeAfterAllTestsInMs); done = true; });
             while (!done)
                 Thread.Sleep(200);
         }

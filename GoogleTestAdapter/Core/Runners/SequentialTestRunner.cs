@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
@@ -83,8 +84,11 @@ namespace GoogleTestAdapter.Runners
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
                 _testEnvironment.DebugInfo($"Collected {results.Count()} test results");
 
+                Stopwatch stopwatch = Stopwatch.StartNew();
                 _frameworkReporter.ReportTestResults(results);
-                _testEnvironment.DebugInfo($"Reported {results.Count()} test results");
+                stopwatch.Stop();
+                _testEnvironment.DebugInfo($"Reported {results.Count()} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
+
                 serializer.UpdateTestDurations(results);
                 _testEnvironment.DebugInfo($"Updated {results.Count()} test durations");
             }
@@ -99,14 +103,17 @@ namespace GoogleTestAdapter.Runners
             var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _testEnvironment, baseDir);
 
             testResults.AddRange(xmlParser.GetTestResults());
+            _testEnvironment.DebugInfo("Collected test results from XML result file");
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
                 List<TestResult> consoleResults = consoleParser.GetTestResults();
+                // ReSharper disable once AccessToModifiedClosure
                 foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
                 {
                     testResults.Add(testResult);
                 }
+                _testEnvironment.DebugInfo("Collected test results from console output");
             }
 
             if (testResults.Count < testCasesRunAsArray.Length)
@@ -122,6 +129,7 @@ namespace GoogleTestAdapter.Runners
                     errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
                         consoleParser.CrashedTestCase.CodeFilePath, consoleParser.CrashedTestCase.LineNumber.ToString());
                 }
+                // ReSharper disable once AccessToModifiedClosure
                 foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
                 {
                     testResults.Add(new TestResult(testCase)
@@ -132,7 +140,10 @@ namespace GoogleTestAdapter.Runners
                         ErrorStackTrace = errorStackTrace
                     });
                 }
+                _testEnvironment.DebugInfo("Created test results for tests which were neither found in xml file nor in console output");
             }
+
+            testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 
             return testResults;
         }
