@@ -10,4 +10,4 @@ TEST_P(LoadTests, Test) {
 }
 
 // create any number of tests here
-INSTANTIATE_TEST_CASE_P(, LoadTests, testing::Range(0, 50000));
+INSTANTIATE_TEST_CASE_P(, LoadTests, testing::Range(0, 5000));
