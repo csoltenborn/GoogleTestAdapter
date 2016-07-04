@@ -36,7 +36,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 Google Test Adapter can be installed in two ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
-* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.6.0/GoogleTestAdapter-0.6.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
+* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.7.0/GoogleTestAdapter-0.7.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
@@ -162,4 +162,3 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 * [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
-* [Coveralls.net](https://github.com/csmacnz/coveralls.net) - uploads code coverage data to Coveralls
