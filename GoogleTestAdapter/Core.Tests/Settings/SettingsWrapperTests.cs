@@ -317,6 +317,7 @@ namespace GoogleTestAdapter.Settings
         {
             MockXmlOptions.Setup(s => s.TraitsRegexesBefore).Returns("Foo///Bar,Baz//||//Foo2///Bar2,Baz2");
             MockXmlOptions.Setup(s => s.BatchForTestSetup).Returns(@"C:\\myfolder\myfile.xml");
+            MockXmlOptions.Setup(s => s.MaxNrOfThreads).Returns(1);
 
             TheOptions.ToString().Should().Be(
                 @"SettingsWrapper(PrintTestOutput: False, TestDiscoveryRegex: '', PathExtension: '', " +
@@ -324,7 +325,7 @@ namespace GoogleTestAdapter.Settings
                 @"TestNameSeparator: '', ParseSymbolInformation: True, DebugMode: False, " + 
                 @"TimestampOutput: False, ShowReleaseNotes: True, AdditionalTestExecutionParam: '', " +
                 @"BatchForTestSetup: 'C:\\myfolder\myfile.xml', " + 
-                @"BatchForTestTeardown: '', ParallelTestExecution: False, MaxNrOfThreads: 8, " + 
+                @"BatchForTestTeardown: '', ParallelTestExecution: False, MaxNrOfThreads: 1, " + 
                 @"CatchExceptions: True, BreakOnFailure: False, RunDisabledTests: False, " +
                 @"NrOfTestRepetitions: 1, ShuffleTests: False, ShuffleTestsSeed: 0)");
         }
