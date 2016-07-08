@@ -18,14 +18,16 @@ namespace GoogleTestAdapter
         private readonly TestEnvironment _testEnvironment;
         private readonly IDiaResolverFactory _diaResolverFactory;
 
-        public GoogleTestDiscoverer(TestEnvironment testEnviroment, IDiaResolverFactory diaResolverFactory = null)
+        public GoogleTestDiscoverer(TestEnvironment testEnvironment, IDiaResolverFactory diaResolverFactory = null)
         {
-            _testEnvironment = testEnviroment;
+            _testEnvironment = testEnvironment;
             _diaResolverFactory = diaResolverFactory ?? DefaultDiaResolverFactory.Instance;
         }
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
+            _testEnvironment.DebugInfo(_testEnvironment.Options.ToString());
+
             List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             foreach (string executable in googleTestExecutables)
             {

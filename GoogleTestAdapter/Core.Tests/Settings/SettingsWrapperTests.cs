@@ -311,6 +311,24 @@ namespace GoogleTestAdapter.Settings
             resultPair.Trait.Value.Should().Be("Baz");
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ToString_PrintsCorrectly()
+        {
+            MockXmlOptions.Setup(s => s.TraitsRegexesBefore).Returns("Foo///Bar,Baz//||//Foo2///Bar2,Baz2");
+            MockXmlOptions.Setup(s => s.BatchForTestSetup).Returns(@"C:\\myfolder\myfile.xml");
+
+            TheOptions.ToString().Should().Be(
+                @"SettingsWrapper(PrintTestOutput: False, TestDiscoveryRegex: '', PathExtension: '', " +
+                @"TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}, TraitsRegexesAfter: {}, " + 
+                @"TestNameSeparator: '', ParseSymbolInformation: True, DebugMode: False, " + 
+                @"TimestampOutput: False, ShowReleaseNotes: True, AdditionalTestExecutionParam: '', " +
+                @"BatchForTestSetup: 'C:\\myfolder\myfile.xml', " + 
+                @"BatchForTestTeardown: '', ParallelTestExecution: False, MaxNrOfThreads: 8, " + 
+                @"CatchExceptions: True, BreakOnFailure: False, RunDisabledTests: False, " +
+                @"NrOfTestRepetitions: 1, ShuffleTests: False, ShuffleTestsSeed: 0)");
+        }
+
     }
 
 }

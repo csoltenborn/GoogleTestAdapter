@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -12,8 +14,13 @@ namespace GoogleTestAdapter.Settings
 
         public RegexTraitPair(string regex, string name, string value)
         {
-            this.Regex = regex;
-            this.Trait = new Trait(name, value);
+            Regex = regex;
+            Trait = new Trait(name, value);
+        }
+
+        public override string ToString()
+        {
+            return $"'{Regex}': {Trait}";
         }
     }
 
@@ -27,12 +34,32 @@ namespace GoogleTestAdapter.Settings
 
         public SettingsWrapper(IGoogleTestAdapterSettings settings)
         {
-            this._theSettings = settings;
+            _theSettings = settings;
         }
 
         // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
+        public override string ToString()
+        {
+            IEnumerable<PropertyInfo> propertiesToPrint =
+                GetType().GetProperties().Where(pi => pi.Name != nameof(RegexTraitParser)); 
+            string values = string.Join(", ", propertiesToPrint.Select(pi => ToString(this, pi)));
+            return $"{GetType().Name}({values})";
+        }
+
+        private string ToString(SettingsWrapper settings, PropertyInfo propertyInfo)
+        {
+            var value = propertyInfo.GetValue(settings);
+            if (value is string)
+                return $"{propertyInfo.Name}: '{value}'";
+
+            var pairs = value as IEnumerable<RegexTraitPair>;
+            if (pairs != null)
+                return $"{propertyInfo.Name}: {{{string.Join(", ", pairs)}}}";
+
+            return $"{propertyInfo.Name}: {value}";
+        }
 
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
