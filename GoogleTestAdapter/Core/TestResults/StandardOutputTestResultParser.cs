@@ -55,28 +55,34 @@ namespace GoogleTestAdapter.TestResults
 
             if (currentLineIndex >= _consoleOutput.Count)
             {
-                return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), true, CrashText);
+                CrashedTestCase = testCase;
+                return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), CrashText, "");
             }
 
             line = _consoleOutput[currentLineIndex++];
 
             string errorMsg = "";
-            while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex < _consoleOutput.Count)
+            while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex <= _consoleOutput.Count)
             {
                 errorMsg += line + "\n";
-                line = _consoleOutput[currentLineIndex++];
+                line = currentLineIndex < _consoleOutput.Count ? _consoleOutput[currentLineIndex] : "";
+                currentLineIndex++;
             }
             if (IsFailedLine(line))
             {
-                return CreateFailedTestResult(testCase, ParseDuration(line), false, errorMsg);
+                ErrorMessageParser parser = new ErrorMessageParser(errorMsg, _baseDir);
+                parser.Parse();
+                return CreateFailedTestResult(testCase, ParseDuration(line), parser.ErrorMessage, parser.ErrorStackTrace);
             }
             if (IsPassedLine(line))
             {
                 return CreatePassedTestResult(testCase, ParseDuration(line));
             }
 
-            string appendedMessage = errorMsg == "" ? "" : "\n\n" + errorMsg;
-            return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), true, CrashText + appendedMessage);
+            CrashedTestCase = testCase;
+            string message = CrashText;
+            message += errorMsg == "" ? "" : "\nTest output:\n\n" + errorMsg;
+            return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), message, "");
         }
 
         private TimeSpan ParseDuration(string line)
@@ -110,22 +116,15 @@ namespace GoogleTestAdapter.TestResults
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, bool crashed, string errorMessage)
+        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, string errorMessage, string errorStackTrace)
         {
-            if (crashed)
-            {
-                CrashedTestCase = testCase;
-            }
-
-            var parser = new ErrorMessageParser(errorMessage, _baseDir);
-            parser.Parse();
             return new TestResult(testCase)
             {
                 ComputerName = Environment.MachineName,
                 DisplayName = testCase.DisplayName,
                 Outcome = TestOutcome.Failed,
-                ErrorMessage = crashed ? CrashText : parser.ErrorMessage,
-                ErrorStackTrace = parser.ErrorStackTrace,
+                ErrorMessage = errorMessage,
+                ErrorStackTrace = errorStackTrace,
                 Duration = duration
             };
         }

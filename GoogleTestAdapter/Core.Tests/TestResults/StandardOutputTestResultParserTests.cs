@@ -140,6 +140,7 @@ namespace GoogleTestAdapter.TestResults
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             results[1].Outcome.Should().Be(TestOutcome.Failed);
             results[1].ErrorMessage.Should().Contain(StandardOutputTestResultParser.CrashText);
+            results[1].ErrorMessage.Should().NotContain("Test output:");
             results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(0));
         }
 
@@ -165,6 +166,8 @@ namespace GoogleTestAdapter.TestResults
             results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
             results[2].Outcome.Should().Be(TestOutcome.Failed);
             results[2].ErrorMessage.Should().Contain(StandardOutputTestResultParser.CrashText);
+            results[2].ErrorMessage.Should().Contain("Test output:");
+            results[2].ErrorMessage.Should().Contain("unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.");
             results[2].Duration.Should().Be(TimeSpan.FromMilliseconds(0));
         }
 
