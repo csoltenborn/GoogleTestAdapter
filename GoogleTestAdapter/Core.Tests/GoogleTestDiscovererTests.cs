@@ -85,9 +85,20 @@ namespace GoogleTestAdapter
         {
             MockOptions.Setup(o => o.PathExtension).Returns(TestResources.PathExtensionTestsDllDir);
 
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
             testCases.Count.Should().Be(TestResources.NrOfPathExtensionTests);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_WithoutPathExtension_ProducesWarning()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
+
+            testCases.Count.Should().Be(0);
+            MockLogger.Verify(l => l.LogWarning(It.Is<string>(s => s.StartsWith("Could not list test cases of executable"))));
         }
 
         [TestMethod]
@@ -131,8 +142,8 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_ParseSymbolInformation_DiaResolverIsCreated()
         {
-            Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
-            Mock<IDiaResolver> mockResolver = new Mock<IDiaResolver>();
+            var mockFactory = new Mock<IDiaResolverFactory>();
+            var mockResolver = new Mock<IDiaResolver>();
             mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>())).Returns(mockResolver.Object);
             mockResolver.Setup(r => r.GetFunctions(It.IsAny<string>())).Returns(new List<SourceFileLocation>());
 
@@ -145,7 +156,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_DoNotParseSymbolInformation_DiaIsNotInvoked()
         {
-            Mock<IDiaResolverFactory> mockFactory = new Mock<IDiaResolverFactory>();
+            var mockFactory = new Mock<IDiaResolverFactory>();
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
 
             IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object)
@@ -189,7 +200,7 @@ namespace GoogleTestAdapter
 
         private void FindSampleTests(string location)
         {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(TestResources.NrOfSampleTests);
@@ -204,7 +215,7 @@ namespace GoogleTestAdapter
 
         private void FindStaticallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(2);
@@ -220,7 +231,7 @@ namespace GoogleTestAdapter
 
         private void FindExternallyLinkedTests(string location)
         {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(2);
@@ -246,7 +257,7 @@ namespace GoogleTestAdapter
                 .Should()
                 .BeTrue("Build SampleTests in Debug mode before executing this test");
 
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.SampleTests);
 
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);
