@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using GoogleTestAdapter.Helpers;
@@ -61,6 +62,13 @@ namespace GoogleTestAdapter.Settings
             return $"{propertyInfo.Name}: {value}";
         }
 
+        public string GetPathExtension(string executable)
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            string executableDir = new FileInfo(executable).Directory.FullName;
+            return PathExtension.Replace(ExecutableDirPlaceholder, executableDir);
+        }
+
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
         {
             return ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
@@ -89,6 +97,18 @@ namespace GoogleTestAdapter.Settings
             return result;
         }
 
+        public static string ReplacePlaceholders(string userParameters, string executable)
+        {
+            if (string.IsNullOrEmpty(userParameters))
+                return "";
+
+            // ReSharper disable once PossibleNullReferenceException
+            string executableDir = new FileInfo(executable).Directory.FullName;
+            return userParameters
+                .Replace(ExecutableDirPlaceholder, executableDir)
+                .Replace(ExecutablePlaceholder, executable);
+        }
+
 
         public const string OptionsCategoryName = "Google Test Adapter";
 
@@ -102,19 +122,27 @@ namespace GoogleTestAdapter.Settings
         public const string PageParallelizationName = CategoryParallelizationName;
         public const string PageGoogleTestName = "Google Test";
 
-        private const string SolutionDirPlaceholder = "$(SolutionDir)";
+        public const string SolutionDirPlaceholder = "$(SolutionDir)";
         public const string TestDirPlaceholder = "$(TestDir)";
         public const string ThreadIdPlaceholder = "$(ThreadId)";
         public const string ExecutablePlaceholder = "$(Executable)";
+        public const string ExecutableDirPlaceholder = "$(ExecutableDir)";
+
+        private const string DescriptionOfSolutionDirPlaceHolder =
+            SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
+
+        private const string DescriptionOfExecutableDirPlaceHolder =
+            ExecutableDirPlaceholder + " - directory containing the test executable";
 
         private const string DescriptionOfPlaceholdersForBatches =
-           TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
-           ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
-           SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
+            TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
+            ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
+            DescriptionOfSolutionDirPlaceHolder;
 
         private const string DescriptionOfPlaceholdersForExecutables =
             DescriptionOfPlaceholdersForBatches + "\n" +
-            ExecutablePlaceholder + " - executable containing the tests";
+            ExecutablePlaceholder + " - executable containing the tests\n" +
+            DescriptionOfExecutableDirPlaceHolder;
 
         #region GeneralOptionsPage
 
@@ -138,7 +166,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionPathExtension = "PATH extension";
         public const string OptionPathExtensionDefaultValue = "";
         public const string OptionPathExtensionDescription =
-            "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;C:\\MyOtherBins";
+            "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + ExecutableDirPlaceholder + "\\MyOtherBins;\nPlaceholders:\n"
+            + DescriptionOfExecutableDirPlaceHolder;
 
         public virtual string PathExtension => _theSettings.PathExtension ?? OptionPathExtensionDefaultValue;
 

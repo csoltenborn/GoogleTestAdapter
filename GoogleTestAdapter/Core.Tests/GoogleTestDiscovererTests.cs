@@ -8,6 +8,7 @@ using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using static GoogleTestAdapter.TestMetadata.TestCategories;
@@ -83,7 +84,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_WithPathExtension_FindsTestsWithLocation()
         {
-            MockOptions.Setup(o => o.PathExtension).Returns(TestResources.PathExtensionTestsDllDir);
+            MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\lib");
 
             var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);

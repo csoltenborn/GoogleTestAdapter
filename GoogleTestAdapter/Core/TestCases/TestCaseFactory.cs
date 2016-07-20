@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.TestCases
 
         public IList<TestCase> CreateTestCases()
         {
-            var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.PathExtension);
+            var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(_executable));
             int processReturnCode;
             List<string> consoleOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processReturnCode);
             if (processReturnCode != 0)
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_testEnvironment).ParseListTestsOutput(consoleOutput);
             if (_testEnvironment.Options.ParseSymbolInformation)
             {
-                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _testEnvironment.Options.PathExtension);
+                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _testEnvironment.Options.GetPathExtension(_executable));
                 return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
             }
 

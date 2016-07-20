@@ -253,6 +253,15 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetPathExtension__PlaceholderIsReplaced()
+        {
+            MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + SettingsWrapper.ExecutableDirPlaceholder + ";Bar");
+            string result = TheOptions.GetPathExtension(TestResources.SampleTests);
+            result.Should().Be(@"Foo;C:\Users\chris\git\GoogleTestAdapter\SampleTests\Debug;Bar");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);

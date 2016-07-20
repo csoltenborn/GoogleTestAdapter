@@ -35,7 +35,7 @@ namespace GoogleTestAdapter.Helpers
                 return output;
             }
 
-            var actualLauncher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.PathExtension);
+            var actualLauncher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(command));
             return actualLauncher.GetOutputOfCommand(workingDirectory, command, param, printTestOutput, 
                 throwIfError, out processExitCode);
         }
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Helpers
                 _testEnvironment.DebugInfo(
                     "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
             }
-            int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _testEnvironment.Options.PathExtension);
+            int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _testEnvironment.Options.GetPathExtension(command));
             Process process = Process.GetProcessById(processId);
             var waiter = new ProcessWaiter(process);
             waiter.WaitForExit();
