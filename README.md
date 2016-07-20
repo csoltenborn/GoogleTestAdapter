@@ -108,8 +108,9 @@ None or not all of my tests show up!
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 
 No source locations and traits are found for my tests!
-* The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved. Rebuilding your solution should regenerate the pdb at an appropriate location.
+* The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved (and indicates that with a warning in the test output window). Rebuilding your solution should regenerate the pdb at an appropriate location.
 * The test executable's project has the option *Linker/Debugging/Generate debug info* set to `No` or `Optimize for faster linking (/DEBUG:FASTLINK)`, resulting in a pdb not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting to `Yes` or `Optimize for debugging (/DEBUG)` and rebuild your solution.
+* Option *Parse symbol information* is set to `false`, making GTA not parse that information out of the pdb file intentionally. The actual set of options used is potentially composed from VS options, a solution settings file, and a user settings file; the resulting set of options will be logged to the test output window if the *Print debug info* option is set to `true`.
 
 
 ### Building, testing, debugging
