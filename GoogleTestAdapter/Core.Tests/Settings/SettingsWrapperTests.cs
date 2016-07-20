@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -257,7 +258,10 @@ namespace GoogleTestAdapter.Settings
         {
             MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + SettingsWrapper.ExecutableDirPlaceholder + ";Bar");
             string result = TheOptions.GetPathExtension(TestResources.SampleTests);
-            result.Should().Be(@"Foo;C:\Users\chris\git\GoogleTestAdapter\SampleTests\Debug;Bar");
+
+            // ReSharper disable once PossibleNullReferenceException
+            string expectedDirectory = new FileInfo(TestResources.SampleTests).Directory.FullName;
+            result.Should().Be($"Foo;{expectedDirectory};Bar");
         }
 
         [TestMethod]
