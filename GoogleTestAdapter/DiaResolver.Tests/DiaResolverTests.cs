@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver.Helpers;
@@ -49,12 +50,37 @@ namespace GoogleTestAdapter.DiaResolver
             DoResolveTest(TestResources.X64ExternallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetFunctions_ExeWithoutPdb_AttemptsToFindPdbAreLogged()
+        {
+            File.Exists(TestResources.X86TestsWithoutPdb).Should().BeTrue();
+
+            var locations = new List<SourceFileLocation>();
+            var fakeLogger = new FakeLogger();
+
+            using (
+                IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.X86TestsWithoutPdb, "",
+                    fakeLogger, true))
+            {
+                locations.AddRange(resolver.GetFunctions("*"));
+            }
+
+            locations.Count.Should().Be(0);
+            fakeLogger.MessagesOfType(Severity.Warning)
+                .Should()
+                .Contain(msg => msg.Contains("Couldn't find the .pdb file"));
+            fakeLogger.MessagesOfType(Severity.Info)
+                .Should()
+                .Contain(msg => msg.Contains("Attempts to find pdb:"));
+        }
+
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
         {
             var locations = new List<SourceFileLocation>();
             var fakeLogger = new FakeLogger();
 
-            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger);
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger, false);
             locations.AddRange(resolver.GetFunctions(filter));
 
             if (disposeResolver)

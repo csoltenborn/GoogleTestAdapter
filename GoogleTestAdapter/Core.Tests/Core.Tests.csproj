@@ -182,6 +182,9 @@
     <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\TestData\_x86\NoPdbFile\ConsoleApplication1Tests.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\TestData\_x86\PathExtension\exe\Tests.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -52,12 +52,13 @@ namespace GoogleTestAdapter.TestCases
         private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
             string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _testEnvironment))
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _testEnvironment, _testEnvironment.Options.DebugMode))
             {
                 try
                 {
                     IList<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
                     IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
+                    _testEnvironment.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
                     return allTestMethodSymbols
                         .Where(nsfl => testMethodSignatures.Any(tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace

@@ -6,9 +6,9 @@ namespace GoogleTestAdapter.DiaResolver
     {
         public static IDiaResolverFactory Instance { get; } = new DefaultDiaResolverFactory();
 
-        public IDiaResolver Create(string binary, string pathExtensions, ILogger logger)
+        public IDiaResolver Create(string binary, string pathExtensions, ILogger logger, bool debugMode)
         {
-            return new DiaResolver(binary, pathExtensions, logger);
+            return new DiaResolver(binary, pathExtensions, logger, debugMode);
         }
     }
 }

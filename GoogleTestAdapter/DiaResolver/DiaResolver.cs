@@ -61,6 +61,7 @@ namespace GoogleTestAdapter.DiaResolver
 
         private readonly string _binary;
         private readonly ILogger _logger;
+        private readonly bool _debugMode;
         private readonly Stream _fileStream;
         private readonly IDiaSession _diaSession;
 
@@ -80,16 +81,11 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        internal DiaResolver(string binary, string pathExtension, ILogger logger)
+        internal DiaResolver(string binary, string pathExtension, ILogger logger, bool debugMode)
         {
             _binary = binary;
             _logger = logger;
-
-            if (!TryCreateDiaInstance(Dia140) && !TryCreateDiaInstance(Dia120) && !TryCreateDiaInstance(Dia110))
-            {
-                _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
-                return;
-            }
+            _debugMode = debugMode;
 
             string pdb = FindPdbFile(binary, pathExtension);
             if (pdb == null)
@@ -97,6 +93,15 @@ namespace GoogleTestAdapter.DiaResolver
                 _logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
                 return;
             }
+
+            if (!TryCreateDiaInstance(Dia140) && !TryCreateDiaInstance(Dia120) && !TryCreateDiaInstance(Dia110))
+            {
+                _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
+                return;
+            }
+
+            if (_debugMode)
+                _logger.LogInfo($"Parsing pdb file \"{pdb}\"");
 
             _fileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
             _diaDataSource.loadDataFromIStream(new DiaMemoryStream(_fileStream));
@@ -123,23 +128,41 @@ namespace GoogleTestAdapter.DiaResolver
 
         private string FindPdbFile(string binary, string pathExtension)
         {
+            IList<string> attempts = new List<string>();
             string pdb = PeParser.ExtractPdbPath(binary, _logger);
             if (pdb != null && File.Exists(pdb))
                 return pdb;
+            attempts.Add("parsing from executable");
 
             pdb = Path.ChangeExtension(binary, ".pdb");
             if (File.Exists(pdb))
                 return pdb;
+            attempts.Add($"\"{pdb}\"");
 
             pdb = Path.GetFileName(pdb);
             if (pdb == null || File.Exists(pdb))
                 return pdb;
+            attempts.Add($"\"{pdb}\"");
 
             string path = Environment.GetEnvironmentVariable("PATH");
             if (!string.IsNullOrEmpty(pathExtension))
                 path = $"{pathExtension};{path}";
             var pathElements = path?.Split(';');
-            return pathElements?.Select(pe => Path.Combine(pe, pdb)).FirstOrDefault(File.Exists);
+            if (path != null)
+            {
+                foreach (string pathElement in pathElements)
+                {
+                    string file = Path.Combine(pathElement, pdb);
+                    if (File.Exists(file))
+                        return file;
+                    attempts.Add($"\"{file}\"");
+                }
+            }
+
+            if (_debugMode)
+                _logger.LogInfo("Attempts to find pdb: " + string.Join("::", attempts));
+
+            return null;
         }
 
         /// From given symbol enumeration, extract name, section, offset and length

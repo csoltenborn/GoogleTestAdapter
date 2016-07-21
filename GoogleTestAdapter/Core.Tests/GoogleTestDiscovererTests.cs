@@ -145,12 +145,12 @@ namespace GoogleTestAdapter
         {
             var mockFactory = new Mock<IDiaResolverFactory>();
             var mockResolver = new Mock<IDiaResolver>();
-            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>())).Returns(mockResolver.Object);
+            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>(), false)).Returns(mockResolver.Object);
             mockResolver.Setup(r => r.GetFunctions(It.IsAny<string>())).Returns(new List<SourceFileLocation>());
 
             new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object).GetTestsFromExecutable(TestResources.SampleTests);
 
-            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.AtLeastOnce);
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>(), false), Times.AtLeastOnce);
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace GoogleTestAdapter
             IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object)
                 .GetTestsFromExecutable(TestResources.SampleTests);
 
-            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.Never);
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>(), false), Times.Never);
             testCases.Count.Should().Be(TestResources.NrOfSampleTests);
             foreach (TestCase testCase in testCases)
             {
