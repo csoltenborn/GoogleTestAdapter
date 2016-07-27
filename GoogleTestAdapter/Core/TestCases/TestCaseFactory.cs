@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.TestCases
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, List<TestCaseLocation> testCaseLocations)
         {
             TestCaseLocation location = testCaseLocations.FirstOrDefault(
-                l => _signatureCreator.GetTestMethodSignatures(descriptor).Any(s => l.Symbol.Contains(s)));
+                l => _signatureCreator.GetTestMethodSignatures(descriptor).Any(s => Regex.IsMatch(l.Symbol, s)));
 
             if (location != null)
             {

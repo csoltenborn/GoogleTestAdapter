@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
@@ -61,7 +62,7 @@ namespace GoogleTestAdapter.TestCases
                     _testEnvironment.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
                     return allTestMethodSymbols
-                        .Where(nsfl => testMethodSignatures.Any(tms => nsfl.Symbol.Contains(tms))) // Contains() instead of == because nsfl might contain namespace
+                        .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, tms))) // Contains() instead of == because nsfl might contain namespace
                         .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
                         .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
                 }

@@ -36,7 +36,7 @@ namespace GoogleTestAdapter.TestCases
                 suite = suite.Substring(index + 1, suite.Length - index - 1);
             }
 
-            string typeParam = ListTestsParser.GetEnclosedTypeParam(descriptor.TypeParam);
+            string typeParam = "<.+>";
 
             // <testcase name>_<test name>_Test<type param value>::TestBody
             result.Add(GetTestMethodSignature(suite, descriptor.Name, typeParam));
