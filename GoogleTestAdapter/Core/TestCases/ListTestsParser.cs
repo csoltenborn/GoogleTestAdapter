@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestCases
@@ -8,6 +8,10 @@ namespace GoogleTestAdapter.TestCases
 
     public class ListTestsParser
     {
+        private static readonly Regex SuiteRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
+
         private readonly string _testNameSeparator;
 
         public ListTestsParser(TestEnvironment testEnvironment)
@@ -37,23 +41,15 @@ namespace GoogleTestAdapter.TestCases
 
         private TestCaseDescriptor CreateDescriptor(string suiteLine, string testCaseLine)
         {
-            string[] split = suiteLine.Split(new[] { GoogleTestConstants.TypedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
-            string suite = split.Length > 0 ? split[0] : suiteLine;
-            string typeParam = null;
-            if (split.Length > 1)
-            {
-                typeParam = split[1];
-                typeParam = typeParam.Replace("class ", "");
-                typeParam = typeParam.Replace("struct ", "");
-            }
+            Match suiteMatch = SuiteRegex.Match(suiteLine);
+            string suite = suiteMatch.Groups[1].Value;
+            string typeParam = suiteMatch.Groups[2].Value
+                .Replace("class ", "")
+                .Replace("struct ", "");
 
-            split = testCaseLine.Split(new[] { GoogleTestConstants.ParameterizedTestMarker }, StringSplitOptions.RemoveEmptyEntries);
-            string name = split.Length > 0 ? split[0] : testCaseLine;
-            string param = null;
-            if (split.Length > 1)
-            {
-                param = split[1];
-            }
+            Match nameMatch = NameRegex.Match(testCaseLine);
+            string name = nameMatch.Groups[1].Value;
+            string param = nameMatch.Groups[2].Value;
 
             string fullyQualifiedName = $"{suite}.{name}";
 
@@ -61,7 +57,13 @@ namespace GoogleTestAdapter.TestCases
             if (!string.IsNullOrEmpty(_testNameSeparator))
                 displayName = displayName.Replace("/", _testNameSeparator);
 
-            return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName);
+            TestCaseDescriptor.TestTypes testType = TestCaseDescriptor.TestTypes.Simple;
+            if (IsParamRegex.IsMatch(suite))
+                testType = TestCaseDescriptor.TestTypes.TypeParameterized;
+            else if (IsParamRegex.IsMatch(name))
+                testType = TestCaseDescriptor.TestTypes.Parameterized;
+
+            return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName, testType);
         }
 
         private static string GetDisplayName(string fullyQalifiedName, string typeParam, string param)

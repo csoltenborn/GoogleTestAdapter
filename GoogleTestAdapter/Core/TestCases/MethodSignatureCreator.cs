@@ -10,16 +10,17 @@ namespace GoogleTestAdapter.TestCases
 
         internal IEnumerable<string> GetTestMethodSignatures(TestCaseDescriptor descriptor)
         {
-            if (descriptor.TypeParam != null)
+            switch (descriptor.TestType)
             {
-                return GetTypedTestMethodSignatures(descriptor);
+                case TestCaseDescriptor.TestTypes.TypeParameterized:
+                    return GetTypedTestMethodSignatures(descriptor);
+                case TestCaseDescriptor.TestTypes.Parameterized:
+                    return GetParameterizedTestMethodSignature(descriptor).Yield();
+                case TestCaseDescriptor.TestTypes.Simple:
+                    return GetTestMethodSignature(descriptor.Suite, descriptor.Name).Yield();
+                default:
+                    throw new InvalidOperationException($"Unknown literal {descriptor.TestType}");
             }
-            if (descriptor.Param != null)
-            {
-                return GetParameterizedTestMethodSignature(descriptor).Yield();
-            }
-
-            return GetTestMethodSignature(descriptor.Suite, descriptor.Name).Yield();
         }
 
         private IEnumerable<string> GetTypedTestMethodSignatures(TestCaseDescriptor descriptor)
