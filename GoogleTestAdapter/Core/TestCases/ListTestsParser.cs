@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.TestCases
             else if (IsParamRegex.IsMatch(name))
                 testType = TestCaseDescriptor.TestTypes.Parameterized;
 
-            return new TestCaseDescriptor(suite, name, typeParam, param, fullyQualifiedName, displayName, testType);
+            return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType);
         }
 
         private static string GetDisplayName(string fullyQalifiedName, string typeParam, string param)
