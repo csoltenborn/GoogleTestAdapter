@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.DiaResolver;
@@ -28,7 +29,7 @@ namespace GoogleTestAdapter
         {
             _testEnvironment.DebugInfo(_testEnvironment.Options.ToString());
 
-            List<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
+            IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             foreach (string executable in googleTestExecutables)
             {
                 IList<TestCase> testCases = GetTestsFromExecutable(executable);
@@ -71,9 +72,11 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        private List<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
+        private IList<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
         {
-            return allExecutables.Where(e => IsGoogleTestExecutable(e, _testEnvironment.Options.TestDiscoveryRegex)).ToList();
+            return allExecutables.Where(
+                e => IsGoogleTestExecutable(e, _testEnvironment.Options.TestDiscoveryRegex))
+                .Select(Path.GetFullPath).ToList();
         }
 
         private bool SafeMatches(string executable, string regex)
