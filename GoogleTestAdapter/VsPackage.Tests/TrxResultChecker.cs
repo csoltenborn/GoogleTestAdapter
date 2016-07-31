@@ -44,7 +44,8 @@ namespace GoogleTestAdapter.VsPackage
 
             string expectationFile = Path.Combine(goldenFilesDir,
                 ResultChecker.GetGoldenFileName(typeName, testCaseName, ".xml"));
-            string htmlDiffFile = Path.Combine(diffFilesDir, ResultChecker.GetGoldenFileName(typeName, testCaseName, ".html"));
+            string htmlDiffFile = Path.GetFullPath(Path.Combine(diffFilesDir, ResultChecker.GetGoldenFileName(typeName, testCaseName, ".html")));
+
 
             string resultsFile = RunExecutableAndGetResultsFile(arguments);
             if (resultsFile == null)
@@ -70,7 +71,7 @@ namespace GoogleTestAdapter.VsPackage
                 string htmlContent = CreateDiffAsHtml(expectationFile, diffFile);
                 File.WriteAllText(htmlDiffFile, htmlContent);
 
-                if (ResultChecker.OverwriteTestResults)
+                if (ResultChecker.OverwriteTestResults && !CiSupport.IsRunningOnBuildServer)
                 {
                     File.Copy(transformedResultFile, expectationFile, true);
                     Assert.Inconclusive($"Updated golden file '{expectationFile}', test should now pass");
