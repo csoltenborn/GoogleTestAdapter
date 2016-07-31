@@ -20,61 +20,62 @@ namespace GoogleTestAdapter.VsPackage
     {
         private const string ResourceLocation = "GoogleTestAdapter.VsPackage.Resources.Trx2TestRun.xslt";
 
-        private readonly string _solutionFile;
+        private readonly string _goldenFilesDir;
+        private readonly string _diffFilesDir;
 
         public TrxResultChecker(string solutionFile)
         {
-            _solutionFile = solutionFile;
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string projectDir = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(solutionFile),
+                @"..\GoogleTestAdapter\VsPackage.Tests.Generated"));
+
+            _goldenFilesDir = Path.Combine(projectDir, "GoldenFiles");
+            Directory.CreateDirectory(_goldenFilesDir);
+
+            _diffFilesDir = Path.Combine(projectDir, "TestErrors");
+            Directory.CreateDirectory(_diffFilesDir);
         }
 
 #pragma warning disable 162
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
+        [SuppressMessage("ReSharper", "RedundantLogicalConditionalExpressionOperand")]
         public void RunTestsAndCheckOutput(string typeName, string arguments, string testCaseName)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            string projectDir = Path.Combine(Path.GetDirectoryName(_solutionFile),
-                @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
-
-            string goldenFilesDir = Path.Combine(projectDir, "GoldenFiles");
-            Directory.CreateDirectory(goldenFilesDir);
-
-            string diffFilesDir = Path.Combine(projectDir, "TestErrors");
-            Directory.CreateDirectory(diffFilesDir);
-
-            string expectationFile = Path.Combine(goldenFilesDir,
+            string goldenFile = Path.Combine(_goldenFilesDir,
                 ResultChecker.GetGoldenFileName(typeName, testCaseName, ".xml"));
-            string htmlDiffFile = Path.GetFullPath(Path.Combine(diffFilesDir, ResultChecker.GetGoldenFileName(typeName, testCaseName, ".html")));
-
 
             string resultsFile = RunExecutableAndGetResultsFile(arguments);
             if (resultsFile == null)
             {
-                File.Exists(expectationFile).Should().BeFalse($"Test run did not produce result trx file, but expectation file exists at {expectationFile}");
+                File.Exists(goldenFile).Should().BeFalse($"Test run did not produce result trx file, but expectation file exists at {goldenFile}");
                 return;
             }
 
             string transformedResultFile = TransformResultsFile(resultsFile);
             CheckIfFileIsParsable(transformedResultFile);
 
-            if (!File.Exists(expectationFile))
+            if (!File.Exists(goldenFile))
             {
                 // ReSharper disable once AssignNullToNotNullAttribute
-                File.Copy(transformedResultFile, expectationFile, true);
-                Assert.Inconclusive($"First time this test runs, created golden file - check for correctness! File: {expectationFile}");
+                File.Copy(transformedResultFile, goldenFile, true);
+                Assert.Inconclusive($"First time this test runs, created golden file - check for correctness! File: {goldenFile}");
             }
-            CheckIfFileIsParsable(expectationFile);
+            CheckIfFileIsParsable(goldenFile);
 
             string diffFile;
-            if (!CompareXmlFiles(expectationFile, transformedResultFile, out diffFile))
+            if (!CompareXmlFiles(goldenFile, transformedResultFile, out diffFile))
             {
-                string htmlContent = CreateDiffAsHtml(expectationFile, diffFile);
+                string htmlDiffFile = Path.Combine(_diffFilesDir,
+                    ResultChecker.GetGoldenFileName(typeName, testCaseName, ".html"));
+
+                string htmlContent = CreateDiffAsHtml(goldenFile, diffFile);
                 File.WriteAllText(htmlDiffFile, htmlContent);
 
                 if (ResultChecker.OverwriteTestResults && !CiSupport.IsRunningOnBuildServer)
                 {
-                    File.Copy(transformedResultFile, expectationFile, true);
-                    Assert.Inconclusive($"Updated golden file '{expectationFile}', test should now pass");
+                    File.Copy(transformedResultFile, goldenFile, true);
+                    Assert.Inconclusive($"Updated golden file '{goldenFile}', test should now pass");
                 }
 
                 Assert.Fail($@"Files differ, see file:///{htmlDiffFile}");
