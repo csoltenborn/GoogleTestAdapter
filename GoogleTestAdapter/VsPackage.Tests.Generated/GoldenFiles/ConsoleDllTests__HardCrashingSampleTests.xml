@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun>
+  <Results>
+    <UnitTestResult testName="Crashing.AddFailsAfterCrash" outcome="NotExecuted">
+      <Output>
+        <ErrorInfo>
+          <Message>reason is probably a crash of test Crashing.TheCrash</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Crashing.AddFailsBeforeCrash" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: Add(10, 10)
+  Actual: 20
+Expected: 1000</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Crashing.AddPassesAfterCrash" outcome="NotExecuted">
+      <Output>
+        <ErrorInfo>
+          <Message>reason is probably a crash of test Crashing.TheCrash</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Crashing.AddPassesBeforeCrash" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Crashing.LongRunning" outcome="NotExecuted">
+      <Output>
+        <ErrorInfo>
+          <Message>reason is probably a crash of test Crashing.TheCrash</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Crashing.TheCrash" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>!! This is probably the test that crashed !!</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <ResultSummary outcome="Failed">
+    <Counters total="6" executed="3" passed="1" failed="2" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output />
+  </ResultSummary>
+</TestRun>

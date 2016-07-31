@@ -53,19 +53,18 @@ namespace GoogleTestAdapter.TestResults
             {
                 var xmlDocument = new XmlDocument();
                 xmlDocument.Load(_xmlResultFile);
-                _testEnvironment.DebugInfo("Loaded test results from " + _xmlResultFile);
 
                 XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
                 {
                     XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
                     testResults.AddRange(testcaseNodes.AsParallel().Cast<XmlNode>().Select(TryParseTestResult).Where(tr => tr != null));
-                    _testEnvironment.DebugInfo($"Parsed XML test results of suite '{testsuiteNode.Attributes["name"]?.InnerText ?? "<unkown suite>"}'");
                 }
             }
             catch (XmlException e)
             {
-                _testEnvironment.DebugWarning("Test result file " + _xmlResultFile + " could not be parsed (completely) - your test has probably crashed. Exception message: " + e.Message);
+                _testEnvironment.DebugWarning(
+                    $"Test result file {_xmlResultFile} could not be parsed (completely) - your test executable has probably crashed. Exception message: {e.Message}");
             }
 
             return testResults;

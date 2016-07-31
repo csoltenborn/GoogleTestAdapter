@@ -33,7 +33,6 @@ namespace GoogleTestAdapter.Runners
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
 
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
-            _testEnvironment.DebugInfo($"Computed testcase groups for {groupedTestCases.Keys.Count} executables");
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
@@ -69,7 +68,6 @@ namespace GoogleTestAdapter.Runners
             var serializer = new TestDurationSerializer();
 
             var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _testEnvironment);
-            _testEnvironment.DebugInfo($"Computed {generator.GetCommandLines().Count()} arguments");
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)
@@ -78,11 +76,8 @@ namespace GoogleTestAdapter.Runners
                 }
 
                 _frameworkReporter.ReportTestsStarted(arguments.TestCases);
-                _testEnvironment.DebugInfo("Executing command '" + executable + " " + arguments.CommandLine + "'.");
                 List<string> consoleOutput = new TestProcessLauncher(_testEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, _testEnvironment.Options.PrintTestOutput && !_testEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
-                _testEnvironment.DebugInfo("Execution finished of command '" + executable + " " + arguments.CommandLine + "'.");
                 IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
-                _testEnvironment.DebugInfo($"Collected {results.Count()} test results");
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 _frameworkReporter.ReportTestResults(results);
@@ -90,7 +85,6 @@ namespace GoogleTestAdapter.Runners
                 _testEnvironment.DebugInfo($"Reported {results.Count()} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
 
                 serializer.UpdateTestDurations(results);
-                _testEnvironment.DebugInfo($"Updated {results.Count()} test durations");
             }
         }
 
@@ -103,17 +97,19 @@ namespace GoogleTestAdapter.Runners
             var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _testEnvironment, baseDir);
 
             testResults.AddRange(xmlParser.GetTestResults());
-            _testEnvironment.DebugInfo("Collected test results from XML result file");
+            _testEnvironment.DebugInfo($"Collected {testResults.Count} test results from XML result file '{resultXmlFile}'");
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
                 List<TestResult> consoleResults = consoleParser.GetTestResults();
+                int nrOfCollectedTestResults = 0;
                 // ReSharper disable once AccessToModifiedClosure
                 foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
                 {
                     testResults.Add(testResult);
+                    nrOfCollectedTestResults++;
                 }
-                _testEnvironment.DebugInfo("Collected test results from console output");
+                _testEnvironment.DebugInfo($"Collected {nrOfCollectedTestResults} test results from console output");
             }
 
             if (testResults.Count < testCasesRunAsArray.Length)
@@ -125,10 +121,11 @@ namespace GoogleTestAdapter.Runners
                 }
                 else
                 {
-                    errorMessage = "reason is probably a crash of test " + consoleParser.CrashedTestCase.DisplayName;
+                    errorMessage = $"reason is probably a crash of test {consoleParser.CrashedTestCase.DisplayName}";
                     errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
                         consoleParser.CrashedTestCase.CodeFilePath, consoleParser.CrashedTestCase.LineNumber.ToString());
                 }
+                int nrOfCreatedTestResults = 0;
                 // ReSharper disable once AccessToModifiedClosure
                 foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
                 {
@@ -139,8 +136,9 @@ namespace GoogleTestAdapter.Runners
                         ErrorMessage = errorMessage,
                         ErrorStackTrace = errorStackTrace
                     });
+                    nrOfCreatedTestResults++;
                 }
-                _testEnvironment.DebugInfo("Created test results for tests which were neither found in xml file nor in console output");
+                _testEnvironment.DebugInfo($"Created {nrOfCreatedTestResults} test results for tests which were neither found in result XML file nor in console output");
             }
 
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();

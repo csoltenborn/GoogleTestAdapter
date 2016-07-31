@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.VsPackage
 {
     public class ResultChecker
     {
-        internal const bool OverwriteTestResults = false;
+        public const bool OverwriteTestResults = true;
 
         private readonly string _goldenFilesDirectory;
         private readonly string _testErrorsDirectory;
@@ -24,8 +24,8 @@ namespace GoogleTestAdapter.VsPackage
 
         public void CheckResults(string testResults, string typeName, [CallerMemberName] string testCaseName = null)
         {
-            string expectationFile = Path.Combine(_goldenFilesDirectory, typeName + "__" + testCaseName + _fileExtension);
-            string resultFile = Path.Combine(_testErrorsDirectory, typeName + "__" + testCaseName + _fileExtension);
+            string expectationFile = Path.Combine(_goldenFilesDirectory, GetGoldenFileName(typeName, testCaseName, _fileExtension));
+            string resultFile = Path.Combine(_testErrorsDirectory, GetGoldenFileName(typeName, testCaseName, _fileExtension));
 
             if (!File.Exists(expectationFile))
             {
@@ -60,6 +60,11 @@ namespace GoogleTestAdapter.VsPackage
             {
                 File.Delete(resultFile);
             }
+        }
+
+        public static string GetGoldenFileName(string typeName, string testCaseName, string fileExtension)
+        {
+            return typeName + "__" + testCaseName + fileExtension;
         }
 
         private bool AreEqual(string expectedResult, string result, out string msg)

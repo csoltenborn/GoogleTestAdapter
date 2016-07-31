@@ -14,7 +14,6 @@
 	string csvFile = Host.ResolvePath("GTA_Console.csv");
 	TestcaseCsvReader reader = new TestcaseCsvReader(csvFile);
 #>
-using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 <# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
@@ -37,15 +36,15 @@ namespace GoogleTestAdapter.VsPackage
 
         private void RunTestsAndCheckOutput(string typeName, string arguments, [CallerMemberName] string testCaseName = null)
         {
-            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(_solutionFile, arguments);
-            // ReSharper disable once AssignNullToNotNullAttribute
-			string projectDir = Path.Combine(Path.GetDirectoryName(_solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
-            new ResultChecker(Path.Combine(projectDir, "GoldenFiles"), Path.Combine(projectDir, "TestErrors"), ".txt")
-                // ReSharper disable once ExplicitCallerInfoArgument
-				.CheckResults(resultString, typeName, testCaseName);
+            TrxResultChecker resultChecker = new TrxResultChecker(_solutionFile);
+            resultChecker.RunTestsAndCheckOutput(typeName, arguments, testCaseName);
         }
 
         protected abstract string GetAdapterIntegration();
+		protected string GetLogger()
+		{
+			return AbstractConsoleIntegrationTests.GetLogger();
+		}
 
 		<#
 		List<Line> lines = reader.GetObjects();
@@ -68,7 +67,7 @@ namespace GoogleTestAdapter.VsPackage
 
 		public virtual void List_TestsOf_<#= executable #>()
 		{
-			string arguments = GetAdapterIntegration() + @" /ListTests:""<#= executables[executable] #>"" /Logger:Console";
+			string arguments = GetAdapterIntegration() + @" /ListTests:""<#= executables[executable] #>""";
             RunTestsAndCheckOutput(GetType().Name, arguments);
 		}
 		<# } #>
@@ -81,7 +80,7 @@ namespace GoogleTestAdapter.VsPackage
 	{
         protected override string GetAdapterIntegration()
         {
-            return @"/TestAdapterPath:" + TestAdapterDir;
+            return GetLogger() + @"/TestAdapterPath:" + TestAdapterDir;
         }
 
 		#region method stubs for code coverage
@@ -127,7 +126,7 @@ namespace GoogleTestAdapter.VsPackage
 
         protected override string GetAdapterIntegration()
         {
-            return @"/UseVsixExtensions:true";
+            return GetLogger() + @"/UseVsixExtensions:true";
         }
 
 		#region method stubs for code coverage
@@ -173,7 +172,7 @@ namespace GoogleTestAdapter.VsPackage
 
         protected override string GetAdapterIntegration()
         {
-            return @"/UseVsixExtensions:true";
+            return GetLogger() + @"/UseVsixExtensions:true";
         }
 
         #region method stubs for code coverage

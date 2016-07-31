@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.VsPackage
 
         protected override string GetAdapterIntegration()
         {
-            return @"/TestAdapterPath:" + TestAdapterDir;
+            return GetLogger() + @"/TestAdapterPath:" + TestAdapterDir;
         }
 
         #region method stubs for code coverage

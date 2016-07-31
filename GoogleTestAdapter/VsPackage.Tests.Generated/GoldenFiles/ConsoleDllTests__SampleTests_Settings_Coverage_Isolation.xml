@@ -1,0 +1,421 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun>
+  <Results>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="CommandArgs.TestDirectoryIsSet" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: ("") != (TEST_DIRECTORY.c_str()), actual: "" vs ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().s
+  Actual: "!"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().i
+  Actual: -1
+Expected: 1</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().s
+  Actual: "!"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().i
+  Actual: -1
+Expected: 1</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().s
+  Actual: "!"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().i
+  Actual: -1
+Expected: 1</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().s
+  Actual: "!"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().i
+  Actual: -1
+Expected: 1</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="LongRunningTests.Test1" outcome="Passed" />
+    <UnitTestResult testName="LongRunningTests.Test2" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: 2
+Expected: 1</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ExpectAndAssert" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: 4
+Expected: 3
+#2 - Value of: 5
+Expected: 4</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ExpectInOtherFile" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ExpectInOtherMethod" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ExpectInTestAndMethodAndOtherFile" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: 6
+Expected: 5
+#2 - Value of: i
+  Actual: 1
+Expected: 0
+#3 - Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ScopedTraceInHelperMethod" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ScopedTraceInTestMethod" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ScopedTraceInTestMethodANdHelperMethod" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: i
+  Actual: 1
+Expected: 0
+#2 - Value of: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.SimpleAssert" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: 2
+Expected: 1</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.SimpleExpect" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: 3
+Expected: 2</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="MessageParserTests.TwoScopedTracesInTestMethod" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: i
+  Actual: 1
+Expected: 0</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="ParameterizedTests.Simple/0 [(0,_)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: GetParam().i
+  Actual: 0
+Expected: 1
+#2 - Value of: GetParam().s
+  Actual: "_"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits/0 [(0,_)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: GetParam().i
+  Actual: 0
+Expected: 1
+#2 - Value of: GetParam().s
+  Actual: "_"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits2/0 [(0,_)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: GetParam().i
+  Actual: 0
+Expected: 1
+#2 - Value of: GetParam().s
+  Actual: "_"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits3/0 [(0,_)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>#1 - Value of: GetParam().i
+  Actual: 0
+Expected: 1
+#2 - Value of: GetParam().s
+  Actual: "_"
+Expected: ""</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" outcome="Passed" />
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" outcome="Passed" />
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: strlen(GetParam().first)
+  Actual: 5
+Expected: GetParam().second
+Which is: 23</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: sum
+  Actual: '\x82' (-126)
+Expected: 130</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" outcome="Passed" />
+    <UnitTestResult testName="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" outcome="Passed" />
+    <UnitTestResult testName="TestMath.AddFails" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: Add(10, 10)
+  Actual: 20
+Expected: 1000</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TestMath.AddPasses" outcome="Passed" />
+    <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed" />
+    <UnitTestResult testName="TestMath.Crash" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>unknown file
+SEH exception with code 0xc0000005 thrown in the test body.</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TheFixture.AddFails" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: Add(10, 10)
+  Actual: 20
+Expected: 1000</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TheFixture.AddPasses" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits2" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.Crash" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>unknown file
+SEH exception with code 0xc0000005 thrown in the test body.</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With1Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With2Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With3Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With4Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With5Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With6Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With7Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.With8Traits" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <ResultSummary outcome="Failed">
+    <Counters total="78" executed="78" passed="35" failed="43" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output />
+  </ResultSummary>
+</TestRun>

@@ -1,9 +1,0 @@
-Microsoft (R) Test Execution Command Line Tool Version ${ToolVersion} Copyright (c) Microsoft Corporation.  All rights reserved.
-The following Tests are available:
-Information: Found ${NrOfTests} tests in executable ${BaseDir}\SampleTests\${ConfigurationName}\CrashingTests.exe
-    Crashing.AddFailsBeforeCrash
-    Crashing.AddPassesBeforeCrash
-    Crashing.TheCrash
-    Crashing.AddFailsAfterCrash
-    Crashing.AddPassesAfterCrash
-    Crashing.LongRunning

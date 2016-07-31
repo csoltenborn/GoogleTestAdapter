@@ -158,7 +158,7 @@ namespace GoogleTestAdapter.TestAdapter
             reporter.AllTestsFinished();
 
             stopwatch.Stop();
-            _testEnvironment.LogInfo($"Test execution completed, overall duration: {stopwatch.Elapsed}.");
+            _testEnvironment.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
         }
 
     }

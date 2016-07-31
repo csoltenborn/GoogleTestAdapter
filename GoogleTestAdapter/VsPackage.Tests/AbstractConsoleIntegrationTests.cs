@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -25,6 +24,11 @@ namespace GoogleTestAdapter.VsPackage
 
         protected abstract string GetAdapterIntegration();
 
+        public static string GetLogger()
+        {
+            return "/Logger:Trx ";
+        }
+
         public static void GetDirectories(out string testAdapterDir, out string testSolutionFile)
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
@@ -43,7 +47,7 @@ namespace GoogleTestAdapter.VsPackage
         {
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().Contain(@"executor://GoogleTestRunner/v1");
+            output.Should().ContainEquivalentOf(@"executor://GoogleTestRunner/v1");
         }
 
         [TestMethod]
@@ -70,7 +74,7 @@ namespace GoogleTestAdapter.VsPackage
             string command = VsExperimentalInstance.GetVsTestConsolePath(VsExperimentalInstance.Versions.VS2015);
             string workingDir = "";
 
-            TestProcessLauncher launcher = new TestProcessLauncher();
+            var launcher = new TestProcessLauncher();
             List<string> standardOut;
             List<string> standardErr;
             launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out standardErr);
@@ -147,17 +151,17 @@ namespace GoogleTestAdapter.VsPackage
 
         private string CreateListDiscoverersArguments()
         {
-            return GetAdapterIntegration() + @" /ListDiscoverers /Logger:Console";
+            return GetAdapterIntegration() + @" /ListDiscoverers " + GetLogger();
         }
 
         private string CreateListExecutorsArguments()
         {
-            return GetAdapterIntegration() + @" /ListExecutors /Logger:Console";
+            return GetAdapterIntegration() + @" /ListExecutors " + GetLogger();
         }
 
         private string CreateListSettingsProvidersArguments()
         {
-            return GetAdapterIntegration() + @" /ListSettingsProviders /Logger:Console";
+            return GetAdapterIntegration() + @" /ListSettingsProviders " + GetLogger();
         }
 
     }
