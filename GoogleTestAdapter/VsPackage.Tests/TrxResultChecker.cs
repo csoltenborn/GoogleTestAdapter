@@ -68,9 +68,12 @@ namespace GoogleTestAdapter.VsPackage
             {
                 string htmlDiffFile = Path.Combine(_diffFilesDir,
                     ResultChecker.GetGoldenFileName(typeName, testCaseName, ".html"));
+                string resultFile = Path.ChangeExtension(htmlDiffFile, ".xml");
 
                 string htmlContent = CreateDiffAsHtml(goldenFile, diffFile);
                 File.WriteAllText(htmlDiffFile, htmlContent);
+
+                File.Copy(transformedResultFile, resultFile, true);
 
                 if (ResultChecker.OverwriteTestResults && !CiSupport.IsRunningOnBuildServer)
                 {
@@ -124,7 +127,7 @@ namespace GoogleTestAdapter.VsPackage
             StringBuilder htmlContent = new StringBuilder();
             StringWriter xmlDiffWriter = new StringWriter(htmlContent);
 
-            xmlDiffWriter.Write("<html><body><table width='100%'>");
+            xmlDiffWriter.Write("<html><body><table width='100%'><tr><th>Expected</th><th>Actual</th></tr>");
             xmlDiffView.GetHtml(xmlDiffWriter);
             xmlDiffWriter.Write("</table></body></html>");
             return htmlContent.ToString();
