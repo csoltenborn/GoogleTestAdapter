@@ -8,6 +8,7 @@
           <Message>Value of: GetParam().s
   Actual: "!"
 Expected: ""</Message>
+          <StackTrace>at parameterizedtests.cpp:30 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 30</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -17,6 +18,7 @@ Expected: ""</Message>
           <Message>Value of: GetParam().i
   Actual: -1
 Expected: 1</Message>
+          <StackTrace>at parameterizedtests.cpp:29 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 29</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -27,6 +29,7 @@ Expected: 1</Message>
           <Message>Value of: GetParam().s
   Actual: "!"
 Expected: ""</Message>
+          <StackTrace>at parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 35</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -36,6 +39,7 @@ Expected: ""</Message>
           <Message>Value of: GetParam().i
   Actual: -1
 Expected: 1</Message>
+          <StackTrace>at parameterizedtests.cpp:34 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 34</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -48,6 +52,8 @@ Expected: 1
 #2 - Value of: GetParam().s
   Actual: "_"
 Expected: ""</Message>
+          <StackTrace>at #1 - parameterizedtests.cpp:29 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 29
+at #2 - parameterizedtests.cpp:30 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 30</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -60,6 +66,8 @@ Expected: 1
 #2 - Value of: GetParam().s
   Actual: "_"
 Expected: ""</Message>
+          <StackTrace>at #1 - parameterizedtests.cpp:34 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 34
+at #2 - parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 35</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -68,8 +76,55 @@ Expected: ""</Message>
     <UnitTestResult testName="TheFixture.AddPassesWithTraits2" outcome="Passed" />
     <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed" />
   </Results>
+  <TestDefinitions>
+    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="ParameterizedTests.SimpleTraits/0 [(0,_)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="TheFixture.AddPassesWithTraits" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="TheFixture.AddPassesWithTraits" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="TheFixture.AddPassesWithTraits2" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="TheFixture.AddPassesWithTraits2" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="TheFixture.AddPassesWithTraits3" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="TheFixture.AddPassesWithTraits3" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" />
+    <TestList name="All Loaded Results" />
+  </TestLists>
   <ResultSummary outcome="Failed">
     <Counters total="12" executed="12" passed="6" failed="6" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
+    <RunInfos>
+      <RunInfo outcome="Warning">
+        <Text>Diagnostic data adapter message: Could not find diagnostic data adapter 'Code Coverage'.  Make sure diagnostic data adapter is installed and try again.</Text>
+      </RunInfo>
+    </RunInfos>
   </ResultSummary>
 </TestRun>
