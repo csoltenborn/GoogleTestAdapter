@@ -18,12 +18,19 @@
             pattern = pattern
                 .Replace("_FILE_", validFileCharsRegex)
                 .Replace("_DIR_", validDirCharsRegex);
+
+            input = Regex.Replace(input, @"\\(Debug|Release)\\", @"\${ConfigurationName}\");
                 
             return Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
         }
+        
+        public string replacePointer(string text)
+        {
+          return Regex.Replace(text, "([0-9A-F]{8}){1,2} pointing to", "${MemoryLocation} pointing to");
+        }
     ]]>
   </msxsl:script>
-
+  
   <xsl:template match="ms:TestRun">
     <TestRun>
       <xsl:apply-templates />
@@ -39,7 +46,7 @@
   <xsl:template match="ms:UnitTestResult">
     <UnitTestResult>
       <xsl:attribute name="testName">
-        <xsl:value-of select="regex:replace(@testName, '([0-9A-F]{8}){1,2} pointing to', '${MemoryLocation} pointing to')" />
+        <xsl:value-of select="regex:replacePointer(@testName)" />
       </xsl:attribute>
       <xsl:attribute name="outcome">
         <xsl:value-of select="@outcome" />
@@ -82,7 +89,7 @@
   <xsl:template match="ms:UnitTest">
     <UnitTest>
       <xsl:attribute name="name">
-        <xsl:value-of select="@name" />
+        <xsl:value-of select="regex:replacePointer(@name)" />
       </xsl:attribute>
       <xsl:attribute name="storage">
         <xsl:value-of select="regex:replace(@storage, '(?:[a-z]:\\+)?(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_)', '$(Directory)\$1')" />
@@ -94,7 +101,7 @@
   <xsl:template match="ms:TestMethod">
     <TestMethod>
       <xsl:attribute name="name">
-        <xsl:value-of select="@name" />
+        <xsl:value-of select="regex:replacePointer(@name)" />
       </xsl:attribute>
       <xsl:attribute name="className">
         <xsl:value-of select="@className" />
@@ -122,6 +129,7 @@
     </TestList>
   </xsl:template>
 
+<!--
   <xsl:template match="ms:RunInfos">
     <RunInfos>
       <xsl:apply-templates />
@@ -142,6 +150,7 @@
       <xsl:value-of select="." />
     </Text>
   </xsl:template>
+-->
 
   <xsl:template match="ms:ResultSummary">
     <ResultSummary>

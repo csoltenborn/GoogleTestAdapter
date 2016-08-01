@@ -474,238 +474,238 @@ SEH exception with code 0xc0000005 thrown in the test body.</Message>
   </Results>
   <TestDefinitions>
     <UnitTest name="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="CommandArgs.TestDirectoryIsSet" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="CommandArgs.TestDirectoryIsSet" className="CommandArgs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="CommandArgs.TestDirectoryIsSet" className="CommandArgs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="LongRunningTests.Test1" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="LongRunningTests.Test1" className="LongRunningTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="LongRunningTests.Test1" className="LongRunningTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="LongRunningTests.Test2" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="LongRunningTests.Test2" className="LongRunningTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="LongRunningTests.Test2" className="LongRunningTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ExpectAndAssert" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ExpectAndAssert" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ExpectAndAssert" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ExpectInOtherFile" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ExpectInOtherFile" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ExpectInOtherFile" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ExpectInOtherMethod" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ExpectInOtherMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ExpectInOtherMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ExpectInTestAndMethodAndOtherFile" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ExpectInTestAndMethodAndOtherFile" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ExpectInTestAndMethodAndOtherFile" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ScopedTraceInHelperMethod" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ScopedTraceInHelperMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ScopedTraceInHelperMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ScopedTraceInTestMethod" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ScopedTraceInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ScopedTraceInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ScopedTraceInTestMethodANdHelperMethod" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ScopedTraceInTestMethodANdHelperMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ScopedTraceInTestMethodANdHelperMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.SimpleAssert" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.SimpleAssert" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.SimpleAssert" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.SimpleExpect" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.SimpleExpect" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.SimpleExpect" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.TwoScopedTracesInTestMethod" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="MessageParserTests.TwoScopedTracesInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="MessageParserTests.TwoScopedTracesInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="ParameterizedTests.Simple/0 [(0,_)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="ParameterizedTests.Simple/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="ParameterizedTests.Simple/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="ParameterizedTests.SimpleTraits/0 [(0,_)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="ParameterizedTests.SimpleTraits/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="ParameterizedTests.SimpleTraits3/0 [(0,_)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits3/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="ParameterizedTests.SimpleTraits3/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
-    <UnitTest name="PointerParameterizedTests.CheckStringLength/0 [(00751320 pointing to &quot;&quot;, 0)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="PointerParameterizedTests.CheckStringLength/0 [(00751320 pointing to &quot;&quot;, 0)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    <UnitTest name="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
-    <UnitTest name="PointerParameterizedTests.CheckStringLength/1 [(00754930 pointing to &quot;Test&quot;, 4)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="PointerParameterizedTests.CheckStringLength/1 [(00754930 pointing to &quot;Test&quot;, 4)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    <UnitTest name="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
-    <UnitTest name="PointerParameterizedTests.CheckStringLength/2 [(00754A10 pointing to &quot;ooops&quot;, 23)]" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="PointerParameterizedTests.CheckStringLength/2 [(00754A10 pointing to &quot;ooops&quot;, 23)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    <UnitTest name="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" storage="$(Directory)\sampletests\debug\tests.exe">
+      <TestMethod name="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" className="PrimitivelyTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" className="PrimitivelyTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" className="PrimitivelyTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" className="PrimitivelyTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" className="PrimitivelyTypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" className="PrimitivelyTypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TestMath.AddFails" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TestMath.AddFails" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TestMath.AddFails" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TestMath.AddPasses" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TestMath.AddPasses" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TestMath.AddPasses" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TestMath.Crash" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TestMath.Crash" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TestMath.Crash" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TheFixture.AddFails" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TheFixture.AddFails" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TheFixture.AddFails" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TheFixture.AddPasses" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TheFixture.AddPasses" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TheFixture.AddPasses" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TheFixture.AddPassesWithTraits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TheFixture.AddPassesWithTraits" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TheFixture.AddPassesWithTraits" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TheFixture.AddPassesWithTraits2" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TheFixture.AddPassesWithTraits2" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TheFixture.AddPassesWithTraits2" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TheFixture.AddPassesWithTraits3" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TheFixture.AddPassesWithTraits3" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TheFixture.AddPassesWithTraits3" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TheFixture.Crash" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TheFixture.Crash" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TheFixture.Crash" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With1Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With1Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With1Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With2Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With2Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With2Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With3Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With3Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With3Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With4Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With4Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With4Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With5Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With5Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With5Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With6Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With6Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With6Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With7Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With7Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With7Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Traits.With8Traits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Traits.With8Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Traits.With8Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
     <UnitTest name="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+      <TestMethod name="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
   </TestDefinitions>
   <TestLists>
@@ -715,10 +715,5 @@ SEH exception with code 0xc0000005 thrown in the test body.</Message>
   <ResultSummary outcome="Failed">
     <Counters total="78" executed="78" passed="35" failed="43" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
-    <RunInfos>
-      <RunInfo outcome="Warning">
-        <Text>Diagnostic data adapter message: Could not find diagnostic data adapter 'Code Coverage'.  Make sure diagnostic data adapter is installed and try again.</Text>
-      </RunInfo>
-    </RunInfos>
   </ResultSummary>
 </TestRun>

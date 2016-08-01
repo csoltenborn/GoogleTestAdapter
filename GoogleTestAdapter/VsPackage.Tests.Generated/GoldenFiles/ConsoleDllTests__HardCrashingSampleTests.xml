@@ -48,22 +48,22 @@ Expected: 1000</Message>
   </Results>
   <TestDefinitions>
     <UnitTest name="Crashing.AddFailsAfterCrash" storage="$(Directory)\sampletests\debug\crashingtests.exe">
-      <TestMethod name="Crashing.AddFailsAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\CrashingTests.exe" />
+      <TestMethod name="Crashing.AddFailsAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
     </UnitTest>
     <UnitTest name="Crashing.AddFailsBeforeCrash" storage="$(Directory)\sampletests\debug\crashingtests.exe">
-      <TestMethod name="Crashing.AddFailsBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\CrashingTests.exe" />
+      <TestMethod name="Crashing.AddFailsBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
     </UnitTest>
     <UnitTest name="Crashing.AddPassesAfterCrash" storage="$(Directory)\sampletests\debug\crashingtests.exe">
-      <TestMethod name="Crashing.AddPassesAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\CrashingTests.exe" />
+      <TestMethod name="Crashing.AddPassesAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
     </UnitTest>
     <UnitTest name="Crashing.AddPassesBeforeCrash" storage="$(Directory)\sampletests\debug\crashingtests.exe">
-      <TestMethod name="Crashing.AddPassesBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\CrashingTests.exe" />
+      <TestMethod name="Crashing.AddPassesBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
     </UnitTest>
     <UnitTest name="Crashing.LongRunning" storage="$(Directory)\sampletests\debug\crashingtests.exe">
-      <TestMethod name="Crashing.LongRunning" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\CrashingTests.exe" />
+      <TestMethod name="Crashing.LongRunning" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
     </UnitTest>
     <UnitTest name="Crashing.TheCrash" storage="$(Directory)\sampletests\debug\crashingtests.exe">
-      <TestMethod name="Crashing.TheCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\CrashingTests.exe" />
+      <TestMethod name="Crashing.TheCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
     </UnitTest>
   </TestDefinitions>
   <TestLists>

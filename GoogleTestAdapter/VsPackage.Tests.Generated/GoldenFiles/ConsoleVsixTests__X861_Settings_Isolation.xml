@@ -21,10 +21,10 @@ at #2 - main.cpp:41 in c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:
   </Results>
   <TestDefinitions>
     <UnitTest name="FooTest.DoesXyz" storage="..\..\..\core.tests\bin\debug\resources\testdata\_x86\staticallylinkedgoogletests\staticallylinkedgoogletests.exe">
-      <TestMethod name="FooTest.DoesXyz" className="FooTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Core.Tests\bin\Debug\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe" />
+      <TestMethod name="FooTest.DoesXyz" className="FooTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Core.Tests\bin\${ConfigurationName}\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe" />
     </UnitTest>
     <UnitTest name="FooTest.MethodBarDoesAbc" storage="..\..\..\core.tests\bin\debug\resources\testdata\_x86\staticallylinkedgoogletests\staticallylinkedgoogletests.exe">
-      <TestMethod name="FooTest.MethodBarDoesAbc" className="FooTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Core.Tests\bin\Debug\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe" />
+      <TestMethod name="FooTest.MethodBarDoesAbc" className="FooTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Core.Tests\bin\${ConfigurationName}\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe" />
     </UnitTest>
   </TestDefinitions>
   <TestLists>
