@@ -19,7 +19,7 @@
                 .Replace("_FILE_", validFileCharsRegex)
                 .Replace("_DIR_", validDirCharsRegex);
 
-            input = Regex.Replace(input, @"\\(Debug|Release)\\", @"\${ConfigurationName}\");
+            input = Regex.Replace(input, @"\\(Debug|Release)\\", @"\${ConfigurationName}\", RegexOptions.IgnoreCase);
                 
             return Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
         }
