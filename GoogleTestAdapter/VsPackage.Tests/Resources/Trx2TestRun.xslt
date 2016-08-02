@@ -20,13 +20,12 @@
                 .Replace("_DIR_", validDirCharsRegex);
 
             input = Regex.Replace(input, @"\\(Debug|Release)\\", @"\${ConfigurationName}\", RegexOptions.IgnoreCase);
-                
             return Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
         }
         
         public string replacePointer(string text)
         {
-          return Regex.Replace(text, "([0-9A-F]{8}){1,2} pointing to", "${MemoryLocation} pointing to");
+          return Regex.Replace(text, "([0-9A-F]{8}){1,2} pointing to", "${MemoryLocation} pointing to", RegexOptions.IgnoreCase);
         }
     ]]>
   </msxsl:script>
@@ -69,7 +68,7 @@
 
   <xsl:template match="ms:StackTrace">
     <StackTrace>
-      <xsl:value-of select="regex:replace(., '[a-z]:\\+(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_:line \d+)', '$(Directory)\$1')" />
+      <xsl:value-of select="regex:replace(., '(?:[a-z]:\\+)?(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_:line \d+)', '$(Directory)\$1')" />
       <xsl:apply-templates />
     </StackTrace>
   </xsl:template>
