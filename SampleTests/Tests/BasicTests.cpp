@@ -25,6 +25,21 @@ TEST(CommandArgs, TestDirectoryIsSet)
 	ASSERT_TRUE(DirExists(TEST_DIRECTORY));
 }
 
+inline bool ends_with(std::string const & value, std::string const & ending)
+{
+	if (ending.size() > value.size()) return false;
+	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+TEST(WorkingDirectory, IsSolutionDirectory)
+{
+	char _working_directory[MAX_PATH + 1];
+	GetCurrentDirectoryA(sizeof(_working_directory), _working_directory);
+	std::string working_directory(_working_directory);
+
+	ASSERT_TRUE(ends_with(working_directory, "SampleTests")) << "working_directory is " << working_directory;
+}
+
 TEST(TestMath, AddFails)
 {
 	EXPECT_EQ(1000, Add(10, 10));

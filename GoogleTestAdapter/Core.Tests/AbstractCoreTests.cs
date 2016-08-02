@@ -59,6 +59,7 @@ namespace GoogleTestAdapter
                 .Returns(SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue);
             mockOptions.Setup(o => o.MaxNrOfThreads).Returns(SettingsWrapper.OptionMaxNrOfThreadsDefaultValue);
             mockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.OptionPathExtensionDefaultValue);
+            mockOptions.Setup(o => o.WorkingDirectory).Returns(SettingsWrapper.OptionWorkingDirectoryDefaultValue);
         }
 
         [TestCleanup]

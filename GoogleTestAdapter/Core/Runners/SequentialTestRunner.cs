@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.Runners
             bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             string resultXmlFile = Path.GetTempFileName();
-            string workingDir = Path.GetDirectoryName(executable);
+            string workingDir = _testEnvironment.Options.GetWorkingDirectory(executable);
             var serializer = new TestDurationSerializer();
 
             var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _testEnvironment);

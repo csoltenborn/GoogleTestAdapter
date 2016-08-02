@@ -62,27 +62,20 @@ namespace GoogleTestAdapter.Settings
             return $"{propertyInfo.Name}: {value}";
         }
 
+        public string GetWorkingDirectory(string executable)
+            => ReplacePlaceholders(WorkingDirectory, executable);
+
         public string GetPathExtension(string executable)
-        {
-            // ReSharper disable once PossibleNullReferenceException
-            string executableDir = new FileInfo(executable).Directory.FullName;
-            return PathExtension.Replace(ExecutableDirPlaceholder, executableDir);
-        }
+            => ReplacePlaceholders(PathExtension, executable);
 
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
-        {
-            return ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
-        }
+            => ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
 
         public string GetBatchForTestSetup(string solutionDirectory, string testDirectory, int threadId)
-        {
-            return ReplacePlaceholders(BatchForTestSetup, solutionDirectory, testDirectory, threadId);
-        }
+            => ReplacePlaceholders(BatchForTestSetup, solutionDirectory, testDirectory, threadId);
 
         public string GetBatchForTestTeardown(string solutionDirectory, string testDirectory, int threadId)
-        {
-            return ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
-        }
+            => ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
 
         private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
         {
@@ -161,6 +154,15 @@ namespace GoogleTestAdapter.Settings
             + TestFinderRegex;
 
         public virtual string TestDiscoveryRegex => _theSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
+
+
+        public const string OptionWorkingDirectory = "Working directory";
+        public const string OptionWorkingDirectoryDefaultValue = ExecutableDirPlaceholder;
+        public const string OptionWorkingDirectoryDescription =
+            "If non-empty, will set the working directory for running the tests (default: " + DescriptionOfExecutableDirPlaceHolder + ").\nExample: " + SolutionDirPlaceholder + "\\MyTestDir\nPlaceholders:\n"
+            + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfSolutionDirPlaceHolder;
+
+        public virtual string WorkingDirectory => _theSettings.WorkingDirectory ?? OptionWorkingDirectoryDefaultValue;
 
 
         public const string OptionPathExtension = "PATH extension";

@@ -21,6 +21,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionWorkingDirectory)]
+        [Description(SettingsWrapper.OptionWorkingDirectoryDescription)]
+        public string WorkingDirectory
+        {
+            get { return _workingDirectory; }
+            set { SetAndNotify(ref _workingDirectory, value); }
+        }
+        private string _workingDirectory = SettingsWrapper.OptionWorkingDirectoryDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionPathExtension)]
         [Description(SettingsWrapper.OptionPathExtensionDescription)]
         public string PathExtension
