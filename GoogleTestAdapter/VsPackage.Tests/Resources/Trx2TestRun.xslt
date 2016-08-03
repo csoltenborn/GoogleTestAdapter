@@ -68,7 +68,7 @@
 
   <xsl:template match="ms:StackTrace">
     <StackTrace>
-      <xsl:value-of select="regex:replace(., '(?:[a-z]:\\+)?(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_:line \d+)', '$(Directory)\$1')" />
+      <xsl:value-of select="regex:replace(., '[a-z]:\\+(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_:line \d+)', '$(Directory)\$1')" />
       <xsl:apply-templates />
     </StackTrace>
   </xsl:template>
