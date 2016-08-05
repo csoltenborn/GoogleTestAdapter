@@ -42,7 +42,7 @@ namespace GoogleTestAdapterUiTests
         }
 
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunAllTests_GlobalAndSolutionSettings_BatchTeardownWarning()
         {
@@ -58,7 +58,7 @@ namespace GoogleTestAdapterUiTests
             }
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunAllTests_UserSettings_ShuffledTestExecutionAndNoBatchWarning()
         {
@@ -86,7 +86,7 @@ namespace GoogleTestAdapterUiTests
             }
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunAllTests__AllTestsAreRun()
         {
@@ -94,7 +94,7 @@ namespace GoogleTestAdapterUiTests
             {
                 VS.TestExplorer.RunAllTests();
                 new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"), ".xml")
-                    .CheckResults(VS.TestExplorer.Parser.ParseTestResults().ToXML(), this.GetType().Name);
+                    .CheckResults(VS.TestExplorer.Parser.ParseTestResults().ToXML(), GetType().Name);
             }
             catch (AutomationException exception)
             {
@@ -102,49 +102,49 @@ namespace GoogleTestAdapterUiTests
             }
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_Crashing_AddPasses()
         {
             RunTest("Crashing.AddPassesAfterCrash");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_ParameterizedTests_Simple_0()
         {
             RunTest("ParameterizedTests.Simple/0");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0()
         {
             RunTest("InstantiationName/ParameterizedTests.SimpleTraits/0");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_PointerParameterizedTests_CheckStringLength_0()
         {
             RunTest("PointerParameterizedTests.CheckStringLength/0");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_TypedTests_0_CanIterate()
         {
             RunTest("TypedTests/0.CanIterate");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath()
         {
             RunTest("Arr/TypeParameterizedTests/1.CanDefeatMath");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(Ui)]
         public void RunSelectedTests_MultipleTests()
         {

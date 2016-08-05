@@ -6,7 +6,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
     public static class History
     {
-        public static Version[] Versions => VersionData.Keys.ToArray();
+        public static Version[] Versions => VersionData.Keys.OrderBy(v => v).ToArray();
 
         public static DateTime GetDate(Version version)
         {
