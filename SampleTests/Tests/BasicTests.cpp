@@ -85,3 +85,8 @@ TEST_TRAITS(Traits, With1Traits, Trait1, Equals1)
 {
 	EXPECT_EQ(1, 1);
 }
+
+TEST_TRAITS(Traits, WithEqualTraits, Author, CSO, Author, JOG)
+{
+	EXPECT_EQ(1, 1);
+}

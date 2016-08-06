@@ -153,12 +153,6 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithNonexistingSetupBatch_LogsError();
         }
 
-        [TestMethod, Ignore]
-        public override void RunTests_LoadTests_CorrectTestResults()
-        {
-            base.RunTests_LoadTests_CorrectTestResults();
-        }
-
         #endregion
 
     }

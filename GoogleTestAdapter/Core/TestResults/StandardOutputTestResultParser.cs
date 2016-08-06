@@ -12,7 +12,7 @@ namespace GoogleTestAdapter.TestResults
         private const string Failed = "[  FAILED  ]";
         private const string Passed = "[       OK ]";
 
-        public const string CrashText = "!! This is probably the test that crashed !!";
+        public const string CrashText = "!! This test has probably CRASHED !!";
 
 
         public TestCase CrashedTestCase { get; private set; }

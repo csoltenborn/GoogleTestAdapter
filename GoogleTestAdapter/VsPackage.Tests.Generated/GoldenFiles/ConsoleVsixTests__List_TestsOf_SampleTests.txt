@@ -19,6 +19,7 @@ Traits.With4Traits
 Traits.With3Traits
 Traits.With2Traits
 Traits.With1Traits
+Traits.WithEqualTraits
 MessageParserTests.SimpleAssert
 MessageParserTests.SimpleExpect
 MessageParserTests.ExpectAndAssert

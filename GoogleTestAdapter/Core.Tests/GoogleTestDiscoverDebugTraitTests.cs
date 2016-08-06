@@ -117,6 +117,42 @@ namespace GoogleTestAdapter
             base.GetTestsFromExecutable_SampleTests_FindsTypedTestWithTwoTraits();
         }
 
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptions_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptions_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptionsThreeEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptionsThreeEqualTraits_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexAfterFromOptionsOneEqualTrait_FindsTestTestWithOneEqualTrait()
+        {
+            base.GetTestsFromExecutable_RegexAfterFromOptionsOneEqualTrait_FindsTestTestWithOneEqualTrait();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexAfterFromOptionsTwoEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexAfterFromOptionsTwoEqualTraits_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits();
+        }
+
         #endregion
 
     }

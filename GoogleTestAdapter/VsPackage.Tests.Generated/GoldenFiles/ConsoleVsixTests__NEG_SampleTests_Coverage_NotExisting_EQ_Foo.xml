@@ -392,6 +392,7 @@ SEH exception with code 0xc0000005 thrown in the test body.</Message>
     <UnitTestResult testName="Traits.With6Traits" outcome="Passed" />
     <UnitTestResult testName="Traits.With7Traits" outcome="Passed" />
     <UnitTestResult testName="Traits.With8Traits" outcome="Passed" />
+    <UnitTestResult testName="Traits.WithEqualTraits" outcome="Passed" />
     <UnitTestResult testName="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -659,6 +660,9 @@ SEH exception with code 0xc0000005 thrown in the test body.</Message>
     <UnitTest name="Traits.With8Traits" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="Traits.With8Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
+    <UnitTest name="Traits.WithEqualTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="Traits.WithEqualTraits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
     <UnitTest name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
@@ -713,7 +717,7 @@ SEH exception with code 0xc0000005 thrown in the test body.</Message>
     <TestList name="All Loaded Results" />
   </TestLists>
   <ResultSummary outcome="Failed">
-    <Counters total="78" executed="78" passed="35" failed="43" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="79" executed="79" passed="36" failed="43" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>

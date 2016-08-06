@@ -41,7 +41,7 @@ Expected: 1000</Message>
     <UnitTestResult testName="Crashing.TheCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>!! This is probably the test that crashed !!</Message>
+          <Message>!! This test has probably CRASHED !!</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>

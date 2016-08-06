@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestCases
 {
@@ -93,34 +92,39 @@ namespace GoogleTestAdapter.TestCases
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
         }
 
-        private List<Trait> GetFinalTraits(string displayName, List<Trait> traits)
+        private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)
         {
-            foreach (RegexTraitPair pair in _testEnvironment.Options.TraitsRegexesBefore.Where(p => Regex.IsMatch(displayName, p.Regex)))
-            {
-                if (!traits.Exists(T => T.Name == pair.Trait.Name))
-                {
-                    traits.Add(pair.Trait);
-                }
-            }
+            var afterTraits =
+                _testEnvironment.Options.TraitsRegexesAfter
+                    .Where(p => Regex.IsMatch(displayName, p.Regex))
+                    .Select(p => p.Trait)
+                    .ToArray();
 
-            foreach (RegexTraitPair pair in _testEnvironment.Options.TraitsRegexesAfter.Where(p => Regex.IsMatch(displayName, p.Regex)))
-            {
-                bool replacedTrait = false;
-                foreach (Trait traitToModify in traits.ToArray().Where(T => T.Name == pair.Trait.Name))
-                {
-                    replacedTrait = true;
-                    traits.Remove(traitToModify);
-                    if (!traits.Contains(pair.Trait))
-                    {
-                        traits.Add(pair.Trait);
-                    }
-                }
-                if (!replacedTrait)
-                {
-                    traits.Add(pair.Trait);
-                }
-            }
-            return traits;
+            var namesOfAfterTraits = afterTraits
+                .Select(t => t.Name)
+                .Distinct()
+                .ToArray();
+
+            var namesOfTestAndAfterTraits = namesOfAfterTraits
+                .Union(traits.Select(t => t.Name))
+                .Distinct()
+                .ToArray();
+
+            var beforeTraits =_testEnvironment.Options.TraitsRegexesBefore
+                .Where(p => 
+                    !namesOfTestAndAfterTraits.Contains(p.Trait.Name) 
+                    && Regex.IsMatch(displayName, p.Regex))
+                .Select(p => p.Trait);
+
+            var testTraits = traits
+                .Where(t => !namesOfAfterTraits.Contains(t.Name));
+
+            var finalTraits = new List<Trait>();
+            finalTraits.AddRange(beforeTraits);
+            finalTraits.AddRange(testTraits);
+            finalTraits.AddRange(afterTraits);
+
+            return finalTraits;
         }
 
     }
