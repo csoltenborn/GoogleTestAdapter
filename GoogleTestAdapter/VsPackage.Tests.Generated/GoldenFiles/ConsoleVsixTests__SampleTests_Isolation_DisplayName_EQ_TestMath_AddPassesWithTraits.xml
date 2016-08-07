@@ -4,8 +4,8 @@
     <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed" />
   </Results>
   <TestDefinitions>
-    <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\debug\tests.exe">
-      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\Debug\Tests.exe" />
+    <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
   </TestDefinitions>
   <TestLists>

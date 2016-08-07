@@ -117,19 +117,20 @@ namespace GoogleTestAdapter.VsPackage
 
         private string CreateDiffAsHtml(string expectationFile, string diffFile)
         {
-            XmlDiffView xmlDiffView = new XmlDiffView();
+            var xmlDiffView = new XmlDiffView();
             using (var expectationFileReader = new XmlTextReader(expectationFile))
             using (var diffFileReader = new XmlTextReader(diffFile))
             {
                 xmlDiffView.Load(expectationFileReader, diffFileReader);
             }
 
-            StringBuilder htmlContent = new StringBuilder();
-            StringWriter xmlDiffWriter = new StringWriter(htmlContent);
+            var htmlContent = new StringBuilder();
+            var xmlDiffWriter = new StringWriter(htmlContent);
 
             xmlDiffWriter.Write("<html><body><table width='100%'><tr><th>Expected</th><th>Actual</th></tr>");
             xmlDiffView.GetHtml(xmlDiffWriter);
             xmlDiffWriter.Write("</table></body></html>");
+
             return htmlContent.ToString();
         }
 
