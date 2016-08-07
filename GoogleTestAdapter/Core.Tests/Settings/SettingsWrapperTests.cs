@@ -333,14 +333,29 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(s => s.MaxNrOfThreads).Returns(1);
 
             TheOptions.ToString().Should().Be(
-                @"SettingsWrapper(PrintTestOutput: False, TestDiscoveryRegex: '', PathExtension: '', " +
-                @"TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}, TraitsRegexesAfter: {}, " + 
-                @"TestNameSeparator: '', ParseSymbolInformation: True, DebugMode: False, " + 
-                @"TimestampOutput: False, ShowReleaseNotes: True, AdditionalTestExecutionParam: '', " +
-                @"BatchForTestSetup: 'C:\\myfolder\myfile.xml', " + 
-                @"BatchForTestTeardown: '', ParallelTestExecution: False, MaxNrOfThreads: 1, " + 
-                @"CatchExceptions: True, BreakOnFailure: False, RunDisabledTests: False, " +
-                @"NrOfTestRepetitions: 1, ShuffleTests: False, ShuffleTestsSeed: 0)");
+                "SettingsWrapper(" +
+                "PrintTestOutput: False, " +
+                "TestDiscoveryRegex: '', " +
+                "WorkingDirectory: '$(ExecutableDir)', " +
+                "PathExtension: '', " +
+                "TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}, " +
+                "TraitsRegexesAfter: {}, " +
+                "TestNameSeparator: '', " +
+                "ParseSymbolInformation: True, " +
+                "DebugMode: False, " +
+                "TimestampOutput: False, " +
+                "ShowReleaseNotes: True, " +
+                "AdditionalTestExecutionParam: '', " +
+                "BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml', " +
+                "BatchForTestTeardown: '', " +
+                "ParallelTestExecution: False, " +
+                "MaxNrOfThreads: 1, " +
+                "CatchExceptions: True, " +
+                "BreakOnFailure: False, " +
+                "RunDisabledTests: False, " +
+                "NrOfTestRepetitions: 1, " +
+                "ShuffleTests: False, " +
+                "ShuffleTestsSeed: 0)");
         }
 
     }

@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.VsPackage
 {
     public class ResultChecker
     {
-        public const bool OverwriteTestResults = false;
+        public const bool OverwriteTestResults = true;
 
         private readonly string _goldenFilesDirectory;
         private readonly string _testErrorsDirectory;

@@ -29,22 +29,24 @@ namespace GoogleTestAdapter.Runners
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+             string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
+            DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
 
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 string testDirectory = Utils.GetTempDirectory();
+                workingDir = _testEnvironment.Options.GetWorkingDirectory(_solutionDirectory, testDirectory, _threadId);
                 userParameters = _testEnvironment.Options.GetUserParameters(_solutionDirectory, testDirectory, _threadId);
 
                 string batch = _testEnvironment.Options.GetBatchForTestSetup(_solutionDirectory, testDirectory, _threadId);
                 batch = batch == "" ? "" : _solutionDirectory + batch;
                 SafeRunBatch(TestSetup, _solutionDirectory, batch, isBeingDebugged);
 
-                _innerTestRunner.RunTests(allTestCases, testCasesToRun, baseDir, userParameters, isBeingDebugged, debuggedLauncher);
+                _innerTestRunner.RunTests(allTestCases, testCasesToRun, baseDir, workingDir, userParameters, isBeingDebugged, debuggedLauncher);
 
                 batch = _testEnvironment.Options.GetBatchForTestTeardown(_solutionDirectory, testDirectory, _threadId);
                 batch = batch == "" ? "" : _solutionDirectory + batch;

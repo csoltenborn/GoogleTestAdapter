@@ -25,11 +25,12 @@ namespace GoogleTestAdapter.Runners
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
         {
             List<Thread> threads;
             lock (this)
             {
+                DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
                 DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
                 threads = new List<Thread>();
@@ -70,7 +71,7 @@ namespace GoogleTestAdapter.Runners
                 var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _testEnvironment);
                 _testRunners.Add(runner);
 
-                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, isBeingDebugged, debuggedLauncher));
+                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher));
                 threads.Add(thread);
 
                 thread.Start();

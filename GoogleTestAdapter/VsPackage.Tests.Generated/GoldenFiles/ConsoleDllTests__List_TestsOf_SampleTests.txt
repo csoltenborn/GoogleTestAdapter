@@ -7,6 +7,7 @@ TheFixture.AddPassesWithTraits3
 LongRunningTests.Test1
 LongRunningTests.Test2
 CommandArgs.TestDirectoryIsSet
+WorkingDirectory.IsSolutionDirectory
 TestMath.AddFails
 TestMath.AddPasses
 TestMath.Crash

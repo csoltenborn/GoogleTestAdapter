@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.Runners
 
             var stopwatch = new Stopwatch();
             var runner = new SequentialTestRunner(MockFrameworkReporter.Object, TestEnvironment);
-            var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", false, null));
+            var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", "", false, null));
 
             stopwatch.Start();
             thread.Start();

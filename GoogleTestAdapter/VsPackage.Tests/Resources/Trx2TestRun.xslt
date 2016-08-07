@@ -75,7 +75,7 @@
 
   <xsl:template match="ms:Message">
     <Message>
-      <xsl:value-of select="." />
+      <xsl:value-of select="regex:replace(., '[a-z]:\\+(?:_DIR_\\)*(sampletests)', '$(Directory)\$1')" />
     </Message>
   </xsl:template>
 

@@ -62,9 +62,6 @@ namespace GoogleTestAdapter.Settings
             return $"{propertyInfo.Name}: {value}";
         }
 
-        public string GetWorkingDirectory(string executable)
-            => ReplacePlaceholders(WorkingDirectory, executable);
-
         public string GetPathExtension(string executable)
             => ReplacePlaceholders(PathExtension, executable);
 
@@ -76,6 +73,10 @@ namespace GoogleTestAdapter.Settings
 
         public string GetBatchForTestTeardown(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
+
+        public string GetWorkingDirectory(string solutionDirectory, string testDirectory, int threadId)
+            => ReplacePlaceholders(WorkingDirectory, solutionDirectory, testDirectory, threadId);
+
 
         private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
         {
