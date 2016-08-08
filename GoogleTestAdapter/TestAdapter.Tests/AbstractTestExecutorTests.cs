@@ -75,15 +75,15 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public virtual void RunTests_WorkingDirectory_IsSetCorrectly()
+        public virtual void RunTests_WorkingDir_IsSetCorrectly()
         {
-            TestCase testCase = TestDataCreator.GetTestCasesOfSampleTests("WorkingDirectory.IsSolutionDirectory").First();
+            TestCase testCase = TestDataCreator.GetTestCasesOfSampleTests("WorkingDir.IsSolutionDirectory").First();
 
-            MockOptions.Setup(o => o.WorkingDirectory).Returns(SettingsWrapper.ExecutableDirPlaceholder);
+            MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.ExecutableDirPlaceholder);
             RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
 
             MockFrameworkHandle.Reset();
-            MockOptions.Setup(o => o.WorkingDirectory).Returns(SettingsWrapper.SolutionDirPlaceholder);
+            MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.SolutionDirPlaceholder);
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
 

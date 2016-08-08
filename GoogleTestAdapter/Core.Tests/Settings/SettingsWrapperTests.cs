@@ -336,7 +336,7 @@ namespace GoogleTestAdapter.Settings
                 "SettingsWrapper(" +
                 "PrintTestOutput: False, " +
                 "TestDiscoveryRegex: '', " +
-                "WorkingDirectory: '$(ExecutableDir)', " +
+                "WorkingDir: '$(ExecutableDir)', " +
                 "PathExtension: '', " +
                 "TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}, " +
                 "TraitsRegexesAfter: {}, " +

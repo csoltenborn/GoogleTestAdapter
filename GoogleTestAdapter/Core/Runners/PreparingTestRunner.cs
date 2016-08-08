@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.Runners
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 string testDirectory = Utils.GetTempDirectory();
-                workingDir = _testEnvironment.Options.GetWorkingDirectory(_solutionDirectory, testDirectory, _threadId);
+                workingDir = _testEnvironment.Options.GetWorkingDir(_solutionDirectory, testDirectory, _threadId);
                 userParameters = _testEnvironment.Options.GetUserParameters(_solutionDirectory, testDirectory, _threadId);
 
                 string batch = _testEnvironment.Options.GetBatchForTestSetup(_solutionDirectory, testDirectory, _threadId);

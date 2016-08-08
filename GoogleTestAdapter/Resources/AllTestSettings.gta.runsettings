@@ -18,7 +18,7 @@
 		<ShuffleTests>false</ShuffleTests>
 		<ShuffleTestsSeed>0</ShuffleTestsSeed>
 		<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
-		<WorkingDirectory>${SolutionDir}</WorkingDirectory>
+		<WorkingDir>${SolutionDir}</WorkingDir>
 		<PathExtension>C:\fooDir;C:\barDir</PathExtension>
 		<TraitsRegexesAfter />
 		<TraitsRegexesBefore />

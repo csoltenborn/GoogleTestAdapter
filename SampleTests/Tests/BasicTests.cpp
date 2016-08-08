@@ -31,7 +31,7 @@ inline bool ends_with(std::string const & value, std::string const & ending)
 	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
-TEST(WorkingDirectory, IsSolutionDirectory)
+TEST(WorkingDir, IsSolutionDirectory)
 {
 	char _working_directory[MAX_PATH + 1];
 	GetCurrentDirectoryA(sizeof(_working_directory), _working_directory);

@@ -21,8 +21,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
 
-        public string WorkingDirectory { get; set; }
-        public bool ShouldSerializeWorkingDirectory() { return WorkingDirectory != null; }
+        public string WorkingDir { get; set; }
+        public bool ShouldSerializeWorkingDir() { return WorkingDir != null; }
 
         public string PathExtension { get; set; }
         public bool ShouldSerializePathExtension() { return PathExtension != null; }

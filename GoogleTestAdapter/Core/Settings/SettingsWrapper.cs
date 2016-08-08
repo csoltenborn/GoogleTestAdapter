@@ -74,8 +74,8 @@ namespace GoogleTestAdapter.Settings
         public string GetBatchForTestTeardown(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
 
-        public string GetWorkingDirectory(string solutionDirectory, string testDirectory, int threadId)
-            => ReplacePlaceholders(WorkingDirectory, solutionDirectory, testDirectory, threadId);
+        public string GetWorkingDir(string solutionDirectory, string testDirectory, int threadId)
+            => ReplacePlaceholders(WorkingDir, solutionDirectory, testDirectory, threadId);
 
 
         private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
@@ -157,13 +157,13 @@ namespace GoogleTestAdapter.Settings
         public virtual string TestDiscoveryRegex => _theSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
-        public const string OptionWorkingDirectory = "Working directory";
-        public const string OptionWorkingDirectoryDefaultValue = ExecutableDirPlaceholder;
-        public const string OptionWorkingDirectoryDescription =
+        public const string OptionWorkingDir = "Working directory";
+        public const string OptionWorkingDirDefaultValue = ExecutableDirPlaceholder;
+        public const string OptionWorkingDirDescription =
             "If non-empty, will set the working directory for running the tests (default: " + DescriptionOfExecutableDirPlaceHolder + ").\nExample: " + SolutionDirPlaceholder + "\\MyTestDir\nPlaceholders:\n"
             + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfSolutionDirPlaceHolder;
 
-        public virtual string WorkingDirectory => _theSettings.WorkingDirectory ?? OptionWorkingDirectoryDefaultValue;
+        public virtual string WorkingDir => _theSettings.WorkingDir ?? OptionWorkingDirDefaultValue;
 
 
         public const string OptionPathExtension = "PATH extension";

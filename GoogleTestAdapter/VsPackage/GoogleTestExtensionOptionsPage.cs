@@ -155,7 +155,7 @@ namespace GoogleTestAdapter.VsPackage
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
                 TestDiscoveryRegex = _generalOptions.TestDiscoveryRegex,
-                WorkingDirectory = _generalOptions.WorkingDirectory,
+                WorkingDir = _generalOptions.WorkingDir,
                 PathExtension = _generalOptions.PathExtension,
                 TraitsRegexesBefore = _generalOptions.TraitsRegexesBefore,
                 TraitsRegexesAfter = _generalOptions.TraitsRegexesAfter,
