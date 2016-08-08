@@ -68,6 +68,12 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         [TestMethod]
+        public override void RunTests_WorkingDirectory_IsSetCorrectly()
+        {
+            base.RunTests_WorkingDirectory_IsSetCorrectly();
+        }
+
+        [TestMethod]
         public override void RunTests_ExternallyLinkedX86Tests_CorrectTestResults()
         {
             base.RunTests_ExternallyLinkedX86Tests_CorrectTestResults();

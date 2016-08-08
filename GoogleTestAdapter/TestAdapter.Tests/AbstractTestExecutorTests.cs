@@ -9,6 +9,9 @@ using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
+using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
+using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
+using VsTestOutcome = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome;
 using static GoogleTestAdapter.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
@@ -29,9 +32,9 @@ namespace GoogleTestAdapter.TestAdapter
 
         protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
         {
-            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult>(tr => tr.Outcome == Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.None)),
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>(), It.Is<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome>(to => to == Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.None)),
+            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<VsTestCase>(), It.Is<VsTestOutcome>(to => to == VsTestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
         }
 
@@ -44,6 +47,17 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(_maxNrOfThreads);
         }
 
+        private void RunAndVerifySingleTest(TestCase testCase, VsTestOutcome expectedOutcome)
+        {
+            TestExecutor executor = new TestExecutor(TestEnvironment);
+            executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            foreach (VsTestOutcome outcome in Enum.GetValues(typeof(VsTestOutcome)))
+            {
+                MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<VsTestCase>(), It.Is<VsTestOutcome>(to => to == outcome)),
+                    Times.Exactly(outcome == expectedOutcome ? 1 : 0));
+            }
+        }
 
         [TestMethod]
         [TestCategory(Integration)]
@@ -51,24 +65,26 @@ namespace GoogleTestAdapter.TestAdapter
         {
             TestCase testCase = TestDataCreator.GetTestCasesOfSampleTests("CommandArgs.TestDirectoryIsSet").First();
 
-            TestExecutor executor = new TestExecutor(TestEnvironment);
-            executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
-
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>(), It.Is<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome>(to => to == Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Passed)),
-                Times.Exactly(0));
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>(), It.Is<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome>(to => to == Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Failed)),
-                Times.Exactly(1));
+            RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
 
             MockFrameworkHandle.Reset();
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + SettingsWrapper.TestDirPlaceholder + "\"");
 
-            executor = new TestExecutor(TestEnvironment);
-            executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
+        }
 
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>(), It.Is<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome>(to => to == Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Failed)),
-                Times.Exactly(0));
-            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>(), It.Is<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome>(to => to == Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome.Passed)),
-                Times.Exactly(1));
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_WorkingDirectory_IsSetCorrectly()
+        {
+            TestCase testCase = TestDataCreator.GetTestCasesOfSampleTests("WorkingDirectory.IsSolutionDirectory").First();
+
+            MockOptions.Setup(o => o.WorkingDirectory).Returns(SettingsWrapper.ExecutableDirPlaceholder);
+            RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
+
+            MockFrameworkHandle.Reset();
+            MockOptions.Setup(o => o.WorkingDirectory).Returns(SettingsWrapper.SolutionDirPlaceholder);
+            RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
 
         [TestMethod]
