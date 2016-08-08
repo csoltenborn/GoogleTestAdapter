@@ -2,7 +2,7 @@
 
 set BASE_DIR=%~dp0
 
-set PICT_EXE="%BASE_DIR%pict\pict.exe"
+set PICT_EXE="%BASE_DIR%3rdparty\pict\pict.exe"
 set MODEL="%BASE_DIR%GTA_Console.pictmodel"
 set CSV="%BASE_DIR%GTA_Console.csv"
 set TEMP_SEED="%BASE_DIR%seed.pictmodel"
