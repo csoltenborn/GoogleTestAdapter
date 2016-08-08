@@ -141,6 +141,93 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsTestWithTwoEqualTraits()
+        {
+            Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };
+            AssertFindsTestWithTraits("Traits.WithEqualTraits", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptions_FindsTestWithTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape(testname), "Author", "Foo").Yield().ToList());
+
+            Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptionsThreeEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Foo"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Bar"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Baz")
+                });
+
+            Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexAfterFromOptionsOneEqualTrait_FindsTestTestWithOneEqualTrait()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Foo")
+                });
+
+            Trait[] traits = { new Trait("Author", "Foo") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexAfterFromOptionsTwoEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Foo"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Bar")
+                });
+
+            Trait[] traits = { new Trait("Author", "Foo"), new Trait("Author", "Bar") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author2", "Foo"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author2", "Bar")
+                });
+
+            Trait[] traits = {
+                new Trait("Author", "JOG"),
+                new Trait("Author", "CSO") ,
+                new Trait("Author2", "Foo"),
+                new Trait("Author2", "Bar") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_RegexBeforeFromOptions_AddsTraitIfNotAlreadyExisting()
         {
             string testname = "InstantiationName/ParameterizedTests.Simple/0 [(1,)]";

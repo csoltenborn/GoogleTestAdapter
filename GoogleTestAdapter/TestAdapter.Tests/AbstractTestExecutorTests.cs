@@ -225,36 +225,6 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.AtLeastOnce());
         }
 
-        [TestMethod,Ignore]
-        [TestCategory(Load)]
-        public virtual void RunTests_LoadTests_CorrectTestResults()
-        {
-            var stopwatch = Stopwatch.StartNew();
-            int nrOfTestcases = new GoogleTestDiscoverer(TestEnvironment).GetTestsFromExecutable(TestResources.LoadTests).Count;
-            stopwatch.Stop();
-            int discoveryTimeInMs = (int)stopwatch.ElapsedMilliseconds;
-
-            int nrOfPassedTests = nrOfTestcases / 2;
-            int nrOfFailedTests = nrOfTestcases - nrOfPassedTests;
-
-            stopwatch.Restart();
-            RunAndVerifyTests(TestResources.LoadTests, nrOfPassedTests, nrOfFailedTests, 0);
-            stopwatch.Stop();
-            var actualDuration = stopwatch.Elapsed;
-
-            int throttleTimeInMs = nrOfTestcases / VsTestFrameworkReporter.NrOfTestsBeforeThrottling * VsTestFrameworkReporter.ThrottleDurationInMs;
-            var minDuration = TimeSpan.FromMilliseconds(discoveryTimeInMs + throttleTimeInMs +
-                              VsTestFrameworkReporter.SleepingTimeAfterAllTestsInMs);
-
-            int timeForProcessingTestsInMs = nrOfTestcases * CiSupport.GetWeightedDuration(2);
-            int overheadInMs = CiSupport.GetWeightedDuration(2000);
-            var maxDuration = TimeSpan.FromMilliseconds(minDuration.TotalMilliseconds + timeForProcessingTestsInMs + overheadInMs);
-
-            actualDuration.Should().BeGreaterThan(minDuration);
-            actualDuration.Should().BeLessOrEqualTo(maxDuration);
-        }
-
-
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
             TestExecutor executor = new TestExecutor(TestEnvironment);
