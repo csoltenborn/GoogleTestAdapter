@@ -5,6 +5,6 @@
 		<BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
 		<BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
 		<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
-		<WorkingDir>${SolutionDir}</WorkingDir>
+		<WorkingDir>$(SolutionDir)</WorkingDir>
 	</GoogleTestAdapter>
 </RunSettings>
