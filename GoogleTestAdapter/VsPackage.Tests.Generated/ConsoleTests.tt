@@ -17,6 +17,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 <# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
 using GoogleTestAdapterUiTests;
@@ -73,6 +74,10 @@ namespace GoogleTestAdapter.VsPackage
             string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(_solutionFile, arguments);
 			string[] resultLines = resultString.Split('\n');
 			resultLines = resultLines.Where(l => l.StartsWith("    ")).Select(l => l.Trim()).ToArray();
+			for (int i = 0; i < resultLines.Length; i++)
+			{
+				resultLines[i] = Regex.Replace(resultLines[i], "Information:.*", "");
+			}	
 			resultString = string.Join("\n", resultLines);
             // ReSharper disable once AssignNullToNotNullAttribute
 			string projectDir = Path.Combine(Path.GetDirectoryName(_solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
