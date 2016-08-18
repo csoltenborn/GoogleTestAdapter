@@ -26,7 +26,8 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 
             exitCode.Should().Be(0);
             standardOutput.Should().Contain(s => s.Contains("Ping"));
-            standardOutput.Length.Should().Be(12);
+            standardOutput.Length.Should().BeGreaterOrEqualTo(11);
+            standardOutput.Length.Should().BeLessOrEqualTo(12);
             errorOutput.Length.Should().Be(0);
         }
 
