@@ -1,21 +1,22 @@
 ﻿using System;
 using System.IO;
 using FluentAssertions;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using Moq;
 
-namespace GoogleTestAdapter.TestAdapter.Helpers
+namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
     public class ProcessExecutorTests
     {
 
         [TestMethod]
-        [TestCategory(Unit)]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
         public void ExecuteProcessBlocking_PingLocalHost()
         {
-            var processCreator = new ProcessExecutor(null);
+            var mockLogger = new Mock<ILogger>();
+            var processCreator = new ProcessExecutor(null, mockLogger.Object);
             string[] standardOutput, errorOutput;
             int exitCode = processCreator.ExecuteCommandBlocking(
                 Path.Combine(Environment.SystemDirectory, "ping.exe"),
@@ -32,10 +33,11 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         }
 
         [TestMethod]
-        [TestCategory(Unit)]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
         public void ExecuteProcessBlocking_SampleTests()
         {
-            var processCreator = new ProcessExecutor(null);
+            var mockLogger = new Mock<ILogger>();
+            var processCreator = new ProcessExecutor(null, mockLogger.Object);
             string[] standardOutput, errorOutput;
             int exitCode = processCreator.ExecuteCommandBlocking(
                 TestResources.SampleTests,

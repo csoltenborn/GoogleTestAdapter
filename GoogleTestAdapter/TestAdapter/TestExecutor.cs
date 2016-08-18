@@ -156,7 +156,7 @@ namespace GoogleTestAdapter.TestAdapter
             IDebuggerAttacher debuggerAttacher = null;
             if (runContext.IsBeingDebugged)
                 debuggerAttacher = new VsDebuggerAttacher(_testEnvironment.Options.VisualStudioProcessId);
-            var executor = new ProcessExecutor(debuggerAttacher);
+            var executor = new ProcessExecutor(debuggerAttacher, _testEnvironment);
             _executor = new GoogleTestExecutor(_testEnvironment);
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
                 runContext.IsBeingDebugged, runContext.SolutionDirectory, executor);

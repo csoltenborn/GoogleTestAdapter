@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 
 namespace GoogleTestAdapter.Helpers
@@ -15,10 +17,12 @@ namespace GoogleTestAdapter.Helpers
         public const int ExecutionFailed = int.MaxValue;
 
         private readonly IDebuggerAttacher _debuggerAttacher;
+        private readonly ILogger _logger;
 
-        public ProcessExecutor(IDebuggerAttacher debuggerAttacher)
+        public ProcessExecutor(IDebuggerAttacher debuggerAttacher, ILogger logger)
         {
             _debuggerAttacher = debuggerAttacher;
+            _logger = logger;
         }
 
         public int ExecuteCommandBlocking(string command, string parameters, string workingDir, out string[] standardOutput, out string[] errorOutput)
@@ -38,7 +42,7 @@ namespace GoogleTestAdapter.Helpers
         public int ExecuteCommandBlocking(string command, string parameters, string workingDir, Action<string> reportStandardOutputLine, Action<string> reportStandardErrorLine)
         {
             return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, _debuggerAttacher, 
-                new OutputSplitter(reportStandardOutputLine), new OutputSplitter(reportStandardErrorLine));
+                new OutputSplitter(reportStandardOutputLine), new OutputSplitter(reportStandardErrorLine), _logger);
         }
 
         private class OutputSplitter
@@ -87,7 +91,7 @@ namespace GoogleTestAdapter.Helpers
             private static readonly Encoding Encoding = Encoding.Default;
 
             internal static int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDebuggerAttacher debuggerAttacher, 
-                OutputSplitter standardOutputSplitter, OutputSplitter errorOutputSplitter)
+                OutputSplitter standardOutputSplitter, OutputSplitter errorOutputSplitter, ILogger logger)
             {
                 var processInfo = new PROCESS_INFORMATION
                 {
@@ -99,12 +103,12 @@ namespace GoogleTestAdapter.Helpers
                 try
                 {
                     if (!CreatePipe(out stdoutReadingEnd, out stdoutWritingEnd))
-                        return ExecutionFailed;
+                        return LogAndReturnExecutionFailed(logger, "Could not create pipe for standard output");
                     if (!CreatePipe(out stderrReadingEnd, out stderrWritingEnd))
-                        return ExecutionFailed;
+                        return LogAndReturnExecutionFailed(logger, "Could not create pipe for error output");
 
                     if (!CreateProcess(command, parameters, workingDir, stdoutWritingEnd, stderrWritingEnd, out processInfo))
-                        return ExecutionFailed;
+                        return LogAndReturnExecutionFailed(logger, $"Could not create process. Command: '{command}', parameters: '{parameters}', working dir: '{workingDir}'");
 
                     debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
 
@@ -118,7 +122,7 @@ namespace GoogleTestAdapter.Helpers
                     if (GetExitCodeProcess(processInfo.hProcess, out exitCode))
                         return exitCode;
 
-                    return ExecutionFailed;
+                    return LogAndReturnExecutionFailed(logger, "Could not receive exit code of process");
                 }
                 finally
                 {
@@ -172,6 +176,8 @@ namespace GoogleTestAdapter.Helpers
 
                 if (!string.IsNullOrEmpty(parameters))
                     parameters = $"{command} {parameters}";
+                if (string.IsNullOrEmpty(workingDir))
+                    workingDir = null;
 
                 // ReSharper disable ArgumentsStyleNamedExpression
                 // ReSharper disable ArgumentsStyleLiteral
@@ -248,6 +254,14 @@ namespace GoogleTestAdapter.Helpers
                     CloseHandle(hObject);
                     hObject = IntPtr.Zero;
                 }
+            }
+
+            private static int LogAndReturnExecutionFailed(ILogger logger, string message)
+            {
+                int errorCode = Marshal.GetLastWin32Error();
+                string errorMessage = new Win32Exception(errorCode).Message;
+                logger.LogError($"{message} ({errorCode}: {errorMessage})");
+                return ExecutionFailed;
             }
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
