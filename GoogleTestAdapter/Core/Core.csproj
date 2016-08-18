@@ -21,6 +21,7 @@
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,12 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\IDebuggedProcessLauncher.cs" />
+    <Compile Include="Framework\IProcessExecutor.cs" />
     <Compile Include="Framework\ITestFrameworkReporter.cs" />
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\IDebuggerAttacher.cs" />
+    <Compile Include="Helpers\ProcessExecutor.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />

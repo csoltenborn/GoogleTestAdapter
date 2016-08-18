@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using ExtensionUriAttribute = Microsoft.VisualStudio.TestPlatform.ObjectModel.ExtensionUriAttribute;
 using System.Diagnostics;
+using GoogleTestAdapter.Framework;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Helpers;
@@ -152,9 +153,13 @@ namespace GoogleTestAdapter.TestAdapter
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);
+            IDebuggerAttacher debuggerAttacher = null;
+            if (runContext.IsBeingDebugged)
+                debuggerAttacher = new VsDebuggerAttacher(_testEnvironment.Options.VisualStudioProcessId);
+            var executor = new ProcessExecutor(debuggerAttacher);
             _executor = new GoogleTestExecutor(_testEnvironment);
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, runContext.SolutionDirectory);
+                runContext.IsBeingDebugged, runContext.SolutionDirectory, executor);
             reporter.AllTestsFinished();
 
             stopwatch.Stop();

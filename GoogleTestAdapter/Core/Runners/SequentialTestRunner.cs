@@ -28,7 +28,7 @@ namespace GoogleTestAdapter.Runners
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
             DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
@@ -51,7 +51,8 @@ namespace GoogleTestAdapter.Runners
                     baseDir,
                     finalParameters,
                     isBeingDebugged,
-                    debuggedLauncher);
+                    debuggedLauncher,
+                    executor);
             }
         }
 
@@ -64,7 +65,7 @@ namespace GoogleTestAdapter.Runners
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable, string workingDir,
             IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string userParameters,
-            bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+            bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
@@ -78,8 +79,7 @@ namespace GoogleTestAdapter.Runners
                 }
 
                 _frameworkReporter.ReportTestsStarted(arguments.TestCases);
-                List<string> consoleOutput = new TestProcessLauncher(_testEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable, arguments.CommandLine, _testEnvironment.Options.PrintTestOutput && !_testEnvironment.Options.ParallelTestExecution, false, debuggedLauncher);
-                IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
+                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor).ToArray();
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 _frameworkReporter.ReportTestResults(results);
@@ -88,6 +88,28 @@ namespace GoogleTestAdapter.Runners
 
                 serializer.UpdateTestDurations(results);
             }
+        }
+
+        private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
+            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor)
+        {
+            List<string> consoleOutput;
+            if (executor != null)
+            {
+                consoleOutput = new List<string>();
+                executor.ExecuteCommandBlocking(executable, arguments.CommandLine, workingDir, s => consoleOutput.Add(s),
+                    s => { });
+            }
+            else
+            {
+                consoleOutput =
+                    new TestProcessLauncher(_testEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable,
+                        arguments.CommandLine,
+                        _testEnvironment.Options.PrintTestOutput && !_testEnvironment.Options.ParallelTestExecution, false,
+                        debuggedLauncher);
+            }
+            IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
+            return results;
         }
 
         private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir)

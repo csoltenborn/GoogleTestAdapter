@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -176,7 +177,9 @@ namespace GoogleTestAdapter.VsPackage
                 ShuffleTestsSeed = _googleTestOptions.ShuffleTestsSeed,
 
                 ParallelTestExecution = _parallelizationOptions.EnableParallelTestExecution,
-                MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads
+                MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads,
+
+                VisualStudioProcessId = Process.GetCurrentProcess().Id
             };
         }
 

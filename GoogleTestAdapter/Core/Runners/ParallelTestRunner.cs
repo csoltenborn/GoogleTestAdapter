@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.Runners
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             List<Thread> threads;
             lock (this)
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Runners
                 DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
                 threads = new List<Thread>();
-                RunTests(allTestCases, testCasesToRun, baseDir, threads, isBeingDebugged, debuggedLauncher);
+                RunTests(allTestCases, testCasesToRun, baseDir, threads, isBeingDebugged, debuggedLauncher, executor);
             }
 
             foreach (Thread thread in threads)
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher)
+        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.Runners
                 var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _testEnvironment);
                 _testRunners.Add(runner);
 
-                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher));
+                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor));
                 threads.Add(thread);
 
                 thread.Start();

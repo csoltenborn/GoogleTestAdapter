@@ -22,7 +22,7 @@ namespace GoogleTestAdapter
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory)
+        public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory, IProcessExecutor executor)
         {
             _testEnvironment.DebugInfo(_testEnvironment.Options.ToString());
 
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter
                 ComputeTestRunner(reporter, isBeingDebugged, solutionDirectory);
             }
 
-            _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, null, isBeingDebugged, launcher);
+            _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, null, isBeingDebugged, launcher, executor);
         }
 
         public void Cancel()

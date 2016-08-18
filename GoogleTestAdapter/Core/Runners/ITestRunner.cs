@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.Runners
     {
         // TODO remove isBeingDebugged parameter (use debuggedLauncher != null)
         void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string workingDir,
-            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher);
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor);
 
         void Cancel();
     }

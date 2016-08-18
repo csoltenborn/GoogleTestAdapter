@@ -36,6 +36,7 @@
         bool? DebugMode { get; set; }
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
+        int? VisualStudioProcessId { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -64,6 +65,7 @@
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
+            self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
         }
     }
 

@@ -60,6 +60,8 @@ namespace GoogleTestAdapter
             mockOptions.Setup(o => o.MaxNrOfThreads).Returns(SettingsWrapper.OptionMaxNrOfThreadsDefaultValue);
             mockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.OptionPathExtensionDefaultValue);
             mockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
+
+            mockOptions.Setup(o => o.VisualStudioProcessId).Returns(-1);
         }
 
         [TestCleanup]

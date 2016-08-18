@@ -27,6 +27,12 @@ namespace GoogleTestAdapter.Settings
 
     public class SettingsWrapper
     {
+        private static readonly string[] NotPrintedProperties =
+        {
+            nameof(RegexTraitParser),
+            nameof(VisualStudioProcessId)
+        };
+
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
         private readonly IGoogleTestAdapterSettings _theSettings;
@@ -44,7 +50,7 @@ namespace GoogleTestAdapter.Settings
         public override string ToString()
         {
             IEnumerable<PropertyInfo> propertiesToPrint =
-                GetType().GetProperties().Where(pi => pi.Name != nameof(RegexTraitParser)); 
+                GetType().GetProperties().Where(pi => !NotPrintedProperties.Contains(pi.Name)); 
             string values = string.Join(", ", propertiesToPrint.Select(pi => ToString(this, pi)));
             return $"{GetType().Name}({values})";
         }
@@ -139,6 +145,8 @@ namespace GoogleTestAdapter.Settings
             DescriptionOfExecutableDirPlaceHolder;
 
         #region GeneralOptionsPage
+
+        public virtual int VisualStudioProcessId => _theSettings.VisualStudioProcessId ?? -1;
 
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;

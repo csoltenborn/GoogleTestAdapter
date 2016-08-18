@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         [ImportingConstructor]
         public RunSettingsService([Import(typeof(IGlobalRunSettings))] IGlobalRunSettings globalRunSettings)
         {
-            this._globalRunSettings = globalRunSettings;
+            _globalRunSettings = globalRunSettings;
         }
 
         public IXPathNavigable AddRunSettings(IXPathNavigable userRunSettingDocument,
@@ -64,6 +64,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 logger.LogException(e);
             }
 
+            finalRunSettings.VisualStudioProcessId = null;
             finalRunSettings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
 
             userRunSettingsNavigator.AppendChild(finalRunSettings.ToXml().CreateNavigator());

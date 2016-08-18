@@ -81,6 +81,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public string BatchForTestTeardown { get; set; }
         public bool ShouldSerializeBatchForTestTeardown() { return BatchForTestTeardown != null; }
 
+        public int? VisualStudioProcessId { get; set; }
+        public bool ShouldSerializeVisualStudioProcessId() { return VisualStudioProcessId != null; }
 
         public override XmlElement ToXml()
         {
