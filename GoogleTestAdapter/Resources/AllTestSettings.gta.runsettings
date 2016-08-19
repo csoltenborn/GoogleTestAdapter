@@ -24,5 +24,6 @@
 		<TraitsRegexesBefore />
 		<TestNameSeparator />
 		<ParseSymbolInformation>true</ParseSymbolInformation>
+    <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
 	</GoogleTestAdapter>
 </RunSettings>

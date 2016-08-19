@@ -153,13 +153,17 @@ namespace GoogleTestAdapter.TestAdapter
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);
-            IDebuggerAttacher debuggerAttacher = null;
-            if (runContext.IsBeingDebugged)
-                debuggerAttacher = new VsDebuggerAttacher(_testEnvironment.Options.VisualStudioProcessId);
-            var executor = new ProcessExecutor(debuggerAttacher, _testEnvironment);
+            ProcessExecutor processExecutor = null;
+            if (_testEnvironment.Options.UseNewTestExecutionFramework)
+            {
+                IDebuggerAttacher debuggerAttacher = null;
+                if (runContext.IsBeingDebugged)
+                    debuggerAttacher = new VsDebuggerAttacher(_testEnvironment.Options.VisualStudioProcessId);
+                processExecutor = new ProcessExecutor(debuggerAttacher, _testEnvironment);
+            }
             _executor = new GoogleTestExecutor(_testEnvironment);
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, runContext.SolutionDirectory, executor);
+                runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
             reporter.AllTestsFinished();
 
             stopwatch.Stop();

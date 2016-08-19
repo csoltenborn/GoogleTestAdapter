@@ -145,7 +145,7 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithNonexistingSetupBatch_LogsError();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public override void RunTests_WithPathExtension_ExecutionOk()
         {
             base.RunTests_WithPathExtension_ExecutionOk();

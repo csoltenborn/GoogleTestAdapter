@@ -84,6 +84,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public int? VisualStudioProcessId { get; set; }
         public bool ShouldSerializeVisualStudioProcessId() { return VisualStudioProcessId != null; }
 
+        public bool? UseNewTestExecutionFramework { get; set; }
+        public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
+
         public override XmlElement ToXml()
         {
             var document = new XmlDocument();

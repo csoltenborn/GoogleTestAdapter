@@ -37,6 +37,7 @@
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
         int? VisualStudioProcessId { get; set; }
+        bool? UseNewTestExecutionFramework { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -66,6 +67,7 @@
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
+            self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
         }
     }
 

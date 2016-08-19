@@ -334,6 +334,7 @@ namespace GoogleTestAdapter.Settings
 
             TheOptions.ToString().Should().Be(
                 "SettingsWrapper(" +
+                "UseNewTestExecutionFramework: True, " +
                 "PrintTestOutput: False, " +
                 "TestDiscoveryRegex: '', " +
                 "WorkingDir: '$(ExecutableDir)', " +

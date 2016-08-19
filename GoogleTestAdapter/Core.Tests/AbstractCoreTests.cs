@@ -61,6 +61,7 @@ namespace GoogleTestAdapter
             mockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.OptionPathExtensionDefaultValue);
             mockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
 
+            mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
             mockOptions.Setup(o => o.VisualStudioProcessId).Returns(-1);
         }
 

@@ -148,6 +148,15 @@ namespace GoogleTestAdapter.Settings
 
         public virtual int VisualStudioProcessId => _theSettings.VisualStudioProcessId ?? -1;
 
+
+        public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
+        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
+        public const string OptionUseNewTestExecutionFrameworkDescription =
+            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode. Disadvantage (for now): VS shows a superfluous 'Breakpoint hit' dialog wich has to be confirmed manually at each debug run.";
+
+        public virtual bool UseNewTestExecutionFramework => _theSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
+
+
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;
         public const string OptionPrintTestOutputDescription =
