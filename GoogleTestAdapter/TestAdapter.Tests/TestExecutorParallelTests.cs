@@ -159,6 +159,18 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithNonexistingSetupBatch_LogsError();
         }
 
+        [TestMethod]
+        public override void RunTests_WithPathExtension_ExecutionOk()
+        {
+            base.RunTests_WithPathExtension_ExecutionOk();
+        }
+
+        [TestMethod]
+        public override void RunTests_WithoutPathExtension_ExecutionFails()
+        {
+            base.RunTests_WithoutPathExtension_ExecutionFails();
+        }
+
         #endregion
 
     }
