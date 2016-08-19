@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
-using GoogleTestAdapter.TestAdapter.Framework;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
 using VsTestOutcome = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome;
@@ -223,6 +220,30 @@ namespace GoogleTestAdapter.TestAdapter
             MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup.ToLower()))),
                 Times.AtLeastOnce());
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_WithPathExtension_ExecutionOk()
+        {
+            MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\lib");
+
+            var executor = new TestExecutor(TestEnvironment);
+            executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.Passed)), Times.Exactly(29));
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_WithoutPathExtension_ExecutionFails()
+        {
+            var executor = new TestExecutor(TestEnvironment);
+            executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Never);
+            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Once);
         }
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
