@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="DataConversionExtensions.cs" />
     <Compile Include="Framework\DebuggedProcessLauncher.cs" />
+    <Compile Include="Framework\NativeImports.cs" />
     <Compile Include="Framework\VsTestFrameworkLogger.cs" />
     <Compile Include="Framework\VSTestFrameworkReporter.cs" />
     <Compile Include="Helpers\TestCaseFilter.cs" />

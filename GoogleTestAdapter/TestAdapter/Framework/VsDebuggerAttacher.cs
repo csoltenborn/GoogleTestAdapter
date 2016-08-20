@@ -1,14 +1,25 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
 using GoogleTestAdapter.Framework;
+using Microsoft.Samples.Debugging.Native;
+using Microsoft.Win32.SafeHandles;
 using DTEProcess = EnvDTE.Process;
 using Process = System.Diagnostics.Process;
+using NativeDebuggingMethods = Microsoft.Samples.Debugging.Native.NativeMethods;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
+    public class LastWin32Exception : Win32Exception
+    {
+        public LastWin32Exception()
+            : base(Marshal.GetLastWin32Error())
+        { }
+    }
+
     public class VsDebuggerAttacher : IDebuggerAttacher
     {
         private readonly Process _visualStudioProcess;
@@ -29,6 +40,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             try
             {
+                NativeMethods.SkipInitialDebugBreak((uint)processToAttachTo.Id);
                 NativeMethods.AttachVisualStudioToProcess(_visualStudioProcess, _visualStudioInstance, processToAttachTo);
                 return true;
             }
@@ -58,6 +70,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
             private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+            [DllImport("kernel32.dll", SetLastError = true)]
+            private static extern int SuspendThread(IntPtr hThread);
+
             internal static void AttachVisualStudioToProcess(Process visualStudioProcess, _DTE visualStudioInstance, Process applicationProcess)
             {
                 //Find the process you want the VS instance to attach to...
@@ -74,6 +89,51 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 else
                 {
                     throw new InvalidOperationException("Visual Studio process cannot find specified application '" + applicationProcess.Id + "'");
+                }
+            }
+
+            internal static void SkipInitialDebugBreak(uint dwProcessId)
+            {
+                if (!NativeDebuggingMethods.DebugActiveProcess(dwProcessId))
+                    throw new LastWin32Exception();
+
+                try
+                {
+                    bool done = false;
+                    uint mainThread = 0;
+                    while (!done)
+                    {
+                        var debugEvent = new DebugEvent32();
+                        if (!NativeDebuggingMethods.WaitForDebugEvent32(ref debugEvent, (int) TimeSpan.FromSeconds(10).TotalMilliseconds))
+                            throw new LastWin32Exception();
+
+                        switch (debugEvent.header.dwDebugEventCode)
+                        {
+                            case NativeDebugEventCode.CREATE_PROCESS_DEBUG_EVENT:
+                                new SafeFileHandle(debugEvent.union.CreateProcess.hFile, true).Dispose();
+                                break;
+                            case NativeDebugEventCode.LOAD_DLL_DEBUG_EVENT:
+                                new SafeFileHandle(debugEvent.union.LoadDll.hFile, true).Dispose();
+                                break;
+                            case NativeDebugEventCode.EXCEPTION_DEBUG_EVENT:
+                            case NativeDebugEventCode.EXIT_PROCESS_DEBUG_EVENT:
+                                mainThread = debugEvent.header.dwThreadId;
+                                done = true;
+                                break;
+                        }
+
+                        if(!NativeDebuggingMethods.ContinueDebugEvent(debugEvent.header.dwProcessId,
+                                debugEvent.header.dwThreadId, NativeDebuggingMethods.ContinueStatus.DBG_CONTINUE))
+                            throw new LastWin32Exception();
+
+                    }
+
+                    SuspendThread(new IntPtr(mainThread));
+                }
+                finally
+                {
+                    if (!NativeDebuggingMethods.DebugActiveProcessStop(dwProcessId))
+                        throw new LastWin32Exception();
                 }
             }
 
