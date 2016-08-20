@@ -2,6 +2,7 @@
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

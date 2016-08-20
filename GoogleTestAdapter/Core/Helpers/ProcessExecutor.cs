@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -25,20 +26,6 @@ namespace GoogleTestAdapter.Helpers
         {
             _debuggerAttacher = debuggerAttacher;
             _logger = logger;
-        }
-
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, out string[] standardOutput, out string[] errorOutput)
-        {
-            IList<string> standardOutputLines = new List<string>();
-            IList<string> errorOutputLines = new List<string>();
-
-            int exitCode = ExecuteCommandBlocking(command, parameters, workingDir, pathExtension,
-                s => standardOutputLines.Add(s),
-                s => errorOutputLines.Add(s));
-
-            standardOutput = standardOutputLines.ToArray();
-            errorOutput = errorOutputLines.ToArray();
-            return exitCode;
         }
 
         public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportStandardOutputLine, Action<string> reportStandardErrorLine)
@@ -92,8 +79,11 @@ namespace GoogleTestAdapter.Helpers
 
             private static readonly Encoding Encoding = Encoding.Default;
 
-            internal static int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, IDebuggerAttacher debuggerAttacher, 
-                OutputSplitter standardOutputSplitter, OutputSplitter errorOutputSplitter, ILogger logger)
+            internal static int ExecuteCommandBlocking(
+                string command, string parameters, string workingDir, string pathExtension, 
+                IDebuggerAttacher debuggerAttacher, 
+                OutputSplitter standardOutputSplitter, OutputSplitter errorOutputSplitter, 
+                ILogger logger)
             {
                 var processInfo = new PROCESS_INFORMATION
                 {
@@ -104,13 +94,17 @@ namespace GoogleTestAdapter.Helpers
                 IntPtr stderrReadingEnd = IntPtr.Zero, stderrWritingEnd = IntPtr.Zero;
                 try
                 {
-                    if (!CreatePipe(out stdoutReadingEnd, out stdoutWritingEnd))
-                        return LogAndReturnExecutionFailed(logger, "Could not create pipe for standard output");
-                    if (!CreatePipe(out stderrReadingEnd, out stderrWritingEnd))
-                        return LogAndReturnExecutionFailed(logger, "Could not create pipe for error output");
+                    if (!CreatePipe(out stdoutReadingEnd, out stdoutWritingEnd, logger))
+                        return ExecutionFailed;
+                    if (!CreatePipe(out stderrReadingEnd, out stderrWritingEnd, logger))
+                        return ExecutionFailed;
 
-                    if (!CreateProcess(command, parameters, workingDir, pathExtension, stdoutWritingEnd, stderrWritingEnd, out processInfo))
-                        return LogAndReturnExecutionFailed(logger, $"Could not create process. Command: '{command}', parameters: '{parameters}', working dir: '{workingDir}'");
+                    if (!CreateProcess(command, parameters, workingDir, pathExtension, stdoutWritingEnd,
+                            stderrWritingEnd, out processInfo))
+                    {
+                        LogWin32Error(logger, $"Could not create process. Command: '{command}', parameters: '{parameters}', working dir: '{workingDir}'");
+                        return ExecutionFailed;
+                    }
 
                     debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
 
@@ -124,7 +118,8 @@ namespace GoogleTestAdapter.Helpers
                     if (GetExitCodeProcess(processInfo.hProcess, out exitCode))
                         return exitCode;
 
-                    return LogAndReturnExecutionFailed(logger, "Could not receive exit code of process");
+                    LogWin32Error(logger, "Could not receive exit code of process");
+                    return ExecutionFailed;
                 }
                 finally
                 {
@@ -137,7 +132,7 @@ namespace GoogleTestAdapter.Helpers
                 }
             }
 
-            private static bool CreatePipe(out IntPtr readingEnd, out IntPtr writingEnd)
+            private static bool CreatePipe(out IntPtr readingEnd, out IntPtr writingEnd, ILogger logger)
             {
                 var securityAttributes = new SECURITY_ATTRIBUTES();
                 securityAttributes.nLength = Marshal.SizeOf(securityAttributes);
@@ -148,10 +143,16 @@ namespace GoogleTestAdapter.Helpers
                 Marshal.StructureToPtr(securityAttributes, securityAttributesPointer, true);
 
                 if (!CreatePipe(out readingEnd, out writingEnd, securityAttributesPointer, 0))
+                {
+                    LogWin32Error(logger, "Could not create pipe");
                     return false;
+                }
 
                 if (!SetHandleInformation(readingEnd, HANDLE_FLAG_INHERIT, 0))
+                {
+                    LogWin32Error(logger, "Could not set handle information");
                     return false;
+                }
 
                 return true;
             }
@@ -163,14 +164,12 @@ namespace GoogleTestAdapter.Helpers
                 if (!string.IsNullOrEmpty(pathExtension))
                     envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
-                List<string> envVariablesList = new List<string>();
-                foreach (string key in envVariables.Keys)
-                {
-                    envVariablesList.Add($"{key}={envVariables[key]}");
-                }
+                var envVariablesList = new List<string>();
+                foreach (DictionaryEntry entry in envVariables)
+                    envVariablesList.Add($"{entry.Key}={entry.Value}");
                 envVariablesList.Sort();
 
-                StringBuilder result = new StringBuilder();
+                var result = new StringBuilder();
                 foreach (string envVariable in envVariablesList)
                 {
                     result.Append(envVariable);
@@ -283,12 +282,11 @@ namespace GoogleTestAdapter.Helpers
                 }
             }
 
-            private static int LogAndReturnExecutionFailed(ILogger logger, string message)
+            private static void LogWin32Error(ILogger logger, string message)
             {
                 int errorCode = Marshal.GetLastWin32Error();
                 string errorMessage = new Win32Exception(errorCode).Message;
                 logger.LogError($"{message} ({errorCode}: {errorMessage})");
-                return ExecutionFailed;
             }
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

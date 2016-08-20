@@ -7,6 +7,7 @@ using EnvDTE;
 using GoogleTestAdapter.Framework;
 using Microsoft.Samples.Debugging.Native;
 using Microsoft.Win32.SafeHandles;
+using GoogleTestAdapter.Helpers;
 using DTEProcess = EnvDTE.Process;
 using Process = System.Diagnostics.Process;
 using NativeDebuggingMethods = Microsoft.Samples.Debugging.Native.NativeMethods;
@@ -24,16 +25,21 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     {
         private readonly Process _visualStudioProcess;
         private readonly _DTE _visualStudioInstance;
+        private readonly TestEnvironment _testEnvironment;
 
-        public VsDebuggerAttacher(int visualStudioProcessId)
+        public VsDebuggerAttacher(TestEnvironment testEnvironment)
         {
-            _visualStudioProcess = Process.GetProcessById(visualStudioProcessId);
+            _testEnvironment = testEnvironment;
+            _visualStudioProcess = Process.GetProcessById(testEnvironment.Options.VisualStudioProcessId);
 
             _DTE visualStudioInstance;
             if (NativeMethods.TryGetVsInstance(_visualStudioProcess.Id, out visualStudioInstance))
                 _visualStudioInstance = visualStudioInstance;
             else
-                throw new InvalidOperationException("Could not find VS instance");
+            {
+                testEnvironment.LogError("Could not find Visual Studio instance");
+                throw new InvalidOperationException("Could not find Visual Studio instance");
+            }
         }
 
         public bool AttachDebugger(Process processToAttachTo)
@@ -42,17 +48,14 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 NativeMethods.SkipInitialDebugBreak((uint)processToAttachTo.Id);
                 NativeMethods.AttachVisualStudioToProcess(_visualStudioProcess, _visualStudioInstance, processToAttachTo);
+                _testEnvironment.DebugInfo($"Attached debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
                 return true;
             }
             catch (Exception)
             {
+                _testEnvironment.LogError($"Failed attaching debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
                 return false;
             }
-        }
-
-        public bool AttachDebugger(int processIdToAttachTo)
-        {
-            return AttachDebugger(Process.GetProcessById(processIdToAttachTo));
         }
 
         private static class NativeMethods
@@ -75,10 +78,8 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
             internal static void AttachVisualStudioToProcess(Process visualStudioProcess, _DTE visualStudioInstance, Process applicationProcess)
             {
-                //Find the process you want the VS instance to attach to...
                 DTEProcess processToAttachTo = visualStudioInstance.Debugger.LocalProcesses.Cast<DTEProcess>().FirstOrDefault(process => process.ProcessID == applicationProcess.Id);
 
-                //AttachDebugger to the process.
                 if (processToAttachTo != null)
                 {
                     processToAttachTo.Attach();

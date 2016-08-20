@@ -90,6 +90,7 @@ namespace GoogleTestAdapter.TestResults
             int durationInMs = 1;
             try
             {
+                // TODO check format in gtest code, replace with regex
                 int indexOfOpeningBracket = line.LastIndexOf('(');
                 int lengthOfDurationPart = line.Length - indexOfOpeningBracket - 2;
                 string durationPart = line.Substring(indexOfOpeningBracket + 1, lengthOfDurationPart);

@@ -96,10 +96,27 @@ namespace GoogleTestAdapter.Runners
             List<string> consoleOutput;
             if (executor != null)
             {
-                consoleOutput = new List<string>();
                 string pathExtension = _testEnvironment.Options.GetPathExtension(executable);
-                executor.ExecuteCommandBlocking(executable, arguments.CommandLine, workingDir, pathExtension, s => consoleOutput.Add(s),
-                    s => { });
+                bool printTestOutput = _testEnvironment.Options.PrintTestOutput &&
+                                       !_testEnvironment.Options.ParallelTestExecution;
+
+                if (printTestOutput)
+                    _testEnvironment.LogInfo(
+                        ">>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
+
+                consoleOutput = new List<string>();
+                Action<string> reportStandardOutputAction = line =>
+                {
+                    consoleOutput.Add(line);
+                    if (printTestOutput)
+                        _testEnvironment.LogInfo(line);
+                };
+                executor.ExecuteCommandBlocking(
+                    executable, arguments.CommandLine, workingDir, pathExtension, 
+                    reportStandardOutputAction, s => { });
+
+                if (printTestOutput)
+                    _testEnvironment.LogInfo("<<<<<<<<<<<<<<< End of Output");
             }
             else
             {
