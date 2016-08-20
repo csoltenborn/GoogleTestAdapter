@@ -97,7 +97,8 @@ namespace GoogleTestAdapter.Runners
             if (executor != null)
             {
                 consoleOutput = new List<string>();
-                executor.ExecuteCommandBlocking(executable, arguments.CommandLine, workingDir, s => consoleOutput.Add(s),
+                string pathExtension = _testEnvironment.Options.GetPathExtension(executable);
+                executor.ExecuteCommandBlocking(executable, arguments.CommandLine, workingDir, pathExtension, s => consoleOutput.Add(s),
                     s => { });
             }
             else

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -25,12 +27,12 @@ namespace GoogleTestAdapter.Helpers
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, out string[] standardOutput, out string[] errorOutput)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, out string[] standardOutput, out string[] errorOutput)
         {
             IList<string> standardOutputLines = new List<string>();
             IList<string> errorOutputLines = new List<string>();
 
-            int exitCode = ExecuteCommandBlocking(command, parameters, workingDir,
+            int exitCode = ExecuteCommandBlocking(command, parameters, workingDir, pathExtension,
                 s => standardOutputLines.Add(s),
                 s => errorOutputLines.Add(s));
 
@@ -39,9 +41,9 @@ namespace GoogleTestAdapter.Helpers
             return exitCode;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, Action<string> reportStandardOutputLine, Action<string> reportStandardErrorLine)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportStandardOutputLine, Action<string> reportStandardErrorLine)
         {
-            return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, _debuggerAttacher, 
+            return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, 
                 new OutputSplitter(reportStandardOutputLine), new OutputSplitter(reportStandardErrorLine), _logger);
         }
 
@@ -90,7 +92,7 @@ namespace GoogleTestAdapter.Helpers
 
             private static readonly Encoding Encoding = Encoding.Default;
 
-            internal static int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDebuggerAttacher debuggerAttacher, 
+            internal static int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, IDebuggerAttacher debuggerAttacher, 
                 OutputSplitter standardOutputSplitter, OutputSplitter errorOutputSplitter, ILogger logger)
             {
                 var processInfo = new PROCESS_INFORMATION
@@ -107,7 +109,7 @@ namespace GoogleTestAdapter.Helpers
                     if (!CreatePipe(out stderrReadingEnd, out stderrWritingEnd))
                         return LogAndReturnExecutionFailed(logger, "Could not create pipe for error output");
 
-                    if (!CreateProcess(command, parameters, workingDir, stdoutWritingEnd, stderrWritingEnd, out processInfo))
+                    if (!CreateProcess(command, parameters, workingDir, pathExtension, stdoutWritingEnd, stderrWritingEnd, out processInfo))
                         return LogAndReturnExecutionFailed(logger, $"Could not create process. Command: '{command}', parameters: '{parameters}', working dir: '{workingDir}'");
 
                     debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
@@ -154,7 +156,32 @@ namespace GoogleTestAdapter.Helpers
                 return true;
             }
 
-            private static bool CreateProcess(string command, string parameters, string workingDir, 
+            private static StringBuilder CreateEnvironment(string pathExtension)
+            {
+                StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
+                
+                if (!string.IsNullOrEmpty(pathExtension))
+                    envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+
+                List<string> envVariablesList = new List<string>();
+                foreach (string key in envVariables.Keys)
+                {
+                    envVariablesList.Add($"{key}={envVariables[key]}");
+                }
+                envVariablesList.Sort();
+
+                StringBuilder result = new StringBuilder();
+                foreach (string envVariable in envVariablesList)
+                {
+                    result.Append(envVariable);
+                    result.Length++;
+                }
+                result.Length++;
+
+                return result;
+            }
+
+            private static bool CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
                 IntPtr stdoutWritingEnd, IntPtr stderrWritingEnd, 
                 out PROCESS_INFORMATION processInfo)
             {
@@ -189,7 +216,7 @@ namespace GoogleTestAdapter.Helpers
                     lpThreadAttributes: ref threadSecurityAttributes,
                     bInheritHandles: true,
                     dwCreationFlags: CREATE_EXTENDED_STARTUPINFO_PRESENT | CREATE_SUSPENDED,
-                    lpEnvironment: IntPtr.Zero,
+                    lpEnvironment: CreateEnvironment(pathExtension),
                     lpCurrentDirectory: workingDir,
                     lpStartupInfo: ref startupinfoex,
                     lpProcessInformation: out processInfo);
@@ -270,7 +297,7 @@ namespace GoogleTestAdapter.Helpers
                 string lpApplicationName, string lpCommandLine, 
                 ref SECURITY_ATTRIBUTES lpProcessAttributes, ref SECURITY_ATTRIBUTES lpThreadAttributes,
                 bool bInheritHandles, uint dwCreationFlags,
-                IntPtr lpEnvironment, string lpCurrentDirectory, [In] ref STARTUPINFOEX lpStartupInfo,
+                [In, MarshalAs(UnmanagedType.LPStr)] StringBuilder lpEnvironment, string lpCurrentDirectory, [In] ref STARTUPINFOEX lpStartupInfo,
                 out PROCESS_INFORMATION lpProcessInformation);
 
             [DllImport("kernel32.dll", SetLastError = true)]

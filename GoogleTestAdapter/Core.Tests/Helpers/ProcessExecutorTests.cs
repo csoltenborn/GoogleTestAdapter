@@ -21,6 +21,7 @@ namespace GoogleTestAdapter.Helpers
             int exitCode = processCreator.ExecuteCommandBlocking(
                 Path.Combine(Environment.SystemDirectory, "ping.exe"),
                 "localhost",
+                "",
                 null, 
                 out standardOutput, 
                 out errorOutput);
@@ -42,7 +43,8 @@ namespace GoogleTestAdapter.Helpers
             int exitCode = processCreator.ExecuteCommandBlocking(
                 TestResources.SampleTests,
                 null,
-                null, 
+                null,
+                "", 
                 out standardOutput, 
                 out errorOutput);
 
