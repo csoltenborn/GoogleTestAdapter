@@ -238,7 +238,20 @@ namespace GoogleTestAdapter.Helpers
                     int exitCode;
                     if (!GetExitCodeProcess(processInfo.hProcess, out exitCode)
                         || exitCode != STILL_ACTIVE)
-                        break;
+                    {
+                        byte[] buffer = new byte[1204];
+                        uint bytesRead = 0, bytesAvailable = 0, bytesLeftThisMessage = 0;
+                        uint overallBytesRead = 0;
+
+                        PeekNamedPipe(stdoutReadingEnd, buffer, (uint)buffer.Length, ref bytesRead, ref bytesAvailable, ref bytesLeftThisMessage);
+                        overallBytesRead += bytesRead;
+
+                        PeekNamedPipe(stderrReadingEnd, buffer, (uint)buffer.Length, ref bytesRead, ref bytesAvailable, ref bytesLeftThisMessage);
+                        overallBytesRead += bytesRead;
+
+                        if (overallBytesRead == 0)
+                            break;
+                    }
                 }
             }
 
