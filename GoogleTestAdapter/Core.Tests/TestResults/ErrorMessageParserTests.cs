@@ -38,6 +38,19 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void Parse_SingleUnparsableErrorMessage_MessageIsPassed()
+        {
+            string errorString = "Some weird error message";
+
+            var parser = new ErrorMessageParser(errorString, BaseDir);
+            parser.Parse();
+
+            parser.ErrorMessage.Should().Be("Some weird error message");
+            parser.ErrorStackTrace.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void Parse_TwoErrorMessages_BothMessagesAreParsedWithLinks()
         {
             string errorString = $"{FullPathOfDummyExecutable}:37: error: Expected: Yes\nActual: Maybe";

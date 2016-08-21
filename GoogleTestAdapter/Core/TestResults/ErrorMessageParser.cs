@@ -79,7 +79,12 @@ namespace GoogleTestAdapter.TestResults
         {
             MatchCollection matches = _splitRegex.Matches(errorMessage);
             if (matches.Count == 0)
-                return new List<string>();
+            {
+                var result = new List<string>();
+                if (!string.IsNullOrEmpty(errorMessage))
+                    result.Add(errorMessage);
+                return result;
+            }
 
             var errorMessages = new List<string>();
             int startIndex, length;

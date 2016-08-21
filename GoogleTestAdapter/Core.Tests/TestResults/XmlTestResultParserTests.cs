@@ -164,7 +164,7 @@ Something's wrong :(";
         }
 
 
-        private void AssertTestResultIsPassed(Model.TestResult testResult)
+        public static void AssertTestResultIsPassed(Model.TestResult testResult)
         {
             testResult.Outcome.Should().Be(Model.TestOutcome.Passed);
             testResult.ErrorMessage.Should().BeNull();
@@ -178,9 +178,14 @@ Something's wrong :(";
 
         private void AssertTestResultIsFailure(Model.TestResult testResult, string errorMessage)
         {
+            AssertTestResultIsFailure(testResult);
+            testResult.ErrorMessage.Replace("\r\n", "\n").Should().Be(errorMessage.Replace("\r\n", "\n"));
+        }
+
+        public static void AssertTestResultIsFailure(Model.TestResult testResult)
+        {
             testResult.Outcome.Should().Be(Model.TestOutcome.Failed);
             testResult.ErrorMessage.Should().NotBeNull();
-            testResult.ErrorMessage.Replace("\r\n", "\n").Should().Be(errorMessage.Replace("\r\n", "\n"));
         }
 
     }
