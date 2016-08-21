@@ -112,7 +112,6 @@ namespace GoogleTestAdapter.TestResults
                 ComputerName = Environment.MachineName,
                 DisplayName = testCase.DisplayName,
                 Outcome = TestOutcome.Passed,
-                ErrorMessage = "",
                 Duration = duration
             };
         }

@@ -27,9 +27,7 @@ Expected: 1000</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Crashing.AddPassesBeforeCrash" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="Crashing.AddPassesBeforeCrash" outcome="Passed" />
     <UnitTestResult testName="Crashing.LongRunning" outcome="NotExecuted">
       <Output>
         <ErrorInfo>
