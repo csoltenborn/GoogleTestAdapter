@@ -77,21 +77,21 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-
-                _frameworkReporter.ReportTestsStarted(arguments.TestCases);
-                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor).ToArray();
+                var splitter = new TestResultSplitter(arguments.TestCases, _testEnvironment, baseDir, _frameworkReporter);
+                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, splitter).ToArray();
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
+                _frameworkReporter.ReportTestsStarted(results.Select(tr => tr.TestCase));
                 _frameworkReporter.ReportTestResults(results);
                 stopwatch.Stop();
-                _testEnvironment.DebugInfo($"Reported {results.Count()} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
+                _testEnvironment.DebugInfo($"Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
 
                 serializer.UpdateTestDurations(results);
             }
         }
 
         private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
-            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor)
+            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, TestResultSplitter splitter)
         {
             List<string> consoleOutput;
             if (executor != null)
@@ -104,19 +104,21 @@ namespace GoogleTestAdapter.Runners
                     _testEnvironment.LogInfo(
                         ">>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
 
-                consoleOutput = new List<string>();
                 Action<string> reportStandardOutputAction = line =>
                 {
-                    consoleOutput.Add(line);
+                    splitter.ReportLine(line);
                     if (printTestOutput)
                         _testEnvironment.LogInfo(line);
                 };
                 executor.ExecuteCommandBlocking(
                     executable, arguments.CommandLine, workingDir, pathExtension, 
                     reportStandardOutputAction, s => { });
+                splitter.Flush();
 
                 if (printTestOutput)
                     _testEnvironment.LogInfo("<<<<<<<<<<<<<<< End of Output");
+
+                consoleOutput = new List<string>();
             }
             else
             {
@@ -126,20 +128,33 @@ namespace GoogleTestAdapter.Runners
                         _testEnvironment.Options.PrintTestOutput && !_testEnvironment.Options.ParallelTestExecution, false,
                         debuggedLauncher);
             }
-            IEnumerable<TestResult> results = CollectTestResults(arguments.TestCases, resultXmlFile, consoleOutput, baseDir);
+
+            var remainingTestCases = 
+                arguments.TestCases.Except(splitter.TestResults.Select(tr => tr.TestCase));
+            IEnumerable<TestResult> results = CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, splitter.CrashedTestCase);
             return results;
         }
 
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir, TestCase crashedTestCase)
         {
             var testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _testEnvironment, baseDir);
             var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _testEnvironment, baseDir);
 
-            testResults.AddRange(xmlParser.GetTestResults());
-            _testEnvironment.DebugInfo($"Collected {testResults.Count} test results from XML result file '{resultXmlFile}'");
+            if (testResults.Count < testCasesRunAsArray.Length)
+            {
+                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _testEnvironment, baseDir);
+                List<TestResult> xmlResults = xmlParser.GetTestResults();
+                int nrOfCollectedTestResults = 0;
+                // ReSharper disable once AccessToModifiedClosure
+                foreach (TestResult testResult in xmlResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
+                {
+                    testResults.Add(testResult);
+                    nrOfCollectedTestResults++;
+                }
+                _testEnvironment.DebugInfo($"Collected {nrOfCollectedTestResults} test results from XML result file");
+            }
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
@@ -157,15 +172,17 @@ namespace GoogleTestAdapter.Runners
             if (testResults.Count < testCasesRunAsArray.Length)
             {
                 string errorMessage, errorStackTrace = null;
-                if (consoleParser.CrashedTestCase == null)
+                if (consoleParser.CrashedTestCase == null && crashedTestCase == null)
                 {
                     errorMessage = "";
                 }
                 else
                 {
-                    errorMessage = $"reason is probably a crash of test {consoleParser.CrashedTestCase.DisplayName}";
+                    if (crashedTestCase == null)
+                        crashedTestCase = consoleParser.CrashedTestCase;
+                    errorMessage = $"reason is probably a crash of test {crashedTestCase.DisplayName}";
                     errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
-                        consoleParser.CrashedTestCase.CodeFilePath, consoleParser.CrashedTestCase.LineNumber.ToString());
+                        crashedTestCase.CodeFilePath, crashedTestCase.LineNumber.ToString());
                 }
                 int nrOfCreatedTestResults = 0;
                 // ReSharper disable once AccessToModifiedClosure

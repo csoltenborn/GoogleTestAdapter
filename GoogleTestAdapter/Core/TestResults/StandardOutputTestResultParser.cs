@@ -87,6 +87,11 @@ namespace GoogleTestAdapter.TestResults
 
         private TimeSpan ParseDuration(string line)
         {
+            return ParseDuration(line, _testEnvironment);
+        }
+
+        public static TimeSpan ParseDuration(string line, TestEnvironment testEnvironment)
+        {
             int durationInMs = 1;
             try
             {
@@ -99,13 +104,13 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                _testEnvironment.LogWarning("Could not parse duration in line '" + line + "'");
+                testEnvironment.LogWarning("Could not parse duration in line '" + line + "'");
             }
 
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));
         }
 
-        private TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
+        public static TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
         {
             return new TestResult(testCase)
             {
@@ -116,7 +121,7 @@ namespace GoogleTestAdapter.TestResults
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, string errorMessage, string errorStackTrace)
+        public static TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, string errorMessage, string errorStackTrace)
         {
             return new TestResult(testCase)
             {
@@ -145,25 +150,30 @@ namespace GoogleTestAdapter.TestResults
 
         private TestCase FindTestcase(string qualifiedTestname)
         {
-            return _testCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
+            return FindTestcase(qualifiedTestname, _testCasesRun);
         }
 
-        private bool IsRunLine(string line)
+        public static TestCase FindTestcase(string qualifiedTestname, IList<TestCase> testCasesRun)
+        {
+            return testCasesRun.First(tc => tc.FullyQualifiedName.StartsWith(qualifiedTestname));
+        }
+
+        public static bool IsRunLine(string line)
         {
             return line.StartsWith(Run);
         }
 
-        private bool IsPassedLine(string line)
+        public static bool IsPassedLine(string line)
         {
             return line.StartsWith(Passed);
         }
 
-        private bool IsFailedLine(string line)
+        public static bool IsFailedLine(string line)
         {
             return line.StartsWith(Failed);
         }
 
-        private string RemovePrefix(string line)
+        public static string RemovePrefix(string line)
         {
             return line.Substring(Run.Length);
         }

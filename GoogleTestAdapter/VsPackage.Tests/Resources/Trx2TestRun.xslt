@@ -38,7 +38,9 @@
 
   <xsl:template match="ms:Results">
     <Results>
-      <xsl:apply-templates />
+      <xsl:apply-templates>
+        <xsl:sort select="regex:replacePointer(@testName)"/>
+      </xsl:apply-templates>
     </Results>
   </xsl:template>
 
@@ -81,7 +83,9 @@
 
   <xsl:template match="ms:TestDefinitions">
     <TestDefinitions>
-      <xsl:apply-templates />
+      <xsl:apply-templates>
+        <xsl:sort select="regex:replacePointer(@name)"/>      
+      </xsl:apply-templates>
     </TestDefinitions>
   </xsl:template>
 

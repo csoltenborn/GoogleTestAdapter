@@ -12,9 +12,10 @@ namespace GoogleTestAdapter.TestResults
     {
         private static readonly string ValidCharRegex;
 
+        private static readonly Regex ScopedTraceStartRegex;
+
         private readonly Regex _splitRegex;
         private readonly Regex _parseRegex;
-        private readonly Regex _scopedTraceStartRegex;
         private readonly Regex _scopedTraceRegex;
 
         static ErrorMessageParser()
@@ -22,6 +23,9 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<char> invalidChars =
                 Path.GetInvalidFileNameChars().Where(c => Path.GetInvalidPathChars().Contains(c));
             ValidCharRegex = "[^" + Regex.Escape(new string(invalidChars.ToArray())) + "]";
+
+            ScopedTraceStartRegex 
+                = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public string ErrorMessage { get; private set; }
@@ -44,13 +48,13 @@ namespace GoogleTestAdapter.TestResults
             string escapedBaseDir = Regex.Escape(baseDir ?? "");
             string file = $"({escapedBaseDir}{ValidCharRegex}*)";
             string line = "([0-9]+)";
-            string fileAndLine = $@"{file}((:{line})|(\({line}\):))";
-            string error = @"((error: )|(Failure\n))";
+            string fileAndLine = $@"{file}(?::{line}|\({line}\):)";
+            string error = @"(?:error: |Failure\n)";
 
-            _parseRegex = new Regex($"{fileAndLine}(:? {error})?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            _splitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            _scopedTraceStartRegex = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            _scopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            _parseRegex = new Regex($"{fileAndLine}(?::? {error})?", RegexOptions.IgnoreCase);
+            // TODO make expression parse "unknown file: error: SEH exception with code 0xc0000005 thrown in the test body."
+            _splitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.IgnoreCase);
+            _scopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.IgnoreCase);
         }
 
         public void Parse()
@@ -141,16 +145,16 @@ namespace GoogleTestAdapter.TestResults
 
             string fullFileName = match.Groups[1].Value;
             string fileName = Path.GetFileName(fullFileName);
-            string lineNumber = match.Groups[4]. Value;
+            string lineNumber = match.Groups[2]. Value;
             if (string.IsNullOrEmpty(lineNumber))
-                lineNumber = match.Groups[6].Value;
+                lineNumber = match.Groups[3].Value;
 
             string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
 
             stackTrace = CreateStackTraceEntry($"{msgReference}{fileName}:{lineNumber}", fullFileName, lineNumber);
             errorMessage = errorMessage.Replace(match.Value, "").Trim();
 
-            match = _scopedTraceStartRegex.Match(errorMessage);
+            match = ScopedTraceStartRegex.Match(errorMessage);
             if (match.Success)
             {
                 string scopedTraces = errorMessage.Substring(match.Index + match.Value.Length);
