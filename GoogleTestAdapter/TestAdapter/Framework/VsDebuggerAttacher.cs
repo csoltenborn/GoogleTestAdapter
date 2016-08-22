@@ -93,6 +93,26 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 }
             }
 
+            private static bool WaitForDebugEvent(ref dynamic debugEvent32Or64, int dwMilliseconds)
+            {
+                bool is64BitProcess = (IntPtr.Size == 8);
+                if (is64BitProcess)
+                {
+                    var debugEvent64 = new DebugEvent64();
+                    if (!NativeDebuggingMethods.WaitForDebugEvent64(ref debugEvent64, dwMilliseconds))
+                        return false;
+                    debugEvent32Or64 = debugEvent64;
+                }
+                else
+                {
+                    var debugEvent32 = new DebugEvent32();
+                    if (!NativeDebuggingMethods.WaitForDebugEvent32(ref debugEvent32, dwMilliseconds))
+                        return false;
+                    debugEvent32Or64 = debugEvent32;
+                }
+                return true;
+            }
+
             internal static void SkipInitialDebugBreak(uint dwProcessId)
             {
                 if (!NativeDebuggingMethods.DebugActiveProcess(dwProcessId))
@@ -104,11 +124,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     uint mainThread = 0;
                     while (!done)
                     {
-                        var debugEvent = new DebugEvent32();
-                        if (!NativeDebuggingMethods.WaitForDebugEvent32(ref debugEvent, (int) TimeSpan.FromSeconds(10).TotalMilliseconds))
+                        dynamic debugEvent = null;
+                        if (!WaitForDebugEvent(ref debugEvent, (int) TimeSpan.FromSeconds(10).TotalMilliseconds))
                             throw new LastWin32Exception();
 
-                        switch (debugEvent.header.dwDebugEventCode)
+
+                        switch ((NativeDebugEventCode)debugEvent.header.dwDebugEventCode)
                         {
                             case NativeDebugEventCode.CREATE_PROCESS_DEBUG_EVENT:
                                 new SafeFileHandle(debugEvent.union.CreateProcess.hFile, true).Dispose();
