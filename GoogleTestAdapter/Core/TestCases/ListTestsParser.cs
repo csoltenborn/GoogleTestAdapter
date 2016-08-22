@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.TestCases
             _testNameSeparator = testEnvironment.Options.TestNameSeparator;
         }
 
-        public IList<TestCaseDescriptor> ParseListTestsOutput(List<string> consoleOutput)
+        public IList<TestCaseDescriptor> ParseListTestsOutput(IEnumerable<string> consoleOutput)
         {
             var testCaseDescriptors = new List<TestCaseDescriptor>();
             string currentSuite = "";

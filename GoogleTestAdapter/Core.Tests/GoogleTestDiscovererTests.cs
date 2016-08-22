@@ -176,6 +176,22 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_LoadTests_AllTestsAreFound()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests);
+
+            testCases.Count.Should().Be(5000);
+            for (int i = 0; i < 5000; i++)
+            {
+                string fullyQualifiedName = $"LoadTests.Test/{i}";
+                bool contains = testCases.Any(tc => tc.FullyQualifiedName == fullyQualifiedName);
+                contains.Should().BeTrue($" Test not found: {fullyQualifiedName}");
+            }
+        }
+
+        [TestMethod]
         [TestCategory(Load)]
         public void GetTestsFromExecutable_LoadTests_AreFoundInReasonableTime()
         {

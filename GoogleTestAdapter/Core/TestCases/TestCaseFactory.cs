@@ -25,16 +25,33 @@ namespace GoogleTestAdapter.TestCases
 
         public IList<TestCase> CreateTestCases()
         {
-            var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(_executable));
-            int processReturnCode;
-            List<string> consoleOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processReturnCode);
-            if (processReturnCode != 0)
+            List<string> standardOutput;
+            int processExitCode;
+            if (_testEnvironment.Options.UseNewTestExecutionFramework)
+            {
+                standardOutput = new List<string>();
+                var executor = new ProcessExecutor(null, _testEnvironment);
+                processExitCode = executor.ExecuteCommandBlocking(
+                    _executable, 
+                    GoogleTestConstants.ListTestsOption.Trim(), 
+                    "", 
+                    _testEnvironment.Options.GetPathExtension(_executable),
+                    s => standardOutput.Add(s),
+                    s => {});
+            }
+            else
+            {
+                var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(_executable));
+                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processExitCode);
+            }
+
+            if (processExitCode != 0)
             {
                 string messsage =
-                    $"Could not list test cases of executable '{_executable}': executing process failed with return code {processReturnCode}";
+                    $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
                 messsage += $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption.Trim()}', working directory: '{Path.GetDirectoryName(_executable)}'";
-                if (consoleOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    messsage += $"\nOutput of command:\n{string.Join("\n", consoleOutput)}";
+                if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
+                    messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
                 else
                     messsage += "\nCommand produced no output";
 
@@ -43,7 +60,7 @@ namespace GoogleTestAdapter.TestCases
                 return new List<TestCase>();
             }
 
-            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_testEnvironment).ParseListTestsOutput(consoleOutput);
+            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_testEnvironment).ParseListTestsOutput(standardOutput);
             if (_testEnvironment.Options.ParseSymbolInformation)
             {
                 List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _testEnvironment.Options.GetPathExtension(_executable));

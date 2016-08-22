@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.Helpers
             internal void ReportOutputPart(string part)
             {
                 _currentOutput += part;
-                string[] lines = Regex.Split(_currentOutput, "\r\n|\r|\n");
+                string[] lines = Regex.Split(_currentOutput, "\r\n");
                 for (int i = 0; i < lines.Length - 1; i++)
                 {
                     _reportLineAction(lines[i]);
@@ -200,8 +200,9 @@ namespace GoogleTestAdapter.Helpers
                 var threadSecurityAttributes = new SECURITY_ATTRIBUTES();
                 threadSecurityAttributes.nLength = Marshal.SizeOf(threadSecurityAttributes);
 
+                string commandLine = command;
                 if (!string.IsNullOrEmpty(parameters))
-                    parameters = $"{command} {parameters}";
+                    commandLine += $" {parameters}";
                 if (string.IsNullOrEmpty(workingDir))
                     workingDir = null;
 
@@ -209,8 +210,8 @@ namespace GoogleTestAdapter.Helpers
                 // ReSharper disable ArgumentsStyleLiteral
                 // ReSharper disable ArgumentsStyleOther
                 return CreateProcess(
-                    lpApplicationName: command,
-                    lpCommandLine: parameters,
+                    lpApplicationName: null,
+                    lpCommandLine: commandLine,
                     lpProcessAttributes: ref processSecurityAttributes,
                     lpThreadAttributes: ref threadSecurityAttributes,
                     bInheritHandles: true,

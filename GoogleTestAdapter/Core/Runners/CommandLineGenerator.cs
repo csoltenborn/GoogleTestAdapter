@@ -21,9 +21,8 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-
+        // TODO change to new MaxCommandLength asa only ProcessExecutor is used (32768, see https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396)
         public const int MaxCommandLength = 8191;
-
 
         private readonly int _lengthOfExecutableString;
         private readonly IEnumerable<TestCase> _allTestCases;
@@ -31,7 +30,6 @@ namespace GoogleTestAdapter.Runners
         private readonly string _resultXmlFile;
         private readonly TestEnvironment _testEnvironment;
         private readonly string _userParameters;
-
 
         public CommandLineGenerator(
             IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
@@ -50,7 +48,6 @@ namespace GoogleTestAdapter.Runners
             _testEnvironment = testEnvironment;
             _userParameters = userParameters;
         }
-
 
         public IEnumerable<Args> GetCommandLines()
         {
