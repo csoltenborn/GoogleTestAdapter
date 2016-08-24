@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -29,16 +30,23 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             if (_testEnvironment == null || _testEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
                 _testEnvironment = TestExecutor.CreateTestEnvironment(discoveryContext.RunSettings, logger);
                 _discoverer = new GoogleTestDiscoverer(_testEnvironment);
             }
 
+            _testEnvironment.LogInfo("Google Test Adapter: Test discovery starting...");
+
             try
             {
-                VsTestFrameworkReporter reporter = new VsTestFrameworkReporter(discoverySink);
+                var reporter = new VsTestFrameworkReporter(discoverySink);
                 _discoverer.DiscoverTests(executables, reporter);
+
+                stopwatch.Stop();
+                _testEnvironment.LogInfo($"Test discovery completed, overall duration: {stopwatch.Elapsed}");
             }
             catch (Exception e)
             {

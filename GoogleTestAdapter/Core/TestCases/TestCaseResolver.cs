@@ -13,7 +13,6 @@ namespace GoogleTestAdapter.TestCases
     internal class TestCaseResolver
     {
         // see GTA_Traits.h
-        private const string TraitSeparator = "__GTA__";
         private const string TraitAppendix = "_GTA_TRAIT";
 
         private readonly IDiaResolverFactory _diaResolverFactory;
@@ -77,30 +76,10 @@ namespace GoogleTestAdapter.TestCases
 
         private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
         {
-            List<Trait> traits = GetTraits(location, allTraitSymbols);
+            List<Trait> traits = NewTestCaseResolver.GetTraits(location, allTraitSymbols);
             var testCaseLocation = new TestCaseLocation(location.Symbol, location.Sourcefile, location.Line);
             testCaseLocation.Traits.AddRange(traits);
             return testCaseLocation;
-        }
-
-        private List<Trait> GetTraits(SourceFileLocation nativeSymbol, IEnumerable<SourceFileLocation> allTraitSymbols)
-        {
-            var traits = new List<Trait>();
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (SourceFileLocation nativeTraitSymbol in allTraitSymbols)
-            {
-                int indexOfSerializedTrait = nativeTraitSymbol.Symbol.LastIndexOf("::", StringComparison.Ordinal) + "::".Length;
-                string testClassSignature = nativeTraitSymbol.Symbol.Substring(0, indexOfSerializedTrait - "::".Length);
-                if (nativeSymbol.Symbol.StartsWith(testClassSignature))
-                {
-                    int lengthOfSerializedTrait = nativeTraitSymbol.Symbol.Length - indexOfSerializedTrait - TraitAppendix.Length;
-                    string serializedTrait = nativeTraitSymbol.Symbol.Substring(indexOfSerializedTrait, lengthOfSerializedTrait);
-                    string[] data = serializedTrait.Split(new[] { TraitSeparator }, StringSplitOptions.None);
-                    traits.Add(new Trait(data[0], data[1]));
-                }
-            }
-
-            return traits;
         }
 
     }

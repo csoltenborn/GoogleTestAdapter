@@ -30,10 +30,29 @@ namespace GoogleTestAdapter
             _testEnvironment.DebugInfo(_testEnvironment.Options.ToString());
 
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            foreach (string executable in googleTestExecutables)
+            if (_testEnvironment.Options.UseNewTestExecutionFramework)
             {
-                IList<TestCase> testCases = GetTestsFromExecutable(executable);
-                reporter.ReportTestsFound(testCases);
+                foreach (string executable in googleTestExecutables)
+                {
+                    int nrOfTestCases = 0;
+                    Action<TestCase> reportTestCases = tc =>
+                    {
+                        reporter.ReportTestsFound(tc.Yield());
+                        _testEnvironment.DebugInfo("Added testcase " + tc.DisplayName);
+                        nrOfTestCases++;
+                    };
+                    var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
+                    factory.CreateTestCases(reportTestCases);
+                    _testEnvironment.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                }
+            }
+            else
+            {
+                foreach (string executable in googleTestExecutables)
+                {
+                    IList<TestCase> testCases = GetTestsFromExecutable(executable);
+                    reporter.ReportTestsFound(testCases);
+                }
             }
         }
 
@@ -42,11 +61,11 @@ namespace GoogleTestAdapter
             var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
             IList<TestCase> testCases = factory.CreateTestCases();
 
-            _testEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
             foreach (TestCase testCase in testCases)
             {
                 _testEnvironment.DebugInfo("Added testcase " + testCase.DisplayName);
             }
+            _testEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 
             return testCases;
         }

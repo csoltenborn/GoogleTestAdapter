@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -23,42 +24,59 @@ namespace GoogleTestAdapter.TestCases
             _diaResolverFactory = diaResolverFactory;
         }
 
-        public IList<TestCase> CreateTestCases()
+        public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
         {
-            List<string> standardOutput;
+            List<string> standardOutput = new List<string>();
             int processExitCode;
             if (_testEnvironment.Options.UseNewTestExecutionFramework)
             {
-                standardOutput = new List<string>();
+                List<TestCase> testCases = new List<TestCase>();
+
+                NewTestCaseResolver resolver = new NewTestCaseResolver(
+                    _executable, 
+                    _testEnvironment.Options.GetPathExtension(_executable), 
+                    _diaResolverFactory, 
+                    _testEnvironment);
+                Action<TestCaseDescriptor> parserAction = tcd =>
+                {
+                    if (_testEnvironment.Options.ParseSymbolInformation)
+                    {
+                        TestCaseLocation testCaseLocation =
+                            resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(tcd).ToList());
+                        TestCase testCase = CreateTestCase(tcd, testCaseLocation.Yield().ToList());
+                        reportTestCase?.Invoke(testCase);
+                        testCases.Add(testCase);
+                    }
+                    else
+                    {
+                        testCases.Add(CreateTestCase(tcd));
+                    }
+                };
+                StreamingListTestsParser parser = new StreamingListTestsParser(_testEnvironment.Options.TestNameSeparator, parserAction);
+                Action<string> lineAction = s =>
+                {
+                    standardOutput.Add(s);
+                    parser.ReportLine(s);
+                };
+
                 var executor = new ProcessExecutor(null, _testEnvironment);
                 processExitCode = executor.ExecuteCommandBlocking(
                     _executable, 
                     GoogleTestConstants.ListTestsOption.Trim(), 
                     "", 
                     _testEnvironment.Options.GetPathExtension(_executable),
-                    s => standardOutput.Add(s),
+                    lineAction,
                     s => {});
-            }
-            else
-            {
-                var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(_executable));
-                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processExitCode);
+                if (!CheckProcessExitCode(processExitCode, standardOutput))
+                    return new List<TestCase>();
+                return testCases;
             }
 
-            if (processExitCode != 0)
-            {
-                string messsage =
-                    $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
-                messsage += $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption.Trim()}', working directory: '{Path.GetDirectoryName(_executable)}'";
-                if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
-                else
-                    messsage += "\nCommand produced no output";
+            var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(_executable));
+            standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processExitCode);
 
-                _testEnvironment.LogWarning(messsage);
-
+            if (!CheckProcessExitCode(processExitCode, standardOutput))
                 return new List<TestCase>();
-            }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_testEnvironment).ParseListTestsOutput(standardOutput);
             if (_testEnvironment.Options.ParseSymbolInformation)
@@ -68,6 +86,25 @@ namespace GoogleTestAdapter.TestCases
             }
 
             return testCaseDescriptors.Select(CreateTestCase).ToList();
+        }
+
+        private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput)
+        {
+            if (processExitCode != 0)
+            {
+                string messsage =
+                    $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
+                messsage +=
+                    $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption.Trim()}', working directory: '{Path.GetDirectoryName(_executable)}'";
+                if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
+                    messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
+                else
+                    messsage += "\nCommand produced no output";
+
+                _testEnvironment.LogWarning(messsage);
+                return false;
+            }
+            return true;
         }
 
         private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
@@ -94,7 +131,7 @@ namespace GoogleTestAdapter.TestCases
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, List<TestCaseLocation> testCaseLocations)
         {
             TestCaseLocation location = testCaseLocations.FirstOrDefault(
-                l => _signatureCreator.GetTestMethodSignatures(descriptor).Any(s => Regex.IsMatch(l.Symbol, s)));
+                l => l != null && _signatureCreator.GetTestMethodSignatures(descriptor).Any(s => Regex.IsMatch(l.Symbol, s)));
 
             if (location != null)
             {
