@@ -11,23 +11,30 @@ namespace GoogleTestAdapter.TestCases
         private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;
-        private readonly Action<TestCaseDescriptor> _onDescriptorCreated;
 
         private string _currentSuite = "";
 
-        public StreamingListTestsParser(string testNameSeparator, Action<TestCaseDescriptor> onDescriptorCreated)
+        public StreamingListTestsParser(string testNameSeparator)
         {
-            _onDescriptorCreated = onDescriptorCreated;
             _testNameSeparator = testNameSeparator;
         }
+
+        public class TestCaseDescriptorCreatedEventArgs : EventArgs
+        {
+            public TestCaseDescriptor TestCaseDescriptor { get; set; }
+        }
+
+        public event EventHandler<TestCaseDescriptorCreatedEventArgs> TestCaseDescriptorCreated;
+
 
         public void ReportLine(string line)
         {
             string trimmedLine = line.Trim('.', '\n', '\r');
             if (trimmedLine.StartsWith("  "))
             {
-                _onDescriptorCreated(
-                    CreateDescriptor(_currentSuite, trimmedLine.Substring(2)));
+                TestCaseDescriptor descriptor = CreateDescriptor(_currentSuite, trimmedLine.Substring(2));
+                TestCaseDescriptorCreated?.Invoke(this,
+                    new TestCaseDescriptorCreatedEventArgs {TestCaseDescriptor = descriptor});
             }
             else
             {

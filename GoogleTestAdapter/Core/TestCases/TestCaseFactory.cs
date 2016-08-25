@@ -37,22 +37,22 @@ namespace GoogleTestAdapter.TestCases
                     _testEnvironment.Options.GetPathExtension(_executable), 
                     _diaResolverFactory, 
                     _testEnvironment);
-                Action<TestCaseDescriptor> parserAction = tcd =>
+                StreamingListTestsParser parser = new StreamingListTestsParser(_testEnvironment.Options.TestNameSeparator);
+                parser.TestCaseDescriptorCreated += (sender, args) =>
                 {
                     if (_testEnvironment.Options.ParseSymbolInformation)
                     {
                         TestCaseLocation testCaseLocation =
-                            resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(tcd).ToList());
-                        TestCase testCase = CreateTestCase(tcd, testCaseLocation.Yield().ToList());
+                            resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(args.TestCaseDescriptor).ToList());
+                        TestCase testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation.Yield().ToList());
                         reportTestCase?.Invoke(testCase);
                         testCases.Add(testCase);
                     }
                     else
                     {
-                        testCases.Add(CreateTestCase(tcd));
+                        testCases.Add(CreateTestCase(args.TestCaseDescriptor));
                     }
                 };
-                StreamingListTestsParser parser = new StreamingListTestsParser(_testEnvironment.Options.TestNameSeparator, parserAction);
                 Action<string> lineAction = s =>
                 {
                     standardOutput.Add(s);
@@ -67,8 +67,10 @@ namespace GoogleTestAdapter.TestCases
                     _testEnvironment.Options.GetPathExtension(_executable),
                     lineAction,
                     s => {});
+
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
                     return new List<TestCase>();
+
                 return testCases;
             }
 
