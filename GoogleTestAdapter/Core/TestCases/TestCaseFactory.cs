@@ -37,22 +37,25 @@ namespace GoogleTestAdapter.TestCases
                     _testEnvironment.Options.GetPathExtension(_executable), 
                     _diaResolverFactory, 
                     _testEnvironment);
+
                 StreamingListTestsParser parser = new StreamingListTestsParser(_testEnvironment.Options.TestNameSeparator);
                 parser.TestCaseDescriptorCreated += (sender, args) =>
                 {
+                    TestCase testCase;
                     if (_testEnvironment.Options.ParseSymbolInformation)
                     {
                         TestCaseLocation testCaseLocation =
                             resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(args.TestCaseDescriptor).ToList());
-                        TestCase testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation.Yield().ToList());
-                        reportTestCase?.Invoke(testCase);
-                        testCases.Add(testCase);
+                        testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation.Yield().ToList());
                     }
                     else
                     {
-                        testCases.Add(CreateTestCase(args.TestCaseDescriptor));
+                        testCase = CreateTestCase(args.TestCaseDescriptor);
                     }
+                    reportTestCase?.Invoke(testCase);
+                    testCases.Add(testCase);
                 };
+
                 Action<string> lineAction = s =>
                 {
                     standardOutput.Add(s);
