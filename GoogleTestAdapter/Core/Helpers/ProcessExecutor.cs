@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -12,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using Microsoft.Win32.SafeHandles;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -28,42 +31,19 @@ namespace GoogleTestAdapter.Helpers
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportStandardOutputLine, Action<string> reportStandardErrorLine)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
         {
-            return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, 
-                new OutputSplitter(reportStandardOutputLine), new OutputSplitter(reportStandardErrorLine), _logger);
-        }
-
-        private class OutputSplitter
-        {
-            private readonly Action<string> _reportLineAction;
-
-            private string _currentOutput = "";
-
-            internal OutputSplitter(Action<string> reportLineAction)
+            try
             {
-                _reportLineAction = reportLineAction;
-            }
+                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, reportOutputLine);
 
-            internal void ReportOutputPart(string part)
+            }
+            catch (Win32Exception ex)
             {
-                _currentOutput += part;
-                string[] lines = Regex.Split(_currentOutput, "\r\n");
-                for (int i = 0; i < lines.Length - 1; i++)
-                {
-                    _reportLineAction(lines[i]);
-                }
-                _currentOutput = lines.Last();
+                string nativeErrorMessage = new Win32Exception(ex.NativeErrorCode).Message;
+                _logger.LogError($"{ex.Message} ({ex.NativeErrorCode}: {nativeErrorMessage})");
+                return ExecutionFailed;
             }
-
-            internal void Flush()
-            {
-                if (!string.IsNullOrEmpty(_currentOutput))
-                    _reportLineAction(_currentOutput);
-
-                _currentOutput = "";
-            }
-
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
@@ -71,90 +51,77 @@ namespace GoogleTestAdapter.Helpers
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         private static class NativeMethods
         {
-            private const int STILL_ACTIVE = 259;
+            private class ProcessOutputPipeStream : PipeStream
+            {
+                public readonly SafePipeHandle _writingEnd;
+
+                public ProcessOutputPipeStream() : base(PipeDirection.In, 0)
+                {
+                    SafePipeHandle readingEnd;
+                    CreatePipe(out readingEnd, out _writingEnd);
+                    base.InitializeHandle(readingEnd, false, false);
+                }
+
+                public void ConnectedToChildProcess()
+                {
+                    // Close the writing end of the pipe - it's still open in the child process.
+                    // If we didn't close it, a StreamReader would never reach EndOfStream.
+                    _writingEnd?.Dispose();
+                    base.IsConnected = true;
+                }
+
+                protected override void Dispose(bool disposing)
+                {
+                    base.Dispose(disposing);
+                    if (disposing)
+                        _writingEnd?.Dispose();
+                }
+            }
+
             private const int STARTF_USESTDHANDLES = 0x00000100;
             private const uint CREATE_SUSPENDED = 0x00000004;
             private const uint CREATE_EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
             private const uint HANDLE_FLAG_INHERIT = 0x00000001;
-
-            private static readonly Encoding Encoding = Encoding.Default;
+            private const uint INFINITE = 0xFFFFFFFF;
 
             internal static int ExecuteCommandBlocking(
                 string command, string parameters, string workingDir, string pathExtension, 
-                IDebuggerAttacher debuggerAttacher, 
-                OutputSplitter standardOutputSplitter, OutputSplitter errorOutputSplitter, 
-                ILogger logger)
+                IDebuggerAttacher debuggerAttacher, Action<string> reportOutputLine)
             {
-                var processInfo = new PROCESS_INFORMATION
+                using (var pipeStream = new ProcessOutputPipeStream())
                 {
-                    hProcess = IntPtr.Zero,
-                    hThread = IntPtr.Zero
-                };
-                IntPtr stdoutReadingEnd = IntPtr.Zero, stdoutWritingEnd = IntPtr.Zero;
-                IntPtr stderrReadingEnd = IntPtr.Zero, stderrWritingEnd = IntPtr.Zero;
-                try
-                {
-                    if (!CreatePipe(out stdoutReadingEnd, out stdoutWritingEnd, logger))
-                        return ExecutionFailed;
-                    if (!CreatePipe(out stderrReadingEnd, out stderrWritingEnd, logger))
-                        return ExecutionFailed;
-
-                    if (!CreateProcess(command, parameters, workingDir, pathExtension, stdoutWritingEnd,
-                            stderrWritingEnd, out processInfo))
+                    var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, pipeStream._writingEnd);
+                    using (var process = new SafeWaitHandle(processInfo.hProcess, true))
+                    using (var thread  = new SafeWaitHandle(processInfo.hThread, true))
                     {
-                        LogWin32Error(logger, $"Could not create process. Command: '{command}', parameters: '{parameters}', working dir: '{workingDir}'");
-                        return ExecutionFailed;
-                    }
+                        pipeStream.ConnectedToChildProcess();
 
-                    debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
+                        debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
 
-                    ResumeThread(processInfo.hThread);
+                        ResumeThread(thread);
 
-                    ReadProcessOutput(processInfo, stdoutReadingEnd, standardOutputSplitter, stderrReadingEnd, errorOutputSplitter);
-                    standardOutputSplitter.Flush();
-                    errorOutputSplitter.Flush();
+                        using (var reader = new StreamReader(pipeStream))
+                            while (!reader.EndOfStream)
+                                reportOutputLine(reader.ReadLine());
 
-                    int exitCode;
-                    if (GetExitCodeProcess(processInfo.hProcess, out exitCode))
+                        WaitForSingleObject(process, INFINITE);
+
+                        int exitCode;
+                        if(!GetExitCodeProcess(process, out exitCode))
+                            throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get exit code of process");
+
                         return exitCode;
-
-                    LogWin32Error(logger, "Could not receive exit code of process");
-                    return ExecutionFailed;
-                }
-                finally
-                {
-                    SafeCloseHandle(ref processInfo.hProcess);
-                    SafeCloseHandle(ref processInfo.hThread);
-                    SafeCloseHandle(ref stdoutReadingEnd);
-                    SafeCloseHandle(ref stdoutWritingEnd);
-                    SafeCloseHandle(ref stderrReadingEnd);
-                    SafeCloseHandle(ref stderrWritingEnd);
+                    }
                 }
             }
 
-            private static bool CreatePipe(out IntPtr readingEnd, out IntPtr writingEnd, ILogger logger)
+            public static void CreatePipe(out SafePipeHandle readingEnd, out SafePipeHandle writingEnd)
             {
-                var securityAttributes = new SECURITY_ATTRIBUTES();
-                securityAttributes.nLength = Marshal.SizeOf(securityAttributes);
-                securityAttributes.bInheritHandle = true;
-                securityAttributes.lpSecurityDescriptor = IntPtr.Zero;
+                if (!CreatePipe(out readingEnd, out writingEnd, IntPtr.Zero, 0))
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not create pipe");
 
-                IntPtr securityAttributesPointer = Marshal.AllocHGlobal(Marshal.SizeOf(securityAttributes));
-                Marshal.StructureToPtr(securityAttributes, securityAttributesPointer, true);
-
-                if (!CreatePipe(out readingEnd, out writingEnd, securityAttributesPointer, 0))
-                {
-                    LogWin32Error(logger, "Could not create pipe");
-                    return false;
-                }
-
-                if (!SetHandleInformation(readingEnd, HANDLE_FLAG_INHERIT, 0))
-                {
-                    LogWin32Error(logger, "Could not set handle information");
-                    return false;
-                }
-
-                return true;
+                if (!SetHandleInformation(writingEnd, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not set handle information");
             }
 
             private static StringBuilder CreateEnvironment(string pathExtension)
@@ -180,25 +147,19 @@ namespace GoogleTestAdapter.Helpers
                 return result;
             }
 
-            private static bool CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
-                IntPtr stdoutWritingEnd, IntPtr stderrWritingEnd, 
-                out PROCESS_INFORMATION processInfo)
+            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
+                SafePipeHandle outputPipeWritingEnd)
             {
                 var startupinfoex = new STARTUPINFOEX
                 {
                     StartupInfo = new STARTUPINFO
                     {
-                        hStdOutput = stdoutWritingEnd,
-                        hStdError = stderrWritingEnd
+                        hStdOutput = outputPipeWritingEnd,
+                        hStdError = outputPipeWritingEnd,
+                        dwFlags = STARTF_USESTDHANDLES,
+                        cb = Marshal.SizeOf(typeof(STARTUPINFOEX)),
                     }
                 };
-                startupinfoex.StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
-                startupinfoex.StartupInfo.cb = Marshal.SizeOf(startupinfoex);
-
-                var processSecurityAttributes = new SECURITY_ATTRIBUTES();
-                processSecurityAttributes.nLength = Marshal.SizeOf(processSecurityAttributes);
-                var threadSecurityAttributes = new SECURITY_ATTRIBUTES();
-                threadSecurityAttributes.nLength = Marshal.SizeOf(threadSecurityAttributes);
 
                 string commandLine = command;
                 if (!string.IsNullOrEmpty(parameters))
@@ -206,148 +167,70 @@ namespace GoogleTestAdapter.Helpers
                 if (string.IsNullOrEmpty(workingDir))
                     workingDir = null;
 
+
+                PROCESS_INFORMATION processInfo;
                 // ReSharper disable ArgumentsStyleNamedExpression
                 // ReSharper disable ArgumentsStyleLiteral
                 // ReSharper disable ArgumentsStyleOther
-                return CreateProcess(
+                if (!CreateProcess(
                     lpApplicationName: null,
                     lpCommandLine: commandLine,
-                    lpProcessAttributes: ref processSecurityAttributes,
-                    lpThreadAttributes: ref threadSecurityAttributes,
+                    lpProcessAttributes: null, 
+                    lpThreadAttributes: null, 
                     bInheritHandles: true,
                     dwCreationFlags: CREATE_EXTENDED_STARTUPINFO_PRESENT | CREATE_SUSPENDED,
                     lpEnvironment: CreateEnvironment(pathExtension),
                     lpCurrentDirectory: workingDir,
-                    lpStartupInfo: ref startupinfoex,
-                    lpProcessInformation: out processInfo);
+                    lpStartupInfo: startupinfoex,
+                    lpProcessInformation: out processInfo))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error(),
+                        $"Could not create process. Command: '{command}', parameters: '{parameters}', working dir: '{workingDir}'");
+                }
                 // ReSharper restore ArgumentsStyleNamedExpression
                 // ReSharper restore ArgumentsStyleLiteral
                 // ReSharper restore ArgumentsStyleOther
-            }
 
-            // after http://edn.embarcadero.com/article/10387
-            private static void ReadProcessOutput(
-                PROCESS_INFORMATION processInfo, 
-                IntPtr stdoutReadingEnd, OutputSplitter standardOutputSplitter, 
-                IntPtr stderrReadingEnd, OutputSplitter errorOutputSplitter)
-            {
-                for (;;)
-                {
-                    ReadPipe(stdoutReadingEnd, standardOutputSplitter);
-                    ReadPipe(stderrReadingEnd, errorOutputSplitter);
-
-                    int exitCode;
-                    if (!GetExitCodeProcess(processInfo.hProcess, out exitCode)
-                        || exitCode != STILL_ACTIVE)
-                    {
-                        byte[] buffer = new byte[1204];
-                        uint bytesRead = 0, bytesAvailable = 0, bytesLeftThisMessage = 0;
-                        uint overallBytesRead = 0;
-
-                        PeekNamedPipe(stdoutReadingEnd, buffer, (uint)buffer.Length, ref bytesRead, ref bytesAvailable, ref bytesLeftThisMessage);
-                        overallBytesRead += bytesRead;
-
-                        PeekNamedPipe(stderrReadingEnd, buffer, (uint)buffer.Length, ref bytesRead, ref bytesAvailable, ref bytesLeftThisMessage);
-                        overallBytesRead += bytesRead;
-
-                        if (overallBytesRead == 0)
-                            break;
-                    }
-                }
-            }
-
-            private static void ReadPipe(IntPtr readingEnd, OutputSplitter outputSplitter)
-            {
-                byte[] buffer = new byte[1024];
-                uint bytesRead = 0, bytesAvailable = 0, bytesLeftThisMessage = 0;
-                PeekNamedPipe(readingEnd, buffer, (uint) buffer.Length, ref bytesRead, ref bytesAvailable, ref bytesLeftThisMessage);
-
-                if (bytesRead != 0)
-                {
-                    buffer.Initialize();
-                    if (bytesAvailable > buffer.Length - 1)
-                    {
-                        while (bytesRead >= buffer.Length - 1)
-                        {
-                            ReadPipe(readingEnd, outputSplitter, buffer, ref bytesRead);
-                        }
-                    }
-                    else
-                    {
-                        ReadPipe(readingEnd, outputSplitter, buffer, ref bytesRead);
-                    }
-                }
-            }
-
-            private static unsafe void ReadPipe(IntPtr readingEnd, OutputSplitter outputSplitter, byte[] buffer, ref uint bytesRead)
-            {
-                ReadFile(readingEnd, buffer, buffer.Length - 1, ref bytesRead, null);
-                string content = Encoding.GetString(buffer, 0, (int) bytesRead);
-                outputSplitter.ReportOutputPart(content);
-                buffer.Initialize();
-            }
-
-            private static void SafeCloseHandle(ref IntPtr hObject)
-            {
-                if (hObject != IntPtr.Zero)
-                {
-                    CloseHandle(hObject);
-                    hObject = IntPtr.Zero;
-                }
-            }
-
-            private static void LogWin32Error(ILogger logger, string message)
-            {
-                int errorCode = Marshal.GetLastWin32Error();
-                string errorMessage = new Win32Exception(errorCode).Message;
-                logger.LogError($"{message} ({errorCode}: {errorMessage})");
+                return processInfo;
             }
 
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             private static extern bool CreateProcess(
                 string lpApplicationName, string lpCommandLine, 
-                ref SECURITY_ATTRIBUTES lpProcessAttributes, ref SECURITY_ATTRIBUTES lpThreadAttributes,
+                SECURITY_ATTRIBUTES lpProcessAttributes, SECURITY_ATTRIBUTES lpThreadAttributes,
                 bool bInheritHandles, uint dwCreationFlags,
-                [In, MarshalAs(UnmanagedType.LPStr)] StringBuilder lpEnvironment, string lpCurrentDirectory, [In] ref STARTUPINFOEX lpStartupInfo,
+                [In, MarshalAs(UnmanagedType.LPStr)] StringBuilder lpEnvironment, string lpCurrentDirectory, [In] STARTUPINFOEX lpStartupInfo,
                 out PROCESS_INFORMATION lpProcessInformation);
 
             [DllImport("kernel32.dll", SetLastError = true)]
-            private static extern bool GetExitCodeProcess(IntPtr hProcess, out int lpExitCode);
+            static extern uint WaitForSingleObject(SafeHandle hProcess, uint dwMilliseconds);
 
             [DllImport("kernel32.dll", SetLastError = true)]
-            private static extern bool CloseHandle(IntPtr hObject);
+            private static extern bool GetExitCodeProcess(SafeHandle hProcess, out int lpExitCode);
 
             [DllImport("kernel32.dll", SetLastError = true)]
-            private static extern bool SetHandleInformation(IntPtr hObject, uint dwMask, uint dwFlags);
+            private static extern bool SetHandleInformation(SafeHandle hObject, uint dwMask, uint dwFlags);
 
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern bool CreatePipe(
-                out IntPtr hReadPipe, out IntPtr hWritePipe, 
+                out SafePipeHandle hReadPipe, out SafePipeHandle hWritePipe, 
                 IntPtr securityAttributes, int nSize);
 
             [DllImport("kernel32.dll", SetLastError = true)]
-            static extern bool PeekNamedPipe(
-                IntPtr handle, byte[] buffer, uint nBufferSize, 
-                ref uint bytesRead, ref uint bytesAvail, ref uint BytesLeftThisMessage);
+            private static extern int ResumeThread(SafeHandle hThread);
 
-            [DllImport("kernel32", SetLastError = true)]
-            static extern unsafe bool ReadFile(
-                IntPtr hFile, byte[] pBuffer, int NumberOfBytesToRead, 
-                ref uint pNumberOfBytesRead, NativeOverlapped* overlapped);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
-            private static extern int ResumeThread(IntPtr hThread);
+            private static SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            private struct STARTUPINFOEX
+            private class STARTUPINFOEX
             {
                 public STARTUPINFO StartupInfo;
                 public IntPtr lpAttributeList;
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            private struct STARTUPINFO
+            private class STARTUPINFO
             {
                 public Int32 cb;
                 public string lpReserved;
@@ -364,30 +247,27 @@ namespace GoogleTestAdapter.Helpers
                 public Int16 wShowWindow;
                 public Int16 cbReserved2;
                 public IntPtr lpReserved2;
-                public IntPtr hStdInput;
-                public IntPtr hStdOutput;
-                public IntPtr hStdError;
+                public SafeHandle hStdInput = NULL_HANDLE;
+                public SafeHandle hStdOutput = NULL_HANDLE;
+                public SafeHandle hStdError = NULL_HANDLE;
             }
 
             [StructLayout(LayoutKind.Sequential)]
             private struct PROCESS_INFORMATION
             {
-                public IntPtr hProcess;
-                public IntPtr hThread;
+                public IntPtr hProcess; // I would like to make these two IntPtr a SafeWaiHandle but the
+                public IntPtr hThread;  // marshaller doesn't seem to support this for out structs/classes
                 public int dwProcessId;
                 public int dwThreadId;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct SECURITY_ATTRIBUTES
+            private class SECURITY_ATTRIBUTES
             {
                 public int nLength;
                 public IntPtr lpSecurityDescriptor;
                 public bool bInheritHandle;
             }
-
         }
-
     }
-
 }

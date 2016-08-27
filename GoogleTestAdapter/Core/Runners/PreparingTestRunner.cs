@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.Runners
             if (_testEnvironment.Options.UseNewTestExecutionFramework)
             {
                 var executor = new ProcessExecutor(null, _testEnvironment);
-                batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { }, s => { });
+                batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { });
             }
             else
             {

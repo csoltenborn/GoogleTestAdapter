@@ -68,8 +68,7 @@ namespace GoogleTestAdapter.TestCases
                     GoogleTestConstants.ListTestsOption.Trim(), 
                     "", 
                     _testEnvironment.Options.GetPathExtension(_executable),
-                    lineAction,
-                    s => {});
+                    lineAction);
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
                     return new List<TestCase>();

@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.Runners
                     _testEnvironment.LogInfo(
                         ">>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
 
-                Action<string> reportStandardOutputAction = line =>
+                Action<string> reportOutputAction = line =>
                 {
                     splitter.ReportLine(line);
                     if (printTestOutput)
@@ -112,7 +112,7 @@ namespace GoogleTestAdapter.Runners
                 };
                 executor.ExecuteCommandBlocking(
                     executable, arguments.CommandLine, workingDir, pathExtension, 
-                    reportStandardOutputAction, s => { });
+                    reportOutputAction);
                 splitter.Flush();
 
                 if (printTestOutput)

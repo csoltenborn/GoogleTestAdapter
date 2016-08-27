@@ -18,20 +18,18 @@ namespace GoogleTestAdapter.Helpers
         {
             var mockLogger = new Mock<ILogger>();
             var processCreator = new ProcessExecutor(null, mockLogger.Object);
-            List<string> standardOutput = new List<string>(), errorOutput = new List<string>();
+            List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
                 Path.Combine(Environment.SystemDirectory, "ping.exe"),
                 "localhost",
                 "",
                 null, 
-                s => standardOutput.Add(s), 
-                s => errorOutput.Add(s));
+                s => output.Add(s));
                 
             exitCode.Should().Be(0);
-            standardOutput.Should().Contain(s => s.Contains("Ping"));
-            standardOutput.Count.Should().BeGreaterOrEqualTo(11);
-            standardOutput.Count.Should().BeLessOrEqualTo(12);
-            errorOutput.Count.Should().Be(0);
+            output.Should().Contain(s => s.Contains("Ping"));
+            output.Count.Should().BeGreaterOrEqualTo(11);
+            output.Count.Should().BeLessOrEqualTo(12);
         }
 
         [TestMethod]
@@ -40,19 +38,17 @@ namespace GoogleTestAdapter.Helpers
         {
             var mockLogger = new Mock<ILogger>();
             var processCreator = new ProcessExecutor(null, mockLogger.Object);
-            List<string> standardOutput = new List<string>(), errorOutput = new List<string>();
+            List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
                 TestResources.SampleTests,
                 null,
                 null,
                 "",
-                s => standardOutput.Add(s),
-                s => errorOutput.Add(s));
+                s => output.Add(s));
 
             exitCode.Should().Be(1);
-            standardOutput.Should().Contain(s => s.Contains("LongRunningTests.Test1"));
-            standardOutput.Count.Should().Be(405);
-            errorOutput.Count.Should().Be(0);
+            output.Should().Contain(s => s.Contains("LongRunningTests.Test1"));
+            output.Count.Should().Be(405);
         }
 
     }
