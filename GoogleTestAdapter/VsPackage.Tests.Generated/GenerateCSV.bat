@@ -10,7 +10,7 @@ set TEMP_SEED="%BASE_DIR%seed.pictmodel"
 
 if exist %CSV% (
   echo Generating test data using existing data as seed =====
-  mv %CSV% %TEMP_SEED%
+  move %CSV% %TEMP_SEED%
   %PICT_EXE% %MODEL% -a:# -e:%TEMP_SEED% >%CSV%
   del %TEMP_SEED%
 ) else (
