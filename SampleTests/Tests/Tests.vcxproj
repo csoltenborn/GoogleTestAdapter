@@ -137,6 +137,7 @@
     <ClCompile Include="ParameterizedTests.cpp" />
     <ClCompile Include="ScopedTracesTests.cpp" />
     <ClCompile Include="TypeParameterizedTests.cpp" />
+    <ClCompile Include="UmlautTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h" />

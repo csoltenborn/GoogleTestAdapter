@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_SampleTests_TestFunctionsMatch_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.SampleTests, "*_GTA_TRAIT", 87, 0, false);
+            DoResolveTest(TestResources.SampleTests, "*_GTA_TRAIT", 96, 0, false);
         }
 
         [TestMethod]

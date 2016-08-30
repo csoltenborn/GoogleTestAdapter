@@ -113,11 +113,11 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests_FindsParameterizedTests()
         {
-            AssertFindsParameterizedTest(
+            AssertFindsTest(
                 "InstantiationName/ParameterizedTests.SimpleTraits/0",
                 "InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]");
 
-            AssertFindsParameterizedTest(
+            AssertFindsTest(
                 "PointerParameterizedTests.CheckStringLength/2",
                 new Regex("PointerParameterizedTests.CheckStringLength/2 ..[0-9A-F]+ pointing to .ooops., 23.."));
         }
@@ -126,17 +126,56 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests_FindsTypedTests()
         {
-            AssertFindsParameterizedTest(
+            AssertFindsTest(
                 "Arr/TypeParameterizedTests/0.CanIterate",
                 "Arr/TypeParameterizedTests/0.CanIterate<std::array<int,3> >");
 
-            AssertFindsParameterizedTest(
+            AssertFindsTest(
                 "TypedTests/2.CanDefeatMath",
                 "TypedTests/2.CanDefeatMath<MyStrangeArray>");
 
-            AssertFindsParameterizedTest(
+            AssertFindsTest(
                 "PrimitivelyTypedTests/0.CanHasBigNumbers",
                 "PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTests_FindsParameterizedTestsWithUmlauts()
+        {
+            AssertFindsTest(
+                "ÜnstanceName/ParameterizedTästs.Täst/0",
+                "ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTests_FindsTestsWithUmlauts()
+        {
+            AssertFindsTest(
+                "Ümlautß.Täst",
+                "Ümlautß.Täst");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTests_FindsFixtureTestsWithUmlauts()
+        {
+            AssertFindsTest(
+                "TheFixtüre.Täst",
+                "TheFixtüre.Täst");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTests_FindsTypedTestsWithUmlauts()
+        {
+            AssertFindsTest(
+                "ÜmlautTypedTests/0.Täst",
+                "ÜmlautTypedTests/0.Täst<ImplementationA>");
+            AssertFindsTest(
+                "ÜmlautTypedTests/1.Täst",
+                "ÜmlautTypedTests/1.Täst<ImplementationB>");
         }
 
         [TestMethod]
@@ -262,13 +301,13 @@ namespace GoogleTestAdapter
             testCases[1].LineNumber.Should().Be(44);
         }
 
-        private void AssertFindsParameterizedTest(string fullyQualifiedName, string displayName)
+        private void AssertFindsTest(string fullyQualifiedName, string displayName)
         {
-            AssertFindsParameterizedTest(fullyQualifiedName, new Regex(Regex.Escape(displayName)));
+            AssertFindsTest(fullyQualifiedName, new Regex(Regex.Escape(displayName)));
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void AssertFindsParameterizedTest(string fullyQualifiedName, Regex displayNameRegex)
+        private void AssertFindsTest(string fullyQualifiedName, Regex displayNameRegex)
         {
             File.Exists(TestResources.SampleTests)
                 .Should()
@@ -278,7 +317,7 @@ namespace GoogleTestAdapter
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.SampleTests);
 
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);
-            displayNameRegex.IsMatch(testCase.DisplayName).Should().BeTrue();
+            testCase.DisplayName.Should().MatchRegex(displayNameRegex.ToString());
         }
 
     }

@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.Helpers
 
             exitCode.Should().Be(1);
             output.Should().Contain(s => s.Contains("LongRunningTests.Test1"));
-            output.Count.Should().Be(405);
+            output.Count.Should().Be(451);
         }
 
     }

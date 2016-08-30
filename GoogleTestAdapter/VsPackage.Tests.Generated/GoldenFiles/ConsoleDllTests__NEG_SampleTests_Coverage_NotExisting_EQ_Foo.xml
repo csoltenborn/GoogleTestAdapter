@@ -384,6 +384,16 @@ Expected: 1000</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
+    <UnitTestResult testName="TheFixtüre.Täst" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: 2
+Expected: 1</Message>
+          <StackTrace>at umlauttests.cpp:25 in $(Directory)\sampletests\tests\umlauttests.cpp:line 25</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="TheFixtüre.Träits" outcome="Passed" />
     <UnitTestResult testName="Traits.With1Traits" outcome="Passed" />
     <UnitTestResult testName="Traits.With2Traits" outcome="Passed" />
     <UnitTestResult testName="Traits.With3Traits" outcome="Passed" />
@@ -447,6 +457,39 @@ Expected: 1000</Message>
     <UnitTestResult testName="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
     <UnitTestResult testName="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
     <UnitTestResult testName="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Ümlautß.Täst" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: 2
+Expected: 1</Message>
+          <StackTrace>at umlauttests.cpp:9 in $(Directory)\sampletests\tests\umlauttests.cpp:line 9</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="Ümlautß.Träits" outcome="Passed" />
+    <UnitTestResult testName="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" outcome="Passed" />
+    <UnitTestResult testName="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: theInstance.GetValue(1)
+  Actual: 3
+Expected: 2</Message>
+          <StackTrace>at umlauttests.cpp:94 in $(Directory)\sampletests\tests\umlauttests.cpp:line 94</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" outcome="Passed" />
+    <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: GetParam().s
+  Actual: "\xC4\xD6\xDC\xE4\xF6\xFC\xDF"
+Expected: "äöüßÄÖÜ"
+Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
+          <StackTrace>at umlauttests.cpp:58 in $(Directory)\sampletests\tests\umlauttests.cpp:line 58</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
     <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -647,6 +690,12 @@ working_directory is $(Directory)\SampleTests\Debug</Message>
     <UnitTest name="TheFixture.Crash" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="TheFixture.Crash" className="TheFixture" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
+    <UnitTest name="TheFixtüre.Täst" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="TheFixtüre.Täst" className="TheFixtüre" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="TheFixtüre.Träits" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="TheFixtüre.Träits" className="TheFixtüre" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
     <UnitTest name="Traits.With1Traits" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="Traits.With1Traits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
@@ -710,6 +759,24 @@ working_directory is $(Directory)\SampleTests\Debug</Message>
     <UnitTest name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
+    <UnitTest name="Ümlautß.Täst" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="Ümlautß.Täst" className="Ümlautß" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="Ümlautß.Träits" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="Ümlautß.Träits" className="Ümlautß" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" className="ÜmlautTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" className="ÜmlautTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" className="ÜnstanceName/ParameterizedTästs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
+    <UnitTest name="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
+      <TestMethod name="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" className="ÜnstanceName/ParameterizedTästs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
+    </UnitTest>
     <UnitTest name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
@@ -731,7 +798,7 @@ working_directory is $(Directory)\SampleTests\Debug</Message>
     <TestList name="All Loaded Results" />
   </TestLists>
   <ResultSummary outcome="Failed">
-    <Counters total="80" executed="80" passed="36" failed="44" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="88" executed="88" passed="40" failed="48" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>

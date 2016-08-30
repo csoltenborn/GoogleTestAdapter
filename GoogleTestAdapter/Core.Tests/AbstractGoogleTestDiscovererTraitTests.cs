@@ -141,6 +141,30 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsTestWithUmlauts()
+        {
+            Trait[] traits = { new Trait("Träit1", "Völue1a"), new Trait("Träit1", "Völue1b"), new Trait("Träit2", "Völue2") };
+            AssertFindsTestWithTraits("Ümlautß.Träits", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts()
+        {
+            Trait[] traits = { new Trait("Träit1", "Völue1a"), new Trait("Träit1", "Völue1b"), new Trait("Träit2", "Völue2") };
+            AssertFindsTestWithTraits("ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithUmlauts()
+        {
+            Trait[] traits = { new Trait("Träit1", "Völue1a"), new Trait("Träit1", "Völue1b"), new Trait("Träit2", "Völue2") };
+            AssertFindsTestWithTraits("TheFixtüre.Träits", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_SampleTests_FindsTestWithTwoEqualTraits()
         {
             Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };

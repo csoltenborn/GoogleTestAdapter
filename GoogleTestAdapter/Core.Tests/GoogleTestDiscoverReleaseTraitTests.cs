@@ -153,6 +153,24 @@ namespace GoogleTestAdapter
             base.GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits();
         }
 
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsTestWithUmlauts()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsTestWithUmlauts();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithUmlauts()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsFixtureTestWithUmlauts();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts();
+        }
+
         #endregion
 
     }

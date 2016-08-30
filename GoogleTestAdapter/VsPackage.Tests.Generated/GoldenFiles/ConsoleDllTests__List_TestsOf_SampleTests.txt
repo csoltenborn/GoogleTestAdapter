@@ -59,6 +59,12 @@ Arr/TypeParameterizedTests/1.ThreeTraits<MyStrangeArray>
 PrimitivelyTypedTests/0.CanHasBigNumbers<signed char>
 PrimitivelyTypedTests/1.CanHasBigNumbers<int>
 PrimitivelyTypedTests/2.CanHasBigNumbers<long>
+Ümlautß.Täst
+Ümlautß.Träits
+TheFixtüre.Täst
+TheFixtüre.Träits
+ÜmlautTypedTests/0.Täst<ImplementationA>
+ÜmlautTypedTests/1.Täst<ImplementationB>
 InstantiationName/ParameterizedTests.Simple/0 [(1,)]
 InstantiationName/ParameterizedTests.Simple/1 [(1,!)]
 InstantiationName/ParameterizedTests.Simple/2 [(-1,)]
@@ -78,3 +84,5 @@ ParameterizedTests.SimpleTraits3/0 [(0,_)]
 PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to "", 0)]
 PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to "Test", 4)]
 PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to "ooops", 23)]
+ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]
+ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]
