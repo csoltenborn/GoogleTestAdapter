@@ -23,11 +23,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CrashReallyHard32.asm">
-      <Filter>Source Files</Filter>
-    </Text>
     <Text Include="CrashReallyHard64.asm">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="CrashReallyHard32.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
