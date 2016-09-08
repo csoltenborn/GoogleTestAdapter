@@ -130,6 +130,7 @@
     <EmbeddedResource Include="Resources\ReleaseNotes\0.6.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.7.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.7.1.md" />
+    <None Include="Resources\ReleaseNotes\0.8.0.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
