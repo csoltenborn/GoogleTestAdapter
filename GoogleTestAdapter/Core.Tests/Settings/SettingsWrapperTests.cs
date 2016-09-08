@@ -74,9 +74,6 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(-1);
             TheOptions.MaxNrOfThreads.Should().Be(Environment.ProcessorCount);
 
-            MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount + 1);
-            TheOptions.MaxNrOfThreads.Should().Be(Environment.ProcessorCount);
-
             if (Environment.ProcessorCount > 1)
             {
                 MockXmlOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount - 1);

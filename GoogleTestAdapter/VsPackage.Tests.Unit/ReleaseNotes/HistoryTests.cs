@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
                 Assembly.GetAssembly(typeof(History))
                     .Invoking(a => stream = a.GetManifestResourceStream(History.GetResourceName(version)))
                     .ShouldNotThrow();
-                stream.Should().NotBeNull($"release notes for version {version} should be available");
+                stream.Should().NotBeNull($"release notes for version {version} should be located in folder VsPackage\\Resources\\ReleaseNotes and have build action 'Embedded Resource'");
 
                 using (var reader = new StreamReader(stream))
                 {
