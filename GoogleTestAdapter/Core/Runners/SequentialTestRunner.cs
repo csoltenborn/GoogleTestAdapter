@@ -154,7 +154,8 @@ namespace GoogleTestAdapter.Runners
                     testResults.Add(testResult);
                     nrOfCollectedTestResults++;
                 }
-                _testEnvironment.DebugInfo($"Collected {nrOfCollectedTestResults} test results from XML result file");
+                if (nrOfCollectedTestResults > 0)
+                    _testEnvironment.DebugInfo($"Collected {nrOfCollectedTestResults} test results from result XML file");
             }
 
             if (testResults.Count < testCasesRunAsArray.Length)
@@ -167,7 +168,8 @@ namespace GoogleTestAdapter.Runners
                     testResults.Add(testResult);
                     nrOfCollectedTestResults++;
                 }
-                _testEnvironment.DebugInfo($"Collected {nrOfCollectedTestResults} test results from console output");
+                if (nrOfCollectedTestResults > 0)
+                    _testEnvironment.DebugInfo($"Collected {nrOfCollectedTestResults} test results from console output");
             }
 
             if (testResults.Count < testCasesRunAsArray.Length)
