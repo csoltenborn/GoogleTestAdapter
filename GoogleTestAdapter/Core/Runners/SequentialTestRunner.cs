@@ -119,6 +119,7 @@ namespace GoogleTestAdapter.Runners
                     _testEnvironment.LogInfo("<<<<<<<<<<<<<<< End of Output");
 
                 consoleOutput = new List<string>();
+                new TestDurationSerializer().UpdateTestDurations(splitter.TestResults);
             }
             else
             {
