@@ -4,6 +4,7 @@ using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Scheduling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using static GoogleTestAdapter.TestMetadata.TestCategories;
@@ -22,7 +23,7 @@ namespace GoogleTestAdapter.Runners
             List<TestCase> testCasesToRun = TestDataCreator.GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test2");
 
             var stopwatch = new Stopwatch();
-            var runner = new SequentialTestRunner("", MockFrameworkReporter.Object, TestEnvironment);
+            var runner = new SequentialTestRunner("", MockFrameworkReporter.Object, TestEnvironment, new SchedulingAnalyzer(TestEnvironment));
             var executor = new ProcessExecutor(null, MockLogger.Object);
             var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", "", false, null, executor));
 

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Scheduling;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -20,19 +21,19 @@ namespace GoogleTestAdapter.Runners
         private readonly string _solutionDirectory;
 
 
-        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
+        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
         {
             _testEnvironment = testEnvironment;
             string threadName = ComputeThreadName(threadId, _testEnvironment.Options.MaxNrOfThreads);
             _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
             _threadId = Math.Max(0, threadId);
-            _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _testEnvironment);
+            _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _testEnvironment, schedulingAnalyzer);
             _solutionDirectory = solutionDirectory;
         }
 
         public PreparingTestRunner(string solutionDirectory, ITestFrameworkReporter reporter,
-            TestEnvironment testEnvironment)
-            : this(-1, solutionDirectory, reporter, testEnvironment){
+            TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
+            : this(-1, solutionDirectory, reporter, testEnvironment, schedulingAnalyzer){
         }
 
 

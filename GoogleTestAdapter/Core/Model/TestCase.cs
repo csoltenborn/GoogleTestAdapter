@@ -28,6 +28,24 @@ namespace GoogleTestAdapter.Model
             return FullyQualifiedName.Split('.')[0];
         }
 
+        public override bool Equals(object obj)
+        {
+            var other = obj as TestCase;
+
+            if (other == null)
+                return false;
+
+            return FullyQualifiedName == other.FullyQualifiedName && Source == other.Source;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + FullyQualifiedName.GetHashCode();
+            hash = hash * 31 + Source.GetHashCode();
+            return hash;
+        }
+
         public override string ToString()
         {
             return DisplayName;

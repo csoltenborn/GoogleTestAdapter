@@ -19,13 +19,15 @@ namespace GoogleTestAdapter.Runners
         private readonly string _threadName;
         private readonly ITestFrameworkReporter _frameworkReporter;
         private readonly TestEnvironment _testEnvironment;
+        private SchedulingAnalyzer _schedulingAnalyzer;
 
 
-        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
+        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
         {
             _threadName = threadName;
             _frameworkReporter = reporter;
             _testEnvironment = testEnvironment;
+            _schedulingAnalyzer = schedulingAnalyzer;
         }
 
 
@@ -90,6 +92,12 @@ namespace GoogleTestAdapter.Runners
                     _testEnvironment.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
 
                 serializer.UpdateTestDurations(results);
+                foreach (TestResult result in results)
+                {
+
+                    if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int)result.Duration.TotalMilliseconds))
+                        _testEnvironment.DebugWarning("TestCase already in analyzer: " + result.TestCase.FullyQualifiedName);
+                }
             }
         }
 
@@ -124,6 +132,11 @@ namespace GoogleTestAdapter.Runners
                 consoleOutput = new List<string>();
                 new TestDurationSerializer().UpdateTestDurations(splitter.TestResults);
                 _testEnvironment.DebugInfo($"{_threadName}Reported {splitter.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
+                foreach (TestResult result in splitter.TestResults)
+                {
+                    if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
+                        _testEnvironment.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
+                }
             }
             else
             {
