@@ -44,7 +44,6 @@ namespace GoogleTestAdapter
                 .BeTrue($"Parallel execution should result in test durations file at location {durationsFile}");
 
             var durations = new TestDurationSerializer().ReadTestDurations(TestDataCreator.AllTestCasesOfSampleTests);
-            durations.Count.Should().Be(TestDataCreator.AllTestCasesOfSampleTests.Count);
             durations.Keys.Should().Contain(TestDataCreator.AllTestCasesOfSampleTests);
         }
 
