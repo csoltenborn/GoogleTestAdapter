@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.Runners
         [TestCategory(Integration)]
         public void RunTests_CancelingDuringTestExecution_StopsTestExecution()
         {
-            List<TestCase> allTestCases = TestDataCreator.AllTestCasesOfSampleTests;
+            List<TestCase> allTestCases = TestDataCreator.AllTestCasesExceptLoadTests;
             List<TestCase> testCasesToRun = TestDataCreator.GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test2");
 
             var stopwatch = new Stopwatch();

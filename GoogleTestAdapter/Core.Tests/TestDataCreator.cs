@@ -19,7 +19,22 @@ namespace GoogleTestAdapter
             _testEnvironment = testEnvironment;
         }
 
-        private List<TestCase> _allTestCasesOfSampleTests = null;
+        private List<TestCase> _allTestCasesExceptLoadTests;
+        public List<TestCase> AllTestCasesExceptLoadTests
+        {
+            get
+            {
+                if (_allTestCasesExceptLoadTests == null)
+                {
+                    _allTestCasesExceptLoadTests = new List<TestCase>();
+                    _allTestCasesExceptLoadTests.AddRange(AllTestCasesOfSampleTests);
+                    _allTestCasesExceptLoadTests.AddRange(AllTestCasesOfHardCrashingTests);
+                }
+                return _allTestCasesExceptLoadTests;
+            }
+        }
+
+        private List<TestCase> _allTestCasesOfSampleTests;
         public List<TestCase> AllTestCasesOfSampleTests
         {
             get
@@ -29,15 +44,29 @@ namespace GoogleTestAdapter
                     _allTestCasesOfSampleTests = new List<TestCase>();
                     GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(_testEnvironment);
                     _allTestCasesOfSampleTests.AddRange(discoverer.GetTestsFromExecutable(TestResources.SampleTests));
-                    _allTestCasesOfSampleTests.AddRange(discoverer.GetTestsFromExecutable(TestResources.HardCrashingSampleTests));
                 }
                 return _allTestCasesOfSampleTests;
             }
         }
 
+        private List<TestCase> _allTestCasesOfHardCrashindTests;
+        public List<TestCase> AllTestCasesOfHardCrashingTests
+        {
+            get
+            {
+                if (_allTestCasesOfHardCrashindTests == null)
+                {
+                    _allTestCasesOfHardCrashindTests = new List<TestCase>();
+                    GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(_testEnvironment);
+                    _allTestCasesOfHardCrashindTests.AddRange(discoverer.GetTestsFromExecutable(TestResources.HardCrashingSampleTests));
+                }
+                return _allTestCasesOfHardCrashindTests;
+            }
+        }
+
         public List<TestCase> GetTestCasesOfSampleTests(params string[] qualifiedNames)
         {
-            return AllTestCasesOfSampleTests.Where(
+            return AllTestCasesExceptLoadTests.Where(
                 testCase => qualifiedNames.Any(
                     qualifiedName => testCase.FullyQualifiedName.Contains(qualifiedName)))
                     .ToList();

@@ -94,7 +94,6 @@ namespace GoogleTestAdapter.Runners
                 serializer.UpdateTestDurations(results);
                 foreach (TestResult result in results)
                 {
-
                     if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int)result.Duration.TotalMilliseconds))
                         _testEnvironment.DebugWarning("TestCase already in analyzer: " + result.TestCase.FullyQualifiedName);
                 }
@@ -149,8 +148,7 @@ namespace GoogleTestAdapter.Runners
 
             var remainingTestCases = 
                 arguments.TestCases.Except(splitter.TestResults.Select(tr => tr.TestCase));
-            IEnumerable<TestResult> results = CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, splitter.CrashedTestCase);
-            return results;
+            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, splitter.CrashedTestCase);
         }
 
         private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir, TestCase crashedTestCase)
