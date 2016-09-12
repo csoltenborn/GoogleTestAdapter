@@ -58,7 +58,7 @@ namespace GoogleTestAdapter
             }
             else
             {
-                _runner = new PreparingTestRunner(0, solutionDirectory, reporter, _testEnvironment);
+                _runner = new PreparingTestRunner(solutionDirectory, reporter, _testEnvironment);
                 if (_testEnvironment.Options.ParallelTestExecution && isBeingDebugged)
                 {
                     _testEnvironment.DebugInfo(
