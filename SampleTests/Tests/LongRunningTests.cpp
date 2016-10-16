@@ -1,6 +1,8 @@
 #include <concrt.h>
 #include "gtest/gtest.h"
 
+#include "../Tests/Main.cpp"
+
 TEST(LongRunningTests, Test1)
 {
 	Concurrency::wait(2000);

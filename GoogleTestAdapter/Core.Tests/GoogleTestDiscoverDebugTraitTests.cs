@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using GoogleTestAdapter.Tests.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestDiscoverDebugTraitTests : AbstractGoogleTestDiscovererTraitTests
+    public class GoogleTestDiscovererDebugTraitTests : GoogleTestDiscovererTraitTestsBase
     {
         protected override string SampleTestToUse => TestResources.SampleTests;
 

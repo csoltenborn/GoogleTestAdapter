@@ -4,12 +4,13 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Framework;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using GoogleTestAdapter.Tests.Common;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
-    public class TestProcessLauncherTests : AbstractCoreTests
+    public class TestProcessLauncherTests : TestsBase
     {
 
         [TestMethod]

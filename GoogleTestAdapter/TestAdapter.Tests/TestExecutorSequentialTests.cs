@@ -6,12 +6,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using FluentAssertions;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
 {
     [TestClass]
-    public class TestExecutorSequentialTests : AbstractTestExecutorTests
+    public class TestExecutorSequentialTests : TestExecutorTestsBase
     {
 
         public TestExecutorSequentialTests() : base(false, 1) { }
@@ -41,7 +41,8 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void RunTests_CancelingExecutor_StopsTestExecution()
         {
-            List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCasesOfSampleTests("Crashing.LongRunning", "LongRunningTests.Test3");
+            List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
+            testCasesToRun.Count.Should().Be(2);
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
@@ -9,14 +8,17 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestDiscovererTests : AbstractCoreTests
+    public class GoogleTestDiscovererTests : TestsBase
     {
 
         [TestMethod]
@@ -309,9 +311,8 @@ namespace GoogleTestAdapter
         // ReSharper disable once UnusedParameter.Local
         private void AssertFindsTest(string fullyQualifiedName, Regex displayNameRegex)
         {
-            File.Exists(TestResources.SampleTests)
-                .Should()
-                .BeTrue("Build SampleTests in Debug mode before executing this test");
+            TestResources.SampleTests.AsFileInfo()
+                .Should().Exist("building the SampleTests solution produces that executable");
 
             var discoverer = new GoogleTestDiscoverer(TestEnvironment);
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.SampleTests);

@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public abstract class AbstractGoogleTestDiscovererTraitTests : AbstractCoreTests
+    public abstract class GoogleTestDiscovererTraitTestsBase : TestsBase
     {
         protected abstract string SampleTestToUse { get; }
 
@@ -314,9 +316,8 @@ namespace GoogleTestAdapter
 
         private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
         {
-            File.Exists(SampleTestToUse)
-                .Should()
-                .BeTrue("Build SampleTests in Debug and Release mode before executing this test");
+            SampleTestToUse.AsFileInfo()
+                .Should().Exist("building the SampleTests solution produces that executable");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTestToUse).ToList();

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Settings
 {
 
     [TestClass]
-    public class SettingsWrapperTests : AbstractCoreTests
+    public class SettingsWrapperTests : TestsBase
     {
 
         private Mock<IGoogleTestAdapterSettings> MockXmlOptions { get; } = new Mock<IGoogleTestAdapterSettings>();

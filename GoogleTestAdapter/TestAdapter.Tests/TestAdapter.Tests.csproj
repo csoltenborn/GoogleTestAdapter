@@ -45,12 +45,12 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions, Version=4.13.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.13.0\lib\net45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=4.15.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.15.0\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.13.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.13.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+    <Reference Include="FluentAssertions.Core, Version=4.15.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.15.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
@@ -64,8 +64,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.5.16.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.5.16\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.23.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.23\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -87,11 +87,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AbstractTestExecutorTests.cs" />
-    <Compile Include="AbstractTestAdapterTests.cs" />
+    <Compile Include="TestExecutorTestsBase.cs" />
+    <Compile Include="TestAdapterTestsBase.cs" />
     <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
-    <Compile Include="Framework\TestAdapterTestFrameworkReporterTests.cs" />
-    <Compile Include="Framework\TestAdapterTestFrameworkLoggerTests.cs" />
+    <Compile Include="Framework\VsTestFrameworkReporterTests.cs" />
+    <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
     <Compile Include="Helpers\ThrottleTests.cs" />
     <Compile Include="Helpers\TestCaseFilterTests.cs" />
     <Compile Include="TestDiscovererTests.cs" />
@@ -120,13 +120,13 @@
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
-      <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
-      <Name>Core.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.Common\Tests.Common.csproj">
+      <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
+      <Name>Tests.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

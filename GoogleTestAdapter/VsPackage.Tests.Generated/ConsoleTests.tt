@@ -1,12 +1,11 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(SolutionDir)Core.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.Core.Tests.dll" #>
-<#@ assembly name="$(SolutionDir)TestAdapter.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.TestAdapter.Tests.dll" #>
-<#@ assembly name="$(SolutionDir)VsPackage.Tests\bin\$(ConfigurationName)\GoogleTestAdapter.VsPackage.Tests.dll" #>
+<#@ assembly name="$(SolutionDir)Tests.Common\bin\$(ConfigurationName)\GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="$(SolutionDir)Tests.Common.EndToEnd\bin\$(ConfigurationName)\GoogleTestAdapter.Tests.Common.EndToEnd.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="GoogleTestAdapter" #>
-<#@ import namespace="GoogleTestAdapter.VsPackage" #>
-<#@ import namespace="GoogleTestAdapter.VsPackage.Helpers" #>
+<#@ import namespace="GoogleTestAdapter.Tests.Common" #>
+<#@ import namespace="GoogleTestAdapter.Tests.Common.EndToEnd" #>
+<#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
 <#@ output extension=".cs" #>
 <#
 //    System.Diagnostics.Debugger.Launch();
@@ -19,10 +18,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GoogleTestAdapter.Tests.Common.EndToEnd;
+using GoogleTestAdapter.Tests.Common.ResultChecker;
 <# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
-using GoogleTestAdapterUiTests;
+using GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio;
 <# } #>
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -127,16 +128,20 @@ namespace GoogleTestAdapter.VsPackage
 	[TestClass]
 	public class ConsoleVsixTests : AbstractConsoleTests
 	{
+		private static Vs VS;
+
         [ClassInitialize]
         public static void InstallVsix(TestContext testContext)
         {
-            VS.SetupVanillaVsExperimentalInstance("");
+			VS = new Vs();
+            VS.SetupVanillaVsExperimentalInstance("", testContext.TestName);
         }
 
         [ClassCleanup]
         public static void Cleanup()
         {
-            VS.CleanVsExperimentalInstance();
+            VS?.CleanVsExperimentalInstance();
+			VS = null;
         }
 
         protected override string GetAdapterIntegration()
@@ -172,17 +177,20 @@ namespace GoogleTestAdapter.VsPackage
     [TestClass]
     public class ConsoleVsixIntegrationTests : AbstractConsoleIntegrationTests
     {
+		private static Vs VS;
 
         [ClassInitialize]
         public static void InstallVsix(TestContext testContext)
         {
-            VS.SetupVanillaVsExperimentalInstance("");
+			VS = new Vs();
+            VS.SetupVanillaVsExperimentalInstance("", testContext.TestName);
         }
 
         [ClassCleanup]
         public static void Cleanup()
         {
-            VS.CleanVsExperimentalInstance();
+            VS?.CleanVsExperimentalInstance();
+			VS = null;
         }
 
         protected override string GetAdapterIntegration()

@@ -4,13 +4,17 @@ using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Scheduling;
+using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Fakes;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestExecutorTests : AbstractCoreTests
+    public class GoogleTestExecutorTests : TestsBase
     {
 
         [TestMethod]
@@ -43,16 +47,16 @@ namespace GoogleTestAdapter
             var testExecutor = new GoogleTestExecutor(TestEnvironment);
             testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, TestResources.SampleTestsSolutionDir, processExecutor);
 
-            File.Exists(sampleTestsDurationsFile)
+            sampleTestsDurationsFile.AsFileInfo()
                 .Should()
-                .BeTrue($"Test execution should result in test durations file at location {sampleTestsDurationsFile}");
+                .Exist("Test execution should result in test durations");
             var durations = new TestDurationSerializer().ReadTestDurations(TestDataCreator.AllTestCasesOfSampleTests);
             durations.Keys.Should().Contain(
                 TestDataCreator.AllTestCasesOfSampleTests.Where(tc => collectingReporter.ReportedTestResults.Any(tr => tc.Equals(tr.TestCase) && (tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))));
 
-            File.Exists(crashingTestsDurationsFile)
+            crashingTestsDurationsFile.AsFileInfo()
                 .Should()
-                .BeTrue($"Test execution should result in test durations file at location {crashingTestsDurationsFile}");
+                .Exist("Test execution should result in test durations file");
             durations = new TestDurationSerializer().ReadTestDurations(TestDataCreator.AllTestCasesOfHardCrashingTests);
             durations.Keys.Should().Contain(TestDataCreator.AllTestCasesOfHardCrashingTests.Where(tc => collectingReporter.ReportedTestResults.Any(tr => tc.Equals(tr.TestCase) && (tr.Outcome == TestOutcome.Passed || tr.Outcome == TestOutcome.Failed))));
         }
@@ -61,7 +65,7 @@ namespace GoogleTestAdapter
         {
             if (File.Exists(file))
                 File.Delete(file);
-            File.Exists(file).Should().BeFalse();
+            file.AsFileInfo().Should().NotExist("it was just deleted");
         }
 
     }

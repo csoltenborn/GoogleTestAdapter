@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
-    public class StandardOutputTestResultParserTests : AbstractCoreTests
+    public class StandardOutputTestResultParserTests : TestsBase
     {
         private string[] ConsoleOutput1 { get; } = {
             @"[==========] Running 3 tests from 1 test case.",

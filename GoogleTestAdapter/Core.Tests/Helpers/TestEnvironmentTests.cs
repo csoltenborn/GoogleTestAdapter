@@ -1,11 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using GoogleTestAdapter.Tests.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
 {
     [TestClass]
-    public class TestEnvironmentTests : AbstractCoreTests
+    public class TestEnvironmentTests : TestsBase
     {
         private TestEnvironment _environment;
 

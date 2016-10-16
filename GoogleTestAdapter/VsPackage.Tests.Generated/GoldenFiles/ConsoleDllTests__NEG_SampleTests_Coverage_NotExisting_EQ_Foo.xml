@@ -122,16 +122,6 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="LongRunningTests.Test1" outcome="Passed" />
-    <UnitTestResult testName="LongRunningTests.Test2" outcome="Failed">
-      <Output>
-        <ErrorInfo>
-          <Message>Value of: 2
-Expected: 1</Message>
-          <StackTrace>at longrunningtests.cpp:13 in $(Directory)\sampletests\tests\longrunningtests.cpp:line 13</StackTrace>
-        </ErrorInfo>
-      </Output>
-    </UnitTestResult>
     <UnitTestResult testName="MessageParserTests.ExpectAndAssert" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -591,12 +581,6 @@ working_directory is $(Directory)\SampleTests\Debug</Message>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
-    <UnitTest name="LongRunningTests.Test1" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
-      <TestMethod name="LongRunningTests.Test1" className="LongRunningTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
-    </UnitTest>
-    <UnitTest name="LongRunningTests.Test2" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
-      <TestMethod name="LongRunningTests.Test2" className="LongRunningTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
-    </UnitTest>
     <UnitTest name="MessageParserTests.ExpectAndAssert" storage="$(Directory)\sampletests\${ConfigurationName}\tests.exe">
       <TestMethod name="MessageParserTests.ExpectAndAssert" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests.exe" />
     </UnitTest>
@@ -798,7 +782,7 @@ working_directory is $(Directory)\SampleTests\Debug</Message>
     <TestList name="All Loaded Results" />
   </TestLists>
   <ResultSummary outcome="Failed">
-    <Counters total="88" executed="88" passed="40" failed="48" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="86" executed="86" passed="39" failed="47" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>

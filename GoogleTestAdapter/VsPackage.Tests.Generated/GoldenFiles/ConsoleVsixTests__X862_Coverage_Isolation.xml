@@ -5,11 +5,11 @@
     <UnitTestResult testName="BarTest.MethodBarDoesAbc" outcome="Passed" />
   </Results>
   <TestDefinitions>
-    <UnitTest name="BarTest.DoesXyz" storage="..\..\..\core.tests\bin\${ConfigurationName}\resources\testdata\_x86\externallylinkedgoogletests\externallylinkedgoogletests.exe">
-      <TestMethod name="BarTest.DoesXyz" className="BarTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Core.Tests\bin\${ConfigurationName}\Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe" />
+    <UnitTest name="BarTest.DoesXyz" storage="..\..\..\tests.common\bin\${ConfigurationName}\resources\testdata\_x86\externallylinkedgoogletests\externallylinkedgoogletests.exe">
+      <TestMethod name="BarTest.DoesXyz" className="BarTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Tests.Common\bin\${ConfigurationName}\Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe" />
     </UnitTest>
-    <UnitTest name="BarTest.MethodBarDoesAbc" storage="..\..\..\core.tests\bin\${ConfigurationName}\resources\testdata\_x86\externallylinkedgoogletests\externallylinkedgoogletests.exe">
-      <TestMethod name="BarTest.MethodBarDoesAbc" className="BarTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Core.Tests\bin\${ConfigurationName}\Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe" />
+    <UnitTest name="BarTest.MethodBarDoesAbc" storage="..\..\..\tests.common\bin\${ConfigurationName}\resources\testdata\_x86\externallylinkedgoogletests\externallylinkedgoogletests.exe">
+      <TestMethod name="BarTest.MethodBarDoesAbc" className="BarTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Tests.Common\bin\${ConfigurationName}\Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe" />
     </UnitTest>
   </TestDefinitions>
   <TestLists>

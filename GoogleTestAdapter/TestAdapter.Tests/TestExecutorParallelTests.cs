@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
 {
     [TestClass]
-    public class TestExecutorParallelTests : AbstractTestExecutorTests
+    public class TestExecutorParallelTests : TestExecutorTestsBase
     {
 
         public TestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
@@ -51,7 +52,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment);
-            IEnumerable<string> testsToRun = TestResources.SampleTests.Yield();
+            IEnumerable<string> testsToRun = TestResources.LongRunningTests.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
@@ -61,7 +62,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
             executor = new TestExecutor(TestEnvironment);
-            testsToRun = TestResources.SampleTests.Yield();
+            testsToRun = TestResources.LongRunningTests.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();

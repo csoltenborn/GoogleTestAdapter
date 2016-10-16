@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 // ReSharper disable PossibleMultipleEnumeration
 
 namespace GoogleTestAdapter.Runners
 {
     [TestClass]
-    public class CommandLineGeneratorTests : AbstractCoreTests
+    public class CommandLineGeneratorTests : TestsBase
     {
 
         private static readonly string DefaultArgs =

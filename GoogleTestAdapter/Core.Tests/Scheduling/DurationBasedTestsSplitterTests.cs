@@ -2,13 +2,14 @@
 using System;
 using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Scheduling
 {
     [TestClass]
-    public class DurationBasedTestsSplitterTests : AbstractCoreTests
+    public class DurationBasedTestsSplitterTests : TestsBase
     {
         [TestMethod]
         [TestCategory(Unit)]

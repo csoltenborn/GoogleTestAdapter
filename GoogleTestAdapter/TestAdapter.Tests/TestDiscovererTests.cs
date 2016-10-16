@@ -3,13 +3,14 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
 using GoogleTestAdapter.Helpers;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using GoogleTestAdapter.Tests.Common;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
 {
 
     [TestClass]
-    public class TestDiscovererTests : AbstractCoreTests
+    public class TestDiscovererTests : TestsBase
     {
 
         [TestMethod]
