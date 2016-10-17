@@ -13,6 +13,6 @@
 
         public enum Versions { VS2012 = 11, VS2013 = 12, VS2015 = 14 }
 
-        public const bool OverwriteTestResults = true;
+        public const bool OverwriteTestResults = false;
     }
 }
