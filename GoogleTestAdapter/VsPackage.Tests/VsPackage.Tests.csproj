@@ -171,10 +171,6 @@
     <Content Include="UITestResults\UiTests__RunSelectedTests_TypedTests_0_CanIterate.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tests.Common.EndToEnd\Tests.Common.EndToEnd.csproj">
       <Project>{c3f11e93-2eff-4bb6-adc9-3b42727e4816}</Project>
       <Name>Tests.Common.EndToEnd</Name>
