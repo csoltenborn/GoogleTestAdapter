@@ -4,7 +4,7 @@
 		<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
 		<BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
 		<BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
-		<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
+		<TestDiscoveryRegex>.*Tests.*_gta.exe</TestDiscoveryRegex>
 		<WorkingDir>$(SolutionDir)</WorkingDir>
 	</GoogleTestAdapter>
 </RunSettings>

@@ -20,13 +20,13 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Results1Batch = @"Tests\Returns1.bat";
 
         public const int NrOfSampleTests = 86;
-        public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests.exe";
-        public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests.exe";
+        public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
+        public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
 
-        public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests.exe");
-        public static readonly string LongRunningTests = Path.Combine(SampleTestsSolutionDir, @"Release\LongRunningTests.exe");
+        public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests_gta.exe");
+        public static readonly string LongRunningTests = Path.Combine(SampleTestsSolutionDir, @"Release\LongRunningTests_gta.exe");
 
-        public const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests.exe";
+        public const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests_gta.exe";
 
         public const string X86Dir = TestdataDir + @"_x86\";
         public const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
@@ -53,6 +53,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
         public const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
         public const string UserTestSettingsForGeneratedTests = TestdataDir + "User.runsettings";
+        public const string UserTestSettingsForListingTests = TestdataDir + "ListTests.runsettings";
 
         public static string GetGoldenFileName(string typeName, string testCaseName, string fileExtension)
         {

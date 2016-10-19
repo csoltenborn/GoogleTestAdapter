@@ -18,6 +18,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.EndToEnd;
 using GoogleTestAdapter.Tests.Common.ResultChecker;
 <# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
@@ -71,7 +72,10 @@ namespace GoogleTestAdapter.VsPackage
 
 		public virtual void List_TestsOf_<#= executable #>()
 		{
-			string arguments = GetAdapterIntegration() + @" /ListTests:""<#= executables[executable] #>""";
+		    string testExecutable = @"<#= executables[executable] #>";
+			string arguments = GetAdapterIntegration() + @" /ListTests:""" + testExecutable + @"""";
+			if (!testExecutable.Contains("_x86") && !testExecutable.Contains("_x64"))
+				arguments +=  " /Settings:\"\"" + TestResources.UserTestSettingsForListingTests + "\"\"";
             string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(_solutionFile, arguments);
 			string[] resultLines = resultString.Split('\n');
 			resultLines = resultLines.Where(l => l.StartsWith("    ")).Select(l => l.Trim()).ToArray();

@@ -47,23 +47,23 @@ Expected: 1000</Message>
     </UnitTestResult>
   </Results>
   <TestDefinitions>
-    <UnitTest name="Crashing.AddFailsAfterCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests.exe">
-      <TestMethod name="Crashing.AddFailsAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
+    <UnitTest name="Crashing.AddFailsAfterCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests_gta.exe">
+      <TestMethod name="Crashing.AddFailsAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Crashing.AddFailsBeforeCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests.exe">
-      <TestMethod name="Crashing.AddFailsBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
+    <UnitTest name="Crashing.AddFailsBeforeCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests_gta.exe">
+      <TestMethod name="Crashing.AddFailsBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Crashing.AddPassesAfterCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests.exe">
-      <TestMethod name="Crashing.AddPassesAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
+    <UnitTest name="Crashing.AddPassesAfterCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests_gta.exe">
+      <TestMethod name="Crashing.AddPassesAfterCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Crashing.AddPassesBeforeCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests.exe">
-      <TestMethod name="Crashing.AddPassesBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
+    <UnitTest name="Crashing.AddPassesBeforeCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests_gta.exe">
+      <TestMethod name="Crashing.AddPassesBeforeCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Crashing.LongRunning" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests.exe">
-      <TestMethod name="Crashing.LongRunning" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
+    <UnitTest name="Crashing.LongRunning" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests_gta.exe">
+      <TestMethod name="Crashing.LongRunning" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Crashing.TheCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests.exe">
-      <TestMethod name="Crashing.TheCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests.exe" />
+    <UnitTest name="Crashing.TheCrash" storage="$(Directory)\sampletests\${ConfigurationName}\crashingtests_gta.exe">
+      <TestMethod name="Crashing.TheCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
   </TestDefinitions>
   <TestLists>
