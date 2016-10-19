@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
+    <ClCompile Include="CrashingTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CrashingTests.cpp">
+    <ClCompile Include="$(ProjectDir)..\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

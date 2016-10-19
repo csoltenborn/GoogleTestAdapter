@@ -5,6 +5,7 @@ using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Scheduling;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -16,15 +17,23 @@ namespace GoogleTestAdapter.Runners
         private readonly TestEnvironment _testEnvironment;
         private readonly ITestRunner _innerTestRunner;
         private readonly int _threadId;
+        private readonly string _threadName;
         private readonly string _solutionDirectory;
 
 
-        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, TestEnvironment testEnvironment)
+        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
         {
             _testEnvironment = testEnvironment;
-            _innerTestRunner = new SequentialTestRunner(reporter, _testEnvironment);
-            _threadId = threadId;
+            string threadName = ComputeThreadName(threadId, _testEnvironment.Options.MaxNrOfThreads);
+            _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
+            _threadId = Math.Max(0, threadId);
+            _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _testEnvironment, schedulingAnalyzer);
             _solutionDirectory = solutionDirectory;
+        }
+
+        public PreparingTestRunner(string solutionDirectory, ITestFrameworkReporter reporter,
+            TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
+            : this(-1, solutionDirectory, reporter, testEnvironment, schedulingAnalyzer){
         }
 
 
@@ -53,18 +62,18 @@ namespace GoogleTestAdapter.Runners
                 SafeRunBatch(TestTeardown, _solutionDirectory, batch, isBeingDebugged);
 
                 stopwatch.Stop();
-                _testEnvironment.DebugInfo($"Thread {_threadId} took {stopwatch.Elapsed}");
+                _testEnvironment.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
 
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
                 {
                     _testEnvironment.DebugWarning(
-                        "Could not delete test directory '" + testDirectory + "': " + errorMessage);
+                        $"{_threadName}Could not delete test directory '" + testDirectory + "': " + errorMessage);
                 }
             }
             catch (Exception e)
             {
-                _testEnvironment.LogError("Exception while running tests: " + e);
+                _testEnvironment.LogError($"{_threadName}Exception while running tests: " + e);
             }
         }
 
@@ -82,7 +91,7 @@ namespace GoogleTestAdapter.Runners
             }
             if (!File.Exists(batch))
             {
-                _testEnvironment.LogError("Did not find " + batchType.ToLower() + " batch file: " + batch);
+                _testEnvironment.LogError($"{_threadName}Did not find " + batchType.ToLower() + " batch file: " + batch);
                 return;
             }
 
@@ -93,8 +102,7 @@ namespace GoogleTestAdapter.Runners
             catch (Exception e)
             {
                 _testEnvironment.LogError(
-                    batchType + " batch caused exception, msg: '" + e.Message + "', executed command: '" +
-                    batch + "'");
+                    $"{_threadName}{batchType} batch caused exception, msg: \'{e.Message}\', executed command: \'{batch}\'");
             }
         }
 
@@ -115,13 +123,24 @@ namespace GoogleTestAdapter.Runners
             if (batchExitCode == 0)
             {
                 _testEnvironment.DebugInfo(
-                    $"Successfully ran {batchType} batch \'{batch}\'");
+                    $"{_threadName}Successfully ran {batchType} batch \'{batch}\'");
             }
             else
             {
                 _testEnvironment.LogWarning(
-                    $"{batchType} batch returned exit code {batchExitCode}, executed command: \'{batch}\'");
+                    $"{_threadName}{batchType} batch returned exit code {batchExitCode}, executed command: \'{batch}\'");
             }
+        }
+
+        private string ComputeThreadName(int threadId, int maxNrOfThreads)
+        {
+            if (threadId < 0)
+                return "";
+
+            int nrOfDigits = maxNrOfThreads.ToString().Length;
+            string paddedThreadId = threadId.ToString().PadLeft(nrOfDigits, '0');
+
+            return $"[T{paddedThreadId}]";
         }
 
     }

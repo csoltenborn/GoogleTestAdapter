@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.DiaResolver.Helpers;
+using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Fakes;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.DiaResolver
 {
 
     [TestClass]
-    public class DiaResolverTests : AbstractCoreTests
+    public class DiaResolverTests
     {
 
         [TestMethod]
@@ -18,7 +20,7 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_SampleTests_TestFunctionsMatch_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.SampleTests, "*_GTA_TRAIT", 87, 0, false);
+            DoResolveTest(TestResources.SampleTests, "*_GTA_TRAIT", 96, 0, false);
         }
 
         [TestMethod]
@@ -54,7 +56,7 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void GetFunctions_ExeWithoutPdb_AttemptsToFindPdbAreLogged()
         {
-            File.Exists(TestResources.X86TestsWithoutPdb).Should().BeTrue();
+            TestResources.X86TestsWithoutPdb.AsFileInfo().Should().Exist();
 
             var locations = new List<SourceFileLocation>();
             var fakeLogger = new FakeLogger();
@@ -67,10 +69,10 @@ namespace GoogleTestAdapter.DiaResolver
             }
 
             locations.Count.Should().Be(0);
-            fakeLogger.MessagesOfType(Severity.Warning)
+            fakeLogger.Warnings
                 .Should()
                 .Contain(msg => msg.Contains("Couldn't find the .pdb file"));
-            fakeLogger.MessagesOfType(Severity.Info)
+            fakeLogger.Infos
                 .Should()
                 .Contain(msg => msg.Contains("Attempts to find pdb:"));
         }

@@ -27,16 +27,16 @@
     <ClCompile Include="FixtureTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LongRunningTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TypeParameterizedTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScopedTracesTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UmlautTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)..\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

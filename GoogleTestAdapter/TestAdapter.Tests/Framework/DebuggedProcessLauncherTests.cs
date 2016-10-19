@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
     [TestClass]
-    public class DebuggedProcessLauncherTests : AbstractTestAdapterTests
+    public class DebuggedProcessLauncherTests : TestAdapterTestsBase
     {
 
         [TestMethod]

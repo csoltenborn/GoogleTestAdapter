@@ -41,12 +41,12 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions, Version=4.13.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.13.0\lib\net45\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=4.15.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.15.0\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.13.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.13.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+    <Reference Include="FluentAssertions.Core, Version=4.15.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.15.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -140,14 +140,6 @@
     <Reference Include="UIAutomationClient" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
-    <Reference Include="XmlDiffPatch, Version=1.0.8.28, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>..\packages\XMLDiffPatch.1.0.8.28\lib\net\XmlDiffPatch.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="XmlDiffPatch.View, Version=1.0.1493.40755, Culture=neutral">
-      <HintPath>..\packages\XMLDiffPatch.1.0.8.28\lib\net\XmlDiffPatch.View.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -159,20 +151,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConsoleDllIntegrationTests.cs" />
-    <Compile Include="Helpers\CsvReader.cs" />
-    <Compile Include="Helpers\RegistryKeyExtensions.cs" />
-    <Compile Include="Helpers\StringExtensions.cs" />
-    <Compile Include="Helpers\TestStackWhiteExtensions.cs" />
-    <Compile Include="Helpers\MessageBoxWithTimeout.cs" />
-    <Compile Include="Helpers\TestProcessLauncher.cs" />
-    <Compile Include="Model\TestRun.cs" />
-    <Compile Include="ResultChecker.cs" />
-    <Compile Include="TrxResultChecker.cs" />
     <Compile Include="UiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AbstractConsoleIntegrationTests.cs" />
-    <Compile Include="VS.cs" />
-    <Compile Include="VsExperimentalInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -181,7 +161,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Trx2TestRun.xslt" />
     <Content Include="UITestResults\UiTests__RunAllTests__AllTestsAreRun.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath.xml" />
     <Content Include="UITestResults\UiTests__RunSelectedTests_Crashing_AddPasses.xml" />
@@ -192,13 +171,17 @@
     <Content Include="UITestResults\UiTests__RunSelectedTests_TypedTests_0_CanIterate.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\Tests.Common.EndToEnd\Tests.Common.EndToEnd.csproj">
+      <Project>{c3f11e93-2eff-4bb6-adc9-3b42727e4816}</Project>
+      <Name>Tests.Common.EndToEnd</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
-      <Project>{b06c696e-e458-490a-ac44-9e4f460dbafe}</Project>
-      <Name>Core.Tests</Name>
+    <ProjectReference Include="..\Tests.Common.UI\Tests.Common.UI.csproj">
+      <Project>{c6ac8e0b-de31-4f0e-be9d-837d9a2ca828}</Project>
+      <Name>Tests.Common.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.Common\Tests.Common.csproj">
+      <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
+      <Name>Tests.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

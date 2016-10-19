@@ -5,12 +5,15 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GoogleTestAdapter.Helpers;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Scheduling
 {
     [TestClass]
-    public class TestDurationSerializerTests : AbstractCoreTests
+    public class TestDurationSerializerTests : TestsBase
     {
 
         [TestMethod]
@@ -28,7 +31,7 @@ namespace GoogleTestAdapter.Scheduling
             serializer.UpdateTestDurations(testResults);
 
             string durationsFile = GetDurationsFile(serializer, tempFile);
-            File.Exists(durationsFile).Should().BeTrue();
+            durationsFile.AsFileInfo().Should().Exist();
 
             IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             durations.Count.Should().Be(1);
@@ -55,9 +58,9 @@ namespace GoogleTestAdapter.Scheduling
             serializer.UpdateTestDurations(testResults);
 
             string durationsFile1 = GetDurationsFile(serializer, tempFile);
-            File.Exists(durationsFile1).Should().BeTrue();
+            durationsFile1.AsFileInfo().Should().Exist();
             string durationsFile2 = GetDurationsFile(serializer, tempFile2);
-            File.Exists(durationsFile2).Should().BeTrue();
+            durationsFile2.AsFileInfo().Should().Exist();
 
             IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
             durations.Count.Should().Be(2);

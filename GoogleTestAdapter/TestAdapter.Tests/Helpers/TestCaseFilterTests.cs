@@ -8,13 +8,13 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
 {
     [TestClass]
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-    public class TestCaseFilterTests : AbstractTestAdapterTests
+    public class TestCaseFilterTests : TestAdapterTestsBase
     {
         private readonly Mock<ITestCaseFilterExpression> _mockFilterExpression = new Mock<ITestCaseFilterExpression>();
         private readonly ISet<string> _traitNames = new HashSet<string>();

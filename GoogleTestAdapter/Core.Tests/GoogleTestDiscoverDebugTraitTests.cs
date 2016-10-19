@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using GoogleTestAdapter.Tests.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public class GoogleTestDiscoverDebugTraitTests : AbstractGoogleTestDiscovererTraitTests
+    public class GoogleTestDiscovererDebugTraitTests : GoogleTestDiscovererTraitTestsBase
     {
         protected override string SampleTestToUse => TestResources.SampleTests;
 
@@ -151,6 +152,24 @@ namespace GoogleTestAdapter
         public override void GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits()
         {
             base.GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsTestWithUmlauts()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsTestWithUmlauts();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithUmlauts()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsFixtureTestWithUmlauts();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts()
+        {
+            base.GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts();
         }
 
         #endregion

@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
 {
     [TestClass]
-    public abstract class AbstractGoogleTestDiscovererTraitTests : AbstractCoreTests
+    public abstract class GoogleTestDiscovererTraitTestsBase : TestsBase
     {
         protected abstract string SampleTestToUse { get; }
 
@@ -137,6 +139,30 @@ namespace GoogleTestAdapter
         {
             Trait[] traits = { new Trait("Type", "Medium"), new Trait("Author", "MSI"), new Trait("TestCategory", "Integration") };
             AssertFindsTestWithTraits("InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsTestWithUmlauts()
+        {
+            Trait[] traits = { new Trait("Träit1", "Völue1a"), new Trait("Träit1", "Völue1b"), new Trait("Träit2", "Völue2") };
+            AssertFindsTestWithTraits("Ümlautß.Träits", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts()
+        {
+            Trait[] traits = { new Trait("Träit1", "Völue1a"), new Trait("Träit1", "Völue1b"), new Trait("Träit2", "Völue2") };
+            AssertFindsTestWithTraits("ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithUmlauts()
+        {
+            Trait[] traits = { new Trait("Träit1", "Völue1a"), new Trait("Träit1", "Völue1b"), new Trait("Träit2", "Völue2") };
+            AssertFindsTestWithTraits("TheFixtüre.Träits", traits);
         }
 
         [TestMethod]
@@ -290,9 +316,8 @@ namespace GoogleTestAdapter
 
         private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
         {
-            File.Exists(SampleTestToUse)
-                .Should()
-                .BeTrue("Build SampleTests in Debug and Release mode before executing this test");
+            SampleTestToUse.AsFileInfo()
+                .Should().Exist("building the SampleTests solution produces that executable");
 
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTestToUse).ToList();

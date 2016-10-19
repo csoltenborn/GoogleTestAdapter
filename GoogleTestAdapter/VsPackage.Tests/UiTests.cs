@@ -1,11 +1,14 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio;
+using GoogleTestAdapter.Tests.Common.Helpers;
+using GoogleTestAdapter.Tests.Common.ResultChecker;
+using GoogleTestAdapter.Tests.Common.UI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
-using GoogleTestAdapterUiTests.Helpers;
 using GoogleTestAdapter.VsPackage;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapterUiTests
 {
@@ -14,31 +17,33 @@ namespace GoogleTestAdapterUiTests
     {
         private const string BatchTeardownWarning = "Warning: Test teardown batch returned exit code 1";
 
+        private static Vsui Vsui;
 
         [ClassInitialize]
         public static void SetupVanillaVsExperimentalInstance(TestContext testContext)
         {
-            VS.SetupVanillaVsExperimentalInstance("GoogleTestAdapterUiTests");
-            VS.LaunchVsExperimentalInstance();
+            Vsui = new Vsui();
+            Vsui.SetupVanillaVsExperimentalInstance("GoogleTestAdapterUiTests", typeof(UiTests).Name);
+            Vsui.LaunchVsExperimentalInstance();
         }
 
         [TestInitialize]
         public void OpenSolutionAndTestExplorer()
         {
-            VS.OpenSolution();
-            VS.TestExplorer.OpenTestExplorer();
+            Vsui.OpenSolution();
+            Vsui.TestExplorer.OpenTestExplorer();
         }
 
         [TestCleanup]
         public void CloseSolution()
         {
-            VS.CloseSolution();
+            Vsui.CloseSolution();
         }
 
         [ClassCleanup]
         public static void CleanVsExperimentalInstance()
         {
-            VS.CleanVsExperimentalInstance();
+            Vsui.CleanVsExperimentalInstance();
         }
 
 
@@ -48,13 +53,13 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                VS.TestExplorer.RunAllTests();
+                Vsui.TestExplorer.RunAllTests();
 
-                VS.GetOutput().Should().Contain(BatchTeardownWarning);
+                Vsui.GetOutput().Should().Contain(BatchTeardownWarning);
             }
             catch (AutomationException exception)
             {
-                exception.LogAndThrow();
+                exception.LogAndThrow(typeof(UiTests).Name);
             }
         }
 
@@ -66,23 +71,23 @@ namespace GoogleTestAdapterUiTests
             {
                 try
                 {
-                    VS.TestExplorer.SelectTestSettingsFile(VS.UserSettingsFile);
+                    Vsui.TestExplorer.SelectTestSettingsFile(Vsui.UserSettingsFile);
 
-                    VS.TestExplorer.RunAllTests();
+                    Vsui.TestExplorer.RunAllTests();
 
-                    string output = VS.GetOutput();
+                    string output = Vsui.GetOutput();
                     output.Should().Contain("--gtest_shuffle");
                     output.Should().Contain("--gtest_repeat=3");
                     output.Should().NotContain(BatchTeardownWarning);
                 }
                 finally
                 {
-                    VS.TestExplorer.UnselectTestSettingsFile();
+                    Vsui.TestExplorer.UnselectTestSettingsFile();
                 }
             }
             catch (AutomationException exception)
             {
-                exception.LogAndThrow();
+                exception.LogAndThrow(typeof(UiTests).Name);
             }
         }
 
@@ -92,13 +97,13 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                VS.TestExplorer.RunAllTests();
-                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"), ".xml")
-                    .CheckResults(VS.TestExplorer.Parser.ParseTestResults().ToXML(), GetType().Name);
+                Vsui.TestExplorer.RunAllTests();
+                new ResultChecker(Path.Combine(Vsui.UiTestsDirectory, "UITestResults"), Path.Combine(Vsui.UiTestsDirectory, "TestErrors"), ".xml")
+                    .CheckResults(Vsui.TestExplorer.Parser.ParseTestResults().ToXML(), GetType().Name);
             }
             catch (AutomationException exception)
             {
-                exception.LogAndThrow();
+                exception.LogAndThrow(typeof(UiTests).Name);
             }
         }
 
@@ -164,15 +169,15 @@ namespace GoogleTestAdapterUiTests
         {
             try
             {
-                VS.TestExplorer.RunSelectedTests(displayNames);
-                string result = VS.TestExplorer.Parser.ParseTestResults().ToXML();
-                new ResultChecker(Path.Combine(VS.UiTestsDirectory, "UITestResults"), Path.Combine(VS.UiTestsDirectory, "TestErrors"), ".xml")
+                Vsui.TestExplorer.RunSelectedTests(displayNames);
+                string result = Vsui.TestExplorer.Parser.ParseTestResults().ToXML();
+                new ResultChecker(Path.Combine(Vsui.UiTestsDirectory, "UITestResults"), Path.Combine(Vsui.UiTestsDirectory, "TestErrors"), ".xml")
                     // ReSharper disable once ExplicitCallerInfoArgument
                     .CheckResults(result, GetType().Name, testCaseName);
             }
             catch (AutomationException exception)
             {
-                exception.LogAndThrow();
+                exception.LogAndThrow(typeof(UiTests).Name);
             }
         }
 

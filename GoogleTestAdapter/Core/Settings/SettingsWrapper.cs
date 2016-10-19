@@ -314,14 +314,14 @@ namespace GoogleTestAdapter.Settings
         public const string OptionMaxNrOfThreads = "Maximum number of threads";
         public const int OptionMaxNrOfThreadsDefaultValue = 0;
         public const string OptionMaxNrOfThreadsDescription =
-            "Maximum number of threads to be used for test execution (0: all available threads).";
+            "Maximum number of threads to be used for test execution (0: one thread for each processor).";
 
         public virtual int MaxNrOfThreads
         {
             get
             {
                 int result = _theSettings.MaxNrOfThreads ?? OptionMaxNrOfThreadsDefaultValue;
-                if (result <= 0 || result > Environment.ProcessorCount)
+                if (result <= 0)
                 {
                     result = Environment.ProcessorCount;
                 }

@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
 {
@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 var theStart = start;
                 var theEnd = start + TimeSpan;
                 var eventsInTimeFrame = Events.Where(e => e.Time >= theStart && e.Time <= theEnd);
-                eventsInTimeFrame.Count().Should().BeLessOrEqualTo(MaxEvents);
+                eventsInTimeFrame.Count().Should().BeLessOrEqualTo(MaxEvents, "Size of Events should never be greater than MaxEvents - but this test is unstable :-)");
             }
         }
     }

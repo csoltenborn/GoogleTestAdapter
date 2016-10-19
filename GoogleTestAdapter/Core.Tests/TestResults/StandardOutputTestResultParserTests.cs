@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
-    public class StandardOutputTestResultParserTests : AbstractCoreTests
+    public class StandardOutputTestResultParserTests : TestsBase
     {
         private string[] ConsoleOutput1 { get; } = {
             @"[==========] Running 3 tests from 1 test case.",
@@ -67,6 +68,21 @@ namespace GoogleTestAdapter.TestResults
             @"[----------] Global test environment tear-down",
             @"[==========] 3 tests from 1 test case ran. (36 ms total)",
             @"[  PASSED  ] 1 test.",
+        };
+
+        private string[] ConsoleOutputWithPrefixingTest { get; } = {
+            @"[==========] Running 2 tests from 1 test case.",
+            @"[----------] Global test environment set-up.",
+            @"[----------] 2 tests from TestMath",
+            @"[ RUN      ] Test.AB",
+            @"[       OK ] Test.A(0 ms)",
+            @"[ RUN      ] Test.A",
+            @"[       OK ] Test.A(0 ms)",
+            @"[----------] 2 tests from TestMath(26 ms total)",
+            @"",
+            @"[----------] Global test environment tear-down",
+            @"[==========] 2 tests from 1 test case ran. (36 ms total)",
+            @"[  PASSED  ] 2 test.",
         };
 
 
@@ -195,14 +211,36 @@ namespace GoogleTestAdapter.TestResults
             XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithPrefixingTest_BothTestsAreFound()
+        {
+            var cases = new List<TestCase>
+            {
+                TestDataCreator.ToTestCase("Test.AB", TestDataCreator.DummyExecutable,
+                    @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"),
+                TestDataCreator.ToTestCase("Test.A", TestDataCreator.DummyExecutable,
+                    @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
+            };
+
+            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\")
+                .GetTestResults();
+
+            results.Count.Should().Be(2);
+            results[0].TestCase.FullyQualifiedName.Should().Be("Test.AB");
+            XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
+            results[1].TestCase.FullyQualifiedName.Should().Be("Test.A");
+            XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
+        }
+
 
         private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {
-            IList<TestCase> cases = new List<TestCase>();
+            var cases = new List<TestCase>();
             cases.Add(TestDataCreator.ToTestCase("TestMath.AddFails", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
             cases.Add(TestDataCreator.ToTestCase("TestMath.Crash", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
             cases.Add(TestDataCreator.ToTestCase("TestMath.AddPasses", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            StandardOutputTestResultParser parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
+            var parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
             return parser.GetTestResults();
         }
 

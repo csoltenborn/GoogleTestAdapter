@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -47,8 +48,8 @@ namespace GoogleTestAdapter.Helpers
                 s => output.Add(s));
 
             exitCode.Should().Be(1);
-            output.Should().Contain(s => s.Contains("LongRunningTests.Test1"));
-            output.Count.Should().Be(405);
+            output.Should().Contain(s => s.Contains("TestMath.AddPasses"));
+            output.Count.Should().Be(441);
         }
 
     }

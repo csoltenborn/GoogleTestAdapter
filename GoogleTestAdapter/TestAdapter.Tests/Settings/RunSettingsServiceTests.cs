@@ -1,15 +1,16 @@
 ﻿using System.Xml;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
-using static GoogleTestAdapter.TestMetadata.TestCategories;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
 
     [TestClass]
-    public class RunSettingsServiceTests : AbstractCoreTests
+    public class RunSettingsServiceTests : TestsBase
     {
 
         private class RunSettingsServiceUnderTest : RunSettingsService

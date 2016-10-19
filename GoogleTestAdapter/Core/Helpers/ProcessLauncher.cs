@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Helpers
@@ -38,6 +39,7 @@ namespace GoogleTestAdapter.Helpers
         {
             var processStartInfo = new ProcessStartInfo(command, param)
             {
+                StandardOutputEncoding = Encoding.Default,
                 RedirectStandardOutput = true,
                 RedirectStandardError = false,
                 UseShellExecute = false,

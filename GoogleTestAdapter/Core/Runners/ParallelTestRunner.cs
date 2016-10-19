@@ -14,13 +14,15 @@ namespace GoogleTestAdapter.Runners
         private readonly TestEnvironment _testEnvironment;
         private readonly List<ITestRunner> _testRunners = new List<ITestRunner>();
         private readonly string _solutionDirectory;
+        private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
 
-        public ParallelTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment, string solutionDirectory)
+        public ParallelTestRunner(ITestFrameworkReporter reporter, TestEnvironment testEnvironment, string solutionDirectory, SchedulingAnalyzer schedulingAnalyzer)
         {
             _frameworkReporter = reporter;
             _testEnvironment = testEnvironment;
             _solutionDirectory = solutionDirectory;
+            _schedulingAnalyzer = schedulingAnalyzer;
         }
 
 
@@ -68,7 +70,7 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _testEnvironment);
+                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _testEnvironment, _schedulingAnalyzer);
                 _testRunners.Add(runner);
 
                 var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor));
@@ -82,6 +84,11 @@ namespace GoogleTestAdapter.Runners
         {
             var serializer = new TestDurationSerializer();
             IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
+            foreach (KeyValuePair<TestCase, int> duration in durations)
+            {
+                if (!_schedulingAnalyzer.AddExpectedDuration(duration.Key, duration.Value))
+                    _testEnvironment.DebugWarning("TestCase already in analyzer: " + duration.Key.FullyQualifiedName);
+            }
 
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)

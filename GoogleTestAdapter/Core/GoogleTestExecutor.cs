@@ -4,6 +4,7 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Scheduling;
 
 namespace GoogleTestAdapter
 {
@@ -12,6 +13,7 @@ namespace GoogleTestAdapter
     {
 
         private readonly TestEnvironment _testEnvironment;
+        private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
         private ITestRunner _runner;
         private bool _canceled;
@@ -19,6 +21,7 @@ namespace GoogleTestAdapter
         public GoogleTestExecutor(TestEnvironment testEnvironment)
         {
             _testEnvironment = testEnvironment;
+            _schedulingAnalyzer = new SchedulingAnalyzer(testEnvironment);
         }
 
 
@@ -39,6 +42,9 @@ namespace GoogleTestAdapter
             }
 
             _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, null, isBeingDebugged, launcher, executor);
+
+            if (_testEnvironment.Options.ParallelTestExecution)
+                _schedulingAnalyzer.PrintStatisticsToDebugOutput();
         }
 
         public void Cancel()
@@ -54,11 +60,11 @@ namespace GoogleTestAdapter
         {
             if (_testEnvironment.Options.ParallelTestExecution && !isBeingDebugged)
             {
-                _runner = new ParallelTestRunner(reporter, _testEnvironment, solutionDirectory);
+                _runner = new ParallelTestRunner(reporter, _testEnvironment, solutionDirectory, _schedulingAnalyzer);
             }
             else
             {
-                _runner = new PreparingTestRunner(0, solutionDirectory, reporter, _testEnvironment);
+                _runner = new PreparingTestRunner(solutionDirectory, reporter, _testEnvironment, _schedulingAnalyzer);
                 if (_testEnvironment.Options.ParallelTestExecution && isBeingDebugged)
                 {
                     _testEnvironment.DebugInfo(

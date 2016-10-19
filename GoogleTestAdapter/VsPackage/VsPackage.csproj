@@ -130,6 +130,7 @@
     <EmbeddedResource Include="Resources\ReleaseNotes\0.6.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.7.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.7.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -154,7 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonMark.NET.0.13.4\lib\net45\CommonMark.dll</HintPath>
+      <HintPath>..\packages\CommonMark.NET.0.14.0\lib\net45\CommonMark.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
