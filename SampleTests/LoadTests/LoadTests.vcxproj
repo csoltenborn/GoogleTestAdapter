@@ -152,9 +152,6 @@
     <ClCompile Include="..\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc" />
     <ClCompile Include="LoadTests.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

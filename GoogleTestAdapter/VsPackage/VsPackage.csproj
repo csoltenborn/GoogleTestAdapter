@@ -332,7 +332,7 @@
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.14.3.25420\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.14.3.25420\build\Microsoft.VSSDK.BuildTools.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>nuget pack VsPackage.nuspec -NonInteractive
+    <PostBuildEvent>nuget pack VsPackage.nuspec -NonInteractive -Symbols
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
