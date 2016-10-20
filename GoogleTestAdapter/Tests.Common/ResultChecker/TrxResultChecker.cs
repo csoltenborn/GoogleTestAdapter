@@ -33,7 +33,6 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             Directory.CreateDirectory(_goldenFilesDir);
 
             _diffFilesDir = Path.Combine(projectDir, "TestErrors");
-            Directory.CreateDirectory(_diffFilesDir);
         }
 
 #pragma warning disable 162
@@ -66,6 +65,9 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             string diffFile;
             if (!CompareXmlFiles(goldenFile, transformedResultFile, out diffFile))
             {
+                if (!Directory.Exists(_diffFilesDir))
+                    Directory.CreateDirectory(_diffFilesDir);
+
                 string htmlDiffFile = Path.Combine(_diffFilesDir,
                     TestResources.GetGoldenFileName(typeName, testCaseName, ".html"));
                 string resultFile = Path.ChangeExtension(htmlDiffFile, ".xml");
@@ -78,7 +80,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
                 if (TestMetadata.OverwriteTestResults && !CiSupport.IsRunningOnBuildServer)
                 {
                     File.Copy(transformedResultFile, goldenFile, true);
-                    Assert.Inconclusive($"Updated golden file '{goldenFile}', test should now pass");
+                    Assert.Inconclusive($"Updated golden file file:///{goldenFile}, test should now pass");
                 }
 
                 Assert.Fail($@"Files differ, see file:///{htmlDiffFile}");

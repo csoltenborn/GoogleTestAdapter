@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
     public static class TestStackWhiteExtensions
     {
         // White's Window.MenuBar.MenuItem("Some", "Menu", "Option").Click() is broken for Visual Studio.
-        // There is a simple fix, but we are bound to the broken version from nuget.
+        // There is a simple fix, but we are bound to the broken version from NuGet.
         // This workaround runs the command by entering "Some Menu Option" in the quick launch bar.
         // Use it like this:  Window.VsMenuBarMenuItems("Some", "Menu", "Option").Click()
         public static VsMenuBarWorkaround VsMenuBarMenuItems(this Window vsWindow, params string[] path)

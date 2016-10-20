@@ -6,7 +6,7 @@
     <title>Google Test Adapter</title>
     <authors>Christian Soltenborn, Jonas Gefele</authors>
     <owners>Christian Soltenborn, Jonas Gefele</owners>
-    <description>Limited version of the Visual Studio extension Google Test Adapter, which adds support for the C++ testing framework Google Test. Installing this test adapter via nuget (as compared to installation through the VS Gallery) lacks configuration through VS Options as well as the toolbar (configuration via solution config files is supported).</description>
+    <description>Limited version of the Visual Studio extension Google Test Adapter, which adds support for the C++ testing framework Google Test. Installing this test adapter via NuGet (as compared to installation through the VS Gallery) lacks configuration through VS Options as well as the toolbar (configuration via solution config files is supported).</description>
     <summary>Limited version of the Visual Studio extension Google Test Adapter, which adds support for the C++ testing framework Google Test.</summary>
     <language>en-US</language>
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
