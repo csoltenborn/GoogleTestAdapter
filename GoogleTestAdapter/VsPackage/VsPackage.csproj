@@ -315,6 +315,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterClean">
+    <Delete Files="$(TargetDir)\GoogleTestAdapter.*.nupkg" />
+  </Target>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
@@ -329,6 +332,7 @@
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.14.3.25420\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.14.3.25420\build\Microsoft.VSSDK.BuildTools.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>nuget pack VsPackage.nuspec</PostBuildEvent>
+    <PostBuildEvent>nuget pack VsPackage.nuspec -NonInteractive
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

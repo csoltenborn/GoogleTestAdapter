@@ -79,7 +79,9 @@ before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
 - path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
-  name: GoogleTestAdapter
+  name: GoogleTestAdapter VSIX installation package
+- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GitHub.CSoltenborn.GoogleTestAdapter.*.nupkg
+  name: GoogleTestAdapter nuget package
 #- path: OpenCover_Unit_CoverageData.xml
 #  name: OpenCover Unit coverage data
 #- path: OpenCover_Integration_CoverageData.xml

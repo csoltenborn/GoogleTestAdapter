@@ -23,6 +23,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * Execution of [parameterized batch files](#test_setup_and_teardown) for test setup/teardown
 * Test discovery using a [custom regex](#test_discovery_regex) (if needed)
 * Settings can be [shared via source control](#solution_settings)
+* Installable as Visual Studio extension or nuget development dependency
 
 #### History
 
@@ -33,10 +34,11 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 #### Installation
 
-Google Test Adapter can be installed in two ways:
+Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.8.0/GoogleTestAdapter-0.8.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
+* Add a nuget dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/TODO) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
@@ -105,7 +107,7 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 ### <a name="trouble_shooting"></a>Trouble shooting
 
 None or not all of my tests show up!
-* <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place.
+* <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place. In case of GTA installation via nuget, do not forget to add the regex to the solution config file (which might be a good idea anyways).
 * Your test executable can not run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 
