@@ -11,7 +11,7 @@
     <language>en-US</language>
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/gtest-logo.png</iconUrl>
-    <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/LICENSE.md</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>true</developmentDependency>
     <copyright>Copyright 2015, 2016 Christian Soltenborn, Jonas Gefele</copyright>
