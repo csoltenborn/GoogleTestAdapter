@@ -7,11 +7,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using Microsoft.Win32.SafeHandles;
@@ -59,7 +56,7 @@ namespace GoogleTestAdapter.Helpers
                 {
                     SafePipeHandle readingEnd;
                     CreatePipe(out readingEnd, out _writingEnd);
-                    base.InitializeHandle(readingEnd, false, false);
+                    InitializeHandle(readingEnd, false, false);
                 }
 
                 public void ConnectedToChildProcess()
@@ -67,7 +64,7 @@ namespace GoogleTestAdapter.Helpers
                     // Close the writing end of the pipe - it's still open in the child process.
                     // If we didn't close it, a StreamReader would never reach EndOfStream.
                     _writingEnd?.Dispose();
-                    base.IsConnected = true;
+                    IsConnected = true;
                 }
 
                 protected override void Dispose(bool disposing)

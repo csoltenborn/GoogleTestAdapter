@@ -128,7 +128,6 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                         if (!WaitForDebugEvent(ref debugEvent, (int) TimeSpan.FromSeconds(10).TotalMilliseconds))
                             throw new LastWin32Exception();
 
-
                         switch ((NativeDebugEventCode)debugEvent.header.dwDebugEventCode)
                         {
                             case NativeDebugEventCode.CREATE_PROCESS_DEBUG_EVENT:
