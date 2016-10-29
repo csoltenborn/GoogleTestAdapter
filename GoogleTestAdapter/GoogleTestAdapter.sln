@@ -87,7 +87,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common.EndToEnd", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common.UI", "Tests.Common.UI\Tests.Common.UI.csproj", "{C6AC8E0B-DE31-4F0E-BE9D-837D9A2CA828}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{64AF842B-3041-4A46-8A6A-E947284E8454}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleTests Solution Items", "SampleTests Solution Items", "{64AF842B-3041-4A46-8A6A-E947284E8454}"
 	ProjectSection(SolutionItems) = preProject
 		..\SampleTests\No.runsettings = ..\SampleTests\No.runsettings
 		..\SampleTests\NonDeterministic.runsettings = ..\SampleTests\NonDeterministic.runsettings
