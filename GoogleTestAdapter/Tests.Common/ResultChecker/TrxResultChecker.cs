@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             string resultsFile = RunExecutableAndGetResultsFile(arguments);
             if (resultsFile == null)
             {
-                goldenFile.AsFileInfo().Should().NotExist($"Test run did not produce result trx file, therefore no golden file should exist");
+                goldenFile.AsFileInfo().Should().NotExist("Test run did not produce result trx file, therefore no golden file should exist");
                 return;
             }
 

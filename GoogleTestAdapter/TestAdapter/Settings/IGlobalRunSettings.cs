@@ -1,4 +1,6 @@
-﻿namespace GoogleTestAdapter.TestAdapter.Settings
+﻿using GoogleTestAdapter.Settings;
+
+namespace GoogleTestAdapter.TestAdapter.Settings
 {
 
     public interface IGlobalRunSettings

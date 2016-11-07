@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.Settings
     public class SettingsWrapperTests : TestsBase
     {
 
-        private Mock<IGoogleTestAdapterSettings> MockXmlOptions { get; } = new Mock<IGoogleTestAdapterSettings>();
+        private Mock<RunSettings> MockXmlOptions { get; } = new Mock<RunSettings>();
         private SettingsWrapper TheOptions { get; set; }
 
 
@@ -24,7 +24,10 @@ namespace GoogleTestAdapter.Settings
         {
             base.SetUp();
 
-            TheOptions = new SettingsWrapper(MockXmlOptions.Object)
+            var containerMock = new Mock<IGoogleTestAdapterSettingsContainer>();
+            containerMock.Setup(c => c.SolutionSettings).Returns(MockXmlOptions.Object);
+            containerMock.Setup(c => c.GetSettingsForExecutable(It.IsAny<string>())).Returns(MockXmlOptions.Object);
+            TheOptions = new SettingsWrapper(containerMock.Object)
             {
                 RegexTraitParser = new RegexTraitParser(TestEnvironment)
             };

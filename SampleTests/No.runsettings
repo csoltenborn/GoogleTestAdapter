@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <GoogleTestAdapter>
-  </GoogleTestAdapter>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+    </SolutionSettings>
+    <ProjectSettings>
+    </ProjectSettings>
+  </GoogleTestAdapterSettings>
 </RunSettings>

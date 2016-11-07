@@ -12,13 +12,13 @@ namespace GoogleTestAdapter.Helpers
 
 
         public SettingsWrapper Options { get; }
-        private readonly ILogger _logger;
+        public ILogger Logger { get; }
 
 
         public TestEnvironment(SettingsWrapper options, ILogger logger)
         {
             Options = options;
-            _logger = logger;
+            Logger = logger;
         }
 
 
@@ -30,13 +30,13 @@ namespace GoogleTestAdapter.Helpers
             switch (severity)
             {
                 case Severity.Info:
-                    _logger.LogInfo(message);
+                    Logger.LogInfo(message);
                     break;
                 case Severity.Warning:
-                    _logger.LogWarning(message);
+                    Logger.LogWarning(message);
                     break;
                 case Severity.Error:
-                    _logger.LogError(message);
+                    Logger.LogError(message);
                     break;
                 default:
                     throw new Exception($"Unknown enum literal: {severity}");
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.Helpers
         {
             if (ShouldBeLogged(LogType.Debug))
             {
-                _logger.LogInfo(message);
+                Logger.LogInfo(message);
             }
         }
 
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Helpers
         {
             if (ShouldBeLogged(LogType.Debug))
             {
-                _logger.LogWarning(message);
+                Logger.LogWarning(message);
             }
         }
 
@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.Helpers
         {
             if (ShouldBeLogged(LogType.Debug))
             {
-                _logger.LogError(message);
+                Logger.LogError(message);
             }
         }
 

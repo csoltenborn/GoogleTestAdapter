@@ -3,7 +3,7 @@
 
     public static class GoogleTestConstants
     {
-        public const string SettingsName = "GoogleTestAdapter";
+        public const string SettingsName = "GoogleTestAdapterSettings";
         public const string SettingsExtension = ".gta.runsettings";
         public const string DurationsExtension = ".gta.testdurations";
 

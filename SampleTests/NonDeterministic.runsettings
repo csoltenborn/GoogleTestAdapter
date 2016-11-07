@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <GoogleTestAdapter>
-    <ShuffleTests>true</ShuffleTests>
-    <NrOfTestRepetitions>3</NrOfTestRepetitions>
-    <BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
-    <DebugMode>true</DebugMode>
-  </GoogleTestAdapter>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <ShuffleTests>true</ShuffleTests>
+        <NrOfTestRepetitions>3</NrOfTestRepetitions>
+        <BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
+        <DebugMode>true</DebugMode>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings>
+      <Settings ProjectRegex=".*\\CrashingTests_gta\.exe">
+        <ShuffleTestsSeed>3</ShuffleTestsSeed>
+      </Settings>
+      <Settings ProjectRegex=".*\\Tests_gta\.exe">
+        <ShuffleTestsSeed>4</ShuffleTestsSeed>
+      </Settings>
+    </ProjectSettings>
+  </GoogleTestAdapterSettings>
 </RunSettings>

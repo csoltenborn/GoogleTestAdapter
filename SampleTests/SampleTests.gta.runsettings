@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-	<GoogleTestAdapter>
-		<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
-		<BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
-		<BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
-		<TestDiscoveryRegex>.*Tests.*_gta.exe</TestDiscoveryRegex>
-		<WorkingDir>$(SolutionDir)</WorkingDir>
-	</GoogleTestAdapter>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
+        <BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
+        <BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
+        <TestDiscoveryRegex>.*Tests.*_gta.exe</TestDiscoveryRegex>
+        <WorkingDir>$(SolutionDir)</WorkingDir>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings>
+      <Settings ProjectRegex="LoadTests_gta\.exe|CrashingTests_gta\.exe">
+        <BatchForTestSetup>Tests\Returns1.bat</BatchForTestSetup>
+      </Settings>
+      <Settings ProjectRegex=".*\\Tests_gta\.exe">
+        <BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
+      </Settings>
+    </ProjectSettings>
+  </GoogleTestAdapterSettings>
 </RunSettings>

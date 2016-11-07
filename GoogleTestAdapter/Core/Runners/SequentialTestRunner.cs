@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.Runners
         private readonly string _threadName;
         private readonly ITestFrameworkReporter _frameworkReporter;
         private readonly TestEnvironment _testEnvironment;
-        private SchedulingAnalyzer _schedulingAnalyzer;
+        private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
 
         public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
@@ -47,16 +47,20 @@ namespace GoogleTestAdapter.Runners
                 if (_canceled)
                     break;
 
-                RunTestsFromExecutable(
-                    executable,
-                    finalWorkingDir,
-                    allTestCasesAsArray.Where(tc => tc.Source == executable),
-                    groupedTestCases[executable],
-                    baseDir,
-                    finalParameters,
-                    isBeingDebugged,
-                    debuggedLauncher,
-                    executor);
+                _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
+                {
+                    RunTestsFromExecutable(
+                        executable,
+                        finalWorkingDir,
+                        allTestCasesAsArray.Where(tc => tc.Source == executable),
+                        groupedTestCases[executable],
+                        baseDir,
+                        finalParameters,
+                        isBeingDebugged,
+                        debuggedLauncher,
+                        executor);
+                });
+
             }
         }
 

@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-	<GoogleTestAdapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
-		<BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
-		<BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
-		<BreakOnFailure>false</BreakOnFailure>
-		<CatchExceptions>true</CatchExceptions>
-    <DebugMode>false</DebugMode>
-    <TimestampOutput>false</TimestampOutput>
-    <ShowReleaseNotes>true</ShowReleaseNotes>
-		<MaxNrOfThreads>4</MaxNrOfThreads>
-		<NrOfTestRepetitions>1</NrOfTestRepetitions>
-		<ParallelTestExecution>false</ParallelTestExecution>
-		<PrintTestOutput>true</PrintTestOutput>
-		<ReportWaitPeriod>10</ReportWaitPeriod>
-		<RunDisabledTests>false</RunDisabledTests>
-		<ShuffleTests>false</ShuffleTests>
-		<ShuffleTestsSeed>0</ShuffleTestsSeed>
-		<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
-		<WorkingDir>${SolutionDir}</WorkingDir>
-		<PathExtension>C:\fooDir;C:\barDir</PathExtension>
-		<TraitsRegexesAfter />
-		<TraitsRegexesBefore />
-		<TestNameSeparator />
-		<ParseSymbolInformation>true</ParseSymbolInformation>
-    <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
-	</GoogleTestAdapter>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
+        <BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
+        <BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
+        <BreakOnFailure>false</BreakOnFailure>
+        <CatchExceptions>true</CatchExceptions>
+        <DebugMode>false</DebugMode>
+        <TimestampOutput>false</TimestampOutput>
+        <ShowReleaseNotes>true</ShowReleaseNotes>
+        <MaxNrOfThreads>4</MaxNrOfThreads>
+        <NrOfTestRepetitions>1</NrOfTestRepetitions>
+        <ParallelTestExecution>false</ParallelTestExecution>
+        <PrintTestOutput>true</PrintTestOutput>
+        <RunDisabledTests>false</RunDisabledTests>
+        <ShuffleTests>false</ShuffleTests>
+        <ShuffleTestsSeed>0</ShuffleTestsSeed>
+        <TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
+        <WorkingDir>${SolutionDir}</WorkingDir>
+        <PathExtension>C:\fooDir;C:\barDir</PathExtension>
+        <TraitsRegexesAfter />
+        <TraitsRegexesBefore />
+        <TestNameSeparator />
+        <ParseSymbolInformation>true</ParseSymbolInformation>
+        <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings/>
+  </GoogleTestAdapterSettings>
 </RunSettings>

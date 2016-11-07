@@ -26,22 +26,23 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             _globalRunSettings = globalRunSettings;
         }
 
-        public IXPathNavigable AddRunSettings(IXPathNavigable userRunSettingDocument,
+        public IXPathNavigable AddRunSettings(IXPathNavigable runSettingDocument,
             IRunSettingsConfigurationInfo configurationInfo, ILogger logger)
         {
-            XPathNavigator userRunSettingsNavigator = userRunSettingDocument.CreateNavigator();
-            Debug.Assert(userRunSettingsNavigator != null, "userRunSettingsNavigator == null!");
-            if (!userRunSettingsNavigator.MoveToChild("RunSettings", ""))
+            XPathNavigator runSettingsNavigator = runSettingDocument.CreateNavigator();
+            Debug.Assert(runSettingsNavigator != null, "userRunSettingsNavigator == null!");
+            if (!runSettingsNavigator.MoveToChild("RunSettings", ""))
             {
                 logger.Log(MessageLevel.Warning, "RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...");
-                return userRunSettingsNavigator;
+                return runSettingsNavigator;
             }
 
-            var finalRunSettings = new RunSettings();
+            var settingsContainer = new RunSettingsContainer();
+            settingsContainer.SolutionSettings = new RunSettings();
 
-            if (CopyToUnsetValues(userRunSettingsNavigator, finalRunSettings))
+            if (CopyToUnsetValues(runSettingsNavigator, settingsContainer))
             {
-                userRunSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
+                runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
             }
 
             string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
@@ -52,9 +53,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     var solutionRunSettingsDocument = new XPathDocument(solutionRunSettingsFile);
                     XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
                     if (solutionRunSettingsNavigator.MoveToChild("RunSettings", ""))
-                    {
-                        CopyToUnsetValues(solutionRunSettingsNavigator, finalRunSettings);
-                    }
+                        CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
                 }
             }
             catch (Exception e)
@@ -64,22 +63,36 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 logger.LogException(e);
             }
 
-            finalRunSettings.VisualStudioProcessId = null;
-            finalRunSettings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
+            GetValuesFromGlobalSettings(settingsContainer);
 
-            userRunSettingsNavigator.AppendChild(finalRunSettings.ToXml().CreateNavigator());
-            userRunSettingsNavigator.MoveToRoot();
+            runSettingsNavigator.MoveToChild("RunSettings", "");
+            runSettingsNavigator.AppendChild(settingsContainer.ToXml().CreateNavigator());
 
-            return userRunSettingsNavigator;
+            runSettingsNavigator.MoveToRoot();
+            return runSettingsNavigator;
         }
 
-        private bool CopyToUnsetValues(XPathNavigator sourceNavigator, RunSettings targetRunSettings)
+        private void GetValuesFromGlobalSettings(RunSettings settings)
+        {
+            settings.VisualStudioProcessId = null;
+            settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
+        }
+
+        private void GetValuesFromGlobalSettings(RunSettingsContainer settingsContainer)
+        {
+            GetValuesFromGlobalSettings(settingsContainer.SolutionSettings);
+            foreach (RunSettings projectSettings in settingsContainer.ProjectSettings)
+            {
+                GetValuesFromGlobalSettings(projectSettings);
+            }
+        }
+
+        private bool CopyToUnsetValues(XPathNavigator sourceNavigator, RunSettingsContainer targetSettingsContainer)
         {
             if (sourceNavigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
             {
-                RunSettings sourceRunSettings = RunSettings.LoadFromXml(sourceNavigator.ReadSubtree());
-                targetRunSettings.GetUnsetValuesFrom(sourceRunSettings);
-
+                var sourceRunSettings = RunSettingsContainer.LoadFromXml(sourceNavigator.ReadSubtree());
+                targetSettingsContainer.GetUnsetValuesFrom(sourceRunSettings);
                 return true;
             }
 

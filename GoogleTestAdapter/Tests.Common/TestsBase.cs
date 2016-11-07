@@ -21,7 +21,9 @@ namespace GoogleTestAdapter.Tests.Common
         protected TestsBase()
         {
             MockLogger = new Mock<ILogger>();
-            MockOptions = new Mock<SettingsWrapper>();
+            Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
+            MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object);
+            MockOptions.Setup(o => o.Clone()).Returns(MockOptions.Object);
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {

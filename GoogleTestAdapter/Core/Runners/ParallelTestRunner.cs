@@ -70,7 +70,8 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _testEnvironment, _schedulingAnalyzer);
+                var threadTestEnvironment = new TestEnvironment(_testEnvironment.Options.Clone(), _testEnvironment.Logger);
+                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, threadTestEnvironment, _schedulingAnalyzer);
                 _testRunners.Add(runner);
 
                 var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor));

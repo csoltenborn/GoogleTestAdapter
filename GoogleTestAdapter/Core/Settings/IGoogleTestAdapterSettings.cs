@@ -14,6 +14,8 @@
     */
     public interface IGoogleTestAdapterSettings
     {
+        string ProjectRegex { get; set; }
+
         string AdditionalTestExecutionParam { get; set; }
         bool? CatchExceptions { get; set; }
         bool? BreakOnFailure { get; set; }

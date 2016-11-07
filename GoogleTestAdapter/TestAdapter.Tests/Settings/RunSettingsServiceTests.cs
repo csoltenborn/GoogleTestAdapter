@@ -1,10 +1,15 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.XPath;
 using FluentAssertions;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
+// ReSharper disable PossibleNullReferenceException
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
@@ -103,6 +108,195 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_ComplexConfiguration_IsMergedCorrectly()
+        {
+            string global = "GlobalSettings";
+            string solutionSolution = "solutionSolution";
+            string solutionProject1 = "solutionProject1";
+            string solutionProject2 = "solutionProject2";
+            string userSolution = "userSolution";
+            string userProject1 = "userProject1";
+            string userProject3 = "userProject3";
+
+            var solutionSettingsContainer = new RunSettingsContainer
+            {
+                SolutionSettings = new RunSettings
+                {
+                    ProjectRegex = null,
+                    AdditionalTestExecutionParam = solutionSolution,
+                    PathExtension = solutionSolution,
+                    TestDiscoveryRegex = solutionSolution,
+                    TraitsRegexesAfter = solutionSolution,
+                    WorkingDir = solutionSolution,
+                    MaxNrOfThreads = 1,
+                },
+                ProjectSettings = new List<RunSettings>
+                {
+                    new RunSettings
+                    {
+                        ProjectRegex = "project1",
+                        AdditionalTestExecutionParam = solutionProject1,
+                        BatchForTestTeardown = solutionProject1,
+                        PathExtension = solutionProject1,
+                        TestDiscoveryRegex = solutionProject1,
+                        NrOfTestRepetitions = 2,
+                        ShuffleTestsSeed = 2
+                    },
+                    new RunSettings
+                    {
+                        ProjectRegex = "project2",
+                        AdditionalTestExecutionParam = solutionProject2,
+                        BatchForTestTeardown = solutionProject2,
+                        TestNameSeparator = solutionProject2,
+                        TraitsRegexesAfter = solutionProject2,
+                        WorkingDir = solutionProject2,
+                        NrOfTestRepetitions = 3,
+                    }
+                }
+            };
+
+            var userSettingsContainer = new RunSettingsContainer
+            {
+                SolutionSettings = new RunSettings
+                {
+                    ProjectRegex = null,
+                    BatchForTestSetup = userSolution,
+                    BatchForTestTeardown = userSolution,
+                    TestDiscoveryRegex = userSolution,
+                    TraitsRegexesAfter = userSolution,
+                    MaxNrOfThreads = 4,
+                    ShuffleTestsSeed = 4
+                },
+                ProjectSettings = new List<RunSettings>
+                {
+                    new RunSettings
+                    {
+                        ProjectRegex = "project1",
+                        BatchForTestTeardown = userProject1,
+                        PathExtension = userProject1,
+                        TestNameSeparator = userProject1,
+                        WorkingDir = userProject1,
+                        MaxNrOfThreads = 5,
+                        ShuffleTestsSeed = 5
+                    },
+                    new RunSettings
+                    {
+                        ProjectRegex = "project3",
+                        AdditionalTestExecutionParam = userProject3,
+                        BatchForTestTeardown = userProject3,
+                        TestDiscoveryRegex = userProject3,
+                        TestNameSeparator = userProject3,
+                        TraitsRegexesBefore = userProject3,
+                        MaxNrOfThreads = 6,
+                    }
+                }
+            };
+
+            var globalSettings = new RunSettings
+            {
+                ProjectRegex = null,
+                AdditionalTestExecutionParam = global,
+                BatchForTestSetup = global,
+                BatchForTestTeardown = global,
+                PathExtension = global,
+                TestDiscoveryRegex = global,
+                TestNameSeparator = global,
+                TraitsRegexesAfter = global,
+                TraitsRegexesBefore = global,
+                WorkingDir = global,
+                MaxNrOfThreads = 0,
+                NrOfTestRepetitions = 0,
+                ShuffleTestsSeed = 0
+            };
+
+            var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
+            mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalSettings);
+
+            var userSettingsNavigator = EmbedSettingsIntoRunSettings(userSettingsContainer);
+
+            string solutionSettingsFile = SerializeSettingsContainer(solutionSettingsContainer);
+            IXPathNavigable navigable;
+            try
+            {
+                var serviceUnderTest = new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, solutionSettingsFile);
+                navigable = serviceUnderTest.AddRunSettings(userSettingsNavigator,
+                    new Mock<IRunSettingsConfigurationInfo>().Object, new Mock<ILogger>().Object);
+            }
+            finally
+            {
+                File.Delete(solutionSettingsFile);
+            }
+
+            var navigator = navigable.CreateNavigator();
+            navigator.MoveToChild("RunSettings", "");
+            navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
+            var resultingContainer = RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());
+
+            resultingContainer.Should().NotBeNull();
+            resultingContainer.SolutionSettings.Should().NotBeNull();
+            resultingContainer.ProjectSettings.Count.Should().Be(3);
+
+            resultingContainer.SolutionSettings.AdditionalTestExecutionParam.Should().Be(solutionSolution);
+            resultingContainer.SolutionSettings.BatchForTestSetup.Should().Be(userSolution);
+            resultingContainer.SolutionSettings.BatchForTestTeardown.Should().Be(userSolution);
+            resultingContainer.SolutionSettings.PathExtension.Should().Be(solutionSolution);
+            resultingContainer.SolutionSettings.TestDiscoveryRegex.Should().Be(userSolution);
+            resultingContainer.SolutionSettings.TestNameSeparator.Should().Be(global);
+            resultingContainer.SolutionSettings.TraitsRegexesAfter.Should().Be(userSolution);
+            resultingContainer.SolutionSettings.TraitsRegexesBefore.Should().Be(global);
+            resultingContainer.SolutionSettings.WorkingDir.Should().Be(solutionSolution);
+            resultingContainer.SolutionSettings.MaxNrOfThreads.Should().Be(4);
+            resultingContainer.SolutionSettings.MaxNrOfThreads.Should().Be(4);
+            resultingContainer.SolutionSettings.NrOfTestRepetitions.Should().Be(0);
+
+            var projectContainer = resultingContainer.GetSettingsForExecutable("project1");
+            projectContainer.Should().NotBeNull();
+            projectContainer.AdditionalTestExecutionParam.Should().Be(solutionProject1);
+            projectContainer.BatchForTestSetup.Should().Be(global);
+            projectContainer.BatchForTestTeardown.Should().Be(userProject1);
+            projectContainer.PathExtension.Should().Be(userProject1);
+            projectContainer.TestDiscoveryRegex.Should().Be(solutionProject1);
+            projectContainer.TestNameSeparator.Should().Be(userProject1);
+            projectContainer.TraitsRegexesAfter.Should().Be(global);
+            projectContainer.TraitsRegexesBefore.Should().Be(global);
+            projectContainer.WorkingDir.Should().Be(userProject1);
+            projectContainer.MaxNrOfThreads.Should().Be(5);
+            projectContainer.MaxNrOfThreads.Should().Be(5);
+            projectContainer.NrOfTestRepetitions.Should().Be(2);
+
+            projectContainer = resultingContainer.GetSettingsForExecutable("project2");
+            projectContainer.Should().NotBeNull();
+            projectContainer.AdditionalTestExecutionParam.Should().Be(solutionProject2);
+            projectContainer.BatchForTestSetup.Should().Be(global);
+            projectContainer.BatchForTestTeardown.Should().Be(solutionProject2);
+            projectContainer.PathExtension.Should().Be(global);
+            projectContainer.TestDiscoveryRegex.Should().Be(global);
+            projectContainer.TestNameSeparator.Should().Be(solutionProject2);
+            projectContainer.TraitsRegexesAfter.Should().Be(solutionProject2);
+            projectContainer.TraitsRegexesBefore.Should().Be(global);
+            projectContainer.WorkingDir.Should().Be(solutionProject2);
+            projectContainer.MaxNrOfThreads.Should().Be(0);
+            projectContainer.MaxNrOfThreads.Should().Be(0);
+            projectContainer.NrOfTestRepetitions.Should().Be(3);
+
+            projectContainer = resultingContainer.GetSettingsForExecutable("project3");
+            projectContainer.Should().NotBeNull();
+            projectContainer.AdditionalTestExecutionParam.Should().Be(userProject3);
+            projectContainer.BatchForTestSetup.Should().Be(global);
+            projectContainer.BatchForTestTeardown.Should().Be(userProject3);
+            projectContainer.PathExtension.Should().Be(global);
+            projectContainer.TestDiscoveryRegex.Should().Be(userProject3);
+            projectContainer.TestNameSeparator.Should().Be(userProject3);
+            projectContainer.TraitsRegexesAfter.Should().Be(global);
+            projectContainer.TraitsRegexesBefore.Should().Be(userProject3);
+            projectContainer.WorkingDir.Should().Be(global);
+            projectContainer.MaxNrOfThreads.Should().Be(6);
+            projectContainer.MaxNrOfThreads.Should().Be(6);
+            projectContainer.NrOfTestRepetitions.Should().Be(0);
+        }
+
         private RunSettingsService SetupRunSettingsService(string solutionRunSettingsFile)
         {
             var globalRunSettings = new RunSettings
@@ -113,7 +307,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 TraitsRegexesBefore = "Global"
             };
 
-            Mock<IGlobalRunSettings> mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
+            var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
             mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalRunSettings);
 
             return new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, solutionRunSettingsFile);
@@ -127,7 +321,37 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             XmlNode node = list.Item(0);
             node.Should().NotBeNull();
             // ReSharper disable once PossibleNullReferenceException
-            node.InnerText.Should().Be(value);
+            node.InnerText.Should().BeEquivalentTo(value);
+        }
+
+        private static XPathNavigator EmbedSettingsIntoRunSettings(RunSettingsContainer settingsContainer)
+        {
+            var settingsDocument = new XmlDocument();
+            XmlDeclaration xmlDeclaration = settingsDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
+            XmlElement root = settingsDocument.DocumentElement;
+            settingsDocument.InsertBefore(xmlDeclaration, root);
+
+            XmlElement runSettingsNode = settingsDocument.CreateElement("", "RunSettings", "");
+            settingsDocument.AppendChild(runSettingsNode);
+
+            var settingsNavigator = settingsDocument.CreateNavigator();
+            settingsNavigator.MoveToChild("RunSettings", "");
+            settingsNavigator.AppendChild(settingsContainer.ToXml().CreateNavigator());
+            settingsNavigator.MoveToRoot();
+
+            return settingsNavigator;
+        }
+
+        private string SerializeSettingsContainer(RunSettingsContainer settingsContainer)
+        {
+            var settingsNavigator = EmbedSettingsIntoRunSettings(settingsContainer);
+
+            var finalDocument = new XmlDocument();
+            finalDocument.LoadXml(settingsNavigator.OuterXml);
+            string targetFile = Path.GetTempFileName();
+            finalDocument.Save(targetFile);
+
+            return targetFile;
         }
 
     }

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <GoogleTestAdapter>
-    <ShuffleTests>true</ShuffleTests>
-    <MaxNrOfThreads>3</MaxNrOfThreads>
-    <ShuffleTestsSeed>3</ShuffleTestsSeed>
-    <TraitsRegexesBefore>User</TraitsRegexesBefore>
-  </GoogleTestAdapter>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <ShuffleTests>true</ShuffleTests>
+        <MaxNrOfThreads>3</MaxNrOfThreads>
+        <ShuffleTestsSeed>3</ShuffleTestsSeed>
+        <TraitsRegexesBefore>User</TraitsRegexesBefore>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings>
+    </ProjectSettings>
+  </GoogleTestAdapterSettings>
 </RunSettings>

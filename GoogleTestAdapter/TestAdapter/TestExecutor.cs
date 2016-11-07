@@ -106,7 +106,7 @@ namespace GoogleTestAdapter.TestAdapter
         internal static TestEnvironment CreateTestEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
             var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-            RunSettings ourRunSettings = settingsProvider != null ? settingsProvider.Settings : new RunSettings();
+            RunSettingsContainer ourRunSettings = settingsProvider != null ? settingsProvider.SettingsContainer : new RunSettingsContainer();
             var settingsWrapper = new SettingsWrapper(ourRunSettings);
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, settingsWrapper);
             TestEnvironment testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
@@ -133,7 +133,10 @@ namespace GoogleTestAdapter.TestAdapter
                     break;
                 }
 
-                allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
+                _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
+                {
+                    allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
+                });
             }
 
             return allTestCasesInExecutables;

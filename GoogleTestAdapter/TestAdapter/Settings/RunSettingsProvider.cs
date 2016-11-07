@@ -9,14 +9,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     [SettingsName(GoogleTestConstants.SettingsName)]
     public class RunSettingsProvider : ISettingsProvider
     {
-        public RunSettings Settings { get; private set; }
+        public RunSettingsContainer SettingsContainer { get; private set; }
 
         public string Name { get; private set; } = GoogleTestConstants.SettingsName;
 
         public void Load(XmlReader reader)
         {
-            Settings = RunSettings.LoadFromXml(reader);
+            SettingsContainer = RunSettingsContainer.LoadFromXml(reader);
         }
+
     }
 
 }

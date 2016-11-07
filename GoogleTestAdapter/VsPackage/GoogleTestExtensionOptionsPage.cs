@@ -10,9 +10,9 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter.Settings;
-using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
+using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage

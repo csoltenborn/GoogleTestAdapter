@@ -2,6 +2,8 @@
 {
     public static class TestMetadata
     {
+        public const bool OverwriteTestResults = false;
+
         public static class TestCategories
         {
             public const string Unit = "Unit";
@@ -12,7 +14,5 @@
         }
 
         public enum Versions { VS2012 = 11, VS2013 = 12, VS2015 = 14 }
-
-        public const bool OverwriteTestResults = false;
     }
 }

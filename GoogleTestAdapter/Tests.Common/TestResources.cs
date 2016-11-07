@@ -54,6 +54,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
         public const string UserTestSettingsForGeneratedTests = TestdataDir + "User.runsettings";
         public const string UserTestSettingsForListingTests = TestdataDir + "ListTests.runsettings";
+        public const string ProviderDeliveredTestSettings = TestdataDir + @"RunSettingsServiceTests\Provider_delivered.runsettings";
 
         public static string GetGoldenFileName(string typeName, string testCaseName, string fileExtension)
         {

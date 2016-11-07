@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="Arr|TypeParameterizedTests|0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -9,8 +9,8 @@
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="Arr|TypeParameterizedTests|0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr|TypeParameterizedTests|0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -18,7 +18,7 @@
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="Arr|TypeParameterizedTests|0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -26,10 +26,10 @@
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr|TypeParameterizedTests|1.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr|TypeParameterizedTests|1.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr|TypeParameterizedTests|1.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr|TypeParameterizedTests|1.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
     <UnitTestResult testName="CommandArgs.TestDirectoryIsSet" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -38,8 +38,8 @@
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" outcome="Passed" />
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.Simple|0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.Simple|1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
@@ -49,7 +49,7 @@ Expected: ""</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.Simple|2 [(-1,)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().i
@@ -59,8 +59,8 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed" />
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits|0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits|1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
@@ -70,7 +70,7 @@ Expected: ""</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits|2 [(-1,)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().i
@@ -80,8 +80,8 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed" />
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits2|0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits2|1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
@@ -91,7 +91,7 @@ Expected: ""</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits2|2 [(-1,)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().i
@@ -101,8 +101,8 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" outcome="Passed" />
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits3|0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits3|1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
@@ -112,7 +112,7 @@ Expected: ""</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits3|2 [(-1,)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().i
@@ -251,7 +251,7 @@ at --&gt;TestMethod Outer in $(Directory)\sampletests\tests\scopedtracestests.cp
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ParameterizedTests.Simple/0 [(0,_)]" outcome="Failed">
+    <UnitTestResult testName="ParameterizedTests.Simple|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>#1 - Value of: GetParam().i
@@ -265,7 +265,7 @@ at #2 - parameterizedtests.cpp:25 in $(Directory)\sampletests\tests\parameterize
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ParameterizedTests.SimpleTraits/0 [(0,_)]" outcome="Failed">
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>#1 - Value of: GetParam().i
@@ -279,7 +279,7 @@ at #2 - parameterizedtests.cpp:30 in $(Directory)\sampletests\tests\parameterize
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ParameterizedTests.SimpleTraits2/0 [(0,_)]" outcome="Failed">
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits2|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>#1 - Value of: GetParam().i
@@ -293,7 +293,7 @@ at #2 - parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterize
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ParameterizedTests.SimpleTraits3/0 [(0,_)]" outcome="Failed">
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits3|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>#1 - Value of: GetParam().i
@@ -307,9 +307,9 @@ at #2 - parameterizedtests.cpp:40 in $(Directory)\sampletests\tests\parameterize
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" outcome="Passed" />
-    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" outcome="Passed" />
-    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" outcome="Failed">
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength|0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" outcome="Passed" />
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength|1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" outcome="Passed" />
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength|2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: strlen(GetParam().first)
@@ -320,7 +320,7 @@ Which is: 23</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" outcome="Failed">
+    <UnitTestResult testName="PrimitivelyTypedTests|0.CanHasBigNumbers&lt;signed char&gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: sum
@@ -330,8 +330,8 @@ Expected: 130</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" outcome="Passed" />
-    <UnitTestResult testName="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" outcome="Passed" />
+    <UnitTestResult testName="PrimitivelyTypedTests|1.CanHasBigNumbers&lt;int&gt;" outcome="Passed" />
+    <UnitTestResult testName="PrimitivelyTypedTests|2.CanHasBigNumbers&lt;long&gt;" outcome="Passed" />
     <UnitTestResult testName="TestMath.AddFails" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -393,7 +393,7 @@ Expected: 1</Message>
     <UnitTestResult testName="Traits.With7Traits" outcome="Passed" />
     <UnitTestResult testName="Traits.With8Traits" outcome="Passed" />
     <UnitTestResult testName="Traits.WithEqualTraits" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="TypedTests|0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -401,8 +401,8 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="TypedTests|0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests|0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -410,7 +410,7 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="TypedTests|0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -418,7 +418,7 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="TypedTests|1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -426,8 +426,8 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="TypedTests|1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests|1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -435,7 +435,7 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="TypedTests|1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -443,10 +443,10 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests|2.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests|2.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests|2.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests|2.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
     <UnitTestResult testName="Ümlautß.Täst" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -457,8 +457,8 @@ Expected: 1</Message>
       </Output>
     </UnitTestResult>
     <UnitTestResult testName="Ümlautß.Träits" outcome="Passed" />
-    <UnitTestResult testName="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" outcome="Passed" />
-    <UnitTestResult testName="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" outcome="Failed">
+    <UnitTestResult testName="ÜmlautTypedTests|0.Täst&lt;ImplementationA&gt;" outcome="Passed" />
+    <UnitTestResult testName="ÜmlautTypedTests|1.Täst&lt;ImplementationB&gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: theInstance.GetValue(1)
@@ -468,8 +468,8 @@ Expected: 2</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" outcome="Passed" />
-    <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" outcome="Failed">
+    <UnitTestResult testName="ÜnstanceName|ParameterizedTästs.Täst|0 [(1,ÄÖÜäöüß)]" outcome="Passed" />
+    <UnitTestResult testName="ÜnstanceName|ParameterizedTästs.Träits|0 [(1,ÄÖÜäöüß)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
@@ -480,7 +480,7 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="Vec|TypeParameterizedTests|0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -488,8 +488,8 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
-    <UnitTestResult testName="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="Vec|TypeParameterizedTests|0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="Vec|TypeParameterizedTests|0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -497,7 +497,7 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
+    <UnitTestResult testName="Vec|TypeParameterizedTests|0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Expected: (this-&gt;container[0] + this-&gt;container[1]) != (this-&gt;container[2]), actual: 3 vs 3</Message>
@@ -508,68 +508,68 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <UnitTestResult testName="WorkingDir.IsSolutionDirectory" outcome="Passed" />
   </Results>
   <TestDefinitions>
-    <UnitTest name="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|0.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|1.CanDefeatMath&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|1.CanDefeatMath&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|1.CanIterate&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|1.CanIterate&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|1.ThreeTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|1.ThreeTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Arr|TypeParameterizedTests|1.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Arr|TypeParameterizedTests|1.TwoTraits&lt;MyStrangeArray&gt;" className="Arr/TypeParameterizedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
     <UnitTest name="CommandArgs.TestDirectoryIsSet" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="CommandArgs.TestDirectoryIsSet" className="CommandArgs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.Simple|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.Simple|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.Simple|1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.Simple|1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.Simple/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.Simple|2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.Simple|2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits|1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits|1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits|2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits|2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits2|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits2|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits2|1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits2|1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits2|2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits2|2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits3|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits3|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits3|1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits3|1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits3/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits3|2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits3|2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
     <UnitTest name="MessageParserTests.ExpectAndAssert" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="MessageParserTests.ExpectAndAssert" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
@@ -604,35 +604,35 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <UnitTest name="MessageParserTests.TwoScopedTracesInTestMethod" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="MessageParserTests.TwoScopedTracesInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ParameterizedTests.Simple/0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ParameterizedTests.Simple/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ParameterizedTests.Simple|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ParameterizedTests.Simple|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ParameterizedTests.SimpleTraits/0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ParameterizedTests.SimpleTraits|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ParameterizedTests.SimpleTraits2|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits2|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ParameterizedTests.SimpleTraits3/0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits3/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ParameterizedTests.SimpleTraits3|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits3|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="PointerParameterizedTests.CheckStringLength|0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="PointerParameterizedTests.CheckStringLength|0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="PointerParameterizedTests.CheckStringLength|1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="PointerParameterizedTests.CheckStringLength|1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="PointerParameterizedTests.CheckStringLength|2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="PointerParameterizedTests.CheckStringLength|2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" className="PointerParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="PrimitivelyTypedTests/0.CanHasBigNumbers&lt;signed char&gt;" className="PrimitivelyTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="PrimitivelyTypedTests|0.CanHasBigNumbers&lt;signed char&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="PrimitivelyTypedTests|0.CanHasBigNumbers&lt;signed char&gt;" className="PrimitivelyTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" className="PrimitivelyTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="PrimitivelyTypedTests|1.CanHasBigNumbers&lt;int&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="PrimitivelyTypedTests|1.CanHasBigNumbers&lt;int&gt;" className="PrimitivelyTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" className="PrimitivelyTypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="PrimitivelyTypedTests|2.CanHasBigNumbers&lt;long&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="PrimitivelyTypedTests|2.CanHasBigNumbers&lt;long&gt;" className="PrimitivelyTypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
     <UnitTest name="TestMath.AddFails" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="TestMath.AddFails" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
@@ -697,41 +697,41 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <UnitTest name="Traits.WithEqualTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="Traits.WithEqualTraits" className="Traits" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="TypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|1.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|1.TwoTraits&lt;std::array&lt;int,3&gt; &gt;" className="TypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|2.CanDefeatMath&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|2.CanDefeatMath&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|2.CanIterate&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|2.CanIterate&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|2.ThreeTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|2.ThreeTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="TypedTests|2.TwoTraits&lt;MyStrangeArray&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="TypedTests|2.TwoTraits&lt;MyStrangeArray&gt;" className="TypedTests/2" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
     <UnitTest name="Ümlautß.Täst" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="Ümlautß.Täst" className="Ümlautß" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
@@ -739,29 +739,29 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <UnitTest name="Ümlautß.Träits" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="Ümlautß.Träits" className="Ümlautß" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" className="ÜmlautTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ÜmlautTypedTests|0.Täst&lt;ImplementationA&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ÜmlautTypedTests|0.Täst&lt;ImplementationA&gt;" className="ÜmlautTypedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" className="ÜmlautTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ÜmlautTypedTests|1.Täst&lt;ImplementationB&gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ÜmlautTypedTests|1.Täst&lt;ImplementationB&gt;" className="ÜmlautTypedTests/1" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" className="ÜnstanceName/ParameterizedTästs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ÜnstanceName|ParameterizedTästs.Täst|0 [(1,ÄÖÜäöüß)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ÜnstanceName|ParameterizedTästs.Täst|0 [(1,ÄÖÜäöüß)]" className="ÜnstanceName/ParameterizedTästs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" className="ÜnstanceName/ParameterizedTästs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="ÜnstanceName|ParameterizedTästs.Träits|0 [(1,ÄÖÜäöüß)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="ÜnstanceName|ParameterizedTästs.Träits|0 [(1,ÄÖÜäöüß)]" className="ÜnstanceName/ParameterizedTästs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Vec|TypeParameterizedTests|0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Vec|TypeParameterizedTests|0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Vec|TypeParameterizedTests|0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Vec|TypeParameterizedTests|0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Vec|TypeParameterizedTests|0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Vec|TypeParameterizedTests|0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
-    <UnitTest name="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
-      <TestMethod name="Vec/TypeParameterizedTests/0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    <UnitTest name="Vec|TypeParameterizedTests|0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Vec|TypeParameterizedTests|0.TwoTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" className="Vec/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
     <UnitTest name="WorkingDir.IsSolutionDirectory" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="WorkingDir.IsSolutionDirectory" className="WorkingDir" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />

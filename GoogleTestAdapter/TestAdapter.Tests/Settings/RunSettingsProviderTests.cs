@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.IO;
+using System.Xml;
 using System.Xml.XPath;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
@@ -24,19 +25,25 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public void Load_SolutionSettings_SettingsAreMerged()
         {
             var provider = new RunSettingsProvider();
-            provider.Settings.Should().BeNull();
+            provider.SettingsContainer.Should().BeNull();
 
             var settingsDoc = new XmlDocument();
-            settingsDoc.Load(TestResources.SolutionTestSettings);
+            settingsDoc.Load(TestResources.ProviderDeliveredTestSettings);
             XPathNavigator navigator = settingsDoc.CreateNavigator();
 
             navigator.MoveToChild("RunSettings", "").Should().BeTrue();
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "").Should().BeTrue();
+            navigator.MoveToChild("SolutionSettings", "").Should().BeTrue();
+            navigator.MoveToRoot();
+            File.WriteAllText(@"C:\Users\chris\Desktop\TheCompleteSettings.xml", navigator.OuterXml);
 
+            navigator.MoveToRoot();
+            navigator.MoveToChild("RunSettings", "").Should().BeTrue();
+            navigator.MoveToChild(GoogleTestConstants.SettingsName, "").Should().BeTrue();
             provider.Load(navigator.ReadSubtree());
 
-            provider.Settings.Should().NotBeNull();
-            provider.Settings.BatchForTestSetup.Should().Be("Solution");
+            provider.SettingsContainer.Should().NotBeNull();
+            provider.SettingsContainer.SolutionSettings.BatchForTestSetup.Should().Be("Solution");
         }
 
     }

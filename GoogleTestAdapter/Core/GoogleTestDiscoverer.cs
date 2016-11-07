@@ -27,31 +27,39 @@ namespace GoogleTestAdapter
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
-            _testEnvironment.DebugInfo(_testEnvironment.Options.ToString());
-
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             if (_testEnvironment.Options.UseNewTestExecutionFramework)
             {
                 foreach (string executable in googleTestExecutables)
                 {
-                    int nrOfTestCases = 0;
-                    Action<TestCase> reportTestCases = tc =>
+                    _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
                     {
-                        reporter.ReportTestsFound(tc.Yield());
-                        _testEnvironment.DebugInfo("Added testcase " + tc.DisplayName);
-                        nrOfTestCases++;
-                    };
-                    var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
-                    factory.CreateTestCases(reportTestCases);
-                    _testEnvironment.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                        _testEnvironment.DebugInfo($"Settings for test executable '{executable}': {_testEnvironment.Options}");
+
+                        int nrOfTestCases = 0;
+                        Action<TestCase> reportTestCases = tc =>
+                        {
+                            reporter.ReportTestsFound(tc.Yield());
+                            _testEnvironment.DebugInfo("Added testcase " + tc.DisplayName);
+                            nrOfTestCases++;
+                        };
+                        var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
+                        factory.CreateTestCases(reportTestCases);
+                        _testEnvironment.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                    });
                 }
             }
             else
             {
                 foreach (string executable in googleTestExecutables)
                 {
-                    IList<TestCase> testCases = GetTestsFromExecutable(executable);
-                    reporter.ReportTestsFound(testCases);
+                    _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
+                    {
+                        _testEnvironment.DebugInfo($"Settings for test executable '{executable}': {_testEnvironment.Options}");
+
+                        IList<TestCase> testCases = GetTestsFromExecutable(executable);
+                        reporter.ReportTestsFound(testCases);
+                    });
                 }
             }
         }
