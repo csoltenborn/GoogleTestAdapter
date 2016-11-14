@@ -33,12 +33,18 @@ namespace GoogleTestAdapter.Settings
             nameof(VisualStudioProcessId)
         };
 
+        private static readonly PropertyInfo[] PropertiesToPrint = typeof(SettingsWrapper)
+            .GetProperties()
+            .Where(pi => !NotPrintedProperties.Contains(pi.Name))
+            .OrderBy(p => p.Name)
+            .ToArray();
+
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
-        private IGoogleTestAdapterSettings _currentSettings;
         public RegexTraitParser RegexTraitParser { private get; set; }
 
+        private IGoogleTestAdapterSettings _currentSettings;
 
         public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer)
         {
@@ -55,26 +61,26 @@ namespace GoogleTestAdapter.Settings
         // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
-        public void ExecuteWithSettingsForExecutable(string executable, Action action)
+        public void ExecuteWithSettingsForExecutable(string executable, Action action, TestEnvironment testEnvironment)
         {
             var formerSettings = _currentSettings;
             try
             {
                 _currentSettings = _settingsContainer.GetSettingsForExecutable(executable);
+                testEnvironment.DebugInfo($"Settings for test executable '{executable}': {this}");
+
                 action.Invoke();
             }
             finally
             {
                 _currentSettings = formerSettings;
+                testEnvironment.DebugInfo($"Back to solution settings: {this}");
             }
         }
 
         public override string ToString()
         {
-            IEnumerable<PropertyInfo> propertiesToPrint =
-                GetType().GetProperties().Where(pi => !NotPrintedProperties.Contains(pi.Name)); 
-            string values = string.Join(", ", propertiesToPrint.Select(pi => ToString(this, pi)));
-            return $"{GetType().Name}({values})";
+            return string.Join(", ", PropertiesToPrint.Select(pi => ToString(this, pi)));
         }
 
         private string ToString(SettingsWrapper settings, PropertyInfo propertyInfo)

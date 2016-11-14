@@ -333,31 +333,30 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(s => s.BatchForTestSetup).Returns(@"C:\\myfolder\myfile.xml");
             MockXmlOptions.Setup(s => s.MaxNrOfThreads).Returns(1);
 
-            TheOptions.ToString().Should().Be(
-                "SettingsWrapper(" +
-                "UseNewTestExecutionFramework: True, " +
-                "PrintTestOutput: False, " +
-                "TestDiscoveryRegex: '', " +
-                "WorkingDir: '$(ExecutableDir)', " +
-                "PathExtension: '', " +
-                "TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}, " +
-                "TraitsRegexesAfter: {}, " +
-                "TestNameSeparator: '', " +
-                "ParseSymbolInformation: True, " +
-                "DebugMode: False, " +
-                "TimestampOutput: False, " +
-                "ShowReleaseNotes: True, " +
-                "AdditionalTestExecutionParam: '', " +
-                "BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml', " +
-                "BatchForTestTeardown: '', " +
-                "ParallelTestExecution: False, " +
-                "MaxNrOfThreads: 1, " +
-                "CatchExceptions: True, " +
-                "BreakOnFailure: False, " +
-                "RunDisabledTests: False, " +
-                "NrOfTestRepetitions: 1, " +
-                "ShuffleTests: False, " +
-                "ShuffleTestsSeed: 0)");
+            string optionsString = TheOptions.ToString();
+            optionsString.Should().Contain("UseNewTestExecutionFramework: True");
+            optionsString.Should().Contain("PrintTestOutput: False");
+            optionsString.Should().Contain("TestDiscoveryRegex: ''");
+            optionsString.Should().Contain("WorkingDir: '$(ExecutableDir)'");
+            optionsString.Should().Contain("PathExtension: ''");
+            optionsString.Should().Contain("TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}");
+            optionsString.Should().Contain("TraitsRegexesAfter: {}");
+            optionsString.Should().Contain("TestNameSeparator: ''");
+            optionsString.Should().Contain("ParseSymbolInformation: True");
+            optionsString.Should().Contain("DebugMode: False");
+            optionsString.Should().Contain("TimestampOutput: False");
+            optionsString.Should().Contain("ShowReleaseNotes: True");
+            optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
+            optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");
+            optionsString.Should().Contain("BatchForTestTeardown: ''");
+            optionsString.Should().Contain("ParallelTestExecution: False");
+            optionsString.Should().Contain("MaxNrOfThreads: 1");
+            optionsString.Should().Contain("CatchExceptions: True");
+            optionsString.Should().Contain("BreakOnFailure: False");
+            optionsString.Should().Contain("RunDisabledTests: False");
+            optionsString.Should().Contain("NrOfTestRepetitions: 1");
+            optionsString.Should().Contain("ShuffleTests: False");
+            optionsString.Should().Contain("ShuffleTestsSeed: 0");
         }
 
     }

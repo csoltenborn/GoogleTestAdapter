@@ -34,8 +34,6 @@ namespace GoogleTestAdapter
                 {
                     _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
                     {
-                        _testEnvironment.DebugInfo($"Settings for test executable '{executable}': {_testEnvironment.Options}");
-
                         int nrOfTestCases = 0;
                         Action<TestCase> reportTestCases = tc =>
                         {
@@ -46,7 +44,7 @@ namespace GoogleTestAdapter
                         var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
                         factory.CreateTestCases(reportTestCases);
                         _testEnvironment.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-                    });
+                    }, _testEnvironment);
                 }
             }
             else
@@ -55,11 +53,9 @@ namespace GoogleTestAdapter
                 {
                     _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
                     {
-                        _testEnvironment.DebugInfo($"Settings for test executable '{executable}': {_testEnvironment.Options}");
-
                         IList<TestCase> testCases = GetTestsFromExecutable(executable);
                         reporter.ReportTestsFound(testCases);
-                    });
+                    }, _testEnvironment);
                 }
             }
         }

@@ -111,6 +111,8 @@ namespace GoogleTestAdapter.TestAdapter
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, settingsWrapper);
             TestEnvironment testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
             settingsWrapper.RegexTraitParser = new RegexTraitParser(testEnvironment);
+
+            testEnvironment.DebugInfo($"Solution settings: {settingsWrapper}");
             return testEnvironment;
         }
 
@@ -136,9 +138,9 @@ namespace GoogleTestAdapter.TestAdapter
                 _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
                 {
                     allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
-                });
+                }, _testEnvironment);
             }
-
+            
             return allTestCasesInExecutables;
         }
 

@@ -27,8 +27,6 @@ namespace GoogleTestAdapter
 
         public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory, IProcessExecutor executor)
         {
-            _testEnvironment.DebugInfo(_testEnvironment.Options.ToString());
-
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             _testEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 

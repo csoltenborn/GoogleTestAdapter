@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.Runners
                         isBeingDebugged,
                         debuggedLauncher,
                         executor);
-                });
+                }, _testEnvironment);
 
             }
         }
