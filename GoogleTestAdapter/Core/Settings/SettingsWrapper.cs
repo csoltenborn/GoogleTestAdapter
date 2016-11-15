@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
@@ -61,20 +62,20 @@ namespace GoogleTestAdapter.Settings
         // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
-        public void ExecuteWithSettingsForExecutable(string executable, Action action, TestEnvironment testEnvironment)
+        public void ExecuteWithSettingsForExecutable(string executable, Action action, ILogger logger)
         {
             var formerSettings = _currentSettings;
             try
             {
                 _currentSettings = _settingsContainer.GetSettingsForExecutable(executable);
-                testEnvironment.Logger.DebugInfo($"Settings for test executable '{executable}': {this}");
+                logger.DebugInfo($"Settings for test executable '{executable}': {this}");
 
                 action.Invoke();
             }
             finally
             {
                 _currentSettings = formerSettings;
-                testEnvironment.Logger.DebugInfo($"Back to solution settings: {this}");
+                logger.DebugInfo($"Back to solution settings: {this}");
             }
         }
 

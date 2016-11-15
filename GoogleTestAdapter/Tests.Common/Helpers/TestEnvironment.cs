@@ -1,7 +1,7 @@
 ﻿using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.Tests.Common.Helpers
 {
 
     public class TestEnvironment

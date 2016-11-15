@@ -55,7 +55,7 @@ namespace GoogleTestAdapter
         [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithUnparsableRegexFromOptions_ProducesErrorMessage()
         {
-            bool result = new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable("my.exe", "d[ddd[");
+            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).IsGoogleTestExecutable("my.exe", "d[ddd[");
 
             result.Should().BeFalse();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("'d[ddd['"))), Times.Exactly(1));
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter
         {
             MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\lib");
 
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
             testCases.Count.Should().Be(TestResources.NrOfPathExtensionTests);
         }
@@ -97,7 +97,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_WithoutPathExtension_ProducesWarning()
         {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
 
             testCases.Count.Should().Be(0);
@@ -186,12 +186,12 @@ namespace GoogleTestAdapter
         {
             var mockFactory = new Mock<IDiaResolverFactory>();
             var mockResolver = new Mock<IDiaResolver>();
-            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>(), false)).Returns(mockResolver.Object);
+            mockFactory.Setup(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>())).Returns(mockResolver.Object);
             mockResolver.Setup(r => r.GetFunctions(It.IsAny<string>())).Returns(new List<SourceFileLocation>());
 
-            new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object).GetTestsFromExecutable(TestResources.SampleTests);
+            new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options, mockFactory.Object).GetTestsFromExecutable(TestResources.SampleTests);
 
-            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>(), false), Times.AtLeastOnce);
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.AtLeastOnce);
         }
 
         [TestMethod]
@@ -201,10 +201,10 @@ namespace GoogleTestAdapter
             var mockFactory = new Mock<IDiaResolverFactory>();
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
 
-            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment, mockFactory.Object)
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options, mockFactory.Object)
                 .GetTestsFromExecutable(TestResources.SampleTests);
 
-            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>(), false), Times.Never);
+            mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.Never);
             testCases.Count.Should().Be(TestResources.NrOfSampleTests);
             foreach (TestCase testCase in testCases)
             {
@@ -220,7 +220,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_LoadTests_AllTestsAreFound()
         {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests);
 
             testCases.Count.Should().Be(5000);
@@ -237,7 +237,7 @@ namespace GoogleTestAdapter
         public void GetTestsFromExecutable_LoadTests_AreFoundInReasonableTime()
         {
             var stopwatch = Stopwatch.StartNew();
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests);
             stopwatch.Stop();
             var actualDuration = stopwatch.Elapsed;
@@ -251,14 +251,14 @@ namespace GoogleTestAdapter
 
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
         {
-            new GoogleTestDiscoverer(TestEnvironment).IsGoogleTestExecutable(executable, regex)
+            new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).IsGoogleTestExecutable(executable, regex)
                 .Should()
                 .Be(isGoogleTestExecutable);
         }
 
         private void FindSampleTests(string location)
         {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(TestResources.NrOfSampleTests);
@@ -273,7 +273,7 @@ namespace GoogleTestAdapter
 
         private void FindStaticallyLinkedTests(string location)
         {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(2);
@@ -289,7 +289,7 @@ namespace GoogleTestAdapter
 
         private void FindExternallyLinkedTests(string location)
         {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(2);
@@ -314,7 +314,7 @@ namespace GoogleTestAdapter
             TestResources.SampleTests.AsFileInfo()
                 .Should().Exist("building the SampleTests solution produces that executable");
 
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.SampleTests);
 
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);

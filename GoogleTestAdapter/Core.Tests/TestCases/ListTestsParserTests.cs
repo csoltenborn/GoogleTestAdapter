@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.TestCases
                 "  MyTestCase"
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
@@ -43,7 +43,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0  # GetParam() = (1,)",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
@@ -85,7 +85,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
@@ -106,7 +106,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
@@ -128,7 +128,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0  # GetParam() = (1,)",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
@@ -150,7 +150,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment)
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);

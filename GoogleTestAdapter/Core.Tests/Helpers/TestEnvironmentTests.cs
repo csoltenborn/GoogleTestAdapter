@@ -1,4 +1,5 @@
 ﻿using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;

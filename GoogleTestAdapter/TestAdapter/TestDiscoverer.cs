@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 
@@ -14,31 +14,33 @@ namespace GoogleTestAdapter.TestAdapter
     [FileExtension(".exe")]
     public class TestDiscoverer : ITestDiscoverer
     {
-        private TestEnvironment _testEnvironment;
+        private ILogger _logger;
+        private SettingsWrapper _settings;
         private GoogleTestDiscoverer _discoverer;
 
         // ReSharper disable once UnusedMember.Global
-        public TestDiscoverer() : this(null) { }
+        public TestDiscoverer() : this(null, null) { }
 
-        public TestDiscoverer(TestEnvironment testEnvironment)
+        public TestDiscoverer(ILogger logger, SettingsWrapper settings)
         {
-            _testEnvironment = testEnvironment;
-            _discoverer = new GoogleTestDiscoverer(_testEnvironment);
+            _settings = settings;
+            _logger = logger;
+            _discoverer = new GoogleTestDiscoverer(_logger, _settings);
         }
-
 
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
             IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            if (_testEnvironment == null || _testEnvironment.Options.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
+            if (_settings == null || _settings.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
-                _testEnvironment = TestExecutor.CreateTestEnvironment(discoveryContext.RunSettings, logger);
-                _discoverer = new GoogleTestDiscoverer(_testEnvironment);
+                TestExecutor.CreateEnvironment(discoveryContext.RunSettings,
+                   logger, out _logger, out _settings);
+                _discoverer = new GoogleTestDiscoverer(_logger, _settings);
             }
 
-            _testEnvironment.Logger.LogInfo("Google Test Adapter: Test discovery starting...");
+            _logger.LogInfo("Google Test Adapter: Test discovery starting...");
 
             try
             {
@@ -46,11 +48,11 @@ namespace GoogleTestAdapter.TestAdapter
                 _discoverer.DiscoverTests(executables, reporter);
 
                 stopwatch.Stop();
-                _testEnvironment.Logger.LogInfo($"Test discovery completed, overall duration: {stopwatch.Elapsed}");
+                _logger.LogInfo($"Test discovery completed, overall duration: {stopwatch.Elapsed}");
             }
             catch (Exception e)
             {
-                _testEnvironment.Logger.LogError("Exception while discovering tests: " + e);
+                _logger.LogError("Exception while discovering tests: " + e);
             }
 
         }

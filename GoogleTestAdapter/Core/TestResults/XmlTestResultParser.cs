@@ -5,7 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
@@ -17,15 +17,15 @@ namespace GoogleTestAdapter.TestResults
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
 
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
         private readonly string _baseDir;
         private readonly string _xmlResultFile;
         private readonly IDictionary<string, TestCase> _testCasesMap;
 
 
-        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, TestEnvironment testEnvironment, string baseDir)
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, ILogger logger, string baseDir)
         {
-            _testEnvironment = testEnvironment;
+            _logger = logger;
             _baseDir = baseDir;
             _xmlResultFile = xmlResultFile;
             _testCasesMap = testCasesRun.ToDictionary(tc => tc.FullyQualifiedName, tc => tc);
@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.TestResults
                 return ParseTestResults();
             }
 
-            _testEnvironment.Logger.LogWarning(ErrorMsgNoXmlFile);
+            _logger.LogWarning(ErrorMsgNoXmlFile);
             return new List<TestResult>();
         }
 
@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                _testEnvironment.Logger.DebugWarning(
+                _logger.DebugWarning(
                     $"Test result file {_xmlResultFile} could not be parsed (completely) - your test executable has probably crashed. Exception message: {e.Message}");
             }
 
@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception e)
             {
-                _testEnvironment.Logger.DebugWarning(
+                _logger.DebugWarning(
                     $"XmlNode could not be parsed: \'{GetQualifiedName(testcaseNode)}\'. Exception message: {e.Message}");
                 return null;
             }
@@ -125,7 +125,7 @@ namespace GoogleTestAdapter.TestResults
                     break;
                 default:
                     string msg = "Unknown testcase status: " + testCaseStatus;
-                    _testEnvironment.Logger.LogError(msg);
+                    _logger.LogError(msg);
                     throw new Exception(msg);
             }
 

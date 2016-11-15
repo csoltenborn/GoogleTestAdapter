@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
@@ -16,60 +17,62 @@ namespace GoogleTestAdapter
     {
         private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
+        private readonly SettingsWrapper _settings;
         private readonly IDiaResolverFactory _diaResolverFactory;
 
-        public GoogleTestDiscoverer(TestEnvironment testEnvironment, IDiaResolverFactory diaResolverFactory = null)
+        public GoogleTestDiscoverer(ILogger logger, SettingsWrapper settings, IDiaResolverFactory diaResolverFactory = null)
         {
-            _testEnvironment = testEnvironment;
+            _logger = logger;
+            _settings = settings;
             _diaResolverFactory = diaResolverFactory ?? DefaultDiaResolverFactory.Instance;
         }
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            if (_testEnvironment.Options.UseNewTestExecutionFramework)
+            if (_settings.UseNewTestExecutionFramework)
             {
                 foreach (string executable in googleTestExecutables)
                 {
-                    _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
+                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
                     {
                         int nrOfTestCases = 0;
                         Action<TestCase> reportTestCases = tc =>
                         {
                             reporter.ReportTestsFound(tc.Yield());
-                            _testEnvironment.Logger.DebugInfo("Added testcase " + tc.DisplayName);
+                            _logger.DebugInfo("Added testcase " + tc.DisplayName);
                             nrOfTestCases++;
                         };
-                        var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
+                        var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
                         factory.CreateTestCases(reportTestCases);
-                        _testEnvironment.Logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-                    }, _testEnvironment);
+                        _logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                    }, _logger);
                 }
             }
             else
             {
                 foreach (string executable in googleTestExecutables)
                 {
-                    _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
+                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
                     {
                         IList<TestCase> testCases = GetTestsFromExecutable(executable);
                         reporter.ReportTestsFound(testCases);
-                    }, _testEnvironment);
+                    }, _logger);
                 }
             }
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
         {
-            var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
+            var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
             IList<TestCase> testCases = factory.CreateTestCases();
 
             foreach (TestCase testCase in testCases)
             {
-                _testEnvironment.Logger.DebugInfo("Added testcase " + testCase.DisplayName);
+                _logger.DebugInfo("Added testcase " + testCase.DisplayName);
             }
-            _testEnvironment.Logger.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
+            _logger.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 
             return testCases;
         }
@@ -89,7 +92,7 @@ namespace GoogleTestAdapter
                 matches = SafeMatches(executable, customRegex);
             }
 
-            _testEnvironment.Logger.DebugInfo(
+            _logger.DebugInfo(
                     executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
 
             return matches;
@@ -98,7 +101,7 @@ namespace GoogleTestAdapter
         private IList<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
         {
             return allExecutables.Where(
-                e => IsGoogleTestExecutable(e, _testEnvironment.Options.TestDiscoveryRegex))
+                e => IsGoogleTestExecutable(e, _settings.TestDiscoveryRegex))
                 .Select(Path.GetFullPath).ToList();
         }
 
@@ -111,11 +114,11 @@ namespace GoogleTestAdapter
             }
             catch (ArgumentException e)
             {
-                _testEnvironment.Logger.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
+                _logger.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
             }
             catch (RegexMatchTimeoutException e)
             {
-                _testEnvironment.Logger.LogError($"Regex '{regex}' timed out: {e.Message}");
+                _logger.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
         }

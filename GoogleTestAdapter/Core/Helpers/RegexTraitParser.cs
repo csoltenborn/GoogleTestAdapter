@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Helpers
 {
     public class RegexTraitParser
     {
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
 
-
-        public RegexTraitParser(TestEnvironment testEnvironment)
+        public RegexTraitParser(ILogger logger)
         {
-            _testEnvironment = testEnvironment;
+            _logger = logger;
         }
-
 
         public List<RegexTraitPair> ParseTraitsRegexesString(string option)
         {
@@ -30,14 +29,13 @@ namespace GoogleTestAdapter.Helpers
                 }
                 catch (Exception e)
                 {
-                    _testEnvironment.Logger.LogError(
+                    _logger.LogError(
                         "Could not parse pair '" + pair + "', exception message: " + e.Message);
                 }
             }
 
             return result;
         }
-
 
         private RegexTraitPair ParseRegexTraitPair(string pair)
         {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
 {
@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
     public class TestCaseFilter
     {
         private readonly IRunContext _runContext;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
 
         private readonly IDictionary<string, TestProperty> _testPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
         private readonly IDictionary<string, TestProperty> _traitPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
@@ -20,10 +20,10 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         private IEnumerable<string> TraitProperties => _traitPropertiesMap.Keys;
         private IEnumerable<string> AllProperties => TestProperties.Union(TraitProperties);
 
-        public TestCaseFilter(IRunContext runContext, ISet<string> traitNames, TestEnvironment testEnvironment)
+        public TestCaseFilter(IRunContext runContext, ISet<string> traitNames, ILogger logger)
         {
             _runContext = runContext;
-            _testEnvironment = testEnvironment;
+            _logger = logger;
 
             InitProperties(traitNames);
         }
@@ -95,13 +95,13 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 string message = filterExpression == null
                         ? "No test case filter provided"
                         : $"Test case filter: {filterExpression.TestCaseFilterValue}";
-                _testEnvironment.Logger.DebugInfo(message);
+                _logger.DebugInfo(message);
 
                 return filterExpression;
             }
             catch (TestPlatformFormatException e)
             {
-                _testEnvironment.Logger.LogWarning(e.Message);
+                _logger.LogWarning(e.Message);
                 return null;
             }
         }
@@ -125,7 +125,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             string message = matches
                 ? $"{testCase.DisplayName} matches {filterExpression.TestCaseFilterValue}"
                 : $"{testCase.DisplayName} does not match {filterExpression.TestCaseFilterValue}";
-            _testEnvironment.Logger.DebugInfo(message);
+            _logger.DebugInfo(message);
 
             return matches;
         }

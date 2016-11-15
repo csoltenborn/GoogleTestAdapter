@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
@@ -18,15 +19,17 @@ namespace GoogleTestAdapter.Runners
 
         private readonly string _threadName;
         private readonly ITestFrameworkReporter _frameworkReporter;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
+        private readonly SettingsWrapper _settings;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
 
-        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, TestEnvironment testEnvironment, SchedulingAnalyzer schedulingAnalyzer)
+        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
         {
             _threadName = threadName;
             _frameworkReporter = reporter;
-            _testEnvironment = testEnvironment;
+            _logger = logger;
+            _settings = settings;
             _schedulingAnalyzer = schedulingAnalyzer;
         }
 
@@ -47,7 +50,7 @@ namespace GoogleTestAdapter.Runners
                 if (_canceled)
                     break;
 
-                _testEnvironment.Options.ExecuteWithSettingsForExecutable(executable, () =>
+                _settings.ExecuteWithSettingsForExecutable(executable, () =>
                 {
                     RunTestsFromExecutable(
                         executable,
@@ -59,7 +62,7 @@ namespace GoogleTestAdapter.Runners
                         isBeingDebugged,
                         debuggedLauncher,
                         executor);
-                }, _testEnvironment);
+                }, _logger);
 
             }
         }
@@ -78,14 +81,14 @@ namespace GoogleTestAdapter.Runners
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _testEnvironment);
+            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)
                 {
                     break;
                 }
-                var splitter = new TestResultSplitter(arguments.TestCases, _testEnvironment, baseDir, _frameworkReporter);
+                var splitter = new TestResultSplitter(arguments.TestCases, _logger, baseDir, _frameworkReporter);
                 var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, splitter).ToArray();
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -93,13 +96,13 @@ namespace GoogleTestAdapter.Runners
                 _frameworkReporter.ReportTestResults(results);
                 stopwatch.Stop();
                 if (results.Length > 0)
-                    _testEnvironment.Logger.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
+                    _logger.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
 
                 serializer.UpdateTestDurations(results);
                 foreach (TestResult result in results)
                 {
                     if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int)result.Duration.TotalMilliseconds))
-                        _testEnvironment.Logger.DebugWarning("TestCase already in analyzer: " + result.TestCase.FullyQualifiedName);
+                        _logger.DebugWarning("TestCase already in analyzer: " + result.TestCase.FullyQualifiedName);
                 }
             }
         }
@@ -110,19 +113,19 @@ namespace GoogleTestAdapter.Runners
             List<string> consoleOutput;
             if (executor != null)
             {
-                string pathExtension = _testEnvironment.Options.GetPathExtension(executable);
-                bool printTestOutput = _testEnvironment.Options.PrintTestOutput &&
-                                       !_testEnvironment.Options.ParallelTestExecution;
+                string pathExtension = _settings.GetPathExtension(executable);
+                bool printTestOutput = _settings.PrintTestOutput &&
+                                       !_settings.ParallelTestExecution;
 
                 if (printTestOutput)
-                    _testEnvironment.Logger.LogInfo(
+                    _logger.LogInfo(
                         $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
 
                 Action<string> reportOutputAction = line =>
                 {
                     splitter.ReportLine(line);
                     if (printTestOutput)
-                        _testEnvironment.Logger.LogInfo(line);
+                        _logger.LogInfo(line);
                 };
                 executor.ExecuteCommandBlocking(
                     executable, arguments.CommandLine, workingDir, pathExtension, 
@@ -130,23 +133,23 @@ namespace GoogleTestAdapter.Runners
                 splitter.Flush();
 
                 if (printTestOutput)
-                    _testEnvironment.Logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
+                    _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
 
                 consoleOutput = new List<string>();
                 new TestDurationSerializer().UpdateTestDurations(splitter.TestResults);
-                _testEnvironment.Logger.DebugInfo($"{_threadName}Reported {splitter.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
+                _logger.DebugInfo($"{_threadName}Reported {splitter.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
                 foreach (TestResult result in splitter.TestResults)
                 {
                     if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
-                        _testEnvironment.Logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
+                        _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
                 }
             }
             else
             {
                 consoleOutput =
-                    new TestProcessLauncher(_testEnvironment, isBeingDebugged).GetOutputOfCommand(workingDir, executable,
+                    new TestProcessLauncher(_logger, _settings, isBeingDebugged).GetOutputOfCommand(workingDir, executable,
                         arguments.CommandLine,
-                        _testEnvironment.Options.PrintTestOutput && !_testEnvironment.Options.ParallelTestExecution, false,
+                        _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
                         debuggedLauncher);
             }
 
@@ -160,11 +163,11 @@ namespace GoogleTestAdapter.Runners
             var testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _testEnvironment, baseDir);
+            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _logger, baseDir);
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _testEnvironment, baseDir);
+                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger, baseDir);
                 List<TestResult> xmlResults = xmlParser.GetTestResults();
                 int nrOfCollectedTestResults = 0;
                 // ReSharper disable once AccessToModifiedClosure
@@ -174,7 +177,7 @@ namespace GoogleTestAdapter.Runners
                     nrOfCollectedTestResults++;
                 }
                 if (nrOfCollectedTestResults > 0)
-                   _testEnvironment.Logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from result XML file {resultXmlFile}");
+                   _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from result XML file {resultXmlFile}");
             }
 
             if (testResults.Count < testCasesRunAsArray.Length)
@@ -188,7 +191,7 @@ namespace GoogleTestAdapter.Runners
                     nrOfCollectedTestResults++;
                 }
                 if (nrOfCollectedTestResults > 0)
-                    _testEnvironment.Logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from console output");
+                    _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from console output");
             }
 
             if (testResults.Count < testCasesRunAsArray.Length)
@@ -219,7 +222,7 @@ namespace GoogleTestAdapter.Runners
                     });
                     nrOfCreatedTestResults++;
                 }
-                _testEnvironment.Logger.DebugInfo($"{_threadName}Created {nrOfCreatedTestResults} test results for tests which were neither found in result XML file nor in console output");
+                _logger.DebugInfo($"{_threadName}Created {nrOfCreatedTestResults} test results for tests which were neither found in result XML file nor in console output");
             }
 
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();

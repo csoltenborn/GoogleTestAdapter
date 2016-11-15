@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
@@ -19,15 +19,15 @@ namespace GoogleTestAdapter.TestResults
 
         private readonly List<string> _consoleOutput;
         private readonly List<TestCase> _testCasesRun;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
         private readonly string _baseDir;
 
 
-        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, TestEnvironment testEnvironment, string baseDir)
+        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, ILogger logger, string baseDir)
         {
             _consoleOutput = consoleOutput.ToList();
             _testCasesRun = testCasesRun.ToList();
-            _testEnvironment = testEnvironment;
+            _logger = logger;
             _baseDir = baseDir;
         }
 
@@ -87,10 +87,10 @@ namespace GoogleTestAdapter.TestResults
 
         private TimeSpan ParseDuration(string line)
         {
-            return ParseDuration(line, _testEnvironment);
+            return ParseDuration(line, _logger);
         }
 
-        public static TimeSpan ParseDuration(string line, TestEnvironment testEnvironment)
+        public static TimeSpan ParseDuration(string line, ILogger logger)
         {
             int durationInMs = 1;
             try
@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                testEnvironment.Logger.LogWarning("Could not parse duration in line '" + line + "'");
+                logger.LogWarning("Could not parse duration in line '" + line + "'");
             }
 
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));

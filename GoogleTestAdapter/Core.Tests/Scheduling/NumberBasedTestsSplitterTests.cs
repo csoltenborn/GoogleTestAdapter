@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.Scheduling
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = TestDataCreator.CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             result.Count.Should().Be(2);
@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.Scheduling
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = TestDataCreator.CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest", "FooSuite.FooTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             result.Count.Should().Be(2);
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Scheduling
             }
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, TestEnvironment);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             result.Count.Should().Be(8);
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.Scheduling
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = TestDataCreator.CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(8);
 
-            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment);
+            ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
             result.Count.Should().Be(2);

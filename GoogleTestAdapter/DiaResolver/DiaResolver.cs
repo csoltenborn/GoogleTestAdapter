@@ -61,7 +61,6 @@ namespace GoogleTestAdapter.DiaResolver
 
         private readonly string _binary;
         private readonly ILogger _logger;
-        private readonly bool _debugMode;
         private readonly Stream _fileStream;
         private readonly IDiaSession _diaSession;
 
@@ -81,11 +80,10 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        internal DiaResolver(string binary, string pathExtension, ILogger logger, bool debugMode)
+        internal DiaResolver(string binary, string pathExtension, ILogger logger)
         {
             _binary = binary;
             _logger = logger;
-            _debugMode = debugMode;
 
             string pdb = FindPdbFile(binary, pathExtension);
             if (pdb == null)
@@ -100,8 +98,7 @@ namespace GoogleTestAdapter.DiaResolver
                 return;
             }
 
-            if (_debugMode)
-                _logger.LogInfo($"Parsing pdb file \"{pdb}\"");
+            _logger.DebugInfo($"Parsing pdb file \"{pdb}\"");
 
             _fileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
             _diaDataSource.loadDataFromIStream(new DiaMemoryStream(_fileStream));
@@ -159,8 +156,7 @@ namespace GoogleTestAdapter.DiaResolver
                 }
             }
 
-            if (_debugMode)
-                _logger.LogInfo("Attempts to find pdb: " + string.Join("::", attempts));
+            _logger.DebugInfo("Attempts to find pdb: " + string.Join("::", attempts));
 
             return null;
         }

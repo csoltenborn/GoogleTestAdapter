@@ -67,7 +67,6 @@
     <Compile Include="TestCases\MethodSignatureCreator.cs" />
     <Compile Include="TestCases\TestCaseDescriptor.cs" />
     <Compile Include="TestCases\TestCaseFactory.cs" />
-    <Compile Include="Helpers\TestEnvironment.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettings.cs" />
     <Compile Include="Model\TestCase.cs" />

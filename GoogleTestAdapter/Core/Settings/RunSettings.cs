@@ -90,16 +90,6 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
 
-        //public XmlElement ToXml()
-        //{
-        //    var document = new XmlDocument();
-        //    using (XmlWriter writer = document.CreateNavigator().AppendChild())
-        //    {
-        //        new YAXSerializer(GetType()).Serialize(this, writer);
-        //    }
-        //    return document.DocumentElement;
-        //}
-
         public static RunSettings LoadFromXml(XmlReader reader)
         {
             Debug.Assert(reader != null, $"{nameof(reader)} must not be null");

@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.Settings
             containerMock.Setup(c => c.GetSettingsForExecutable(It.IsAny<string>())).Returns(MockXmlOptions.Object);
             TheOptions = new SettingsWrapper(containerMock.Object)
             {
-                RegexTraitParser = new RegexTraitParser(TestEnvironment)
+                RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger)
             };
         }
 

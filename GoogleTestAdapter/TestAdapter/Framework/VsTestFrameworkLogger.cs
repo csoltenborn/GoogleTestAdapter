@@ -1,7 +1,6 @@
 ﻿using System;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
@@ -11,14 +10,14 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     {
         private static readonly object Lock = new object();
 
-        private readonly SettingsWrapper _settings;
         private readonly IMessageLogger _logger;
+        private readonly Func<bool> _timeStampOutput;
 
-        public VsTestFrameworkLogger(IMessageLogger logger, SettingsWrapper settings)
-            : base(() => settings.DebugMode)
+        public VsTestFrameworkLogger(IMessageLogger logger, Func<bool> inDebugMode, Func<bool> timestampOutput)
+            : base(inDebugMode)
         {
             _logger = logger;
-            _settings = settings;
+            _timeStampOutput = timestampOutput;
         }
 
 
@@ -43,7 +42,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         private void LogSafe(TestMessageLevel level, string message)
         {
-            if (_settings.TimestampOutput)
+            if (_timeStampOutput())
                 Utils.TimestampMessage(ref message);
 
             if (string.IsNullOrWhiteSpace(message))

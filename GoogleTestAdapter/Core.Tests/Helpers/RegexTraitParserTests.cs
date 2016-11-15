@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.Helpers
         {
             base.SetUp();
 
-            Parser = new RegexTraitParser(TestEnvironment);
+            Parser = new RegexTraitParser(TestEnvironment.Logger);
         }
 
 

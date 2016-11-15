@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.Runners
                 () =>
                     // ReSharper disable once ObjectCreationAsStatement
                     new CommandLineGenerator(new List<Model.TestCase>(), new List<Model.TestCase>(), 0, null, "",
-                        TestEnvironment);
+                        TestEnvironment.Options);
             a.ShouldThrow<ArgumentNullException>();
         }
 
@@ -36,7 +36,7 @@ namespace GoogleTestAdapter.Runners
         {
             string userParameters = "-testdirectory=\"MyTestDirectory\"";
 
-            string commandLine = new CommandLineGenerator(new List<Model.TestCase>(), new List<Model.TestCase>(), TestDataCreator.DummyExecutable.Length, userParameters, "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(new List<Model.TestCase>(), new List<Model.TestCase>(), TestDataCreator.DummyExecutable.Length, userParameters, "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
 
             commandLine.Should().EndWith(" -testdirectory=\"MyTestDirectory\"");
         }
@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.Runners
         public void GetCommandLines_AllTests_ProducesCorrectArguments()
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1 param", "Suite2.Test2");
-            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
 
             commandLine.Should().Be($"--gtest_output=\"xml:\"{DefaultArgs}");
         }
@@ -56,13 +56,13 @@ namespace GoogleTestAdapter.Runners
         public void GetCommandLines_CatchExceptionsOption_IsAppendedCorrectly()
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
-            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
             string catchExceptionsOption = GoogleTestConstants.GetCatchExceptionsOption(true);
             commandLine.Should().Contain(catchExceptionsOption);
 
             MockOptions.Setup(o => o.CatchExceptions).Returns(false);
 
-            commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
             catchExceptionsOption = GoogleTestConstants.GetCatchExceptionsOption(false);
 
             commandLine.Should().Contain(catchExceptionsOption);
@@ -73,13 +73,13 @@ namespace GoogleTestAdapter.Runners
         public void GetCommandLines_BreakOnFailureOption_IsAppendedCorrectly()
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
-            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
             string breakOnFailureOption = GoogleTestConstants.GetBreakOnFailureOption(false);
             commandLine.Should().Contain(breakOnFailureOption);
 
             MockOptions.Setup(o => o.BreakOnFailure).Returns(true);
 
-            commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
             breakOnFailureOption = GoogleTestConstants.GetBreakOnFailureOption(true);
             commandLine.Should().Contain(breakOnFailureOption);
         }
@@ -91,7 +91,7 @@ namespace GoogleTestAdapter.Runners
             MockOptions.Setup(o => o.NrOfTestRepetitions).Returns(4711);
 
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
-            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
 
             string repetitionsOption = GoogleTestConstants.NrOfRepetitionsOption + "=4711";
             commandLine.Should().Be($"--gtest_output=\"xml:\"{DefaultArgs}{repetitionsOption}");
@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.Runners
             MockOptions.Setup(o => o.ShuffleTests).Returns(true);
 
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
-            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
 
             commandLine.Should().Be($"--gtest_output=\"xml:\"{DefaultArgs}{GoogleTestConstants.ShuffleTestsOption}");
         }
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.Runners
             MockOptions.Setup(o => o.ShuffleTestsSeed).Returns(4711);
 
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite2.Test2");
-            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment).GetCommandLines().First().CommandLine;
+            string commandLine = new CommandLineGenerator(testCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
 
             string shuffleTestsOption = GoogleTestConstants.ShuffleTestsOption
                 + GoogleTestConstants.ShuffleTestsSeedOption + "=4711";
@@ -131,7 +131,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> testCasesWithCommonSuite = TestDataCreator.CreateDummyTestCases("FooSuite.BarTest", "FooSuite.BazTest");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithCommonSuite.Union(TestDataCreator.CreateDummyTestCases("BarSuite.FooTest"));
 
-            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().First().CommandLine;
 
             commandLine.Should().Be($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:");
@@ -147,7 +147,7 @@ namespace GoogleTestAdapter.Runners
                 "InstantiationName/ParameterizedTests.SimpleTraits/1");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithCommonSuite.Union(TestDataCreator.CreateDummyTestCases("InstantiationName2/ParameterizedTests.SimpleTraits/1  # GetParam() = (,2)"));
 
-            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().First().CommandLine;
 
             commandLine.Should()
@@ -164,9 +164,9 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> allTestCases = testCasesWithCommonSuite.Union(TestDataCreator.CreateDummyTestCases("BarSuite.BarTest"));
             IEnumerable<Model.TestCase> testCasesReversed = testCasesWithCommonSuite.Reverse();
 
-            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithCommonSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().First().CommandLine;
-            string commandLineFromBackwards = new CommandLineGenerator(allTestCases, testCasesReversed, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLineFromBackwards = new CommandLineGenerator(allTestCases, testCasesReversed, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().First().CommandLine;
 
             string expectedCommandLine = $"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:";
@@ -181,7 +181,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> testCasesWithDifferentSuite = TestDataCreator.CreateDummyTestCases("FooSuite.BarTest", "BarSuite.BazTest1");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithDifferentSuite.Union(TestDataCreator.CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
 
-            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().First().CommandLine;
 
             commandLine.Should()
@@ -195,7 +195,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> testCasesWithDifferentSuite = TestDataCreator.CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest");
             IEnumerable<Model.TestCase> allTestCases = testCasesWithDifferentSuite.Union(TestDataCreator.CreateDummyTestCases("FooSuite.BazTest", "BarSuite.BazTest2"));
 
-            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            string commandLine = new CommandLineGenerator(allTestCases, testCasesWithDifferentSuite, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().First().CommandLine;
 
             commandLine.Should()
@@ -217,7 +217,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> allTestCases = allTests.Select(TestDataCreator.ToTestCase).ToList();
             IEnumerable<Model.TestCase> testCases = testsToExecute.Select(TestDataCreator.ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().ToList();
 
             commands.Count.Should().Be(3);
@@ -265,7 +265,7 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<Model.TestCase> allTestCases = allTests.Select(TestDataCreator.ToTestCase).ToList();
             IEnumerable<Model.TestCase> testCases = testsToExecute.Select(TestDataCreator.ToTestCase).ToList();
 
-            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment)
+            List<CommandLineGenerator.Args> commands = new CommandLineGenerator(allTestCases, testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().ToList();
 
             commands.Count.Should().Be(3);

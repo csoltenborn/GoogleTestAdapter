@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void GetOutputOfCommand_WithSimpleCommand_ReturnsOutputOfCommand()
         {
-            List<string> output = new TestProcessLauncher(TestEnvironment, false)
+            List<string> output = new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
                 .GetOutputOfCommand(".", "cmd.exe", "/C \"echo 2\"", false, false, null);
 
             output.Count.Should().Be(1);
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Helpers
                 l.LaunchProcessWithDebuggerAttached(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(processId);
 
-            new TestProcessLauncher(TestEnvironment, true)
+            new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, true)
                 .Invoking(pl => pl.GetOutputOfCommand("theDir", "theCommand", "theParams", false, false, mockLauncher.Object))
                 .ShouldThrow<ArgumentException>()
                 .Where(e => e.Message.Contains(processId.ToString()));
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void GetOutputOfCommand_ThrowsIfProcessReturnsErrorCode_Throws()
         {
-            new TestProcessLauncher(TestEnvironment, false)
+            new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
                 .Invoking(pl => pl.GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, true, null))
                 .ShouldThrow<Exception>();
         }
@@ -60,7 +60,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void GetOutputOfCommand_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()
         {
-            new TestProcessLauncher(TestEnvironment, false)
+            new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
                 .GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, false, null);
         }
 

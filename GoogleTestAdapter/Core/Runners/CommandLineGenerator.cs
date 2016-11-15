@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -28,13 +29,13 @@ namespace GoogleTestAdapter.Runners
         private readonly IEnumerable<TestCase> _allTestCases;
         private readonly IEnumerable<TestCase> _testCasesToRun;
         private readonly string _resultXmlFile;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly SettingsWrapper _settings;
         private readonly string _userParameters;
 
         public CommandLineGenerator(
             IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
-            TestEnvironment testEnvironment)
+            SettingsWrapper settings)
         {
             if (userParameters == null)
             {
@@ -45,7 +46,7 @@ namespace GoogleTestAdapter.Runners
             _allTestCases = allTestCases;
             _testCasesToRun = testCasesToRun;
             _resultXmlFile = resultXmlFile;
-            _testEnvironment = testEnvironment;
+            _settings = settings;
             _userParameters = userParameters;
         }
 
@@ -150,31 +151,31 @@ namespace GoogleTestAdapter.Runners
 
         private string GetCatchExceptionsParameter()
         {
-            return GoogleTestConstants.GetCatchExceptionsOption(_testEnvironment.Options.CatchExceptions);
+            return GoogleTestConstants.GetCatchExceptionsOption(_settings.CatchExceptions);
         }
 
         private string GetBreakOnFailureParameter()
         {
-            return GoogleTestConstants.GetBreakOnFailureOption(_testEnvironment.Options.BreakOnFailure);
+            return GoogleTestConstants.GetBreakOnFailureOption(_settings.BreakOnFailure);
         }
 
         private string GetAlsoRunDisabledTestsParameter()
         {
-            return _testEnvironment.Options.RunDisabledTests
+            return _settings.RunDisabledTests
                 ? GoogleTestConstants.AlsoRunDisabledTestsOption
                 : "";
         }
 
         private string GetShuffleTestsParameter()
         {
-            if (!_testEnvironment.Options.ShuffleTests)
+            if (!_settings.ShuffleTests)
             {
                 return "";
             }
 
             string option = GoogleTestConstants.ShuffleTestsOption;
 
-            int seed = _testEnvironment.Options.ShuffleTestsSeed;
+            int seed = _settings.ShuffleTestsSeed;
             if (seed != GoogleTestConstants.ShuffleTestsSeedDefaultValue)
             {
                 option += GoogleTestConstants.ShuffleTestsSeedOption + "=" + seed;
@@ -185,7 +186,7 @@ namespace GoogleTestAdapter.Runners
 
         private string GetTestsRepetitionsParameter()
         {
-            int nrOfRepetitions = _testEnvironment.Options.NrOfTestRepetitions;
+            int nrOfRepetitions = _settings.NrOfTestRepetitions;
             if (nrOfRepetitions == 1)
             {
                 return "";

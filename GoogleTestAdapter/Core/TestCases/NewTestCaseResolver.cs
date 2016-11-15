@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestCases
@@ -19,21 +19,21 @@ namespace GoogleTestAdapter.TestCases
         private readonly string _executable;
         private readonly string _pathExtension;
         private readonly IDiaResolverFactory _diaResolverFactory;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
 
         private readonly List<SourceFileLocation> _allTestMethodSymbols = new List<SourceFileLocation>();
         private readonly List<SourceFileLocation> _allTraitSymbols = new List<SourceFileLocation>();
 
         private bool _loadedSymbolsFromImports;
 
-        internal NewTestCaseResolver(string executable, string pathExtension, IDiaResolverFactory diaResolverFactory, TestEnvironment testEnvironment)
+        internal NewTestCaseResolver(string executable, string pathExtension, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
         {
             _executable = executable;
             _pathExtension = pathExtension;
             _diaResolverFactory = diaResolverFactory;
-            _testEnvironment = testEnvironment;
+            _logger = logger;
 
-            if (testEnvironment.Options.ParseSymbolInformation)
+            if (parseSymbolInformation)
                 AddSymbolsFromBinary(executable);
             else
                 _loadedSymbolsFromImports = true;
@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.TestCases
 
         private void LoadSymbolsFromImports()
         {
-            List<string> imports = PeParser.ParseImports(_executable, _testEnvironment.Logger);
+            List<string> imports = PeParser.ParseImports(_executable, _logger);
             string moduleDirectory = Path.GetDirectoryName(_executable);
             foreach (string import in imports)
             {
@@ -66,19 +66,18 @@ namespace GoogleTestAdapter.TestCases
 
         private void AddSymbolsFromBinary(string binary)
         {
-            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, _pathExtension, _testEnvironment.Logger, _testEnvironment.Options.DebugMode))
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, _pathExtension, _logger))
             {
                 try
                 {
                     _allTestMethodSymbols.AddRange(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     _allTraitSymbols.AddRange(diaResolver.GetFunctions("*" + TraitAppendix));
 
-                    _testEnvironment.Logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}");
+                    _logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}");
                 }
                 catch (Exception e)
                 {
-                    if (_testEnvironment.Options.DebugMode)
-                        _testEnvironment.Logger.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
+                    _logger.DebugError($"Exception while resolving test locations and traits in {binary}\n{e}");
                 }
             }
         }

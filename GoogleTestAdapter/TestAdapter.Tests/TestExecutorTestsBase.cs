@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void RunAndVerifySingleTest(TestCase testCase, VsTestOutcome expectedOutcome)
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             foreach (VsTestOutcome outcome in Enum.GetValues(typeof(VsTestOutcome)))
@@ -144,7 +144,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(TestResources.HardCrashingSampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(1, 2, 0, 3);
@@ -229,7 +229,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\lib");
 
-            var executor = new TestExecutor(TestEnvironment);
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.Passed)), Times.Exactly(29));
@@ -240,7 +240,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithoutPathExtension_ExecutionFails()
         {
-            var executor = new TestExecutor(TestEnvironment);
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Never);
@@ -249,7 +249,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);

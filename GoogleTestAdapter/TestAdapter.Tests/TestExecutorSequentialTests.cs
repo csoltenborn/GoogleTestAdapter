@@ -45,7 +45,7 @@ namespace GoogleTestAdapter.TestAdapter
             testCasesToRun.Count.Should().Be(2);
 
             Stopwatch stopwatch = new Stopwatch();
-            TestExecutor executor = new TestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(DataConversionExtensions.ToVsTestCase), MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();

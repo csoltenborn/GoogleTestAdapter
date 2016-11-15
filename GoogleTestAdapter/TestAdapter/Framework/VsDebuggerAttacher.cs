@@ -4,10 +4,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using Microsoft.Samples.Debugging.Native;
 using Microsoft.Win32.SafeHandles;
-using GoogleTestAdapter.Helpers;
 using DTEProcess = EnvDTE.Process;
 using Process = System.Diagnostics.Process;
 using NativeDebuggingMethods = Microsoft.Samples.Debugging.Native.NativeMethods;
@@ -25,19 +25,19 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     {
         private readonly Process _visualStudioProcess;
         private readonly _DTE _visualStudioInstance;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
 
-        public VsDebuggerAttacher(TestEnvironment testEnvironment)
+        public VsDebuggerAttacher(ILogger logger, int processId)
         {
-            _testEnvironment = testEnvironment;
-            _visualStudioProcess = Process.GetProcessById(testEnvironment.Options.VisualStudioProcessId);
+            _logger = logger;
+            _visualStudioProcess = Process.GetProcessById(processId);
 
             _DTE visualStudioInstance;
             if (NativeMethods.TryGetVsInstance(_visualStudioProcess.Id, out visualStudioInstance))
                 _visualStudioInstance = visualStudioInstance;
             else
             {
-                testEnvironment.Logger.LogError("Could not find Visual Studio instance");
+                logger.LogError("Could not find Visual Studio instance");
                 throw new InvalidOperationException("Could not find Visual Studio instance");
             }
         }
@@ -48,12 +48,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 NativeMethods.SkipInitialDebugBreak((uint)processToAttachTo.Id);
                 NativeMethods.AttachVisualStudioToProcess(_visualStudioProcess, _visualStudioInstance, processToAttachTo);
-                _testEnvironment.Logger.DebugInfo($"Attached debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
+                _logger.DebugInfo($"Attached debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
                 return true;
             }
             catch (Exception)
             {
-                _testEnvironment.Logger.LogError($"Failed attaching debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
+                _logger.LogError($"Failed attaching debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
                 return false;
             }
         }

@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestCases
 {
 
     internal class TestCaseFactory
     {
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
+        private readonly SettingsWrapper _settings;
         private readonly string _executable;
         private readonly IDiaResolverFactory _diaResolverFactory;
         private readonly MethodSignatureCreator _signatureCreator = new MethodSignatureCreator();
 
-        public TestCaseFactory(string executable, TestEnvironment testEnvironment, IDiaResolverFactory diaResolverFactory)
+        public TestCaseFactory(string executable, ILogger logger, SettingsWrapper settings, IDiaResolverFactory diaResolverFactory)
         {
-            _testEnvironment = testEnvironment;
+            _logger = logger;
+            _settings = settings;
             _executable = executable;
             _diaResolverFactory = diaResolverFactory;
         }
@@ -28,21 +32,22 @@ namespace GoogleTestAdapter.TestCases
         {
             List<string> standardOutput = new List<string>();
             int processExitCode;
-            if (_testEnvironment.Options.UseNewTestExecutionFramework)
+            if (_settings.UseNewTestExecutionFramework)
             {
-                List<TestCase> testCases = new List<TestCase>();
+                var testCases = new List<TestCase>();
 
-                NewTestCaseResolver resolver = new NewTestCaseResolver(
+                var resolver = new NewTestCaseResolver(
                     _executable, 
-                    _testEnvironment.Options.GetPathExtension(_executable), 
-                    _diaResolverFactory, 
-                    _testEnvironment);
+                    _settings.GetPathExtension(_executable), 
+                    _diaResolverFactory,
+                    _settings.ParseSymbolInformation,
+                    _logger);
 
-                StreamingListTestsParser parser = new StreamingListTestsParser(_testEnvironment.Options.TestNameSeparator);
+                var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
                 parser.TestCaseDescriptorCreated += (sender, args) =>
                 {
                     TestCase testCase;
-                    if (_testEnvironment.Options.ParseSymbolInformation)
+                    if (_settings.ParseSymbolInformation)
                     {
                         TestCaseLocation testCaseLocation =
                             resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(args.TestCaseDescriptor).ToList());
@@ -62,12 +67,12 @@ namespace GoogleTestAdapter.TestCases
                     parser.ReportLine(s);
                 };
 
-                var executor = new ProcessExecutor(null, _testEnvironment.Logger);
+                var executor = new ProcessExecutor(null, _logger);
                 processExitCode = executor.ExecuteCommandBlocking(
                     _executable, 
                     GoogleTestConstants.ListTestsOption.Trim(), 
                     "", 
-                    _testEnvironment.Options.GetPathExtension(_executable),
+                    _settings.GetPathExtension(_executable),
                     lineAction);
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
@@ -76,16 +81,16 @@ namespace GoogleTestAdapter.TestCases
                 return testCases;
             }
 
-            var launcher = new ProcessLauncher(_testEnvironment.Logger, _testEnvironment.Options.GetPathExtension(_executable));
+            var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable));
             standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processExitCode);
 
             if (!CheckProcessExitCode(processExitCode, standardOutput))
                 return new List<TestCase>();
 
-            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_testEnvironment).ParseListTestsOutput(standardOutput);
-            if (_testEnvironment.Options.ParseSymbolInformation)
+            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
+            if (_settings.ParseSymbolInformation)
             {
-                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _testEnvironment.Options.GetPathExtension(_executable));
+                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
                 return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
             }
 
@@ -105,7 +110,7 @@ namespace GoogleTestAdapter.TestCases
                 else
                     messsage += "\nCommand produced no output";
 
-                _testEnvironment.Logger.LogWarning(messsage);
+                _logger.LogWarning(messsage);
                 return false;
             }
             return true;
@@ -120,7 +125,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
-            var resolver = new TestCaseResolver(_diaResolverFactory, _testEnvironment);
+            var resolver = new TestCaseResolver(_diaResolverFactory, _logger);
             return resolver.ResolveAllTestCases(_executable, testMethodSignatures, filterString, pathExtension);
         }
 
@@ -145,7 +150,7 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _testEnvironment.Logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
+            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
             return new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
         }
@@ -153,7 +158,7 @@ namespace GoogleTestAdapter.TestCases
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)
         {
             var afterTraits =
-                _testEnvironment.Options.TraitsRegexesAfter
+                _settings.TraitsRegexesAfter
                     .Where(p => Regex.IsMatch(displayName, p.Regex))
                     .Select(p => p.Trait)
                     .ToArray();
@@ -168,7 +173,7 @@ namespace GoogleTestAdapter.TestCases
                 .Distinct()
                 .ToArray();
 
-            var beforeTraits =_testEnvironment.Options.TraitsRegexesBefore
+            var beforeTraits =_settings.TraitsRegexesBefore
                 .Where(p => 
                     !namesOfTestAndAfterTraits.Contains(p.Trait.Name) 
                     && Regex.IsMatch(displayName, p.Regex))

@@ -319,7 +319,7 @@ namespace GoogleTestAdapter
             SampleTestToUse.AsFileInfo()
                 .Should().Exist("building the SampleTests solution produces that executable");
 
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment);
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTestToUse).ToList();
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count == traits.Length && tc.DisplayName.StartsWith(displayName));

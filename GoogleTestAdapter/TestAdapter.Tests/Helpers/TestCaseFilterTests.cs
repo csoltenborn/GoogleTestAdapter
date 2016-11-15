@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 .Returns((ITestCaseFilterExpression)null);
             IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases, filteredTestCases);
@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(true);
             IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases, filteredTestCases);
@@ -74,7 +74,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(false);
             IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(new List<TestCase>(), filteredTestCases);
@@ -87,7 +87,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases[0].Yield(), filteredTestCases);
@@ -100,7 +100,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar").Select(DataConversionExtensions.ToVsTestCase).ToList();
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             bool matches = filter.Matches(testCases[0]);
 
             matches.Should().BeTrue();
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             SetupFilterToAcceptTraitForTestCase(testCases[1], "MyTrait", "value2");
             _traitNames.Add("MyTrait");
 
-            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment);
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
 
             AssertAreEqual(testCases, filteredTestCases);
@@ -133,11 +133,13 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             testCases1.Count().ShouldBeEquivalentTo(testCases2.Count());
 
-            IEnumerator<TestCase> enumerator1 = testCases1.GetEnumerator();
-            IEnumerator<TestCase> enumerator2 = testCases2.GetEnumerator();
-            while (enumerator1.MoveNext() && enumerator2.MoveNext())
+            using (IEnumerator<TestCase> enumerator1 = testCases1.GetEnumerator())
+            using (IEnumerator<TestCase> enumerator2 = testCases2.GetEnumerator())
             {
-                AssertAreEqual(enumerator1.Current, enumerator2.Current);
+                while (enumerator1.MoveNext() && enumerator2.MoveNext())
+                {
+                    AssertAreEqual(enumerator1.Current, enumerator2.Current);
+                }
             }
         }
 

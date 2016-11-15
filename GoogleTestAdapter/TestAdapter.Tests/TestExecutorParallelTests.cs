@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(false);
 
             Stopwatch stopwatch = new Stopwatch();
-            TestExecutor executor = new TestExecutor(TestEnvironment);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             IEnumerable<string> testsToRun = TestResources.LongRunningTests.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(true);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
-            executor = new TestExecutor(TestEnvironment);
+            executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             testsToRun = TestResources.LongRunningTests.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);

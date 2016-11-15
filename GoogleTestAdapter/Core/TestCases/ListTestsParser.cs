@@ -8,9 +8,9 @@ namespace GoogleTestAdapter.TestCases
     {
         private readonly string _testNameSeparator;
 
-        public ListTestsParser(TestEnvironment testEnvironment)
+        public ListTestsParser(string testNameSeparator)
         {
-            _testNameSeparator = testEnvironment.Options.TestNameSeparator;
+            _testNameSeparator = testNameSeparator;
         }
 
         public IList<TestCaseDescriptor> ParseListTestsOutput(IEnumerable<string> consoleOutput)

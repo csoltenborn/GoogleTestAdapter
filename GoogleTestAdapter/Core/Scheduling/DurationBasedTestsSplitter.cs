@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Scheduling
 {
@@ -9,12 +9,12 @@ namespace GoogleTestAdapter.Scheduling
     {
         private readonly int _overallDuration;
         private readonly IDictionary<TestCase, int> _testcaseDurations;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly SettingsWrapper _settings;
 
 
-        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, TestEnvironment testEnvironment)
+        public DurationBasedTestsSplitter(IDictionary<TestCase, int> testcaseDurations, SettingsWrapper settings)
         {
-            _testEnvironment = testEnvironment;
+            _settings = settings;
             _testcaseDurations = testcaseDurations;
             _overallDuration = testcaseDurations.Values.Sum();
         }
@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Scheduling
         public List<List<TestCase>> SplitTestcases()
         {
             List<TestCase> sortedTestcases = _testcaseDurations.Keys.OrderByDescending(tc => _testcaseDurations[tc]).ToList();
-            int nrOfThreadsToUse = _testEnvironment.Options.MaxNrOfThreads;
+            int nrOfThreadsToUse = _settings.MaxNrOfThreads;
             int targetDuration = _overallDuration / nrOfThreadsToUse;
 
             var splitTestcases = new List<List<TestCase>>();

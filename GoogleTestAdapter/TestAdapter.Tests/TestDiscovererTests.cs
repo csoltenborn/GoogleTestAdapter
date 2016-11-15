@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.TestAdapter
             Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
             MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
 
-            TestDiscoverer discoverer = new TestDiscoverer(TestEnvironment);
+            TestDiscoverer discoverer = new TestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             Mock<IMessageLogger> mockVsLogger = new Mock<IMessageLogger>();
             discoverer.DiscoverTests(TestResources.X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, mockVsLogger.Object, mockDiscoverySink.Object);
 

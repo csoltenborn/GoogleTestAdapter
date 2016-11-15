@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
@@ -13,17 +14,17 @@ namespace GoogleTestAdapter.TestResults
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
 
         private readonly List<TestCase> _testCasesRun;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
         private readonly string _baseDir;
         private readonly ITestFrameworkReporter _reporter;
 
         private readonly List<string> _consoleOutput = new List<string>();
 
         public TestResultSplitter(IEnumerable<TestCase> testCasesRun,
-            TestEnvironment testEnvironment, string baseDir, ITestFrameworkReporter reporter)
+            ILogger logger, string baseDir, ITestFrameworkReporter reporter)
         {
             _testCasesRun = testCasesRun.ToList();
-            _testEnvironment = testEnvironment;
+            _logger = logger;
             _baseDir = baseDir;
             _reporter = reporter;
         }
@@ -104,7 +105,7 @@ namespace GoogleTestAdapter.TestResults
                 parser.Parse();
                 return StandardOutputTestResultParser.CreateFailedTestResult(
                     testCase, 
-                    StandardOutputTestResultParser.ParseDuration(line, _testEnvironment), 
+                    StandardOutputTestResultParser.ParseDuration(line, _logger), 
                     parser.ErrorMessage, 
                     parser.ErrorStackTrace);
             }
@@ -112,7 +113,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 return StandardOutputTestResultParser.CreatePassedTestResult(
                     testCase, 
-                    StandardOutputTestResultParser.ParseDuration(line, _testEnvironment));
+                    StandardOutputTestResultParser.ParseDuration(line, _logger));
             }
 
             CrashedTestCase = testCase;

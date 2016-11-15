@@ -223,7 +223,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\")
+            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\")
                 .GetTestResults();
 
             results.Count.Should().Be(2);
@@ -236,11 +236,16 @@ namespace GoogleTestAdapter.TestResults
 
         private List<TestResult> ComputeTestResults(List<string> consoleOutput)
         {
-            var cases = new List<TestCase>();
-            cases.Add(TestDataCreator.ToTestCase("TestMath.AddFails", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            cases.Add(TestDataCreator.ToTestCase("TestMath.Crash", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            cases.Add(TestDataCreator.ToTestCase("TestMath.AddPasses", TestDataCreator.DummyExecutable, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"));
-            var parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
+            var cases = new List<TestCase>
+            {
+                TestDataCreator.ToTestCase("TestMath.AddFails", TestDataCreator.DummyExecutable,
+                    @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"),
+                TestDataCreator.ToTestCase("TestMath.Crash", TestDataCreator.DummyExecutable,
+                    @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp"),
+                TestDataCreator.ToTestCase("TestMath.AddPasses", TestDataCreator.DummyExecutable,
+                    @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
+            };
+            var parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
             return parser.GetTestResults();
         }
 

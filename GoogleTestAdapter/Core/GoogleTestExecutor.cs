@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Scheduling;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter
 {
@@ -12,23 +13,25 @@ namespace GoogleTestAdapter
     public class GoogleTestExecutor
     {
 
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
+        private readonly SettingsWrapper _settings;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
         private ITestRunner _runner;
         private bool _canceled;
 
-        public GoogleTestExecutor(TestEnvironment testEnvironment)
+        public GoogleTestExecutor(ILogger logger, SettingsWrapper settings)
         {
-            _testEnvironment = testEnvironment;
-            _schedulingAnalyzer = new SchedulingAnalyzer(testEnvironment);
+            _logger = logger;
+            _settings = settings;
+            _schedulingAnalyzer = new SchedulingAnalyzer(logger);
         }
 
 
         public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory, IProcessExecutor executor)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            _testEnvironment.Logger.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
+            _logger.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 
             lock (this)
             {
@@ -41,7 +44,7 @@ namespace GoogleTestAdapter
 
             _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, null, isBeingDebugged, launcher, executor);
 
-            if (_testEnvironment.Options.ParallelTestExecution)
+            if (_settings.ParallelTestExecution)
                 _schedulingAnalyzer.PrintStatisticsToDebugOutput();
         }
 
@@ -56,16 +59,16 @@ namespace GoogleTestAdapter
 
         private void ComputeTestRunner(ITestFrameworkReporter reporter, bool isBeingDebugged, string solutionDirectory)
         {
-            if (_testEnvironment.Options.ParallelTestExecution && !isBeingDebugged)
+            if (_settings.ParallelTestExecution && !isBeingDebugged)
             {
-                _runner = new ParallelTestRunner(reporter, _testEnvironment, solutionDirectory, _schedulingAnalyzer);
+                _runner = new ParallelTestRunner(reporter, _logger, _settings, solutionDirectory, _schedulingAnalyzer);
             }
             else
             {
-                _runner = new PreparingTestRunner(solutionDirectory, reporter, _testEnvironment, _schedulingAnalyzer);
-                if (_testEnvironment.Options.ParallelTestExecution && isBeingDebugged)
+                _runner = new PreparingTestRunner(solutionDirectory, reporter, _logger, _settings, _schedulingAnalyzer);
+                if (_settings.ParallelTestExecution && isBeingDebugged)
                 {
-                    _testEnvironment.Logger.DebugInfo(
+                    _logger.DebugInfo(
                         "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
                 }
             }

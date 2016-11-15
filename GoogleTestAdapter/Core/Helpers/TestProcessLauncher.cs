@@ -2,18 +2,21 @@
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Helpers
 {
 
     public class TestProcessLauncher
     {
-        private readonly TestEnvironment _testEnvironment;
+        private readonly ILogger _logger;
+        private readonly SettingsWrapper _settings;
         private readonly bool _isBeingDebugged;
 
-        public TestProcessLauncher(TestEnvironment testEnvironment, bool isBeingDebugged)
+        public TestProcessLauncher(ILogger logger, SettingsWrapper settings, bool isBeingDebugged)
         {
-            _testEnvironment = testEnvironment;
+            _logger = logger;
+            _settings = settings;
             _isBeingDebugged = isBeingDebugged;
         }
 
@@ -35,7 +38,7 @@ namespace GoogleTestAdapter.Helpers
                 return output;
             }
 
-            var actualLauncher = new ProcessLauncher(_testEnvironment.Logger, _testEnvironment.Options.GetPathExtension(command));
+            var actualLauncher = new ProcessLauncher(_logger, _settings.GetPathExtension(command));
             return actualLauncher.GetOutputOfCommand(workingDirectory, command, param, printTestOutput, 
                 throwIfError, out processExitCode);
         }
@@ -44,13 +47,13 @@ namespace GoogleTestAdapter.Helpers
         private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command, string param, bool printTestOutput,
             IDebuggedProcessLauncher handle)
         {
-            _testEnvironment.Logger.LogInfo("Attaching debugger to " + command);
+            _logger.LogInfo("Attaching debugger to " + command);
             if (printTestOutput)
             {
-                _testEnvironment.Logger.DebugInfo(
+                _logger.DebugInfo(
                     "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
             }
-            int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _testEnvironment.Options.GetPathExtension(command));
+            int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _settings.GetPathExtension(command));
             Process process = Process.GetProcessById(processId);
             var waiter = new ProcessWaiter(process);
             waiter.WaitForExit();

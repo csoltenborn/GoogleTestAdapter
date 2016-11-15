@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Tests.Common.Helpers;
 
 namespace GoogleTestAdapter.Tests.Common
 {
@@ -52,7 +53,7 @@ namespace GoogleTestAdapter.Tests.Common
             if (testCases == null)
             {
                 testCases = new List<TestCase>();
-                var discoverer = new GoogleTestDiscoverer(_testEnvironment);
+                var discoverer = new GoogleTestDiscoverer(_testEnvironment.Logger, _testEnvironment.Options);
                 testCases.AddRange(discoverer.GetTestsFromExecutable(executable));
             }
             return testCases;

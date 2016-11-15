@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Scheduling
 {
     public class NumberBasedTestsSplitter : ITestsSplitter
     {
         private readonly IEnumerable<TestCase> _testcasesToRun;
-        private readonly TestEnvironment _testEnvironment;
+        private readonly SettingsWrapper _settings;
 
 
-        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, TestEnvironment testEnvironment)
+        public NumberBasedTestsSplitter(IEnumerable<TestCase> testcasesToRun, SettingsWrapper settings)
         {
-            _testEnvironment = testEnvironment;
+            _settings = settings;
             _testcasesToRun = testcasesToRun;
         }
 
 
         public List<List<TestCase>> SplitTestcases()
         {
-            int nrOfThreadsToUse = Math.Min(_testEnvironment.Options.MaxNrOfThreads, _testcasesToRun.Count());
+            int nrOfThreadsToUse = Math.Min(_settings.MaxNrOfThreads, _testcasesToRun.Count());
             var splitTestCases = new List<TestCase>[nrOfThreadsToUse];
             for (int i = 0; i < nrOfThreadsToUse; i++)
             {
