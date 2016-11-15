@@ -7,7 +7,6 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Fakes;
-using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -41,7 +40,7 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
-            var processExecutor = new ProcessExecutor(null, TestEnvironment);
+            var processExecutor = new ProcessExecutor(null, TestEnvironment.Logger);
 
             var collectingReporter = new FakeFrameworkReporter();
             var testExecutor = new GoogleTestExecutor(TestEnvironment);

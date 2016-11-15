@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.TestAdapter
                 _discoverer = new GoogleTestDiscoverer(_testEnvironment);
             }
 
-            _testEnvironment.LogInfo("Google Test Adapter: Test discovery starting...");
+            _testEnvironment.Logger.LogInfo("Google Test Adapter: Test discovery starting...");
 
             try
             {
@@ -46,11 +46,11 @@ namespace GoogleTestAdapter.TestAdapter
                 _discoverer.DiscoverTests(executables, reporter);
 
                 stopwatch.Stop();
-                _testEnvironment.LogInfo($"Test discovery completed, overall duration: {stopwatch.Elapsed}");
+                _testEnvironment.Logger.LogInfo($"Test discovery completed, overall duration: {stopwatch.Elapsed}");
             }
             catch (Exception e)
             {
-                _testEnvironment.LogError("Exception while discovering tests: " + e);
+                _testEnvironment.Logger.LogError("Exception while discovering tests: " + e);
             }
 
         }

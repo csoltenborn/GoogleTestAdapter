@@ -8,8 +8,9 @@
         void LogInfo(string message);
         void LogWarning(string message);
         void LogError(string message);
-
-        void Log(Severity severity, string message);
+        void DebugInfo(string message);
+        void DebugWarning(string message);
+        void DebugError(string message);
     }
 
 }

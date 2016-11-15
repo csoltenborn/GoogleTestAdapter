@@ -15,6 +15,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private readonly IMessageLogger _logger;
 
         public VsTestFrameworkLogger(IMessageLogger logger, SettingsWrapper settings)
+            : base(() => settings.DebugMode)
         {
             _logger = logger;
             _settings = settings;

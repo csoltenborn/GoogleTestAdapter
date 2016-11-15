@@ -38,12 +38,12 @@ namespace GoogleTestAdapter
                         Action<TestCase> reportTestCases = tc =>
                         {
                             reporter.ReportTestsFound(tc.Yield());
-                            _testEnvironment.DebugInfo("Added testcase " + tc.DisplayName);
+                            _testEnvironment.Logger.DebugInfo("Added testcase " + tc.DisplayName);
                             nrOfTestCases++;
                         };
                         var factory = new TestCaseFactory(executable, _testEnvironment, _diaResolverFactory);
                         factory.CreateTestCases(reportTestCases);
-                        _testEnvironment.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                        _testEnvironment.Logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
                     }, _testEnvironment);
                 }
             }
@@ -67,9 +67,9 @@ namespace GoogleTestAdapter
 
             foreach (TestCase testCase in testCases)
             {
-                _testEnvironment.DebugInfo("Added testcase " + testCase.DisplayName);
+                _testEnvironment.Logger.DebugInfo("Added testcase " + testCase.DisplayName);
             }
-            _testEnvironment.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
+            _testEnvironment.Logger.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 
             return testCases;
         }
@@ -89,7 +89,7 @@ namespace GoogleTestAdapter
                 matches = SafeMatches(executable, customRegex);
             }
 
-            _testEnvironment.DebugInfo(
+            _testEnvironment.Logger.DebugInfo(
                     executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
 
             return matches;
@@ -111,11 +111,11 @@ namespace GoogleTestAdapter
             }
             catch (ArgumentException e)
             {
-                _testEnvironment.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
+                _testEnvironment.Logger.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
             }
             catch (RegexMatchTimeoutException e)
             {
-                _testEnvironment.LogError($"Regex '{regex}' timed out: {e.Message}");
+                _testEnvironment.Logger.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
         }

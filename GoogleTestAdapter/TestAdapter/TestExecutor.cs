@@ -57,11 +57,11 @@ namespace GoogleTestAdapter.TestAdapter
                 DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
 
                 stopwatch.Stop();
-                _testEnvironment.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+                _testEnvironment.Logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
             }
             catch (Exception e)
             {
-                _testEnvironment.LogError("Exception while running tests: " + e);
+                _testEnvironment.Logger.LogError("Exception while running tests: " + e);
             }
         }
 
@@ -85,11 +85,11 @@ namespace GoogleTestAdapter.TestAdapter
                 DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
 
                 stopwatch.Stop();
-                _testEnvironment.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+                _testEnvironment.Logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
             }
             catch (Exception e)
             {
-                _testEnvironment.LogError("Exception while running tests: " + e);
+                _testEnvironment.Logger.LogError("Exception while running tests: " + e);
             }
         }
 
@@ -99,7 +99,7 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 _canceled = true;
                 _executor?.Cancel();
-                _testEnvironment.LogInfo("Test execution canceled.");
+                _testEnvironment.Logger.LogInfo("Test execution canceled.");
             }
         }
 
@@ -110,9 +110,10 @@ namespace GoogleTestAdapter.TestAdapter
             var settingsWrapper = new SettingsWrapper(ourRunSettings);
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, settingsWrapper);
             TestEnvironment testEnvironment = new TestEnvironment(settingsWrapper, loggerAdapter);
-            settingsWrapper.RegexTraitParser = new RegexTraitParser(testEnvironment);
+            var regexParser = new RegexTraitParser(testEnvironment);
+            settingsWrapper.RegexTraitParser = regexParser;
 
-            testEnvironment.DebugInfo($"Solution settings: {settingsWrapper}");
+            testEnvironment.Logger.DebugInfo($"Solution settings: {settingsWrapper}");
             return testEnvironment;
         }
 
@@ -170,7 +171,7 @@ namespace GoogleTestAdapter.TestAdapter
                 IDebuggerAttacher debuggerAttacher = null;
                 if (runContext.IsBeingDebugged)
                     debuggerAttacher = new VsDebuggerAttacher(_testEnvironment);
-                processExecutor = new ProcessExecutor(debuggerAttacher, _testEnvironment);
+                processExecutor = new ProcessExecutor(debuggerAttacher, _testEnvironment.Logger);
             }
             _executor = new GoogleTestExecutor(_testEnvironment);
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,

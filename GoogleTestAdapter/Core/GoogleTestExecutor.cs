@@ -28,7 +28,7 @@ namespace GoogleTestAdapter
         public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory, IProcessExecutor executor)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            _testEnvironment.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
+            _testEnvironment.Logger.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
 
             lock (this)
             {
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter
                 _runner = new PreparingTestRunner(solutionDirectory, reporter, _testEnvironment, _schedulingAnalyzer);
                 if (_testEnvironment.Options.ParallelTestExecution && isBeingDebugged)
                 {
-                    _testEnvironment.DebugInfo(
+                    _testEnvironment.Logger.DebugInfo(
                         "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
                 }
             }

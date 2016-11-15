@@ -62,18 +62,18 @@ namespace GoogleTestAdapter.Runners
                 SafeRunBatch(TestTeardown, _solutionDirectory, batch, isBeingDebugged);
 
                 stopwatch.Stop();
-                _testEnvironment.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
+                _testEnvironment.Logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
 
                 string errorMessage;
                 if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
                 {
-                    _testEnvironment.DebugWarning(
+                    _testEnvironment.Logger.DebugWarning(
                         $"{_threadName}Could not delete test directory '" + testDirectory + "': " + errorMessage);
                 }
             }
             catch (Exception e)
             {
-                _testEnvironment.LogError($"{_threadName}Exception while running tests: " + e);
+                _testEnvironment.Logger.LogError($"{_threadName}Exception while running tests: " + e);
             }
         }
 
@@ -91,7 +91,7 @@ namespace GoogleTestAdapter.Runners
             }
             if (!File.Exists(batch))
             {
-                _testEnvironment.LogError($"{_threadName}Did not find " + batchType.ToLower() + " batch file: " + batch);
+                _testEnvironment.Logger.LogError($"{_threadName}Did not find " + batchType.ToLower() + " batch file: " + batch);
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace GoogleTestAdapter.Runners
             }
             catch (Exception e)
             {
-                _testEnvironment.LogError(
+                _testEnvironment.Logger.LogError(
                     $"{_threadName}{batchType} batch caused exception, msg: \'{e.Message}\', executed command: \'{batch}\'");
             }
         }
@@ -111,7 +111,7 @@ namespace GoogleTestAdapter.Runners
             int batchExitCode;
             if (_testEnvironment.Options.UseNewTestExecutionFramework)
             {
-                var executor = new ProcessExecutor(null, _testEnvironment);
+                var executor = new ProcessExecutor(null, _testEnvironment.Logger);
                 batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { });
             }
             else
@@ -122,12 +122,12 @@ namespace GoogleTestAdapter.Runners
 
             if (batchExitCode == 0)
             {
-                _testEnvironment.DebugInfo(
+                _testEnvironment.Logger.DebugInfo(
                     $"{_threadName}Successfully ran {batchType} batch \'{batch}\'");
             }
             else
             {
-                _testEnvironment.LogWarning(
+                _testEnvironment.Logger.LogWarning(
                     $"{_threadName}{batchType} batch returned exit code {batchExitCode}, executed command: \'{batch}\'");
             }
         }

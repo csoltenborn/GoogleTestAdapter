@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 _visualStudioInstance = visualStudioInstance;
             else
             {
-                testEnvironment.LogError("Could not find Visual Studio instance");
+                testEnvironment.Logger.LogError("Could not find Visual Studio instance");
                 throw new InvalidOperationException("Could not find Visual Studio instance");
             }
         }
@@ -48,12 +48,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 NativeMethods.SkipInitialDebugBreak((uint)processToAttachTo.Id);
                 NativeMethods.AttachVisualStudioToProcess(_visualStudioProcess, _visualStudioInstance, processToAttachTo);
-                _testEnvironment.DebugInfo($"Attached debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
+                _testEnvironment.Logger.DebugInfo($"Attached debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
                 return true;
             }
             catch (Exception)
             {
-                _testEnvironment.LogError($"Failed attaching debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
+                _testEnvironment.Logger.LogError($"Failed attaching debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
                 return false;
             }
         }

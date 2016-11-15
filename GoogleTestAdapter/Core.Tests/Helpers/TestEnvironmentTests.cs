@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void LogWarning_ProducesWarningOnLogger()
         {
-            _environment.LogWarning("foo");
+            _environment.Logger.LogWarning("foo");
 
             MockLogger.Verify(l => l.LogWarning(It.Is<string>(s => s.Contains("foo"))), Times.Exactly(1));
         }
@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void LogError_ProducesErrorOnLogger()
         {
-            _environment.LogError("bar");
+            _environment.Logger.LogError("bar");
 
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
@@ -42,15 +42,15 @@ namespace GoogleTestAdapter.Helpers
         public void DebugInfo_InDebugMode_ProducesInfoOnLogger()
         {
             MockOptions.Setup(o => o.DebugMode).Returns(true);
-            _environment.DebugInfo("bar");
-            MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
+            _environment.Logger.DebugInfo("bar");
+            MockLogger.Verify(l => l.DebugInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
         [TestMethod]
         [TestCategory(Unit)]
         public void DebugInfo_NotInDebugMode_DoesNotProduceLogging()
         {
             MockOptions.Setup(o => o.DebugMode).Returns(false);
-            _environment.DebugInfo("bar");
+            _environment.Logger.DebugInfo("bar");
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Never());
         }
 

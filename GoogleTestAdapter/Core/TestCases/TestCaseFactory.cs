@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestCases
                     parser.ReportLine(s);
                 };
 
-                var executor = new ProcessExecutor(null, _testEnvironment);
+                var executor = new ProcessExecutor(null, _testEnvironment.Logger);
                 processExitCode = executor.ExecuteCommandBlocking(
                     _executable, 
                     GoogleTestConstants.ListTestsOption.Trim(), 
@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.TestCases
                 return testCases;
             }
 
-            var launcher = new ProcessLauncher(_testEnvironment, _testEnvironment.Options.GetPathExtension(_executable));
+            var launcher = new ProcessLauncher(_testEnvironment.Logger, _testEnvironment.Options.GetPathExtension(_executable));
             standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(), false, false, out processExitCode);
 
             if (!CheckProcessExitCode(processExitCode, standardOutput))
@@ -105,7 +105,7 @@ namespace GoogleTestAdapter.TestCases
                 else
                     messsage += "\nCommand produced no output";
 
-                _testEnvironment.LogWarning(messsage);
+                _testEnvironment.Logger.LogWarning(messsage);
                 return false;
             }
             return true;
@@ -145,7 +145,7 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _testEnvironment.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
+            _testEnvironment.Logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
             return new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
         }

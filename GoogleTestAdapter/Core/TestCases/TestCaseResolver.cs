@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.TestCases
 
             if (testCaseLocationsFound.Count == 0)
             {
-                List<string> imports = PeParser.ParseImports(executable, _testEnvironment);
+                List<string> imports = PeParser.ParseImports(executable, _testEnvironment.Logger);
 
                 string moduleDirectory = Path.GetDirectoryName(executable);
 
@@ -52,13 +52,13 @@ namespace GoogleTestAdapter.TestCases
         private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
             string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _testEnvironment, _testEnvironment.Options.DebugMode))
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _testEnvironment.Logger, _testEnvironment.Options.DebugMode))
             {
                 try
                 {
                     IList<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
                     IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
-                    _testEnvironment.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
+                    _testEnvironment.Logger.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
                     return allTestMethodSymbols
                         .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, tms))) // Contains() instead of == because nsfl might contain namespace
@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.TestCases
                 catch (Exception e)
                 {
                     if (_testEnvironment.Options.DebugMode)
-                        _testEnvironment.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
+                        _testEnvironment.Logger.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
                     return new TestCaseLocation[0];
                 }
             }

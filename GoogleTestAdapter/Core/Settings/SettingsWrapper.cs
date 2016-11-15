@@ -67,14 +67,14 @@ namespace GoogleTestAdapter.Settings
             try
             {
                 _currentSettings = _settingsContainer.GetSettingsForExecutable(executable);
-                testEnvironment.DebugInfo($"Settings for test executable '{executable}': {this}");
+                testEnvironment.Logger.DebugInfo($"Settings for test executable '{executable}': {this}");
 
                 action.Invoke();
             }
             finally
             {
                 _currentSettings = formerSettings;
-                testEnvironment.DebugInfo($"Back to solution settings: {this}");
+                testEnvironment.Logger.DebugInfo($"Back to solution settings: {this}");
             }
         }
 

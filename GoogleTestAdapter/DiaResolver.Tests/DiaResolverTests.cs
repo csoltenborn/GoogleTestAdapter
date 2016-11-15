@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.DiaResolver
             TestResources.X86TestsWithoutPdb.AsFileInfo().Should().Exist();
 
             var locations = new List<SourceFileLocation>();
-            var fakeLogger = new FakeLogger();
+            var fakeLogger = new FakeLogger(() => true);
 
             using (
                 IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.X86TestsWithoutPdb, "",
@@ -80,7 +80,7 @@ namespace GoogleTestAdapter.DiaResolver
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
         {
             var locations = new List<SourceFileLocation>();
-            var fakeLogger = new FakeLogger();
+            var fakeLogger = new FakeLogger(() => true);
 
             IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger, false);
             locations.AddRange(resolver.GetFunctions(filter));

@@ -39,12 +39,12 @@ namespace GoogleTestAdapter.Scheduling
 
         public void PrintStatisticsToDebugOutput()
         {
-            _testEnvironment.DebugInfo(">>> Scheduling statistics <<<");
-            _testEnvironment.DebugInfo($"# of expected test case durations: {ExpectedTestcaseDurations.Count}");
-            _testEnvironment.DebugInfo($"# of actual test case durations: {ActualTestcaseDurations.Count}");
+            _testEnvironment.Logger.DebugInfo(">>> Scheduling statistics <<<");
+            _testEnvironment.Logger.DebugInfo($"# of expected test case durations: {ExpectedTestcaseDurations.Count}");
+            _testEnvironment.Logger.DebugInfo($"# of actual test case durations: {ActualTestcaseDurations.Count}");
             if (ExpectedTestcaseDurations.Count == 0 || ActualTestcaseDurations.Count == 0)
             {
-                _testEnvironment.DebugInfo("Nothing to report.");
+                _testEnvironment.Logger.DebugInfo("Nothing to report.");
                 return;
             }
 
@@ -63,15 +63,15 @@ namespace GoogleTestAdapter.Scheduling
             double sumOfSquaresOfDifferences = differences.Select(d => (d.DifferenceInMs - avgDifference) * (d.DifferenceInMs - avgDifference)).Sum();
             double standardDeviation = Math.Sqrt(sumOfSquaresOfDifferences / differences.Count);
 
-            _testEnvironment.DebugInfo($"{differences.Count} expected durations have been found in actual durations");
-            _testEnvironment.DebugInfo($"Avg difference between expected and actual duration: {avgDifference.ToString("F1", CultureInfo.InvariantCulture)}ms");
-            _testEnvironment.DebugInfo($"Standard deviation: {standardDeviation.ToString("F1", CultureInfo.InvariantCulture)}ms");
+            _testEnvironment.Logger.DebugInfo($"{differences.Count} expected durations have been found in actual durations");
+            _testEnvironment.Logger.DebugInfo($"Avg difference between expected and actual duration: {avgDifference.ToString("F1", CultureInfo.InvariantCulture)}ms");
+            _testEnvironment.Logger.DebugInfo($"Standard deviation: {standardDeviation.ToString("F1", CultureInfo.InvariantCulture)}ms");
 
             int nrOfWorstDifferences = Math.Min(10, differences.Count);
-            _testEnvironment.DebugInfo($"{nrOfWorstDifferences} worst differences:");
+            _testEnvironment.Logger.DebugInfo($"{nrOfWorstDifferences} worst differences:");
             for (int i = 0; i < nrOfWorstDifferences; i++)
             {
-                _testEnvironment.DebugInfo($"Test {differences[i].TestCase.FullyQualifiedName}: Expected {ExpectedTestcaseDurations[differences[i].TestCase]}ms, actual {ActualTestcaseDurations[differences[i].TestCase]}ms");
+                _testEnvironment.Logger.DebugInfo($"Test {differences[i].TestCase.FullyQualifiedName}: Expected {ExpectedTestcaseDurations[differences[i].TestCase]}ms, actual {ActualTestcaseDurations[differences[i].TestCase]}ms");
             }
         }
 

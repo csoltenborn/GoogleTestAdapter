@@ -95,13 +95,13 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 string message = filterExpression == null
                         ? "No test case filter provided"
                         : $"Test case filter: {filterExpression.TestCaseFilterValue}";
-                _testEnvironment.DebugInfo(message);
+                _testEnvironment.Logger.DebugInfo(message);
 
                 return filterExpression;
             }
             catch (TestPlatformFormatException e)
             {
-                _testEnvironment.LogWarning(e.Message);
+                _testEnvironment.Logger.LogWarning(e.Message);
                 return null;
             }
         }
@@ -125,7 +125,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             string message = matches
                 ? $"{testCase.DisplayName} matches {filterExpression.TestCaseFilterValue}"
                 : $"{testCase.DisplayName} does not match {filterExpression.TestCaseFilterValue}";
-            _testEnvironment.DebugInfo(message);
+            _testEnvironment.Logger.DebugInfo(message);
 
             return matches;
         }

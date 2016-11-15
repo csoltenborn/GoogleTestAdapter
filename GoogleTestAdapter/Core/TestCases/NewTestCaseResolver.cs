@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.TestCases
 
         private void LoadSymbolsFromImports()
         {
-            List<string> imports = PeParser.ParseImports(_executable, _testEnvironment);
+            List<string> imports = PeParser.ParseImports(_executable, _testEnvironment.Logger);
             string moduleDirectory = Path.GetDirectoryName(_executable);
             foreach (string import in imports)
             {
@@ -66,19 +66,19 @@ namespace GoogleTestAdapter.TestCases
 
         private void AddSymbolsFromBinary(string binary)
         {
-            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, _pathExtension, _testEnvironment, _testEnvironment.Options.DebugMode))
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, _pathExtension, _testEnvironment.Logger, _testEnvironment.Options.DebugMode))
             {
                 try
                 {
                     _allTestMethodSymbols.AddRange(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     _allTraitSymbols.AddRange(diaResolver.GetFunctions("*" + TraitAppendix));
 
-                    _testEnvironment.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}");
+                    _testEnvironment.Logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}");
                 }
                 catch (Exception e)
                 {
                     if (_testEnvironment.Options.DebugMode)
-                        _testEnvironment.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
+                        _testEnvironment.Logger.LogError($"Exception while resolving test locations and traits in {binary}\n{e}");
                 }
             }
         }

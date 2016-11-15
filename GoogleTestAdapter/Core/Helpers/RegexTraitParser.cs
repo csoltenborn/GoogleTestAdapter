@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.Helpers
                 }
                 catch (Exception e)
                 {
-                    _testEnvironment.LogError(
+                    _testEnvironment.Logger.LogError(
                         "Could not parse pair '" + pair + "', exception message: " + e.Message);
                 }
             }

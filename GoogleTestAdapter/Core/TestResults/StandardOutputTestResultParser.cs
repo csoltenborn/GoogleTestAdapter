@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                testEnvironment.LogWarning("Could not parse duration in line '" + line + "'");
+                testEnvironment.Logger.LogWarning("Could not parse duration in line '" + line + "'");
             }
 
             return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));

@@ -64,8 +64,8 @@ namespace GoogleTestAdapter.Runners
             ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
-            _testEnvironment.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
-            _testEnvironment.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
+            _testEnvironment.Logger.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
+            _testEnvironment.Logger.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
 
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
@@ -88,19 +88,19 @@ namespace GoogleTestAdapter.Runners
             foreach (KeyValuePair<TestCase, int> duration in durations)
             {
                 if (!_schedulingAnalyzer.AddExpectedDuration(duration.Key, duration.Value))
-                    _testEnvironment.DebugWarning("TestCase already in analyzer: " + duration.Key.FullyQualifiedName);
+                    _testEnvironment.Logger.DebugWarning("TestCase already in analyzer: " + duration.Key.FullyQualifiedName);
             }
 
             ITestsSplitter splitter;
             if (durations.Count < testCasesToRun.Length)
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun, _testEnvironment);
-                _testEnvironment.DebugInfo("Using splitter based on number of tests");
+                _testEnvironment.Logger.DebugInfo("Using splitter based on number of tests");
             }
             else
             {
                 splitter = new DurationBasedTestsSplitter(durations, _testEnvironment);
-                _testEnvironment.DebugInfo("Using splitter based on test durations");
+                _testEnvironment.Logger.DebugInfo("Using splitter based on test durations");
             }
 
             return splitter;

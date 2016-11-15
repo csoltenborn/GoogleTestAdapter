@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.TestResults
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Count.Should().Be(0);
-            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
+            MockLogger.Verify(l => l.DebugWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace GoogleTestAdapter.TestResults
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Count.Should().Be(1);
-            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
+            MockLogger.Verify(l => l.DebugWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
         [TestMethod]

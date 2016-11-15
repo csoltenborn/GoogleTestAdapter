@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
@@ -23,7 +24,8 @@ namespace GoogleTestAdapter.Tests.Common.Fakes
             return _groupedMessages.Where(p => severities.Contains(p.Key)).SelectMany(p => p.Value).ToList();
         }
 
-        public FakeLogger(bool timestampLogMessages = true)
+        public FakeLogger(Func<bool> inDebugMode, bool timestampLogMessages = true)
+            : base(inDebugMode)
         {
             _timeStampLogMessages = timestampLogMessages;
         }
