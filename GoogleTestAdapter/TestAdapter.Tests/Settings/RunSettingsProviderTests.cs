@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.XPath;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
@@ -35,7 +34,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "").Should().BeTrue();
             navigator.MoveToChild("SolutionSettings", "").Should().BeTrue();
             navigator.MoveToRoot();
-            File.WriteAllText(@"C:\Users\chris\Desktop\TheCompleteSettings.xml", navigator.OuterXml);
 
             navigator.MoveToRoot();
             navigator.MoveToChild("RunSettings", "").Should().BeTrue();
