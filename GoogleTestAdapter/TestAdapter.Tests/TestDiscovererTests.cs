@@ -27,6 +27,34 @@ namespace GoogleTestAdapter.TestAdapter
             CheckForDiscoverySinkCalls(0, "NoMatchAtAll");
         }
 
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void DiscoverTests_CrashingExecutable_CrashIsLogged()
+        {
+            RunExecutableAndCheckLogging(TestResources.AlwaysCrashingExe);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void DiscoverTests_FailingExecutable_ExitCodeIsLogged()
+        {
+            RunExecutableAndCheckLogging(TestResources.AlwaysFailingExe);
+        }
+
+        private void RunExecutableAndCheckLogging(string executable)
+        {
+            var mockDiscoveryContext = new Mock<IDiscoveryContext>();
+            var mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
+            var mockVsLogger = new Mock<IMessageLogger>();
+            MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => ".*");
+
+            var discoverer = new TestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            discoverer.DiscoverTests(executable.Yield(), mockDiscoveryContext.Object, mockVsLogger.Object,
+                mockDiscoverySink.Object);
+
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not list test cases of executable"))),
+                Times.Once);
+        }
 
         private void CheckForDiscoverySinkCalls(int expectedNrOfTests, string customRegex = null)
         {

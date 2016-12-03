@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
 using VsTestOutcome = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome;
@@ -74,6 +76,21 @@ namespace GoogleTestAdapter.TestAdapter
                     return VsTestOutcome.NotFound;
                 default:
                     throw new Exception();
+            }
+        }
+
+        public static Severity GetSeverity(this TestMessageLevel level)
+        {
+            switch (level)
+            {
+                case TestMessageLevel.Informational:
+                    return Severity.Info;
+                case TestMessageLevel.Warning:
+                    return Severity.Warning;
+                case TestMessageLevel.Error:
+                    return Severity.Error;
+                default:
+                    throw new InvalidOperationException($"Unknown enum literal: {level}");
             }
         }
 

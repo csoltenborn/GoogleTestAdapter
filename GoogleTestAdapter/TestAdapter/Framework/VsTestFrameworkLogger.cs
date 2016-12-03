@@ -39,7 +39,6 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             }
         }
 
-
         private void LogSafe(TestMessageLevel level, string message)
         {
             if (_timeStampOutput())
@@ -55,6 +54,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             lock (Lock)
             {
                 _logger.SendMessage(level, message);
+                ReportFinalLogEntry(
+                    new LogEntry
+                    {
+                        Severity = level.GetSeverity(),
+                        Message = message
+                    });
             }
         }
 

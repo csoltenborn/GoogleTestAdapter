@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
@@ -100,9 +99,16 @@ namespace GoogleTestAdapter
 
         private IList<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
         {
-            return allExecutables.Where(
-                e => IsGoogleTestExecutable(e, _settings.TestDiscoveryRegex))
-                .Select(Path.GetFullPath).ToList();
+            IList<string> testExecutables = new List<string>();
+            foreach (string executable in allExecutables)
+            {
+                _settings.ExecuteWithSettingsForExecutable(executable, () =>
+                {
+                    if (IsGoogleTestExecutable(executable, _settings.TestDiscoveryRegex))
+                        testExecutables.Add(Path.GetFullPath(executable));
+                }, _logger);
+            }
+            return testExecutables;
         }
 
         private bool SafeMatches(string executable, string regex)

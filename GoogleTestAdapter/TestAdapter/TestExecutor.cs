@@ -13,7 +13,6 @@ using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Framework;
-using GoogleTestAdapter.TestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -44,56 +43,28 @@ namespace GoogleTestAdapter.TestAdapter
         {
             try
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
-                InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
-
-                IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
-                
-                ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
-                var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
-                List<VsTestCase> vsTestCasesToRun =
-                    filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
-                ICollection<TestCase> testCasesToRun =
-                    allTestCasesInExecutables.Where(tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
-
-                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
-
-                stopwatch.Stop();
-                _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+                TryRunTests(executables, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
-                _logger.LogError("Exception while running tests: " + e);
+                _logger.LogError($"Exception while running tests: {e}");
             }
+
+            CommonFunctions.ReportErrors(_logger, "test execution", _settings.DebugMode);
         }
 
         public void RunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             try
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
-                InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
-
-                var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
-                ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(DataConversionExtensions.ToTestCase));
-                var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
-                vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
-
-                IEnumerable<TestCase> allTestCasesInExecutables =
-                    GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
-
-                ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase).ToArray();
-                DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
-
-                stopwatch.Stop();
-                _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+                TryRunTests(vsTestCasesToRun, runContext, frameworkHandle);
             }
             catch (Exception e)
             {
                 _logger.LogError("Exception while running tests: " + e);
             }
+
+            CommonFunctions.ReportErrors(_logger, "test execution", _settings.DebugMode);
         }
 
         public void Cancel()
@@ -106,26 +77,57 @@ namespace GoogleTestAdapter.TestAdapter
             }
         }
 
-        internal static void CreateEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, out ILogger logger, out SettingsWrapper settings)
+        private void TryRunTests(IEnumerable<string> executables, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-            RunSettingsContainer ourRunSettings = settingsProvider != null ? settingsProvider.SettingsContainer : new RunSettingsContainer();
-            var settingsWrapper = new SettingsWrapper(ourRunSettings);
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
-            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
-            var regexParser = new RegexTraitParser(loggerAdapter);
-            settingsWrapper.RegexTraitParser = regexParser;
+            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
+            _logger.LogInfo("Google Test Adapter: Test execution starting...");
+            _logger.DebugInfo($"Solution settings: {_settings}");
 
-            settings = settingsWrapper;
-            logger = loggerAdapter;
+            IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
 
-            logger.DebugInfo($"Solution settings: {settings}");
+            ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
+            var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
+            List<VsTestCase> vsTestCasesToRun =
+                filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
+            ICollection<TestCase> testCasesToRun =
+                allTestCasesInExecutables.Where(
+                    tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
+
+            DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+
+            stopwatch.Stop();
+            _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+        }
+
+        private void TryRunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
+            _logger.LogInfo("Google Test Adapter: Test execution starting...");
+            _logger.DebugInfo($"Solution settings: {_settings}");
+
+            var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
+            ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(DataConversionExtensions.ToTestCase));
+            var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
+            vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
+
+            IEnumerable<TestCase> allTestCasesInExecutables =
+                GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
+
+            ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase).ToArray();
+            DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+
+            stopwatch.Stop();
+            _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
         }
 
         private void InitOrRefreshEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
             if (_settings == null || _settings.GetType() == typeof(SettingsWrapper))
-                CreateEnvironment(runSettings, messageLogger, out _logger, out _settings);
+                CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings);
         }
 
         private IEnumerable<TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)

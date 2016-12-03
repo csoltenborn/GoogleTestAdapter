@@ -35,12 +35,13 @@ namespace GoogleTestAdapter.TestAdapter
 
             if (_settings == null || _settings.GetType() == typeof(SettingsWrapper)) // check whether we have a mock
             {
-                TestExecutor.CreateEnvironment(discoveryContext.RunSettings,
+                CommonFunctions.CreateEnvironment(discoveryContext.RunSettings,
                    logger, out _logger, out _settings);
                 _discoverer = new GoogleTestDiscoverer(_logger, _settings);
             }
 
             _logger.LogInfo("Google Test Adapter: Test discovery starting...");
+            _logger.DebugInfo($"Solution settings: {_settings}");
 
             try
             {
@@ -52,9 +53,10 @@ namespace GoogleTestAdapter.TestAdapter
             }
             catch (Exception e)
             {
-                _logger.LogError("Exception while discovering tests: " + e);
+                _logger.LogError($"Exception while discovering tests: {e}");
             }
 
+            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.DebugMode);
         }
 
     }

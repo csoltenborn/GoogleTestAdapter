@@ -4,7 +4,6 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Fakes;
-using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -91,7 +90,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
 
             locations.Count.Should().Be(expectedLocations);
-            fakeLogger.MessagesOfType(Severity.Warning, Severity.Error).Count.Should().Be(expectedErrorMessages);
+            fakeLogger.GetMessages(Severity.Warning, Severity.Error).Count.Should().Be(expectedErrorMessages);
         }
 
     }

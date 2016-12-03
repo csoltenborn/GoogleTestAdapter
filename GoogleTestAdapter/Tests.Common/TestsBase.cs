@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,6 +21,7 @@ namespace GoogleTestAdapter.Tests.Common
         protected TestsBase()
         {
             MockLogger = new Mock<ILogger>();
+            MockLogger.Setup(l => l.GetMessages(It.IsAny<Severity[]>())).Returns(new List<string>());
 
             Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
             MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object);

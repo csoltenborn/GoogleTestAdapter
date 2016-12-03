@@ -244,7 +244,7 @@ namespace GoogleTestAdapter.TestAdapter
             executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Never);
-            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Once);
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Once);
         }
 
         private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)

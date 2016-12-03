@@ -1,4 +1,6 @@
-﻿namespace GoogleTestAdapter.Common
+﻿using System.Collections.Generic;
+
+namespace GoogleTestAdapter.Common
 {
 
     public enum Severity { Info, Warning, Error }
@@ -11,6 +13,9 @@
         void DebugInfo(string message);
         void DebugWarning(string message);
         void DebugError(string message);
+
+        IList<string> GetMessages(params Severity[] severities);
+
     }
 
 }

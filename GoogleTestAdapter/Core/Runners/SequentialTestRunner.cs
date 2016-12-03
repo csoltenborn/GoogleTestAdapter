@@ -110,52 +110,86 @@ namespace GoogleTestAdapter.Runners
         private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, TestResultSplitter splitter)
         {
-            List<string> consoleOutput;
-            if (executor != null)
+            try
             {
-                string pathExtension = _settings.GetPathExtension(executable);
-                bool printTestOutput = _settings.PrintTestOutput &&
-                                       !_settings.ParallelTestExecution;
+                return TryRunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, splitter);
+            }
+            catch (Exception e)
+            {
+                LogExecutionError(_logger, executable, workingDir, arguments.CommandLine, e);
+                return new TestResult[0];
+            }
+        }
 
-                if (printTestOutput)
-                    _logger.LogInfo(
-                        $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
+        public static void LogExecutionError(ILogger logger, string executable, string workingDir, string arguments, Exception exception, string threadName = "")
+        {
+            logger.LogError($"{threadName}Failed to run test executable '{executable}': {exception.Message}");
+            logger.DebugError($@"{threadName}Stacktrace:{Environment.NewLine}{exception.StackTrace}");
+            logger.LogError(
+                $"{threadName}Check out Google Test Adapter's trouble shooting section at https://github.com/csoltenborn/GoogleTestAdapter#trouble_shooting");
+            logger.LogError(
+                $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
+        }
 
-                Action<string> reportOutputAction = line =>
-                {
-                    splitter.ReportLine(line);
-                    if (printTestOutput)
-                        _logger.LogInfo(line);
-                };
-                executor.ExecuteCommandBlocking(
-                    executable, arguments.CommandLine, workingDir, pathExtension, 
-                    reportOutputAction);
-                splitter.Flush();
-
-                if (printTestOutput)
-                    _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
-
-                consoleOutput = new List<string>();
-                new TestDurationSerializer().UpdateTestDurations(splitter.TestResults);
-                _logger.DebugInfo($"{_threadName}Reported {splitter.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
-                foreach (TestResult result in splitter.TestResults)
-                {
-                    if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
-                        _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
-                }
+        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
+            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
+            TestResultSplitter splitter)
+        {
+            List<string> consoleOutput;
+            if (_settings.UseNewTestExecutionFramework)
+            {
+                DebugUtils.AssertIsNotNull(executor, nameof(executor));
+                consoleOutput = RunTestExecutableWithNewFramework(executable, workingDir, arguments, executor, splitter);
             }
             else
             {
                 consoleOutput =
-                    new TestProcessLauncher(_logger, _settings, isBeingDebugged).GetOutputOfCommand(workingDir, executable,
-                        arguments.CommandLine,
-                        _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
-                        debuggedLauncher);
+                    new TestProcessLauncher(_logger, _settings, isBeingDebugged)
+                        .GetOutputOfCommand(workingDir, executable, arguments.CommandLine,
+                            _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
+                            debuggedLauncher);
             }
 
-            var remainingTestCases = 
+            var remainingTestCases =
                 arguments.TestCases.Except(splitter.TestResults.Select(tr => tr.TestCase));
             return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, splitter.CrashedTestCase);
+        }
+
+        private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, IProcessExecutor executor,
+            TestResultSplitter splitter)
+        {
+            string pathExtension = _settings.GetPathExtension(executable);
+            bool printTestOutput = _settings.PrintTestOutput &&
+                                   !_settings.ParallelTestExecution;
+
+            if (printTestOutput)
+                _logger.LogInfo(
+                    $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
+
+            Action<string> reportOutputAction = line =>
+            {
+                splitter.ReportLine(line);
+                if (printTestOutput)
+                    _logger.LogInfo(line);
+            };
+            executor.ExecuteCommandBlocking(
+                executable, arguments.CommandLine, workingDir, pathExtension,
+                reportOutputAction);
+            splitter.Flush();
+
+            if (printTestOutput)
+                _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
+
+            var consoleOutput = new List<string>();
+            new TestDurationSerializer().UpdateTestDurations(splitter.TestResults);
+            _logger.DebugInfo(
+                $"{_threadName}Reported {splitter.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
+            foreach (TestResult result in splitter.TestResults)
+            {
+                if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
+                    _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
+            }
+            return consoleOutput;
         }
 
         private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir, TestCase crashedTestCase)

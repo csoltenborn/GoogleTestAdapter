@@ -36,6 +36,8 @@ namespace GoogleTestAdapter.Tests.Common
         public const string X86TestsWithoutPdb = X86Dir + @"NoPdbFile\ConsoleApplication1Tests.exe";
         public const string PathExtensionTestsExe = X86Dir + @"PathExtension\exe\Tests.exe";
         public static readonly string PathExtensionTestsDllDir = Path.GetFullPath(X86Dir + @"PathExtension\lib");
+        public const string AlwaysCrashingExe = X86Dir + @"Crash\CrashingExe.exe";
+        public const string AlwaysFailingExe = X86Dir + @"Fail\FailingExe.exe";
         public const int NrOfPathExtensionTests = 72;
 
         public const string X64Dir = TestdataDir + @"_x64\";
