@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
+    <UnitTestResult testName="Api.Created.Tests.PassingTest" outcome="Passed" />
+    <UnitTestResult testName="Api_Created_Tests.FailingTest" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>Value of: message == ""
+  Actual: false
+Expected: true
+Test failed: Something is wrong</Message>
+          <StackTrace>at apicreatedtests.cpp:40 in $(Directory)\sampletests\tests\apicreatedtests.cpp:line 40</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
     <UnitTestResult testName="Arr|TypeParameterizedTests|0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -508,6 +520,12 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <UnitTestResult testName="WorkingDir.IsSolutionDirectory" outcome="Passed" />
   </Results>
   <TestDefinitions>
+    <UnitTest name="Api.Created.Tests.PassingTest" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Api.Created.Tests.PassingTest" className="Api.Created.Tests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="Api_Created_Tests.FailingTest" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="Api_Created_Tests.FailingTest" className="Api_Created_Tests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
     <UnitTest name="Arr|TypeParameterizedTests|0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="Arr|TypeParameterizedTests|0.CanDefeatMath&lt;std::array&lt;int,3&gt; &gt;" className="Arr/TypeParameterizedTests/0" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
@@ -772,7 +790,7 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <TestList name="All Loaded Results" />
   </TestLists>
   <ResultSummary outcome="Failed">
-    <Counters total="86" executed="86" passed="40" failed="46" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="88" executed="88" passed="41" failed="47" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>

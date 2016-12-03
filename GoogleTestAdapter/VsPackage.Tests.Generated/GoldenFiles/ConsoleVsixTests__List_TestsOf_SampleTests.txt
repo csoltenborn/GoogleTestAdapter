@@ -1,3 +1,5 @@
+Api.Created.Tests.PassingTest
+Api_Created_Tests.FailingTest
 TheFixture.AddFails
 TheFixture.AddPasses
 TheFixture.Crash

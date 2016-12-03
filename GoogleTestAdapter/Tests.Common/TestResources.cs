@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Results0Batch = @"Tests\Returns0.bat";
         public const string Results1Batch = @"Tests\Returns1.bat";
 
-        public const int NrOfSampleTests = 86;
+        public const int NrOfSampleTests = 88;
         public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
         public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
 
