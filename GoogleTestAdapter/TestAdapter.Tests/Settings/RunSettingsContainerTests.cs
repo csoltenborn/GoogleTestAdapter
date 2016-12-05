@@ -120,7 +120,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             runSettingsContainer.Should().NotBeNull();
             runSettingsContainer.SolutionSettings.Should().NotBeNull();
-            runSettingsContainer.ProjectSettings.Count.Should().Be(0);
+            runSettingsContainer.ProjectSettings.Count.Should().Be(1);
+
+            runSettingsContainer.SolutionSettings.MaxNrOfThreads.Should().Be(3);
+            runSettingsContainer.ProjectSettings[0].MaxNrOfThreads.Should().Be(4);
+            runSettingsContainer.SolutionSettings.TraitsRegexesBefore.Should().Be("User");
+            runSettingsContainer.ProjectSettings[0].TraitsRegexesBefore.Should().Be("User");
         }
 
     }

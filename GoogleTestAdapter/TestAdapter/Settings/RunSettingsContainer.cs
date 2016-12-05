@@ -31,6 +31,10 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             _solutionSettings = serializationContainer.SolutionSettings.Settings;
             ProjectSettings.AddRange(serializationContainer.SettingsList);
+            foreach (RunSettings projectSettings in ProjectSettings)
+            {
+                projectSettings.GetUnsetValuesFrom(_solutionSettings);
+            }
         }
 
         public RunSettings GetSettingsForExecutable(string executable)

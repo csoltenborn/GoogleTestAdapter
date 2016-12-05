@@ -10,6 +10,9 @@
       </Settings>
     </SolutionSettings>
     <ProjectSettings>
+      <Settings ProjectRegex="LoadTests_gta\.exe|CrashingTests_gta\.exe">
+        <MaxNrOfThreads>4</MaxNrOfThreads>
+      </Settings>
     </ProjectSettings>
   </GoogleTestAdapterSettings>
 </RunSettings>

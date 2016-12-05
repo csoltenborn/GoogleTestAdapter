@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -254,12 +255,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var projectContainer = resultingContainer.GetSettingsForExecutable("project1");
             projectContainer.Should().NotBeNull();
             projectContainer.AdditionalTestExecutionParam.Should().Be(solutionProject1);
-            projectContainer.BatchForTestSetup.Should().Be(global);
+            projectContainer.BatchForTestSetup.Should().Be(userSolution);
             projectContainer.BatchForTestTeardown.Should().Be(userProject1);
             projectContainer.PathExtension.Should().Be(userProject1);
-            projectContainer.TestDiscoveryRegex.Should().Be(solutionProject1);
+            projectContainer.TestDiscoveryRegex.Should().Be(userSolution);
             projectContainer.TestNameSeparator.Should().Be(userProject1);
-            projectContainer.TraitsRegexesAfter.Should().Be(global);
+            projectContainer.TraitsRegexesAfter.Should().Be(userSolution);
             projectContainer.TraitsRegexesBefore.Should().Be(global);
             projectContainer.WorkingDir.Should().Be(userProject1);
             projectContainer.MaxNrOfThreads.Should().Be(5);
@@ -271,25 +272,25 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             projectContainer.AdditionalTestExecutionParam.Should().Be(solutionProject2);
             projectContainer.BatchForTestSetup.Should().Be(global);
             projectContainer.BatchForTestTeardown.Should().Be(solutionProject2);
-            projectContainer.PathExtension.Should().Be(global);
-            projectContainer.TestDiscoveryRegex.Should().Be(global);
+            projectContainer.PathExtension.Should().Be(solutionSolution);
+            projectContainer.TestDiscoveryRegex.Should().Be(solutionSolution);
             projectContainer.TestNameSeparator.Should().Be(solutionProject2);
             projectContainer.TraitsRegexesAfter.Should().Be(solutionProject2);
             projectContainer.TraitsRegexesBefore.Should().Be(global);
             projectContainer.WorkingDir.Should().Be(solutionProject2);
-            projectContainer.MaxNrOfThreads.Should().Be(0);
-            projectContainer.MaxNrOfThreads.Should().Be(0);
+            projectContainer.MaxNrOfThreads.Should().Be(1);
+            projectContainer.MaxNrOfThreads.Should().Be(1);
             projectContainer.NrOfTestRepetitions.Should().Be(3);
 
             projectContainer = resultingContainer.GetSettingsForExecutable("project3");
             projectContainer.Should().NotBeNull();
             projectContainer.AdditionalTestExecutionParam.Should().Be(userProject3);
-            projectContainer.BatchForTestSetup.Should().Be(global);
+            projectContainer.BatchForTestSetup.Should().Be(userSolution);
             projectContainer.BatchForTestTeardown.Should().Be(userProject3);
             projectContainer.PathExtension.Should().Be(global);
             projectContainer.TestDiscoveryRegex.Should().Be(userProject3);
             projectContainer.TestNameSeparator.Should().Be(userProject3);
-            projectContainer.TraitsRegexesAfter.Should().Be(global);
+            projectContainer.TraitsRegexesAfter.Should().Be(userSolution);
             projectContainer.TraitsRegexesBefore.Should().Be(userProject3);
             projectContainer.WorkingDir.Should().Be(global);
             projectContainer.MaxNrOfThreads.Should().Be(6);
@@ -315,13 +316,31 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         private void AssertContainsSetting(XmlDocument xml, string nodeName, string value)
         {
-            XmlNodeList list = xml.GetElementsByTagName(nodeName);
-            list.Count.Should().Be(1);
+            XmlNode solutionSettingsNode = xml.GetElementsByTagName("SolutionSettings").Item(0);
+            XmlNodeList list = solutionSettingsNode.SelectNodes($"Settings/{nodeName}");
+
+            list.Should().HaveCount(1, $"node {nodeName} should exist only once. XML Document:{Environment.NewLine}{ToFormattedString(xml, 4)}");
 
             XmlNode node = list.Item(0);
             node.Should().NotBeNull();
             // ReSharper disable once PossibleNullReferenceException
             node.InnerText.Should().BeEquivalentTo(value);
+        }
+
+        public static string ToFormattedString(XmlDocument xml, int indentation)
+        {
+            string xmlAsString;
+            using (var sw = new StringWriter())
+            {
+                using (var xw = new XmlTextWriter(sw))
+                {
+                    xw.Formatting = Formatting.Indented;
+                    xw.Indentation = indentation;
+                    xml.WriteContentTo(xw);
+                }
+                xmlAsString = sw.ToString();
+            }
+            return xmlAsString;
         }
 
         private static XPathNavigator EmbedSettingsIntoRunSettings(RunSettingsContainer settingsContainer)
