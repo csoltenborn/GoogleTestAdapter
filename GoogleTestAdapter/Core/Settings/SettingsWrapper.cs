@@ -179,9 +179,9 @@ namespace GoogleTestAdapter.Settings
 
 
         public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
+        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = false;
         public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode. Disadvantage (for now): VS shows a superfluous 'Breakpoint hit' dialog wich has to be confirmed manually at each debug run.";
+            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode. NOTE: Debugging in X64 mode does not work yet!";
 
         public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
 

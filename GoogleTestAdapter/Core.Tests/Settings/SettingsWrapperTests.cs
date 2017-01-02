@@ -334,7 +334,7 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(s => s.MaxNrOfThreads).Returns(1);
 
             string optionsString = TheOptions.ToString();
-            optionsString.Should().Contain("UseNewTestExecutionFramework: True");
+            optionsString.Should().Contain("UseNewTestExecutionFramework: False");
             optionsString.Should().Contain("PrintTestOutput: False");
             optionsString.Should().Contain("TestDiscoveryRegex: ''");
             optionsString.Should().Contain("WorkingDir: '$(ExecutableDir)'");
