@@ -50,22 +50,22 @@ test_script:
 
     $TestExitCode = $LASTEXITCODE
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
-
-    if ($LASTEXITCODE -ne 0) {
-        $TestExitCode = $LASTEXITCODE
-    }
-
-    & VsTest.Console GoogleTestAdapter\VsPackage.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.dll GoogleTestAdapter\VsPackage.Tests.Generated\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
-
-    if ($LASTEXITCODE -ne 0) {
-        $TestExitCode = $LASTEXITCODE
-    }
-
-    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
-        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
-        Push-AppveyorArtifact TestErrors.zip
-    }
+#    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
+#
+#    if ($LASTEXITCODE -ne 0) {
+#        $TestExitCode = $LASTEXITCODE
+#    }
+#
+#    & VsTest.Console GoogleTestAdapter\VsPackage.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.dll GoogleTestAdapter\VsPackage.Tests.Generated\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
+#
+#    if ($LASTEXITCODE -ne 0) {
+#        $TestExitCode = $LASTEXITCODE
+#    }
+#
+#    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
+#        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
+#        Push-AppveyorArtifact TestErrors.zip
+#    }
 
     if ($TestExitCode -ne 0) {
         exit $TestExitCode
@@ -80,7 +80,7 @@ before_deploy:
 artifacts:
 - path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: VSIX installation package
-- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*\.nupkg
+- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*.nupkg
   name: NuGet package
 #- path: OpenCover_Unit_CoverageData.xml
 #  name: OpenCover Unit coverage data
@@ -100,7 +100,7 @@ deploy:
   api_key:
     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
   skip_symbols: true
-  artifact: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*\.nupkg
+  artifact: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*.nupkg
   on:
     branch: master
     appveyor_repo_tag: true
