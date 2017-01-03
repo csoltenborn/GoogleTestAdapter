@@ -80,19 +80,27 @@ before_deploy:
 artifacts:
 - path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
   name: VSIX installation package
-- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GitHub.CSoltenborn.GoogleTestAdapter.*.nupkg
+- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*\.nupkg
   name: NuGet package
 #- path: OpenCover_Unit_CoverageData.xml
 #  name: OpenCover Unit coverage data
 #- path: OpenCover_Integration_CoverageData.xml
 #  name: OpenCover Integration coverage data
 deploy:
-  provider: GitHub
+- provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
   description: $(RELEASE_NOTES)
   draft: true
   prerelease: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
+- provider: NuGet
+  api_key:
+    secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
+  skip_symbols: true
+  artifact: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*\.nupkg
   on:
     branch: master
     appveyor_repo_tag: true
