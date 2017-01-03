@@ -68,6 +68,13 @@ test_script:
     }
 
     if ($TestExitCode -ne 0) {
+        $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
+        $sourceFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\bin\" + $env:CONFIGURATION + "\GoogleTestAdapter.VsPackage.vsix")).ToString()
+        $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
+        $nugetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter." + $version + ".nupkg"
+        Push-AppveyorArtifact $targetFile
+        Push-AppveyorArtifact $nugetFile
+
         exit $TestExitCode
     }
 after_test: 
@@ -100,7 +107,7 @@ deploy:
   api_key:
     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
   skip_symbols: true
-  artifact: /.*\.nupkg
+#  artifact: /.*\.nupkg
 #  artifact: GoogleTestAdapter/VsPackage/bin/$(configuration)/GoogleTestAdapter\..*\.nupkg
   on:
     branch: master
