@@ -100,7 +100,7 @@ deploy:
   api_key:
     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
   skip_symbols: true
-  artifact: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*.nupkg
+  artifact: GoogleTestAdapter/VsPackage/bin/$(configuration)/GoogleTestAdapter\..*\.nupkg
   on:
     branch: master
     appveyor_repo_tag: true
