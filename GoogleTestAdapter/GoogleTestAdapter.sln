@@ -1,8 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26014.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F754A4D-BD42-4368-8B90-F3C03F24A2F3}"
+	ProjectSection(SolutionItems) = preProject
+		Resources\AllTestSettings.gta.runsettings = Resources\AllTestSettings.gta.runsettings
+		..\appveyor.yml = ..\appveyor.yml
+		..\codecov.yml = ..\codecov.yml
+		..\LICENSE.md = ..\LICENSE.md
+		..\README.md = ..\README.md
+		SetVersion.bat = SetVersion.bat
+		SetVersion.ps1 = SetVersion.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleTests", "SampleTests", "{1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleTests Solution Items", "SampleTests Solution Items", "{64AF842B-3041-4A46-8A6A-E947284E8454}"
+	ProjectSection(SolutionItems) = preProject
+		..\SampleTests\No.runsettings = ..\SampleTests\No.runsettings
+		..\SampleTests\NonDeterministic.runsettings = ..\SampleTests\NonDeterministic.runsettings
+		..\SampleTests\SampleTests.gta.runsettings = ..\SampleTests\SampleTests.gta.runsettings
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsPackage", "VsPackage\VsPackage.csproj", "{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAdapter", "TestAdapter\TestAdapter.csproj", "{44C04E51-D543-4155-A57E-BBEB73D3F8E5}"
@@ -14,17 +36,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Core.Tests\Co
 	ProjectSection(ProjectDependencies) = postProject
 		{12952B24-C70B-4A26-839A-EE4183BE8CC0} = {12952B24-C70B-4A26-839A-EE4183BE8CC0}
 		{FDC95D92-5E1E-4BDF-AA35-181851FCE755} = {FDC95D92-5E1E-4BDF-AA35-181851FCE755}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F754A4D-BD42-4368-8B90-F3C03F24A2F3}"
-	ProjectSection(SolutionItems) = preProject
-		Resources\AllTestSettings.gta.runsettings = Resources\AllTestSettings.gta.runsettings
-		..\appveyor.yml = ..\appveyor.yml
-		..\codecov.yml = ..\codecov.yml
-		..\LICENSE.md = ..\LICENSE.md
-		..\README.md = ..\README.md
-		SetVersion.bat = SetVersion.bat
-		SetVersion.ps1 = SetVersion.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaResolver", "DiaResolver\DiaResolver.csproj", "{FDC95D92-5E1E-4BDF-AA35-181851FCE755}"
@@ -62,16 +73,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsPackage.Tests.Unit", "VsP
 		{12952B24-C70B-4A26-839A-EE4183BE8CC0} = {12952B24-C70B-4A26-839A-EE4183BE8CC0}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTestsBuilder", "SampleTestsBuilder\SampleTestsBuilder.csproj", "{12952B24-C70B-4A26-839A-EE4183BE8CC0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{04990B2A-C7B5-40DA-A856-230E1E062FF1} = {04990B2A-C7B5-40DA-A856-230E1E062FF1}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{2F0E4458-6C1C-461F-A60A-B731AD97E839}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleTests", "SampleTests", "{1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "..\SampleTests\Tests\Tests.vcxproj", "{04990B2A-C7B5-40DA-A856-230E1E062FF1}"
 EndProject
@@ -86,13 +93,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common.EndToEnd", "Tests.Common.EndToEnd\Tests.Common.EndToEnd.csproj", "{C3F11E93-2EFF-4BB6-ADC9-3B42727E4816}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common.UI", "Tests.Common.UI\Tests.Common.UI.csproj", "{C6AC8E0B-DE31-4F0E-BE9D-837D9A2CA828}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleTests Solution Items", "SampleTests Solution Items", "{64AF842B-3041-4A46-8A6A-E947284E8454}"
-	ProjectSection(SolutionItems) = preProject
-		..\SampleTests\No.runsettings = ..\SampleTests\No.runsettings
-		..\SampleTests\NonDeterministic.runsettings = ..\SampleTests\NonDeterministic.runsettings
-		..\SampleTests\SampleTests.gta.runsettings = ..\SampleTests\SampleTests.gta.runsettings
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -339,6 +339,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{1FF56AF6-0ACE-4FE8-B802-4832703EC2DC} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
+		{64AF842B-3041-4A46-8A6A-E947284E8454} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{B06C696E-E458-490A-AC44-9E4F460DBAFE} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
 		{A3ADB538-F3DF-4C5F-960D-11B6DF66A1A3} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
 		{941BA1B7-2CF4-4D5C-8680-5C73CD6FE197} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
@@ -347,7 +349,6 @@ Global
 		{87F26371-0005-4301-9C49-A6DF4F06B81C} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
 		{12952B24-C70B-4A26-839A-EE4183BE8CC0} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{2F0E4458-6C1C-461F-A60A-B731AD97E839} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
-		{1FF56AF6-0ACE-4FE8-B802-4832703EC2DC} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
 		{04990B2A-C7B5-40DA-A856-230E1E062FF1} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{A5AA0879-9511-420A-9025-1AB87FAB7348} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{446DA549-6EEF-4C48-A73C-F35B79C0BDE9} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
@@ -355,6 +356,5 @@ Global
 		{4A4606CD-6D7B-4F76-8981-46D3C74E18BD} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{C3F11E93-2EFF-4BB6-ADC9-3B42727E4816} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
 		{C6AC8E0B-DE31-4F0E-BE9D-837D9A2CA828} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
-		{64AF842B-3041-4A46-8A6A-E947284E8454} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 	EndGlobalSection
 EndGlobal
