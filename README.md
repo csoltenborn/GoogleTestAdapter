@@ -38,7 +38,7 @@ Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
 * Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.8.0/GoogleTestAdapter-0.8.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
-* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/TODO) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no options or toolbar will be available; configuration is only possible through solution config files (see below).
+* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
