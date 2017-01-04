@@ -3,7 +3,7 @@
 
 ### Google Test Adapter
 
-Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. It is based on the [Google Test Runner](https://github.com/markusl/GoogleTestRunner), a similar extension written in F#; we have ported the extension to C# and implemented various enhancements.
+Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework.
 
 ![Screenshot of Test Explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/Screenshot.png "Screenshot of Test Explorer")
 
@@ -170,10 +170,11 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
 ### Credits
 
 #### People
-* Markus Lindqvist, author of Google Test Runner
+* Markus Lindqvist, author of Google Test Runner (see below)
 * Matthew Manela, author of Chutzpah Test Adapter
 
 #### Tools
+* [Google Test Runner](https://github.com/markusl/GoogleTestRunner) - the starting point for GTA. We have ported the Google Test Runner extension from F# to C# and implemented various enhancements and refactorings.
 * [ReSharper](https://www.jetbrains.com/resharper/) - awesome VS extension for .NET development, including refactoring, static analysis etc.
   * thanks to [JetBrains](https://www.jetbrains.com/) for providing free licenses for our developers!
   * note that JetBrains' [Resharper C++](https://www.jetbrains.com/resharper-cpp/) can also run tests written using Google Test
