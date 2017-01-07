@@ -119,7 +119,7 @@
       <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiaResolver\DiaResolver.csproj">
-      <Project>{FDC95D92-5E1E-4BDF-AA35-181851FCE755}</Project>
+      <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>
     </ProjectReference>
   </ItemGroup>

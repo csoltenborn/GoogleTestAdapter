@@ -28,6 +28,6 @@
   </Assets>
   <Prerequisites>
     <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26004.1,16.0)" DisplayName="Visual Studio core editor" />
-    <Prerequisite Id="Microsoft.VisualStudio.Component.TestTools.Core" Version="[15.0.25904.2,16.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core" Version="[15.0.26004.1,16.0)" DisplayName="Visual Studio C++ core features" />
   </Prerequisites>
 </PackageManifest>
