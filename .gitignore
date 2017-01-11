@@ -158,3 +158,5 @@ $RECYCLE.BIN/
 
 *.gta_testdurations
 OpenCover/
+*.VC.db
+/GoogleTestAdapter/.vs/GoogleTestAdapter.sqlite
