@@ -65,7 +65,13 @@ namespace GoogleTestAdapter.Tests.Common
 
         public static string GetVsTestConsolePath(TestMetadata.Versions version)
         {
-            return @"C:\Program Files (x86)\" + $"Microsoft Visual Studio {version:d}.0" + @"\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+            switch (version)
+            {
+                case TestMetadata.Versions.VS2017:
+                    return @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+                default:
+                    return @"C:\Program Files (x86)\" + $"Microsoft Visual Studio {version:d}.0" + @"\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+            }
         }
 
         public static string NormalizePointerInfo(string text)

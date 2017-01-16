@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="Api.Created.Tests.PassingTest" outcome="Passed" />
+    <UnitTestResult testName="Api.Created.Tests.PassingTest" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="Api_Created_Tests.FailingTest" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -21,7 +23,9 @@ Test failed: Something is wrong</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr/TypeParameterizedTests/0.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="Arr/TypeParameterizedTests/0.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -38,10 +42,18 @@ Test failed: Something is wrong</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Arr/TypeParameterizedTests/1.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="CommandArgs.TestDirectoryIsSet" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -50,7 +62,9 @@ Test failed: Something is wrong</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/0 [(1,)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="InstantiationName/ParameterizedTests.Simple/1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -71,7 +85,9 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -92,7 +108,9 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -113,7 +131,9 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/0 [(1,)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits3/1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -319,8 +339,12 @@ at #2 - parameterizedtests.cpp:40 in $(Directory)\sampletests\tests\parameterize
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" outcome="Passed" />
-    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" outcome="Passed" />
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/0 [(${MemoryLocation} pointing to &quot;&quot;, 0)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/1 [(${MemoryLocation} pointing to &quot;Test&quot;, 4)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="PointerParameterizedTests.CheckStringLength/2 [(${MemoryLocation} pointing to &quot;ooops&quot;, 23)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -342,8 +366,12 @@ Expected: 130</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" outcome="Passed" />
-    <UnitTestResult testName="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" outcome="Passed" />
+    <UnitTestResult testName="PrimitivelyTypedTests/1.CanHasBigNumbers&lt;int&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="PrimitivelyTypedTests/2.CanHasBigNumbers&lt;long&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="TestMath.AddFails" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -354,8 +382,12 @@ Expected: 1000</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TestMath.AddPasses" outcome="Passed" />
-    <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed" />
+    <UnitTestResult testName="TestMath.AddPasses" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="TestMath.Crash" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -374,10 +406,18 @@ Expected: 1000</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TheFixture.AddPasses" outcome="Passed" />
-    <UnitTestResult testName="TheFixture.AddPassesWithTraits" outcome="Passed" />
-    <UnitTestResult testName="TheFixture.AddPassesWithTraits2" outcome="Passed" />
-    <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.AddPasses" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits2" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="TheFixture.Crash" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -395,16 +435,36 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TheFixtüre.Träits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With1Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With2Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With3Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With4Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With5Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With6Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With7Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.With8Traits" outcome="Passed" />
-    <UnitTestResult testName="Traits.WithEqualTraits" outcome="Passed" />
+    <UnitTestResult testName="TheFixtüre.Träits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With1Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With2Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With3Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With4Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With5Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With6Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With7Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.With8Traits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="Traits.WithEqualTraits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="TypedTests/0.CanDefeatMath&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -413,7 +473,9 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="TypedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -438,7 +500,9 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/1.CanIterate&lt;std::array&lt;int,3&gt; &gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="TypedTests/1.ThreeTraits&lt;std::array&lt;int,3&gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -455,10 +519,18 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
-    <UnitTestResult testName="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed" />
+    <UnitTestResult testName="TypedTests/2.CanDefeatMath&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/2.CanIterate&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/2.ThreeTraits&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="TypedTests/2.TwoTraits&lt;MyStrangeArray&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="Ümlautß.Täst" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -468,8 +540,12 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Ümlautß.Träits" outcome="Passed" />
-    <UnitTestResult testName="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" outcome="Passed" />
+    <UnitTestResult testName="Ümlautß.Träits" outcome="Passed">
+      <Output />
+    </UnitTestResult>
+    <UnitTestResult testName="ÜmlautTypedTests/0.Täst&lt;ImplementationA&gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="ÜmlautTypedTests/1.Täst&lt;ImplementationB&gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -480,7 +556,9 @@ Expected: 2</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" outcome="Passed" />
+    <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Täst/0 [(1,ÄÖÜäöüß)]" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="ÜnstanceName/ParameterizedTästs.Träits/0 [(1,ÄÖÜäöüß)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -500,7 +578,9 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed" />
+    <UnitTestResult testName="Vec/TypeParameterizedTests/0.CanIterate&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="Vec/TypeParameterizedTests/0.ThreeTraits&lt;std::vector&lt;int,std::allocator&lt;int&gt; &gt; &gt;" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -795,10 +875,6 @@ working_directory is $(Directory)\SampleTests\Debug</Message>
       <TestMethod name="WorkingDir.IsSolutionDirectory" className="WorkingDir" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
   </TestDefinitions>
-  <TestLists>
-    <TestList name="Results Not in a List" />
-    <TestList name="All Loaded Results" />
-  </TestLists>
   <ResultSummary outcome="Failed">
     <Counters total="88" executed="88" passed="40" failed="48" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />

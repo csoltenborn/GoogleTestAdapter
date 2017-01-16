@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="FooTest.DoesXyz" outcome="Passed" />
+    <UnitTestResult testName="FooTest.DoesXyz" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="FooTest.MethodBarDoesAbc" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -27,10 +29,6 @@ at #2 - main.cpp:41 in c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp:
       <TestMethod name="FooTest.MethodBarDoesAbc" className="FooTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="..\..\..\Tests.Common\bin\${ConfigurationName}\Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe" />
     </UnitTest>
   </TestDefinitions>
-  <TestLists>
-    <TestList name="Results Not in a List" />
-    <TestList name="All Loaded Results" />
-  </TestLists>
   <ResultSummary outcome="Failed">
     <Counters total="2" executed="2" passed="1" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />

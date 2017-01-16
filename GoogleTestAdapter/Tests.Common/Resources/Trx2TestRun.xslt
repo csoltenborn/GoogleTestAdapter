@@ -118,43 +118,6 @@
     </TestMethod>
   </xsl:template>
 
-  <xsl:template match="ms:TestLists">
-    <TestLists>
-      <xsl:apply-templates />
-    </TestLists>
-  </xsl:template>
-
-  <xsl:template match="ms:TestList">
-    <TestList>
-      <xsl:attribute name="name">
-        <xsl:value-of select="@name" />
-      </xsl:attribute>
-    </TestList>
-  </xsl:template>
-
-<!--
-  <xsl:template match="ms:RunInfos">
-    <RunInfos>
-      <xsl:apply-templates />
-    </RunInfos>
-  </xsl:template>
-
-  <xsl:template match="ms:RunInfo">
-    <RunInfo>
-      <xsl:attribute name="outcome">
-        <xsl:value-of select="@outcome" />
-      </xsl:attribute>
-      <xsl:apply-templates />
-    </RunInfo>
-  </xsl:template>
-
-  <xsl:template match="ms:Text">
-    <Text>
-      <xsl:value-of select="." />
-    </Text>
-  </xsl:template>
--->
-
   <xsl:template match="ms:ResultSummary">
     <ResultSummary>
       <xsl:attribute name="outcome">

@@ -37,7 +37,9 @@ Expected: 1000</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Crashing.LongRunning" outcome="Passed" />
+    <UnitTestResult testName="Crashing.LongRunning" outcome="Passed">
+      <Output />
+    </UnitTestResult>
     <UnitTestResult testName="Crashing.TheCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -66,10 +68,6 @@ Expected: 1000</Message>
       <TestMethod name="Crashing.TheCrash" className="Crashing" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\CrashingTests_gta.exe" />
     </UnitTest>
   </TestDefinitions>
-  <TestLists>
-    <TestList name="Results Not in a List" />
-    <TestList name="All Loaded Results" />
-  </TestLists>
   <ResultSummary outcome="Failed">
     <Counters total="6" executed="4" passed="1" failed="3" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
