@@ -174,7 +174,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.Shell.11.11.0.0\lib\net45\Microsoft.VisualStudio.Shell.11.0.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.Shell.Immutable.10.10.0.4\lib\net40\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
@@ -295,6 +295,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VsDebuggerAttacherWrapper\VsDebuggerAttacherWrapper.csproj">
+      <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
+      <Name>VsDebuggerAttacherWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
