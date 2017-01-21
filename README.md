@@ -167,6 +167,11 @@ A convenient way to get your debugger attached is to use Microsoft's [Child Proc
 Pull requests are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
 
 
+### External Links
+
+[Basic tutorial for using Google Test with GTA in Visual Studio](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/)
+
+
 ### Credits
 
 #### People
