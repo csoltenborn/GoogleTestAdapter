@@ -17,15 +17,17 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
 {
     public class VsExperimentalInstance
     {
-        public readonly TestMetadata.Versions Version;
+        public readonly VsVersion Version;
         public readonly string Suffix;
         public readonly string VersionAndSuffix;
 
-        public VsExperimentalInstance(TestMetadata.Versions version, string suffix)
+        public VsExperimentalInstance(VsVersion version, string suffix)
         {
             Version = version;
             Suffix = suffix;
-            VersionAndSuffix = $"{Version:d}.0{Suffix}";
+            VersionAndSuffix = version == VsVersion.VS2017 
+                ? $"15.0_17426ca5{Suffix}"
+                : $"{Version:d}.0{Suffix}";
         }
 
         public bool Exists()
@@ -101,7 +103,25 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
 
         private string GetExePath()
         {
-            return $@"C:\Program Files (x86)\Microsoft Visual Studio {Version:d}.0\Common7\IDE\devenv.exe";
+            string exePath;
+            switch (Version)
+            {
+                case VsVersion.VS2012:
+                case VsVersion.VS2013:
+                case VsVersion.VS2015:
+                    exePath = $@"C:\Program Files (x86)\Microsoft Visual Studio {Version:d}.0\Common7\IDE\devenv.exe";
+                    break;
+                case VsVersion.VS2017:
+                    exePath = $@"C:\Program Files (x86)\Microsoft Visual Studio\{Version.Year()}\Community\Common7\IDE\devenv.exe";
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unknown enum literal: {Version}");
+            }
+
+            if (!File.Exists(exePath))
+                throw new AutomationException($"VS executable does not exist at '{exePath}'", "");
+
+            return exePath;
         }
 
         private IEnumerable<string> GetVsDirectories()

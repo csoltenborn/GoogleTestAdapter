@@ -69,7 +69,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
 
         public static string RunExecutableAndGetOutput(string solutionFile, string arguments)
         {
-            string command = TestResources.GetVsTestConsolePath(TestMetadata.Versions.VS2015);
+            string command = TestResources.GetVsTestConsolePath(TestMetadata.VersionUnderTest);
             string workingDir = "";
 
             var launcher = new TestProcessLauncher();

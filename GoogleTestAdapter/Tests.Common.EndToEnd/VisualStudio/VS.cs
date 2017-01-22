@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
 
             try
             {
-                VisualStudioInstance = new VsExperimentalInstance(TestMetadata.Versions.VS2015, suffix);
+                VisualStudioInstance = new VsExperimentalInstance(TestMetadata.VersionUnderTest, suffix);
                 if (string.IsNullOrEmpty(suffix))
                 {
                     _keepDirtyVsInstance = true;

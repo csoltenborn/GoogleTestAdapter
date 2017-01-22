@@ -4,6 +4,8 @@
     {
         public const bool OverwriteTestResults = false;
 
+        public const VsVersion VersionUnderTest = VsVersion.VS2017;
+
         public static class TestCategories
         {
             public const string Unit = "Unit";
@@ -12,7 +14,5 @@
             public const string Ui = "UI";
             public const string Load = "Load";
         }
-
-        public enum Versions { VS2012 = 11, VS2013 = 12, VS2015 = 14, VS2017 = 15 }
     }
 }

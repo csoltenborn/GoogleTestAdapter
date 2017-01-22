@@ -99,6 +99,7 @@
     <Compile Include="TestDataCreator.cs" />
     <Compile Include="TestMetadata.cs" />
     <Compile Include="TestResources.cs" />
+    <Compile Include="VsVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

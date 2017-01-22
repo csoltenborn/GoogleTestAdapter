@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
 
         private string RunExecutableAndGetResultsFile(string arguments)
         {
-            string command = TestResources.GetVsTestConsolePath(TestMetadata.Versions.VS2017);
+            string command = TestResources.GetVsTestConsolePath(TestMetadata.VersionUnderTest);
             command.AsFileInfo().Should().Exist();
 
             string workingDir = "";

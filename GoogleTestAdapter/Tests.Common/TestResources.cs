@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -63,14 +64,18 @@ namespace GoogleTestAdapter.Tests.Common
             return typeName + "__" + testCaseName + fileExtension;
         }
 
-        public static string GetVsTestConsolePath(TestMetadata.Versions version)
+        public static string GetVsTestConsolePath(VsVersion version)
         {
             switch (version)
             {
-                case TestMetadata.Versions.VS2017:
-                    return @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+                case VsVersion.VS2012:
+                case VsVersion.VS2013:
+                case VsVersion.VS2015:
+                    return $@"C:\Program Files (x86)\Microsoft Visual Studio {version:d}.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+                case VsVersion.VS2017:
+                    return $@"C:\Program Files (x86)\Microsoft Visual Studio\{version.Year()}\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
                 default:
-                    return @"C:\Program Files (x86)\" + $"Microsoft Visual Studio {version:d}.0" + @"\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+                    throw new InvalidOperationException();
             }
         }
 
