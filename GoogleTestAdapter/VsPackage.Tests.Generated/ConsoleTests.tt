@@ -156,7 +156,7 @@ namespace GoogleTestAdapter.VsPackage
 		#region method stubs for code coverage
 		<# foreach (Line line in lines) { #>
 
-		[TestMethod]
+		[TestMethod, Ignore]
         [TestCategory(EndToEnd)]
 		public override void <#= line.MethodName #>()
 		{
@@ -166,7 +166,7 @@ namespace GoogleTestAdapter.VsPackage
 
 		<# foreach (string executable in executables.Keys) { #>
 
-		[TestMethod]
+		[TestMethod, Ignore]
         [TestCategory(EndToEnd)]
 		public override void List_TestsOf_<#= executable #>()
 		{
@@ -204,21 +204,21 @@ namespace GoogleTestAdapter.VsPackage
 
         #region method stubs for code coverage
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(EndToEnd)]
         public override void Console_ListDiscoverers_DiscovererIsListed()
         {
             base.Console_ListDiscoverers_DiscovererIsListed();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(EndToEnd)]
         public override void Console_ListExecutors_ExecutorIsListed()
         {
             base.Console_ListExecutors_ExecutorIsListed();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(EndToEnd)]
         public override void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
