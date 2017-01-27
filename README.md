@@ -131,6 +131,9 @@ No source locations and traits are found for my tests!
 * The test executable's project has the option *Linker/Debugging/Generate debug info* set to `No` or `Optimize for faster linking (/DEBUG:FASTLINK)`, resulting in a pdb not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting to `Yes` or `Optimize for debugging (/DEBUG)` and rebuild your solution.
 * Option *Parse symbol information* is set to `false`, making GTA not parse that information out of the pdb file intentionally. The actual set of options used is potentially composed from VS options, a solution settings file, and a user settings file; the resulting set of options will be logged to the test output window if the *Print debug info* option is set to `true`.
 
+The Google Test Adapter extension is disabled when I start Visual Studio!
+* Your MEF cache might have been corrupted. Please refer to [this issue](https://github.com/csoltenborn/GoogleTestAdapter/issues/98) for help.
+
 
 ### Building, testing, debugging
 
@@ -165,6 +168,11 @@ A convenient way to get your debugger attached is to use Microsoft's [Child Proc
 #### Contributions
 
 Pull requests are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
+
+
+### External Links
+
+[Basic tutorial for using Google Test with GTA in Visual Studio](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/)
 
 
 ### Credits

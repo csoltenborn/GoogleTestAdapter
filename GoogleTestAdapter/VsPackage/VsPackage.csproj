@@ -131,6 +131,7 @@
     <EmbeddedResource Include="Resources\ReleaseNotes\0.7.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.7.1.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.8.1.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -175,7 +176,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.Shell.11.11.0.0\lib\net45\Microsoft.VisualStudio.Shell.11.0.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.Shell.Immutable.10.10.0.4\lib\net40\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
@@ -289,6 +290,10 @@
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VsDebuggerAttacherWrapper\VsDebuggerAttacherWrapper.csproj">
+      <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
+      <Name>VsDebuggerAttacherWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -1,24 +1,45 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using Microsoft.Samples.Debugging.Native;
-using Microsoft.Win32.SafeHandles;
-using DTEProcess = EnvDTE.Process;
+using GoogleTestAdapter.Helpers;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using IBindCtx = System.Runtime.InteropServices.ComTypes.IBindCtx;
+using IEnumMoniker = System.Runtime.InteropServices.ComTypes.IEnumMoniker;
+using IMoniker = System.Runtime.InteropServices.ComTypes.IMoniker;
+using IRunningObjectTable = System.Runtime.InteropServices.ComTypes.IRunningObjectTable;
 using Process = System.Diagnostics.Process;
-using NativeDebuggingMethods = Microsoft.Samples.Debugging.Native.NativeMethods;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
-    public class LastWin32Exception : Win32Exception
+    internal class LastWin32Exception : Win32Exception
     {
         public LastWin32Exception()
             : base(Marshal.GetLastWin32Error())
-        { }
+        {}
+    }
+
+    internal sealed class CoTaskMemSafeHandle : SafeHandle
+    {
+
+        public CoTaskMemSafeHandle(IntPtr handle)
+            : base(handle, true)
+        {}
+
+        public override bool IsInvalid => IsClosed || handle == IntPtr.Zero;
+
+        protected override bool ReleaseHandle()
+        {
+            Marshal.FreeCoTaskMem(handle);
+            handle = IntPtr.Zero;
+            return true;
+        }
     }
 
     public class VsDebuggerAttacher : IDebuggerAttacher
@@ -42,121 +63,65 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             }
         }
 
-        public bool AttachDebugger(Process processToAttachTo)
+        public bool AttachDebugger(int processId)
         {
             try
             {
-                NativeMethods.SkipInitialDebugBreak((uint)processToAttachTo.Id);
-                NativeMethods.AttachVisualStudioToProcess(_visualStudioProcess, _visualStudioInstance, processToAttachTo);
-                _logger.DebugInfo($"Attached debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
+                if (Environment.Is64BitProcess)
+                {
+                    // Cannot use Visual Studio API from 64-bit process
+                    // => delegate it to 32-bit wrapper process
+                    string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                    UriBuilder uri = new UriBuilder(codeBase);
+                    string path = Uri.UnescapeDataString(uri.Path);
+                    string baseDir = Path.GetDirectoryName(path);
+
+                    var command = Path.Combine(baseDir, "VsDebuggerAttacherWrapper.exe");
+                    var param = $"{processId} {_visualStudioProcess.Id}";
+                    return new ProcessExecutor(null, _logger).ExecuteCommandBlocking(command, param, null, null, _logger.LogError) == 0;
+                }
+                else
+                {
+                    IntPtr pDebugEngine = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(Guid)));
+                    try
+                    {
+                        Marshal.StructureToPtr(VSConstants.DebugEnginesGuids.NativeOnly_guid, pDebugEngine, false);
+
+                        var debugTarget = new VsDebugTargetInfo4
+                        {
+                            dlo = (uint)DEBUG_LAUNCH_OPERATION.DLO_AlreadyRunning
+                                | (uint)_DEBUG_LAUNCH_OPERATION4.DLO_AttachToSuspendedLaunchProcess,
+                            dwProcessId = (uint)processId,
+                            dwDebugEngineCount = 1,
+                            pDebugEngines = pDebugEngine,
+                        };
+
+                        // ReSharper disable once SuspiciousTypeConversion.Global
+                        var serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)_visualStudioInstance.DTE);
+                        var debugger = (IVsDebugger4)serviceProvider.GetService(typeof(SVsShellDebugger));
+                        debugger.LaunchDebugTargets4(1, new[] { debugTarget }, new VsDebugTargetProcessInfo[1]);
+                    }
+                    finally
+                    {
+                        Marshal.FreeCoTaskMem(pDebugEngine);
+                    }
+                }
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                _logger.LogError($"Failed attaching debugger to process {processToAttachTo.Id}:{processToAttachTo.ProcessName}");
+                _logger.LogError($"Failed attaching debugger to process {processId}: {e}");
                 return false;
             }
         }
 
         private static class NativeMethods
         {
-            [DllImport("User32")]
-            private static extern int ShowWindow(int hwnd, int nCmdShow);
-
             [DllImport("ole32.dll")]
             private static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
 
             [DllImport("ole32.dll")]
             private static extern int GetRunningObjectTable(int reserved, out IRunningObjectTable prot);
-
-
-            [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
-            private static extern int SuspendThread(IntPtr hThread);
-
-            internal static void AttachVisualStudioToProcess(Process visualStudioProcess, _DTE visualStudioInstance, Process applicationProcess)
-            {
-                DTEProcess processToAttachTo = visualStudioInstance.Debugger.LocalProcesses.Cast<DTEProcess>().FirstOrDefault(process => process.ProcessID == applicationProcess.Id);
-
-                if (processToAttachTo != null)
-                {
-                    processToAttachTo.Attach();
-
-                    ShowWindow((int)visualStudioProcess.MainWindowHandle, 3);
-                    SetForegroundWindow(visualStudioProcess.MainWindowHandle);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Visual Studio process cannot find specified application '" + applicationProcess.Id + "'");
-                }
-            }
-
-            private static bool WaitForDebugEvent(ref dynamic debugEvent32Or64, int dwMilliseconds)
-            {
-                bool is64BitProcess = (IntPtr.Size == 8);
-                if (is64BitProcess)
-                {
-                    var debugEvent64 = new DebugEvent64();
-                    if (!NativeDebuggingMethods.WaitForDebugEvent64(ref debugEvent64, dwMilliseconds))
-                        return false;
-                    debugEvent32Or64 = debugEvent64;
-                }
-                else
-                {
-                    var debugEvent32 = new DebugEvent32();
-                    if (!NativeDebuggingMethods.WaitForDebugEvent32(ref debugEvent32, dwMilliseconds))
-                        return false;
-                    debugEvent32Or64 = debugEvent32;
-                }
-                return true;
-            }
-
-            internal static void SkipInitialDebugBreak(uint dwProcessId)
-            {
-                if (!NativeDebuggingMethods.DebugActiveProcess(dwProcessId))
-                    throw new LastWin32Exception();
-
-                try
-                {
-                    bool done = false;
-                    uint mainThread = 0;
-                    while (!done)
-                    {
-                        dynamic debugEvent = null;
-                        if (!WaitForDebugEvent(ref debugEvent, (int) TimeSpan.FromSeconds(10).TotalMilliseconds))
-                            throw new LastWin32Exception();
-
-                        switch ((NativeDebugEventCode)debugEvent.header.dwDebugEventCode)
-                        {
-                            case NativeDebugEventCode.CREATE_PROCESS_DEBUG_EVENT:
-                                new SafeFileHandle(debugEvent.union.CreateProcess.hFile, true).Dispose();
-                                break;
-                            case NativeDebugEventCode.LOAD_DLL_DEBUG_EVENT:
-                                new SafeFileHandle(debugEvent.union.LoadDll.hFile, true).Dispose();
-                                break;
-                            case NativeDebugEventCode.EXCEPTION_DEBUG_EVENT:
-                            case NativeDebugEventCode.EXIT_PROCESS_DEBUG_EVENT:
-                                mainThread = debugEvent.header.dwThreadId;
-                                done = true;
-                                break;
-                        }
-
-                        if(!NativeDebuggingMethods.ContinueDebugEvent(debugEvent.header.dwProcessId,
-                                debugEvent.header.dwThreadId, NativeDebuggingMethods.ContinueStatus.DBG_CONTINUE))
-                            throw new LastWin32Exception();
-
-                    }
-
-                    SuspendThread(new IntPtr(mainThread));
-                }
-                finally
-                {
-                    if (!NativeDebuggingMethods.DebugActiveProcessStop(dwProcessId))
-                        throw new LastWin32Exception();
-                }
-            }
 
             internal static bool TryGetVsInstance(int processId, out _DTE instance)
             {
@@ -195,9 +160,6 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 instance = null;
                 return false;
             }
-
         }
-
     }
-
 }

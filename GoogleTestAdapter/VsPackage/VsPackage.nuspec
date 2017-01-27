@@ -30,6 +30,6 @@
 
     <file src="VsPackage.targets" target="build\native\" />
     
-    <file src="LICENSE.txt" target="\" />
+    <file src="LICENSE.txt" target="" />
   </files>
 </package>
