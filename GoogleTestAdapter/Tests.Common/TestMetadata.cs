@@ -3,7 +3,7 @@
     public static class TestMetadata
     {
         public const bool OverwriteTestResults = false;
-        public const bool GenerateVsixTests = true;
+        public const bool GenerateVsixTests = false;
 
         public static class TestCategories
         {
