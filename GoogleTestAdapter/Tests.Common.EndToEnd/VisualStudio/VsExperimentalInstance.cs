@@ -70,24 +70,24 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
             if (!Exists())
                 throw new InvalidOperationException("Cannot install VSIX in non-existing instance.");
 
+            IInstallableExtension installableExtension = ExtensionManagerService.CreateInstallableExtension(vsixPath);
+
             using (var settings = ExternalSettingsManager.CreateForApplication(GetExePath(), Suffix))
             {
-                var ems = new ExtensionManagerService(settings);
-                IInstallableExtension vsix = ExtensionManagerService.CreateInstallableExtension(vsixPath);
-
-                if (ems.IsInstalled(vsix))
+                var extensionManager = new ExtensionManagerService(settings);
+                if (extensionManager.IsInstalled(installableExtension))
                 {
-                    IInstalledExtension installedVsix = ems.GetInstalledExtension(vsix.Header.Identifier);
-                    ems.Uninstall(installedVsix);
-                    if (ems.IsInstalled(vsix))
+                    IInstalledExtension installedExtension = extensionManager.GetInstalledExtension(installableExtension.Header.Identifier);
+                    extensionManager.Uninstall(installedExtension);
+                    if (extensionManager.IsInstalled(installableExtension))
                         throw new InvalidOperationException("Could not uninstall already installed GoogleTestAdapter.");
                 }
 
-                ems.Install(vsix, perMachine: false);
-                if (!ems.IsInstalled(vsix))
+                extensionManager.Install(installableExtension, perMachine: false);
+                if (!extensionManager.IsInstalled(installableExtension))
                     throw new InvalidOperationException("Could not install GoogleTestAdapter.");
 
-                ems.Close();
+                extensionManager.Close();
             }
         }
 
@@ -115,7 +115,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
         {
             string path = Path.Combine(@"SOFTWARE\Microsoft\VisualStudio", VersionAndSuffix);
             foreach (var additionalSuffix in new[] { "", "_Config", "_Remote" })
-                yield return path + additionalSuffix;
+                yield return $"{path}{additionalSuffix}";
 
             // Remove this key for now, as it makes trouble being cleaned after test run (issue #19).
             //yield return Path.Combine(@"SOFTWARE\Microsoft\VSCommon", Suffix);
