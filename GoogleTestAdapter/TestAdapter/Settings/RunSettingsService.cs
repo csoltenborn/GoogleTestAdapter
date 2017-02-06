@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             {
                 logger.Log(MessageLevel.Warning,
                     $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}");
-                logger.LogException(e);
+                logger.Log(MessageLevel.Warning, e.ToString());
             }
 
             GetValuesFromGlobalSettings(settingsContainer);

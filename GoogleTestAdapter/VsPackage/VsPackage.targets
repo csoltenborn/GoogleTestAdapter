@@ -41,10 +41,5 @@
         $(MSBuildThisFileDirectory)..\lib\native\Microsoft.VisualStudio.TestWindow.Interfaces.dll
       </HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.dll">
-      <HintPath>
-        $(MSBuildThisFileDirectory)..\lib\native\Microsoft.VisualStudio.TestWindow.dll
-      </HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
