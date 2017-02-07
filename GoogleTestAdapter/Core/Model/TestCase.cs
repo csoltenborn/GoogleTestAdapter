@@ -23,11 +23,6 @@ namespace GoogleTestAdapter.Model
             LineNumber = lineNumber;
         }
 
-        internal string GetTestsuiteName_CommandLineGenerator()
-        {
-            return FullyQualifiedName.Split('.')[0];
-        }
-
         public override bool Equals(object obj)
         {
             var other = obj as TestCase;

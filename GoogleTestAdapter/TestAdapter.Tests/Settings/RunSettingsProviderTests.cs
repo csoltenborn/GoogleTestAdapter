@@ -2,6 +2,7 @@
 using System.Xml.XPath;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -30,13 +31,13 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             settingsDoc.Load(TestResources.ProviderDeliveredTestSettings);
             XPathNavigator navigator = settingsDoc.CreateNavigator();
 
-            navigator.MoveToChild("RunSettings", "").Should().BeTrue();
+            navigator.MoveToChild(Constants.RunSettingsName, "").Should().BeTrue();
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "").Should().BeTrue();
             navigator.MoveToChild("SolutionSettings", "").Should().BeTrue();
             navigator.MoveToRoot();
 
             navigator.MoveToRoot();
-            navigator.MoveToChild("RunSettings", "").Should().BeTrue();
+            navigator.MoveToChild(Constants.RunSettingsName, "").Should().BeTrue();
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "").Should().BeTrue();
             provider.Load(navigator.ReadSubtree());
 

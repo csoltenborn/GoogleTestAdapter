@@ -6,6 +6,7 @@ using System.Xml.XPath;
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
@@ -231,7 +232,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
 
             var navigator = navigable.CreateNavigator();
-            navigator.MoveToChild("RunSettings", "");
+            navigator.MoveToChild(Constants.RunSettingsName, "");
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
             var resultingContainer = RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());
 
@@ -350,11 +351,11 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             XmlElement root = settingsDocument.DocumentElement;
             settingsDocument.InsertBefore(xmlDeclaration, root);
 
-            XmlElement runSettingsNode = settingsDocument.CreateElement("", "RunSettings", "");
+            XmlElement runSettingsNode = settingsDocument.CreateElement("", Constants.RunSettingsName, "");
             settingsDocument.AppendChild(runSettingsNode);
 
             var settingsNavigator = settingsDocument.CreateNavigator();
-            settingsNavigator.MoveToChild("RunSettings", "");
+            settingsNavigator.MoveToChild(Constants.RunSettingsName, "");
             settingsNavigator.AppendChild(settingsContainer.ToXml().CreateNavigator());
             settingsNavigator.MoveToRoot();
 
