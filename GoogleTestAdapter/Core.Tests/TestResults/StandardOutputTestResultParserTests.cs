@@ -130,7 +130,7 @@ namespace GoogleTestAdapter.TestResults
 
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
-            results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(1));
+            results[1].Duration.Should().Be(StandardOutputTestResultParser.ShortTestDuration);
 
             results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[2]);
@@ -175,7 +175,7 @@ namespace GoogleTestAdapter.TestResults
 
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
-            results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(1));
+            results[1].Duration.Should().Be(StandardOutputTestResultParser.ShortTestDuration);
 
             results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[2]);

@@ -88,8 +88,8 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-                var splitter = new TestResultSplitter(arguments.TestCases, _logger, baseDir, _frameworkReporter);
-                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, splitter).ToArray();
+                var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, baseDir, _frameworkReporter);
+                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 _frameworkReporter.ReportTestsStarted(results.Select(tr => tr.TestCase));
@@ -108,11 +108,11 @@ namespace GoogleTestAdapter.Runners
         }
 
         private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
-            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, TestResultSplitter splitter)
+            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
         {
             try
             {
-                return TryRunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, splitter);
+                return TryRunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
             }
             catch (Exception e)
             {
@@ -133,13 +133,13 @@ namespace GoogleTestAdapter.Runners
 
         private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
-            TestResultSplitter splitter)
+            StreamingStandardOutputTestResultParser streamingParser)
         {
             List<string> consoleOutput;
             if (_settings.UseNewTestExecutionFramework)
             {
                 DebugUtils.AssertIsNotNull(executor, nameof(executor));
-                consoleOutput = RunTestExecutableWithNewFramework(executable, workingDir, arguments, executor, splitter);
+                consoleOutput = RunTestExecutableWithNewFramework(executable, workingDir, arguments, executor, streamingParser);
             }
             else
             {
@@ -151,12 +151,12 @@ namespace GoogleTestAdapter.Runners
             }
 
             var remainingTestCases =
-                arguments.TestCases.Except(splitter.TestResults.Select(tr => tr.TestCase));
-            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, splitter.CrashedTestCase);
+                arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
+            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, streamingParser.CrashedTestCase);
         }
 
         private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, IProcessExecutor executor,
-            TestResultSplitter splitter)
+            StreamingStandardOutputTestResultParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);
             bool printTestOutput = _settings.PrintTestOutput &&
@@ -168,23 +168,23 @@ namespace GoogleTestAdapter.Runners
 
             Action<string> reportOutputAction = line =>
             {
-                splitter.ReportLine(line);
+                streamingParser.ReportLine(line);
                 if (printTestOutput)
                     _logger.LogInfo(line);
             };
             executor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 reportOutputAction);
-            splitter.Flush();
+            streamingParser.Flush();
 
             if (printTestOutput)
                 _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
 
             var consoleOutput = new List<string>();
-            new TestDurationSerializer().UpdateTestDurations(splitter.TestResults);
+            new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);
             _logger.DebugInfo(
-                $"{_threadName}Reported {splitter.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
-            foreach (TestResult result in splitter.TestResults)
+                $"{_threadName}Reported {streamingParser.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
+            foreach (TestResult result in streamingParser.TestResults)
             {
                 if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
                     _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");

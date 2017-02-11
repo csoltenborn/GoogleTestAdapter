@@ -81,14 +81,12 @@ namespace GoogleTestAdapter.TestResults
 
         private IList<string> SplitConsoleOutput(string errorMessage)
         {
+            if (string.IsNullOrEmpty(errorMessage))
+                return new List<string>();
+
             MatchCollection matches = _splitRegex.Matches(errorMessage);
             if (matches.Count == 0)
-            {
-                var result = new List<string>();
-                if (!string.IsNullOrEmpty(errorMessage))
-                    result.Add(errorMessage);
-                return result;
-            }
+                return new List<string>{ errorMessage };
 
             var errorMessages = new List<string>();
             int startIndex, length;

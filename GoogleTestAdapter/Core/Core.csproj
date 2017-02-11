@@ -88,7 +88,7 @@
     <Compile Include="TestCases\TestCaseResolver.cs" />
     <Compile Include="TestResults\ErrorMessageParser.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
-    <Compile Include="TestResults\TestResultSplitter.cs" />
+    <Compile Include="TestResults\StreamingStandardOutputTestResultParser.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
