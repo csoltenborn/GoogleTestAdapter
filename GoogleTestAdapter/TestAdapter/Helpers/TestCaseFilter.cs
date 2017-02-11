@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -54,7 +55,8 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             foreach (string traitName in traitNames)
             {
                 var traitTestProperty = TestProperty.Find(traitName) ??
-                      TestProperty.Register(traitName, traitName, typeof(string), typeof(TestCase));
+                      TestProperty.Register(traitName, traitName, "", "", typeof(string), 
+                        ValidateTraitValue, TestPropertyAttributes.None, typeof(TestCase));
                 _traitPropertiesMap[traitName] = traitTestProperty;
             }
         }
@@ -128,6 +130,15 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             _logger.DebugInfo(message);
 
             return matches;
+        }
+
+        private bool ValidateTraitValue(object value)
+        {
+            string traitValue = value as string;
+            if (traitValue == null)
+                return false;
+
+            return Regex.IsMatch(traitValue, "[a-zA-Z_][a-zA-Z0-9_]*");
         }
 
     }
