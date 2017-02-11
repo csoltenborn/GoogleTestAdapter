@@ -157,10 +157,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonMark.NET.0.14.0\lib\net45\CommonMark.dll</HintPath>
+      <HintPath>..\packages\CommonMark.NET.0.15.0\lib\net45\CommonMark.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.ComponentModelHost.11.0.4\lib\net45\Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
       <Private>False</Private>
@@ -322,10 +323,6 @@
     <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.4.3\tools\nuget pack VsPackage.nuspec -NonInteractive
-</PostBuildEvent>
-  </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
@@ -334,4 +331,8 @@
     <Error Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

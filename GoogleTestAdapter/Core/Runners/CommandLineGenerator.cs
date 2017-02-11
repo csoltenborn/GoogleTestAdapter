@@ -212,7 +212,7 @@ namespace GoogleTestAdapter.Runners
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (TestCase testCase in _testCasesToRun)
             {
-                bool isRunBySuite = suitesRunningAllTests.Any(s => s == testCase.GetTestsuiteName_CommandLineGenerator());
+                bool isRunBySuite = suitesRunningAllTests.Any(s => s == GetTestsuiteName(testCase));
                 if (!isRunBySuite)
                 {
                     testCasesNotRunBySuite.Add(testCase);
@@ -239,12 +239,17 @@ namespace GoogleTestAdapter.Runners
 
         private List<string> GetAllSuitesOfTestCasesToRun()
         {
-            return _testCasesToRun.Select(tc => tc.GetTestsuiteName_CommandLineGenerator()).Distinct().ToList();
+            return _testCasesToRun.Select(GetTestsuiteName).Distinct().ToList();
         }
 
         private List<TestCase> GetAllMatchingTestCases(IEnumerable<TestCase> cases, string suite)
         {
-            return cases.Where(testcase => suite == testcase.GetTestsuiteName_CommandLineGenerator()).ToList();
+            return cases.Where(testcase => suite == GetTestsuiteName(testcase)).ToList();
+        }
+
+        private string GetTestsuiteName(TestCase testCase)
+        {
+            return testCase.FullyQualifiedName.Split('.')[0];
         }
 
     }

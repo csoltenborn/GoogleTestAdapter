@@ -2,12 +2,10 @@
 using System.Runtime.CompilerServices;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio;
-using GoogleTestAdapter.Tests.Common.Helpers;
 using GoogleTestAdapter.Tests.Common.ResultChecker;
 using GoogleTestAdapter.Tests.Common.UI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
-using GoogleTestAdapter.VsPackage;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapterUiTests

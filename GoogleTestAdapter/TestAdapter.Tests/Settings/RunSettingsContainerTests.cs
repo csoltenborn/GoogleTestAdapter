@@ -2,6 +2,7 @@
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -113,7 +114,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(TestResources.UserTestSettings);
             var navigator = xmlDocument.CreateNavigator();
-            navigator.MoveToChild("RunSettings", "");
+            navigator.MoveToChild(Constants.RunSettingsName, "");
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
 
             var runSettingsContainer = RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());

@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
 #pragma warning disable 162
             // ReSharper disable once RedundantLogicalConditionalExpressionOperand
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            return TestMetadata.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
+            return TestMetadata.GenerateVsixTests || TestMetadata.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
 #pragma warning restore 162
         }
 

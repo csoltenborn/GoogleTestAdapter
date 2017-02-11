@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using EnvDTE;
 using GoogleTestAdapter.Settings;
+using Constants = Microsoft.VisualStudio.TestPlatform.ObjectModel.Constants;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
@@ -31,7 +32,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             XPathNavigator runSettingsNavigator = runSettingDocument.CreateNavigator();
             Debug.Assert(runSettingsNavigator != null, "userRunSettingsNavigator == null!");
-            if (!runSettingsNavigator.MoveToChild("RunSettings", ""))
+            if (!runSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
             {
                 logger.Log(MessageLevel.Warning, "RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...");
                 return runSettingsNavigator;
@@ -52,7 +53,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 {
                     var solutionRunSettingsDocument = new XPathDocument(solutionRunSettingsFile);
                     XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
-                    if (solutionRunSettingsNavigator.MoveToChild("RunSettings", ""))
+                    if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
                         CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
                 }
             }
@@ -64,7 +65,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             GetValuesFromGlobalSettings(settingsContainer);
 
-            runSettingsNavigator.MoveToChild("RunSettings", "");
+            runSettingsNavigator.MoveToChild(Constants.RunSettingsName, "");
             runSettingsNavigator.AppendChild(settingsContainer.ToXml().CreateNavigator());
 
             runSettingsNavigator.MoveToRoot();

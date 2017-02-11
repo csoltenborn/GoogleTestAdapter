@@ -14,6 +14,10 @@ namespace GoogleTestAdapter.TestResults
 
         public const string CrashText = "!! This test has probably CRASHED !!";
 
+        /// <summary>
+        /// 1000 ticks = 0.1ms to make sure VS shows "&lt;1ms"
+        /// </summary>
+        public static readonly TimeSpan ShortTestDuration = TimeSpan.FromTicks(1000);
 
         public TestCase CrashedTestCase { get; private set; }
 
@@ -107,7 +111,14 @@ namespace GoogleTestAdapter.TestResults
                 logger.LogWarning("Could not parse duration in line '" + line + "'");
             }
 
-            return TimeSpan.FromMilliseconds(Math.Max(1, durationInMs));
+            return NormalizeDuration(TimeSpan.FromMilliseconds(durationInMs));
+        }
+
+        public static TimeSpan NormalizeDuration(TimeSpan duration)
+        {
+            return duration.TotalMilliseconds < 1
+                ? ShortTestDuration
+                : duration;
         }
 
         public static TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)

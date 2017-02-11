@@ -58,7 +58,11 @@ namespace GoogleTestAdapter.TestResults
                 foreach (XmlNode testsuiteNode in testsuiteNodes)
                 {
                     XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
-                    testResults.AddRange(testcaseNodes.AsParallel().Cast<XmlNode>().Select(TryParseTestResult).Where(tr => tr != null));
+                    testResults.AddRange(testcaseNodes
+                                            .AsParallel()
+                                            .Cast<XmlNode>()
+                                            .Select(TryParseTestResult)
+                                            .Where(tr => tr != null));
                 }
             }
             catch (XmlException e)
@@ -144,14 +148,11 @@ namespace GoogleTestAdapter.TestResults
             return $"{className}.{testCaseName}";
         }
 
-        private TimeSpan ParseDuration(string durationString)
+        private TimeSpan ParseDuration(string durationInSeconds)
         {
-            double duration = double.Parse(durationString, NumberFormatInfo);
-            if (duration <= 0.001)
-            {
-                duration = 0.001;
-            }
-            return TimeSpan.FromSeconds(duration);
+            return
+                StandardOutputTestResultParser
+                    .NormalizeDuration(TimeSpan.FromSeconds(double.Parse(durationInSeconds, NumberFormatInfo)));
         }
 
     }

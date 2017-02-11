@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

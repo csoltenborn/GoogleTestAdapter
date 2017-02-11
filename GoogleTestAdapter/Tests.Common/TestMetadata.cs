@@ -3,6 +3,7 @@
     public static class TestMetadata
     {
         public const bool OverwriteTestResults = false;
+        public const bool GenerateVsixTests = false;
 
         public const VsVersion VersionUnderTest = VsVersion.VS2017;
 

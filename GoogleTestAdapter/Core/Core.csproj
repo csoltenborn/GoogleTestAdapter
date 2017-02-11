@@ -88,11 +88,12 @@
     <Compile Include="TestCases\TestCaseResolver.cs" />
     <Compile Include="TestResults\ErrorMessageParser.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
-    <Compile Include="TestResults\TestResultSplitter.cs" />
+    <Compile Include="TestResults\StreamingStandardOutputTestResultParser.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\GTA_Traits.h" />

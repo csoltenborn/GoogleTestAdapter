@@ -120,6 +120,8 @@ namespace GoogleTestAdapter.DiaResolver
                 return new SourceFileLocation[0];
 
             IDiaEnumSymbols diaSymbols = FindFunctionsByRegex(symbolFilterString);
+            if (diaSymbols == null)
+                return new SourceFileLocation[0];
             return GetSymbolNamesAndAddresses(diaSymbols).Select(ToSourceFileLocation).ToList();
         }
 
@@ -214,8 +216,17 @@ namespace GoogleTestAdapter.DiaResolver
 
         private IDiaEnumSymbols FindFunctionsByRegex(string pattern)
         {
-            IDiaEnumSymbols result;
-            _diaSession.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.NsfRegularExpression, out result);
+            IDiaEnumSymbols result = null;
+            try
+            {
+                _diaSession.globalScope.findChildren(SymTagEnum.SymTagFunction, pattern, (uint)NameSearchOptions.NsfRegularExpression, out result);
+            }
+            catch (NotImplementedException)
+            {
+                // https://developercommunity.visualstudio.com/content/problem/4631/dia-sdk-still-doesnt-support-debugfastlink.html
+                _logger.LogWarning("In order to get source locations for your tests, please ensure to generate *full* PDBs for your test executables.");
+                _logger.LogWarning("Use linker option /DEBUG:FULL (VS2017) or /DEBUG (VS2015 and older) - do not use /DEBUG:FASTLINK!");
+            }
             return result;
         }
 

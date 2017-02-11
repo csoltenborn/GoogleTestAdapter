@@ -8,7 +8,7 @@ using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
 {
-    public class TestResultSplitter
+    public class StreamingStandardOutputTestResultParser
     {
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.TestResults
 
         private readonly List<string> _consoleOutput = new List<string>();
 
-        public TestResultSplitter(IEnumerable<TestCase> testCasesRun,
+        public StreamingStandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun,
             ILogger logger, string baseDir, ITestFrameworkReporter reporter)
         {
             _testCasesRun = testCasesRun.ToList();
@@ -34,7 +34,10 @@ namespace GoogleTestAdapter.TestResults
             if (StandardOutputTestResultParser.IsRunLine(line))
             {
                 if (_consoleOutput.Count > 0)
+                {
                     ReportTestResult();
+                    _consoleOutput.Clear();
+                }
                 ReportTestStart(line);
             }
             _consoleOutput.Add(line);
@@ -43,7 +46,10 @@ namespace GoogleTestAdapter.TestResults
         public void Flush()
         {
             if (_consoleOutput.Count > 0)
+            {
                 ReportTestResult();
+                _consoleOutput.Clear();
+            }
         }
 
         private void ReportTestStart(string line)
@@ -61,7 +67,6 @@ namespace GoogleTestAdapter.TestResults
                 TestResults.Add(result);
                 _reporter.ReportTestResults(result.Yield());
             }
-            _consoleOutput.Clear();
         }
 
         private TestResult CreateTestResult()
@@ -70,14 +75,14 @@ namespace GoogleTestAdapter.TestResults
             while (currentLineIndex < _consoleOutput.Count && 
                 !StandardOutputTestResultParser.IsRunLine(_consoleOutput[currentLineIndex]))
                 currentLineIndex++;
-            if (currentLineIndex >= _consoleOutput.Count)
+            if (currentLineIndex == _consoleOutput.Count)
                 return null;
 
             string line = _consoleOutput[currentLineIndex++];
             string qualifiedTestname = StandardOutputTestResultParser.RemovePrefix(line).Trim();
             TestCase testCase = StandardOutputTestResultParser.FindTestcase(qualifiedTestname, _testCasesRun);
 
-            if (currentLineIndex >= _consoleOutput.Count)
+            if (currentLineIndex == _consoleOutput.Count)
             {
                 CrashedTestCase = testCase;
                 return StandardOutputTestResultParser.CreateFailedTestResult(
