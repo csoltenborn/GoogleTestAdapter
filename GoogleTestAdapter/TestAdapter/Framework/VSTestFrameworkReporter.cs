@@ -82,7 +82,14 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     if (!_isRunningInsideVisualStudio && testResult.ErrorStackTrace != null)
                         testResult.ErrorStackTrace = testResult.ErrorStackTrace.Trim();
 
-                    ReportTestResult(testResult);
+                    try
+                    {
+                        ReportTestResult(testResult);
+                    }
+                    catch (TestCanceledException e)
+                    {
+                        throw new TestRunCanceledException($"{nameof(VsTestFrameworkReporter)} caught TestCanceledException", e);
+                    }
                 }
             }
         }

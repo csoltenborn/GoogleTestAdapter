@@ -70,6 +70,7 @@ namespace GoogleTestAdapter.Runners
         public void Cancel()
         {
             _canceled = true;
+            // TODO kill process
         }
 
 
@@ -91,12 +92,20 @@ namespace GoogleTestAdapter.Runners
                 var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, baseDir, _frameworkReporter);
                 var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
 
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                _frameworkReporter.ReportTestsStarted(results.Select(tr => tr.TestCase));
-                _frameworkReporter.ReportTestResults(results);
-                stopwatch.Stop();
-                if (results.Length > 0)
-                    _logger.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
+                try
+                {
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+                    _frameworkReporter.ReportTestsStarted(results.Select(tr => tr.TestCase));
+                    _frameworkReporter.ReportTestResults(results);
+                    stopwatch.Stop();
+                    if (results.Length > 0)
+                        _logger.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
+                }
+                catch (TestRunCanceledException e)
+                {
+                    _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
+                    _canceled = true;
+                }
 
                 serializer.UpdateTestDurations(results);
                 foreach (TestResult result in results)
@@ -168,9 +177,20 @@ namespace GoogleTestAdapter.Runners
 
             Action<string> reportOutputAction = line =>
             {
-                streamingParser.ReportLine(line);
-                if (printTestOutput)
-                    _logger.LogInfo(line);
+                try
+                {
+                    if (!_canceled)
+                        streamingParser.ReportLine(line);
+
+                    if (printTestOutput)
+                        _logger.LogInfo(line);
+                }
+                catch (TestRunCanceledException e)
+                {
+                    _canceled = true;
+                    _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
+                    // TODO kill process?
+                }
             };
             executor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,

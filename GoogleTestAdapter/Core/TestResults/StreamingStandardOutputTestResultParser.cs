@@ -64,8 +64,8 @@ namespace GoogleTestAdapter.TestResults
             TestResult result = CreateTestResult();
             if (result != null)
             {
-                TestResults.Add(result);
                 _reporter.ReportTestResults(result.Yield());
+                TestResults.Add(result);
             }
         }
 

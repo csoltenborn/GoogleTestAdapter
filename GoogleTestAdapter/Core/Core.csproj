@@ -48,6 +48,7 @@
     <Compile Include="Framework\IDebuggedProcessLauncher.cs" />
     <Compile Include="Framework\IProcessExecutor.cs" />
     <Compile Include="Framework\ITestFrameworkReporter.cs" />
+    <Compile Include="Framework\TestRunCanceledException.cs" />
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
