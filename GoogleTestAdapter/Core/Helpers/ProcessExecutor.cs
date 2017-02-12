@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.Helpers
         {
             try
             {
-                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, reportOutputLine);
+                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, reportOutputLine, processId => _processId = processId);
 
             }
             catch (Win32Exception ex)
@@ -41,6 +41,14 @@ namespace GoogleTestAdapter.Helpers
                 _logger.LogError($"{ex.Message} ({ex.NativeErrorCode}: {nativeErrorMessage})");
                 return ExecutionFailed;
             }
+        }
+
+        private int? _processId;
+
+        public void Cancel()
+        {
+            if (_processId.HasValue)
+                TestProcessLauncher.KillProcess(_processId.Value, _logger);
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
@@ -83,11 +91,12 @@ namespace GoogleTestAdapter.Helpers
 
             internal static int ExecuteCommandBlocking(
                 string command, string parameters, string workingDir, string pathExtension, 
-                IDebuggerAttacher debuggerAttacher, Action<string> reportOutputLine)
+                IDebuggerAttacher debuggerAttacher, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
                 using (var pipeStream = new ProcessOutputPipeStream())
                 {
                     var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, pipeStream._writingEnd);
+                    reportProcessId(processInfo.dwProcessId);
                     using (var process = new SafeWaitHandle(processInfo.hProcess, true))
                     using (var thread  = new SafeWaitHandle(processInfo.hThread, true))
                     {

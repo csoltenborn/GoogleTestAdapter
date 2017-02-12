@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
-                var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable));
+                var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
                 int processExitCode;
                 standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(),
                     false, false, out processExitCode);

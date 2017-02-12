@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
@@ -38,9 +39,39 @@ namespace GoogleTestAdapter.Helpers
                 return output;
             }
 
-            var actualLauncher = new ProcessLauncher(_logger, _settings.GetPathExtension(command));
+            var actualLauncher = new ProcessLauncher(_logger, _settings.GetPathExtension(command), processId => _processId = processId);
             return actualLauncher.GetOutputOfCommand(workingDirectory, command, param, printTestOutput, 
                 throwIfError, out processExitCode);
+        }
+
+        private int? _processId;
+
+        public void Cancel()
+        {
+            if (_processId.HasValue)
+                KillProcess(_processId.Value, _logger);
+        }
+
+        public static void KillProcess(int processId, ILogger logger)
+        {
+            try
+            {
+                Process process = Process.GetProcessById(processId);
+                DateTime startTime = process.StartTime;
+                try
+                {
+                    process.Kill();
+                    logger.DebugInfo($"Killed process {process} with startTime={startTime.ToShortTimeString()}");
+                }
+                catch (Exception e)
+                {
+                    logger.DebugWarning($"Could not kill process {process} with startTime={startTime.ToShortTimeString()}: {e.Message}");
+                }
+            }
+            catch (Exception)
+            {
+                // process was not running - nothing to do
+            }
         }
 
 
@@ -53,8 +84,8 @@ namespace GoogleTestAdapter.Helpers
                 _logger.DebugInfo(
                     "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
             }
-            int processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _settings.GetPathExtension(command));
-            Process process = Process.GetProcessById(processId);
+            _processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _settings.GetPathExtension(command));
+            Process process = Process.GetProcessById(_processId.Value);
             var waiter = new ProcessWaiter(process);
             waiter.WaitForExit();
             process.Dispose();

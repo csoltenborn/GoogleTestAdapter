@@ -11,11 +11,13 @@ namespace GoogleTestAdapter.Helpers
     {
         private readonly ILogger _logger;
         private readonly string _pathExtension;
+        private readonly Action<int> _reportProcessId;
 
-        public ProcessLauncher(ILogger logger, string pathExtension)
+        public ProcessLauncher(ILogger logger, string pathExtension, Action<int> reportProcessId)
         {
             _logger = logger;
             _pathExtension = pathExtension;
+            _reportProcessId = reportProcessId;
         }
 
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
@@ -51,6 +53,8 @@ namespace GoogleTestAdapter.Helpers
                 processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(_pathExtension);
 
             Process process = Process.Start(processStartInfo);
+            if (process != null)
+                _reportProcessId?.Invoke(process.Id);
             try
             {
                 var waiter = new ProcessWaiter(process);

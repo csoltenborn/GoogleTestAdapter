@@ -70,7 +70,8 @@ namespace GoogleTestAdapter.Runners
         public void Cancel()
         {
             _canceled = true;
-            // TODO kill process
+            _processLauncher?.Cancel();
+            _processExecutor?.Cancel();
         }
 
 
@@ -104,7 +105,7 @@ namespace GoogleTestAdapter.Runners
                 catch (TestRunCanceledException e)
                 {
                     _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
-                    _canceled = true;
+                    Cancel();
                 }
 
                 serializer.UpdateTestDurations(results);
@@ -152,9 +153,9 @@ namespace GoogleTestAdapter.Runners
             }
             else
             {
+                _processLauncher = new TestProcessLauncher(_logger, _settings, isBeingDebugged);
                 consoleOutput =
-                    new TestProcessLauncher(_logger, _settings, isBeingDebugged)
-                        .GetOutputOfCommand(workingDir, executable, arguments.CommandLine,
+                    _processLauncher.GetOutputOfCommand(workingDir, executable, arguments.CommandLine,
                             _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
                             debuggedLauncher);
             }
@@ -163,6 +164,9 @@ namespace GoogleTestAdapter.Runners
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
             return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, streamingParser.CrashedTestCase);
         }
+
+        private TestProcessLauncher _processLauncher;
+        private IProcessExecutor _processExecutor;
 
         private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, IProcessExecutor executor,
             StreamingStandardOutputTestResultParser streamingParser)
@@ -187,12 +191,12 @@ namespace GoogleTestAdapter.Runners
                 }
                 catch (TestRunCanceledException e)
                 {
-                    _canceled = true;
                     _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
-                    // TODO kill process?
+                    Cancel();
                 }
             };
-            executor.ExecuteCommandBlocking(
+            _processExecutor = executor;
+            _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 reportOutputAction);
             streamingParser.Flush();

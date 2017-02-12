@@ -38,8 +38,8 @@ namespace GoogleTestAdapter.Runners
             testCasesToRun.Count.Should().Be(2);
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
 
-            stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(2000); // 1st test should be executed
-            stopwatch.ElapsedMilliseconds.Should().BeLessThan(3000); // 2nd test should not be executed 
+            stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(1000); // 1st test should be executed
+            stopwatch.ElapsedMilliseconds.Should().BeLessThan(2000); // 2nd test should not be executed 
         }
 
     }

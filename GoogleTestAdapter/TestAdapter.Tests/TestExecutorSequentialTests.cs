@@ -55,8 +55,8 @@ namespace GoogleTestAdapter.TestAdapter
             thread.Join();
             stopwatch.Stop();
 
-            stopwatch.ElapsedMilliseconds.Should().BeInRange(3000,  // 1st test should be executed
-                                                             4000); // 2nd test should not be executed 
+            stopwatch.ElapsedMilliseconds.Should().BeInRange(1000,  // 1st test should be executed
+                                                             2500); // 2nd test should not be executed 
         }
 
 
