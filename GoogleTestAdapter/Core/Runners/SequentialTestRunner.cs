@@ -70,8 +70,11 @@ namespace GoogleTestAdapter.Runners
         public void Cancel()
         {
             _canceled = true;
-            _processLauncher?.Cancel();
-            _processExecutor?.Cancel();
+            if (_settings.KillProcessesOnCancel)
+            {
+                _processLauncher?.Cancel();
+                _processExecutor?.Cancel();
+            }
         }
 
 

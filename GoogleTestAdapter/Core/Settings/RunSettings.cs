@@ -90,6 +90,9 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
 
+        public virtual bool? KillProcessesOnCancel { get; set; }
+        public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
+
         public static RunSettings LoadFromXml(XmlReader reader)
         {
             Debug.Assert(reader != null, $"{nameof(reader)} must not be null");

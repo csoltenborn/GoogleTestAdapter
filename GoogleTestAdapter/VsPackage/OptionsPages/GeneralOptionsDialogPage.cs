@@ -70,6 +70,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
 
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionKillProcessesOnCancel)]
+        [Description(SettingsWrapper.OptionKillProcessesOnCancelDescription)]
+        public bool KillProcessesOnCancel
+        {
+            get { return _killProcessesOnCancel; }
+            set { SetAndNotify(ref _killProcessesOnCancel, value); }
+        }
+        private bool _killProcessesOnCancel = SettingsWrapper.OptionKillProcessesOnCancelDefaultValue;
+
         #endregion
 
         #region Traits

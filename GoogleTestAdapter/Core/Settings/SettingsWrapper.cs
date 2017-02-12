@@ -328,6 +328,14 @@ namespace GoogleTestAdapter.Settings
 
         public virtual string BatchForTestTeardown => _currentSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
+
+        public const string OptionKillProcessesOnCancel = "Kill processes on cancel";
+        public const bool OptionKillProcessesOnCancelDefaultValue = false;
+        public const string OptionKillProcessesOnCancelDescription =
+            "If true, running test executables are actively killed if the test execution is canceled. Note that killing a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.";
+
+        public virtual bool KillProcessesOnCancel => _currentSettings.KillProcessesOnCancel ?? OptionKillProcessesOnCancelDefaultValue;
+
         #endregion
 
         #region ParallelizationOptionsPage

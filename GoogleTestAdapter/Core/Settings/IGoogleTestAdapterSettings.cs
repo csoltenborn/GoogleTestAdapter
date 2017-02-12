@@ -6,11 +6,11 @@
     - add (nullable!) property to GoogleTestAdapter.Settings.IGoogleTestAdapterSettings
     - handle property in method GoogleTestAdapter.Settings.GoogleTestAdapterSettingsExtensions.GetUnsetValuesFrom()
     - add property and according constants to class GoogleTestAdapter.Settings.SettingsWrapper
-    - handle property serialization in class GoogleTestAdapter.TestAdapter.Settings.RunSettings
+    - handle property serialization in class GoogleTestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
-    - add new option to Resources/AllTestSettings.gta.runsettings
-    - add default mock configuration in method AbstractCoreTests.SetUp()
+    - add new option to Solution Items/AllTestSettings.gta.runsettings
+    - add default mock configuration in method GoogleTestAdapter.Tests.Common.TestsBase.SetUp()
     */
     public interface IGoogleTestAdapterSettings
     {
@@ -40,6 +40,7 @@
         bool? ShowReleaseNotes { get; set; }
         int? VisualStudioProcessId { get; set; }
         bool? UseNewTestExecutionFramework { get; set; }
+        bool? KillProcessesOnCancel { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -70,6 +71,7 @@
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
+            self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
         }
     }
 

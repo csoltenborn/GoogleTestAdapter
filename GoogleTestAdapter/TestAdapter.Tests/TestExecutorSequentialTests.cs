@@ -41,6 +41,25 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void RunTests_CancelingExecutor_StopsTestExecution()
         {
+            DoRunCancelingTests(
+                false, 
+                3000,  // 1st test should be executed
+                4000); // 2nd test should not be executed 
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
+        {
+            DoRunCancelingTests(
+                true,
+                1000,  // 1st test should be canceled
+                2500); // 2nd test should not be executed 
+        }
+
+        private void DoRunCancelingTests(bool killProcesses, int lower, int upper)
+        {
+            MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
             List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
             testCasesToRun.Count.Should().Be(2);
 
@@ -55,8 +74,7 @@ namespace GoogleTestAdapter.TestAdapter
             thread.Join();
             stopwatch.Stop();
 
-            stopwatch.ElapsedMilliseconds.Should().BeInRange(1000,  // 1st test should be executed
-                                                             2500); // 2nd test should not be executed 
+            stopwatch.ElapsedMilliseconds.Should().BeInRange(lower, upper);
         }
 
 

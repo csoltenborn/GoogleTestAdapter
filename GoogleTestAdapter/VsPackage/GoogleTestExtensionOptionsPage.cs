@@ -168,6 +168,7 @@ namespace GoogleTestAdapter.VsPackage
                 AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = _generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
+                KillProcessesOnCancel = _generalOptions.KillProcessesOnCancel,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,
                 BreakOnFailure = _googleTestOptions.BreakOnFailure,
