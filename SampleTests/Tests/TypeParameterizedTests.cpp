@@ -12,7 +12,7 @@ struct MyStrangeArray : public std::array<int, 3>
 template< typename int_container_type >
 class TypedTests : public ::testing::Test {
 public:
-	typename int_container_type container{ 1,2,3 };
+	typename int_container_type container = int_container_type { 1,2,3 };
 };
 
 typedef ::testing::Types<std::vector<int>, std::array<int, 3>, MyStrangeArray> IntContainerTypes;
@@ -74,7 +74,7 @@ INSTANTIATE_TYPED_TEST_CASE_P(Arr, TypeParameterizedTests, IntArrayTypes);
 template< typename number_type >
 class PrimitivelyTypedTests : public ::testing::Test {
 public:
-	std::list<number_type> container{ 1,2,127 };
+	std::list<number_type> container = std::list<number_type> { 1,2,127 };
 };
 
 typedef ::testing::Types<signed char, int, long> IntNumberTypes;
