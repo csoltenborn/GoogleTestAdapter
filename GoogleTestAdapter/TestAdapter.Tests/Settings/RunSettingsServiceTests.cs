@@ -80,7 +80,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "NrOfTestRepetitions", "1");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
-            AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
 
             mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Warning), It.Is<string>(s => s.Contains("could not be parsed"))),
                 Times.Exactly(1));
@@ -107,13 +106,14 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "NrOfTestRepetitions", "2");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
-            AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void AddRunSettings_ComplexConfiguration_IsMergedCorrectly()
         {
+            // FIXME check tests against previous commit - have TraitRegexBefore and TraitRegexAfter been replaced correctly?
+            // TODO improve test structure by breaking the test up in several small tests
             string global = "GlobalSettings";
             string solutionSolution = "solutionSolution";
             string solutionProject1 = "solutionProject1";
@@ -130,7 +130,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     AdditionalTestExecutionParam = solutionSolution,
                     PathExtension = solutionSolution,
                     TestDiscoveryRegex = solutionSolution,
-                    TraitsRegexesAfter = solutionSolution,
+                    VisualStudioProcessId = 1,
                     WorkingDir = solutionSolution,
                     MaxNrOfThreads = 1,
                 },
@@ -152,7 +152,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                         AdditionalTestExecutionParam = solutionProject2,
                         BatchForTestTeardown = solutionProject2,
                         TestNameSeparator = solutionProject2,
-                        TraitsRegexesAfter = solutionProject2,
+                        VisualStudioProcessId = 3,
                         WorkingDir = solutionProject2,
                         NrOfTestRepetitions = 3,
                     }
@@ -167,7 +167,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     BatchForTestSetup = userSolution,
                     BatchForTestTeardown = userSolution,
                     TestDiscoveryRegex = userSolution,
-                    TraitsRegexesAfter = userSolution,
+                    VisualStudioProcessId = 4,
                     MaxNrOfThreads = 4,
                     ShuffleTestsSeed = 4
                 },
@@ -190,7 +190,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                         BatchForTestTeardown = userProject3,
                         TestDiscoveryRegex = userProject3,
                         TestNameSeparator = userProject3,
-                        TraitsRegexesBefore = userProject3,
+                        ShuffleTestsSeed = 6,
                         MaxNrOfThreads = 6,
                     }
                 }
@@ -205,12 +205,11 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 PathExtension = global,
                 TestDiscoveryRegex = global,
                 TestNameSeparator = global,
-                TraitsRegexesAfter = global,
-                TraitsRegexesBefore = global,
+                VisualStudioProcessId = 0,
+                ShuffleTestsSeed = 0,
                 WorkingDir = global,
                 MaxNrOfThreads = 0,
-                NrOfTestRepetitions = 0,
-                ShuffleTestsSeed = 0
+                NrOfTestRepetitions = 0
             };
 
             var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
@@ -246,8 +245,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.SolutionSettings.PathExtension.Should().Be(solutionSolution);
             resultingContainer.SolutionSettings.TestDiscoveryRegex.Should().Be(userSolution);
             resultingContainer.SolutionSettings.TestNameSeparator.Should().Be(global);
-            resultingContainer.SolutionSettings.TraitsRegexesAfter.Should().Be(userSolution);
-            resultingContainer.SolutionSettings.TraitsRegexesBefore.Should().Be(global);
+            resultingContainer.SolutionSettings.VisualStudioProcessId.Should().Be(0);
+            resultingContainer.SolutionSettings.ShuffleTestsSeed.Should().Be(4);
             resultingContainer.SolutionSettings.WorkingDir.Should().Be(solutionSolution);
             resultingContainer.SolutionSettings.MaxNrOfThreads.Should().Be(4);
             resultingContainer.SolutionSettings.MaxNrOfThreads.Should().Be(4);
@@ -261,10 +260,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             projectContainer.PathExtension.Should().Be(userProject1);
             projectContainer.TestDiscoveryRegex.Should().Be(userSolution);
             projectContainer.TestNameSeparator.Should().Be(userProject1);
-            projectContainer.TraitsRegexesAfter.Should().Be(userSolution);
-            projectContainer.TraitsRegexesBefore.Should().Be(global);
+            projectContainer.VisualStudioProcessId.Should().Be(0);
+            projectContainer.ShuffleTestsSeed.Should().Be(5);
             projectContainer.WorkingDir.Should().Be(userProject1);
-            projectContainer.MaxNrOfThreads.Should().Be(5);
             projectContainer.MaxNrOfThreads.Should().Be(5);
             projectContainer.NrOfTestRepetitions.Should().Be(2);
 
@@ -276,10 +274,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             projectContainer.PathExtension.Should().Be(solutionSolution);
             projectContainer.TestDiscoveryRegex.Should().Be(solutionSolution);
             projectContainer.TestNameSeparator.Should().Be(solutionProject2);
-            projectContainer.TraitsRegexesAfter.Should().Be(solutionProject2);
-            projectContainer.TraitsRegexesBefore.Should().Be(global);
+            projectContainer.VisualStudioProcessId.Should().Be(0);
+            projectContainer.ShuffleTestsSeed.Should().Be(0);
             projectContainer.WorkingDir.Should().Be(solutionProject2);
-            projectContainer.MaxNrOfThreads.Should().Be(1);
             projectContainer.MaxNrOfThreads.Should().Be(1);
             projectContainer.NrOfTestRepetitions.Should().Be(3);
 
@@ -291,10 +288,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             projectContainer.PathExtension.Should().Be(global);
             projectContainer.TestDiscoveryRegex.Should().Be(userProject3);
             projectContainer.TestNameSeparator.Should().Be(userProject3);
-            projectContainer.TraitsRegexesAfter.Should().Be(userSolution);
-            projectContainer.TraitsRegexesBefore.Should().Be(userProject3);
+            projectContainer.VisualStudioProcessId.Should().Be(0);
+            projectContainer.ShuffleTestsSeed.Should().Be(6);
             projectContainer.WorkingDir.Should().Be(global);
-            projectContainer.MaxNrOfThreads.Should().Be(6);
             projectContainer.MaxNrOfThreads.Should().Be(6);
             projectContainer.NrOfTestRepetitions.Should().Be(0);
         }
@@ -306,7 +302,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 AdditionalTestExecutionParam = "Global",
                 NrOfTestRepetitions = 1,
                 MaxNrOfThreads = 1,
-                TraitsRegexesBefore = "Global"
+                ShuffleTestsSeed = 1
             };
 
             var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();

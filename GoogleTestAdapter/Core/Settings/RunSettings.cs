@@ -48,12 +48,6 @@ namespace GoogleTestAdapter.Settings
         public virtual int? ShuffleTestsSeed { get; set; }
         public bool ShouldSerializeShuffleTestsSeed() { return ShuffleTestsSeed != null; }
 
-        public virtual string TraitsRegexesBefore { get; set; }
-        public bool ShouldSerializeTraitsRegexesBefore() { return TraitsRegexesBefore != null; }
-
-        public virtual string TraitsRegexesAfter { get; set; }
-        public bool ShouldSerializeTraitsRegexesAfter() { return TraitsRegexesAfter != null; }
-
         public virtual string TestNameSeparator { get; set; }
         public bool ShouldSerializeTestNameSeparator() { return TestNameSeparator != null; }
 
