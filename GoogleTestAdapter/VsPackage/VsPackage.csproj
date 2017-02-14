@@ -292,6 +292,10 @@
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VsDebuggerAttacherWrapper\VsDebuggerAttacherWrapper.csproj">
+      <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
+      <Name>VsDebuggerAttacherWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -320,9 +324,7 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy $(SolutionDir)VsDebuggerAttacherWrapper\bin\x86\$(ConfigurationName)\VsDebuggerAttacherWrapper.exe $(OutDir)
-
-$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
+    <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
 </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
