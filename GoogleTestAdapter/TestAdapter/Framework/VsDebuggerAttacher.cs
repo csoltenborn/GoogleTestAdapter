@@ -44,6 +44,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
     public class VsDebuggerAttacher : IDebuggerAttacher
     {
+        static VsDebuggerAttacher()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveVisualStudioShell;
+        }
+
         private readonly Process _visualStudioProcess;
         private readonly _DTE _visualStudioInstance;
         private readonly ILogger _logger;
@@ -113,6 +118,30 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 _logger.LogError($"Failed attaching debugger to process {processId}: {e}");
                 return false;
             }
+        }
+
+        private static Assembly ResolveVisualStudioShell(object sender, ResolveEventArgs args)
+        {
+            if (args.Name == "Microsoft.VisualStudio.Shell.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+            {
+                AppDomain.CurrentDomain.AssemblyResolve -= ResolveVisualStudioShell;
+
+                var assembly = new AssemblyName(args.Name);
+
+                for (var version = 11; version <= 15; version++)
+                {
+                    try
+                    {
+                        assembly.Version = new Version(version, 0, 0, 0);
+                        return Assembly.Load(assembly);
+                    }
+                    catch (Exception)
+                    {
+                        // try next version
+                    }
+                }
+            }
+            return null;
         }
 
         private static class NativeMethods
