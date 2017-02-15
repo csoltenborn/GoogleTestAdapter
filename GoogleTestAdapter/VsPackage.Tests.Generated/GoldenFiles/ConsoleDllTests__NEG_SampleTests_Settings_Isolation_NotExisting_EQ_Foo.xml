@@ -391,8 +391,8 @@ Expected: 1000</Message>
     <UnitTestResult testName="TestMath.Crash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>unknown file
-SEH exception with code 0xc0000005 thrown in the test body.</Message>
+          <Message>unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.
+</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -421,8 +421,8 @@ Expected: 1000</Message>
     <UnitTestResult testName="TheFixture.Crash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>unknown file
-SEH exception with code 0xc0000005 thrown in the test body.</Message>
+          <Message>unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.
+</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
