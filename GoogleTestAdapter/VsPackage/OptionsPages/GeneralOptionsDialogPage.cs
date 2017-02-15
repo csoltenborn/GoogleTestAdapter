@@ -87,7 +87,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionUseNewTestExecutionFramework)]
         [Description(SettingsWrapper.OptionUseNewTestExecutionFrameworkDescription)]
-        public bool UseNewTestExecutionFramework
+        public bool UseNewTestExecutionFramework2
         {
             get { return _useNewTestExecutionFramework; }
             set { SetAndNotify(ref _useNewTestExecutionFramework, value); }

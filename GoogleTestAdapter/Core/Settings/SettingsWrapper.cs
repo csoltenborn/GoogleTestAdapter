@@ -175,9 +175,9 @@ namespace GoogleTestAdapter.Settings
 
 
         public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = false;
+        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
         public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode. NOTE: Debugging in X64 mode does not work yet!";
+            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.";
 
         public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
 
