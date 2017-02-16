@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             MockRunContext.Setup(rc => rc.GetTestCaseFilter(
                     It.IsAny<IEnumerable<string>>(), It.IsAny<Func<string, TestProperty>>()))
                 .Returns((ITestCaseFilterExpression)null);
-            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
+            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(tc => tc.ToVsTestCase(MockLogger.Object));
 
             TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         public void Filter_ExpressionAcceptsAnything_NoFiltering()
         {
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(true);
-            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
+            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(tc => tc.ToVsTestCase(MockLogger.Object));
 
             TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         public void Filter_ExpressionMatchesNothing_EmptyResult()
         {
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>())).Returns(false);
-            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase);
+            IEnumerable<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(tc => tc.ToVsTestCase(MockLogger.Object));
 
             TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
             IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
@@ -84,7 +84,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         [TestCategory(Unit)]
         public void Filter_ExpressionMatchesDisplayName_CorrectFiltering()
         {
-            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(tc => tc.ToVsTestCase(MockLogger.Object)).ToList();
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
 
             TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
@@ -97,7 +97,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         [TestCategory(Unit)]
         public void Matches_ExpressionMatchesDisplayName_CorrectFiltering()
         {
-            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar").Select(DataConversionExtensions.ToVsTestCase).ToList();
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar").Select(tc => tc.ToVsTestCase(MockLogger.Object)).ToList();
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCases[0]), It.Is<Func<string, object>>(f => f("DisplayName").ToString() == "Foo.Bar"))).Returns(true);
 
             TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
@@ -110,7 +110,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         [TestCategory(Unit)]
         public void Filter_Trait_CorrectFiltering()
         {
-            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(DataConversionExtensions.ToVsTestCase).ToList();
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(tc => tc.ToVsTestCase(MockLogger.Object)).ToList();
             testCases[0].Traits.Add(new Trait("MyTrait", "value1"));
             SetupFilterToAcceptTraitForTestCase(testCases[0], "MyTrait", "value1");
             testCases[1].Traits.Add(new Trait("MyTrait", "value2"));

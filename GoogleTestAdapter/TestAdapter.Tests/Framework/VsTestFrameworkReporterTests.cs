@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 ComputerName = "My Computer"
             };
 
-            var reporter = new VsTestFrameworkReporter(MockFrameworkHandle.Object, false);
+            var reporter = new VsTestFrameworkReporter(MockFrameworkHandle.Object, false, MockLogger.Object);
             reporter.ReportTestResults(result.Yield());
 
             MockFrameworkHandle.Verify(h => h.RecordResult(
@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 ComputerName = "My Computer"
             };
 
-            var reporter = new VsTestFrameworkReporter(MockFrameworkHandle.Object, inVisualStudio);
+            var reporter = new VsTestFrameworkReporter(MockFrameworkHandle.Object, inVisualStudio, MockLogger.Object);
             reporter.ReportTestResults(result.Yield());
 
             MockFrameworkHandle.Verify(h => h.RecordResult(

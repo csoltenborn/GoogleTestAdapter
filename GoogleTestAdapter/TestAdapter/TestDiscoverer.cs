@@ -45,7 +45,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             try
             {
-                var reporter = new VsTestFrameworkReporter(discoverySink);
+                var reporter = new VsTestFrameworkReporter(discoverySink, _logger);
                 _discoverer.DiscoverTests(executables, reporter);
 
                 stopwatch.Stop();

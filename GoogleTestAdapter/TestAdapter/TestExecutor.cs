@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.TestAdapter
             ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
             var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
             List<VsTestCase> vsTestCasesToRun =
-                filter.Filter(allTestCasesInExecutables.Select(DataConversionExtensions.ToVsTestCase)).ToList();
+                filter.Filter(allTestCasesInExecutables.Select(tc => tc.ToVsTestCase(_logger))).ToList();
             ICollection<TestCase> testCasesToRun =
                 allTestCasesInExecutables.Where(
                     tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
@@ -110,14 +110,14 @@ namespace GoogleTestAdapter.TestAdapter
             _logger.DebugInfo($"Solution settings: {_settings}");
 
             var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
-            ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(DataConversionExtensions.ToTestCase));
+            ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase(_logger)));
             var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
             vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
 
             IEnumerable<TestCase> allTestCasesInExecutables =
                 GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
-            ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(DataConversionExtensions.ToTestCase).ToArray();
+            ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(tc => tc.ToTestCase(_logger)).ToArray();
             DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
@@ -170,7 +170,7 @@ namespace GoogleTestAdapter.TestAdapter
             IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
-            var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio);
+            var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);
             ProcessExecutor processExecutor = null;
             if (_settings.UseNewTestExecutionFramework)

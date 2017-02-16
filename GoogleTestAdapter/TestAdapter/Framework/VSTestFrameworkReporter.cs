@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Model;
@@ -17,21 +18,24 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         private static readonly object Lock = new object();
 
+        private readonly ILogger _logger;
+
         private readonly IFrameworkHandle _frameworkHandle;
         private readonly ITestCaseDiscoverySink _sink;
 
         private readonly Throttle _throttle;
         private readonly bool _isRunningInsideVisualStudio;
 
-        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink) : this(sink, null, false) { }
+        public VsTestFrameworkReporter(ITestCaseDiscoverySink sink, ILogger logger) : this(sink, null, false, logger) { }
 
-        public VsTestFrameworkReporter(IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio) : this(null, frameworkHandle, isRunningInsideVisualStudio) { }
+        public VsTestFrameworkReporter(IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio, ILogger logger) : this(null, frameworkHandle, isRunningInsideVisualStudio, logger) { }
 
-        private VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio)
+        private VsTestFrameworkReporter(ITestCaseDiscoverySink sink, IFrameworkHandle frameworkHandle, bool isRunningInsideVisualStudio, ILogger logger)
         {
             _sink = sink;
             _frameworkHandle = frameworkHandle;
             _isRunningInsideVisualStudio = isRunningInsideVisualStudio;
+            _logger = logger;
 
             // This is part of a workaround for a Visual Studio bug (see issue #15).
             // If test results are reported too quickly (100 or more in 500ms), the
@@ -55,7 +59,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 foreach (TestCase testCase in testCases)
                 {
-                    _sink.SendTestCase(testCase.ToVsTestCase());
+                    _sink.SendTestCase(testCase.ToVsTestCase(_logger));
                 }
             }
         }
@@ -66,7 +70,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 foreach (TestCase testCase in testCases)
                 {
-                    _frameworkHandle.RecordStart(testCase.ToVsTestCase());
+                    _frameworkHandle.RecordStart(testCase.ToVsTestCase(_logger));
                 }
             }
         }
