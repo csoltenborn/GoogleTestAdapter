@@ -123,7 +123,10 @@ namespace GoogleTestAdapter.VsPackage
 
         private void DisplayReleaseNotes(string html)
         {
-            string htmlFile = Path.GetTempFileName();
+            string htmlFileBase = Path.GetTempFileName();
+            string htmlFile = Path.ChangeExtension(htmlFileBase, "html");
+            File.Delete(htmlFileBase);
+
             File.WriteAllText(htmlFile, html);
 
             using (var dialog = new ReleaseNotesDialog {HtmlFile = new Uri($"file://{htmlFile}")})
