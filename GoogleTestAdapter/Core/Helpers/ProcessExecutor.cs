@@ -22,6 +22,10 @@ namespace GoogleTestAdapter.Helpers
         private readonly IDebuggerAttacher _debuggerAttacher;
         private readonly ILogger _logger;
 
+        public ProcessExecutor(ILogger logger) : this(null, logger)
+        {
+        }
+
         public ProcessExecutor(IDebuggerAttacher debuggerAttacher, ILogger logger)
         {
             _debuggerAttacher = debuggerAttacher;

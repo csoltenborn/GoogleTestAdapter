@@ -25,9 +25,10 @@ namespace GoogleTestAdapter.TestAdapter
 
         private ILogger _logger;
         private SettingsWrapper _settings;
+        private GoogleTestExecutor _executor;
 
         private bool _canceled;
-        private GoogleTestExecutor _executor;
+        private bool _solutionDirectoryErrorMessageShown;
 
         // ReSharper disable once UnusedMember.Global
         public TestExecutor() : this(null, null) { }
@@ -79,11 +80,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void TryRunTests(IEnumerable<string> executables, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
-            _logger.LogInfo("Google Test Adapter: Test execution starting...");
-            _logger.DebugInfo($"Solution settings: {_settings}");
+            var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
 
             IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
 
@@ -103,11 +100,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void TryRunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
-            _logger.LogInfo("Google Test Adapter: Test execution starting...");
-            _logger.DebugInfo($"Solution settings: {_settings}");
+            var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
 
             var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
             ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase(_logger)));
@@ -124,9 +117,20 @@ namespace GoogleTestAdapter.TestAdapter
             _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
         }
 
+        private Stopwatch StartStopWatchAndInitEnvironment(IRunContext runContext, IFrameworkHandle frameworkHandle)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
+            _logger.LogInfo("Google Test Adapter: Test execution starting...");
+            _logger.DebugInfo($"Solution settings: {_settings}");
+
+            return stopwatch;
+        }
+
         private void InitOrRefreshEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
         {
-            if (_settings == null || _settings.GetType() == typeof(SettingsWrapper))
+            if (_settings == null || _settings.GetType() == typeof(SettingsWrapper)) // the latter prevents test settings and logger from being replaced 
                 CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings);
         }
 
@@ -169,8 +173,9 @@ namespace GoogleTestAdapter.TestAdapter
             IEnumerable<TestCase> allTestCasesInExecutables, ICollection<TestCase> testCasesToRun,
             IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
+            string solutionDirectory = GetSolutiondirectorySafely(runContext);
+            bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(solutionDirectory);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);
             ProcessExecutor processExecutor = null;
             if (_settings.UseNewTestExecutionFramework)
@@ -182,8 +187,25 @@ namespace GoogleTestAdapter.TestAdapter
             }
             _executor = new GoogleTestExecutor(_logger, _settings);
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
+                runContext.IsBeingDebugged, solutionDirectory, processExecutor);
             reporter.AllTestsFinished();
+        }
+
+        private string GetSolutiondirectorySafely(IRunContext runContext)
+        {
+            try
+            {
+                return runContext.SolutionDirectory;
+            }
+            catch (Exception)
+            {
+                if (!_solutionDirectoryErrorMessageShown)
+                {
+                    _solutionDirectoryErrorMessageShown = true;
+                    _logger.LogError("Exception while getting SolutionDirectory from runtime environment. Please update your VisualStudio to version 2012 update 1 or above.");
+                }
+                return "";
+            }
         }
 
     }

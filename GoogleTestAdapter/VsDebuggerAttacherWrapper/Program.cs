@@ -18,24 +18,23 @@ namespace VsDebuggerAttacherWrapper
             }
         }
 
-        private const int EXIT_SUCCESS = 0;
-        private const int EXIT_FAILURE = 1;
+        private const int ExitSuccess = 0;
+        private const int ExitFailure = 1;
 
         public static int Main(string[] args)
         {
             var logger = new ConsoleLogger();
 
-            int debuggeeProcessId, visualStudioProcessId;
             if (args.Length != 2 ||
-                !int.TryParse(args[0], out debuggeeProcessId) ||
-                !int.TryParse(args[1], out visualStudioProcessId))
+                !int.TryParse(args[0], out int debuggeeProcessId) ||
+                !int.TryParse(args[1], out int visualStudioProcessId))
             {
                 logger.LogError("Invalid arguments!");
-                return EXIT_FAILURE;
+                return ExitFailure;
             }
 
             var attacher = new VsDebuggerAttacher(logger, visualStudioProcessId);
-            return attacher.AttachDebugger(debuggeeProcessId) ? EXIT_SUCCESS : EXIT_FAILURE;
+            return attacher.AttachDebugger(debuggeeProcessId) ? ExitSuccess : ExitFailure;
         }
     }
 }

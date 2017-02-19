@@ -13,11 +13,21 @@ namespace GoogleTestAdapter.Helpers
         private readonly string _pathExtension;
         private readonly Action<int> _reportProcessId;
 
+        public ProcessLauncher(ILogger logger) : this(logger, "", null)
+        {
+        }
+
         public ProcessLauncher(ILogger logger, string pathExtension, Action<int> reportProcessId)
         {
             _logger = logger;
             _pathExtension = pathExtension;
             _reportProcessId = reportProcessId;
+        }
+
+        public List<string> GetOutputOfCommand(string command)
+        {
+            int dummy;
+            return GetOutputOfCommand("", command, "", false, false, out dummy);
         }
 
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
