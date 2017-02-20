@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.TestAdapter
             DoRunCancelingTests(
                 false, 
                 2000,  // 1st test should be executed
-                3500); // 2nd test should not be executed 
+                3750); // 2nd test should not be executed 
         }
 
         [TestMethod]
