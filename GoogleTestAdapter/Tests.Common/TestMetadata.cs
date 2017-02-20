@@ -1,4 +1,6 @@
-﻿namespace GoogleTestAdapter.Tests.Common
+﻿using GoogleTestAdapter.TestAdapter.Framework;
+
+namespace GoogleTestAdapter.Tests.Common
 {
     public static class TestMetadata
     {

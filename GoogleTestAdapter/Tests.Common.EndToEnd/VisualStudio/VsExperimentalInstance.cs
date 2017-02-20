@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.ExtensionManager;
 using Microsoft.VisualStudio.Settings;
@@ -107,6 +108,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
             switch (Version)
             {
                 case VsVersion.VS2012:
+                case VsVersion.VS2012_1:
                 case VsVersion.VS2013:
                 case VsVersion.VS2015:
                     exePath = $@"C:\Program Files (x86)\Microsoft Visual Studio {Version:d}.0\Common7\IDE\devenv.exe";

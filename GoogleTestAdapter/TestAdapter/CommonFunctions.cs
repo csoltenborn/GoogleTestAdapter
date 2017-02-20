@@ -45,5 +45,20 @@ namespace GoogleTestAdapter.TestAdapter
             logger = loggerAdapter;
         }
 
+        public static void LogVisualStudioVersion(ILogger logger)
+        {
+            VsVersion version = VsVersionUtils.GetVisualStudioVersion(logger);
+            switch (version)
+            {
+                // warning printed while checking version
+                case VsVersion.Unknown:
+                case VsVersion.VS2012:
+                    return;
+                default:
+                    logger.DebugInfo($"Visual Studio Version: {version}");
+                    break;
+            }
+        }
+
     }
 }

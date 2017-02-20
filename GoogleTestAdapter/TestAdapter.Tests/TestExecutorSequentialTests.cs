@@ -43,8 +43,8 @@ namespace GoogleTestAdapter.TestAdapter
         {
             DoRunCancelingTests(
                 false, 
-                3000,  // 1st test should be executed
-                4000); // 2nd test should not be executed 
+                2000,  // 1st test should be executed
+                3500); // 2nd test should not be executed 
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(tc => tc.ToVsTestCase(MockLogger.Object)), MockRunContext.Object, MockFrameworkHandle.Object));
+            Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();
             thread.Start();

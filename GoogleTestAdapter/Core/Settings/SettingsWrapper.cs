@@ -171,7 +171,8 @@ namespace GoogleTestAdapter.Settings
 
         #region GeneralOptionsPage
 
-        public virtual int VisualStudioProcessId => _currentSettings.VisualStudioProcessId ?? -1;
+        public const int OptionVisualStudioProcessIdDefaultValue = -1;
+        public virtual int VisualStudioProcessId => _currentSettings.VisualStudioProcessId ?? OptionVisualStudioProcessIdDefaultValue;
 
 
         public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";

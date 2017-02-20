@@ -100,7 +100,6 @@
     <Compile Include="TestDataCreator.cs" />
     <Compile Include="TestMetadata.cs" />
     <Compile Include="TestResources.cs" />
-    <Compile Include="VsVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -114,6 +113,10 @@
     <ProjectReference Include="..\DiaResolver\DiaResolver.csproj">
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
+      <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
+      <Name>TestAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -14,20 +14,15 @@ namespace GoogleTestAdapter.TestAdapter
     public static class DataConversionExtensions
     {
 
-        private static bool _noTraitsSupportedErrorShown;
-
-        private const string NoTraitsSupportedErrorMessage =
-            "Visual Studio versions prior to 2012 update 1 do not support traits. Please update your VS installation.";
-
-        public static TestCase ToTestCase(this VsTestCase vsTestCase, ILogger logger)
+        public static TestCase ToTestCase(this VsTestCase vsTestCase)
         {
             var testCase = new TestCase(vsTestCase.FullyQualifiedName, vsTestCase.Source, 
                 vsTestCase.DisplayName, vsTestCase.CodeFilePath, vsTestCase.LineNumber);
-            ConvertTraitsSafely(() => testCase.Traits.AddRange(vsTestCase.Traits.Select(ToTrait)), logger);
+            testCase.Traits.AddRange(vsTestCase.Traits.Select(ToTrait));
             return testCase;
         }
 
-        public static VsTestCase ToVsTestCase(this TestCase testCase, ILogger logger)
+        public static VsTestCase ToVsTestCase(this TestCase testCase)
         {
             var vsTestCase = new VsTestCase(testCase.FullyQualifiedName, TestExecutor.ExecutorUri, testCase.Source)
             {
@@ -35,24 +30,8 @@ namespace GoogleTestAdapter.TestAdapter
                 CodeFilePath = testCase.CodeFilePath,
                 LineNumber = testCase.LineNumber
             };
-            ConvertTraitsSafely(() => vsTestCase.Traits.AddRange(testCase.Traits.Select(ToVsTrait)), logger);
+            vsTestCase.Traits.AddRange(testCase.Traits.Select(ToVsTrait));
             return vsTestCase;
-        }
-
-        private static void ConvertTraitsSafely(Action action, ILogger logger)
-        {
-            try
-            {
-                action.Invoke();
-            }
-            catch (Exception)
-            {
-                if (!_noTraitsSupportedErrorShown && logger != null)
-                {
-                    _noTraitsSupportedErrorShown = true;
-                    logger.LogError(NoTraitsSupportedErrorMessage);
-                }
-            }
         }
 
 
@@ -69,7 +48,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         public static VsTestResult ToVsTestResult(this TestResult testResult)
         {
-            return new VsTestResult(ToVsTestCase(testResult.TestCase, null))
+            return new VsTestResult(ToVsTestCase(testResult.TestCase))
             {
                 Outcome = testResult.Outcome.ToVsTestOutcome(),
                 ComputerName = testResult.ComputerName,

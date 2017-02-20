@@ -40,6 +40,10 @@ namespace GoogleTestAdapter.TestAdapter
                 _discoverer = new GoogleTestDiscoverer(_logger, _settings);
             }
 
+            if (!IsSupportedVisualStudioVersion())
+                return;
+            CommonFunctions.LogVisualStudioVersion(_logger);
+
             _logger.LogInfo("Google Test Adapter: Test discovery starting...");
             _logger.DebugInfo($"Solution settings: {_settings}");
 
@@ -57,6 +61,22 @@ namespace GoogleTestAdapter.TestAdapter
             }
 
             CommonFunctions.ReportErrors(_logger, "test discovery", _settings.DebugMode);
+        }
+
+        private bool IsSupportedVisualStudioVersion()
+        {
+            var version = VsVersionUtils.GetVisualStudioVersion(_logger);
+            switch (version)
+            {
+                case VsVersion.Unknown:
+                    _logger.LogWarning("Could not identify Visual Studio version. Google Test Adapter requires at least VS 2012 update 1 and is tested up to VS 2017.");
+                    return true;
+                case VsVersion.VS2012:
+                    _logger.LogError("Google Test Adapter requires at least VS 2012 update 1 - please update your Visual Studio installation.");
+                    return false;
+                default:
+                    return true;
+            }
         }
 
     }

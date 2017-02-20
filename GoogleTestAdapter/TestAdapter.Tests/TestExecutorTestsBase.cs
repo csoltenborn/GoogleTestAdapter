@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.TestAdapter
         private void RunAndVerifySingleTest(TestCase testCase, VsTestOutcome expectedOutcome)
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            executor.RunTests(testCase.ToVsTestCase(MockLogger.Object).Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             foreach (VsTestOutcome outcome in Enum.GetValues(typeof(VsTestOutcome)))
             {

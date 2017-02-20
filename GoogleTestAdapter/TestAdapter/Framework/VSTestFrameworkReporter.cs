@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 foreach (TestCase testCase in testCases)
                 {
-                    _sink.SendTestCase(testCase.ToVsTestCase(_logger));
+                    _sink.SendTestCase(testCase.ToVsTestCase());
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 foreach (TestCase testCase in testCases)
                 {
-                    _frameworkHandle.RecordStart(testCase.ToVsTestCase(_logger));
+                    _frameworkHandle.RecordStart(testCase.ToVsTestCase());
                 }
             }
         }
@@ -99,24 +99,41 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
 
+        private bool TestReportingNeedsToBeThrottled()
+        {
+            return VsVersionUtils.GetVisualStudioVersion(_logger) != VsVersion.VS2017;
+        }
+
         private void ReportTestResult(TestResult testResult)
         {
             VsTestResult result = testResult.ToVsTestResult();
-            _throttle.Execute(delegate
+
+            if (TestReportingNeedsToBeThrottled())
             {
-                // This is part of a workaround for a Visual Studio bug. See above.
+                _throttle.Execute(delegate
+                {
+                    // This is part of a workaround for a Visual Studio bug. See above.
+                    _frameworkHandle.RecordResult(result);
+                });
+            }
+            else
+            {
                 _frameworkHandle.RecordResult(result);
-            });
+            }
+
             _frameworkHandle.RecordEnd(result.TestCase, result.Outcome);
         }
 
         internal void AllTestsFinished()
         {
-            // This is part of a workaround for a Visual Studio bug. See above.
-            bool done = false;
-            ThreadPool.QueueUserWorkItem(delegate { Thread.Sleep(SleepingTimeAfterAllTestsInMs); done = true; });
-            while (!done)
-                Thread.Sleep(200);
+            if (TestReportingNeedsToBeThrottled())
+            {
+                // This is part of a workaround for a Visual Studio bug. See above.
+                bool done = false;
+                ThreadPool.QueueUserWorkItem(delegate { Thread.Sleep(SleepingTimeAfterAllTestsInMs); done = true; });
+                while (!done)
+                    Thread.Sleep(200);
+            }
         }
     }
 

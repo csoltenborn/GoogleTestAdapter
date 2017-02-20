@@ -166,6 +166,8 @@
     <Compile Include="Framework\DebuggedProcessLauncher.cs" />
     <Compile Include="Framework\VsTestFrameworkLogger.cs" />
     <Compile Include="Framework\VSTestFrameworkReporter.cs" />
+    <Compile Include="Framework\VsVersion.cs" />
+    <Compile Include="Helpers\ParentProcessUtils.cs" />
     <Compile Include="Helpers\TestCaseFilter.cs" />
     <Compile Include="Helpers\Throttle.cs" />
     <Compile Include="Framework\VsDebuggerAttacher.cs" />

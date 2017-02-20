@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.TestAdapter.Framework;
 
 namespace GoogleTestAdapter.Tests.Common
 {
@@ -68,7 +69,7 @@ namespace GoogleTestAdapter.Tests.Common
         {
             switch (version)
             {
-                case VsVersion.VS2012:
+                case VsVersion.VS2012_1:
                 case VsVersion.VS2013:
                 case VsVersion.VS2015:
                     return $@"C:\Program Files (x86)\Microsoft Visual Studio {version:d}.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";

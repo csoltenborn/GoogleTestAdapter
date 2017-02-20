@@ -28,7 +28,6 @@ namespace GoogleTestAdapter.TestAdapter
         private GoogleTestExecutor _executor;
 
         private bool _canceled;
-        private bool _solutionDirectoryErrorMessageShown;
 
         // ReSharper disable once UnusedMember.Global
         public TestExecutor() : this(null, null) { }
@@ -87,7 +86,7 @@ namespace GoogleTestAdapter.TestAdapter
             ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
             var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
             List<VsTestCase> vsTestCasesToRun =
-                filter.Filter(allTestCasesInExecutables.Select(tc => tc.ToVsTestCase(_logger))).ToList();
+                filter.Filter(allTestCasesInExecutables.Select(tc => tc.ToVsTestCase())).ToList();
             ICollection<TestCase> testCasesToRun =
                 allTestCasesInExecutables.Where(
                     tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
@@ -103,14 +102,14 @@ namespace GoogleTestAdapter.TestAdapter
             var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
 
             var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
-            ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase(_logger)));
+            ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase()));
             var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
             vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
 
             IEnumerable<TestCase> allTestCasesInExecutables =
                 GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
 
-            ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(tc => tc.ToTestCase(_logger)).ToArray();
+            ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(tc => tc.ToTestCase()).ToArray();
             DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
@@ -122,6 +121,9 @@ namespace GoogleTestAdapter.TestAdapter
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
+
+            CommonFunctions.LogVisualStudioVersion(_logger);
+
             _logger.LogInfo("Google Test Adapter: Test execution starting...");
             _logger.DebugInfo($"Solution settings: {_settings}");
 
@@ -173,9 +175,8 @@ namespace GoogleTestAdapter.TestAdapter
             IEnumerable<TestCase> allTestCasesInExecutables, ICollection<TestCase> testCasesToRun,
             IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
-            string solutionDirectory = GetSolutiondirectorySafely(runContext);
-            bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(solutionDirectory);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);
             ProcessExecutor processExecutor = null;
             if (_settings.UseNewTestExecutionFramework)
@@ -187,25 +188,8 @@ namespace GoogleTestAdapter.TestAdapter
             }
             _executor = new GoogleTestExecutor(_logger, _settings);
             _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, solutionDirectory, processExecutor);
+                runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
             reporter.AllTestsFinished();
-        }
-
-        private string GetSolutiondirectorySafely(IRunContext runContext)
-        {
-            try
-            {
-                return runContext.SolutionDirectory;
-            }
-            catch (Exception)
-            {
-                if (!_solutionDirectoryErrorMessageShown)
-                {
-                    _solutionDirectoryErrorMessageShown = true;
-                    _logger.LogError("Exception while getting SolutionDirectory from runtime environment. Please update your VisualStudio to version 2012 update 1 or above.");
-                }
-                return "";
-            }
         }
 
     }
