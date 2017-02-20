@@ -15,6 +15,7 @@ using IEnumMoniker = System.Runtime.InteropServices.ComTypes.IEnumMoniker;
 using IMoniker = System.Runtime.InteropServices.ComTypes.IMoniker;
 using IRunningObjectTable = System.Runtime.InteropServices.ComTypes.IRunningObjectTable;
 using Process = System.Diagnostics.Process;
+using Thread = System.Threading.Thread;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
@@ -44,6 +45,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
     public class VsDebuggerAttacher : IDebuggerAttacher
     {
+        private const int AttachRetryWaitingTimeInMs = 100;
+        private const int MaxAttachTries = 10; // let's try for 1s
+
         static VsDebuggerAttacher()
         {
             AppDomain.CurrentDomain.AssemblyResolve += ResolveVisualStudioShell;
@@ -83,7 +87,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
                     var command = Path.Combine(baseDir, "VsDebuggerAttacherWrapper.exe");
                     var param = $"{processId} {_visualStudioProcess.Id}";
-                    return new ProcessExecutor(null, _logger).ExecuteCommandBlocking(command, param, null, null, _logger.LogError) == 0;
+                    return new ProcessExecutor(_logger).ExecuteCommandBlocking(command, param, null, null, _logger.LogError) == 0;
                 }
                 else
                 {
@@ -104,7 +108,26 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                         // ReSharper disable once SuspiciousTypeConversion.Global
                         var serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)_visualStudioInstance.DTE);
                         var debugger = (IVsDebugger4)serviceProvider.GetService(typeof(SVsShellDebugger));
-                        debugger.LaunchDebugTargets4(1, new[] { debugTarget }, new VsDebugTargetProcessInfo[1]);
+
+                        bool attachedSuccesfully = false;
+                        int tries = 0;
+                        while (!attachedSuccesfully)
+                        {
+                            try
+                            {
+                                debugger.LaunchDebugTargets4(1, new[] { debugTarget }, new VsDebugTargetProcessInfo[1]);
+                                attachedSuccesfully = true;
+                            }
+                            catch (Exception)
+                            {
+                                // workaround for exceptions: System.Runtime.InteropServices.COMException (0x80010001): Call was rejected by callee. (Exception from HRESULT: 0x80010001 (RPC_E_CALL_REJECTED))
+                                tries++;
+                                if (tries == MaxAttachTries)
+                                    throw;
+
+                                Thread.Sleep(AttachRetryWaitingTimeInMs);
+                            }
+                        }
                     }
                     finally
                     {
