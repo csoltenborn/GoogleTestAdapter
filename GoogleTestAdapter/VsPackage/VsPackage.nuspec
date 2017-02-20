@@ -27,6 +27,7 @@
     <file src="GoogleTestAdapter.DiaResolver.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.TestAdapter.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.VsPackage.dll" target="lib\net45\" />
+    <file src="VsDebuggerAttacherWrapper.exe" target="lib\net45\" />
 
     <file src="VsPackage.targets" target="build\native\" />
     
