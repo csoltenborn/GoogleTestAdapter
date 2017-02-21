@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
         }
 
 
-        [TestMethod]
+        [TestMethod, Ignore]
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListDiscoverers_DiscovererIsListed()
         {
