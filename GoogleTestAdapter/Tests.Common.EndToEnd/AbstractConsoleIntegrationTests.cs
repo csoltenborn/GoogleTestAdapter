@@ -19,6 +19,14 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
             GetDirectories(out TestAdapterDir, out _solutionFile);
         }
 
+        [ClassInitialize]
+        public void Setup()
+        {
+            // workaround for first test failing
+            string arguments = CreateListDiscoverersArguments();
+            RunExecutableAndGetOutput(_solutionFile, arguments);
+        }
+
         protected abstract string GetAdapterIntegration();
 
         public static string GetLogger()
@@ -88,9 +96,9 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
         public static bool ShouldGenerateVsixTests()
         {
 #pragma warning disable 162
-            // ReSharper disable once RedundantLogicalConditionalExpressionOperand
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable RedundantLogicalConditionalExpressionOperand
             return TestMetadata.GenerateVsixTests || TestMetadata.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
+            // ReSharper restore RedundantLogicalConditionalExpressionOperand
 #pragma warning restore 162
         }
 

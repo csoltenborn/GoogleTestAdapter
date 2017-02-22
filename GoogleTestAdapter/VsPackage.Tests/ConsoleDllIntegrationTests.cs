@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.VsPackage
 
         #region method stubs for code coverage
 
-        [TestMethod, Ignore] // TODO ignored for now because of AppVeyor test instabilities
+        [TestMethod]
         [TestCategory(EndToEnd)]
         public override void Console_ListDiscoverers_DiscovererIsListed()
         {
