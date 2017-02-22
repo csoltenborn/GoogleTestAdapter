@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
@@ -10,6 +11,8 @@ namespace GoogleTestAdapter.TestResults
 {
     public class StreamingStandardOutputTestResultParser
     {
+        private static readonly Regex PrefixedLineRegex;
+
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
 
@@ -20,8 +23,15 @@ namespace GoogleTestAdapter.TestResults
 
         private readonly List<string> _consoleOutput = new List<string>();
 
+        static StreamingStandardOutputTestResultParser()
+        {
+            string passedMarker = Regex.Escape(StandardOutputTestResultParser.Passed);
+            string failedMarker = Regex.Escape(StandardOutputTestResultParser.Failed);
+            PrefixedLineRegex = new Regex($"(.*)((?:{passedMarker}|{failedMarker}).*)", RegexOptions.Compiled);
+        }
+
         public StreamingStandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun,
-            ILogger logger, string baseDir, ITestFrameworkReporter reporter)
+                ILogger logger, string baseDir, ITestFrameworkReporter reporter)
         {
             _testCasesRun = testCasesRun.ToList();
             _logger = logger;
@@ -30,6 +40,24 @@ namespace GoogleTestAdapter.TestResults
         }
 
         public void ReportLine(string line)
+        {
+            Match testEndMatch = PrefixedLineRegex.Match(line);
+            if (testEndMatch.Success)
+            {
+                string restOfErrorMessage = testEndMatch.Groups[1].Value;
+                if (!string.IsNullOrEmpty(restOfErrorMessage))
+                    DoReportLine(restOfErrorMessage);
+
+                string testEndPart = testEndMatch.Groups[2].Value;
+                DoReportLine(testEndPart);
+            }
+            else
+            {
+                DoReportLine(line);
+            }
+        }
+
+        private void DoReportLine(string line)
         {
             if (StandardOutputTestResultParser.IsRunLine(line))
             {
@@ -72,7 +100,7 @@ namespace GoogleTestAdapter.TestResults
         private TestResult CreateTestResult()
         {
             int currentLineIndex = 0;
-            while (currentLineIndex < _consoleOutput.Count && 
+            while (currentLineIndex < _consoleOutput.Count &&
                 !StandardOutputTestResultParser.IsRunLine(_consoleOutput[currentLineIndex]))
                 currentLineIndex++;
             if (currentLineIndex == _consoleOutput.Count)
@@ -86,9 +114,9 @@ namespace GoogleTestAdapter.TestResults
             {
                 CrashedTestCase = testCase;
                 return StandardOutputTestResultParser.CreateFailedTestResult(
-                    testCase, 
-                    TimeSpan.FromMilliseconds(0), 
-                    StandardOutputTestResultParser.CrashText, 
+                    testCase,
+                    TimeSpan.FromMilliseconds(0),
+                    StandardOutputTestResultParser.CrashText,
                     "");
             }
 
@@ -96,8 +124,8 @@ namespace GoogleTestAdapter.TestResults
 
             string errorMsg = "";
             while (
-                !(StandardOutputTestResultParser.IsFailedLine(line) 
-                    || StandardOutputTestResultParser.IsPassedLine(line)) 
+                !(StandardOutputTestResultParser.IsFailedLine(line)
+                    || StandardOutputTestResultParser.IsPassedLine(line))
                 && currentLineIndex <= _consoleOutput.Count)
             {
                 errorMsg += line + "\n";
@@ -109,15 +137,15 @@ namespace GoogleTestAdapter.TestResults
                 ErrorMessageParser parser = new ErrorMessageParser(errorMsg, _baseDir);
                 parser.Parse();
                 return StandardOutputTestResultParser.CreateFailedTestResult(
-                    testCase, 
-                    StandardOutputTestResultParser.ParseDuration(line, _logger), 
-                    parser.ErrorMessage, 
+                    testCase,
+                    StandardOutputTestResultParser.ParseDuration(line, _logger),
+                    parser.ErrorMessage,
                     parser.ErrorStackTrace);
             }
             if (StandardOutputTestResultParser.IsPassedLine(line))
             {
                 return StandardOutputTestResultParser.CreatePassedTestResult(
-                    testCase, 
+                    testCase,
                     StandardOutputTestResultParser.ParseDuration(line, _logger));
             }
 
@@ -125,9 +153,9 @@ namespace GoogleTestAdapter.TestResults
             string message = StandardOutputTestResultParser.CrashText;
             message += errorMsg == "" ? "" : $"\nTest output:\n\n{errorMsg}";
             TestResult result = StandardOutputTestResultParser.CreateFailedTestResult(
-                testCase, 
-                TimeSpan.FromMilliseconds(0), 
-                message, 
+                testCase,
+                TimeSpan.FromMilliseconds(0),
+                message,
                 "");
             return result;
         }

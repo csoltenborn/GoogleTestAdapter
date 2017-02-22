@@ -9,8 +9,8 @@ namespace GoogleTestAdapter.TestResults
     public class StandardOutputTestResultParser
     {
         private const string Run = "[ RUN      ]";
-        private const string Failed = "[  FAILED  ]";
-        private const string Passed = "[       OK ]";
+        public const string Failed = "[  FAILED  ]";
+        public const string Passed = "[       OK ]";
 
         public const string CrashText = "!! This test has probably CRASHED !!";
 
