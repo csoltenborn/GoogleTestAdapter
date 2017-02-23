@@ -38,9 +38,7 @@ namespace GoogleTestAdapter.Runners
             SettingsWrapper settings)
         {
             if (userParameters == null)
-            {
                 throw new ArgumentNullException(nameof(userParameters));
-            }
 
             _lengthOfExecutableString = lengthOfExecutableString;
             _allTestCases = allTestCases;
@@ -74,10 +72,10 @@ namespace GoogleTestAdapter.Runners
                 return commandLines;
             }
 
+            string baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption;
+
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
-            string suitesFilter = GoogleTestConstants.FilterOption
-                + GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
-            string baseCommandLineWithFilter = baseCommandLine + suitesFilter;
+            baseCommandLineWithFilter += GetFilterForSuitesRunningAllTests(suitesRunningAllTests);
 
             List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
             List<TestCase> testCasesRunBySuite = _testCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
