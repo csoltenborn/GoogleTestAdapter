@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             if (string.IsNullOrEmpty(markDown))
                 return "";
 
-            string html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 Final//EN><html><body>";
+            string html = "<!DOCTYPE html><html><body>";
             html += CommonMarkConverter.Convert(CreateMarkdown());
             html += "</body></html>";
 
