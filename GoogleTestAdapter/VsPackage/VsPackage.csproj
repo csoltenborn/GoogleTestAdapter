@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <!-- We need to install the correct version for Microsoft.VSSDK.BuildTools according to
+       the Visual Studio version. We cannot include it directly via nuget package.config
+	   as this does not support multiple side-by-side versions of the same package. We
+	   cannot include the custom build step in this project as it would be too late.
+	   So we do it in the "Common" project. -->
   <PropertyGroup>
     <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.3.25420</VsSdkBuildToolsVersion>
     <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0.26201</VsSdkBuildToolsVersion>
