@@ -102,7 +102,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &gt;= 15">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">Debug</GenerateDebugInformation>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
@@ -116,7 +117,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &gt;= 15">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">Debug</GenerateDebugInformation>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
@@ -132,7 +134,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &gt;= 15">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">Debug</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -150,7 +153,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &gt;= 15">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">Debug</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
