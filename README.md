@@ -167,10 +167,23 @@ A convenient way to get your debugger attached is to use Microsoft's [Child Proc
 
 #### Contributions
 
-Pull requests are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
+Pull requests (against the `develop` branch) are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
+
+##### Branching strategy
+The GTA project follows a simple branching strategy:
+* Releases are created from `master`
+* Development is done on `develop`
+* Bugfixes are done on `master` and merged into `develop`
+* Feature branches are based on `develop` (and only merged into that branch)
+  * Naming scheme: `#{issue number}_{feature name/description}`
+  * Finite lifetime (in contrast to `master`and `develop`)
+  * For local branches, rebasing is preferred (but not required)
+  * Branches are merged without squashing
+* Acceptance testing happens on `develop`
+* Releases are created by merging `develop` into `master`
 
 
-### External Links
+### External links
 
 [Basic tutorial for using Google Test with GTA in Visual Studio](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/)
 
@@ -190,4 +203,5 @@ Pull requests are welcome and will be reviewed carefully. Please make sure to in
   * thanks for providing free services and great support for open source projects!
 * [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
+* [CommonMark.NET](https://github.com/Knagis/CommonMark.NET) - open source Markdown to HTML converter
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
