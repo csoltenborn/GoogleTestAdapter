@@ -5,8 +5,9 @@
 	   multiple side-by-side versions of the same package. We cannot include this custom
 	   build step in VsPackage as it would be too late. So we do it here -->
   <PropertyGroup>
-    <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.3.25420</VsSdkBuildToolsVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0.26201</VsSdkBuildToolsVersion>
+    <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.3.25420</VsSdkBuildToolsVersion>
   </PropertyGroup>
   <Target Name="GetVsSdkBuildTools" Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)')">
     <Exec Command="..\packages\NuGet.CommandLine.3.5.0\tools\NuGet.exe install Microsoft.VSSDK.BuildTools -Version $(VsSdkBuildToolsVersion) -OutputDirectory ..\packages" />
