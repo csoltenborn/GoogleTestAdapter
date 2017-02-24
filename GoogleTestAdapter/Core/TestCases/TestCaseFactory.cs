@@ -157,8 +157,10 @@ namespace GoogleTestAdapter.TestCases
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor)
         {
-            return new TestCase(
+            var testCase = new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
+            testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, new List<Trait>()));
+            return testCase;
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, List<TestCaseLocation> testCaseLocations)
@@ -170,13 +172,48 @@ namespace GoogleTestAdapter.TestCases
             {
                 var testCase = new TestCase(
                     descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, location.Sourcefile, (int)location.Line);
-                testCase.Traits.AddRange(location.Traits);
+                testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, location.Traits));
                 return testCase;
             }
 
             _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
             return new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
+        }
+
+        private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)
+        {
+            var afterTraits =
+                _settings.TraitsRegexesAfter
+                    .Where(p => Regex.IsMatch(displayName, p.Regex))
+                    .Select(p => p.Trait)
+                    .ToArray();
+
+            var namesOfAfterTraits = afterTraits
+                .Select(t => t.Name)
+                .Distinct()
+                .ToArray();
+
+            var namesOfTestAndAfterTraits = namesOfAfterTraits
+                .Union(traits.Select(t => t.Name))
+                .Distinct()
+                .ToArray();
+
+            var beforeTraits = _settings.TraitsRegexesBefore
+                .Where(p =>
+                    !namesOfTestAndAfterTraits.Contains(p.Trait.Name)
+                    && Regex.IsMatch(displayName, p.Regex))
+                .Select(p => p.Trait);
+
+            var testTraits = traits
+                .Where(t => !namesOfAfterTraits.Contains(t.Name));
+
+            var finalTraits = new List<Trait>();
+            finalTraits.AddRange(beforeTraits);
+            finalTraits.AddRange(testTraits);
+            finalTraits.AddRange(afterTraits);
+
+            return finalTraits;
         }
 
     }

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FluentAssertions;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -168,6 +172,147 @@ namespace GoogleTestAdapter
             Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };
             AssertFindsTestWithTraits("Traits.WithEqualTraits", traits);
         }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptions_FindsTestWithTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape(testname), "Author", "Foo").Yield().ToList());
+
+            Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptionsThreeEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Foo"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Bar"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Baz")
+                });
+
+            Trait[] traits = { new Trait("Author", "JOG"), new Trait("Author", "CSO") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexAfterFromOptionsOneEqualTrait_FindsTestTestWithOneEqualTrait()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Foo")
+                });
+
+            Trait[] traits = { new Trait("Author", "Foo") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexAfterFromOptionsTwoEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Foo"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author", "Bar")
+                });
+
+            Trait[] traits = { new Trait("Author", "Foo"), new Trait("Author", "Bar") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits()
+        {
+            string testname = "Traits.WithEqualTraits";
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(
+                new List<RegexTraitPair>
+                {
+                    new RegexTraitPair(Regex.Escape(testname), "Author2", "Foo"),
+                    new RegexTraitPair(Regex.Escape(testname), "Author2", "Bar")
+                });
+
+            Trait[] traits = {
+                new Trait("Author", "JOG"),
+                new Trait("Author", "CSO") ,
+                new Trait("Author2", "Foo"),
+                new Trait("Author2", "Bar") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptions_AddsTraitIfNotAlreadyExisting()
+        {
+            string testname = "InstantiationName/ParameterizedTests.Simple/0 [(1,)]";
+            Trait[] traits = { };
+            AssertFindsTestWithTraits(testname, traits);
+
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape(testname), "Type", "SomeNewType").Yield().ToList());
+
+            traits = new[] { new Trait("Type", "SomeNewType") };
+            AssertFindsTestWithTraits(testname, traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexBeforeFromOptions_TraitFromOptionsIsOverridenByTraitFromTest()
+        {
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
+
+            Trait[] traits = { new Trait("Type", "Medium") };
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_BothRegexesFromOptions_BeforeTraitIsOverridenByAfterTrait()
+        {
+            MockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "BeforeType").Yield().ToList());
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "AfterType").Yield().ToList());
+
+            Trait[] traits = { new Trait("Type", "AfterType") };
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexAfterFromOptions_AfterTraitOverridesTraitFromTest()
+        {
+            Trait[] traits = { new Trait("Type", "Medium") };
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPassesWithTraits"), "Type", "SomeNewType").Yield().ToList());
+
+            traits = new[] { new Trait("Type", "SomeNewType") };
+            AssertFindsTestWithTraits("TestMath.AddPassesWithTraits", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexAfterFromOptions_AddsTraitIfNotAlreadyExisting()
+        {
+            Trait[] traits = { };
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
+
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "SomeNewType").Yield().ToList());
+
+            traits = new[] { new Trait("Type", "SomeNewType") };
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
+        }
+
 
         private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
         {

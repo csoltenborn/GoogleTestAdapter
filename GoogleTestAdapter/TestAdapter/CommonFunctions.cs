@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -40,6 +41,8 @@ namespace GoogleTestAdapter.TestAdapter
             var settingsWrapper = new SettingsWrapper(ourRunSettings);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
+            var regexParser = new RegexTraitParser(loggerAdapter);
+            settingsWrapper.RegexTraitParser = regexParser;
 
             settings = settingsWrapper;
             logger = loggerAdapter;

@@ -87,6 +87,7 @@
     <Compile Include="GoogleTestExecutorTests.cs" />
     <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="Helpers\ProcessExecutorTests.cs" />
+    <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\UtilsTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />

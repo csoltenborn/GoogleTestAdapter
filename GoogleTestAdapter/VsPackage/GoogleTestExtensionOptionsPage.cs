@@ -161,6 +161,8 @@ namespace GoogleTestAdapter.VsPackage
                 TestDiscoveryRegex = _generalOptions.TestDiscoveryRegex,
                 WorkingDir = _generalOptions.WorkingDir,
                 PathExtension = _generalOptions.PathExtension,
+                TraitsRegexesBefore = _generalOptions.TraitsRegexesBefore,
+                TraitsRegexesAfter = _generalOptions.TraitsRegexesAfter,
                 TestNameSeparator = _generalOptions.TestNameSeparator,
                 ParseSymbolInformation = _generalOptions.ParseSymbolInformation,
                 DebugMode = _generalOptions.DebugMode,

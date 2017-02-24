@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Settings
@@ -29,6 +30,7 @@ namespace GoogleTestAdapter.Settings
     {
         private static readonly string[] NotPrintedProperties =
         {
+            nameof(RegexTraitParser),
             nameof(VisualStudioProcessId)
         };
 
@@ -41,6 +43,7 @@ namespace GoogleTestAdapter.Settings
         public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
 
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
+        public RegexTraitParser RegexTraitParser { private get; set; }
 
         private IGoogleTestAdapterSettings _currentSettings;
 
@@ -52,7 +55,7 @@ namespace GoogleTestAdapter.Settings
 
         public virtual SettingsWrapper Clone()
         {
-            return new SettingsWrapper(_settingsContainer);
+            return new SettingsWrapper(_settingsContainer) { RegexTraitParser = RegexTraitParser };
         }
 
         // needed for mocking
@@ -139,6 +142,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionsCategoryName = "Google Test Adapter";
 
         public const string CategoryTestExecutionName = "Test execution";
+        public const string CategoryTraitsName = "Regexes for trait assignment";
         public const string CategoryRuntimeBehaviorName = "Runtime behavior";
         public const string CategoryParallelizationName = "Parallelization";
         public const string CategoryMiscName = "Misc";
@@ -216,6 +220,47 @@ namespace GoogleTestAdapter.Settings
             + DescriptionOfExecutableDirPlaceHolder;
 
         public virtual string PathExtension => _currentSettings.PathExtension ?? OptionPathExtensionDefaultValue;
+
+
+        public const string TraitsRegexesPairSeparator = "//||//";
+        public const string TraitsRegexesRegexSeparator = "///";
+        public const string TraitsRegexesTraitSeparator = ",";
+        public const string OptionTraitsRegexesDefaultValue = "";
+        public const string OptionTraitsDescription = "Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the 'Traits before' option. 2nd, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the 'Traits after' option is evaluated, again in an overriding manner.\nSyntax: "
+                                                 + TraitsRegexesRegexSeparator +
+                                                 " separates the regex from the traits, the trait's name and value are separated by "
+                                                 + TraitsRegexesTraitSeparator +
+                                                 " and each pair of regex and trait is separated by "
+                                                 + TraitsRegexesPairSeparator + ".\nExample: " +
+                                                 @"MySuite\.*"
+                                                 + TraitsRegexesRegexSeparator + "Type"
+                                                 + TraitsRegexesTraitSeparator + "Small"
+                                                 + TraitsRegexesPairSeparator +
+                                                 @"MySuite2\.*|MySuite3\.*"
+                                                 + TraitsRegexesRegexSeparator + "Type"
+                                                 + TraitsRegexesTraitSeparator + "Medium";
+
+        public const string OptionTraitsRegexesBefore = "Before test discovery";
+
+        public virtual List<RegexTraitPair> TraitsRegexesBefore
+        {
+            get
+            {
+                string option = _currentSettings.TraitsRegexesBefore ?? OptionTraitsRegexesDefaultValue;
+                return RegexTraitParser.ParseTraitsRegexesString(option);
+            }
+        }
+
+        public const string OptionTraitsRegexesAfter = "After test discovery";
+
+        public virtual List<RegexTraitPair> TraitsRegexesAfter
+        {
+            get
+            {
+                string option = _currentSettings.TraitsRegexesAfter ?? OptionTraitsRegexesDefaultValue;
+                return RegexTraitParser.ParseTraitsRegexesString(option);
+            }
+        }
 
 
         public const string OptionTestNameSeparator = "Test name separator";

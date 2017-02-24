@@ -11,6 +11,36 @@ namespace GoogleTestAdapter
         #region Method stubs for code coverage
 
         [TestMethod]
+        public override void GetTestsFromExecutable_RegexAfterFromOptions_AddsTraitIfNotAlreadyExisting()
+        {
+            base.GetTestsFromExecutable_RegexAfterFromOptions_AddsTraitIfNotAlreadyExisting();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_BothRegexesFromOptions_BeforeTraitIsOverridenByAfterTrait()
+        {
+            base.GetTestsFromExecutable_BothRegexesFromOptions_BeforeTraitIsOverridenByAfterTrait();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexAfterFromOptions_AfterTraitOverridesTraitFromTest()
+        {
+            base.GetTestsFromExecutable_RegexAfterFromOptions_AfterTraitOverridesTraitFromTest();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptions_AddsTraitIfNotAlreadyExisting()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptions_AddsTraitIfNotAlreadyExisting();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptions_TraitFromOptionsIsOverridenByTraitFromTest()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptions_TraitFromOptionsIsOverridenByTraitFromTest();
+        }
+
+        [TestMethod]
         public override void GetTestsFromExecutable_SampleTests_FindsFixtureTestWithOneTrait()
         {
             base.GetTestsFromExecutable_SampleTests_FindsFixtureTestWithOneTrait();
@@ -92,6 +122,36 @@ namespace GoogleTestAdapter
         public override void GetTestsFromExecutable_SampleTests_FindsTestWithTwoEqualTraits()
         {
             base.GetTestsFromExecutable_SampleTests_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptions_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptions_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptionsThreeEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptionsThreeEqualTraits_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexAfterFromOptionsOneEqualTrait_FindsTestTestWithOneEqualTrait()
+        {
+            base.GetTestsFromExecutable_RegexAfterFromOptionsOneEqualTrait_FindsTestTestWithOneEqualTrait();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexAfterFromOptionsTwoEqualTraits_FindsTestWithTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexAfterFromOptionsTwoEqualTraits_FindsTestWithTwoEqualTraits();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits()
+        {
+            base.GetTestsFromExecutable_RegexBeforeFromOptionsTwoEqualTraits_FindsTestWithTwoAndTwoEqualTraits();
         }
 
         [TestMethod]

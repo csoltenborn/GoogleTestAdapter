@@ -21,6 +21,8 @@
         <TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
         <WorkingDir>${SolutionDir}</WorkingDir>
         <PathExtension>C:\fooDir;C:\barDir</PathExtension>
+        <TraitsRegexesAfter />
+        <TraitsRegexesBefore />
         <TestNameSeparator />
         <ParseSymbolInformation>true</ParseSymbolInformation>
         <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>

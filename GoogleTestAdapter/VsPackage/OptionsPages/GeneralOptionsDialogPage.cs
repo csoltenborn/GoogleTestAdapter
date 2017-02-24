@@ -82,6 +82,30 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #endregion
 
+        #region Traits
+
+        [Category(SettingsWrapper.CategoryTraitsName)]
+        [DisplayName(SettingsWrapper.OptionTraitsRegexesBefore)]
+        [Description(SettingsWrapper.OptionTraitsDescription)]
+        public string TraitsRegexesBefore
+        {
+            get { return _traitsRegexesBefore; }
+            set { SetAndNotify(ref _traitsRegexesBefore, value); }
+        }
+        private string _traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTraitsName)]
+        [DisplayName(SettingsWrapper.OptionTraitsRegexesAfter)]
+        [Description(SettingsWrapper.OptionTraitsDescription)]
+        public string TraitsRegexesAfter
+        {
+            get { return _traitsRegexesAfter; }
+            set { SetAndNotify(ref _traitsRegexesAfter, value); }
+        }
+        private string _traitsRegexesAfter = SettingsWrapper.OptionTraitsRegexesDefaultValue;
+
+        #endregion
+
         #region Misc
 
         [Category(SettingsWrapper.CategoryMiscName)]

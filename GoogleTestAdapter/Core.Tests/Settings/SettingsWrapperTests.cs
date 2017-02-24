@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -25,7 +27,10 @@ namespace GoogleTestAdapter.Settings
             var containerMock = new Mock<IGoogleTestAdapterSettingsContainer>();
             containerMock.Setup(c => c.SolutionSettings).Returns(MockXmlOptions.Object);
             containerMock.Setup(c => c.GetSettingsForExecutable(It.IsAny<string>())).Returns(MockXmlOptions.Object);
-            TheOptions = new SettingsWrapper(containerMock.Object);
+            TheOptions = new SettingsWrapper(containerMock.Object)
+            {
+                RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger)
+            };
         }
 
         [TestCleanup]
@@ -288,8 +293,43 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void TraitsRegexesBefore__ReturnsParsedValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.TraitsRegexesBefore).Returns((string)null);
+            List<RegexTraitPair> result = TheOptions.TraitsRegexesBefore;
+            result.Should().Equal(new List<RegexTraitPair>());
+
+            MockXmlOptions.Setup(o => o.TraitsRegexesBefore).Returns("Foo///Bar,Baz");
+            result = TheOptions.TraitsRegexesBefore;
+            result.Count.Should().Be(1);
+            RegexTraitPair resultPair = result[0];
+            resultPair.Regex.Should().Be("Foo");
+            resultPair.Trait.Name.Should().Be("Bar");
+            resultPair.Trait.Value.Should().Be("Baz");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void TraitsRegexesAfter__ReturnsParsedValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.TraitsRegexesAfter).Returns((string)null);
+            List<RegexTraitPair> result = TheOptions.TraitsRegexesAfter;
+            result.Should().Equal(new List<RegexTraitPair>());
+
+            MockXmlOptions.Setup(o => o.TraitsRegexesAfter).Returns("Foo///Bar,Baz");
+            result = TheOptions.TraitsRegexesAfter;
+            result.Count.Should().Be(1);
+            RegexTraitPair resultPair = result[0];
+            resultPair.Regex.Should().Be("Foo");
+            resultPair.Trait.Name.Should().Be("Bar");
+            resultPair.Trait.Value.Should().Be("Baz");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void ToString_PrintsCorrectly()
         {
+            MockXmlOptions.Setup(s => s.TraitsRegexesBefore).Returns("Foo///Bar,Baz//||//Foo2///Bar2,Baz2");
             MockXmlOptions.Setup(s => s.BatchForTestSetup).Returns(@"C:\\myfolder\myfile.xml");
             MockXmlOptions.Setup(s => s.MaxNrOfThreads).Returns(1);
 
@@ -299,6 +339,8 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("TestDiscoveryRegex: ''");
             optionsString.Should().Contain("WorkingDir: '$(ExecutableDir)'");
             optionsString.Should().Contain("PathExtension: ''");
+            optionsString.Should().Contain("TraitsRegexesBefore: {'Foo': (Bar,Baz), 'Foo2': (Bar2,Baz2)}");
+            optionsString.Should().Contain("TraitsRegexesAfter: {}");
             optionsString.Should().Contain("TestNameSeparator: ''");
             optionsString.Should().Contain("ParseSymbolInformation: True");
             optionsString.Should().Contain("DebugMode: False");
