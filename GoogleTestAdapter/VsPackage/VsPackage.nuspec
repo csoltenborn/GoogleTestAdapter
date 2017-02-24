@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.8">
     <id>GoogleTestAdapter</id>
-    <version>0.9.0</version>
+    <version>0.9.1</version>
     <title>Google Test Adapter</title>
     <authors>Christian Soltenborn, Jonas Gefele</authors>
     <owners>Christian Soltenborn, Jonas Gefele</owners>
