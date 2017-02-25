@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed" />
   </Results>
   <TestDefinitions>
     <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">

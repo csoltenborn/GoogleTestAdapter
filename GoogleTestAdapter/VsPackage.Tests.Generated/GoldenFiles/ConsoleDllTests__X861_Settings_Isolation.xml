@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="FooTest.DoesXyz" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="FooTest.DoesXyz" outcome="Passed" />
     <UnitTestResult testName="FooTest.MethodBarDoesAbc" outcome="Failed">
       <Output>
         <ErrorInfo>
