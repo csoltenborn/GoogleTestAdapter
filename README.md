@@ -191,8 +191,26 @@ The GTA project follows a simple branching strategy:
 ### Credits
 
 #### People
-* Markus Lindqvist, author of Google Test Runner (see below)
-* Matthew Manela, author of Chutzpah Test Adapter
+
+* [Christian Soltenborn](https://github.com/csoltenborn), main author
+* [Jonas Gefele](https://github.com/jgefele), regular contributor
+* [Markus Lindqvist](https://github.com/markusl), author of Google Test Runner (see below)
+* [Matthew Manela](https://github.com/mmanela), author of Chutzpah Test Adapter
+* [Alfred5020](https://github.com/Alfred5020), testing in [#15](https://github.com/csoltenborn/GoogleTestAdapter/issues/15)
+* [Dominik Grabiec](https://github.com/DominikGrabiec), testing in [#15](https://github.com/csoltenborn/GoogleTestAdapter/issues/15) and report and fix in [#18](https://github.com/csoltenborn/GoogleTestAdapter/issues/18))
+* [Dima Sirotnikov](https://github.com/sirotnikov), report and fix in [#25](https://github.com/csoltenborn/GoogleTestAdapter/issues/25)
+* [Eistroll](https://github.com/Eistroll), report and testing in [#27](https://github.com/csoltenborn/GoogleTestAdapter/issues/27) and [#30](https://github.com/csoltenborn/GoogleTestAdapter/issues/30)
+* [loki980](https://github.com/loki980), report and testing in [#28](https://github.com/csoltenborn/GoogleTestAdapter/issues/28))
+* [Achim Stremplat](https://github.com/RaymondKHessel), report and fix in [#29](https://github.com/csoltenborn/GoogleTestAdapter/issues/29)
+* [bbusacker](https://github.com/bbusacker), report and fix in [#36](https://github.com/csoltenborn/GoogleTestAdapter/issues/36)
+* [Péter Budai](https://github.com/peterbudai), report and fix in [#40](https://github.com/csoltenborn/GoogleTestAdapter/issues/40) and [#41](https://github.com/csoltenborn/GoogleTestAdapter/issues/41)
+* [kornman00](https://github.com/kornman00), report and testing in [#42](https://github.com/csoltenborn/GoogleTestAdapter/issues/42)
+* [Stefan Winkler](https://github.com/nafest), report and fix in [#45](https://github.com/csoltenborn/GoogleTestAdapter/issues/45)
+* [Jesse Olmer](https://github.com/JesseOlmer), report and example solution in [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)
+* [cyrilbesse](https://github.com/cyrilbesse), report and fix in [#54](https://github.com/csoltenborn/GoogleTestAdapter/issues/54), report and testing in [#66](https://github.com/csoltenborn/GoogleTestAdapter/issues/66)
+* [Sergey Gomon](https://github.com/gomons), report and example solution in [#63](https://github.com/csoltenborn/GoogleTestAdapter/issues/63)
+* [Florin T.](https://github.com/ftrofin), report and example code in [#89](https://github.com/csoltenborn/GoogleTestAdapter/issues/89)
+* [JackGrinningCat](https://github.com/JackGrinningCat), report and fix in [#96](https://github.com/csoltenborn/GoogleTestAdapter/issues/96)
 
 #### Tools
 * [Google Test Runner](https://github.com/markusl/GoogleTestRunner) - the starting point for GTA. We have ported the Google Test Runner extension from F# to C# and implemented various enhancements and refactorings.
