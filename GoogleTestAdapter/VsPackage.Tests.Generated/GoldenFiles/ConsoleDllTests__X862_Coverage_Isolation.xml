@@ -1,12 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="BarTest.DoesXyz" outcome="Passed">
-      <Output />
-    </UnitTestResult>
-    <UnitTestResult testName="BarTest.MethodBarDoesAbc" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="BarTest.DoesXyz" outcome="Passed" />
+    <UnitTestResult testName="BarTest.MethodBarDoesAbc" outcome="Passed" />
   </Results>
   <TestDefinitions>
     <UnitTest name="BarTest.DoesXyz" storage="..\..\..\tests.common\bin\${ConfigurationName}\resources\testdata\_x86\externallylinkedgoogletests\externallylinkedgoogletests.exe">

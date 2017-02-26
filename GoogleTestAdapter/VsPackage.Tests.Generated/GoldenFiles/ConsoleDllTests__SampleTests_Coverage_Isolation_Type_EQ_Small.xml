@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed" />
     <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -24,9 +22,7 @@ Expected: 1</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed" />
     <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -75,15 +71,9 @@ at #2 - parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterize
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="TheFixture.AddPassesWithTraits" outcome="Passed">
-      <Output />
-    </UnitTestResult>
-    <UnitTestResult testName="TheFixture.AddPassesWithTraits2" outcome="Passed">
-      <Output />
-    </UnitTestResult>
-    <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits2" outcome="Passed" />
+    <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed" />
   </Results>
   <TestDefinitions>
     <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">

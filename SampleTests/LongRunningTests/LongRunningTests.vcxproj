@@ -93,7 +93,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\3rdparty\gtest-1.7.0\fused-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &gt;= 15">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">Debug</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -105,7 +106,8 @@
       <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &gt;= 15">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">Debug</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
