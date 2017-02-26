@@ -33,43 +33,9 @@ namespace GoogleTestAdapter.TestCases
         public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
         {
             List<string> standardOutput = new List<string>();
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                return NewCreateTestcases(reportTestCase, standardOutput);
-            }
-
-            try
-            {
-                var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                int processExitCode;
-                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(),
-                    false, false, out processExitCode);
-
-                if (!CheckProcessExitCode(processExitCode, standardOutput))
-                    return new List<TestCase>();
-            }
-            catch (Exception e)
-            {
-                SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption.Trim(), e);
-                return new List<TestCase>();
-            }
-
-            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            if (_settings.ParseSymbolInformation)
-            {
-                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
-                return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
-            }
-
-            return testCaseDescriptors.Select(CreateTestCase).ToList();
-        }
-
-        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase, List<string> standardOutput)
-        {
             var testCases = new List<TestCase>();
 
-            var resolver = new NewTestCaseResolver(
+            var resolver = new TestCaseResolver(
                 _executable,
                 _settings.GetPathExtension(_executable),
                 _diaResolverFactory,
@@ -103,7 +69,7 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
-                var executor = new ProcessExecutor(null, _logger);
+                var executor = new ProcessExecutor(_logger);
                 int processExitCode = executor.ExecuteCommandBlocking(
                     _executable,
                     GoogleTestConstants.ListTestsOption.Trim(),
@@ -140,19 +106,6 @@ namespace GoogleTestAdapter.TestCases
                 return false;
             }
             return true;
-        }
-
-        private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
-        {
-            var testMethodSignatures = new List<string>();
-            foreach (TestCaseDescriptor descriptor in testCaseDescriptors)
-            {
-                testMethodSignatures.AddRange(_signatureCreator.GetTestMethodSignatures(descriptor));
-            }
-
-            string filterString = "*" + GoogleTestConstants.TestBodySignature;
-            var resolver = new TestCaseResolver(_diaResolverFactory, _logger);
-            return resolver.ResolveAllTestCases(_executable, testMethodSignatures, filterString, pathExtension);
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor)

@@ -18,24 +18,26 @@ namespace GoogleTestAdapter.Runners
         private bool _canceled;
 
         private readonly string _threadName;
-        private readonly ITestFrameworkReporter _frameworkReporter;
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
+        private readonly ProcessExecutor _processExecutor;
+        private readonly ITestFrameworkReporter _frameworkReporter;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
 
-        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, IDebuggerAttacher debuggerAttacher)
         {
             _threadName = threadName;
             _frameworkReporter = reporter;
             _logger = logger;
             _settings = settings;
             _schedulingAnalyzer = schedulingAnalyzer;
+            _processExecutor = new ProcessExecutor(debuggerAttacher, logger);
         }
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+            string workingDir, string userParameters)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
             DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
@@ -58,10 +60,7 @@ namespace GoogleTestAdapter.Runners
                         allTestCasesAsArray.Where(tc => tc.Source == executable),
                         groupedTestCases[executable],
                         baseDir,
-                        finalParameters,
-                        isBeingDebugged,
-                        debuggedLauncher,
-                        executor);
+                        finalParameters);
                 }, _logger);
 
             }
@@ -72,16 +71,13 @@ namespace GoogleTestAdapter.Runners
             _canceled = true;
             if (_settings.KillProcessesOnCancel)
             {
-                _processLauncher?.Cancel();
                 _processExecutor?.Cancel();
             }
         }
 
 
-        // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable, string workingDir,
-            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string userParameters,
-            bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string userParameters)
         {
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
@@ -93,8 +89,8 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-                var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, baseDir, _frameworkReporter);
-                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
+                var streamingParser = new StreamingTestOutputParser(arguments.TestCases, _logger, baseDir, _frameworkReporter);
+                var results = RunTests(executable, workingDir, baseDir, arguments, resultXmlFile, streamingParser).ToArray();
 
                 try
                 {
@@ -120,12 +116,12 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
-            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
+        private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir,
+            CommandLineGenerator.Args arguments, string resultXmlFile, StreamingTestOutputParser streamingParser)
         {
             try
             {
-                return TryRunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
+                return TryRunTests(executable, workingDir, baseDir, arguments, resultXmlFile, streamingParser);
             }
             catch (Exception e)
             {
@@ -144,35 +140,19 @@ namespace GoogleTestAdapter.Runners
                 $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
         }
 
-        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
-            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
-            StreamingStandardOutputTestResultParser streamingParser)
+        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, string baseDir,
+            CommandLineGenerator.Args arguments, string resultXmlFile, 
+            StreamingTestOutputParser streamingParser)
         {
-            List<string> consoleOutput;
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                DebugUtils.AssertIsNotNull(executor, nameof(executor));
-                consoleOutput = RunTestExecutableWithNewFramework(executable, workingDir, arguments, executor, streamingParser);
-            }
-            else
-            {
-                _processLauncher = new TestProcessLauncher(_logger, _settings, isBeingDebugged);
-                consoleOutput =
-                    _processLauncher.GetOutputOfCommand(workingDir, executable, arguments.CommandLine,
-                            _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
-                            debuggedLauncher);
-            }
+            RunTestExecutable(executable, workingDir, arguments, streamingParser);
 
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
-            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, streamingParser.CrashedTestCase);
+            return CollectTestResults(remainingTestCases, resultXmlFile, baseDir, streamingParser.CrashedTestCase);
         }
 
-        private TestProcessLauncher _processLauncher;
-        private IProcessExecutor _processExecutor;
-
-        private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, IProcessExecutor executor,
-            StreamingStandardOutputTestResultParser streamingParser)
+        private void RunTestExecutable(string executable, string workingDir, CommandLineGenerator.Args arguments,
+            StreamingTestOutputParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);
             bool printTestOutput = _settings.PrintTestOutput &&
@@ -180,7 +160,7 @@ namespace GoogleTestAdapter.Runners
 
             if (printTestOutput)
                 _logger.LogInfo(
-                    $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
+                    $"{_threadName}>>>>>>>>>>>>>>> Output of command '{executable} {arguments.CommandLine}'");
 
             Action<string> reportOutputAction = line =>
             {
@@ -198,7 +178,6 @@ namespace GoogleTestAdapter.Runners
                     Cancel();
                 }
             };
-            _processExecutor = executor;
             _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 reportOutputAction);
@@ -207,7 +186,6 @@ namespace GoogleTestAdapter.Runners
             if (printTestOutput)
                 _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
 
-            var consoleOutput = new List<string>();
             new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);
             _logger.DebugInfo(
                 $"{_threadName}Reported {streamingParser.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
@@ -216,15 +194,13 @@ namespace GoogleTestAdapter.Runners
                 if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
                     _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
             }
-            return consoleOutput;
         }
 
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir, TestCase crashedTestCase)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, string baseDir, TestCase crashedTestCase)
         {
             var testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _logger, baseDir);
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
@@ -243,29 +219,13 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                List<TestResult> consoleResults = consoleParser.GetTestResults();
-                int nrOfCollectedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
-                {
-                    testResults.Add(testResult);
-                    nrOfCollectedTestResults++;
-                }
-                if (nrOfCollectedTestResults > 0)
-                    _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from console output");
-            }
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
                 string errorMessage, errorStackTrace = null;
-                if (consoleParser.CrashedTestCase == null && crashedTestCase == null)
+                if (crashedTestCase == null)
                 {
                     errorMessage = "";
                 }
                 else
                 {
-                    if (crashedTestCase == null)
-                        crashedTestCase = consoleParser.CrashedTestCase;
                     errorMessage = $"reason is probably a crash of test {crashedTestCase.DisplayName}";
                     errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
                         crashedTestCase.CodeFilePath, crashedTestCase.LineNumber.ToString());

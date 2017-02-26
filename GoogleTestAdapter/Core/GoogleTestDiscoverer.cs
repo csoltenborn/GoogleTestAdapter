@@ -30,35 +30,21 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            if (_settings.UseNewTestExecutionFramework)
+            foreach (string executable in googleTestExecutables)
             {
-                foreach (string executable in googleTestExecutables)
+                _settings.ExecuteWithSettingsForExecutable(executable, () =>
                 {
-                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
+                    int nrOfTestCases = 0;
+                    Action<TestCase> reportTestCases = tc =>
                     {
-                        int nrOfTestCases = 0;
-                        Action<TestCase> reportTestCases = tc =>
-                        {
-                            reporter.ReportTestsFound(tc.Yield());
-                            _logger.DebugInfo("Added testcase " + tc.DisplayName);
-                            nrOfTestCases++;
-                        };
-                        var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
-                        factory.CreateTestCases(reportTestCases);
-                        _logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-                    }, _logger);
-                }
-            }
-            else
-            {
-                foreach (string executable in googleTestExecutables)
-                {
-                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                    {
-                        IList<TestCase> testCases = GetTestsFromExecutable(executable);
-                        reporter.ReportTestsFound(testCases);
-                    }, _logger);
-                }
+                        reporter.ReportTestsFound(tc.Yield());
+                        _logger.DebugInfo("Added testcase " + tc.DisplayName);
+                        nrOfTestCases++;
+                    };
+                    var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
+                    factory.CreateTestCases(reportTestCases);
+                    _logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                }, _logger);
             }
         }
 

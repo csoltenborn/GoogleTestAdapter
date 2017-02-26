@@ -151,7 +151,7 @@ namespace GoogleTestAdapter.TestResults
         private TimeSpan ParseDuration(string durationInSeconds)
         {
             return
-                StandardOutputTestResultParser
+                StreamingTestOutputParser
                     .NormalizeDuration(TimeSpan.FromSeconds(double.Parse(durationInSeconds, NumberFormatInfo)));
         }
 

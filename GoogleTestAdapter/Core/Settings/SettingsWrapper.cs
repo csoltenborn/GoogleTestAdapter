@@ -179,14 +179,6 @@ namespace GoogleTestAdapter.Settings
         public virtual int VisualStudioProcessId => _currentSettings.VisualStudioProcessId ?? OptionVisualStudioProcessIdDefaultValue;
 
 
-        public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
-        public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.";
-
-        public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
-
-
         public const string OptionPrintTestOutput = "Print test output";
         public const bool OptionPrintTestOutputDefaultValue = false;
         public const string OptionPrintTestOutputDescription =

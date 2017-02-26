@@ -109,16 +109,6 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         #region Misc
 
         [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionUseNewTestExecutionFramework)]
-        [Description(SettingsWrapper.OptionUseNewTestExecutionFrameworkDescription)]
-        public bool UseNewTestExecutionFramework2
-        {
-            get { return _useNewTestExecutionFramework; }
-            set { SetAndNotify(ref _useNewTestExecutionFramework, value); }
-        }
-        private bool _useNewTestExecutionFramework = SettingsWrapper.OptionUseNewTestExecutionFrameworkDefaultValue;
-
-        [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionPrintTestOutput)]
         [Description(SettingsWrapper.OptionPrintTestOutputDescription)]
         public bool PrintTestOutput

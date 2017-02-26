@@ -91,6 +91,7 @@
     <Compile Include="Fakes\FakeFrameworkReporter.cs" />
     <Compile Include="Fakes\FakeLogger.cs" />
     <Compile Include="Assertions\FileAssertions.cs" />
+    <Compile Include="Helpers\ProcessWaiter.cs" />
     <Compile Include="Helpers\RegistryKeyExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />

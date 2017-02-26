@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Tests.Common.Helpers
 {

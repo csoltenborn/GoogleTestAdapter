@@ -16,7 +16,6 @@ build/
 [Oo]bj/
 
 # MSTest test Results
-[Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
 *_i.c
@@ -159,3 +158,4 @@ $RECYCLE.BIN/
 /Keys/Key_Release.snk
 GoogleTestAdapter.VC.db
 GoogleTestAdapter.VC.VC.opendb
+/TestResults

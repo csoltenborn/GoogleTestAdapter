@@ -87,7 +87,6 @@
     <Compile Include="Settings\RunSettingsContainerTests.cs" />
     <Compile Include="TestExecutorTestsBase.cs" />
     <Compile Include="TestAdapterTestsBase.cs" />
-    <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
     <Compile Include="Framework\VsTestFrameworkReporterTests.cs" />
     <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
     <Compile Include="Helpers\ThrottleTests.cs" />

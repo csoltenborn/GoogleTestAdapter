@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Threading;
 using FluentAssertions;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Tests.Common;
@@ -43,9 +42,8 @@ namespace GoogleTestAdapter.Runners
             List<TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
 
             var stopwatch = new Stopwatch();
-            var runner = new SequentialTestRunner("", MockFrameworkReporter.Object, TestEnvironment.Logger, TestEnvironment.Options, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
-            var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", "", false, null, executor));
+            var runner = new SequentialTestRunner("", MockFrameworkReporter.Object, TestEnvironment.Logger, TestEnvironment.Options, new SchedulingAnalyzer(TestEnvironment.Logger), null);
+            var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", ""));
 
             stopwatch.Start();
             thread.Start();

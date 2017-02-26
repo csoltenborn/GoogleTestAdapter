@@ -15,12 +15,14 @@ using Microsoft.Win32.SafeHandles;
 
 namespace GoogleTestAdapter.Helpers
 {
-    public class ProcessExecutor : IProcessExecutor
+    public class ProcessExecutor
     {
         public const int ExecutionFailed = int.MaxValue;
 
         private readonly IDebuggerAttacher _debuggerAttacher;
         private readonly ILogger _logger;
+
+        private int? _processId;
 
         public ProcessExecutor(ILogger logger) : this(null, logger)
         {
@@ -47,12 +49,37 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        private int? _processId;
+        public int ExecuteBatchFileBlocking(string batchFile, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
+        {
+            return ExecuteCommandBlocking($"cmd.exe /C {batchFile}", parameters, workingDir, pathExtension, reportOutputLine);
+        }
 
         public void Cancel()
         {
             if (_processId.HasValue)
-                TestProcessLauncher.KillProcess(_processId.Value, _logger);
+                KillProcess(_processId.Value, _logger);
+        }
+
+        private static void KillProcess(int processId, ILogger logger)
+        {
+            try
+            {
+                Process process = Process.GetProcessById(processId);
+                DateTime startTime = process.StartTime;
+                try
+                {
+                    process.Kill();
+                    logger.DebugInfo($"Killed process {process} with startTime={startTime.ToShortTimeString()}");
+                }
+                catch (Exception e)
+                {
+                    logger.DebugWarning($"Could not kill process {process} with startTime={startTime.ToShortTimeString()}: {e.Message}");
+                }
+            }
+            catch (Exception)
+            {
+                // process was not running - nothing to do
+            }
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]

@@ -45,8 +45,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\IDebuggedProcessLauncher.cs" />
-    <Compile Include="Framework\IProcessExecutor.cs" />
     <Compile Include="Framework\ITestFrameworkReporter.cs" />
     <Compile Include="Framework\TestRunCanceledException.cs" />
     <Compile Include="GoogleTestConstants.cs" />
@@ -56,15 +54,12 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Framework\IDebuggerAttacher.cs" />
     <Compile Include="Helpers\ProcessExecutor.cs" />
-    <Compile Include="Helpers\ProcessLauncher.cs" />
-    <Compile Include="Helpers\TestProcessLauncher.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />
     <Compile Include="Settings\RunSettings.cs" />
     <Compile Include="Settings\SettingsSerializationContainer.cs" />
     <Compile Include="TestCases\StreamingListTestsParser.cs" />
-    <Compile Include="TestCases\ListTestsParser.cs" />
     <Compile Include="TestCases\MethodSignatureCreator.cs" />
     <Compile Include="TestCases\TestCaseDescriptor.cs" />
     <Compile Include="TestCases\TestCaseFactory.cs" />
@@ -85,11 +80,9 @@
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
     <Compile Include="Scheduling\TestDurationSerializer.cs" />
     <Compile Include="TestCases\TestCaseLocation.cs" />
-    <Compile Include="TestCases\NewTestCaseResolver.cs" />
     <Compile Include="TestCases\TestCaseResolver.cs" />
     <Compile Include="TestResults\ErrorMessageParser.cs" />
-    <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
-    <Compile Include="TestResults\StreamingStandardOutputTestResultParser.cs" />
+    <Compile Include="TestResults\StreamingTestOutputParser.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
