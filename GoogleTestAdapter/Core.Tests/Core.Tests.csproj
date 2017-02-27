@@ -92,6 +92,7 @@
     <Compile Include="Helpers\UtilsTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
+    <Compile Include="TestCases\StreamingListTestsParserTests.cs" />
     <Compile Include="TestResults\StreamingTestOutputParserTests.cs" />
     <Compile Include="TestResults\ErrorMessageParserTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
