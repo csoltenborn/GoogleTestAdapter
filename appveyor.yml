@@ -7,6 +7,9 @@ platform: Any CPU
 environment:
   RELEASE_KEY_PASSWORD:
     secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
+matrix:
+  allow_failures:
+    - os: Visual Studio 2017 RC
 install:
 - ps: >-
     if ($env:APPVEYOR_REPO_TAG -eq "true") {
