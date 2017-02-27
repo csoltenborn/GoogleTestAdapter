@@ -103,6 +103,7 @@ deploy:
   draft: true
   prerelease: true
   on:
+    os: Visual Studio 2017 RC
     branch: master
     appveyor_repo_tag: true
 - provider: NuGet
@@ -110,5 +111,6 @@ deploy:
     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
   skip_symbols: true
   on:
+    os: Visual Studio 2017 RC
     branch: master
     appveyor_repo_tag: true
