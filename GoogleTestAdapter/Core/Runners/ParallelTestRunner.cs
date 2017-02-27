@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.Runners
         private readonly IDebuggerAttacher _debuggerAttacher;
 
 
-        public ParallelTestRunner(ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, string solutionDirectory, SchedulingAnalyzer schedulingAnalyzer, IDebuggerAttacher debuggerAttacher)
+        public ParallelTestRunner(string solutionDirectory, IDebuggerAttacher debuggerAttacher, ITestFrameworkReporter reporter, SchedulingAnalyzer schedulingAnalyzer, SettingsWrapper settings, ILogger logger)
         {
             _frameworkReporter = reporter;
             _logger = logger;
@@ -38,8 +38,8 @@ namespace GoogleTestAdapter.Runners
             List<Thread> threads;
             lock (this)
             {
-                DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
-                DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
+                Utils.AssertIsNull(workingDir, nameof(workingDir));
+                Utils.AssertIsNull(userParameters, nameof(userParameters));
 
                 threads = new List<Thread>();
                 RunTests(allTestCases, testCasesToRun, baseDir, threads);
@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _logger, _settings.Clone(), _schedulingAnalyzer, _debuggerAttacher);
+                var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _debuggerAttacher, _frameworkReporter, _schedulingAnalyzer, _settings.Clone(), _logger);
                 _testRunners.Add(runner);
 
                 var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null));

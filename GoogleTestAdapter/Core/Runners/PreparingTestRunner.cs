@@ -24,28 +24,27 @@ namespace GoogleTestAdapter.Runners
         private readonly string _solutionDirectory;
 
 
-        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, IDebuggerAttacher debuggerAttacher)
+        public PreparingTestRunner(int threadId, string solutionDirectory, IDebuggerAttacher debuggerAttacher, ITestFrameworkReporter reporter, SchedulingAnalyzer schedulingAnalyzer, SettingsWrapper settings, ILogger logger)
         {
             _logger = logger;
             _settings = settings;
             string threadName = ComputeThreadName(threadId, _settings.MaxNrOfThreads);
             _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
             _threadId = Math.Max(0, threadId);
-            _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _logger, _settings, schedulingAnalyzer, debuggerAttacher);
+            _innerTestRunner = new SequentialTestRunner(_threadName, debuggerAttacher, reporter, schedulingAnalyzer, _settings, _logger);
             _solutionDirectory = solutionDirectory;
         }
 
-        public PreparingTestRunner(string solutionDirectory, ITestFrameworkReporter reporter,
-            ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, IDebuggerAttacher debuggerAttacher)
-            : this(-1, solutionDirectory, reporter, logger, settings, schedulingAnalyzer, debuggerAttacher){
+        public PreparingTestRunner(string solutionDirectory, IDebuggerAttacher debuggerAttacher, ITestFrameworkReporter reporter, SchedulingAnalyzer schedulingAnalyzer, SettingsWrapper settings, ILogger logger)
+            : this(-1, solutionDirectory, debuggerAttacher, reporter, schedulingAnalyzer, settings, logger){
         }
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
              string workingDir, string userParameters)
         {
-            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
-            DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
+            Utils.AssertIsNull(userParameters, nameof(userParameters));
+            Utils.AssertIsNull(workingDir, nameof(workingDir));
 
             try
             {

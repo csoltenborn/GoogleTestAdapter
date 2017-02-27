@@ -166,7 +166,7 @@ namespace GoogleTestAdapter.Helpers
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
                 
                 if (!string.IsNullOrEmpty(pathExtension))
-                    envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                    envVariables["PATH"] = GetExtendedPath(pathExtension);
 
                 var envVariablesList = new List<string>();
                 foreach (DictionaryEntry entry in envVariables)
@@ -182,6 +182,12 @@ namespace GoogleTestAdapter.Helpers
                 result.Length++;
 
                 return result;
+            }
+
+            private static string GetExtendedPath(string pathExtension)
+            {
+                string path = Environment.GetEnvironmentVariable("PATH");
+                return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
             }
 
             private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, 

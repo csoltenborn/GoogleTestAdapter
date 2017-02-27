@@ -63,11 +63,11 @@ namespace GoogleTestAdapter
         {
             if (_settings.ParallelTestExecution && !isBeingDebugged)
             {
-                _runner = new ParallelTestRunner(reporter, _logger, _settings, solutionDirectory, _schedulingAnalyzer, _debuggerAttacher);
+                _runner = new ParallelTestRunner(solutionDirectory, _debuggerAttacher, reporter, _schedulingAnalyzer, _settings, _logger);
             }
             else
             {
-                _runner = new PreparingTestRunner(solutionDirectory, reporter, _logger, _settings, _schedulingAnalyzer, _debuggerAttacher);
+                _runner = new PreparingTestRunner(solutionDirectory, _debuggerAttacher, reporter, _schedulingAnalyzer, _settings, _logger);
                 if (_settings.ParallelTestExecution && isBeingDebugged)
                 {
                     _logger.DebugInfo(

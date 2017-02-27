@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

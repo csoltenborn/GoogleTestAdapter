@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.Runners
             List<TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
 
             var stopwatch = new Stopwatch();
-            var runner = new SequentialTestRunner("", MockFrameworkReporter.Object, TestEnvironment.Logger, TestEnvironment.Options, new SchedulingAnalyzer(TestEnvironment.Logger), null);
+            var runner = new SequentialTestRunner("", null, MockFrameworkReporter.Object, new SchedulingAnalyzer(TestEnvironment.Logger), TestEnvironment.Options, TestEnvironment.Logger);
             var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", ""));
 
             stopwatch.Start();

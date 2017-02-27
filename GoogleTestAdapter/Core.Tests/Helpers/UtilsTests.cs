@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -43,25 +44,18 @@ namespace GoogleTestAdapter.Helpers
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void TimestampMessage_MessageIsNullOrEmpty_ResultIsTheSame()
+        public void AssertIsNotNull_Null_ThrowsException()
         {
-            string timestampSeparator = " - ";
-            string resultRegex = @"[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}" + timestampSeparator;
+            Action action = () => Utils.AssertIsNotNull(null, "foo");
+            action.ShouldThrow<ArgumentNullException>();
+        }
 
-            string nullMessage = null;
-            Utils.TimestampMessage(ref nullMessage);
-            nullMessage.Should().MatchRegex(resultRegex);
-            nullMessage.Should().EndWith(timestampSeparator);
-
-            string emptyMessage = "";
-            Utils.TimestampMessage(ref emptyMessage);
-            emptyMessage.Should().MatchRegex(resultRegex);
-            emptyMessage.Should().EndWith(timestampSeparator);
-
-            string fooMessage = "foo";
-            Utils.TimestampMessage(ref fooMessage);
-            fooMessage.Should().MatchRegex(resultRegex);
-            fooMessage.Should().EndWith(timestampSeparator + "foo");
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AssertIsNull_NotNull_ThrowsException()
+        {
+            Action action = () => Utils.AssertIsNull("", "foo");
+            action.ShouldThrow<ArgumentException>();
         }
 
         private void SetReadonlyFlag(string dir)

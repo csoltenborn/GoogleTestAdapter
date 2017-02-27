@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace GoogleTestAdapter.Common
@@ -68,6 +69,12 @@ namespace GoogleTestAdapter.Common
         {
             if (_inDebugMode())
                 LogError(message);
+        }
+
+        public static void TimestampMessage(ref string message)
+        {
+            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            message = $"{timestamp} - {message ?? ""}";
         }
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
@@ -42,7 +41,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private void LogSafe(TestMessageLevel level, string message)
         {
             if (_timeStampOutput())
-                Utils.TimestampMessage(ref message);
+                TimestampMessage(ref message);
 
             if (string.IsNullOrWhiteSpace(message))
             {

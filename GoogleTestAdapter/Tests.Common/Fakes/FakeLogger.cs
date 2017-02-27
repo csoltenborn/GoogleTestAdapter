@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.Tests.Common.Fakes
 {
@@ -25,7 +24,7 @@ namespace GoogleTestAdapter.Tests.Common.Fakes
         public override void Log(Severity severity, string message)
         {
             if (_timeStampLogMessages)
-                Utils.TimestampMessage(ref message);
+                TimestampMessage(ref message);
 
             lock (this)
             {

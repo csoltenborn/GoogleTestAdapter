@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.Runners
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
 
-        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, IDebuggerAttacher debuggerAttacher)
+        public SequentialTestRunner(string threadName, IDebuggerAttacher debuggerAttacher, ITestFrameworkReporter reporter, SchedulingAnalyzer schedulingAnalyzer, SettingsWrapper settings, ILogger logger)
         {
             _threadName = threadName;
             _frameworkReporter = reporter;
@@ -39,10 +39,10 @@ namespace GoogleTestAdapter.Runners
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
             string workingDir, string userParameters)
         {
-            DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
-            DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
+            Utils.AssertIsNotNull(userParameters, nameof(userParameters));
+            Utils.AssertIsNotNull(workingDir, nameof(workingDir));
 
-            IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
+            IDictionary<string, List<TestCase>> groupedTestCases = TestCase.GroupByExecutable(testCasesToRun);
             TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Settings;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.Settings
 {
     public class RegexTraitParser
     {

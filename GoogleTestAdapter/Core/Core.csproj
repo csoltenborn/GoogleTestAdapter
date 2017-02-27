@@ -50,11 +50,10 @@
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
-    <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Framework\IDebuggerAttacher.cs" />
     <Compile Include="Helpers\ProcessExecutor.cs" />
-    <Compile Include="Helpers\RegexTraitParser.cs" />
+    <Compile Include="Settings\RegexTraitParser.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />
     <Compile Include="Settings\RunSettings.cs" />

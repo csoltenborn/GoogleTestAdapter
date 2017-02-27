@@ -28,7 +28,7 @@
 
         public static string GetResultXmlFileOption(string resultXmlFile)
         {
-            return "--gtest_output=\"xml:" + resultXmlFile + "\"";
+            return $"--gtest_output=\"xml:{resultXmlFile}\"";
         }
 
         public static string GetCatchExceptionsOption(bool catchThem)
