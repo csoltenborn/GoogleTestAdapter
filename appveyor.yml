@@ -19,6 +19,9 @@ install:
         # $blockRdp = $true
         iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
+- copy "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\Extensions\as2g30ei.2oj\Extensions\Appveyor.BuildAgent.Api.dll" "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions"
+- copy "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\Extensions\as2g30ei.2oj\Extensions\Appveyor.MSTestLogger.VS2017.dll" "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions"
+- set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;%PATH%
 before_build: 
 - ps: >-
     Start-Process -WorkingDirectory GoogleTestAdapter -FilePath SetVersion.bat -ArgumentList $env:APPVEYOR_BUILD_VERSION
