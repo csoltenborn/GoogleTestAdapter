@@ -129,13 +129,10 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             var testCase = TestDataCreator.CreateDummyTestCases("Foo.Bar").Single().ToVsTestCase();
             testCase.Traits.Add(new Trait("MyTrait", "value1"));
-            SetupFilterToAcceptTraitForTestCase(testCase, "MyTrait", "value1");
-
-            _traitNames.Add("MyTrait");
 
             //registers TestProperty objects for trait names
             // ReSharper disable once ObjectCreationAsStatement
-            new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
+            new TestCaseFilter(MockRunContext.Object, new HashSet<string>{"MyTrait"}, TestEnvironment.Logger);
             TestProperty property = TestProperty.Find("MyTrait");
 
             Action action = () => testCase.SetPropertyValue(property, "i");
@@ -147,14 +144,36 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             action = () => testCase.SetPropertyValue(property, "äöüÄÖÜß$");
             action.ShouldNotThrow();
 
-            action = () => testCase.SetPropertyValue(property, "");
-            action.ShouldThrow<ArgumentException>();
+            action = () => testCase.SetPropertyValue(property, "_äöüÄÖÜß$");
+            action.ShouldNotThrow();
 
+            // since we are not at the beginning of the method name
             action = () => testCase.SetPropertyValue(property, "1");
-            action.ShouldThrow<ArgumentException>();
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_1");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
 
             action = () => testCase.SetPropertyValue(property, "_(");
-            action.ShouldThrow<ArgumentException>();
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "a(");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "1(");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "%");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "+");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
         }
 
         private void SetupFilterToAcceptTraitForTestCase(TestCase testCase, string traitName, string traitValue)

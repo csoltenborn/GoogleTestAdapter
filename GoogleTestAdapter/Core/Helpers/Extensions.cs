@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Helpers
@@ -10,6 +12,17 @@ namespace GoogleTestAdapter.Helpers
         public static IEnumerable<T> Yield<T>(this T item)
         {
             yield return item;
+        }
+
+        public static bool MatchesCompletely(this Regex regex, string input)
+        {
+            if (regex == null)
+                throw new ArgumentNullException(nameof(regex));
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            Match match = regex.Match(input);
+            return match.Success && match.Length == input.Length;
         }
 
         internal static IDictionary<string, List<TestCase>> GroupByExecutable(this IEnumerable<TestCase> testcases)

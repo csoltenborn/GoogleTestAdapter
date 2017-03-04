@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
@@ -11,8 +12,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
     public class TestCaseFilter
     {
-        // after https://msdn.microsoft.com/en-us/library/2k3te2cs%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396
-        private static readonly Regex CppIdentifierRegex = new Regex(@"\b(_\w+|[\w-[0-9_]]\w*)\b", RegexOptions.Compiled);
+        private static readonly Regex TraitValueRegex = new Regex(@"(?:\w|\$)+", RegexOptions.Compiled);
 
         private readonly IRunContext _runContext;
         private readonly ILogger _logger;
@@ -141,7 +141,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             if (traitValue == null)
                 return false;
 
-            return CppIdentifierRegex.IsMatch(traitValue);
+            return TraitValueRegex.MatchesCompletely(traitValue);
         }
 
     }
