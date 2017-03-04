@@ -7,21 +7,15 @@ platform: Any CPU
 environment:
   RELEASE_KEY_PASSWORD:
     secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
-matrix:
-  allow_failures:
-    - os: Visual Studio 2017 RC
 install:
 - ps: >-
     if ($env:APPVEYOR_REPO_TAG -eq "true") {
         nuget install secure-file -ExcludeVersion
         secure-file\tools\secure-file -decrypt GoogleTestAdapter\Keys\Key_Release.snk.enc -secret $env:RELEASE_KEY_PASSWORD
     } else {
-        $blockRdp = $true
+        # $blockRdp = $true
         iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
-- copy "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\Extensions\as2g30ei.2oj\Extensions\Appveyor.BuildAgent.Api.dll" "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions"
-- copy "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\Extensions\as2g30ei.2oj\Extensions\Appveyor.MSTestLogger.VS2017.dll" "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions"
-- set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;%PATH%
 before_build: 
 - ps: >-
     Start-Process -WorkingDirectory GoogleTestAdapter -FilePath SetVersion.bat -ArgumentList $env:APPVEYOR_BUILD_VERSION
