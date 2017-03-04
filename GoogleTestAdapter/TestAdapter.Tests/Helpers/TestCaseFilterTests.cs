@@ -123,6 +123,40 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             AssertAreEqual(testCases, filteredTestCases);
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void SetPropertyValue_Trait_CorrectValidation()
+        {
+            var testCase = TestDataCreator.CreateDummyTestCases("Foo.Bar").Single().ToVsTestCase();
+            testCase.Traits.Add(new Trait("MyTrait", "value1"));
+            SetupFilterToAcceptTraitForTestCase(testCase, "MyTrait", "value1");
+
+            _traitNames.Add("MyTrait");
+
+            //registers TestProperty objects for trait names
+            // ReSharper disable once ObjectCreationAsStatement
+            new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
+            TestProperty property = TestProperty.Find("MyTrait");
+
+            Action action = () => testCase.SetPropertyValue(property, "i");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_i");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "äöüÄÖÜß$");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "");
+            action.ShouldThrow<ArgumentException>();
+
+            action = () => testCase.SetPropertyValue(property, "1");
+            action.ShouldThrow<ArgumentException>();
+
+            action = () => testCase.SetPropertyValue(property, "_(");
+            action.ShouldThrow<ArgumentException>();
+        }
+
         private void SetupFilterToAcceptTraitForTestCase(TestCase testCase, string traitName, string traitValue)
         {
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCase), It.Is<Func<string, object>>(f => f(traitName).ToString() == traitValue))).Returns(true);

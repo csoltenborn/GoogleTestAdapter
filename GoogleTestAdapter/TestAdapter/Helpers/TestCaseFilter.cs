@@ -11,6 +11,9 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
     public class TestCaseFilter
     {
+        // after https://msdn.microsoft.com/en-us/library/2k3te2cs%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396
+        private static readonly Regex CppIdentifierRegex = new Regex(@"\b(_\w+|[\w-[0-9_]]\w*)\b", RegexOptions.Compiled);
+
         private readonly IRunContext _runContext;
         private readonly ILogger _logger;
 
@@ -138,7 +141,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             if (traitValue == null)
                 return false;
 
-            return Regex.IsMatch(traitValue, "[a-zA-Z_][a-zA-Z0-9_]*");
+            return CppIdentifierRegex.IsMatch(traitValue);
         }
 
     }
