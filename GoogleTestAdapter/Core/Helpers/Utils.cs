@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -48,6 +50,19 @@ namespace GoogleTestAdapter.Helpers
                 throw new ArgumentException(parameterName + " must be null");
             }
         }
+
+        /// <exception cref="AggregateException">If at least one of the actions has thrown an exception</exception>
+        public static bool SpawnAndWait(Action[] actions, int timeoutInMs = Timeout.Infinite)
+        {
+            var tasks = new Task[actions.Length];
+            for (int i = 0; i < actions.Length; i++)
+            {
+                tasks[i] = Task.Factory.StartNew(actions[i]);
+            }
+      
+            return Task.WaitAll(tasks, timeoutInMs);
+        }
+
     }
 
 }

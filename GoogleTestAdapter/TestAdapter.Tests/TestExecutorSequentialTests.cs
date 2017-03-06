@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
@@ -13,6 +14,9 @@ namespace GoogleTestAdapter.TestAdapter
     [TestClass]
     public class TestExecutorSequentialTests : TestExecutorTestsBase
     {
+        private const int DurationOfEachLongRunningTestInMs = 2000;
+        private const int WaitBeforeCancelInMs = 1000;
+        private static readonly int OverheadInMs = !CiSupport.IsRunningOnBuildServer ? 500 : 1500;
 
         public TestExecutorSequentialTests() : base(false, 1) { }
 
@@ -41,40 +45,34 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void RunTests_CancelingExecutor_StopsTestExecution()
         {
-            DoRunCancelingTests(
-                false, 
-                2000,  // 1st test should be executed
-                3750); // 2nd test should not be executed 
+            DoRunCancelingTests(false, DurationOfEachLongRunningTestInMs);  // (only) 1st test should be executed
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
         {
-            DoRunCancelingTests(
-                true,
-                1000,  // 1st test should be canceled
-                2500); // 2nd test should not be executed 
+            DoRunCancelingTests(true, WaitBeforeCancelInMs);  // 1st test should be actively canceled
         }
 
-        private void DoRunCancelingTests(bool killProcesses, int lower, int upper)
+        private void DoRunCancelingTests(bool killProcesses, int lower)
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
             List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
             testCasesToRun.Count.Should().Be(2);
 
-            Stopwatch stopwatch = new Stopwatch();
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object));
+            var stopwatch = new Stopwatch();
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            var thread = new Thread(() => executor.RunTests(testCasesToRun.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object));
 
             stopwatch.Start();
             thread.Start();
-            Thread.Sleep(1000);
+            Thread.Sleep(WaitBeforeCancelInMs);
             executor.Cancel();
             thread.Join();
             stopwatch.Stop();
 
-            stopwatch.ElapsedMilliseconds.Should().BeInRange(lower, upper);
+            stopwatch.ElapsedMilliseconds.Should().BeInRange(lower, lower + OverheadInMs);
         }
 
 

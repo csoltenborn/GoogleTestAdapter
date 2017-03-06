@@ -2,6 +2,10 @@ coverage:
   precision: 2
   round: down
   range: "50...90"
+  status:
+    project:
+      default:
+        threshold: 2%
 
 comment:
-  layout: "header, diff, changes"
+  layout: "reach, diff, flags, files"

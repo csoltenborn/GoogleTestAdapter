@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
@@ -30,22 +31,27 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            foreach (string executable in googleTestExecutables)
+            var discoveryActions = googleTestExecutables
+                .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
+                .ToArray();
+            Utils.SpawnAndWait(discoveryActions);
+        }
+
+        private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory)
+        {
+            settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
-                _settings.ExecuteWithSettingsForExecutable(executable, () =>
+                int nrOfTestCases = 0;
+                Action<TestCase> reportTestCases = tc =>
                 {
-                    int nrOfTestCases = 0;
-                    Action<TestCase> reportTestCases = tc =>
-                    {
-                        reporter.ReportTestsFound(tc.Yield());
-                        _logger.DebugInfo("Added testcase " + tc.DisplayName);
-                        nrOfTestCases++;
-                    };
-                    var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
-                    factory.CreateTestCases(reportTestCases);
-                    _logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-                }, _logger);
-            }
+                    reporter.ReportTestsFound(tc.Yield());
+                    logger.DebugInfo("Added testcase " + tc.DisplayName);
+                    nrOfTestCases++;
+                };
+                var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory);
+                factory.CreateTestCases(reportTestCases);
+                logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+            }, logger);
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)

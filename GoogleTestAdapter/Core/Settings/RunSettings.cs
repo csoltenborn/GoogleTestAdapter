@@ -24,6 +24,9 @@ namespace GoogleTestAdapter.Settings
         public virtual string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
 
+        public virtual int? TestDiscoveryTimeoutInSeconds { get; set; }
+        public bool ShouldSerializeTestDiscoveryTimeoutInSeconds() { return TestDiscoveryTimeoutInSeconds != null; }
+
         public virtual string WorkingDir { get; set; }
         public bool ShouldSerializeWorkingDir() { return WorkingDir != null; }
 
