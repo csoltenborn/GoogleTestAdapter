@@ -77,7 +77,8 @@ namespace GoogleTestAdapter.Runners
                 var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _logger, _settings.Clone(), _schedulingAnalyzer);
                 _testRunners.Add(runner);
 
-                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor));
+                var thread = new Thread(
+                    () => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor)){ Name = $"GTA Testrunner {threadId}" };
                 threads.Add(thread);
 
                 thread.Start();

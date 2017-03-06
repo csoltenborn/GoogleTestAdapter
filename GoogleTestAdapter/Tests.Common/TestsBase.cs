@@ -25,7 +25,6 @@ namespace GoogleTestAdapter.Tests.Common
 
             Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
             MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object);
-            MockOptions.Setup(o => o.Clone()).Returns(MockOptions.Object);
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
@@ -41,6 +40,9 @@ namespace GoogleTestAdapter.Tests.Common
 
         public static void SetupOptions(Mock<SettingsWrapper> mockOptions)
         {
+            mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
+            mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
+
             mockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             mockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             mockOptions.Setup(o => o.TestNameSeparator).Returns(SettingsWrapper.OptionTestNameSeparatorDefaultValue);
