@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common.Helpers;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
@@ -15,7 +16,7 @@ namespace GoogleTestAdapter.TestAdapter
     {
         private const int DurationOfEachLongRunningTestInMs = 2000;
         private const int WaitBeforeCancelInMs = 1000;
-        private const int OverheadInMs = 500;
+        private static readonly int OverheadInMs = !CiSupport.IsRunningOnBuildServer ? 500 : 1500;
 
         public TestExecutorSequentialTests() : base(false, 1) { }
 
