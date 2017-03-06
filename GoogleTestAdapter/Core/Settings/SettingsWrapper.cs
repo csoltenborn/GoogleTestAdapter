@@ -259,6 +259,23 @@ namespace GoogleTestAdapter.Settings
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
+        public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
+        public const int OptionTestDiscoveryTimeoutInSecondsDefaultValue = 30;
+        public const string OptionTestDiscoveryTimeoutInSecondsDescription =
+            "Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout";
+
+        public virtual int TestDiscoveryTimeoutInSeconds {
+            get
+            {
+                int timeout = _currentSettings.TestDiscoveryTimeoutInSeconds ?? OptionTestDiscoveryTimeoutInSecondsDefaultValue;
+                if (timeout < 0)
+                    timeout = OptionTestDiscoveryTimeoutInSecondsDefaultValue;
+
+                return timeout == 0 ? int.MaxValue : timeout;
+            }
+        }
+
+
         public const string OptionWorkingDir = "Working directory";
         public const string OptionWorkingDirDefaultValue = ExecutableDirPlaceholder;
         public const string OptionWorkingDirDescription =
