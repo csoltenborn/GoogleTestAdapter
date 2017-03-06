@@ -103,7 +103,7 @@ namespace GoogleTestAdapter.Helpers
             stopWatch.Stop();
 
             hasFinishedTasks.Should().BeFalse();
-            stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(timeoutInMs);
+            stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(timeoutInMs - 10 /* arbitrary tolerance */);
             stopWatch.ElapsedMilliseconds.Should().BeLessThan(taskDurationInMs);
         }
 
