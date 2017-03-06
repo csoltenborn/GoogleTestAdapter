@@ -43,6 +43,8 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
             mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
 
+            mockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds)
+                .Returns(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue);
             mockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             mockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             mockOptions.Setup(o => o.TestNameSeparator).Returns(SettingsWrapper.OptionTestNameSeparatorDefaultValue);

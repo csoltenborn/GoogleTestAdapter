@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
@@ -13,7 +14,7 @@ using GoogleTestAdapter.Settings;
 namespace GoogleTestAdapter.TestCases
 {
 
-    internal class TestCaseFactory
+    public class TestCaseFactory
     {
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
@@ -103,13 +104,34 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
-                var executor = new ProcessExecutor(null, _logger);
-                int processExitCode = executor.ExecuteCommandBlocking(
-                    _executable,
-                    GoogleTestConstants.ListTestsOption.Trim(),
-                    "",
-                    _settings.GetPathExtension(_executable),
-                    lineAction);
+                int processExitCode = ProcessExecutor.ExecutionFailed;
+                ProcessExecutor executor = null;
+                var listAndParseTestsTask = new Task(() =>
+                {
+                    executor = new ProcessExecutor(null, _logger);
+                    processExitCode = executor.ExecuteCommandBlocking(
+                        _executable,
+                        GoogleTestConstants.ListTestsOption.Trim(),
+                        "",
+                        _settings.GetPathExtension(_executable),
+                        lineAction);
+                }, TaskCreationOptions.AttachedToParent);
+                listAndParseTestsTask.Start();
+
+                if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
+                {
+                    executor?.Cancel();
+
+                    string dir = Path.GetDirectoryName(_executable);
+                    string file = Path.GetFileName(_executable);
+                    string cdToWorkingDir = $@"cd ""{dir}""";
+                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption.Trim()}";
+
+                    _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
+                    _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
+
+                    return new List<TestCase>();
+                }
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
                     return new List<TestCase>();
