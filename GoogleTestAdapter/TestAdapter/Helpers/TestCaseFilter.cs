@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
@@ -12,7 +11,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
     public class TestCaseFilter
     {
-        private static readonly Regex TraitValueRegex = new Regex(@"(?:\w|\$)+", RegexOptions.Compiled);
+        private static readonly Regex TraitValueRegex = new Regex(@"^[\w$]+$", RegexOptions.Compiled);
 
         private readonly IRunContext _runContext;
         private readonly ILogger _logger;
@@ -20,9 +19,8 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         private readonly IDictionary<string, TestProperty> _testPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
         private readonly IDictionary<string, TestProperty> _traitPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
 
-        private IEnumerable<string> TestProperties => _testPropertiesMap.Keys;
-        private IEnumerable<string> TraitProperties => _traitPropertiesMap.Keys;
-        private IEnumerable<string> AllProperties => TestProperties.Union(TraitProperties);
+        private readonly ISet<string> _traitPropertyNames;
+        private readonly ISet<string> _allPropertyNames;
 
         public TestCaseFilter(IRunContext runContext, ISet<string> traitNames, ILogger logger)
         {
@@ -30,6 +28,9 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             _logger = logger;
 
             InitProperties(traitNames);
+
+            _traitPropertyNames = new HashSet<string>(_traitPropertiesMap.Keys);
+            _allPropertyNames = new HashSet<string>(_testPropertiesMap.Keys.Union(_traitPropertyNames));
         }
 
         public IEnumerable<TestCase> Filter(IEnumerable<TestCase> testCases)
@@ -57,6 +58,12 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
             foreach (string traitName in traitNames)
             {
+                if (_testPropertiesMap.Keys.Contains(traitName))
+                {
+                    _logger.LogWarning($"Trait has same name as base test property and will thus be ignored for test case filtering: {traitName}");
+                    continue;
+                }
+
                 var traitTestProperty = TestProperty.Find(traitName) ??
                       TestProperty.Register(traitName, traitName, "", "", typeof(string), 
                         ValidateTraitValue, TestPropertyAttributes.None, typeof(TestCase));
@@ -85,7 +92,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             if (currentTest.Properties.Contains(testProperty))
                 return currentTest.GetPropertyValue(testProperty);
 
-            if (TraitProperties.Contains(propertyName))
+            if (_traitPropertyNames.Contains(propertyName))
                 return GetTraitValues(currentTest, propertyName);
 
             return null;
@@ -95,7 +102,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             try
             {
-                ITestCaseFilterExpression filterExpression = _runContext.GetTestCaseFilter(AllProperties, PropertyProvider);
+                ITestCaseFilterExpression filterExpression = _runContext.GetTestCaseFilter(_allPropertyNames, PropertyProvider);
 
                 string message = filterExpression == null
                         ? "No test case filter provided"
@@ -106,15 +113,17 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             }
             catch (TestPlatformFormatException e)
             {
-                _logger.LogWarning(e.Message);
+                _logger.LogError($"Test case filter is invalid: {e.Message}");
                 return null;
             }
         }
 
         private object GetTraitValues(TestCase testCase, string traitName)
         {
-            IList<string> traitValues
-                = testCase.Traits.Where(t => t.Name == traitName).Select(t => t.Value).ToList();
+            IList<string> traitValues = testCase.Traits
+                .Where(t => t.Name == traitName)
+                .Select(t => t.Value)
+                .ToList();
 
             if (traitValues.Count > 1)
                 return traitValues;
@@ -141,7 +150,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             if (traitValue == null)
                 return false;
 
-            return TraitValueRegex.MatchesCompletely(traitValue);
+            return TraitValueRegex.IsMatch(traitValue);
         }
 
     }
