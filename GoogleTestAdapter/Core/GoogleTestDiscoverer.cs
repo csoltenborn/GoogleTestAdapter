@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
                 int nrOfTestCases = 0;
                 Action<TestCase> reportTestCases = tc =>
                 {
-                    reporter.ReportTestsFound(tc.Yield());
+                    reporter.ReportTestFound(tc);
                     logger.DebugInfo("Added testcase " + tc.DisplayName);
                     nrOfTestCases++;
                 };

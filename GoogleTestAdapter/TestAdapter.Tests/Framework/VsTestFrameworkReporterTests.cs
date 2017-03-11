@@ -1,5 +1,4 @@
 ﻿using System;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -39,7 +38,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             };
 
             var reporter = new VsTestFrameworkReporter(MockFrameworkHandle.Object, false, MockLogger.Object);
-            reporter.ReportTestResults(result.Yield());
+            reporter.ReportTestResult(result);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(
                 It.Is<VsTestResult>(tr => tr.ErrorStackTrace.Equals(errorStacktrace))),
@@ -57,7 +56,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             };
 
             var reporter = new VsTestFrameworkReporter(MockFrameworkHandle.Object, inVisualStudio, MockLogger.Object);
-            reporter.ReportTestResults(result.Yield());
+            reporter.ReportTestResult(result);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(
                 It.Is<VsTestResult>(tr => tr.ErrorMessage.Equals(beginOfErrorMessage + errorMessage))),

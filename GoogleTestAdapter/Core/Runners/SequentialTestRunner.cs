@@ -95,8 +95,11 @@ namespace GoogleTestAdapter.Runners
                 try
                 {
                     Stopwatch stopwatch = Stopwatch.StartNew();
-                    _frameworkReporter.ReportTestsStarted(results.Select(tr => tr.TestCase));
-                    _frameworkReporter.ReportTestResults(results);
+                    foreach (TestResult testResult in results)
+                    {
+                        _frameworkReporter.ReportTestStarted(testResult.TestCase);
+                        _frameworkReporter.ReportTestResult(testResult);
+                    }
                     stopwatch.Stop();
                     if (results.Length > 0)
                         _logger.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");

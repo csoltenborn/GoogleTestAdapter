@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -53,47 +52,38 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         }
 
 
-        public void ReportTestsFound(IEnumerable<TestCase> testCases)
+        public void ReportTestFound(TestCase testCase)
         {
             lock (Lock)
             {
-                foreach (TestCase testCase in testCases)
-                {
-                    _sink.SendTestCase(testCase.ToVsTestCase());
-                }
+                _sink.SendTestCase(testCase.ToVsTestCase());
             }
         }
 
-        public void ReportTestsStarted(IEnumerable<TestCase> testCases)
+        public void ReportTestStarted(TestCase testCase)
         {
             lock (Lock)
             {
-                foreach (TestCase testCase in testCases)
-                {
-                    _frameworkHandle.RecordStart(testCase.ToVsTestCase());
-                }
+                _frameworkHandle.RecordStart(testCase.ToVsTestCase());
             }
         }
 
-        public void ReportTestResults(IEnumerable<TestResult> testResults)
+        public void ReportTestResult(TestResult testResult)
         {
             lock (Lock)
             {
-                foreach (TestResult testResult in testResults)
-                {
-                    if (_isRunningInsideVisualStudio && (testResult.Outcome == TestOutcome.Failed || testResult.Outcome == TestOutcome.Skipped))
-                        testResult.ErrorMessage = Environment.NewLine + testResult.ErrorMessage;
-                    if (!_isRunningInsideVisualStudio && testResult.ErrorStackTrace != null)
-                        testResult.ErrorStackTrace = testResult.ErrorStackTrace.Trim();
+                if (_isRunningInsideVisualStudio && (testResult.Outcome == TestOutcome.Failed || testResult.Outcome == TestOutcome.Skipped))
+                    testResult.ErrorMessage = Environment.NewLine + testResult.ErrorMessage;
+                if (!_isRunningInsideVisualStudio && testResult.ErrorStackTrace != null)
+                    testResult.ErrorStackTrace = testResult.ErrorStackTrace.Trim();
 
-                    try
-                    {
-                        ReportTestResult(testResult);
-                    }
-                    catch (TestCanceledException e)
-                    {
-                        throw new TestRunCanceledException($"{nameof(VsTestFrameworkReporter)} caught TestCanceledException", e);
-                    }
+                try
+                {
+                    DoReportTestResult(testResult);
+                }
+                catch (TestCanceledException e)
+                {
+                    throw new TestRunCanceledException($"{nameof(VsTestFrameworkReporter)} caught TestCanceledException", e);
                 }
             }
         }
@@ -104,7 +94,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             return VsVersionUtils.GetVisualStudioVersion(_logger) != VsVersion.VS2017;
         }
 
-        private void ReportTestResult(TestResult testResult)
+        private void DoReportTestResult(TestResult testResult)
         {
             VsTestResult result = testResult.ToVsTestResult();
 

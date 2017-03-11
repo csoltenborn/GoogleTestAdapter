@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestResults
@@ -102,7 +101,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string qualifiedTestname = RemovePrefix(line).Trim();
             TestCase testCase = FindTestcase(qualifiedTestname, _testCasesRun);
-            _reporter.ReportTestsStarted(testCase.Yield());
+            _reporter.ReportTestStarted(testCase);
         }
 
         private void ReportTestResult()
@@ -110,7 +109,7 @@ namespace GoogleTestAdapter.TestResults
             TestResult result = CreateTestResult();
             if (result != null)
             {
-                _reporter.ReportTestResults(result.Yield());
+                _reporter.ReportTestResult(result);
                 TestResults.Add(result);
             }
         }

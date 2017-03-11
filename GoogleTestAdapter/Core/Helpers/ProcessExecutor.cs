@@ -265,6 +265,8 @@ namespace GoogleTestAdapter.Helpers
 
             private static SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
 
+#pragma warning disable 414
+#pragma warning disable 169
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
             private class STARTUPINFOEX
             {
@@ -290,11 +292,14 @@ namespace GoogleTestAdapter.Helpers
                 public Int16 wShowWindow;
                 public Int16 cbReserved2;
                 public IntPtr lpReserved2;
+                // ReSharper disable UnusedMember.Local
+                // ReSharper disable NotAccessedField.Local
                 public SafeHandle hStdInput = NULL_HANDLE;
                 public SafeHandle hStdOutput = NULL_HANDLE;
                 public SafeHandle hStdError = NULL_HANDLE;
+                // ReSharper restore NotAccessedField.Local
+                // ReSharper restore UnusedMember.Local
             }
-
             [StructLayout(LayoutKind.Sequential)]
             private struct PROCESS_INFORMATION
             {
@@ -311,6 +316,9 @@ namespace GoogleTestAdapter.Helpers
                 public IntPtr lpSecurityDescriptor;
                 public bool bInheritHandle;
             }
+#pragma warning restore 169
+#pragma warning restore 414
+
         }
     }
 }
