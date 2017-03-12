@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F754A4D-BD42-4368-8B90-F3C03F24A2F3}"
 	ProjectSection(SolutionItems) = preProject
@@ -77,9 +77,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsPackage.Tests.Unit", "VsP
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTestsBuilder", "SampleTestsBuilder\SampleTestsBuilder.csproj", "{12952B24-C70B-4A26-839A-EE4183BE8CC0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{04990B2A-C7B5-40DA-A856-230E1E062FF1} = {04990B2A-C7B5-40DA-A856-230E1E062FF1}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{2F0E4458-6C1C-461F-A60A-B731AD97E839}"
 EndProject
@@ -105,6 +102,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleTests Solution Items"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsDebuggerAttacherWrapper", "VsDebuggerAttacherWrapper\VsDebuggerAttacherWrapper.csproj", "{9947AE87-92E3-4184-AE57-6E782C2CCE00}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests_1.7.0", "..\SampleTests\Tests_1.7.0\Tests_1.7.0.vcxproj", "{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -356,6 +355,16 @@ Global
 		{9947AE87-92E3-4184-AE57-6E782C2CCE00}.Release|x64.ActiveCfg = Release|x86
 		{9947AE87-92E3-4184-AE57-6E782C2CCE00}.Release|x86.ActiveCfg = Release|x86
 		{9947AE87-92E3-4184-AE57-6E782C2CCE00}.Release|x86.Build.0 = Release|x86
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Debug|x64.ActiveCfg = Debug|x64
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Debug|x64.Build.0 = Debug|x64
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Debug|x86.ActiveCfg = Debug|Win32
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Debug|x86.Build.0 = Debug|Win32
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Release|Any CPU.ActiveCfg = Release|Win32
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Release|x64.ActiveCfg = Release|x64
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Release|x64.Build.0 = Release|x64
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Release|x86.ActiveCfg = Release|Win32
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -378,5 +387,6 @@ Global
 		{4A4606CD-6D7B-4F76-8981-46D3C74E18BD} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{C3F11E93-2EFF-4BB6-ADC9-3B42727E4816} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
 		{C6AC8E0B-DE31-4F0E-BE9D-837D9A2CA828} = {DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}
+		{7F98DAED-D035-4DFB-9E78-10D1C8FA3A32} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 	EndGlobalSection
 EndGlobal
