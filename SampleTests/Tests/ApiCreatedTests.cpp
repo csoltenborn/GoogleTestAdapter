@@ -53,7 +53,9 @@ testing::TestInfo* CreateTest(std::string suitename, std::string testname, Custo
 {
 	return ::testing::internal::MakeAndRegisterTestInfo(
 		suitename.c_str(), testname.c_str(), NULL, NULL,
-		::testing::internal::CodeLocation(__FILE__, __LINE__), 
+#ifndef GTEST_1_7_0
+		::testing::internal::CodeLocation(__FILE__, __LINE__),
+#endif // GTEST_1_7_0
 		::testing::internal::GetTestTypeId(),
 		::testing::Test::SetUpTestCase,
 		::testing::Test::TearDownTestCase,

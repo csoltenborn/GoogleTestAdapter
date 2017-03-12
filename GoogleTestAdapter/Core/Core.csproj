@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\GTA_Traits_1.8.0.h" />
-    <Content Include="Resources\GTA_Traits.h" />
+    <Content Include="Resources\GTA_Traits_1.7.0.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

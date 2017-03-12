@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "../LibProject/Lib.h"
-#include "../../GoogleTestAdapter/Core/Resources/GTA_Traits_1.8.0.h"
+#include "gtest_wrapper.h"
 
 using std::string;
 

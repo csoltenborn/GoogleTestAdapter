@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <array>
 #include <list>
-#include "../../GoogleTestAdapter/Core/Resources/GTA_Traits_1.8.0.h"
+#include "gtest_wrapper.h"
 
 struct MyStrangeArray : public std::array<int, 3>
 {
