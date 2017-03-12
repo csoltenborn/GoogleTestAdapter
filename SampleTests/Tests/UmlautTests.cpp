@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <string>
 #include "gtest/gtest.h"
-#include "../../GoogleTestAdapter/Core/Resources/GTA_Traits.h"
+#include "../../GoogleTestAdapter/Core/Resources/GTA_Traits_1.8.0.h"
 
 
 TEST(‹mlautﬂ, T‰st)
