@@ -26,6 +26,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const int NrOfSampleTests = 88;
         public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
         public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
+        public const string SampleTests170 = SampleTestsSolutionDir + @"Debug\Tests_1.7.0_gta.exe";
 
         public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests_gta.exe");
         public static readonly string LongRunningTests = Path.Combine(SampleTestsSolutionDir, @"Release\LongRunningTests_gta.exe");

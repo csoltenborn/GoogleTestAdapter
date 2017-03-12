@@ -317,6 +317,8 @@ namespace GoogleTestAdapter.VsPackage
 			{
 				case "SampleTests":
 					return TestResources.SampleTests;
+				case "SampleTests170":
+					return TestResources.SampleTests170;
 				case "LoadTests":
 					return TestResources.LoadTests;
 				case "HardCrashingSampleTests":
