@@ -70,9 +70,23 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void GetTestsFromExecutable_SampleTests_FindsTestsWithLocation()
+        public void GetTestsFromExecutable_SampleTestsDebug_FindsTestsWithLocation()
         {
             FindSampleTests(TestResources.SampleTests);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTestsRelease_FindsTestsWithLocation()
+        {
+            FindSampleTests(TestResources.SampleTestsRelease);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTests170_FindsTestsWithLocation()
+        {
+            FindSampleTests(TestResources.SampleTests170);
         }
 
         [TestMethod]

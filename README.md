@@ -72,7 +72,7 @@ For reference, see a settings file [AllTestSettings.gta.runsettings](https://raw
 
 GTA has full support for [traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx), which can be assigned to tests in two ways:
 
-* <a name="trait_macros"></a>You can make use of the custom test macros provided in [GTA_Traits.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits.h), which contain macros for all test types of the Google Test framework. The macros do not change behavior of the tests; they only add some information to the generated test code which encodes the traits assigned to the respective test. All GTA provided macros follow the same naming schema `<Google Test macro>_TRAITS`, where, obviously, `<Google Test macro>` is the name of the according macro in Google Test. Each test can be assigned up to 8 traits.
+* <a name="trait_macros"></a>You can make use of the custom test macros provided in [GTA_Traits_1.8.0.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits_1.8.0.h) (or [GTA_Traits_1.7.0.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits_1.7.0.h) if you are still on Google Test 1.7.0), which contain macros for all test types of the Google Test framework. The macros do not change behavior of the tests; they only add some information to the generated test code which encodes the traits assigned to the respective test. All GTA provided macros follow the same naming schema `<Google Test macro>_TRAITS`, where, obviously, `<Google Test macro>` is the name of the according macro in Google Test. Each test can be assigned up to 8 traits.
 * <a name="trait_regexes"></a>Combinations of regular expressions and traits can be specified under the GTA options: If a test's name matches one of these regular expressions, the according trait is assigned to that test. 
 
 More precisely, traits are assigned to tests in three phases:
@@ -87,7 +87,7 @@ Note that traits are assigned in an additive manner within each phase, and in an
 
 GTA can be used to run tests from the command line, which can be done making use of VS's [VSTest.Console.exe](https://msdn.microsoft.com/en-us/library/jj155800.aspx). GTA supports all the tool's command line options, including `/UseVsixExtensions` and `/TestAdapterPath`.
 
-Note, however, that VSTest.Console.exe will not make use of GTA solution settings (if the solution containing the tests happens to use such settings). All settings to be used by VSTest.Console.exe need to be passed using the `/Settings` command line option. Note also that the `$(SolutionDir)` placeholder is neither available in the *Test setup/teardown batch file* options nor in the *Additional test execution parameters* option. Finally, note that GTA currently has issues with running X64 tests via VSTest.Console.exe (see [#21](https://github.com/csoltenborn/GoogleTestAdapter/issues/21)).
+Note, however, that VSTest.Console.exe will not make use of GTA solution settings (if the solution containing the tests happens to use such settings). All settings to be used by VSTest.Console.exe need to be passed using the `/Settings` command line option. Note also that the `$(SolutionDir)` placeholder is neither available in the *Test setup/teardown batch file* options nor in the *Additional test execution parameters* option.
 
 <a name="test_case_filters"></a>The tests to be run can be selected via the `/TestCaseFilter` option. Filters need to follow the syntax as described in this [blog entry](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx). GTA supports the following test properties:
 
@@ -128,7 +128,9 @@ None or not all of my tests show up!
 
 No source locations and traits are found for my tests!
 * The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved (and indicates that with a warning in the test output window). Rebuilding your solution should regenerate the pdb at an appropriate location.
-* The test executable's project has the option *Linker/Debugging/Generate debug info* set to `No` or `Optimize for faster linking (/DEBUG:FASTLINK)`, resulting in a pdb not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting to `Yes` or `Optimize for debugging (/DEBUG)` and rebuild your solution.
+* The test executable's project settings result in a pdb file not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting as indicated below and rebuild your solution.
+  * VS 2015 and earlier: `Yes` or `Optimize for debugging (/DEBUG)`
+  * VS 2017: `Generate debug information optimized for sharing and publishing (/DEBUG:FULL)`
 * Option *Parse symbol information* is set to `false`, making GTA not parse that information out of the pdb file intentionally. The actual set of options used is potentially composed from VS options, a solution settings file, and a user settings file; the resulting set of options will be logged to the test output window if the *Print debug info* option is set to `true`.
 
 The Google Test Adapter extension is disabled when I start Visual Studio!
@@ -148,7 +150,7 @@ Google Test Adapter has been created using Visual Studio 2015 and NuGet, which a
 
 #### Executing the tests
 
-Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before any of the tests can be run, this second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project Core.Tests. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before any of the tests can be run, this second solution needs to be built with configurations `Release/X86` and `Debug/X86`; this is done by the pre-build event of project `Tests/SampleTests/SampleTestsBuilder`.
 
 For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the *SampleTests* solution (or any other solution containing Google Test tests).
 
@@ -167,20 +169,7 @@ A convenient way to get your debugger attached is to use Microsoft's [Child Proc
 
 #### Contributions
 
-Pull requests (against the `develop` branch) are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
-
-##### Branching strategy
-The GTA project follows a simple branching strategy:
-* Releases are created from `master`
-* Development is done on `develop`
-* Bugfixes are done on `master` and merged into `develop`
-* Feature branches are based on `develop` (and only merged into that branch)
-  * Naming scheme: `#{issue number}_{feature name/description}`
-  * Finite lifetime (in contrast to `master`and `develop`)
-  * For local branches, rebasing is preferred (but not required)
-  * Branches are merged without squashing
-* Acceptance testing happens on `develop`
-* Releases are created by merging `develop` into `master`
+Pull requests (against the `develop` branch) are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality. You might also be interested in our [Development Knowledge Base](https://github.com/csoltenborn/GoogleTestAdapter/wiki/Development-Knowledge-Base).
 
 
 ### External links
