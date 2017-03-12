@@ -18,3 +18,5 @@ X862	false	none	true	true
 HardCrashingSampleTests	true	none	true	true
 SampleTests	true	DisplayName=TestMath.AddPassesWithTraits|Type=Small	false	false
 SampleTests	true	*NotExisting=Foo	false	true
+SampleTests170	true	DisplayName=TestMath.AddPassesWithTraits|Type=Small	false	false
+SampleTests170	true	none	true	true
