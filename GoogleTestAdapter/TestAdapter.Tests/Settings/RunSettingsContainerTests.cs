@@ -126,7 +126,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             runSettingsContainer.SolutionSettings.MaxNrOfThreads.Should().Be(3);
             runSettingsContainer.ProjectSettings[0].MaxNrOfThreads.Should().Be(4);
             runSettingsContainer.SolutionSettings.TraitsRegexesBefore.Should().Be("User");
-            runSettingsContainer.ProjectSettings[0].TraitsRegexesBefore.Should().Be("User");
+            runSettingsContainer.ProjectSettings[0].TraitsRegexesBefore.Should().BeNull();
         }
 
     }
