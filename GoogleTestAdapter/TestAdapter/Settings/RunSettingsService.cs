@@ -54,13 +54,24 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     var solutionRunSettingsDocument = new XPathDocument(solutionRunSettingsFile);
                     XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
                     if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                    {
                         CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
+                    }
+                    else
+                    {
+                        logger.Log(MessageLevel.Warning, $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
+                    }
                 }
             }
             catch (Exception e)
             {
                 logger.Log(MessageLevel.Warning,
                     $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
+            }
+
+            foreach (var projectSettings in settingsContainer.ProjectSettings)
+            {
+                projectSettings.GetUnsetValuesFrom(settingsContainer.SolutionSettings);
             }
 
             GetValuesFromGlobalSettings(settingsContainer);
