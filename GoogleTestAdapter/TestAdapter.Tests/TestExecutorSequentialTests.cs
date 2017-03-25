@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.TestAdapter
     {
         private const int DurationOfEachLongRunningTestInMs = 2000;
         private const int WaitBeforeCancelInMs = 1000;
-        private static readonly int OverheadInMs = !CiSupport.IsRunningOnBuildServer ? 500 : 1600;
+        private static readonly int OverheadInMs = !CiSupport.IsRunningOnBuildServer ? 500 : 1700;
 
         public TestExecutorSequentialTests() : base(false, 1) { }
 
