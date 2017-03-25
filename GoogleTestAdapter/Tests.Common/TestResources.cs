@@ -50,6 +50,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
         public const string X64CrashingTests = X64Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
 
+        public const string TestWithIndicatorFile = TestdataDir + @"GoogleTestIndicatorFile\with\SomeWeirdName.exe";
+        public const string TestWithoutIndicatorFile = TestdataDir + @"GoogleTestIndicatorFile\without\SomeWeirdName.exe";
+
         public const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         public const string XmlFile2 = TestdataDir + @"SampleResult2.xml";
         public const string XmlFileBroken = TestdataDir + @"SampleResult1_Broken.xml";
