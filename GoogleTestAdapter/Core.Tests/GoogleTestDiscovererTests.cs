@@ -62,6 +62,26 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_WithIndicatorFile_IsRecognizedAsTestExecutable()
+        {
+            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .IsGoogleTestExecutable(TestResources.TestWithIndicatorFile);
+
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_WithoutIndicatorFile_IsNotRecognizedAsTestExecutable()
+        {
+            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .IsGoogleTestExecutable(TestResources.TestWithoutIndicatorFile);
+
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_StaticallyLinkedX86Executable_FindsTestsWitLocation()
         {

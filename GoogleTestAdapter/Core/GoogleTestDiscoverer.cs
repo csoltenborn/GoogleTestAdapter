@@ -15,6 +15,8 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
+        private const string GoogleTestExecutableIndicatorFile = "IS_GOOGLE_TEST_EXECUTABLE";
+
         private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
         private readonly ILogger _logger;
@@ -84,6 +86,12 @@ namespace GoogleTestAdapter
 
         public bool IsGoogleTestExecutable(string executable, string customRegex = "")
         {
+            string folder = Path.GetDirectoryName(executable);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string googleTestIndicatorFile = Path.Combine(folder, GoogleTestExecutableIndicatorFile);
+            if (File.Exists(googleTestIndicatorFile))
+                return true;
+
             bool matches;
             string regexUsed;
             if (string.IsNullOrWhiteSpace(customRegex))
