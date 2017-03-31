@@ -24,15 +24,13 @@ namespace GoogleTestAdapter.TestResults
         private readonly List<string> _consoleOutput;
         private readonly List<TestCase> _testCasesRun;
         private readonly ILogger _logger;
-        private readonly string _baseDir;
 
 
-        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, ILogger logger, string baseDir)
+        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, ILogger logger)
         {
             _consoleOutput = consoleOutput.ToList();
             _testCasesRun = testCasesRun.ToList();
             _logger = logger;
-            _baseDir = baseDir;
         }
 
 
@@ -74,7 +72,7 @@ namespace GoogleTestAdapter.TestResults
             }
             if (IsFailedLine(line))
             {
-                ErrorMessageParser parser = new ErrorMessageParser(errorMsg, _baseDir);
+                ErrorMessageParser parser = new ErrorMessageParser(errorMsg);
                 parser.Parse();
                 return CreateFailedTestResult(testCase, ParseDuration(line), parser.ErrorMessage, parser.ErrorStackTrace);
             }
