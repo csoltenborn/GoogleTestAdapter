@@ -93,8 +93,8 @@ namespace GoogleTestAdapter.Runners
                 {
                     break;
                 }
-                var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, baseDir, _frameworkReporter);
-                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
+                var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, _frameworkReporter);
+                var results = RunTests(executable, workingDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
 
                 try
                 {
@@ -120,12 +120,12 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
+        private IEnumerable<TestResult> RunTests(string executable, string workingDir, bool isBeingDebugged,
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
         {
             try
             {
-                return TryRunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
+                return TryRunTests(executable, workingDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
             }
             catch (Exception e)
             {
@@ -144,7 +144,7 @@ namespace GoogleTestAdapter.Runners
                 $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
         }
 
-        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
+        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, bool isBeingDebugged,
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
             StreamingStandardOutputTestResultParser streamingParser)
         {
@@ -165,7 +165,7 @@ namespace GoogleTestAdapter.Runners
 
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
-            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, streamingParser.CrashedTestCase);
+            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
         }
 
         private TestProcessLauncher _processLauncher;
@@ -219,16 +219,16 @@ namespace GoogleTestAdapter.Runners
             return consoleOutput;
         }
 
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir, TestCase crashedTestCase)
+        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, TestCase crashedTestCase)
         {
             var testResults = new List<TestResult>();
 
             TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _logger, baseDir);
+            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _logger);
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger, baseDir);
+                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger);
                 List<TestResult> xmlResults = xmlParser.GetTestResults();
                 int nrOfCollectedTestResults = 0;
                 // ReSharper disable once AccessToModifiedClosure

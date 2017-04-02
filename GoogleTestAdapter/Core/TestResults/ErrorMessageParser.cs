@@ -33,20 +33,19 @@ namespace GoogleTestAdapter.TestResults
 
         private IList<string> ErrorMessages { get; }
 
-        public ErrorMessageParser(string consoleOutput, string baseDir) : this(baseDir)
+        public ErrorMessageParser(string consoleOutput) : this()
         {
             ErrorMessages = SplitConsoleOutput(consoleOutput);
         }
 
-        public ErrorMessageParser(XmlNodeList failureNodes, string baseDir) : this(baseDir)
+        public ErrorMessageParser(XmlNodeList failureNodes) : this()
         {
             ErrorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText).ToList();
         }
 
-        private ErrorMessageParser(string baseDir)
+        private ErrorMessageParser()
         {
-            string escapedBaseDir = Regex.Escape(baseDir ?? "");
-            string file = $"({escapedBaseDir}{ValidCharRegex}*)";
+            string file = $"({ValidCharRegex}*)";
             string line = "([0-9]+)";
             string fileAndLine = $@"{file}(?::{line}|\({line}\):)";
             string error = @"(?:error: |Failure\n)";

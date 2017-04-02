@@ -223,7 +223,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\")
+            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger)
                 .GetTestResults();
 
             results.Count.Should().Be(2);
@@ -245,7 +245,7 @@ namespace GoogleTestAdapter.TestResults
                 TestDataCreator.ToTestCase("TestMath.AddPasses", TestDataCreator.DummyExecutable,
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
-            var parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\");
+            var parser = new StandardOutputTestResultParser(cases, consoleOutput, TestEnvironment.Logger);
             return parser.GetTestResults();
         }
 

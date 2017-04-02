@@ -270,7 +270,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\")
+            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger)
                 .GetTestResults();
 
             results.Count.Should().Be(2);
@@ -293,7 +293,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\", MockFrameworkReporter.Object);
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
             consoleOutput.ForEach(parser.ReportLine);
             parser.Flush();
 
