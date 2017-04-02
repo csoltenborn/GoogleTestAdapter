@@ -151,7 +151,7 @@ namespace GoogleTestAdapter.TestResults
             }
             if (IsFailedLine(line))
             {
-                ErrorMessageParser parser = new ErrorMessageParser(errorMsg, _baseDir);
+                ErrorMessageParser parser = new ErrorMessageParser(errorMsg);
                 parser.Parse();
                 return CreateFailedTestResult(
                     testCase,

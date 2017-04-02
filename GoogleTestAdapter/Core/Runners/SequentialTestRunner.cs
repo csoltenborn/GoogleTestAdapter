@@ -207,7 +207,7 @@ namespace GoogleTestAdapter.Runners
 
             if (testResults.Count < testCasesRunAsArray.Length)
             {
-                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger, baseDir);
+                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger);
                 List<TestResult> xmlResults = xmlParser.GetTestResults();
                 int nrOfCollectedTestResults = 0;
                 // ReSharper disable once AccessToModifiedClosure
