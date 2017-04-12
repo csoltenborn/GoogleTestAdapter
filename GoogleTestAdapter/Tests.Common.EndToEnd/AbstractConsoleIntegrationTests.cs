@@ -95,11 +95,12 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
 
         public static bool ShouldGenerateVsixTests()
         {
-#pragma warning disable 162
-            // ReSharper disable RedundantLogicalConditionalExpressionOperand
-            return TestMetadata.GenerateVsixTests || TestMetadata.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
-            // ReSharper restore RedundantLogicalConditionalExpressionOperand
-#pragma warning restore 162
+            return false;
+//#pragma warning disable 162
+//            // ReSharper disable RedundantLogicalConditionalExpressionOperand
+//            return TestMetadata.GenerateVsixTests || TestMetadata.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
+//            // ReSharper restore RedundantLogicalConditionalExpressionOperand
+//#pragma warning restore 162
         }
 
         private static string NormalizeOutput(string resultString, string baseDir)
