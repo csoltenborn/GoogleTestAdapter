@@ -26,7 +26,6 @@
         <TraitsRegexesBefore />
         <TestNameSeparator />
         <ParseSymbolInformation>true</ParseSymbolInformation>
-        <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
         <KillProcessesOnCancel>false</KillProcessesOnCancel>
       </Settings>
     </SolutionSettings>

@@ -81,27 +81,25 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractGoogleTestDiscovererTraitTests.cs" />
+    <Compile Include="Common\LoggerBaseTests.cs" />
     <Compile Include="GoogleTestDiscoverReleaseTraitTests.cs" />
     <Compile Include="GoogleTestDiscoverDebugTraitTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="GoogleTestExecutorTests.cs" />
-    <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="Helpers\ProcessExecutorTests.cs" />
-    <Compile Include="Helpers\RegexTraitParserTests.cs" />
+    <Compile Include="Settings\RegexTraitParserTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\UtilsTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
     <Compile Include="TestCases\TestCaseFactoryTests.cs" />
-    <Compile Include="TestCases\ListTestsParserTests.cs" />
-    <Compile Include="TestResults\StreamingStandardOutputTestResultParserTests.cs" />
-    <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
+    <Compile Include="TestCases\StreamingListTestsParserTests.cs" />
+    <Compile Include="TestResults\StreamingTestOutputParserTests.cs" />
     <Compile Include="TestResults\ErrorMessageParserTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
     <Compile Include="Settings\SettingsWrapperTests.cs" />
-    <Compile Include="Helpers\TestProcessLauncherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />
   </ItemGroup>

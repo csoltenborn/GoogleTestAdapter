@@ -19,6 +19,7 @@ using Thread = System.Threading.Thread;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
+    [Serializable]
     internal class LastWin32Exception : Win32Exception
     {
         public LastWin32Exception()

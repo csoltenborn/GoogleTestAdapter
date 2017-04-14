@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.Settings
 {
     [TestClass]
     public class RegexTraitParserTests : TestsBase
@@ -22,7 +20,7 @@ namespace GoogleTestAdapter.Helpers
 
 
         [TestMethod]
-        [TestCategory(Unit)]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
         public void ParseTraitsRegexesString_UnparsableString_FailsNicely()
         {
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("vrr<erfwe");
@@ -32,7 +30,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        [TestCategory(Unit)]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
         public void ParseTraitsRegexesString_EmptyString_EmptyResult()
         {
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("");
@@ -42,7 +40,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        [TestCategory(Unit)]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
         public void ParseTraitsRegexesString_OneRegex_ParsedCorrectly()
         {
             string optionsString = CreateTraitsRegex("MyTest*", "Type", "Small");
@@ -57,7 +55,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
         [TestMethod]
-        [TestCategory(Unit)]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
         public void ParseTraitsRegexesString_TwoRegexes_ParsedCorrectly()
         {
             string optionsString = ConcatTraitsRegexes(

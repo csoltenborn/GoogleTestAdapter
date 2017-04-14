@@ -33,24 +33,10 @@ namespace GoogleTestAdapter
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                var discoveryActions = googleTestExecutables
-                    .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
-                    .ToArray();
-                Utils.SpawnAndWait(discoveryActions);
-            }
-            else
-            {
-                foreach (string executable in googleTestExecutables)
-                {
-                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                    {
-                        IList<TestCase> testCases = GetTestsFromExecutable(executable);
-                        reporter.ReportTestsFound(testCases);
-                    }, _logger);
-                }
-            }
+            var discoveryActions = googleTestExecutables
+                .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
+                .ToArray();
+            Utils.SpawnAndWait(discoveryActions);
         }
 
         private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory)
@@ -60,7 +46,7 @@ namespace GoogleTestAdapter
                 int nrOfTestCases = 0;
                 Action<TestCase> reportTestCases = tc =>
                 {
-                    reporter.ReportTestsFound(tc.Yield());
+                    reporter.ReportTestFound(tc);
                     logger.DebugInfo("Added testcase " + tc.DisplayName);
                     nrOfTestCases++;
                 };

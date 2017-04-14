@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Settings;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common;
@@ -10,7 +11,7 @@ using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
-    public class StreamingStandardOutputTestResultParserTests : TestsBase
+    public class StreamingTestOutputParserTests : TestsBase
     {
         private string[] ConsoleOutput1 { get; } = {
             @"[==========] Running 3 tests from 1 test case.",
@@ -142,7 +143,7 @@ namespace GoogleTestAdapter.TestResults
 
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[0]);
-            results[0].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[0].ErrorMessage.Should().NotContain(StreamingTestOutputParser.CrashText);
             results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(3));
             results[0].ErrorStackTrace.Should()
                 .Contain(
@@ -150,11 +151,11 @@ namespace GoogleTestAdapter.TestResults
 
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
-            results[1].Duration.Should().Be(StandardOutputTestResultParser.ShortTestDuration);
+            results[1].Duration.Should().Be(StreamingTestOutputParser.ShortTestDuration);
 
             results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[2]);
-            results[2].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[2].ErrorMessage.Should().NotContain(StreamingTestOutputParser.CrashText);
             results[2].Duration.Should().Be(TimeSpan.FromMilliseconds(9));
         }
 
@@ -168,13 +169,13 @@ namespace GoogleTestAdapter.TestResults
 
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[0]);
-            results[0].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[0].ErrorMessage.Should().NotContain(StreamingTestOutputParser.CrashText);
             results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(3));
             results[0].ErrorStackTrace.Should().Contain(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
 
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[1]);
-            results[1].ErrorMessage.Should().Contain(StandardOutputTestResultParser.CrashText);
+            results[1].ErrorMessage.Should().Contain(StreamingTestOutputParser.CrashText);
             results[1].ErrorMessage.Should().NotContain("Test output:");
             results[1].Duration.Should().Be(TimeSpan.FromMilliseconds(0));
         }
@@ -189,17 +190,17 @@ namespace GoogleTestAdapter.TestResults
 
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[0]);
-            results[0].ErrorMessage.Should().NotContain(StandardOutputTestResultParser.CrashText);
+            results[0].ErrorMessage.Should().NotContain(StreamingTestOutputParser.CrashText);
             results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(3));
             results[0].ErrorStackTrace.Should().Contain(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
 
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
-            results[1].Duration.Should().Be(StandardOutputTestResultParser.ShortTestDuration);
+            results[1].Duration.Should().Be(StreamingTestOutputParser.ShortTestDuration);
 
             results[2].TestCase.FullyQualifiedName.Should().Be("TestMath.Crash");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[2]);
-            results[2].ErrorMessage.Should().Contain(StandardOutputTestResultParser.CrashText);
+            results[2].ErrorMessage.Should().Contain(StreamingTestOutputParser.CrashText);
             results[2].ErrorMessage.Should().Contain("Test output:");
             results[2].ErrorMessage.Should().Contain("unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.");
             results[2].Duration.Should().Be(TimeSpan.FromMilliseconds(0));
@@ -215,7 +216,7 @@ namespace GoogleTestAdapter.TestResults
 
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
-            results[1].Duration.Should().Be(StandardOutputTestResultParser.ShortTestDuration);
+            results[1].Duration.Should().Be(StreamingTestOutputParser.ShortTestDuration);
         }
 
         [TestMethod]
@@ -229,7 +230,7 @@ namespace GoogleTestAdapter.TestResults
             results[1].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[1]);
             results[1].ErrorMessage.Should().Contain("DummyOutput");
-            results[1].Duration.Should().Be(StandardOutputTestResultParser.ShortTestDuration);
+            results[1].Duration.Should().Be(StreamingTestOutputParser.ShortTestDuration);
         }
 
         [TestMethod]
@@ -270,8 +271,10 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger)
-                .GetTestResults();
+            var parser = new StreamingTestOutputParser(cases, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\", MockFrameworkReporter.Object);
+            ConsoleOutputWithPrefixingTest.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+            var results = parser.TestResults;
 
             results.Count.Should().Be(2);
             results[0].TestCase.FullyQualifiedName.Should().Be("Test.AB");
@@ -293,7 +296,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            var parser = new StreamingTestOutputParser(cases, MockLogger.Object, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\", MockFrameworkReporter.Object);
             consoleOutput.ForEach(parser.ReportLine);
             parser.Flush();
 

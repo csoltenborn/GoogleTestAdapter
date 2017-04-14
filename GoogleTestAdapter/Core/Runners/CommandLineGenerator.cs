@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 
@@ -194,7 +193,10 @@ namespace GoogleTestAdapter.Runners
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)
         {
-            return string.Join(".*:", suitesRunningAllTests).AppendIfNotEmpty(".*:");
+            string filter = string.Join(".*:", suitesRunningAllTests);
+            if (!string.IsNullOrWhiteSpace(filter))
+                filter += ".*:";
+            return filter;
         }
 
         private bool AllTestCasesOfExecutableAreRun()

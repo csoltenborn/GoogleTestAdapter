@@ -184,7 +184,6 @@ namespace GoogleTestAdapter.VsPackage
                 ParallelTestExecution = _parallelizationOptions.EnableParallelTestExecution,
                 MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads,
 
-                UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
                 VisualStudioProcessId = Process.GetCurrentProcess().Id
             };
         }

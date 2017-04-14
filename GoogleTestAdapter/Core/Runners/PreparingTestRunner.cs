@@ -24,28 +24,27 @@ namespace GoogleTestAdapter.Runners
         private readonly string _solutionDirectory;
 
 
-        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public PreparingTestRunner(int threadId, string solutionDirectory, IDebuggerAttacher debuggerAttacher, ITestFrameworkReporter reporter, SchedulingAnalyzer schedulingAnalyzer, SettingsWrapper settings, ILogger logger)
         {
             _logger = logger;
             _settings = settings;
             string threadName = ComputeThreadName(threadId, _settings.MaxNrOfThreads);
             _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
             _threadId = Math.Max(0, threadId);
-            _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _logger, _settings, schedulingAnalyzer);
+            _innerTestRunner = new SequentialTestRunner(_threadName, debuggerAttacher, reporter, schedulingAnalyzer, _settings, _logger);
             _solutionDirectory = solutionDirectory;
         }
 
-        public PreparingTestRunner(string solutionDirectory, ITestFrameworkReporter reporter,
-            ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
-            : this(-1, solutionDirectory, reporter, logger, settings, schedulingAnalyzer){
+        public PreparingTestRunner(string solutionDirectory, IDebuggerAttacher debuggerAttacher, ITestFrameworkReporter reporter, SchedulingAnalyzer schedulingAnalyzer, SettingsWrapper settings, ILogger logger)
+            : this(-1, solutionDirectory, debuggerAttacher, reporter, schedulingAnalyzer, settings, logger){
         }
 
 
         public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
-             string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+             string workingDir, string userParameters)
         {
-            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
-            DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
+            Utils.AssertIsNull(userParameters, nameof(userParameters));
+            Utils.AssertIsNull(workingDir, nameof(workingDir));
 
             try
             {
@@ -57,13 +56,13 @@ namespace GoogleTestAdapter.Runners
 
                 string batch = _settings.GetBatchForTestSetup(_solutionDirectory, testDirectory, _threadId);
                 batch = batch == "" ? "" : _solutionDirectory + batch;
-                SafeRunBatch(TestSetup, _solutionDirectory, batch, isBeingDebugged);
+                SafeRunBatch(TestSetup, _solutionDirectory, batch);
 
-                _innerTestRunner.RunTests(allTestCases, testCasesToRun, baseDir, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
+                _innerTestRunner.RunTests(allTestCases, testCasesToRun, baseDir, workingDir, userParameters);
 
                 batch = _settings.GetBatchForTestTeardown(_solutionDirectory, testDirectory, _threadId);
                 batch = batch == "" ? "" : _solutionDirectory + batch;
-                SafeRunBatch(TestTeardown, _solutionDirectory, batch, isBeingDebugged);
+                SafeRunBatch(TestTeardown, _solutionDirectory, batch);
 
                 stopwatch.Stop();
                 _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
@@ -87,7 +86,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void SafeRunBatch(string batchType, string workingDirectory, string batch, bool isBeingDebugged)
+        private void SafeRunBatch(string batchType, string workingDirectory, string batch)
         {
             if (string.IsNullOrEmpty(batch))
             {
@@ -101,7 +100,7 @@ namespace GoogleTestAdapter.Runners
 
             try
             {
-                RunBatch(batchType, workingDirectory, batch, isBeingDebugged);
+                RunBatch(batchType, workingDirectory, batch);
             }
             catch (Exception e)
             {
@@ -110,19 +109,10 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private void RunBatch(string batchType, string workingDirectory, string batch, bool isBeingDebugged)
+        private void RunBatch(string batchType, string workingDirectory, string batch)
         {
-            int batchExitCode;
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                var executor = new ProcessExecutor(null, _logger);
-                batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { });
-            }
-            else
-            {
-                new TestProcessLauncher(_logger, _settings, isBeingDebugged).GetOutputOfCommand(
-                    workingDirectory, batch, "", false, false, null, out batchExitCode);
-            }
+            var executor = new ProcessExecutor(_logger);
+            var batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { });
 
             if (batchExitCode == 0)
             {

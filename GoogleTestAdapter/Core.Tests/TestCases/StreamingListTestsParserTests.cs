@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.TestCases
 {
 
     [TestClass]
-    public class ListTestsParserTests : TestsBase
+    public class StreamingListTestsParserTests : TestsBase
     {
 
         [TestMethod]
@@ -21,8 +21,7 @@ namespace GoogleTestAdapter.TestCases
                 "  MyTestCase"
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("MySuite");
@@ -43,8 +42,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0  # GetParam() = (1,)",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterizedTests");
@@ -64,8 +62,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("TypedTests/0");
@@ -85,8 +82,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("Arr/TypeParameterizedTests/1");
@@ -106,8 +102,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("Arr/TypeParameterizedTests/1");
@@ -128,8 +123,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0  # GetParam() = (1,)",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterizedTests");
@@ -150,8 +144,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
-                .ParseListTestsOutput(consoleOutput);
+            var descriptors = ParseConsoleOutput(consoleOutput);
 
             descriptors.Count.Should().Be(1);
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterizedTests");
@@ -161,6 +154,14 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
         }
 
+        private List<TestCaseDescriptor> ParseConsoleOutput(List<string> consoleOutput)
+        {
+            var descriptors = new List<TestCaseDescriptor>();
+            var parser = new StreamingListTestsParser(TestEnvironment.Options.TestNameSeparator);
+            parser.TestCaseDescriptorCreated += (sender, args) => descriptors.Add(args.TestCaseDescriptor);
+            consoleOutput.ForEach(s => parser.ReportLine(s));
+            return descriptors;
+        }
     }
 
 }

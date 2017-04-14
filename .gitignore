@@ -16,7 +16,6 @@ build/
 [Oo]bj/
 
 # MSTest test Results
-[Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
 *_i.c
@@ -163,3 +162,4 @@ OpenCover/
 *.VC.opendb
 *.VC.db-shm
 *.VC.db-wal
+/SampleTests/TestResults

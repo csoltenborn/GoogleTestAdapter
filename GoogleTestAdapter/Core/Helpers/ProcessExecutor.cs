@@ -15,12 +15,14 @@ using Microsoft.Win32.SafeHandles;
 
 namespace GoogleTestAdapter.Helpers
 {
-    public class ProcessExecutor : IProcessExecutor
+    public class ProcessExecutor
     {
         public const int ExecutionFailed = int.MaxValue;
 
         private readonly IDebuggerAttacher _debuggerAttacher;
         private readonly ILogger _logger;
+
+        private int? _processId;
 
         public ProcessExecutor(ILogger logger) : this(null, logger)
         {
@@ -47,12 +49,37 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        private int? _processId;
+        public int ExecuteBatchFileBlocking(string batchFile, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
+        {
+            return ExecuteCommandBlocking($"cmd.exe /C {batchFile}", parameters, workingDir, pathExtension, reportOutputLine);
+        }
 
         public void Cancel()
         {
             if (_processId.HasValue)
-                TestProcessLauncher.KillProcess(_processId.Value, _logger);
+                KillProcess(_processId.Value, _logger);
+        }
+
+        private static void KillProcess(int processId, ILogger logger)
+        {
+            try
+            {
+                Process process = Process.GetProcessById(processId);
+                DateTime startTime = process.StartTime;
+                try
+                {
+                    process.Kill();
+                    logger.DebugInfo($"Killed process {process} with startTime={startTime.ToShortTimeString()}");
+                }
+                catch (Exception e)
+                {
+                    logger.DebugWarning($"Could not kill process {process} with startTime={startTime.ToShortTimeString()}: {e.Message}");
+                }
+            }
+            catch (Exception)
+            {
+                // process was not running - nothing to do
+            }
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
@@ -139,7 +166,7 @@ namespace GoogleTestAdapter.Helpers
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
                 
                 if (!string.IsNullOrEmpty(pathExtension))
-                    envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                    envVariables["PATH"] = GetExtendedPath(pathExtension);
 
                 var envVariablesList = new List<string>();
                 foreach (DictionaryEntry entry in envVariables)
@@ -155,6 +182,12 @@ namespace GoogleTestAdapter.Helpers
                 result.Length++;
 
                 return result;
+            }
+
+            private static string GetExtendedPath(string pathExtension)
+            {
+                string path = Environment.GetEnvironmentVariable("PATH");
+                return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
             }
 
             private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
@@ -232,6 +265,8 @@ namespace GoogleTestAdapter.Helpers
 
             private static SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
 
+#pragma warning disable 414
+#pragma warning disable 169
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
             private class STARTUPINFOEX
             {
@@ -257,11 +292,14 @@ namespace GoogleTestAdapter.Helpers
                 public Int16 wShowWindow;
                 public Int16 cbReserved2;
                 public IntPtr lpReserved2;
+                // ReSharper disable UnusedMember.Local
+                // ReSharper disable NotAccessedField.Local
                 public SafeHandle hStdInput = NULL_HANDLE;
                 public SafeHandle hStdOutput = NULL_HANDLE;
                 public SafeHandle hStdError = NULL_HANDLE;
+                // ReSharper restore NotAccessedField.Local
+                // ReSharper restore UnusedMember.Local
             }
-
             [StructLayout(LayoutKind.Sequential)]
             private struct PROCESS_INFORMATION
             {
@@ -278,6 +316,9 @@ namespace GoogleTestAdapter.Helpers
                 public IntPtr lpSecurityDescriptor;
                 public bool bInheritHandle;
             }
+#pragma warning restore 169
+#pragma warning restore 414
+
         }
     }
 }

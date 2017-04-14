@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using GoogleTestAdapter.Model;
+﻿using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Framework
 {
 
     public interface ITestFrameworkReporter
     {
-        void ReportTestsFound(IEnumerable<TestCase> testCases);
+        void ReportTestFound(TestCase testCase);
 
-        void ReportTestsStarted(IEnumerable<TestCase> testCases);
+        void ReportTestStarted(TestCase testCase);
 
         /// <exception cref="TestRunCanceledException">if test execution has been canceled in the meantime</exception>
-        void ReportTestResults(IEnumerable<TestResult> testResults);
+        void ReportTestResult(TestResult testResult);
     }
 
 }

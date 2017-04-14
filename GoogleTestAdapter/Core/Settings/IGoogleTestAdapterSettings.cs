@@ -40,7 +40,6 @@
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
         int? VisualStudioProcessId { get; set; }
-        bool? UseNewTestExecutionFramework { get; set; }
         bool? KillProcessesOnCancel { get; set; }
     }
 
@@ -72,7 +71,6 @@
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
-            self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
         }
     }

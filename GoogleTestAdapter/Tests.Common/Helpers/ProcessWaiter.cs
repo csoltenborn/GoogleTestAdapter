@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace GoogleTestAdapter.Common
+namespace GoogleTestAdapter.Tests.Common.Helpers
 {
 
     public class ProcessWaiter

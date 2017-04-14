@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Scheduling
@@ -45,7 +44,7 @@ namespace GoogleTestAdapter.Scheduling
 
         public IDictionary<TestCase, int> ReadTestDurations(IEnumerable<TestCase> testcases)
         {
-            IDictionary<string, List<TestCase>> groupedTestcases = testcases.GroupByExecutable();
+            IDictionary<string, List<TestCase>> groupedTestcases = TestCase.GroupByExecutable(testcases);
             var durations = new Dictionary<TestCase, int>();
             foreach (string executable in groupedTestcases.Keys)
             {

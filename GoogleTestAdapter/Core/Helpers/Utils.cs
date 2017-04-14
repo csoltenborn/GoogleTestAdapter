@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,11 @@ namespace GoogleTestAdapter.Helpers
 
         public static string GetTempDirectory()
         {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempDirectory;
+            do
+            {
+                tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            } while (Directory.Exists(tempDirectory) || File.Exists(tempDirectory));
             Directory.CreateDirectory(tempDirectory);
             return tempDirectory;
         }
@@ -32,16 +35,20 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        public static string GetExtendedPath(string pathExtension)
+        public static void AssertIsNotNull(object parameter, string parameterName)
         {
-            string path = Environment.GetEnvironmentVariable("PATH");
-            return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(parameterName);
+            }
         }
 
-        public static void TimestampMessage(ref string message)
+        public static void AssertIsNull(object parameter, string parameterName)
         {
-            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            message = $"{timestamp} - {message ?? ""}";
+            if (parameter != null)
+            {
+                throw new ArgumentException(parameterName + " must be null");
+            }
         }
 
         /// <exception cref="AggregateException">If at least one of the actions has thrown an exception</exception>

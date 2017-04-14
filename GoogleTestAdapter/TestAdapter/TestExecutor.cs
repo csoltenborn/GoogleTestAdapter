@@ -9,7 +9,6 @@ using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
@@ -189,24 +188,19 @@ namespace GoogleTestAdapter.TestAdapter
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
-            var launcher = new DebuggedProcessLauncher(frameworkHandle);
-            ProcessExecutor processExecutor = null;
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                IDebuggerAttacher debuggerAttacher = null;
-                if (runContext.IsBeingDebugged)
-                    debuggerAttacher = new VsDebuggerAttacher(_logger, _settings.VisualStudioProcessId);
-                processExecutor = new ProcessExecutor(debuggerAttacher, _logger);
-            }
+            IDebuggerAttacher debuggerAttacher = null;
+            if (runContext.IsBeingDebugged)
+                debuggerAttacher = new VsDebuggerAttacher(_logger, _settings.VisualStudioProcessId);
             lock (_lock)
             {
                 if (_canceled)
                     return;
 
-                _executor = new GoogleTestExecutor(_logger, _settings);
+                _executor = new GoogleTestExecutor(_logger, _settings, debuggerAttacher);
             }
-            _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
+            _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter,
+                runContext.IsBeingDebugged, runContext.SolutionDirectory);
+
             reporter.AllTestsFinished();
         }
 

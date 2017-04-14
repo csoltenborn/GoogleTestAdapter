@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.TestCases;
 
 namespace GoogleTestAdapter.Settings
 {
@@ -232,14 +232,6 @@ namespace GoogleTestAdapter.Settings
 
         public const int OptionVisualStudioProcessIdDefaultValue = -1;
         public virtual int VisualStudioProcessId => _currentSettings.VisualStudioProcessId ?? OptionVisualStudioProcessIdDefaultValue;
-
-
-        public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
-        public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.";
-
-        public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
 
 
         public const string OptionPrintTestOutput = "Print test output";

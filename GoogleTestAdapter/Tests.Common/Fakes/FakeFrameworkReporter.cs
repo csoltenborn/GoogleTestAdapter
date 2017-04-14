@@ -8,17 +8,17 @@ namespace GoogleTestAdapter.Tests.Common.Fakes
     {
         public IList<TestResult> ReportedTestResults { get; } = new List<TestResult>();
 
-        public void ReportTestsFound(IEnumerable<TestCase> testCases)
+        public void ReportTestFound(TestCase testCase)
         {
         }
 
-        public void ReportTestsStarted(IEnumerable<TestCase> testCases)
+        public void ReportTestStarted(TestCase testCase)
         {
         }
 
-        public void ReportTestResults(IEnumerable<TestResult> testResults)
+        public void ReportTestResult(TestResult testResult)
         {
-            ((List<TestResult>)ReportedTestResults).AddRange(testResults);
+            ReportedTestResults.Add(testResult);
         }
     }
 

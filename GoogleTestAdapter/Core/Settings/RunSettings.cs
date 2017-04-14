@@ -90,9 +90,6 @@ namespace GoogleTestAdapter.Settings
         public virtual int? VisualStudioProcessId { get; set; }
         public bool ShouldSerializeVisualStudioProcessId() { return VisualStudioProcessId != null; }
 
-        public virtual bool? UseNewTestExecutionFramework { get; set; }
-        public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
-
         public virtual bool? KillProcessesOnCancel { get; set; }
         public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
 

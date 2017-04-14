@@ -15,20 +15,22 @@ namespace GoogleTestAdapter
 
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
+        private readonly IDebuggerAttacher _debuggerAttacher;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
         private ITestRunner _runner;
         private bool _canceled;
 
-        public GoogleTestExecutor(ILogger logger, SettingsWrapper settings)
+        public GoogleTestExecutor(ILogger logger, SettingsWrapper settings, IDebuggerAttacher debuggerAttacher)
         {
             _logger = logger;
             _settings = settings;
+            _debuggerAttacher = debuggerAttacher;
             _schedulingAnalyzer = new SchedulingAnalyzer(logger);
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> allTestCasesInExecutables, IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, bool isBeingDebugged, string solutionDirectory)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
             _logger.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
@@ -42,7 +44,7 @@ namespace GoogleTestAdapter
                 ComputeTestRunner(reporter, isBeingDebugged, solutionDirectory);
             }
 
-            _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, null, isBeingDebugged, launcher, executor);
+            _runner.RunTests(allTestCasesInExecutables, testCasesToRunAsArray, solutionDirectory, null, null);
 
             if (_settings.ParallelTestExecution)
                 _schedulingAnalyzer.PrintStatisticsToDebugOutput();
@@ -61,11 +63,11 @@ namespace GoogleTestAdapter
         {
             if (_settings.ParallelTestExecution && !isBeingDebugged)
             {
-                _runner = new ParallelTestRunner(reporter, _logger, _settings, solutionDirectory, _schedulingAnalyzer);
+                _runner = new ParallelTestRunner(solutionDirectory, _debuggerAttacher, reporter, _schedulingAnalyzer, _settings, _logger);
             }
             else
             {
-                _runner = new PreparingTestRunner(solutionDirectory, reporter, _logger, _settings, _schedulingAnalyzer);
+                _runner = new PreparingTestRunner(solutionDirectory, _debuggerAttacher, reporter, _schedulingAnalyzer, _settings, _logger);
                 if (_settings.ParallelTestExecution && isBeingDebugged)
                 {
                     _logger.DebugInfo(
