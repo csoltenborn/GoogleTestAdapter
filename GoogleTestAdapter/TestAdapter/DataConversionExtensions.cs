@@ -3,7 +3,12 @@ using System.Linq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using TestCase = GoogleTestAdapter.Model.TestCase;
+using TestOutcome = GoogleTestAdapter.Model.TestOutcome;
+using TestResult = GoogleTestAdapter.Model.TestResult;
+using Trait = GoogleTestAdapter.Model.Trait;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
+using VsTestProperty = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestProperty;
 using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
 using VsTestOutcome = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome;
 using VsTrait = Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait;
@@ -13,12 +18,24 @@ namespace GoogleTestAdapter.TestAdapter
 
     public static class DataConversionExtensions
     {
+        private static readonly VsTestProperty TestMetaDataProperty;
+
+        static DataConversionExtensions()
+        {
+            TestMetaDataProperty = VsTestProperty.Register(TestCaseMetaDataProperty.Id, TestCaseMetaDataProperty.Label, typeof(string), typeof(VsTestCase));
+        }
+
 
         public static TestCase ToTestCase(this VsTestCase vsTestCase)
         {
             var testCase = new TestCase(vsTestCase.FullyQualifiedName, vsTestCase.Source, 
                 vsTestCase.DisplayName, vsTestCase.CodeFilePath, vsTestCase.LineNumber);
             testCase.Traits.AddRange(vsTestCase.Traits.Select(ToTrait));
+
+            var metaDataSerialization = vsTestCase.GetPropertyValue(TestMetaDataProperty);
+            if (metaDataSerialization != null)
+                testCase.Properties.Add(new TestCaseMetaDataProperty((string)metaDataSerialization));
+
             return testCase;
         }
 
@@ -30,7 +47,13 @@ namespace GoogleTestAdapter.TestAdapter
                 CodeFilePath = testCase.CodeFilePath,
                 LineNumber = testCase.LineNumber
             };
+
             vsTestCase.Traits.AddRange(testCase.Traits.Select(ToVsTrait));
+
+            var property = testCase.Properties.OfType<TestCaseMetaDataProperty>().SingleOrDefault();
+            if (property != null)
+                vsTestCase.SetPropertyValue(TestMetaDataProperty, property.Serialization);
+
             return vsTestCase;
         }
 

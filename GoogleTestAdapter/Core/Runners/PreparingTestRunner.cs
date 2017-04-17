@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
              string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.Runners
                 batch = batch == "" ? "" : _solutionDirectory + batch;
                 SafeRunBatch(TestSetup, _solutionDirectory, batch, isBeingDebugged);
 
-                _innerTestRunner.RunTests(allTestCases, testCasesToRun, baseDir, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
+                _innerTestRunner.RunTests(testCasesToRun, baseDir, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
 
                 batch = _settings.GetBatchForTestTeardown(_solutionDirectory, testDirectory, _threadId);
                 batch = batch == "" ? "" : _solutionDirectory + batch;
