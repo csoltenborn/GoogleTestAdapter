@@ -41,54 +41,54 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
             UserSettingsFile = Path.Combine(basePath, @"SampleTests\NonDeterministic.runsettings");
         }
 
-        public void SetupVanillaVsExperimentalInstance(string suffix, string typename)
-        {
-            AskIfNotOnBuildServerAndProductiveVs(suffix);
+        //public void SetupVanillaVsExperimentalInstance(string suffix, string typename)
+        //{
+        //    AskIfNotOnBuildServerAndProductiveVs(suffix);
 
-            try
-            {
-                VisualStudioInstance = new VsExperimentalInstance(TestMetadata.VersionUnderTest, suffix);
-                if (string.IsNullOrEmpty(suffix))
-                {
-                    _keepDirtyVsInstance = true;
-                    VisualStudioInstance.InstallExtension(_vsixPath);
-                }
-                else
-                {
-                    if (!_keepDirtyVsInstance)
-                    {
-                        _keepDirtyVsInstance = AskToCleanIfExists();
-                    }
-                    if (!_keepDirtyVsInstance)
-                    {
-                        VisualStudioInstance.FirstTimeInitialization();
-                        VisualStudioInstance.InstallExtension(_vsixPath);
-                    }
-                }
-            }
-            // ReSharper disable once RedundantCatchClause
-            // ReSharper disable once UnusedVariable
-            catch (Exception exception)
-            {
-                var wrapper = new AutomationException(
-                    $"Exception caught: {exception.GetType().Name}", 
-                    exception.Message, 
-                    exception);
-                wrapper.LogAndThrow(typename);
-            }
-        }
+        //    try
+        //    {
+        //        VisualStudioInstance = new VsExperimentalInstance(TestMetadata.VersionUnderTest, suffix);
+        //        if (string.IsNullOrEmpty(suffix))
+        //        {
+        //            _keepDirtyVsInstance = true;
+        //            VisualStudioInstance.InstallExtension(_vsixPath);
+        //        }
+        //        else
+        //        {
+        //            if (!_keepDirtyVsInstance)
+        //            {
+        //                _keepDirtyVsInstance = AskToCleanIfExists();
+        //            }
+        //            if (!_keepDirtyVsInstance)
+        //            {
+        //                VisualStudioInstance.FirstTimeInitialization();
+        //                VisualStudioInstance.InstallExtension(_vsixPath);
+        //            }
+        //        }
+        //    }
+        //    // ReSharper disable once RedundantCatchClause
+        //    // ReSharper disable once UnusedVariable
+        //    catch (Exception exception)
+        //    {
+        //        var wrapper = new AutomationException(
+        //            $"Exception caught: {exception.GetType().Name}", 
+        //            exception.Message, 
+        //            exception);
+        //        wrapper.LogAndThrow(typename);
+        //    }
+        //}
 
-        public void CleanVsExperimentalInstance()
-        {
-            if (!_keepDirtyVsInstance)
-            {
-                // wait for removal of locks on some files we want to delete
-                // TODO: find more reliable method than using Sleep()
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-                VisualStudioInstance.Clean();
-            }
-            VisualStudioInstance = null;
-        }
+        //public void CleanVsExperimentalInstance()
+        //{
+        //    if (!_keepDirtyVsInstance)
+        //    {
+        //        // wait for removal of locks on some files we want to delete
+        //        // TODO: find more reliable method than using Sleep()
+        //        Thread.Sleep(TimeSpan.FromSeconds(1));
+        //        VisualStudioInstance.Clean();
+        //    }
+        //    VisualStudioInstance = null;
+        //}
 
 
         private static void AskIfNotOnBuildServerAndProductiveVs(string suffix)

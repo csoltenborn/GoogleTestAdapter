@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
@@ -14,6 +15,8 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
+        private const string GoogleTestExecutableIndicatorFile = "IS_GOOGLE_TEST_EXECUTABLE";
+
         private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
         private readonly ILogger _logger;
@@ -32,22 +35,10 @@ namespace GoogleTestAdapter
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             if (_settings.UseNewTestExecutionFramework)
             {
-                foreach (string executable in googleTestExecutables)
-                {
-                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                    {
-                        int nrOfTestCases = 0;
-                        Action<TestCase> reportTestCases = tc =>
-                        {
-                            reporter.ReportTestsFound(tc.Yield());
-                            _logger.DebugInfo("Added testcase " + tc.DisplayName);
-                            nrOfTestCases++;
-                        };
-                        var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
-                        factory.CreateTestCases(reportTestCases);
-                        _logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-                    }, _logger);
-                }
+                var discoveryActions = googleTestExecutables
+                    .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
+                    .ToArray();
+                Utils.SpawnAndWait(discoveryActions);
             }
             else
             {
@@ -60,6 +51,23 @@ namespace GoogleTestAdapter
                     }, _logger);
                 }
             }
+        }
+
+        private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory)
+        {
+            settings.ExecuteWithSettingsForExecutable(executable, () =>
+            {
+                int nrOfTestCases = 0;
+                Action<TestCase> reportTestCases = tc =>
+                {
+                    reporter.ReportTestsFound(tc.Yield());
+                    logger.DebugInfo("Added testcase " + tc.DisplayName);
+                    nrOfTestCases++;
+                };
+                var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory);
+                factory.CreateTestCases(reportTestCases);
+                logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+            }, logger);
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
@@ -78,6 +86,12 @@ namespace GoogleTestAdapter
 
         public bool IsGoogleTestExecutable(string executable, string customRegex = "")
         {
+            string folder = Path.GetDirectoryName(executable);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string googleTestIndicatorFile = Path.Combine(folder, GoogleTestExecutableIndicatorFile);
+            if (File.Exists(googleTestIndicatorFile))
+                return true;
+
             bool matches;
             string regexUsed;
             if (string.IsNullOrWhiteSpace(customRegex))

@@ -21,9 +21,12 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Results0Batch = @"Tests\Returns0.bat";
         public const string Results1Batch = @"Tests\Returns1.bat";
 
+        public const string TenSecondsWaiter = TestdataDir + @"misc\TenSecondsWaiter.exe";
+
         public const int NrOfSampleTests = 88;
         public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
         public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
+        public const string SampleTests170 = SampleTestsSolutionDir + @"Debug\Tests_1.7.0_gta.exe";
 
         public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests_gta.exe");
         public static readonly string LongRunningTests = Path.Combine(SampleTestsSolutionDir, @"Release\LongRunningTests_gta.exe");
@@ -46,6 +49,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
         public const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
         public const string X64CrashingTests = X64Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+
+        public const string TestWithIndicatorFile = TestdataDir + @"GoogleTestIndicatorFile\with\SomeWeirdName.exe";
+        public const string TestWithoutIndicatorFile = TestdataDir + @"GoogleTestIndicatorFile\without\SomeWeirdName.exe";
 
         public const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         public const string XmlFile2 = TestdataDir + @"SampleResult2.xml";

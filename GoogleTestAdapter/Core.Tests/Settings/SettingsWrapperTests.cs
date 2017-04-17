@@ -359,6 +359,117 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("ShuffleTestsSeed: 0");
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ExecuteWithSettingsForExecutable_NewInstance_ShouldDeliverSolutionSettings()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo");
+
+            settings.WorkingDir.Should().Be("solution_dir");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ExecuteWithSettingsForExecutable_WithConfiguredProject_ShouldDeliverProjectSettings()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo");
+
+            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            {
+                settings.WorkingDir.Should().Be("foo_dir");
+            }, MockLogger.Object);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ExecuteWithSettingsForExecutable_WithConfiguredProject_ShouldSwitchBackToSolutionSettingsAfterExecution()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo");
+
+            settings.ExecuteWithSettingsForExecutable("foo", () => {}, MockLogger.Object);
+
+            settings.WorkingDir.Should().Be("solution_dir");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ExecuteWithSettingsForExecutable_WithUnconfiguredProject_ShouldDeliverSolutionSettings()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo");
+
+            settings.ExecuteWithSettingsForExecutable("bar", () =>
+            {
+                settings.WorkingDir.Should().Be("solution_dir");
+            }, MockLogger.Object);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ExecuteWithSettingsForExecutable_NestedExecutionOfSameExecutable_ShouldDeliverProjectSettings()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo");
+
+            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            {
+                settings.ExecuteWithSettingsForExecutable("foo", () =>
+                {
+                    settings.WorkingDir.Should().Be("foo_dir");
+                }, MockLogger.Object);
+                
+            }, MockLogger.Object);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ExecuteWithSettingsForExecutable_NestedExecutionOfDifferentExecutables_ShouldThrow()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo");
+
+            settings
+                .Invoking(s => s.ExecuteWithSettingsForExecutable("foo", () =>
+                {
+                    s.ExecuteWithSettingsForExecutable("bar", () => { }, MockLogger.Object);
+                }, MockLogger.Object))
+                .ShouldThrow<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void Clone_WhileExecuting_ReturnsFreshSettingsWrapperInstance()
+        {
+            var settings = CreateSettingsWrapper("solution_dir", "foo", "bar");
+
+            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            {
+                var settingsClone = settings.Clone();
+                settingsClone.WorkingDir.Should().Be("solution_dir");
+                settingsClone.ExecuteWithSettingsForExecutable("bar", () =>
+                {
+                    settings.WorkingDir.Should().Be("foo_dir");
+                    settingsClone.WorkingDir.Should().Be("bar_dir");
+                }, MockLogger.Object);
+            }, MockLogger.Object);
+        }
+
+        private SettingsWrapper CreateSettingsWrapper(string solutionWorkdir, params string[] projects)
+        {
+            var containerMock = new Mock<IGoogleTestAdapterSettingsContainer>();
+
+            var solutionRunSettings = new RunSettings { WorkingDir = solutionWorkdir };
+            containerMock.Setup(c => c.SolutionSettings).Returns(solutionRunSettings);
+
+            foreach (string project in projects)
+            {
+                var projectRunSettings = new RunSettings { WorkingDir = $"{project}_dir" };
+                containerMock.Setup(c => c.GetSettingsForExecutable(It.Is<string>(s => s == project))).Returns(projectRunSettings);
+            }
+
+            return new SettingsWrapper(containerMock.Object)
+            {
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+            };
+        }
+
     }
 
 }

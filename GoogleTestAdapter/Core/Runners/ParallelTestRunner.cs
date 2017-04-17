@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
             string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             List<Thread> threads;
@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.Runners
                 DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
 
                 threads = new List<Thread>();
-                RunTests(allTestCases, testCasesToRun, baseDir, threads, isBeingDebugged, debuggedLauncher, executor);
+                RunTests(testCasesToRun, baseDir, threads, isBeingDebugged, debuggedLauncher, executor);
             }
 
             foreach (Thread thread in threads)
@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        private void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
@@ -77,7 +77,8 @@ namespace GoogleTestAdapter.Runners
                 var runner = new PreparingTestRunner(threadId++, _solutionDirectory, _frameworkReporter, _logger, _settings.Clone(), _schedulingAnalyzer);
                 _testRunners.Add(runner);
 
-                var thread = new Thread(() => runner.RunTests(allTestCases, testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor));
+                var thread = new Thread(
+                    () => runner.RunTests(testcases, baseDir, null, null, isBeingDebugged, debuggedLauncher, executor)){ Name = $"GTA Testrunner {threadId}" };
                 threads.Add(thread);
 
                 thread.Start();

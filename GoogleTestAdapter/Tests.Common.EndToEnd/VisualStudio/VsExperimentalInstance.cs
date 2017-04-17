@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common.Helpers;
-using Microsoft.VisualStudio.ExtensionManager;
+//using Microsoft.VisualStudio.ExtensionManager;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.Win32;
 using TestStack.White;
@@ -68,31 +68,31 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
             }
         }
 
-        public void InstallExtension(string vsixPath)
-        {
-            if (!Exists())
-                throw new InvalidOperationException("Cannot install VSIX in non-existing instance.");
+        //public void InstallExtension(string vsixPath)
+        //{
+        //    if (!Exists())
+        //        throw new InvalidOperationException("Cannot install VSIX in non-existing instance.");
 
-            IInstallableExtension installableExtension = ExtensionManagerService.CreateInstallableExtension(vsixPath);
+        //    IInstallableExtension installableExtension = ExtensionManagerService.CreateInstallableExtension(vsixPath);
 
-            using (var settings = ExternalSettingsManager.CreateForApplication(GetExePath(), Suffix))
-            {
-                var extensionManager = new ExtensionManagerService(settings);
-                if (extensionManager.IsInstalled(installableExtension))
-                {
-                    IInstalledExtension installedExtension = extensionManager.GetInstalledExtension(installableExtension.Header.Identifier);
-                    extensionManager.Uninstall(installedExtension);
-                    if (extensionManager.IsInstalled(installableExtension))
-                        throw new InvalidOperationException("Could not uninstall already installed GoogleTestAdapter.");
-                }
+        //    using (var settings = ExternalSettingsManager.CreateForApplication(GetExePath(), Suffix))
+        //    {
+        //        var extensionManager = new ExtensionManagerService(settings);
+        //        if (extensionManager.IsInstalled(installableExtension))
+        //        {
+        //            IInstalledExtension installedExtension = extensionManager.GetInstalledExtension(installableExtension.Header.Identifier);
+        //            extensionManager.Uninstall(installedExtension);
+        //            if (extensionManager.IsInstalled(installableExtension))
+        //                throw new InvalidOperationException("Could not uninstall already installed GoogleTestAdapter.");
+        //        }
 
-                extensionManager.Install(installableExtension, perMachine: false);
-                if (!extensionManager.IsInstalled(installableExtension))
-                    throw new InvalidOperationException("Could not install GoogleTestAdapter.");
+        //        extensionManager.Install(installableExtension, perMachine: false);
+        //        if (!extensionManager.IsInstalled(installableExtension))
+        //            throw new InvalidOperationException("Could not install GoogleTestAdapter.");
 
-                extensionManager.Close();
-            }
-        }
+        //        extensionManager.Close();
+        //    }
+        //}
 
         public Application Launch()
         {

@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
 
             var collectingReporter = new FakeFrameworkReporter();
             var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, TestResources.SampleTestsSolutionDir, processExecutor);
+            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, TestResources.SampleTestsSolutionDir, processExecutor);
 
             sampleTestsDurationsFile.AsFileInfo()
                 .Should()

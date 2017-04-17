@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '14.0'">
+    <DefineConstants>$(DefineConstants);VERSION_UNDER_TEST_VS2015</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
@@ -120,6 +123,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\TestData\GoogleTestIndicatorFile\without\SomeWeirdName.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestData\GoogleTestIndicatorFile\with\SomeWeirdName.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestData\misc\TenSecondsWaiter.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\TestData\SampleResult1 _Broken_InvalidStatusAttribute.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -154,6 +166,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\TestData\RunSettingsServiceTests\Provider_delivered.runsettings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestData\GoogleTestIndicatorFile\with\IS_GOOGLE_TEST_EXECUTABLE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -127,14 +127,6 @@
     </Reference>
     <Reference Include="UIAutomationClient" />
     <Reference Include="UIAutomationTypes" />
-    <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.ExtensionManager.Implementation, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.Implementation.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <Choose>
@@ -154,8 +146,8 @@
     <Compile Include="Helpers\MessageBoxWithTimeout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStudio\TestStackWhiteExtensions.cs" />
-    <Compile Include="VisualStudio\VsExperimentalInstance.cs" />
     <Compile Include="VisualStudio\VS.cs" />
+    <Compile Include="VisualStudio\VsExperimentalInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">

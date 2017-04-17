@@ -62,6 +62,26 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_WithIndicatorFile_IsRecognizedAsTestExecutable()
+        {
+            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .IsGoogleTestExecutable(TestResources.TestWithIndicatorFile);
+
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_WithoutIndicatorFile_IsNotRecognizedAsTestExecutable()
+        {
+            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .IsGoogleTestExecutable(TestResources.TestWithoutIndicatorFile);
+
+            result.Should().BeFalse();
+        }
+
+        [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_StaticallyLinkedX86Executable_FindsTestsWitLocation()
         {
@@ -70,9 +90,23 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void GetTestsFromExecutable_SampleTests_FindsTestsWithLocation()
+        public void GetTestsFromExecutable_SampleTestsDebug_FindsTestsWithLocation()
         {
             FindSampleTests(TestResources.SampleTests);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTestsRelease_FindsTestsWithLocation()
+        {
+            FindSampleTests(TestResources.SampleTestsRelease);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTests170_FindsTestsWithLocation()
+        {
+            FindSampleTests(TestResources.SampleTests170);
         }
 
         [TestMethod]

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common.Helpers;
 
@@ -86,9 +85,40 @@ namespace GoogleTestAdapter.Tests.Common
             };
         }
 
+        public IEnumerable<TestCase> CreateDummyTestCasesFull(string[] qualifiedNamesToRun, string[] allQualifiedNames)
+        {
+            IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
+            foreach (string qualifiedName in allQualifiedNames)
+            {
+                TestCase testCase = ToTestCase(qualifiedName);
+
+                int index = qualifiedName.LastIndexOf(".", StringComparison.Ordinal);
+                string suite = qualifiedName.Substring(0, index);
+                ISet<TestCase> testCasesWithSuiteName;
+                if (!suite2TestCases.TryGetValue(suite, out testCasesWithSuiteName))
+                    suite2TestCases.Add(suite, testCasesWithSuiteName = new HashSet<TestCase>());
+                testCasesWithSuiteName.Add(testCase);
+            }
+
+            var testCases = new List<TestCase>();
+            foreach (var suiteTestCasePair in suite2TestCases)
+            {
+                foreach (var testCase in suiteTestCasePair.Value)
+                {
+                    if (qualifiedNamesToRun.Contains(testCase.FullyQualifiedName))
+                    {
+                        testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasePair.Value.Count, allQualifiedNames.Length));
+                        testCases.Add(testCase);
+                    }
+                }
+            }
+
+            return testCases;
+        }
+
         public IEnumerable<TestCase> CreateDummyTestCases(params string[] qualifiedNames)
         {
-            return qualifiedNames.Select(ToTestCase).ToList();
+            return CreateDummyTestCasesFull(qualifiedNames, qualifiedNames);
         }
 
     }

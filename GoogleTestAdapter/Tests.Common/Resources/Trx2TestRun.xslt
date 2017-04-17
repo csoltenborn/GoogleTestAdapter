@@ -57,9 +57,12 @@
   </xsl:template>
 
   <xsl:template match="ms:Output">
-    <Output>
-      <xsl:apply-templates />
-    </Output>
+    <!-- Various versions of VS disagree on showing empty "Output" nodes. Keep only if non-empty. -->
+    <xsl:if test="normalize-space(string(.)) != ''">
+      <Output>
+        <xsl:apply-templates />
+      </Output>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="ms:ErrorInfo">

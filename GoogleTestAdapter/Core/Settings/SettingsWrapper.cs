@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
@@ -28,6 +29,8 @@ namespace GoogleTestAdapter.Settings
 
     public class SettingsWrapper
     {
+        private readonly object _lock = new object();
+
         private static readonly string[] NotPrintedProperties =
         {
             nameof(RegexTraitParser),
@@ -45,6 +48,9 @@ namespace GoogleTestAdapter.Settings
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
         public RegexTraitParser RegexTraitParser { private get; set; }
 
+        private int _nrOfRunningExecutions;
+        private string _currentExecutable;
+        private Thread _currentThread;
         private IGoogleTestAdapterSettings _currentSettings;
 
         public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer)
@@ -64,29 +70,78 @@ namespace GoogleTestAdapter.Settings
 
         public void ExecuteWithSettingsForExecutable(string executable, Action action, ILogger logger)
         {
-            var formerSettings = _currentSettings;
+            lock (_lock)
+            {
+                CheckCorrectUsage(executable);
+
+                _nrOfRunningExecutions++;
+                if (_nrOfRunningExecutions == 1)
+                {
+                    _currentExecutable = executable;
+                    _currentThread = Thread.CurrentThread;
+
+                    var projectSettings = _settingsContainer.GetSettingsForExecutable(executable);
+                    if (projectSettings != null)
+                    {
+                        _currentSettings = projectSettings;
+                        logger.DebugInfo($"Settings for test executable '{executable}': {this}");
+                    }
+                    else
+                    {
+                        logger.DebugInfo($"No settings configured for test executable '{executable}'; running with solution settings: {this}");
+                    }
+                }
+
+            }
+
             try
             {
-                _currentSettings = _settingsContainer.GetSettingsForExecutable(executable);
-                logger.DebugInfo($"Settings for test executable '{executable}': {this}");
-
                 action.Invoke();
             }
             finally
             {
-                _currentSettings = formerSettings;
-                logger.DebugInfo($"Back to solution settings: {this}");
+                lock (_lock)
+                {
+                    _nrOfRunningExecutions--;
+                    if (_nrOfRunningExecutions == 0)
+                    {
+                        _currentExecutable = null;
+                        _currentThread = null;
+                        if (_currentSettings != _settingsContainer.SolutionSettings)
+                        {
+                            _currentSettings = _settingsContainer.SolutionSettings;
+                            logger.DebugInfo($"Back to solution settings: {this}");
+                        }
+                    }
+                }
             }
+        }
+
+        // public virtual for mocking
+        public virtual void CheckCorrectUsage(string executable)
+        {
+            if (_nrOfRunningExecutions == 0)
+                return;
+            if (_nrOfRunningExecutions < 0)
+                throw new InvalidOperationException($"{nameof(_nrOfRunningExecutions)} must never be < 0");
+
+            if (_currentThread != Thread.CurrentThread)
+                throw new InvalidOperationException(
+                    $"SettingsWrapper is already running with settings for an executable withing thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
+
+            if (executable != _currentExecutable)
+                throw new InvalidOperationException(
+                    $"Execution is already running with settings for executable {_currentExecutable}, can not switch to settings for {executable}");
         }
 
         public override string ToString()
         {
-            return string.Join(", ", PropertiesToPrint.Select(pi => ToString(this, pi)));
+            return string.Join(", ", PropertiesToPrint.Select(ToString));
         }
 
-        private string ToString(SettingsWrapper settings, PropertyInfo propertyInfo)
+        private string ToString(PropertyInfo propertyInfo)
         {
-            var value = propertyInfo.GetValue(settings);
+            var value = propertyInfo.GetValue(this);
             if (value is string)
                 return $"{propertyInfo.Name}: '{value}'";
 
@@ -202,6 +257,23 @@ namespace GoogleTestAdapter.Settings
             + TestFinderRegex;
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
+
+
+        public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
+        public const int OptionTestDiscoveryTimeoutInSecondsDefaultValue = 30;
+        public const string OptionTestDiscoveryTimeoutInSecondsDescription =
+            "Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout";
+
+        public virtual int TestDiscoveryTimeoutInSeconds {
+            get
+            {
+                int timeout = _currentSettings.TestDiscoveryTimeoutInSeconds ?? OptionTestDiscoveryTimeoutInSecondsDefaultValue;
+                if (timeout < 0)
+                    timeout = OptionTestDiscoveryTimeoutInSecondsDefaultValue;
+
+                return timeout == 0 ? int.MaxValue : timeout;
+            }
+        }
 
 
         public const string OptionWorkingDir = "Working directory";

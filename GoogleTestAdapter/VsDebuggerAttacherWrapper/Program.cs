@@ -24,10 +24,11 @@ namespace VsDebuggerAttacherWrapper
         public static int Main(string[] args)
         {
             var logger = new ConsoleLogger();
+            int debuggeeProcessId, visualStudioProcessId;
 
             if (args.Length != 2 ||
-                !int.TryParse(args[0], out int debuggeeProcessId) ||
-                !int.TryParse(args[1], out int visualStudioProcessId))
+                !int.TryParse(args[0], out debuggeeProcessId) ||
+                !int.TryParse(args[1], out visualStudioProcessId))
             {
                 logger.LogError("Invalid arguments!");
                 return ExitFailure;
