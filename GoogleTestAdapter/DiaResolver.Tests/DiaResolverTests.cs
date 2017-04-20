@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Fakes;
@@ -28,7 +29,11 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void GetFunctions_X86_EverythingMatches_ResultSizeIsCorrect()
         {
-            DoResolveTest(TestResources.LoadTests_ReleaseX86, "*", 765, 111);
+            DoResolveTest(
+                TestResources.LoadTests_ReleaseX86, 
+                "*", 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 765 : 728, 
+                111);
         }
 
         [TestMethod]
@@ -43,7 +48,12 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_X64_EverythingMatches_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.DllTests_ReleaseX64, "*", 1278, 687, false);
+            DoResolveTest(
+                TestResources.DllTests_ReleaseX64, 
+                "*", 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 1278 : 1250, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 687 : 686, 
+                false);
         }
 
         [TestMethod]
