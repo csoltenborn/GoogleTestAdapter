@@ -28,6 +28,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
         public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
         public const string SampleTests170 = SampleTestsSolutionDir + @"Debug\Tests_1.7.0_gta.exe";
+        public const string SampleTestsX64 = SampleTestsSolutionDir + @"x64\Release\Tests_gta.exe";
 
         public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests_gta.exe");
         public static readonly string LongRunningTests = Path.Combine(SampleTestsSolutionDir, @"Release\LongRunningTests_gta.exe");
@@ -37,19 +38,17 @@ namespace GoogleTestAdapter.Tests.Common
         public const string X64HardCrashingSampleTests = SampleTestsSolutionDir + @"X64\Debug\CrashingTests_gta.exe";
         public const string X64HardCrashingSampleTestsRelease = SampleTestsSolutionDir + @"X64\Release\CrashingTests_gta.exe";
 
-        public const string X86Dir = TestdataDir + @"_x86\";
-        public const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe"; // TODO
-        public const string X86ExternallyLinkedTests = X86Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe"; // TODO
-        public const string X86ExternallyLinkedTestsDll = X86Dir + @"ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll"; // TODO
         public const string PathExtensionTestsExe = SampleTestsSolutionDir + @"Release\DllTests_gta.exe";
         public const string PathExtensionTestsDll = SampleTestsSolutionDir + @"Release\DllProject.dll";
+        public const string X86ExternallyLinkedTests = PathExtensionTestsExe;
+        public const string X86ExternallyLinkedTestsDll = PathExtensionTestsDll;
         public const string AlwaysCrashingExe = GtaSolutionDir + BuildConfig + @"\CrashingExe.exe";
         public const string AlwaysFailingExe = GtaSolutionDir + BuildConfig + @"\FailingExe.exe";
         public const int NrOfPathExtensionTests = 2;
 
-        public const string X64Dir = TestdataDir + @"_x64\";
-        public const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe"; // TODO
-        public const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe"; // TODO
+        public const string X64ExternallyLinkedTests = X64PathExtensionTestsExe;
+        public const string X64PathExtensionTestsExe = SampleTestsSolutionDir + @"X64\Release\DllTests_gta.exe";
+        public const string X64PathExtensionTestsDll = SampleTestsSolutionDir + @"X64\Release\DllProject.dll";
 
         public const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         public const string XmlFile2 = TestdataDir + @"SampleResult2.xml";

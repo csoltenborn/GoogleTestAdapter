@@ -28,14 +28,14 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void GetFunctions_X86_EverythingMatches_ResultSizeIsCorrect()
         {
-            DoResolveTest(TestResources.X86StaticallyLinkedTests, "*", 5125, 356);
+            DoResolveTest(TestResources.LoadTests, "*", 765, 111);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X86_NonMatchingFilter_NoResults()
         {
-            DoResolveTest(TestResources.X86StaticallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
+            DoResolveTest(TestResources.LoadTests, "ThisFunctionDoesNotExist", 0, 0);
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_X64_EverythingMatches_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.X64ExternallyLinkedTests, "*", 1232, 61, false);
+            DoResolveTest(TestResources.X64ExternallyLinkedTests, "*", 1278, 687, false);
         }
 
         [TestMethod]

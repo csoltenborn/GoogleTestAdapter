@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_ExternallyLinkedX86Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 1, 1, 0);
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace GoogleTestAdapter.TestAdapter
             // for at least having the debug messaging code executed once
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 1, 1, 0);
         }
 
         [TestMethod]
@@ -110,21 +110,21 @@ namespace GoogleTestAdapter.TestAdapter
             // let's print the test output
             MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
 
-            RunAndVerifyTests(TestResources.X86StaticallyLinkedTests, 1, 1, 0);
+            RunAndVerifyTests(TestResources.SampleTests, 40, 48, 0);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public virtual void RunTests_ExternallyLinkedX64_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 1, 1, 0);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public virtual void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X64StaticallyLinkedTests, 1, 1, 0);
+            RunAndVerifyTests(TestResources.SampleTestsX64, 40, 48, 0);
         }
 
         [TestMethod]
@@ -144,7 +144,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.Results0Batch);
             MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.Results1Batch);
 
-            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
@@ -161,7 +161,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.Results1Batch);
             MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.Results0Batch);
 
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
@@ -175,7 +175,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithoutBatches_NoLogging()
         {
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogInfo(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
@@ -203,7 +203,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.BatchForTestSetup).Returns("some_nonexisting_file");
 
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup.ToLower()))),

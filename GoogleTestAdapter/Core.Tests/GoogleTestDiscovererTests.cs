@@ -105,7 +105,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_StaticallyLinkedX86Executable_FindsTestsWitLocation()
         {
-            FindStaticallyLinkedTests(TestResources.X86StaticallyLinkedTests);
+            FindStaticallyLinkedTests(TestResources.SampleTests);
         }
 
         [TestMethod]
@@ -182,7 +182,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_ExternallyLinkedX64Executable_FindsTestsWithLocation()
         {
-            FindExternallyLinkedTests(TestResources.X64ExternallyLinkedTests);
+            FindExternallyLinkedTests(TestResources.X64PathExtensionTestsExe);
         }
 
         [TestMethod]
@@ -350,15 +350,13 @@ namespace GoogleTestAdapter
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            testCases.Count.Should().Be(2);
+            testCases.Count.Should().Be(88);
 
-            testCases[0].DisplayName.Should().Be("FooTest.MethodBarDoesAbc");
-            testCases[0].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp");
-            testCases[0].LineNumber.Should().Be(36);
-
-            testCases[1].DisplayName.Should().Be("FooTest.DoesXyz");
-            testCases[1].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp");
-            testCases[1].LineNumber.Should().Be(45);
+            TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
+            testCase.DisplayName.Should().Be("TheFixture.AddFails");
+            string expectedCodeFilePath = Path.GetFullPath($@"{TestResources.SampleTestsSolutionDir}tests\fixturetests.cpp").ToLower();
+            testCase.CodeFilePath.Should().Be(expectedCodeFilePath);
+            testCase.LineNumber.Should().Be(11);
         }
 
         private void FindExternallyLinkedTests(string location)
@@ -368,13 +366,14 @@ namespace GoogleTestAdapter
 
             testCases.Count.Should().Be(2);
 
-            testCases[0].DisplayName.Should().Be("BarTest.MethodBarDoesAbc");
-            testCases[0].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp");
-            testCases[0].LineNumber.Should().Be(36);
+            string expectedCodeFilePath = Path.GetFullPath($@"{TestResources.SampleTestsSolutionDir}dlldependentproject\dlltests.cpp").ToLower();
+            testCases[0].DisplayName.Should().Be("Passing.InvokeFunction");
+            testCases[0].CodeFilePath.Should().Be(expectedCodeFilePath);
+            testCases[0].LineNumber.Should().Be(5);
 
-            testCases[1].DisplayName.Should().Be("BarTest.DoesXyz");
-            testCases[1].CodeFilePath.Should().Be(@"c:\prod\gtest-1.7.0\externalgoogletestlibrary\externalgoogletestlibrarytests.cpp");
-            testCases[1].LineNumber.Should().Be(44);
+            testCases[1].DisplayName.Should().Be("Failing.InvokeFunction");
+            testCases[1].CodeFilePath.Should().Be(expectedCodeFilePath);
+            testCases[1].LineNumber.Should().Be(10);
         }
 
         private void AssertFindsTest(string fullyQualifiedName, string displayName)
