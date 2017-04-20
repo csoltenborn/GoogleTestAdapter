@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Tests.Common;
@@ -53,18 +55,33 @@ namespace GoogleTestAdapter.DiaResolver
 
         [TestMethod]
         [TestCategory(Unit)]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void GetFunctions_ExeWithoutPdb_AttemptsToFindPdbAreLogged()
         {
-            TestResources.X86TestsWithoutPdb.AsFileInfo().Should().Exist();
+            TestResources.LoadTests.AsFileInfo().Should().Exist();
+            string pdb = Path.ChangeExtension(TestResources.LoadTests, ".pdb");
+            pdb.AsFileInfo().Should().Exist();
+            string renamedPdb = $"{pdb}.bak";
+            renamedPdb.AsFileInfo().Should().NotExist();
 
             var locations = new List<SourceFileLocation>();
             var fakeLogger = new FakeLogger(() => true);
-
-            using (
-                IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.X86TestsWithoutPdb, "",
-                    fakeLogger))
+            try
             {
-                locations.AddRange(resolver.GetFunctions("*"));
+                File.Move(pdb, renamedPdb);
+                pdb.AsFileInfo().Should().NotExist();
+
+                using (
+                    IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.LoadTests, "",
+                        fakeLogger))
+                {
+                    locations.AddRange(resolver.GetFunctions("*"));
+                }
+            }
+            finally
+            {
+                File.Move(renamedPdb, pdb);
+                pdb.AsFileInfo().Should().Exist();
             }
 
             locations.Count.Should().Be(0);

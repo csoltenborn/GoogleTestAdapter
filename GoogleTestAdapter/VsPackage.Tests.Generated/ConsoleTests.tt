@@ -322,7 +322,7 @@ namespace GoogleTestAdapter.VsPackage
 				case "LoadTests":
 					return TestResources.LoadTests;
 				case "HardCrashingSampleTests":
-					return TestResources.HardCrashingSampleTests;
+					return TestResources.X86HardCrashingSampleTests;
 				case "X861":
 					return TestResources.X86StaticallyLinkedTests;
 				case "X862":

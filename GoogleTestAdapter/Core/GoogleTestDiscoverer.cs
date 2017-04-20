@@ -15,7 +15,7 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
-        private const string GoogleTestExecutableIndicatorFile = "IS_GOOGLE_TEST_EXECUTABLE";
+        public const string GoogleTestExecutableIndicatorFile = "IS_GOOGLE_TEST_EXECUTABLE";
 
         private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 

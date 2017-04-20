@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common.Helpers;
 
@@ -41,7 +43,7 @@ namespace GoogleTestAdapter.Tests.Common
 
         private List<TestCase> _allTestCasesOfHardCrashindTests;
         public List<TestCase> AllTestCasesOfHardCrashingTests 
-            => GetTestCases(TestResources.HardCrashingSampleTests, ref _allTestCasesOfHardCrashindTests);
+            => GetTestCases(TestResources.X86HardCrashingSampleTests, ref _allTestCasesOfHardCrashindTests);
 
         private List<TestCase> _allTestCasesOfLongRunningTests;
         public List<TestCase> AllTestCasesOfLongRunningTests 
@@ -121,6 +123,26 @@ namespace GoogleTestAdapter.Tests.Common
             return CreateDummyTestCasesFull(qualifiedNames, qualifiedNames);
         }
 
+        public static string PreparePathExtensionTest()
+        {
+            string baseDir = Utils.GetTempDirectory();
+            string exeDir = Path.Combine(baseDir, "exe");
+            string dllDir = Path.Combine(baseDir, "dll");
+            string targetExe = GetPathExtensionExecutable(baseDir);
+            string targetDll = Path.Combine(dllDir, Path.GetFileName(TestResources.PathExtensionTestsDll));
+
+            Directory.CreateDirectory(exeDir);
+            Directory.CreateDirectory(dllDir);
+            File.Copy(TestResources.PathExtensionTestsExe, targetExe);
+            File.Copy(TestResources.PathExtensionTestsDll, targetDll);
+
+            return baseDir;
+        }
+
+        public static string GetPathExtensionExecutable(string baseDir)
+        {
+            return Path.Combine(baseDir, "exe", Path.GetFileName(TestResources.PathExtensionTestsExe));
+        }
     }
 
 }

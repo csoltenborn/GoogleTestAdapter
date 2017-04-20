@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
@@ -65,20 +67,38 @@ namespace GoogleTestAdapter
         [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithIndicatorFile_IsRecognizedAsTestExecutable()
         {
-            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
-                .IsGoogleTestExecutable(TestResources.TestWithIndicatorFile);
+            string testExecutable = SetupIndicatorFileTest(true);
+            try
+            {
+                bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                    .IsGoogleTestExecutable(testExecutable);
 
-            result.Should().BeTrue();
+                result.Should().BeTrue();
+            }
+            finally
+            {
+                string errorMessage;
+                Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out errorMessage).Should().BeTrue();
+            }
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithoutIndicatorFile_IsNotRecognizedAsTestExecutable()
         {
-            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
-                .IsGoogleTestExecutable(TestResources.TestWithoutIndicatorFile);
+            string testExecutable = SetupIndicatorFileTest(false);
+            try
+            {
+                bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                    .IsGoogleTestExecutable(testExecutable);
 
-            result.Should().BeFalse();
+                result.Should().BeFalse();
+            }
+            finally
+            {
+                string errorMessage;
+                Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out errorMessage).Should().BeTrue();
+            }
         }
 
         [TestMethod]
@@ -120,22 +140,42 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_WithPathExtension_FindsTestsWithLocation()
         {
-            MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\lib");
+            string baseDir = TestDataCreator.PreparePathExtensionTest();
+            try
+            {
+                string targetExe = Path.Combine(baseDir, "exe", Path.GetFileName(TestResources.PathExtensionTestsExe));
+                MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\dll");
 
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
-            testCases.Count.Should().Be(TestResources.NrOfPathExtensionTests);
+                var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+                IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
+
+                testCases.Count.Should().Be(TestResources.NrOfPathExtensionTests);
+            }
+            finally
+            {
+                Utils.DeleteDirectory(baseDir).Should().BeTrue();
+            }
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_WithoutPathExtension_ProducesWarning()
         {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.PathExtensionTestsExe);
+            string baseDir = TestDataCreator.PreparePathExtensionTest();
+            try
+            {
+                string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
 
-            testCases.Count.Should().Be(0);
-            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases of executable"))));
+                var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+                IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
+
+                testCases.Count.Should().Be(0);
+                MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases of executable"))));
+            }
+            finally
+            {
+                Utils.DeleteDirectory(baseDir).Should().BeTrue();
+            }
         }
 
         [TestMethod]
@@ -353,6 +393,16 @@ namespace GoogleTestAdapter
 
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);
             testCase.DisplayName.Should().MatchRegex(displayNameRegex.ToString());
+        }
+
+        private string SetupIndicatorFileTest(bool withIndicatorFile)
+        {
+            string dir = Utils.GetTempDirectory();
+            string targetFile = Path.Combine(dir, "SomeWeirdName.exe");
+            File.Copy(TestResources.LoadTests, targetFile);
+            if (withIndicatorFile)
+                File.Create(Path.Combine(dir, GoogleTestDiscoverer.GoogleTestExecutableIndicatorFile)).Dispose();
+            return targetFile;
         }
 
     }

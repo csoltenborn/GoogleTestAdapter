@@ -35,7 +35,7 @@ namespace GoogleTestAdapter
             string sampleTestsDurationsFile = TestResources.SampleTests + GoogleTestConstants.DurationsExtension;
             RemoveFileIfNecessary(sampleTestsDurationsFile);
 
-            string crashingTestsDurationsFile = TestResources.HardCrashingSampleTests + GoogleTestConstants.DurationsExtension;
+            string crashingTestsDurationsFile = TestResources.X86HardCrashingSampleTests + GoogleTestConstants.DurationsExtension;
             RemoveFileIfNecessary(crashingTestsDurationsFile);
 
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);

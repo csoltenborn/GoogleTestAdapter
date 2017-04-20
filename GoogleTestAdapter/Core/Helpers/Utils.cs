@@ -17,6 +17,12 @@ namespace GoogleTestAdapter.Helpers
             return tempDirectory;
         }
 
+        public static bool DeleteDirectory(string directory)
+        {
+            string dummy;
+            return DeleteDirectory(directory, out dummy);
+        }
+
         public static bool DeleteDirectory(string directory, out string errorMessage)
         {
             try
