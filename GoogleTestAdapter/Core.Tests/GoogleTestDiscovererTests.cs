@@ -103,30 +103,23 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void GetTestsFromExecutable_StaticallyLinkedX86Executable_FindsTestsWitLocation()
-        {
-            FindStaticallyLinkedTests(TestResources.Tests_DebugX86);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTestsDebug_FindsTestsWithLocation()
         {
-            FindSampleTests(TestResources.Tests_DebugX86);
+            FindTests(TestResources.Tests_DebugX86);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTestsRelease_FindsTestsWithLocation()
         {
-            FindSampleTests(TestResources.Tests_ReleaseX86);
+            FindTests(TestResources.Tests_ReleaseX86);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests170_FindsTestsWithLocation()
         {
-            FindSampleTests(TestResources.Tests_DebugX86_Gtest170);
+            FindTests(TestResources.Tests_DebugX86_Gtest170);
         }
 
         [TestMethod]
@@ -330,33 +323,22 @@ namespace GoogleTestAdapter
                 .Be(isGoogleTestExecutable);
         }
 
-        private void FindSampleTests(string location)
+        private void FindTests(string location)
         {
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
             testCases.Count.Should().Be(TestResources.NrOfTests);
 
-            TestCase testCase =
-               testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
+            TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
+            testCase.DisplayName.Should().Be("TheFixture.AddFails");
+            testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\fixturetests.cpp");
+            testCase.LineNumber.Should().Be(11);
 
+            testCase = testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
             testCase.DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>");
             testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\typeparameterizedtests.cpp");
             testCase.LineNumber.Should().Be(53);
-        }
-
-        private void FindStaticallyLinkedTests(string location)
-        {
-            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
-
-            testCases.Count.Should().Be(88);
-
-            TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
-            testCase.DisplayName.Should().Be("TheFixture.AddFails");
-            string expectedCodeFilePath = Path.GetFullPath($@"{TestResources.SampleTestsSolutionDir}tests\fixturetests.cpp").ToLower();
-            testCase.CodeFilePath.Should().Be(expectedCodeFilePath);
-            testCase.LineNumber.Should().Be(11);
         }
 
         private void FindExternallyLinkedTests(string location)
