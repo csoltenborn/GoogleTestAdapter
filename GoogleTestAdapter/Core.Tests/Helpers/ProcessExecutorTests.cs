@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.Helpers
             var processCreator = new ProcessExecutor(null, mockLogger.Object);
             List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
-                TestResources.SampleTests,
+                TestResources.Tests_DebugX86,
                 null,
                 null,
                 "",

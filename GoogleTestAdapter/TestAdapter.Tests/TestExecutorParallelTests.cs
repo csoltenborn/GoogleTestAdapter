@@ -52,7 +52,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            IEnumerable<string> testsToRun = TestResources.LongRunningTests.Yield();
+            IEnumerable<string> testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
             executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testsToRun = TestResources.LongRunningTests.Yield();
+            testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();

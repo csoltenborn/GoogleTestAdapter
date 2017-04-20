@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 string targetFile = Path.Combine(dir, "MyTests.exe");
-                File.Copy(TestResources.SampleTests, targetFile);
+                File.Copy(TestResources.Tests_DebugX86, targetFile);
 
                 Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
                 Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();

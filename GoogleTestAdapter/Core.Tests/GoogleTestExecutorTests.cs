@@ -32,10 +32,10 @@ namespace GoogleTestAdapter
 
         private void AssertDurationsFileIsCreated(bool parallelExecution)
         {
-            string sampleTestsDurationsFile = TestResources.SampleTests + GoogleTestConstants.DurationsExtension;
+            string sampleTestsDurationsFile = TestResources.Tests_DebugX86 + GoogleTestConstants.DurationsExtension;
             RemoveFileIfNecessary(sampleTestsDurationsFile);
 
-            string crashingTestsDurationsFile = TestResources.X86HardCrashingSampleTests + GoogleTestConstants.DurationsExtension;
+            string crashingTestsDurationsFile = TestResources.CrashingTests_DebugX86 + GoogleTestConstants.DurationsExtension;
             RemoveFileIfNecessary(crashingTestsDurationsFile);
 
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);

@@ -119,14 +119,14 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void RunTests_CrashingX64Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X64HardCrashingSampleTestsRelease, 1, 2, 0, 3);
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 1, 2, 0, 3);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public void RunTests_CrashingX86Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X86HardCrashingSampleTestsRelease, 1, 2, 0, 3);
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 1, 2, 0, 3);
         }
 
         [TestMethod]

@@ -21,21 +21,21 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_SampleTests_TestFunctionsMatch_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.SampleTests, "*_GTA_TRAIT", 96, 0, false);
+            DoResolveTest(TestResources.Tests_DebugX86, "*_GTA_TRAIT", 96, 0, false);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X86_EverythingMatches_ResultSizeIsCorrect()
         {
-            DoResolveTest(TestResources.LoadTests, "*", 765, 111);
+            DoResolveTest(TestResources.LoadTests_ReleaseX86, "*", 765, 111);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X86_NonMatchingFilter_NoResults()
         {
-            DoResolveTest(TestResources.LoadTests, "ThisFunctionDoesNotExist", 0, 0);
+            DoResolveTest(TestResources.LoadTests_ReleaseX86, "ThisFunctionDoesNotExist", 0, 0);
         }
 
         [TestMethod]
@@ -43,14 +43,14 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_X64_EverythingMatches_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.X64ExternallyLinkedTests, "*", 1278, 687, false);
+            DoResolveTest(TestResources.DllTests_ReleaseX64, "*", 1278, 687, false);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X64_NonMatchingFilter_NoResults()
         {
-            DoResolveTest(TestResources.X64ExternallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
+            DoResolveTest(TestResources.DllTests_ReleaseX64, "ThisFunctionDoesNotExist", 0, 0);
         }
 
         [TestMethod]
@@ -58,8 +58,8 @@ namespace GoogleTestAdapter.DiaResolver
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void GetFunctions_ExeWithoutPdb_AttemptsToFindPdbAreLogged()
         {
-            TestResources.LoadTests.AsFileInfo().Should().Exist();
-            string pdb = Path.ChangeExtension(TestResources.LoadTests, ".pdb");
+            TestResources.LoadTests_ReleaseX86.AsFileInfo().Should().Exist();
+            string pdb = Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb");
             pdb.AsFileInfo().Should().Exist();
             string renamedPdb = $"{pdb}.bak";
             renamedPdb.AsFileInfo().Should().NotExist();
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter.DiaResolver
                 pdb.AsFileInfo().Should().NotExist();
 
                 using (
-                    IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.LoadTests, "",
+                    IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.LoadTests_ReleaseX86, "",
                         fakeLogger))
                 {
                     locations.AddRange(resolver.GetFunctions("*"));

@@ -14,7 +14,7 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X86ExternallyLinkedExe_CorrentNumberOfImports()
         {
-            var imports = PeParser.ParseImports(TestResources.X86ExternallyLinkedTests, MockLogger.Object);
+            var imports = PeParser.ParseImports(TestResources.DllTests_ReleaseX86, MockLogger.Object);
             imports.Count.Should().Be(14);
         }
 
@@ -22,7 +22,7 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X86ExternallyLinkedDll_CorrentNumberOfImports()
         {
-            var imports = PeParser.ParseImports(TestResources.X86ExternallyLinkedTestsDll, MockLogger.Object);
+            var imports = PeParser.ParseImports(TestResources.DllTestsDll_ReleaseX86, MockLogger.Object);
             imports.Count.Should().Be(3);
         }
 
@@ -31,8 +31,8 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X64StaticallyLinked_FindsEmbeddedPdbPath()
         {
-            string pdb = PeParser.ExtractPdbPath(TestResources.SampleTestsX64, MockLogger.Object);
-            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.SampleTestsX64, ".pdb"));
+            string pdb = PeParser.ExtractPdbPath(TestResources.Tests_ReleaseX64, MockLogger.Object);
+            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.Tests_ReleaseX64, ".pdb"));
             pdb.Should().Be(expectedPdb);
         }
 
@@ -40,8 +40,8 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X86StaticallyLinked_FindsEmbeddedPdbPath()
         {
-            string pdb = PeParser.ExtractPdbPath(TestResources.LoadTests, MockLogger.Object);
-            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.LoadTests, ".pdb"));
+            string pdb = PeParser.ExtractPdbPath(TestResources.LoadTests_ReleaseX86, MockLogger.Object);
+            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb"));
             pdb.Should().Be(expectedPdb);
         }
 

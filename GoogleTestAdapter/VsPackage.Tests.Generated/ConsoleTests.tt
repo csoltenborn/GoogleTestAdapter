@@ -316,15 +316,15 @@ namespace GoogleTestAdapter.VsPackage
 			switch(key)
 			{
 				case "SampleTests":
-					return TestResources.SampleTests;
+					return TestResources.Tests_DebugX86;
 				case "SampleTests170":
-					return TestResources.SampleTests170;
+					return TestResources.Tests_DebugX86_Gtest170;
 				case "SampleTestsX64":
-					return TestResources.SampleTestsX64;
+					return TestResources.Tests_ReleaseX64;
 				case "LoadTests":
-					return TestResources.LoadTests;
+					return TestResources.LoadTests_ReleaseX86;
 				case "HardCrashingSampleTests":
-					return TestResources.X86HardCrashingSampleTests;
+					return TestResources.CrashingTests_DebugX86;
 				default:
 					throw new Exception("Unknown test executable key: " + key);
 			}
