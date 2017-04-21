@@ -27,36 +27,74 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         public bool AttachDebugger(int processId)
         {
+            try
+            {
+                return TryAttachDebugger(processId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Could not attach debugger to process {processId} because of exception on client side: {e.Message}");
+                return false;
+            }
+        }
+
+        private bool TryAttachDebugger(int processId)
+        {
             var stopWatch = Stopwatch.StartNew();
-
             var resetEvent = new ManualResetEventSlim(false);
+            bool debuggerAttachedSuccessfully = false;
+            string errorMessage = null;
 
-            var client = new NamedPipeClient<AttachDebuggerMessage>(GetPipeName(_visualStudioProcessId));
-            client.Error += exception =>
-            {
-                _logger.LogError($"Named pipe client error: {exception.Message}");
-            };
-            client.ServerMessage += (connection, message) =>
-            {
-                if (message.ProcessId == processId)
-                    resetEvent.Set();
-            };
+            ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage
+                = (connection, message) =>
+                {
+                    if (message.ProcessId == processId)
+                    {
+                        debuggerAttachedSuccessfully = message.DebuggerAttachedSuccessfully;
+                        errorMessage = message.ErrorMessage;
+                        resetEvent.Set();
+                    }
+                };
 
-            client.Start();
-            client.WaitForConnection();
+            var client = CreateAndStartPipeClient(onServerMessage);
             client.PushMessage(new AttachDebuggerMessage { ProcessId = processId });
 
-            resetEvent.Wait(AttachDebuggerTimeout);
+            if (!resetEvent.Wait(AttachDebuggerTimeout))
+                errorMessage = $"Could not attach debugger to process {processId} since attaching timed out after {AttachDebuggerTimeout.TotalSeconds}s";
+
             stopWatch.Stop();
 
-            if (resetEvent.IsSet)
+            if (debuggerAttachedSuccessfully)
+            {
                 _logger.DebugInfo($"Debugger attached to process {processId}, took {stopWatch.ElapsedMilliseconds}ms");
+            }
             else
-                _logger.LogError($"Could not attach debugger to process {processId}!");
+            {
+                if (string.IsNullOrWhiteSpace(errorMessage))
+                    errorMessage = $"Could not attach debugger to process {processId}, no error message available";
+
+                _logger.LogError(errorMessage);
+            }
 
             client.Stop();
 
-            return resetEvent.IsSet;
+            return debuggerAttachedSuccessfully;
+        }
+
+        private NamedPipeClient<AttachDebuggerMessage> CreateAndStartPipeClient(ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage)
+        {
+            var client = new NamedPipeClient<AttachDebuggerMessage>(GetPipeName(_visualStudioProcessId));
+            client.Error += exception =>
+            {
+                _logger.DebugError(
+                    $"Named pipe error: Named pipe is {GetPipeName(_visualStudioProcessId)}, exception message: {exception.Message}");
+            };
+            client.ServerMessage += onServerMessage;
+
+            client.Start();
+            client.WaitForConnection();
+
+            return client;
         }
     }
 
