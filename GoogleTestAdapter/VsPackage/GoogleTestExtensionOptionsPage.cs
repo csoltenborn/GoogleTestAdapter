@@ -12,6 +12,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
+using GoogleTestAdapter.VsPackage.Debugging;
+using GoogleTestAdapter.VsPackage.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
 
@@ -36,6 +38,8 @@ namespace GoogleTestAdapter.VsPackage
         private GeneralOptionsDialogPage _generalOptions;
         private ParallelizationOptionsDialogPage _parallelizationOptions;
         private GoogleTestOptionsDialogPage _googleTestOptions;
+
+        private DebuggerAttacherService _debuggerAttacherUtils;
 
         protected override void Initialize()
         {
@@ -62,6 +66,8 @@ namespace GoogleTestAdapter.VsPackage
             var thread = new Thread(DisplayReleaseNotesIfNecessary);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
+
+            _debuggerAttacherUtils = new DebuggerAttacherService(Process.GetCurrentProcess().Id);
         }
 
         public bool CatchExtensions
