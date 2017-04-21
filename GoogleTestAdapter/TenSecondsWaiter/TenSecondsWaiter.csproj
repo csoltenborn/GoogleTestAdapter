@@ -1,18 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{12952B24-C70B-4A26-839A-EE4183BE8CC0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SampleTestsBuilder</RootNamespace>
-    <AssemblyName>SampleTestsBuilder</AssemblyName>
+    <ProjectGuid>{F4B47B1D-41B2-4C7A-804D-4664B590A4F7}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TenSecondsWaiter</RootNamespace>
+    <AssemblyName>TenSecondsWaiter</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,28 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=Win32 /m
-
-"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=Win32 /m
-
-"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=X64 /m
-
-"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=X64 /m
-</PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Target Name="AfterClean">
-    <RemoveDir Directories="$(SolutionDir)..\SampleTests\Debug" ContinueOnError="true" />
-    <RemoveDir Directories="$(SolutionDir)..\SampleTests\Release" ContinueOnError="true" />
-  </Target>
 </Project>

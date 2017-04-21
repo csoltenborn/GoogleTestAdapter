@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common.Helpers;
 
@@ -37,15 +39,15 @@ namespace GoogleTestAdapter.Tests.Common
 
         private List<TestCase> _allTestCasesOfSampleTests;
         public List<TestCase> AllTestCasesOfSampleTests 
-            => GetTestCases(TestResources.SampleTests, ref _allTestCasesOfSampleTests);
+            => GetTestCases(TestResources.Tests_DebugX86, ref _allTestCasesOfSampleTests);
 
         private List<TestCase> _allTestCasesOfHardCrashindTests;
         public List<TestCase> AllTestCasesOfHardCrashingTests 
-            => GetTestCases(TestResources.HardCrashingSampleTests, ref _allTestCasesOfHardCrashindTests);
+            => GetTestCases(TestResources.CrashingTests_DebugX86, ref _allTestCasesOfHardCrashindTests);
 
         private List<TestCase> _allTestCasesOfLongRunningTests;
         public List<TestCase> AllTestCasesOfLongRunningTests 
-            => GetTestCases(TestResources.LongRunningTests, ref _allTestCasesOfLongRunningTests);
+            => GetTestCases(TestResources.LongRunningTests_ReleaseX86, ref _allTestCasesOfLongRunningTests);
 
         private List<TestCase> GetTestCases(string executable, ref List<TestCase> testCases)
         {
@@ -121,6 +123,26 @@ namespace GoogleTestAdapter.Tests.Common
             return CreateDummyTestCasesFull(qualifiedNames, qualifiedNames);
         }
 
+        public static string PreparePathExtensionTest()
+        {
+            string baseDir = Utils.GetTempDirectory();
+            string exeDir = Path.Combine(baseDir, "exe");
+            string dllDir = Path.Combine(baseDir, "dll");
+            string targetExe = GetPathExtensionExecutable(baseDir);
+            string targetDll = Path.Combine(dllDir, Path.GetFileName(TestResources.DllTestsDll_ReleaseX86));
+
+            Directory.CreateDirectory(exeDir);
+            Directory.CreateDirectory(dllDir);
+            File.Copy(TestResources.DllTests_ReleaseX86, targetExe);
+            File.Copy(TestResources.DllTestsDll_ReleaseX86, targetDll);
+
+            return baseDir;
+        }
+
+        public static string GetPathExtensionExecutable(string baseDir)
+        {
+            return Path.Combine(baseDir, "exe", Path.GetFileName(TestResources.DllTests_ReleaseX86));
+        }
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.IO;
+using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -13,16 +14,16 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X86ExternallyLinkedExe_CorrentNumberOfImports()
         {
-            var imports = PeParser.ParseImports(TestResources.X86ExternallyLinkedTests, MockLogger.Object);
-            imports.Count.Should().Be(2);
+            var imports = PeParser.ParseImports(TestResources.DllTests_ReleaseX86, MockLogger.Object);
+            imports.Count.Should().Be(14);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void PeParser_X86ExternallyLinkedDll_CorrentNumberOfImports()
         {
-            var imports = PeParser.ParseImports(TestResources.X86ExternallyLinkedTestsDll, MockLogger.Object);
-            imports.Count.Should().Be(1);
+            var imports = PeParser.ParseImports(TestResources.DllTestsDll_ReleaseX86, MockLogger.Object);
+            imports.Count.Should().Be(3);
         }
 
 
@@ -30,16 +31,18 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X64StaticallyLinked_FindsEmbeddedPdbPath()
         {
-            string pdb = PeParser.ExtractPdbPath(TestResources.X64StaticallyLinkedTests, MockLogger.Object);
-            pdb.Should().Be(@"C:\prod\gtest-1.7.0\msvc\x64\Debug\StaticallyLinkedGoogleTests.pdb");
+            string pdb = PeParser.ExtractPdbPath(TestResources.Tests_ReleaseX64, MockLogger.Object);
+            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.Tests_ReleaseX64, ".pdb"));
+            pdb.Should().Be(expectedPdb);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void PeParser_X86StaticallyLinked_FindsEmbeddedPdbPath()
         {
-            string pdb = PeParser.ExtractPdbPath(TestResources.X86StaticallyLinkedTests, MockLogger.Object);
-            pdb.Should().Be(@"C:\prod\gtest-1.7.0\msvc\Debug\StaticallyLinkedGoogleTests.pdb");
+            string pdb = PeParser.ExtractPdbPath(TestResources.LoadTests_ReleaseX86, MockLogger.Object);
+            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb"));
+            pdb.Should().Be(expectedPdb);
         }
 
     }

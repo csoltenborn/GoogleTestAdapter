@@ -18,9 +18,9 @@ namespace GoogleTestAdapter.TestAdapter
         public TestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
 
 
-        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
+        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests)
         {
-            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
+            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
 
             if (nrOfPassedTests > 0)
             {
@@ -39,9 +39,9 @@ namespace GoogleTestAdapter.TestAdapter
             }
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
-                Times.AtMost(nrOfNotFoundTests));
+                Times.AtMost(nrOfSkippedTests));
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
-                Times.AtMost(nrOfNotFoundTests));
+                Times.AtMost(nrOfSkippedTests));
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            IEnumerable<string> testsToRun = TestResources.LongRunningTests.Yield();
+            IEnumerable<string> testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
             executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testsToRun = TestResources.LongRunningTests.Yield();
+            testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
@@ -110,18 +110,6 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
             base.RunTests_StaticallyLinkedX64Tests_CorrectTestResults();
-        }
-
-        [TestMethod]
-        public override void RunTests_CrashingX64Tests_CorrectTestResults()
-        {
-            base.RunTests_CrashingX64Tests_CorrectTestResults();
-        }
-
-        [TestMethod]
-        public override void RunTests_CrashingX86Tests_CorrectTestResults()
-        {
-            base.RunTests_CrashingX86Tests_CorrectTestResults();
         }
 
         [TestMethod]

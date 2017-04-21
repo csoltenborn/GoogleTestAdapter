@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Fakes;
@@ -19,21 +22,25 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_SampleTests_TestFunctionsMatch_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.SampleTests, "*_GTA_TRAIT", 96, 0, false);
+            DoResolveTest(TestResources.Tests_DebugX86, "*_GTA_TRAIT", 96, 0, false);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X86_EverythingMatches_ResultSizeIsCorrect()
         {
-            DoResolveTest(TestResources.X86StaticallyLinkedTests, "*", 5125, 356);
+            DoResolveTest(
+                TestResources.LoadTests_ReleaseX86, 
+                "*", 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 765 : 728, 
+                111);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X86_NonMatchingFilter_NoResults()
         {
-            DoResolveTest(TestResources.X86StaticallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
+            DoResolveTest(TestResources.LoadTests_ReleaseX86, "ThisFunctionDoesNotExist", 0, 0);
         }
 
         [TestMethod]
@@ -41,30 +48,50 @@ namespace GoogleTestAdapter.DiaResolver
         public void GetFunctions_X64_EverythingMatches_ResultSizeIsCorrect()
         {
             // also triggers destructor
-            DoResolveTest(TestResources.X64ExternallyLinkedTests, "*", 1232, 61, false);
+            DoResolveTest(
+                TestResources.DllTests_ReleaseX64, 
+                "*", 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 1278 : 1250, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 687 : 686, 
+                false);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void GetFunctions_X64_NonMatchingFilter_NoResults()
         {
-            DoResolveTest(TestResources.X64ExternallyLinkedTests, "ThisFunctionDoesNotExist", 0, 0);
+            DoResolveTest(TestResources.DllTests_ReleaseX64, "ThisFunctionDoesNotExist", 0, 0);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void GetFunctions_ExeWithoutPdb_AttemptsToFindPdbAreLogged()
         {
-            TestResources.X86TestsWithoutPdb.AsFileInfo().Should().Exist();
+            TestResources.LoadTests_ReleaseX86.AsFileInfo().Should().Exist();
+            string pdb = Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb");
+            pdb.AsFileInfo().Should().Exist();
+            string renamedPdb = $"{pdb}.bak";
+            renamedPdb.AsFileInfo().Should().NotExist();
 
             var locations = new List<SourceFileLocation>();
             var fakeLogger = new FakeLogger(() => true);
-
-            using (
-                IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.X86TestsWithoutPdb, "",
-                    fakeLogger))
+            try
             {
-                locations.AddRange(resolver.GetFunctions("*"));
+                File.Move(pdb, renamedPdb);
+                pdb.AsFileInfo().Should().NotExist();
+
+                using (
+                    IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.LoadTests_ReleaseX86, "",
+                        fakeLogger))
+                {
+                    locations.AddRange(resolver.GetFunctions("*"));
+                }
+            }
+            finally
+            {
+                File.Move(renamedPdb, pdb);
+                pdb.AsFileInfo().Should().Exist();
             }
 
             locations.Count.Should().Be(0);

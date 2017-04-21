@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
@@ -28,7 +29,7 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
 
-        protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
+        protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests)
         {
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
@@ -89,7 +90,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_ExternallyLinkedX86Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
         }
 
         [TestMethod]
@@ -99,7 +100,7 @@ namespace GoogleTestAdapter.TestAdapter
             // for at least having the debug messaging code executed once
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
         }
 
         [TestMethod]
@@ -109,35 +110,21 @@ namespace GoogleTestAdapter.TestAdapter
             // let's print the test output
             MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
 
-            RunAndVerifyTests(TestResources.X86StaticallyLinkedTests, 1, 1, 0);
+            RunAndVerifyTests(TestResources.Tests_DebugX86, 40, 48, 0);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public virtual void RunTests_ExternallyLinkedX64_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public virtual void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.X64StaticallyLinkedTests, 1, 1, 0);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
-        public virtual void RunTests_CrashingX64Tests_CorrectTestResults()
-        {
-            RunAndVerifyTests(TestResources.X64CrashingTests, 0, 2, 0);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
-        public virtual void RunTests_CrashingX86Tests_CorrectTestResults()
-        {
-            RunAndVerifyTests(TestResources.X86CrashingTests, 0, 2, 0);
+            RunAndVerifyTests(TestResources.Tests_ReleaseX64, 40, 48, 0);
         }
 
         [TestMethod]
@@ -145,7 +132,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            executor.RunTests(TestResources.HardCrashingSampleTests.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(1, 2, 0, 3);
         }
@@ -154,10 +141,10 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithSetupAndTeardownBatchesWhereTeardownFails_LogsWarning()
         {
-            MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.Results0Batch);
-            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.Results1Batch);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.SucceedingBatch);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.FailingBatch);
 
-            RunAndVerifyTests(TestResources.X86ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
@@ -171,10 +158,10 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithSetupAndTeardownBatchesWhereSetupFails_LogsWarning()
         {
-            MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.Results1Batch);
-            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.Results0Batch);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.FailingBatch);
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.SucceedingBatch);
 
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
@@ -188,7 +175,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithoutBatches_NoLogging()
         {
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogInfo(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
@@ -216,7 +203,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.BatchForTestSetup).Returns("some_nonexisting_file");
 
-            RunAndVerifyTests(TestResources.X64ExternallyLinkedTests, 2, 0, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup.ToLower()))),
@@ -227,32 +214,52 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithPathExtension_ExecutionOk()
         {
-            MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\lib");
+            string baseDir = TestDataCreator.PreparePathExtensionTest();
+            try
+            {
+                string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
+                MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\dll");
 
-            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+                var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+                executor.RunTests(targetExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
-            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.Passed)), Times.Exactly(29));
-            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+                MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.Passed)), Times.Once);
+                MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.Failed)), Times.Once);
+                MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            }
+            finally
+            {
+                Utils.DeleteDirectory(baseDir).Should().BeTrue();
+            }
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public virtual void RunTests_WithoutPathExtension_ExecutionFails()
         {
-            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            executor.RunTests(TestResources.PathExtensionTestsExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+            string baseDir = TestDataCreator.PreparePathExtensionTest();
+            try
+            {
+                string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
 
-            MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Never);
-            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Once);
+                var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+                executor.RunTests(targetExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+                MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Never);
+                MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Once);
+            }
+            finally
+            {
+                Utils.DeleteDirectory(baseDir).Should().BeTrue();
+            }
         }
 
-        private void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests = 0)
+        protected void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests = 0)
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
-            CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
+            CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
         }
 
     }
