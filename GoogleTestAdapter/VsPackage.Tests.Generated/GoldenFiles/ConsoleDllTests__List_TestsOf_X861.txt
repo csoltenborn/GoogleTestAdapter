@@ -1,2 +1,0 @@
-FooTest.MethodBarDoesAbc
-FooTest.DoesXyz

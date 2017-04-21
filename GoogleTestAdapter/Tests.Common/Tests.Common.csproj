@@ -123,15 +123,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\TestData\GoogleTestIndicatorFile\without\SomeWeirdName.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\GoogleTestIndicatorFile\with\SomeWeirdName.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\misc\TenSecondsWaiter.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\TestData\SampleResult1 _Broken_InvalidStatusAttribute.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -166,92 +157,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\TestData\RunSettingsServiceTests\Provider_delivered.runsettings">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\GoogleTestIndicatorFile\with\IS_GOOGLE_TEST_EXECUTABLE">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\TestData\_x64\CrashingGoogleTests\CrashingGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\CrashingGoogleTests\CrashingGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\Space In Path\StaticallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\CrashingGoogleTests\CrashingGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\CrashingGoogleTests\CrashingGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Crash\CrashingExe.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Fail\FailingExe.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\NoPdbFile\ConsoleApplication1Tests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\exe\Tests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\exe\Tests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\lib\LibProject.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\lib\LibProject.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\StaticallyLinkedGoogleTests\test_detail.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Traits\ConsoleApplication1Tests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Traits\ConsoleApplication1Tests.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

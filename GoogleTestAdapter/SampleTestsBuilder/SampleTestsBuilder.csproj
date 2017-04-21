@@ -46,7 +46,12 @@
   <PropertyGroup>
     <PreBuildEvent>"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=Win32 /m
 
-"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=Win32 /m</PreBuildEvent>
+"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=Win32 /m
+
+"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=X64 /m
+
+"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=X64 /m
+</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

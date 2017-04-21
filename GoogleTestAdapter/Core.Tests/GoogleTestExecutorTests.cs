@@ -32,10 +32,10 @@ namespace GoogleTestAdapter
 
         private void AssertDurationsFileIsCreated(bool parallelExecution)
         {
-            string sampleTestsDurationsFile = TestResources.SampleTests + GoogleTestConstants.DurationsExtension;
+            string sampleTestsDurationsFile = TestResources.Tests_DebugX86 + GoogleTestConstants.DurationsExtension;
             RemoveFileIfNecessary(sampleTestsDurationsFile);
 
-            string crashingTestsDurationsFile = TestResources.HardCrashingSampleTests + GoogleTestConstants.DurationsExtension;
+            string crashingTestsDurationsFile = TestResources.CrashingTests_DebugX86 + GoogleTestConstants.DurationsExtension;
             RemoveFileIfNecessary(crashingTestsDurationsFile);
 
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);
@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
 
             var collectingReporter = new FakeFrameworkReporter();
             var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, TestResources.SampleTestsSolutionDir, processExecutor);
+            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, TestResources.SampleTestsSolutionDir, processExecutor);
 
             sampleTestsDurationsFile.AsFileInfo()
                 .Should()

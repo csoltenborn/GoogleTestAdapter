@@ -9,7 +9,6 @@ using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
@@ -97,7 +96,7 @@ namespace GoogleTestAdapter.TestAdapter
                 allTestCasesInExecutables.Where(
                     tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
 
-            DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+            DoRunTests(testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
             _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
@@ -112,11 +111,8 @@ namespace GoogleTestAdapter.TestAdapter
             var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
             vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
 
-            IEnumerable<TestCase> allTestCasesInExecutables =
-                GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
-
             ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(tc => tc.ToTestCase()).ToArray();
-            DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+            DoRunTests(testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
             _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
@@ -183,9 +179,7 @@ namespace GoogleTestAdapter.TestAdapter
             return allTraitNames;
         }
 
-        private void DoRunTests(
-            IEnumerable<TestCase> allTestCasesInExecutables, ICollection<TestCase> testCasesToRun,
-            IRunContext runContext, IFrameworkHandle frameworkHandle)
+        private void DoRunTests(ICollection<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
@@ -205,7 +199,7 @@ namespace GoogleTestAdapter.TestAdapter
 
                 _executor = new GoogleTestExecutor(_logger, _settings);
             }
-            _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
+            _executor.RunTests(testCasesToRun, reporter, launcher,
                 runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
             reporter.AllTestsFinished();
         }

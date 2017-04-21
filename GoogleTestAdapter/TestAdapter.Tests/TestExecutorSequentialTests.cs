@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -20,9 +21,9 @@ namespace GoogleTestAdapter.TestAdapter
 
         public TestExecutorSequentialTests() : base(false, 1) { }
 
-        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfNotFoundTests)
+        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests)
         {
-            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfNotFoundTests);
+            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
                 Times.Exactly(nrOfPassedTests));
@@ -35,9 +36,9 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Exactly(nrOfFailedTests));
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),
-                Times.Exactly(nrOfNotFoundTests));
+                Times.Exactly(nrOfSkippedTests));
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
-                Times.Exactly(nrOfNotFoundTests));
+                Times.Exactly(nrOfSkippedTests));
         }
 
 
@@ -115,15 +116,17 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         [TestMethod]
-        public override void RunTests_CrashingX64Tests_CorrectTestResults()
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX64Tests_CorrectTestResults()
         {
-            base.RunTests_CrashingX64Tests_CorrectTestResults();
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 1, 2, 0, 3);
         }
 
         [TestMethod]
-        public override void RunTests_CrashingX86Tests_CorrectTestResults()
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX86Tests_CorrectTestResults()
         {
-            base.RunTests_CrashingX86Tests_CorrectTestResults();
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 1, 2, 0, 3);
         }
 
         [TestMethod]

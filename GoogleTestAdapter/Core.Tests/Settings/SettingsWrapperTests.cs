@@ -258,10 +258,10 @@ namespace GoogleTestAdapter.Settings
         public void GetPathExtension__PlaceholderIsReplaced()
         {
             MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + SettingsWrapper.ExecutableDirPlaceholder + ";Bar");
-            string result = TheOptions.GetPathExtension(TestResources.SampleTests);
+            string result = TheOptions.GetPathExtension(TestResources.Tests_DebugX86);
 
             // ReSharper disable once PossibleNullReferenceException
-            string expectedDirectory = new FileInfo(TestResources.SampleTests).Directory.FullName;
+            string expectedDirectory = new FileInfo(TestResources.Tests_DebugX86).Directory.FullName;
             result.Should().Be($"Foo;{expectedDirectory};Bar");
         }
 

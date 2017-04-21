@@ -12,10 +12,10 @@ namespace GoogleTestAdapter.Runners
     {
         public class Args
         {
-            public List<TestCase> TestCases { get; }
+            public IList<TestCase> TestCases { get; }
             public string CommandLine { get; }
 
-            internal Args(List<TestCase> testCases, string commandLine)
+            internal Args(IList<TestCase> testCases, string commandLine)
             {
                 TestCases = testCases ?? new List<TestCase>();
                 CommandLine = commandLine ?? "";
@@ -26,14 +26,12 @@ namespace GoogleTestAdapter.Runners
         public const int MaxCommandLength = 8191;
 
         private readonly int _lengthOfExecutableString;
-        private readonly IEnumerable<TestCase> _allTestCases;
-        private readonly IEnumerable<TestCase> _testCasesToRun;
+        private readonly IList<TestCase> _testCasesToRun;
         private readonly string _resultXmlFile;
         private readonly SettingsWrapper _settings;
         private readonly string _userParameters;
 
-        public CommandLineGenerator(
-            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun,
+        public CommandLineGenerator(IEnumerable<TestCase> testCasesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
             SettingsWrapper settings)
         {
@@ -41,8 +39,7 @@ namespace GoogleTestAdapter.Runners
                 throw new ArgumentNullException(nameof(userParameters));
 
             _lengthOfExecutableString = lengthOfExecutableString;
-            _allTestCases = allTestCases;
-            _testCasesToRun = testCasesToRun;
+            _testCasesToRun = testCasesToRun.ToList();
             _resultXmlFile = resultXmlFile;
             _settings = settings;
             _userParameters = userParameters;
@@ -68,7 +65,7 @@ namespace GoogleTestAdapter.Runners
             string userParam = GetAdditionalUserParameter();
             if (AllTestCasesOfExecutableAreRun())
             {
-                commandLines.Add(new Args(_testCasesToRun.ToList(), baseCommandLine + userParam));
+                commandLines.Add(new Args(_testCasesToRun, baseCommandLine + userParam));
                 return commandLines;
             }
 
@@ -81,7 +78,7 @@ namespace GoogleTestAdapter.Runners
             List<TestCase> testCasesRunBySuite = _testCasesToRun.Where(tc => !testCasesNotRunBySuite.Contains(tc)).ToList();
             if (testCasesNotRunBySuite.Count == 0)
             {
-                commandLines.Add(new Args(_testCasesToRun.ToList(), baseCommandLineWithFilter + userParam));
+                commandLines.Add(new Args(_testCasesToRun, baseCommandLineWithFilter + userParam));
                 return commandLines;
             }
 
@@ -199,9 +196,16 @@ namespace GoogleTestAdapter.Runners
 
         private bool AllTestCasesOfExecutableAreRun()
         {
-            var allTestCasesAsSet = new HashSet<TestCase>(_allTestCases);
-            var testCasesToRunAsSet = new HashSet<TestCase>(_testCasesToRun);
-            return allTestCasesAsSet.SetEquals(testCasesToRunAsSet);
+            if (!_testCasesToRun.Any())
+                return true;
+
+            TestCaseMetaDataProperty metaData = _testCasesToRun.First().Properties
+                .OfType<TestCaseMetaDataProperty>()
+                .SingleOrDefault();
+            if (metaData == null)
+                throw new Exception($"Test does not have meta data: {_testCasesToRun.First()}");
+
+            return _testCasesToRun.Count == metaData.NrOfTestCasesInExecutable;
         }
 
         private List<TestCase> GetTestCasesNotRunBySuite(List<string> suitesRunningAllTests)
@@ -226,11 +230,14 @@ namespace GoogleTestAdapter.Runners
             foreach (string suite in GetAllSuitesOfTestCasesToRun())
             {
                 List<TestCase> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(_testCasesToRun, suite);
-                List<TestCase> allMatchingTestCases = GetAllMatchingTestCases(_allTestCases, suite);
-                if (allMatchingTestCasesToBeRun.Count == allMatchingTestCases.Count)
-                {
+                TestCaseMetaDataProperty metaData = allMatchingTestCasesToBeRun.First().Properties
+                    .OfType<TestCaseMetaDataProperty>()
+                    .SingleOrDefault();
+                if (metaData == null)
+                    throw new Exception($"Test does not have meta data: {allMatchingTestCasesToBeRun.First()}");
+
+                if (allMatchingTestCasesToBeRun.Count == metaData.NrOfTestCasesInSuite)
                     suitesRunningAllTests.Add(suite);
-                }
             }
             return suitesRunningAllTests;
         }

@@ -88,6 +88,10 @@
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
+      <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
+      <Name>TestAdapter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj">
       <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
       <Name>Tests.Common</Name>

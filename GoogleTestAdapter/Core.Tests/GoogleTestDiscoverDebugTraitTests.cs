@@ -6,7 +6,7 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestDiscovererDebugTraitTests : GoogleTestDiscovererTraitTestsBase
     {
-        protected override string SampleTestToUse => TestResources.SampleTests;
+        protected override string SampleTestToUse => TestResources.Tests_DebugX86;
 
         #region Method stubs for code coverage
 

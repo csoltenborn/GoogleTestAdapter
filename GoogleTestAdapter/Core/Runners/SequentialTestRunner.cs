@@ -34,14 +34,13 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
             string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
             DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
 
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
-            TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
                 string finalParameters = SettingsWrapper.ReplacePlaceholders(userParameters, executable);
@@ -55,9 +54,7 @@ namespace GoogleTestAdapter.Runners
                     RunTestsFromExecutable(
                         executable,
                         finalWorkingDir,
-                        allTestCasesAsArray.Where(tc => tc.Source == executable),
                         groupedTestCases[executable],
-                        baseDir,
                         finalParameters,
                         isBeingDebugged,
                         debuggedLauncher,
@@ -80,13 +77,13 @@ namespace GoogleTestAdapter.Runners
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable, string workingDir,
-            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string userParameters,
+            IEnumerable<TestCase> testCasesToRun, string userParameters,
             bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
+            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)

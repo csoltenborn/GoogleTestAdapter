@@ -57,13 +57,31 @@ namespace GoogleTestAdapter.TestCases
             }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            if (_settings.ParseSymbolInformation)
+            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
+
+            IList<TestCase> testCases = new List<TestCase>();
+            IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
+            foreach (var descriptor in testCaseDescriptors)
             {
-                List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
-                return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
+                var testCase = _settings.ParseSymbolInformation 
+                    ? CreateTestCase(descriptor, testCaseLocations) 
+                    : CreateTestCase(descriptor);
+                ISet<TestCase> testCasesInSuite;
+                if (!suite2TestCases.TryGetValue(descriptor.Suite, out testCasesInSuite))
+                    suite2TestCases.Add(descriptor.Suite, testCasesInSuite = new HashSet<TestCase>());
+                testCasesInSuite.Add(testCase);
+                testCases.Add(testCase);
             }
 
-            return testCaseDescriptors.Select(CreateTestCase).ToList();
+            foreach (var suiteTestCasesPair in suite2TestCases)
+            {
+                foreach (var testCase in suiteTestCasesPair.Value)
+                {
+                    testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, testCases.Count));
+                }
+            }
+
+            return testCases;
         }
 
         private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase, List<string> standardOutput)
@@ -77,6 +95,7 @@ namespace GoogleTestAdapter.TestCases
                 _settings.ParseSymbolInformation,
                 _logger);
 
+            var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
             var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
             parser.TestCaseDescriptorCreated += (sender, args) =>
             {
@@ -92,8 +111,12 @@ namespace GoogleTestAdapter.TestCases
                 {
                     testCase = CreateTestCase(args.TestCaseDescriptor);
                 }
-                reportTestCase?.Invoke(testCase);
                 testCases.Add(testCase);
+
+                ISet<TestCase> testCasesOfSuite;
+                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out testCasesOfSuite))
+                    suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
+                testCasesOfSuite.Add(testCase);
             };
 
             Action<string> lineAction = s =>
@@ -131,6 +154,15 @@ namespace GoogleTestAdapter.TestCases
                     _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
 
                     return new List<TestCase>();
+                }
+
+                foreach (var suiteTestCasesPair in suite2TestCases)
+                {
+                    foreach (var testCase in suiteTestCasesPair.Value)
+                    {
+                        testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, testCases.Count));
+                        reportTestCase?.Invoke(testCase);
+                    }
                 }
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
