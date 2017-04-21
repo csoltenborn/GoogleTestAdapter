@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+<Project InitialTargets="GetVsSdkBuildTools" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <!-- We need to install the correct version for Microsoft.VSSDK.BuildTools according to
        the Visual Studio version. We cannot include it directly via nuget package.config
 	   as this does not support multiple side-by-side versions of the same package. We
@@ -10,6 +10,9 @@
     <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0.26201</VsSdkBuildToolsVersion>
     <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.3.25420</VsSdkBuildToolsVersion>
   </PropertyGroup>
+  <Target Name="GetVsSdkBuildTools" Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)')">
+    <Exec Command="..\packages\NuGet.CommandLine.3.5.0\tools\NuGet.exe install Microsoft.VSSDK.BuildTools -Version $(VsSdkBuildToolsVersion) -OutputDirectory ..\packages" />
+  </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</MinimumVisualStudioVersion>
