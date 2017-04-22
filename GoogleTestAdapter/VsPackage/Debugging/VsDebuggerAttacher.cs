@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
-using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -12,30 +10,6 @@ using Thread = System.Threading.Thread;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {
-    internal class LastWin32Exception : Win32Exception
-    {
-        public LastWin32Exception()
-            : base(Marshal.GetLastWin32Error())
-        {}
-    }
-
-    internal sealed class CoTaskMemSafeHandle : SafeHandle
-    {
-
-        public CoTaskMemSafeHandle(IntPtr handle)
-            : base(handle, true)
-        {}
-
-        public override bool IsInvalid => IsClosed || handle == IntPtr.Zero;
-
-        protected override bool ReleaseHandle()
-        {
-            Marshal.FreeCoTaskMem(handle);
-            handle = IntPtr.Zero;
-            return true;
-        }
-    }
-
     public class VsDebuggerAttacher : IDebuggerAttacher
     {
         private const int AttachRetryWaitingTimeInMs = 100;
@@ -46,29 +20,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             AppDomain.CurrentDomain.AssemblyResolve += ResolveVisualStudioShell;
         }
 
-        private readonly _DTE _visualStudioInstance;
-        private readonly ILogger _logger;
-
-        public VsDebuggerAttacher(ILogger logger)
-        {
-            _logger = logger;
-            _visualStudioInstance = Package.GetGlobalService(typeof(DTE)) as DTE;
-        }
-
         public bool AttachDebugger(int processId)
-        {
-            try
-            {
-                return TryAttachDebugger(processId);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Failed attaching debugger to process {processId}: {e}");
-                return false;
-            }
-        }
-
-        private bool TryAttachDebugger(int processId)
         {
             IntPtr pDebugEngine = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(Guid)));
             try
@@ -84,10 +36,11 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                     pDebugEngines = pDebugEngine,
                 };
 
+                _DTE dte = (DTE) Package.GetGlobalService(typeof(DTE));
                 // ReSharper disable once SuspiciousTypeConversion.Global
                 var serviceProvider =
                     new ServiceProvider(
-                        (Microsoft.VisualStudio.OLE.Interop.IServiceProvider) _visualStudioInstance.DTE);
+                        (Microsoft.VisualStudio.OLE.Interop.IServiceProvider) dte.DTE);
                 var debugger = (IVsDebugger4) serviceProvider.GetService(typeof(SVsShellDebugger));
 
                 AttachDebuggerRetrying(debugger, debugTarget);

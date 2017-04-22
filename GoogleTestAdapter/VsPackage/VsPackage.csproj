@@ -112,7 +112,6 @@
     <Compile Include="OptionsPages\ParallelizationOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Helpers\ConsoleLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\SwitchCatchExceptionsOptionCommand.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreator.cs" />

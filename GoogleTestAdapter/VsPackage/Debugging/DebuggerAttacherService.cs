@@ -1,18 +1,21 @@
 ﻿using System;
+using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
-using GoogleTestAdapter.VsPackage.Helpers;
 using NamedPipeWrapper;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {
-    public class DebuggerAttacherService
+    public class DebuggerAttacherService : IDisposable
     {
         private readonly int _visualStudioProcessId;
-        private readonly NamedPipeServer<AttachDebuggerMessage> _server;
+        private readonly IDebuggerAttacher _debuggerAttacher;
 
-        public DebuggerAttacherService(int visualStudioProcessId)
+        private NamedPipeServer<AttachDebuggerMessage> _server;
+
+        public DebuggerAttacherService(int visualStudioProcessId, IDebuggerAttacher debuggerAttacher)
         {
             _visualStudioProcessId = visualStudioProcessId;
+            _debuggerAttacher = debuggerAttacher;
             _server = CreateAndStartPipeServer();
         }
 
@@ -20,18 +23,17 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         {
             // TODO what to do if NamedPipe can not be created?
             var server = new NamedPipeServer<AttachDebuggerMessage>(MessageBasedDebuggerAttacher.GetPipeName(_visualStudioProcessId));
-            server.ClientMessage += AttachDebugger;
+            server.ClientMessage += OnAttachDebuggerMessageReceived;
             server.Start(); 
             return server;
         }
 
-        private void AttachDebugger(NamedPipeConnection<AttachDebuggerMessage, AttachDebuggerMessage> connection,
+        private void OnAttachDebuggerMessageReceived(NamedPipeConnection<AttachDebuggerMessage, AttachDebuggerMessage> connection,
             AttachDebuggerMessage message)
         {
             try
             {
-                var debuggerAttacher = new VsDebuggerAttacher(new ConsoleLogger());
-                message.DebuggerAttachedSuccessfully = debuggerAttacher.AttachDebugger(message.ProcessId);
+                message.DebuggerAttachedSuccessfully = _debuggerAttacher.AttachDebugger(message.ProcessId);
                 if (!message.DebuggerAttachedSuccessfully)
                     message.ErrorMessage = $"Could not attach debugger to process {message.ProcessId} for unknown reasons";
             }
@@ -53,6 +55,11 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             }
         }
 
+        public void Dispose()
+        {
+            _server?.Stop();
+            _server = null;
+        }
     }
 
 }

@@ -21,7 +21,9 @@
     <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\native\" />
     <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\native\" />
     <file src="CommonMark.dll" target="lib\native\" />
-    
+    <file src="NamedPipeWrapper.dll" target="lib\native\" />
+    <file src="NRegFreeCom.dll" target="lib\native\" />
+
     <file src="GoogleTestAdapter.Common.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.Core.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.DiaResolver.dll" target="lib\net45\" />
