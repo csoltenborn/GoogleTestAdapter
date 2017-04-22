@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void DebuggerAttacherService_AttacherThrows_AnswerIndicatesFailure()
+        public void DebuggerAttacherService_AttacherThrows_AnswerIncludesExceptionMessage()
         {
             MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Throws(new Exception("my message"));
             DoTest(false, "my message");
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void DebuggerAttacherService_AttacherReturnsFalse_AnswerIndicatesFailure()
+        public void DebuggerAttacherService_AttacherReturnsFalse_AnswerWithoutReason()
         {
             MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(false);
             DoTest(false, "unknown reasons");

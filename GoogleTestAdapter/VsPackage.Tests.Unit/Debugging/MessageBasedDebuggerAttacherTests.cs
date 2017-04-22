@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
@@ -58,52 +56,6 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             DoTest(false);
 
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("my message"))), Times.Once);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
-        public void AttachDebugger_AttachingDoesNotReturn_TimeoutErrorOutputGenerated()
-        {
-            int visualStudioProcessId = 4711;
-            int debuggeeProcessId = 2017;
-
-            bool attacherReturned = false;
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(() =>
-            {
-                Thread.Sleep((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
-                attacherReturned = true;
-                return false;
-            });
-
-            // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(visualStudioProcessId, MockDebuggerAttacher.Object))
-            {
-                var stopwatch = Stopwatch.StartNew();
-                var client = new MessageBasedDebuggerAttacher(visualStudioProcessId, Timeout, MockLogger.Object);
-                client.AttachDebugger(debuggeeProcessId).Should().BeFalse();
-                stopwatch.Stop();
-
-                attacherReturned.Should().BeFalse();
-                stopwatch.Elapsed.Should().BeGreaterOrEqualTo(Timeout - Tolerance);
-                MockDebuggerAttacher.Verify(a => a.AttachDebugger(It.Is<int>(processId => processId == debuggeeProcessId)), Times.Once);
-                MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("timed out"))), Times.Once);
-
-                // attacher is still running - let's see if we can attach another debugger in the meantime
-                int debuggee2ProcessId = debuggeeProcessId + 1;
-                MockDebuggerAttacher.Reset();
-                MockLogger.Reset();
-                MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
-
-                stopwatch.Restart();
-                client = new MessageBasedDebuggerAttacher(visualStudioProcessId, Timeout, MockLogger.Object);
-                client.AttachDebugger(debuggee2ProcessId);
-                stopwatch.Stop();
-
-                attacherReturned.Should().BeFalse();
-                stopwatch.Elapsed.Should().BeLessThan(DebuggerAttacherServiceTests.WaitingTime + Tolerance);
-                MockDebuggerAttacher.Verify(a => a.AttachDebugger(It.Is<int>(processId => processId == debuggee2ProcessId)), Times.Once);
-                MockLogger.Verify(l => l.DebugInfo(It.IsAny<string>()), Times.Once);
-            }
         }
 
         private void DoTest(bool expectedResult)
