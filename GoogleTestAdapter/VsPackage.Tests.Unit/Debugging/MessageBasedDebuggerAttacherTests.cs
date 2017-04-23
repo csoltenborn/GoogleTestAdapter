@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
@@ -29,7 +30,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Integration)]
         public void AttachDebugger_AttachingSucceeds_DebugOutputGenerated()
         {
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
+            MockDebuggerAttacher
+                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Returns(GetAttachDebuggerAction(() => true));
 
             DoTest(true);
 
@@ -40,7 +43,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Integration)]
         public void AttachDebugger_AttachingFails_ErrorOutputGenerated()
         {
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(false);
+            MockDebuggerAttacher
+                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Returns(GetAttachDebuggerAction(() => false));
 
             DoTest(false);
 
@@ -51,7 +56,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Integration)]
         public void AttachDebugger_AttachingThrows_ErrorOutputGenerated()
         {
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Throws(new Exception("my message"));
+            MockDebuggerAttacher
+                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Returns(GetAttachDebuggerAction(() => throw new Exception("my message")));
 
             DoTest(false);
 
@@ -83,6 +90,15 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                 MockDebuggerAttacher.Verify(a => a.AttachDebugger(It.Is<int>(processId => processId == debuggeeProcessId)),
                     Times.Once);
             }
+        }
+
+        public static Func<bool> GetAttachDebuggerAction(Func<bool> function)
+        {
+            return () =>
+            {
+                Thread.Sleep(25);
+                return function();
+            };
         }
 
     }

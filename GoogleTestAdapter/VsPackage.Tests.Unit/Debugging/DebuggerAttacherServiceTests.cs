@@ -36,7 +36,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Unit)]
         public void DebuggerAttacherService_ReceivesMessage_AnswersImmediately()
         {
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
+            MockDebuggerAttacher
+                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => true));
             DoTest(true, null);
         }
 
@@ -44,7 +46,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Unit)]
         public void DebuggerAttacherService_AttacherThrows_AnswerIncludesExceptionMessage()
         {
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Throws(new Exception("my message"));
+            MockDebuggerAttacher
+                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => throw new Exception("my message")));
             DoTest(false, "my message");
         }
 
@@ -52,7 +56,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Unit)]
         public void DebuggerAttacherService_AttacherReturnsFalse_AnswerWithoutReason()
         {
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(false);
+            MockDebuggerAttacher
+                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => false));
             DoTest(false, "unknown reasons");
         }
 
@@ -68,6 +74,8 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                     visualStudioProcessId,
                     (connection, msg) => { _messages.Add(msg); _resetEvent.Set(); },
                     MockLogger.Object);
+                client.Should().NotBeNull();
+
                 client.PushMessage(new AttachDebuggerMessage { ProcessId = debuggeeProcessId });
 
                 _resetEvent.Wait(WaitingTime).Should().BeTrue();

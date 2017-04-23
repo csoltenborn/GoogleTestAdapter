@@ -24,7 +24,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             // TODO what to do if NamedPipe can not be created?
             var server = new NamedPipeServer<AttachDebuggerMessage>(MessageBasedDebuggerAttacher.GetPipeName(_visualStudioProcessId));
             server.ClientMessage += OnAttachDebuggerMessageReceived;
-            server.Start(); 
+            server.Start();
             return server;
         }
 

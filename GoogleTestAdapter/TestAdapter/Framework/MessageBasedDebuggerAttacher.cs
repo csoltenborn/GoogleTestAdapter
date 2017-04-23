@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
             client.PushMessage(new AttachDebuggerMessage { ProcessId = processId });
 
-            if (!resetEvent.Wait(_timeout))
+            if (!resetEvent.IsSet && !resetEvent.Wait(_timeout))
                 errorMessage = $"Could not attach debugger to process {processId} since attaching timed out after {_timeout.TotalSeconds}s";
 
             stopWatch.Stop();
