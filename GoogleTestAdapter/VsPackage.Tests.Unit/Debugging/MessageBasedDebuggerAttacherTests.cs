@@ -58,6 +58,16 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("my message"))), Times.Once);
         }
 
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void AttachDebugger_NoPipeAvailable_ErrorOutputGenerated()
+        {
+            var client = new MessageBasedDebuggerAttacher(4711, Timeout, MockLogger.Object);
+            client.AttachDebugger(2017).Should().BeFalse();
+
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not connect to NamedPipe"))), Times.Once);
+        }
+
         private void DoTest(bool expectedResult)
         {
             int visualStudioProcessId = 4711;

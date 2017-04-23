@@ -63,6 +63,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 };
 
             var client = CreateAndStartPipeClient(_visualStudioProcessId, onServerMessage, _logger);
+            if (client == null)
+                return false;
+
             client.PushMessage(new AttachDebuggerMessage { ProcessId = processId });
 
             if (!resetEvent.Wait(_timeout))
@@ -98,7 +101,17 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             client.ServerMessage += onServerMessage;
 
             client.Start();
-            client.WaitForConnection();
+
+            // workaround for NamedPipeClient not telling if connection has been established :-)
+            var stopwatch = Stopwatch.StartNew();
+            client.WaitForConnection(TimeSpan.FromSeconds(3));
+            stopwatch.Stop();
+            if (stopwatch.Elapsed > TimeSpan.FromSeconds(2.5))
+            {
+                logger.LogError($"Could not connect to NamedPipe {GetPipeName(visualStudioProcessId)} - debugging will not be available");
+                client.Stop();
+                return null;
+            }
 
             return client;
         }
