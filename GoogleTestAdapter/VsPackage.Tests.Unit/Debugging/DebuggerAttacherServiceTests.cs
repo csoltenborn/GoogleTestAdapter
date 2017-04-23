@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         {
             MockDebuggerAttacher
                 .Setup(a => a.AttachDebugger(It.IsAny<int>()))
-                .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => throw new Exception("my message")));
+                .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => { throw new Exception("my message"); }));
             DoTest(false, "my message");
         }
 
