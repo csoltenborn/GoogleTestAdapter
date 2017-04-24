@@ -37,8 +37,8 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
-* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.9.1/GoogleTestAdapter-0.9.1.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
-* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no options or toolbar will be available; configuration is only possible through solution config files (see below).
+* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.10.0/GoogleTestAdapter-0.10.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
+* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
@@ -202,6 +202,8 @@ Pull requests (against the `develop` branch) are welcome and will be reviewed ca
 * [Sergey Gomon](https://github.com/gomons), report and example solution in [#63](https://github.com/csoltenborn/GoogleTestAdapter/issues/63)
 * [Florin T.](https://github.com/ftrofin), report and example code in [#89](https://github.com/csoltenborn/GoogleTestAdapter/issues/89)
 * [JackGrinningCat](https://github.com/JackGrinningCat), report and fix in [#96](https://github.com/csoltenborn/GoogleTestAdapter/issues/96)
+* [Farwaykorse](https://github.com/Farwaykorse), report and testing in [#124](https://github.com/csoltenborn/GoogleTestAdapter/issues/124)
+* [ninjaCoder](https://github.com/ninjaCoder), report and testing in [#126](https://github.com/csoltenborn/GoogleTestAdapter/issues/126)
 
 #### Tools
 * [Google Test Runner](https://github.com/markusl/GoogleTestRunner) - the starting point for GTA. We have ported the Google Test Runner extension from F# to C# and implemented various enhancements and refactorings.
@@ -213,4 +215,6 @@ Pull requests (against the `develop` branch) are welcome and will be reviewed ca
 * [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [CommonMark.NET](https://github.com/Knagis/CommonMark.NET) - open source Markdown to HTML converter
+* [NRegFreeCom](https://github.com/OpenSharp/NRegFreeCom) - open source library for accessing unregistered COM objects
+* [NamedPipeWrapper](https://github.com/acdvorak/named-pipe-wrapper) - open source library for easily working with Named Pipes
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage
