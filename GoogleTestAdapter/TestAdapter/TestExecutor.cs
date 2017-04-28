@@ -198,7 +198,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private bool IsVisualStudioProcessAvailable()
         {
-            return _settings.VisualStudioProcessId > 0;
+            return _settings.DebuggingNamedPipeId != null;
         }
 
         private void DoRunTests(ICollection<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)

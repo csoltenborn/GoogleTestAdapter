@@ -99,9 +99,6 @@ namespace GoogleTestAdapter.Settings
         public string DebuggingNamedPipeId { get; set; }
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
 
-        public virtual int? VisualStudioProcessId { get; set; }
-        public bool ShouldSerializeVisualStudioProcessId() { return VisualStudioProcessId != null; }
-
         
         public static RunSettings LoadFromXml(XmlReader reader)
         {

@@ -45,7 +45,6 @@
 
         // internal
         string DebuggingNamedPipeId { get; set; }
-        int? VisualStudioProcessId { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -79,7 +78,6 @@
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 
-            self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
         }
     }

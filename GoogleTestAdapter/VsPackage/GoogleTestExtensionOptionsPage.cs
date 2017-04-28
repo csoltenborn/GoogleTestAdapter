@@ -203,7 +203,6 @@ namespace GoogleTestAdapter.VsPackage
 
                 UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
 
-                VisualStudioProcessId = Process.GetCurrentProcess().Id,
                 DebuggingNamedPipeId = _debuggingNamedPipeId
             };
         }

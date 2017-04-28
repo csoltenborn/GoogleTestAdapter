@@ -85,7 +85,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         private void GetValuesFromGlobalSettings(RunSettings settings)
         {
-            settings.VisualStudioProcessId = null;
+            settings.DebuggingNamedPipeId = null;
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }
 

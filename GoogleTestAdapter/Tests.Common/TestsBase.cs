@@ -73,7 +73,6 @@ namespace GoogleTestAdapter.Tests.Common
 
             mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
 
-            mockOptions.Setup(o => o.VisualStudioProcessId).Returns(-1);
             mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
         }
 
