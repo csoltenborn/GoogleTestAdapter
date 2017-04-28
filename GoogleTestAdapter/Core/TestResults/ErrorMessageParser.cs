@@ -10,50 +10,44 @@ namespace GoogleTestAdapter.TestResults
 
     public class ErrorMessageParser
     {
-        private static readonly string ValidCharRegex;
-
+        private static readonly Regex SplitRegex;
+        private static readonly Regex ParseRegex;
+        private static readonly Regex ScopedTraceRegex;
         private static readonly Regex ScopedTraceStartRegex;
-
-        private readonly Regex _splitRegex;
-        private readonly Regex _parseRegex;
-        private readonly Regex _scopedTraceRegex;
 
         static ErrorMessageParser()
         {
             IEnumerable<char> invalidChars =
                 Path.GetInvalidFileNameChars().Where(c => Path.GetInvalidPathChars().Contains(c));
-            ValidCharRegex = "[^" + Regex.Escape(new string(invalidChars.ToArray())) + "]";
+            var validCharRegex = $"[^{Regex.Escape(new string(invalidChars.ToArray()))}]";
 
-            ScopedTraceStartRegex 
+            string file = $"([a-z]:{validCharRegex}*)";
+            string line = "([0-9]+)";
+            string fileAndLine = $@"{file}(?::{line}|\({line}\):)";
+            string error = @"(?:error: |Failure\n)";
+
+            SplitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.IgnoreCase);
+            ParseRegex = new Regex($"{fileAndLine}(?::? {error})?", RegexOptions.IgnoreCase);
+            // TODO make expression parse "unknown file: error: SEH exception with code 0xc0000005 thrown in the test body."
+            ScopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.IgnoreCase);
+            ScopedTraceStartRegex
                 = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public string ErrorMessage { get; private set; }
         public string ErrorStackTrace { get; private set; }
 
+        private string _outputBeforeFirstFailure = "";
         private IList<string> ErrorMessages { get; }
 
-        public ErrorMessageParser(string consoleOutput) : this()
+        public ErrorMessageParser(string consoleOutput)
         {
             ErrorMessages = SplitConsoleOutput(consoleOutput);
         }
 
-        public ErrorMessageParser(XmlNodeList failureNodes) : this()
+        public ErrorMessageParser(XmlNodeList failureNodes)
         {
             ErrorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText).ToList();
-        }
-
-        private ErrorMessageParser()
-        {
-            string file = $"({ValidCharRegex}*)";
-            string line = "([0-9]+)";
-            string fileAndLine = $@"{file}(?::{line}|\({line}\):)";
-            string error = @"(?:error: |Failure\n)";
-
-            _parseRegex = new Regex($"{fileAndLine}(?::? {error})?", RegexOptions.IgnoreCase);
-            // TODO make expression parse "unknown file: error: SEH exception with code 0xc0000005 thrown in the test body."
-            _splitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.IgnoreCase);
-            _scopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.IgnoreCase);
         }
 
         public void Parse()
@@ -71,6 +65,13 @@ namespace GoogleTestAdapter.TestResults
                     HandleMultipleFailures();
                     break;
             }
+
+            if (_outputBeforeFirstFailure != "")
+            {
+                if (!_outputBeforeFirstFailure.EndsWith("\n") && !_outputBeforeFirstFailure.EndsWith("\r\n"))
+                    _outputBeforeFirstFailure += "\n";
+                ErrorMessage = $"{_outputBeforeFirstFailure}{ErrorMessage}";
+            }
         }
 
         public static string CreateStackTraceEntry(string label, string fullFileName, string lineNumber)
@@ -83,12 +84,16 @@ namespace GoogleTestAdapter.TestResults
             if (string.IsNullOrEmpty(errorMessage))
                 return new List<string>();
 
-            MatchCollection matches = _splitRegex.Matches(errorMessage);
+            MatchCollection matches = SplitRegex.Matches(errorMessage);
             if (matches.Count == 0)
                 return new List<string>{ errorMessage };
 
             var errorMessages = new List<string>();
-            int startIndex, length;
+            int startIndex = 0;
+            int length = matches[0].Index;
+            if (length > 0)
+                _outputBeforeFirstFailure = errorMessage.Substring(startIndex, length);
+
             for (int i = 0; i < matches.Count - 1; i++)
             {
                 startIndex = matches[i].Index;
@@ -133,7 +138,7 @@ namespace GoogleTestAdapter.TestResults
 
         private void CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, int msgId = 0)
         {
-            Match match = _parseRegex.Match(errorMessage);
+            Match match = ParseRegex.Match(errorMessage);
             if (!match.Success)
             {
                 stackTrace = "";
@@ -142,7 +147,7 @@ namespace GoogleTestAdapter.TestResults
 
             string fullFileName = match.Groups[1].Value;
             string fileName = Path.GetFileName(fullFileName);
-            string lineNumber = match.Groups[2]. Value;
+            string lineNumber = match.Groups[2].Value;
             if (string.IsNullOrEmpty(lineNumber))
                 lineNumber = match.Groups[3].Value;
 
@@ -156,7 +161,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 string scopedTraces = errorMessage.Substring(match.Index + match.Value.Length);
                 errorMessage = errorMessage.Substring(0, match.Index).Trim();
-                MatchCollection matches = _scopedTraceRegex.Matches(scopedTraces);
+                MatchCollection matches = ScopedTraceRegex.Matches(scopedTraces);
                 foreach (Match traceMatch in matches)
                 {
                     fullFileName = traceMatch.Groups[1].Value;

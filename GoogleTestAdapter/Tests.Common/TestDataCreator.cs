@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.Tests.Common
 
     public class TestDataCreator
     {
-        public const string DummyExecutable = "ff.exe";
+        public const string DummyExecutable = "c:\\ff.exe";
 
 
         private readonly TestEnvironment _testEnvironment;

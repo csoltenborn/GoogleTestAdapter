@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_WithDefaultRegex_RegistersFoundTestsAtDiscoverySink()
         {
-            CheckForDiscoverySinkCalls(88);
+            CheckForDiscoverySinkCalls(TestResources.NrOfTests);
         }
 
         [TestMethod]

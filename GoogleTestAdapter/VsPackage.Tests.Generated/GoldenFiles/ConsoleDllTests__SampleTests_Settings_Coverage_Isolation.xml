@@ -263,6 +263,79 @@ at --&gt;TestMethod Outer in $(Directory)\sampletests\tests\scopedtracestests.cp
         </ErrorInfo>
       </Output>
     </UnitTestResult>
+    <UnitTestResult testName="OutputHandling.ManyLinesWithNewlines" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>before test 1
+before test 2
+Expected: 1
+To be equal to: 2
+after test 1
+after test 2</Message>
+          <StackTrace>at basictests.cpp:136 in $(Directory)\sampletests\tests\basictests.cpp:line 136</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="OutputHandling.OneLine" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>before test
+Expected: 1
+To be equal to: 2
+after test</Message>
+          <StackTrace>at basictests.cpp:151 in $(Directory)\sampletests\tests\basictests.cpp:line 151</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="OutputHandling.OneLineWithNewlines" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>before test
+Expected: 1
+To be equal to: 2
+after test</Message>
+          <StackTrace>at basictests.cpp:144 in $(Directory)\sampletests\tests\basictests.cpp:line 144</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="OutputHandling.Output_ManyLinesWithNewlines" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>before test 1
+before test 2
+Expected: 1
+To be equal to: 2
+test output
+after test 1
+after test 2</Message>
+          <StackTrace>at basictests.cpp:113 in $(Directory)\sampletests\tests\basictests.cpp:line 113</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="OutputHandling.Output_OneLine" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>before test
+Expected: 1
+To be equal to: 2
+test output
+after test</Message>
+          <StackTrace>at basictests.cpp:128 in $(Directory)\sampletests\tests\basictests.cpp:line 128</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult testName="OutputHandling.Output_OneLineWithNewlines" outcome="Failed">
+      <Output>
+        <ErrorInfo>
+          <Message>before test
+Expected: 1
+To be equal to: 2
+test output
+after test</Message>
+          <StackTrace>at basictests.cpp:121 in $(Directory)\sampletests\tests\basictests.cpp:line 121</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
     <UnitTestResult testName="ParameterizedTests.Simple|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -622,6 +695,24 @@ To be equal to: GetParam().s
     <UnitTest name="MessageParserTests.TwoScopedTracesInTestMethod" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="MessageParserTests.TwoScopedTracesInTestMethod" className="MessageParserTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
+    <UnitTest name="OutputHandling.ManyLinesWithNewlines" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="OutputHandling.ManyLinesWithNewlines" className="OutputHandling" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="OutputHandling.OneLine" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="OutputHandling.OneLine" className="OutputHandling" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="OutputHandling.OneLineWithNewlines" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="OutputHandling.OneLineWithNewlines" className="OutputHandling" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="OutputHandling.Output_ManyLinesWithNewlines" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="OutputHandling.Output_ManyLinesWithNewlines" className="OutputHandling" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="OutputHandling.Output_OneLine" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="OutputHandling.Output_OneLine" className="OutputHandling" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="OutputHandling.Output_OneLineWithNewlines" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="OutputHandling.Output_OneLineWithNewlines" className="OutputHandling" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
     <UnitTest name="ParameterizedTests.Simple|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="ParameterizedTests.Simple|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
@@ -786,7 +877,7 @@ To be equal to: GetParam().s
     </UnitTest>
   </TestDefinitions>
   <ResultSummary outcome="Failed">
-    <Counters total="88" executed="88" passed="41" failed="47" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="94" executed="94" passed="41" failed="53" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>

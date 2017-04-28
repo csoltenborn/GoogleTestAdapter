@@ -110,7 +110,7 @@ namespace GoogleTestAdapter.TestAdapter
             // let's print the test output
             MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
 
-            RunAndVerifyTests(TestResources.Tests_DebugX86, 40, 48, 0);
+            RunAndVerifyTests(TestResources.Tests_DebugX86, TestResources.NrOfPassingTests, TestResources.NrOfFailingTests, 0);
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.Tests_ReleaseX64, 40, 48, 0);
+            RunAndVerifyTests(TestResources.Tests_ReleaseX64, TestResources.NrOfPassingTests, TestResources.NrOfFailingTests, 0);
         }
 
         [TestMethod]
