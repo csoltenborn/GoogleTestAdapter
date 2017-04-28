@@ -12,22 +12,22 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private static readonly TimeSpan AttachDebuggerTimeout = TimeSpan.FromSeconds(10);
 
         private readonly ILogger _logger;
-        private readonly int _visualStudioProcessId;
+        private readonly string _debuggingNamedPipeId;
         private readonly TimeSpan _timeout;
 
-        public static string GetPipeName(int visualStudioProcessId)
+        public static string GetPipeName(string id)
         {
-            return $"GTA_{visualStudioProcessId}";
+            return $"GTA_{id}";
         }
 
-        public MessageBasedDebuggerAttacher(int visualStudioProcessId, TimeSpan timeout, ILogger logger)
+        public MessageBasedDebuggerAttacher(string debuggingNamedPipeId, TimeSpan timeout, ILogger logger)
         {
-            _visualStudioProcessId = visualStudioProcessId;
+            _debuggingNamedPipeId = debuggingNamedPipeId;
             _timeout = timeout;
             _logger = logger;
         }
 
-        public MessageBasedDebuggerAttacher(int visualStudioProcessId, ILogger logger) : this(visualStudioProcessId, AttachDebuggerTimeout, logger)
+        public MessageBasedDebuggerAttacher(string debuggingNamedPipeId, ILogger logger) : this(debuggingNamedPipeId, AttachDebuggerTimeout, logger)
         {
         }
 
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     }
                 };
 
-            var client = CreateAndStartPipeClient(_visualStudioProcessId, onServerMessage, _logger);
+            var client = CreateAndStartPipeClient(_debuggingNamedPipeId, onServerMessage, _logger);
             if (client == null)
                 return false;
 
@@ -90,13 +90,13 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             return debuggerAttachedSuccessfully;
         }
 
-        public static NamedPipeClient<AttachDebuggerMessage> CreateAndStartPipeClient(int visualStudioProcessId, ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage, ILogger logger)
+        public static NamedPipeClient<AttachDebuggerMessage> CreateAndStartPipeClient(string pipeId, ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage, ILogger logger)
         {
-            var client = new NamedPipeClient<AttachDebuggerMessage>(GetPipeName(visualStudioProcessId));
+            var client = new NamedPipeClient<AttachDebuggerMessage>(GetPipeName(pipeId));
             client.Error += exception =>
             {
                 logger.DebugError(
-                    $"Named pipe error: Named pipe is {GetPipeName(visualStudioProcessId)}, exception message: {exception.Message}");
+                    $"Named pipe error: Named pipe is {GetPipeName(pipeId)}, exception message: {exception.Message}");
             };
             client.ServerMessage += onServerMessage;
 
@@ -108,7 +108,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             stopwatch.Stop();
             if (stopwatch.Elapsed > TimeSpan.FromSeconds(2.5))
             {
-                logger.LogError($"Could not connect to NamedPipe {GetPipeName(visualStudioProcessId)} - debugging will not be available");
+                logger.LogError($"Could not connect to NamedPipe {GetPipeName(pipeId)} - debugging will not be available");
                 client.Stop();
                 return null;
             }

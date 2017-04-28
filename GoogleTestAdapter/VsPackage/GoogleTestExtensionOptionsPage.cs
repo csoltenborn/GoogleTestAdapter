@@ -32,6 +32,8 @@ namespace GoogleTestAdapter.VsPackage
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
 
+        private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
+
         private IGlobalRunSettingsInternal _globalRunSettings;
 
         private GeneralOptionsDialogPage _generalOptions;
@@ -67,7 +69,8 @@ namespace GoogleTestAdapter.VsPackage
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
-            _debuggerAttacherService = new DebuggerAttacherService(Process.GetCurrentProcess().Id, new VsDebuggerAttacher());
+            var debuggerAttacher = new VsDebuggerAttacher(this);
+            _debuggerAttacherService = new DebuggerAttacherService(_debuggingNamedPipeId, debuggerAttacher);
         }
 
         protected override void Dispose(bool disposing)
@@ -199,7 +202,9 @@ namespace GoogleTestAdapter.VsPackage
                 MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads,
 
                 UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
-                VisualStudioProcessId = Process.GetCurrentProcess().Id
+
+                VisualStudioProcessId = Process.GetCurrentProcess().Id,
+                DebuggingNamedPipeId = _debuggingNamedPipeId
             };
         }
 

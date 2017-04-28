@@ -64,14 +64,14 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
         private void DoTest(bool expectedOutcome, string expectedErrorMessagePart)
         {
-            int visualStudioProcessId = 4711;
+            string pipeId = Guid.NewGuid().ToString();
             int debuggeeProcessId = 2017;
 
             // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(visualStudioProcessId, MockDebuggerAttacher.Object))
+            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object))
             {
                 var client = MessageBasedDebuggerAttacher.CreateAndStartPipeClient(
-                    visualStudioProcessId,
+                    pipeId,
                     (connection, msg) => { _messages.Add(msg); _resetEvent.Set(); },
                     MockLogger.Object);
                 client.Should().NotBeNull();

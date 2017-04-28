@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Settings;
@@ -71,7 +72,9 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.KillProcessesOnCancel).Returns(SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
 
             mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+
             mockOptions.Setup(o => o.VisualStudioProcessId).Returns(-1);
+            mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
         }
 
         [TestCleanup]

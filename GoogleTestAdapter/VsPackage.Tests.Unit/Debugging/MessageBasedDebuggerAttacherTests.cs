@@ -69,7 +69,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         [TestCategory(Integration)]
         public void AttachDebugger_NoPipeAvailable_ErrorOutputGenerated()
         {
-            var client = new MessageBasedDebuggerAttacher(4711, Timeout, MockLogger.Object);
+            var client = new MessageBasedDebuggerAttacher(Guid.NewGuid().ToString(), Timeout, MockLogger.Object);
             client.AttachDebugger(2017).Should().BeFalse();
 
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not connect to NamedPipe"))), Times.Once);
@@ -77,13 +77,13 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
         private void DoTest(bool expectedResult)
         {
-            int visualStudioProcessId = 4711;
+            string pipeId = Guid.NewGuid().ToString();
             int debuggeeProcessId = 2017;
 
             // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(visualStudioProcessId, MockDebuggerAttacher.Object))
+            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object))
             {
-                var client = new MessageBasedDebuggerAttacher(visualStudioProcessId, Timeout, MockLogger.Object);
+                var client = new MessageBasedDebuggerAttacher(pipeId, Timeout, MockLogger.Object);
 
                 client.AttachDebugger(debuggeeProcessId).Should().Be(expectedResult);
 

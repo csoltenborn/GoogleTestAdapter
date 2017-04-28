@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using EnvDTE;
 using GoogleTestAdapter.Framework;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Thread = System.Threading.Thread;
 
@@ -15,9 +13,16 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         private const int AttachRetryWaitingTimeInMs = 100;
         private const int MaxAttachTries = 10; // let's try for 1s
 
+        private readonly IServiceProvider _serviceProvider;
+
         static VsDebuggerAttacher()
         {
             AppDomain.CurrentDomain.AssemblyResolve += ResolveVisualStudioShell;
+        }
+
+        internal VsDebuggerAttacher(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
         }
 
         public bool AttachDebugger(int processId)
@@ -36,12 +41,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                     pDebugEngines = pDebugEngine,
                 };
 
-                _DTE dte = (DTE) Package.GetGlobalService(typeof(DTE));
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                var serviceProvider =
-                    new ServiceProvider(
-                        (Microsoft.VisualStudio.OLE.Interop.IServiceProvider) dte.DTE);
-                var debugger = (IVsDebugger4) serviceProvider.GetService(typeof(SVsShellDebugger));
+                var debugger = (IVsDebugger4) _serviceProvider.GetService(typeof(SVsShellDebugger));
 
                 AttachDebuggerRetrying(debugger, debugTarget);
             }

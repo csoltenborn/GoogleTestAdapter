@@ -7,22 +7,22 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 {
     public class DebuggerAttacherService : IDisposable
     {
-        private readonly int _visualStudioProcessId;
+        private readonly string _debuggingNampedPipeId;
         private readonly IDebuggerAttacher _debuggerAttacher;
 
         private NamedPipeServer<AttachDebuggerMessage> _server;
 
-        public DebuggerAttacherService(int visualStudioProcessId, IDebuggerAttacher debuggerAttacher)
+        public DebuggerAttacherService(string debuggingNampedPipeId, IDebuggerAttacher debuggerAttacher)
         {
-            _visualStudioProcessId = visualStudioProcessId;
+            _debuggingNampedPipeId = debuggingNampedPipeId;
             _debuggerAttacher = debuggerAttacher;
             _server = CreateAndStartPipeServer();
         }
 
         private NamedPipeServer<AttachDebuggerMessage> CreateAndStartPipeServer()
         {
-            // TODO what to do if NamedPipe can not be created?
-            var server = new NamedPipeServer<AttachDebuggerMessage>(MessageBasedDebuggerAttacher.GetPipeName(_visualStudioProcessId));
+            string pipeName = MessageBasedDebuggerAttacher.GetPipeName(_debuggingNampedPipeId);
+            var server = new NamedPipeServer<AttachDebuggerMessage>(pipeName);
             server.ClientMessage += OnAttachDebuggerMessageReceived;
             server.Start();
             return server;
@@ -47,6 +47,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                 try
                 {
                     _server.PushMessage(message);
+
                 }
                 catch (Exception e)
                 {

@@ -211,7 +211,7 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 IDebuggerAttacher debuggerAttacher = null;
                 if (runContext.IsBeingDebugged)
-                    debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.VisualStudioProcessId, _logger);
+                    debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
                 processExecutor = new ProcessExecutor(debuggerAttacher, _logger);
             }
             lock (_lock)
