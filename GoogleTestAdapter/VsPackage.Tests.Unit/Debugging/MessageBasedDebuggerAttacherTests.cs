@@ -4,6 +4,7 @@ using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -14,7 +15,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
     public class MessageBasedDebuggerAttacherTests
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(4);
-        public static readonly TimeSpan Tolerance = TimeSpan.FromMilliseconds(25);
+        public static readonly TimeSpan Tolerance = TestMetadata.Tolerance;
 
         private Mock<IDebuggerAttacher> MockDebuggerAttacher { get; } = new Mock<IDebuggerAttacher>();
         private Mock<ILogger> MockLogger { get; } = new Mock<ILogger>();
@@ -36,7 +37,8 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
             DoTest(true);
 
-            MockLogger.Verify(l => l.DebugInfo(It.IsAny<string>()), Times.Once);
+            MockLogger.Verify(l => l.DebugInfo(It.IsAny<string>()), Times.Exactly(3));
+            MockLogger.Verify(l => l.DebugInfo(It.Is<string>(s => s.ToLower().Contains("server"))), Times.Exactly(2));
         }
 
         [TestMethod]
@@ -81,7 +83,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             int debuggeeProcessId = 2017;
 
             // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object))
+            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object, MockLogger.Object))
             {
                 var client = new MessageBasedDebuggerAttacher(pipeId, Timeout, MockLogger.Object);
 

@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             }
             catch (Exception e)
             {
-                _logger.LogError($"Could not attach debugger to process {processId} because of exception on client side: {e.Message}");
+                _logger.LogError($"Could not attach debugger to process {processId} because of exception on client side:{Environment.NewLine}{e}");
                 return false;
             }
         }
@@ -54,12 +54,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage
                 = (connection, message) =>
                 {
-                    if (message.ProcessId == processId)
-                    {
-                        debuggerAttachedSuccessfully = message.DebuggerAttachedSuccessfully;
-                        errorMessage = message.ErrorMessage;
-                        resetEvent.Set();
-                    }
+                    if (message.ProcessId != processId)
+                        return;
+
+                    debuggerAttachedSuccessfully = message.DebuggerAttachedSuccessfully;
+                    errorMessage = message.ErrorMessage;
+                    resetEvent.Set();
                 };
 
             var client = CreateAndStartPipeClient(_debuggingNamedPipeId, onServerMessage, _logger);
@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
             client.PushMessage(new AttachDebuggerMessage { ProcessId = processId });
 
-            if (!resetEvent.IsSet && !resetEvent.Wait(_timeout))
+            if (!resetEvent.Wait(_timeout))
                 errorMessage = $"Could not attach debugger to process {processId} since attaching timed out after {_timeout.TotalSeconds}s";
 
             stopWatch.Stop();
@@ -81,6 +81,8 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             {
                 if (string.IsNullOrWhiteSpace(errorMessage))
                     errorMessage = $"Could not attach debugger to process {processId}, no error message available";
+
+                errorMessage += $"{Environment.NewLine}There might be more information on the problem in Visual Studio's ActivityLog.xml (see e.g. https://blogs.msdn.microsoft.com/visualstudio/2010/02/24/troubleshooting-extensions-with-the-activity-log/)";
 
                 _logger.LogError(errorMessage);
             }
@@ -96,7 +98,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             client.Error += exception =>
             {
                 logger.DebugError(
-                    $"Named pipe error: Named pipe is {GetPipeName(pipeId)}, exception message: {exception.Message}");
+                    $"Named pipe error: Named pipe: {GetPipeName(pipeId)}, exception:{Environment.NewLine}{exception}");
             };
             client.ServerMessage += onServerMessage;
 
@@ -108,7 +110,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             stopwatch.Stop();
             if (stopwatch.Elapsed > TimeSpan.FromSeconds(2.5))
             {
-                logger.LogError($"Could not connect to NamedPipe {GetPipeName(pipeId)} - debugging will not be available");
+                logger.LogError($"Could not connect to NamedPipe {GetPipeName(pipeId)} - not able to attach debugger");
                 client.Stop();
                 return null;
             }

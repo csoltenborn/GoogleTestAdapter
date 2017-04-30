@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             int debuggeeProcessId = 2017;
 
             // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object))
+            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object, MockLogger.Object))
             {
                 var client = MessageBasedDebuggerAttacher.CreateAndStartPipeClient(
                     pipeId,

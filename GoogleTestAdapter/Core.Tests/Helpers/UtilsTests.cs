@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using FluentAssertions;
+using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -103,7 +104,7 @@ namespace GoogleTestAdapter.Helpers
             stopWatch.Stop();
 
             hasFinishedTasks.Should().BeFalse();
-            stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(timeoutInMs - 10 /* arbitrary tolerance */);
+            stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(timeoutInMs - TestMetadata.ToleranceInMs);
             stopWatch.ElapsedMilliseconds.Should().BeLessThan(taskDurationInMs);
         }
 

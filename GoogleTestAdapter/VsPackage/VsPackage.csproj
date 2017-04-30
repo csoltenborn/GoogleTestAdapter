@@ -98,6 +98,7 @@
     <Compile Include="Commands\SwitchBreakOnFailureOptionCommand.cs" />
     <Compile Include="Commands\SwitchParallelExecutionOptionCommand.cs" />
     <Compile Include="Debugging\DebuggerAttacherService.cs" />
+    <Compile Include="Helpers\ActivityLogLogger.cs" />
     <Compile Include="IGoogleTestExtensionOptionsPage.cs" />
     <Compile Include="OptionsPages\GoogleTestOptionsDialogPage.cs">
       <SubType>Component</SubType>
