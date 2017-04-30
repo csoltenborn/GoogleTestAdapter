@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
+#pragma warning disable 169, CS0414
 
 namespace GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio
 {
