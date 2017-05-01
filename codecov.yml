@@ -6,6 +6,7 @@ coverage:
     project:
       default:
         threshold: 2%
+    patch: no
 
 comment:
   layout: "reach, diff, flags, files"
