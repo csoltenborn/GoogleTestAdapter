@@ -382,7 +382,7 @@ namespace GoogleTestAdapter
             string targetFile = Path.Combine(dir, "SomeWeirdName.exe");
             File.Copy(TestResources.LoadTests_ReleaseX86, targetFile);
             if (withIndicatorFile)
-                File.Create(Path.Combine(dir, GoogleTestDiscoverer.GoogleTestExecutableIndicatorFile)).Dispose();
+                File.Create(targetFile + GoogleTestDiscoverer.GoogleTestIndicator).Dispose();
             return targetFile;
         }
 

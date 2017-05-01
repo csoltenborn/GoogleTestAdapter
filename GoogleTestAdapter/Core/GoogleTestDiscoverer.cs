@@ -15,7 +15,7 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
-        public const string GoogleTestExecutableIndicatorFile = "IS_GOOGLE_TEST_EXECUTABLE";
+        public const string GoogleTestIndicator = ".is_google_test";
 
         private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
@@ -86,27 +86,30 @@ namespace GoogleTestAdapter
 
         public bool IsGoogleTestExecutable(string executable, string customRegex = "")
         {
-            string folder = Path.GetDirectoryName(executable);
-            // ReSharper disable once AssignNullToNotNullAttribute
-            string googleTestIndicatorFile = Path.Combine(folder, GoogleTestExecutableIndicatorFile);
+            string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
+            {
+                _logger.DebugInfo($"Google Test indicator file found for executable {executable}");
                 return true;
+            }
+            _logger.DebugInfo($"No Google Test indicator file found for executable {executable}");
 
             bool matches;
-            string regexUsed;
+            string regexSource, regex;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexUsed = SettingsWrapper.TestFinderRegex;
+                regexSource = "default";
+                regex = SettingsWrapper.TestFinderRegex;
                 matches = CompiledTestFinderRegex.IsMatch(executable);
             }
             else
             {
-                regexUsed = customRegex;
+                regexSource = "custom";
+                regex = customRegex;
                 matches = SafeMatches(executable, customRegex);
             }
-
             _logger.DebugInfo(
-                    executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
+                $"'{executable}' {(matches ? "matches" : "does not match")} {regexSource} regex '{regex}'");
 
             return matches;
         }
