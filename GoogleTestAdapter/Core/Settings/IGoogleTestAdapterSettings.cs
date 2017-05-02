@@ -39,9 +39,12 @@
         bool? DebugMode { get; set; }
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
-        int? VisualStudioProcessId { get; set; }
-        bool? UseNewTestExecutionFramework { get; set; }
         bool? KillProcessesOnCancel { get; set; }
+
+        bool? UseNewTestExecutionFramework { get; set; }
+
+        // internal
+        string DebuggingNamedPipeId { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -71,9 +74,11 @@
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
-            self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
-            self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
+
+            self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
+
+            self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
         }
     }
 

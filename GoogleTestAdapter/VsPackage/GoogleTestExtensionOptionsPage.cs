@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -12,6 +11,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
+using GoogleTestAdapter.VsPackage.Debugging;
+using GoogleTestAdapter.VsPackage.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
 
@@ -27,15 +28,20 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), SettingsWrapper.OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage
+    public sealed class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IDisposable
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
+
+        private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
         private IGlobalRunSettingsInternal _globalRunSettings;
 
         private GeneralOptionsDialogPage _generalOptions;
         private ParallelizationOptionsDialogPage _parallelizationOptions;
         private GoogleTestOptionsDialogPage _googleTestOptions;
+
+        // ReSharper disable once NotAccessedField.Local
+        private DebuggerAttacherService _debuggerAttacherService;
 
         protected override void Initialize()
         {
@@ -62,6 +68,34 @@ namespace GoogleTestAdapter.VsPackage
             var thread = new Thread(DisplayReleaseNotesIfNecessary);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
+
+            var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
+            var debuggerAttacher = new VsDebuggerAttacher(this);
+            _debuggerAttacherService = new DebuggerAttacherService(_debuggingNamedPipeId, debuggerAttacher, logger);
+        }
+
+        public IVsActivityLog GetActivityLog()
+        {
+            return GetService(typeof(SVsActivityLog)) as IVsActivityLog;
+        }
+
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _generalOptions?.Dispose();
+                _parallelizationOptions?.Dispose();
+                _googleTestOptions?.Dispose();
+
+                _debuggerAttacherService.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         public bool CatchExtensions
@@ -185,10 +219,10 @@ namespace GoogleTestAdapter.VsPackage
                 MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads,
 
                 UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
-                VisualStudioProcessId = Process.GetCurrentProcess().Id
+
+                DebuggingNamedPipeId = _debuggingNamedPipeId
             };
         }
-
     }
 
 }

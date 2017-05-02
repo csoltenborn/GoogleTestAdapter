@@ -86,6 +86,9 @@ namespace GoogleTestAdapter.TestAdapter
         {
             var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
 
+            if (!AbleToRun(runContext))
+                return;
+
             IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
 
             ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
@@ -105,6 +108,9 @@ namespace GoogleTestAdapter.TestAdapter
         private void TryRunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
+
+            if (!AbleToRun(runContext))
+                return;
 
             var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
             ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase()));
@@ -136,6 +142,17 @@ namespace GoogleTestAdapter.TestAdapter
         {
             if (_settings == null || _settings.GetType() == typeof(SettingsWrapper)) // the latter prevents test settings and logger from being replaced 
                 CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings);
+        }
+
+        private bool AbleToRun(IRunContext runContext)
+        {
+            if (!IsVisualStudioProcessAvailable() && runContext.IsBeingDebugged)
+            {
+                _logger.LogError("Debugging is only possible if GoogleTestAdapter has been installed into Visual Studio - NuGet installation does not support this (and other features such as Visual Studio Options, toolbar, and solution settings).");
+                return false;
+            }
+
+            return true;
         }
 
         private IEnumerable<TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
@@ -179,6 +196,11 @@ namespace GoogleTestAdapter.TestAdapter
             return allTraitNames;
         }
 
+        private bool IsVisualStudioProcessAvailable()
+        {
+            return _settings.DebuggingNamedPipeId != null;
+        }
+
         private void DoRunTests(ICollection<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
@@ -189,7 +211,7 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 IDebuggerAttacher debuggerAttacher = null;
                 if (runContext.IsBeingDebugged)
-                    debuggerAttacher = new VsDebuggerAttacher(_logger, _settings.VisualStudioProcessId);
+                    debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
                 processExecutor = new ProcessExecutor(debuggerAttacher, _logger);
             }
             lock (_lock)

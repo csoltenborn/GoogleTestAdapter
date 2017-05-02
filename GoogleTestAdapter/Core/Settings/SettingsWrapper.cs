@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Settings
         private static readonly string[] NotPrintedProperties =
         {
             nameof(RegexTraitParser),
-            nameof(VisualStudioProcessId)
+            nameof(DebuggingNamedPipeId)
         };
 
         private static readonly PropertyInfo[] PropertiesToPrint = typeof(SettingsWrapper)
@@ -230,9 +230,7 @@ namespace GoogleTestAdapter.Settings
 
         #region GeneralOptionsPage
 
-        public const int OptionVisualStudioProcessIdDefaultValue = -1;
-        public virtual int VisualStudioProcessId => _currentSettings.VisualStudioProcessId ?? OptionVisualStudioProcessIdDefaultValue;
-
+        public virtual string DebuggingNamedPipeId => _currentSettings.DebuggingNamedPipeId;
 
         public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
         public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;

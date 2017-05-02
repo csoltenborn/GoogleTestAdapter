@@ -18,16 +18,26 @@
     <tags>native gtest Google Test adapter C++ unit integration automated testing</tags>
   </metadata>
   <files>
-    <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\native\" />
-    <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\native\" />
-    <file src="CommonMark.dll" target="lib\native\" />
-    
+
     <file src="GoogleTestAdapter.Common.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.Core.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.DiaResolver.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.TestAdapter.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.VsPackage.dll" target="lib\net45\" />
-    <file src="VsDebuggerAttacherWrapper.exe" target="lib\net45\" />
+
+    <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\net45\" />
+    <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\net45\" />
+    
+    <file src="NamedPipeWrapper.dll" target="lib\net45\" />
+    <file src="NRegFreeCom.dll" target="lib\net45\" />
+    <file src="CommonMark.dll" target="lib\net45\" />
+
+    <file src="GoogleTestAdapter.DiaResolver.x86.manifest" target="lib\net45\" />
+    <file src="GoogleTestAdapter.DiaResolver.x64.manifest" target="lib\net45\" />
+    <file src="ComComponents\x86\msdia140.dll" target="lib\net45\ComComponents\x86\" />
+    <file src="ComComponents\x86\msdia140.dll.manifest" target="lib\net45\ComComponents\x86\" />
+    <file src="ComComponents\x64\msdia140.dll" target="lib\net45\ComComponents\x64\" />
+    <file src="ComComponents\x64\msdia140.dll.manifest" target="lib\net45\ComComponents\x64\" />
 
     <file src="VsPackage.targets" target="build\native\" />
     
