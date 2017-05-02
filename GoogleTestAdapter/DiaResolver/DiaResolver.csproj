@@ -41,9 +41,13 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="msdia110to140typelib">
-      <HintPath>msdia110to140typelib\msdia110to140typelib.dll</HintPath>
+    <Reference Include="msdia140typelib_clr0200">
+      <HintPath>ComComponents\msdia140typelib_clr0200.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="NRegFreeCom, Version=0.1.6.0, Culture=neutral, PublicKeyToken=db25130896b113af, processorArchitecture=MSIL">
+      <HintPath>..\packages\NRegFreeCom.0.1.6.0\lib\net40\NRegFreeCom.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,6 +63,22 @@
     <Compile Include="SourceFileLocation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ComComponents\x64\msdia140.dll.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ComComponents\x86\msdia140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ComComponents\x86\msdia140.dll.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="ComComponents\Readme.md" />
+    <Content Include="GoogleTestAdapter.DiaResolver.x64.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoogleTestAdapter.DiaResolver.x86.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -67,6 +87,11 @@
       <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
       <Name>Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ComComponents\x64\msdia140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

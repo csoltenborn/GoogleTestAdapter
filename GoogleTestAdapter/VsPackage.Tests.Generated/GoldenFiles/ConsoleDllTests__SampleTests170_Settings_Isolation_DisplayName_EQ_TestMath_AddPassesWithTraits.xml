@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun>
+  <Results>
+    <UnitTestResult testName="TestMath.AddPassesWithTraits" outcome="Passed" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
+  </TestDefinitions>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output />
+  </ResultSummary>
+</TestRun>

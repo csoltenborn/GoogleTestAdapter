@@ -1,10 +1,8 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="$(SolutionDir)Tests.Common\bin\$(ConfigurationName)\GoogleTestAdapter.Tests.Common.dll" #>
-<#@ assembly name="$(SolutionDir)Tests.Common.EndToEnd\bin\$(ConfigurationName)\GoogleTestAdapter.Tests.Common.EndToEnd.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common" #>
-<#@ import namespace="GoogleTestAdapter.Tests.Common.EndToEnd" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
 <#@ output extension=".cs" #>
 <#
@@ -19,11 +17,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GoogleTestAdapter.Tests.Common;
-using GoogleTestAdapter.Tests.Common.EndToEnd;
 using GoogleTestAdapter.Tests.Common.ResultChecker;
-<# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
-using GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio;
-<# } #>
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage
@@ -128,108 +122,6 @@ namespace GoogleTestAdapter.VsPackage
 		#endregion
 	}
 
-	<# if (AbstractConsoleIntegrationTests.ShouldGenerateVsixTests()) { #>
-	[TestClass]
-	public class ConsoleVsixTests : AbstractConsoleTests
-	{
-		private static Vs VS;
-
-        [ClassInitialize]
-        public static void InstallVsix(TestContext testContext)
-        {
-			VS = new Vs();
-            VS.SetupVanillaVsExperimentalInstance("", testContext.TestName);
-        }
-
-        [ClassCleanup]
-        public static void Cleanup()
-        {
-            VS?.CleanVsExperimentalInstance();
-			VS = null;
-        }
-
-        protected override string GetAdapterIntegration()
-        {
-            return GetLogger() + @"/UseVsixExtensions:true";
-        }
-
-		#region method stubs for code coverage
-		<# foreach (Line line in lines) { #>
-
-		[TestMethod, Ignore]
-        [TestCategory(EndToEnd)]
-		public override void <#= line.MethodName #>()
-		{
-			base.<#= line.MethodName #>();
-		}
-		<# } #>
-
-		<# foreach (string executable in executables.Keys) { #>
-
-		[TestMethod, Ignore]
-        [TestCategory(EndToEnd)]
-		public override void List_TestsOf_<#= executable #>()
-		{
-			base.List_TestsOf_<#= executable #>();
-		}
-		<# } #>
-
-		#endregion
-
-	}
-
-    [TestClass]
-    public class ConsoleVsixIntegrationTests : AbstractConsoleIntegrationTests
-    {
-		private static Vs VS;
-
-        [ClassInitialize]
-        public static void InstallVsix(TestContext testContext)
-        {
-			VS = new Vs();
-            VS.SetupVanillaVsExperimentalInstance("", testContext.TestName);
-        }
-
-        [ClassCleanup]
-        public static void Cleanup()
-        {
-            VS?.CleanVsExperimentalInstance();
-			VS = null;
-        }
-
-        protected override string GetAdapterIntegration()
-        {
-            return GetLogger() + @"/UseVsixExtensions:true";
-        }
-
-        #region method stubs for code coverage
-
-        [TestMethod, Ignore]
-        [TestCategory(EndToEnd)]
-        public override void Console_ListDiscoverers_DiscovererIsListed()
-        {
-            base.Console_ListDiscoverers_DiscovererIsListed();
-        }
-
-        [TestMethod, Ignore]
-        [TestCategory(EndToEnd)]
-        public override void Console_ListExecutors_ExecutorIsListed()
-        {
-            base.Console_ListExecutors_ExecutorIsListed();
-        }
-
-        [TestMethod, Ignore]
-        [TestCategory(EndToEnd)]
-        public override void Console_ListSettingsProviders_SettingsProviderIsListed()
-        {
-            base.Console_ListSettingsProviders_SettingsProviderIsListed();
-        }
-
-        #endregion
-
-    }
-	<# } #>
-
 }
 
 <#+
@@ -316,19 +208,15 @@ namespace GoogleTestAdapter.VsPackage
 			switch(key)
 			{
 				case "SampleTests":
-					return TestResources.SampleTests;
+					return TestResources.Tests_DebugX86;
+				case "SampleTests170":
+					return TestResources.Tests_DebugX86_Gtest170;
+				case "SampleTestsX64":
+					return TestResources.Tests_ReleaseX64;
 				case "LoadTests":
-					return TestResources.LoadTests;
+					return TestResources.LoadTests_ReleaseX86;
 				case "HardCrashingSampleTests":
-					return TestResources.HardCrashingSampleTests;
-				case "X861":
-					return TestResources.X86StaticallyLinkedTests;
-				case "X862":
-					return TestResources.X86ExternallyLinkedTests;
-				case "X641":
-					return TestResources.X64StaticallyLinkedTests;
-				case "X642":
-					return TestResources.X64ExternallyLinkedTests;
+					return TestResources.CrashingTests_DebugX86;
 				default:
 					throw new Exception("Unknown test executable key: " + key);
 			}

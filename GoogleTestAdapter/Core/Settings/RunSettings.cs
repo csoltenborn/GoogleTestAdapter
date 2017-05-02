@@ -24,6 +24,9 @@ namespace GoogleTestAdapter.Settings
         public virtual string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
 
+        public virtual int? TestDiscoveryTimeoutInSeconds { get; set; }
+        public bool ShouldSerializeTestDiscoveryTimeoutInSeconds() { return TestDiscoveryTimeoutInSeconds != null; }
+
         public virtual string WorkingDir { get; set; }
         public bool ShouldSerializeWorkingDir() { return WorkingDir != null; }
 
@@ -84,15 +87,19 @@ namespace GoogleTestAdapter.Settings
         public virtual string BatchForTestTeardown { get; set; }
         public bool ShouldSerializeBatchForTestTeardown() { return BatchForTestTeardown != null; }
 
-        public virtual int? VisualStudioProcessId { get; set; }
-        public bool ShouldSerializeVisualStudioProcessId() { return VisualStudioProcessId != null; }
+        public virtual bool? KillProcessesOnCancel { get; set; }
+        public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
 
-        public virtual bool? KillProcessesOnCancel { get; set; }
-        public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
 
+        // internal
+        public string DebuggingNamedPipeId { get; set; }
+        public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
+
+        
         public static RunSettings LoadFromXml(XmlReader reader)
         {
             Debug.Assert(reader != null, $"{nameof(reader)} must not be null");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 
@@ -61,13 +62,17 @@ namespace GoogleTestAdapter.TestResults
                 return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), CrashText, "");
             }
 
-            line = _consoleOutput[currentLineIndex++];
+            line = _consoleOutput[currentLineIndex];
+            SplitLineIfNecessary(ref line, currentLineIndex);
+            currentLineIndex++;
+
 
             string errorMsg = "";
             while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex <= _consoleOutput.Count)
             {
                 errorMsg += line + "\n";
                 line = currentLineIndex < _consoleOutput.Count ? _consoleOutput[currentLineIndex] : "";
+                SplitLineIfNecessary(ref line, currentLineIndex);
                 currentLineIndex++;
             }
             if (IsFailedLine(line))
@@ -85,6 +90,22 @@ namespace GoogleTestAdapter.TestResults
             string message = CrashText;
             message += errorMsg == "" ? "" : "\nTest output:\n\n" + errorMsg;
             return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), message, "");
+        }
+
+        private void SplitLineIfNecessary(ref string line, int currentLineIndex)
+        {
+            Match testEndMatch = StreamingStandardOutputTestResultParser.PrefixedLineRegex.Match(line);
+            if (testEndMatch.Success)
+            {
+                string restOfErrorMessage = testEndMatch.Groups[1].Value;
+                string testEndPart = testEndMatch.Groups[2].Value;
+
+                _consoleOutput.RemoveAt(currentLineIndex);
+                _consoleOutput.Insert(currentLineIndex, testEndPart);
+                _consoleOutput.Insert(currentLineIndex, restOfErrorMessage);
+
+                line = restOfErrorMessage;
+            }
         }
 
         private TimeSpan ParseDuration(string line)

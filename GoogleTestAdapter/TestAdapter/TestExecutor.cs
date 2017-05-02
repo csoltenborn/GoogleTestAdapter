@@ -6,9 +6,9 @@ using ExtensionUriAttribute = Microsoft.VisualStudio.TestPlatform.ObjectModel.Ex
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
@@ -22,6 +22,8 @@ namespace GoogleTestAdapter.TestAdapter
     {
         public const string ExecutorUriString = "executor://GoogleTestRunner/v1";
         public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
+
+        private readonly object _lock = new object();
 
         private ILogger _logger;
         private SettingsWrapper _settings;
@@ -69,8 +71,11 @@ namespace GoogleTestAdapter.TestAdapter
 
         public void Cancel()
         {
-            lock (this)
+            lock (_lock)
             {
+                if (_canceled)
+                    return;
+
                 _canceled = true;
                 _executor?.Cancel();
                 _logger.LogInfo("Test execution canceled.");
@@ -80,6 +85,9 @@ namespace GoogleTestAdapter.TestAdapter
         private void TryRunTests(IEnumerable<string> executables, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
+
+            if (!AbleToRun(runContext))
+                return;
 
             IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
 
@@ -91,7 +99,7 @@ namespace GoogleTestAdapter.TestAdapter
                 allTestCasesInExecutables.Where(
                     tc => vsTestCasesToRun.Any(vtc => tc.FullyQualifiedName == vtc.FullyQualifiedName)).ToArray();
 
-            DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+            DoRunTests(testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
             _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
@@ -101,16 +109,16 @@ namespace GoogleTestAdapter.TestAdapter
         {
             var stopwatch = StartStopWatchAndInitEnvironment(runContext, frameworkHandle);
 
+            if (!AbleToRun(runContext))
+                return;
+
             var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
             ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase()));
             var filter = new TestCaseFilter(runContext, allTraitNames, _logger);
             vsTestCasesToRun = filter.Filter(vsTestCasesToRunAsArray);
 
-            IEnumerable<TestCase> allTestCasesInExecutables =
-                GetAllTestCasesInExecutables(vsTestCasesToRun.Select(tc => tc.Source).Distinct());
-
             ICollection<TestCase> testCasesToRun = vsTestCasesToRun.Select(tc => tc.ToTestCase()).ToArray();
-            DoRunTests(allTestCasesInExecutables, testCasesToRun, runContext, frameworkHandle);
+            DoRunTests(testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
             _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
@@ -136,26 +144,43 @@ namespace GoogleTestAdapter.TestAdapter
                 CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings);
         }
 
+        private bool AbleToRun(IRunContext runContext)
+        {
+            if (!IsVisualStudioProcessAvailable() && runContext.IsBeingDebugged)
+            {
+                _logger.LogError("Debugging is only possible if GoogleTestAdapter has been installed into Visual Studio - NuGet installation does not support this (and other features such as Visual Studio Options, toolbar, and solution settings).");
+                return false;
+            }
+
+            return true;
+        }
+
         private IEnumerable<TestCase> GetAllTestCasesInExecutables(IEnumerable<string> executables)
         {
             var allTestCasesInExecutables = new List<TestCase>();
 
-            var discoverer = new GoogleTestDiscoverer(_logger, _settings);
-            foreach (string executable in executables.OrderBy(e => e))
-            {
-                if (_canceled)
-                {
-                    allTestCasesInExecutables.Clear();
-                    break;
-                }
+            var discoveryActions = executables
+                .OrderBy(e => e)
+                .Select(executable => (Action) (() => AddTestCasesOfExecutable(allTestCasesInExecutables, executable, _settings.Clone(), _logger, () => _canceled)))
+                .ToArray();
+            Utils.SpawnAndWait(discoveryActions);
 
-                _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                {
-                    allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
-                }, _logger);
-            }
+            if (_canceled)
+                allTestCasesInExecutables.Clear();
             
             return allTestCasesInExecutables;
+        }
+
+        private static void AddTestCasesOfExecutable(List<TestCase> allTestCasesInExecutables, string executable, SettingsWrapper settings, ILogger logger, Func<bool> testrunIsCanceled)
+        {
+            if (testrunIsCanceled())
+                return;
+
+            var discoverer = new GoogleTestDiscoverer(logger, settings);
+            settings.ExecuteWithSettingsForExecutable(executable, () =>
+            {
+                allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
+            }, logger);
         }
 
         private ISet<string> GetAllTraitNames(IEnumerable<TestCase> testCases)
@@ -171,9 +196,12 @@ namespace GoogleTestAdapter.TestAdapter
             return allTraitNames;
         }
 
-        private void DoRunTests(
-            IEnumerable<TestCase> allTestCasesInExecutables, ICollection<TestCase> testCasesToRun,
-            IRunContext runContext, IFrameworkHandle frameworkHandle)
+        private bool IsVisualStudioProcessAvailable()
+        {
+            return _settings.DebuggingNamedPipeId != null;
+        }
+
+        private void DoRunTests(ICollection<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
@@ -183,11 +211,17 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 IDebuggerAttacher debuggerAttacher = null;
                 if (runContext.IsBeingDebugged)
-                    debuggerAttacher = new VsDebuggerAttacher(_logger, _settings.VisualStudioProcessId);
+                    debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
                 processExecutor = new ProcessExecutor(debuggerAttacher, _logger);
             }
-            _executor = new GoogleTestExecutor(_logger, _settings);
-            _executor.RunTests(allTestCasesInExecutables, testCasesToRun, reporter, launcher,
+            lock (_lock)
+            {
+                if (_canceled)
+                    return;
+
+                _executor = new GoogleTestExecutor(_logger, _settings);
+            }
+            _executor.RunTests(testCasesToRun, reporter, launcher,
                 runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
             reporter.AllTestsFinished();
         }

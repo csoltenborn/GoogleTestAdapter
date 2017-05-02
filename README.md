@@ -21,7 +21,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * Identification of crashed tests
 * Test output can be piped to test console
 * Execution of [parameterized batch files](#test_setup_and_teardown) for test setup/teardown
-* Test discovery using a [custom regex](#test_discovery_regex) (if needed)
+* Test discovery using a [custom regex](#test_discovery_regex) (if needed) or an indicator file
 * Settings can be [shared via source control](#solution_settings)
 * Installable as Visual Studio extension or NuGet development dependency
 
@@ -37,8 +37,8 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
-* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.9.1/GoogleTestAdapter-0.9.1.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
-* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no options or toolbar will be available; configuration is only possible through solution config files (see below).
+* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.10.0/GoogleTestAdapter-0.10.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
+* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
@@ -72,7 +72,7 @@ For reference, see a settings file [AllTestSettings.gta.runsettings](https://raw
 
 GTA has full support for [traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx), which can be assigned to tests in two ways:
 
-* <a name="trait_macros"></a>You can make use of the custom test macros provided in [GTA_Traits.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits.h), which contain macros for all test types of the Google Test framework. The macros do not change behavior of the tests; they only add some information to the generated test code which encodes the traits assigned to the respective test. All GTA provided macros follow the same naming schema `<Google Test macro>_TRAITS`, where, obviously, `<Google Test macro>` is the name of the according macro in Google Test. Each test can be assigned up to 8 traits.
+* <a name="trait_macros"></a>You can make use of the custom test macros provided in [GTA_Traits_1.8.0.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits_1.8.0.h) (or [GTA_Traits_1.7.0.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits_1.7.0.h) if you are still on Google Test 1.7.0), which contain macros for all test types of the Google Test framework. The macros do not change behavior of the tests; they only add some information to the generated test code which encodes the traits assigned to the respective test. All GTA provided macros follow the same naming schema `<Google Test macro>_TRAITS`, where, obviously, `<Google Test macro>` is the name of the according macro in Google Test. Each test can be assigned up to 8 traits.
 * <a name="trait_regexes"></a>Combinations of regular expressions and traits can be specified under the GTA options: If a test's name matches one of these regular expressions, the according trait is assigned to that test. 
 
 More precisely, traits are assigned to tests in three phases:
@@ -87,7 +87,7 @@ Note that traits are assigned in an additive manner within each phase, and in an
 
 GTA can be used to run tests from the command line, which can be done making use of VS's [VSTest.Console.exe](https://msdn.microsoft.com/en-us/library/jj155800.aspx). GTA supports all the tool's command line options, including `/UseVsixExtensions` and `/TestAdapterPath`.
 
-Note, however, that VSTest.Console.exe will not make use of GTA solution settings (if the solution containing the tests happens to use such settings). All settings to be used by VSTest.Console.exe need to be passed using the `/Settings` command line option. Note also that the `$(SolutionDir)` placeholder is neither available in the *Test setup/teardown batch file* options nor in the *Additional test execution parameters* option. Finally, note that GTA currently has issues with running X64 tests via VSTest.Console.exe (see [#21](https://github.com/csoltenborn/GoogleTestAdapter/issues/21)).
+Note, however, that VSTest.Console.exe will not make use of GTA solution settings (if the solution containing the tests happens to use such settings). All settings to be used by VSTest.Console.exe need to be passed using the `/Settings` command line option. Note also that the `$(SolutionDir)` placeholder is neither available in the *Test setup/teardown batch file* options nor in the *Additional test execution parameters* option.
 
 <a name="test_case_filters"></a>The tests to be run can be selected via the `/TestCaseFilter` option. Filters need to follow the syntax as described in this [blog entry](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx). GTA supports the following test properties:
 
@@ -121,14 +121,18 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 ### <a name="trouble_shooting"></a>Trouble shooting
 
 None or not all of my tests show up!
-* <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, configure a *Test discovery regex* at the same place. In case of GTA installation via NuGet, do not forget to add the regex to the solution config file (which might be a good idea anyways).
+* <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, you have two options:
+  * Configure a *Test discovery regex* at the same place. In case of GTA installation via NuGet, do not forget to add the regex to the solution config file (which might be a good idea anyways). 
+  * If your test executable is `..\FooTests.exe`, make sure that a file `..\FooTests.exe.is_google_test` exists.
 * Your test executable can not run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 * If your project happens to be a makefile project, there's a pitfall which will prevent GTA from discovering your tests: It appears that when importing a makefile project into VS, the *Output* setting of the project is populated from the makefile's content. However, if the makefile is edited later on such that the location of the generated test executable changes, VS does not find the test executable any more. One symptom of this is that your project can not be launched any more with `F5`. Make sure that the *Output* setting of the project is consistent with its makefile to avoid this problem. 
 
 No source locations and traits are found for my tests!
 * The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved (and indicates that with a warning in the test output window). Rebuilding your solution should regenerate the pdb at an appropriate location.
-* The test executable's project has the option *Linker/Debugging/Generate debug info* set to `No` or `Optimize for faster linking (/DEBUG:FASTLINK)`, resulting in a pdb not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting to `Yes` or `Optimize for debugging (/DEBUG)` and rebuild your solution.
+* The test executable's project settings result in a pdb file not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting as indicated below and rebuild your solution.
+  * VS 2015 and earlier: `Yes` or `Optimize for debugging (/DEBUG)`
+  * VS 2017: `Generate debug information optimized for sharing and publishing (/DEBUG:FULL)`
 * Option *Parse symbol information* is set to `false`, making GTA not parse that information out of the pdb file intentionally. The actual set of options used is potentially composed from VS options, a solution settings file, and a user settings file; the resulting set of options will be logged to the test output window if the *Print debug info* option is set to `true`.
 
 The Google Test Adapter extension is disabled when I start Visual Studio!
@@ -148,7 +152,7 @@ Google Test Adapter has been created using Visual Studio 2015 and NuGet, which a
 
 #### Executing the tests
 
-Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before any of the tests can be run, this second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project Core.Tests. Afterwards, the GTA tests can be run and should all pass.
+Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before any of the tests can be run, this second solution needs to be built with configurations `Release/X86` and `Debug/X86`; this is done by the pre-build event of project `Tests/SampleTests/SampleTestsBuilder`.
 
 For manually testing GTA, just start the GTA solution: A development instance of Visual Studio will be started with GTA installed. Use this instance to open the *SampleTests* solution (or any other solution containing Google Test tests).
 
@@ -167,20 +171,7 @@ A convenient way to get your debugger attached is to use Microsoft's [Child Proc
 
 #### Contributions
 
-Pull requests (against the `develop` branch) are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality.
-
-##### Branching strategy
-The GTA project follows a simple branching strategy:
-* Releases are created from `master`
-* Development is done on `develop`
-* Bugfixes are done on `master` and merged into `develop`
-* Feature branches are based on `develop` (and only merged into that branch)
-  * Naming scheme: `#{issue number}_{feature name/description}`
-  * Finite lifetime (in contrast to `master`and `develop`)
-  * For local branches, rebasing is preferred (but not required)
-  * Branches are merged without squashing
-* Acceptance testing happens on `develop`
-* Releases are created by merging `develop` into `master`
+Pull requests (against the `develop` branch) are welcome and will be reviewed carefully. Please make sure to include tests demonstrating the bug you fixed or covering the added functionality. You might also be interested in our [Development Knowledge Base](https://github.com/csoltenborn/GoogleTestAdapter/wiki/Development-Knowledge-Base).
 
 
 ### External links
@@ -211,6 +202,8 @@ The GTA project follows a simple branching strategy:
 * [Sergey Gomon](https://github.com/gomons), report and example solution in [#63](https://github.com/csoltenborn/GoogleTestAdapter/issues/63)
 * [Florin T.](https://github.com/ftrofin), report and example code in [#89](https://github.com/csoltenborn/GoogleTestAdapter/issues/89)
 * [JackGrinningCat](https://github.com/JackGrinningCat), report and fix in [#96](https://github.com/csoltenborn/GoogleTestAdapter/issues/96)
+* [Farwaykorse](https://github.com/Farwaykorse), report and testing in [#124](https://github.com/csoltenborn/GoogleTestAdapter/issues/124)
+* [ninjaCoder](https://github.com/ninjaCoder), report and testing in [#126](https://github.com/csoltenborn/GoogleTestAdapter/issues/126)
 
 #### Tools
 * [Google Test Runner](https://github.com/markusl/GoogleTestRunner) - the starting point for GTA. We have ported the Google Test Runner extension from F# to C# and implemented various enhancements and refactorings.
@@ -222,4 +215,6 @@ The GTA project follows a simple branching strategy:
 * [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [CommonMark.NET](https://github.com/Knagis/CommonMark.NET) - open source Markdown to HTML converter
+* [NRegFreeCom](https://github.com/OpenSharp/NRegFreeCom) - open source library for accessing unregistered COM objects
+* [NamedPipeWrapper](https://github.com/acdvorak/named-pipe-wrapper) - open source library for easily working with Named Pipes
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage

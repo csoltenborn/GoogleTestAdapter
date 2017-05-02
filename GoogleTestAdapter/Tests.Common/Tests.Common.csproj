@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '14.0'">
+    <DefineConstants>$(DefineConstants);VERSION_UNDER_TEST_VS2015</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
@@ -83,6 +86,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AbstractConsoleIntegrationTests.cs" />
     <Compile Include="Helpers\CiSupport.cs" />
     <Compile Include="Helpers\CsvReader.cs" />
     <Compile Include="Fakes\FakeFrameworkReporter.cs" />
@@ -144,6 +148,9 @@
     <Content Include="Resources\TestData\RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\TestData\Tests_gta_exe_output.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\TestData\User.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -154,89 +161,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\TestData\RunSettingsServiceTests\Provider_delivered.runsettings">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\TestData\_x64\CrashingGoogleTests\CrashingGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\CrashingGoogleTests\CrashingGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\Space In Path\StaticallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x64\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\CrashingGoogleTests\CrashingGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\CrashingGoogleTests\CrashingGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Crash\CrashingExe.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Fail\FailingExe.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\NoPdbFile\ConsoleApplication1Tests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\exe\Tests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\exe\Tests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\lib\LibProject.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\PathExtension\lib\LibProject.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\StaticallyLinkedGoogleTests\test_detail.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Traits\ConsoleApplication1Tests.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\TestData\_x86\Traits\ConsoleApplication1Tests.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

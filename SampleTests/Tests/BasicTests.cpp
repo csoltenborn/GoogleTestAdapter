@@ -2,7 +2,7 @@
 #include <string>
 #include "gtest/gtest.h"
 #include "../LibProject/Lib.h"
-#include "../../GoogleTestAdapter/Core/Resources/GTA_Traits.h"
+#include "gtest_wrapper.h"
 
 extern std::string TEST_DIRECTORY;
 
@@ -105,3 +105,50 @@ TEST_TRAITS(Traits, WithEqualTraits, Author, CSO, Author, JOG)
 {
 	EXPECT_EQ(1, 1);
 }
+
+TEST(OutputHandling, Output_ManyLinesWithNewlines)
+{
+	std::cout << "before test 1\n";
+	std::cout << "before test 2\n";
+	EXPECT_EQ(1, 2) << "test output";
+	std::cout << "after test 1\n";
+	std::cout << "after test 2\n";
+}
+
+TEST(OutputHandling, Output_OneLineWithNewlines)
+{
+	std::cout << "before test\n";
+	EXPECT_EQ(1, 2) << "test output";
+	std::cout << "after test\n";
+}
+
+TEST(OutputHandling, Output_OneLine)
+{
+	std::cout << "before test";
+	EXPECT_EQ(1, 2) << "test output";
+	std::cout << "after test";
+}
+
+TEST(OutputHandling, ManyLinesWithNewlines)
+{
+	std::cout << "before test 1\n";
+	std::cout << "before test 2\n";
+	EXPECT_EQ(1, 2);
+	std::cout << "after test 1\n";
+	std::cout << "after test 2\n";
+}
+
+TEST(OutputHandling, OneLineWithNewlines)
+{
+	std::cout << "before test\n";
+	EXPECT_EQ(1, 2);
+	std::cout << "after test\n";
+}
+
+TEST(OutputHandling, OneLine)
+{
+	std::cout << "before test";
+	EXPECT_EQ(1, 2);
+	std::cout << "after test";
+}
+

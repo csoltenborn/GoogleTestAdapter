@@ -50,14 +50,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.ExtensionManager.Implementation, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionManager.Implementation.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
       <Private>True</Private>
@@ -69,10 +61,6 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VS100COMNTOOLS)..\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Settings.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86">
-      <HintPath>..\packages\Microsoft.VisualStudio.Settings.14.0.14.3.25407\lib\Microsoft.VisualStudio.Settings.14.0.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.14.0.14.3.25407\lib\Microsoft.VisualStudio.Shell.14.0.dll</HintPath>
@@ -134,10 +122,6 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TestStack.White, Version=0.13.0.0, Culture=neutral, PublicKeyToken=2672efbf3e161801, processorArchitecture=MSIL">
-      <HintPath>..\packages\TestStack.White.0.13.3\lib\net40\TestStack.White.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="UIAutomationClient" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
@@ -152,7 +136,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConsoleDllIntegrationTests.cs" />
-    <Compile Include="UiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -164,24 +147,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UITestResults\UiTests__RunAllTests__AllTestsAreRun.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_Arr_TypeParameterizedTests_1_CanDefeatMath.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_Crashing_AddPasses.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_InstantiationName_ParameterizedTests_SimpleTraits_0.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_MultipleTests.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_ParameterizedTests_Simple_0.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_PointerParameterizedTests_CheckStringLength_0.xml" />
-    <Content Include="UITestResults\UiTests__RunSelectedTests_TypedTests_0_CanIterate.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tests.Common.EndToEnd\Tests.Common.EndToEnd.csproj">
-      <Project>{c3f11e93-2eff-4bb6-adc9-3b42727e4816}</Project>
-      <Name>Tests.Common.EndToEnd</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tests.Common.UI\Tests.Common.UI.csproj">
-      <Project>{c6ac8e0b-de31-4f0e-be9d-837d9a2ca828}</Project>
-      <Name>Tests.Common.UI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj">
       <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
       <Name>Tests.Common</Name>

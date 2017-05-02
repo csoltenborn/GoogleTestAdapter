@@ -11,7 +11,7 @@ namespace GoogleTestAdapter.TestResults
 {
     public class StreamingStandardOutputTestResultParser
     {
-        private static readonly Regex PrefixedLineRegex;
+        public static readonly Regex PrefixedLineRegex;
 
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string passedMarker = Regex.Escape(StandardOutputTestResultParser.Passed);
             string failedMarker = Regex.Escape(StandardOutputTestResultParser.Failed);
-            PrefixedLineRegex = new Regex($"(.*)((?:{passedMarker}|{failedMarker}).*)", RegexOptions.Compiled);
+            PrefixedLineRegex = new Regex($"(.+)((?:{passedMarker}|{failedMarker}).*)", RegexOptions.Compiled);
         }
 
         public StreamingStandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun,
@@ -101,6 +101,7 @@ namespace GoogleTestAdapter.TestResults
             while (currentLineIndex < _consoleOutput.Count &&
                 !StandardOutputTestResultParser.IsRunLine(_consoleOutput[currentLineIndex]))
                 currentLineIndex++;
+
             if (currentLineIndex == _consoleOutput.Count)
                 return null;
 

@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.Helpers
             var processCreator = new ProcessExecutor(null, mockLogger.Object);
             List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
-                TestResources.SampleTests,
+                TestResources.Tests_DebugX86,
                 null,
                 null,
                 "",
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.Helpers
 
             exitCode.Should().Be(1);
             output.Should().Contain(s => s.Contains("TestMath.AddPasses"));
-            output.Count.Should().Be(456);
+            output.Count.Should().Be(504);
         }
 
     }

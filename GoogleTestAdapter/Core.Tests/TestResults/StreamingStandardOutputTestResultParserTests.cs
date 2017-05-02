@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using FluentAssertions;
+using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -105,6 +109,7 @@ namespace GoogleTestAdapter.TestResults
         private List<string> PassingTestProducesConsoleOutput { get; set; }
         private List<string> WithPrefixingOutputPassing { get; set; }
         private List<string> WithPrefixingOutputFailing { get; set; }
+        private List<string> CompleteStandardOutput { get; set; }
 
         [TestInitialize]
         public override void SetUp()
@@ -129,6 +134,8 @@ namespace GoogleTestAdapter.TestResults
 
             WithPrefixingOutputPassing = new List<string>(ConsoleOutput1);
             WithPrefixingOutputPassing.AddRange(ConsoleOutput2WithPrefixingOutput);
+
+            CompleteStandardOutput = new List<string>(File.ReadAllLines(TestResources.Tests_ReleaseX64_Output, Encoding.Default));
         }
 
 
@@ -278,6 +285,90 @@ namespace GoogleTestAdapter.TestResults
             XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
             results[1].TestCase.FullyQualifiedName.Should().Be("Test.A");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OutputManyLinesWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_ManyLinesWithNewlines");
+            var expectedErrorMessage =
+                "before test 1\nbefore test 2\nExpected: 1\nTo be equal to: 2\ntest output\nafter test 1\nafter test 2";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OutputOneLineWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_OneLineWithNewlines");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\ntest output\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OutputOneLine_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_OneLine");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\ntest output\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_ManyLinesWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.ManyLinesWithNewlines");
+            var expectedErrorMessage =
+                "before test 1\nbefore test 2\nExpected: 1\nTo be equal to: 2\nafter test 1\nafter test 2";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OneLineWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_OneLineWithNewlines");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\ntest output\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OneLine_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.OneLine");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        private IList<TestResult> GetTestResultsFromCompleteOutputFile()
+        {
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, MockOptions.Object, new DefaultDiaResolverFactory())
+                .GetTestsFromExecutable(TestResources.Tests_ReleaseX64);
+
+            var parser = new StreamingStandardOutputTestResultParser(testCases, MockLogger.Object, MockFrameworkReporter.Object);
+            CompleteStandardOutput.ForEach(parser.ReportLine);
+            parser.Flush();
+
+            return parser.TestResults;
         }
 
 
