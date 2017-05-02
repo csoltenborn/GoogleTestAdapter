@@ -86,6 +86,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AbstractConsoleIntegrationTests.cs" />
     <Compile Include="Helpers\CiSupport.cs" />
     <Compile Include="Helpers\CsvReader.cs" />
     <Compile Include="Fakes\FakeFrameworkReporter.cs" />

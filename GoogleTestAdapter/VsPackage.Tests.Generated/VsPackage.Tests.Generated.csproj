@@ -71,10 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tests.Common.EndToEnd\Tests.Common.EndToEnd.csproj">
-      <Project>{c3f11e93-2eff-4bb6-adc9-3b42727e4816}</Project>
-      <Name>Tests.Common.EndToEnd</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj">
       <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
       <Name>Tests.Common</Name>

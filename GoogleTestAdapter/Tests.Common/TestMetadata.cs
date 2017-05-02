@@ -6,7 +6,6 @@ namespace GoogleTestAdapter.Tests.Common
     public static class TestMetadata
     {
         public const bool OverwriteTestResults = false;
-        public const bool GenerateVsixTests = false;
 
         public const VsVersion VersionUnderTest = 
 #if VERSION_UNDER_TEST_VS2015

@@ -6,7 +6,7 @@ using FluentAssertions;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GoogleTestAdapter.Tests.Common.EndToEnd
+namespace GoogleTestAdapter.Tests.Common
 {
 
     public abstract class AbstractConsoleIntegrationTests
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
             Assert.IsNotNull(testDll);
-            Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\VsPackage.Tests.*\\bin\\(Debug|Release)\\GoogleTestAdapter.Tests.Common.EndToEnd.dll$");
+            Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\VsPackage.Tests.*\\bin\\(Debug|Release)\\GoogleTestAdapter.Tests.Common.dll$");
             match.Success.Should().BeTrue();
             string basePath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
@@ -91,16 +91,6 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
             resultString = NormalizeOutput(resultString, baseDir);
 
             return resultString;
-        }
-
-        public static bool ShouldGenerateVsixTests()
-        {
-            return false;
-//#pragma warning disable 162
-//            // ReSharper disable RedundantLogicalConditionalExpressionOperand
-//            return TestMetadata.GenerateVsixTests || TestMetadata.OverwriteTestResults || CiSupport.IsRunningOnBuildServer;
-//            // ReSharper restore RedundantLogicalConditionalExpressionOperand
-//#pragma warning restore 162
         }
 
         private static string NormalizeOutput(string resultString, string baseDir)
