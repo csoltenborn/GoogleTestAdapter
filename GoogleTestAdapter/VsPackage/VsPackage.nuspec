@@ -25,8 +25,8 @@
     <file src="GoogleTestAdapter.TestAdapter.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.VsPackage.dll" target="lib\net45\" />
 
-    <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\net45\" />
-    <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\net45\" />
+    <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\native\" />
+    <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\native\" />
     
     <file src="NamedPipeWrapper.dll" target="lib\net45\" />
     <file src="NRegFreeCom.dll" target="lib\net45\" />
@@ -40,7 +40,7 @@
     <file src="ComComponents\x64\msdia140.dll.manifest" target="lib\net45\ComComponents\x64\" />
 
     <file src="VsPackage.targets" target="build\native\" />
-    
+
     <file src="LICENSE.txt" target="" />
   </files>
 </package>
