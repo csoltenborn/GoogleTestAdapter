@@ -1,0 +1,17 @@
+<RunSettings>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <ShuffleTests>true</ShuffleTests>
+        <MaxNrOfThreads>3</MaxNrOfThreads>
+        <ShuffleTestsSeed>3</ShuffleTestsSeed>
+        <WorkingDir>$(ExecutableDir)\..</WorkingDir>
+        <TestNameSeparator>!</TestNameSeparator>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings>
+      <Settings ProjectRegex=".*\\Tests_gta\.exe">
+      </Settings>
+    </ProjectSettings>
+  </GoogleTestAdapterSettings>
+</RunSettings>

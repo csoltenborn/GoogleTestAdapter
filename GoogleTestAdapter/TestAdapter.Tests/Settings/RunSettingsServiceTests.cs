@@ -94,7 +94,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").Should().NotBeNull();
             resultingContainer.GetSettingsForExecutable("project2").Should().NotBeNull();
             resultingContainer.GetSettingsForExecutable("project3").Should().NotBeNull();
-            resultingContainer.GetSettingsForExecutable("not_matched").Should().NotBeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -108,7 +108,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -119,10 +119,10 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 null, null, null,
                 null, null, null);
 
-            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(GlobalWorkingDir);
-            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(GlobalWorkingDir);
-            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project1").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(GlobalWorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(GlobalWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -149,8 +149,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
-            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -162,9 +162,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 UserSolutionWorkingDir, UserProject1WorkingDir, UserProject3WorkingDir);
 
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
-            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -178,7 +178,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -192,7 +192,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -205,8 +205,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
-            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -218,9 +218,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 null, "", UserProject3WorkingDir);
 
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
-            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -233,8 +233,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
-            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -248,7 +248,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -262,7 +262,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -274,9 +274,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 null, UserProject1WorkingDir, "");
 
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
-            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         [TestMethod]
@@ -290,7 +290,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
-            resultingContainer.GetSettingsForExecutable("not_matched").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         private RunSettingsService SetupRunSettingsService(string solutionRunSettingsFile)

@@ -36,8 +36,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         public RunSettings GetSettingsForExecutable(string executable)
         {
             return
-                ProjectSettings.FirstOrDefault(s => Regex.IsMatch(executable, s.ProjectRegex))
-                ?? SolutionSettings;
+                ProjectSettings.FirstOrDefault(s => Regex.IsMatch(executable, s.ProjectRegex));
         }
 
         public override XmlElement ToXml()

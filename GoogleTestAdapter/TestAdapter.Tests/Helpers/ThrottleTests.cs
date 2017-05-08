@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             var duration = (Events.Last().Time - Events.First().Time).TotalMilliseconds;
             var minimumDuration = ((TotalEvents / MaxEvents - 1) * TimeSpan.TotalMilliseconds);
-            duration.Should().BeGreaterThan(minimumDuration);
+            duration.Should().BeGreaterThan(minimumDuration - TestMetadata.ToleranceInMs);
             duration.Should().BeLessThan(minimumDuration + TimeSpan.TotalMilliseconds + TestMetadata.ToleranceInMs);
         }
 

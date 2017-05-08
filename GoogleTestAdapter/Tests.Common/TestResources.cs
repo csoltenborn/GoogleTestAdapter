@@ -61,7 +61,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution.gta.runsettings";
         public const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
         public const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
-        public const string UserTestSettingsForGeneratedTests = TestdataDir + "User.runsettings";
+        public const string UserTestSettingsForGeneratedTests_Project = TestdataDir + "Project.runsettings";
+        public const string UserTestSettingsForGeneratedTests_Solution = TestdataDir + "Solution.runsettings";
+        public const string UserTestSettingsForGeneratedTests_SolutionProject = TestdataDir + "SolutionProject.runsettings";
         public const string UserTestSettingsForListingTests = TestdataDir + "ListTests.runsettings";
         public const string ProviderDeliveredTestSettings = TestdataDir + @"RunSettingsServiceTests\Provider_delivered.runsettings";
 

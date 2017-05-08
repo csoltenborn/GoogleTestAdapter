@@ -84,7 +84,11 @@ namespace GoogleTestAdapter.Settings
                     if (projectSettings != null)
                     {
                         _currentSettings = projectSettings;
-                        logger.DebugInfo($"Settings for test executable '{executable}': {this}");
+                        string settingsString = ToString();
+                        _currentSettings = _settingsContainer.SolutionSettings;
+                        logger.DebugInfo($"Settings for test executable '{executable}': {settingsString}");
+
+                        _currentSettings = projectSettings;
                     }
                     else
                     {

@@ -11,40 +11,16 @@
 	string csvFile = Host.ResolvePath("GTA_Console.csv");
 	TestcaseCsvReader reader = new TestcaseCsvReader(csvFile);
 #>
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GoogleTestAdapter.Tests.Common;
-using GoogleTestAdapter.Tests.Common.ResultChecker;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage
 {
 
-	public abstract class AbstractConsoleTests
+	[TestClass]
+	public class ConsoleDllTests : AbstractConsoleTests
 	{
-		private readonly string _solutionFile;
-		protected readonly string TestAdapterDir;
-
-		protected AbstractConsoleTests()
-		{
-			AbstractConsoleIntegrationTests.GetDirectories(out TestAdapterDir, out _solutionFile);
-		}
-
-        private void RunTestsAndCheckOutput(string typeName, string arguments, [CallerMemberName] string testCaseName = null)
-        {
-            TrxResultChecker resultChecker = new TrxResultChecker(_solutionFile);
-            resultChecker.RunTestsAndCheckOutput(typeName, arguments, testCaseName);
-        }
-
-        protected abstract string GetAdapterIntegration();
-		protected string GetLogger()
-		{
-			return AbstractConsoleIntegrationTests.GetLogger();
-		}
-
 		<#
 		List<Line> lines = reader.GetObjects();
 		IDictionary<string, string> executables = new Dictionary<string, string>();
@@ -54,72 +30,25 @@ namespace GoogleTestAdapter.VsPackage
 				executables.Add(line.TestFile, line.ActualTestFile);
 		#>
 
-		public virtual void <#= line.MethodName #>()
+		[TestMethod]
+        [TestCategory(EndToEnd)]
+		public void <#= line.MethodName #>()
 		{
 			string arguments = GetAdapterIntegration();
 			arguments += @"<#= line.Arguments #>";
             RunTestsAndCheckOutput(GetType().Name, arguments);
 		}
 		<# } #>
-
-		<# foreach (string executable in executables.Keys) { #>
-
-		public virtual void List_TestsOf_<#= executable #>()
-		{
-		    string testExecutable = @"<#= executables[executable] #>";
-			string arguments = GetAdapterIntegration() + @" /ListTests:""" + testExecutable + @"""";
-			if (!testExecutable.Contains("_x86") && !testExecutable.Contains("_x64"))
-				arguments +=  " /Settings:\"\"" + TestResources.UserTestSettingsForListingTests + "\"\"";
-            string resultString = AbstractConsoleIntegrationTests.RunExecutableAndGetOutput(_solutionFile, arguments);
-			string[] resultLines = resultString.Split('\n');
-			resultLines = resultLines.Where(l => l.StartsWith("    ")).Select(l => l.Trim()).ToArray();
-			for (int i = 0; i < resultLines.Length; i++)
-			{
-				resultLines[i] = Regex.Replace(resultLines[i], "Information:.*", "");
-			}	
-			resultString = string.Join("\n", resultLines);
-            // ReSharper disable once AssignNullToNotNullAttribute
-			string projectDir = Path.Combine(Path.GetDirectoryName(_solutionFile), @"..\GoogleTestAdapter\VsPackage.Tests.Generated");
-            new ResultChecker(Path.Combine(projectDir, "GoldenFiles"), Path.Combine(projectDir, "TestErrors"), ".txt")
-                // ReSharper disable once ExplicitCallerInfoArgument
-				.CheckResults(resultString, GetType().Name);
-		}
-		<# } #>
-
-	}
-
-
-	[TestClass]
-	public class ConsoleDllTests : AbstractConsoleTests
-	{
-        protected override string GetAdapterIntegration()
-        {
-            return GetLogger() + @"/TestAdapterPath:" + TestAdapterDir;
-        }
-
-		#region method stubs for code coverage
-
-		<# foreach (Line line in lines) { #>
-
-		[TestMethod]
-        [TestCategory(EndToEnd)]
-		public override void <#= line.MethodName #>()
-		{
-			base.<#= line.MethodName #>();
-		}
-		<# } #>
-
 		<# foreach (string executable in executables.Keys) { #>
 
 		[TestMethod]
         [TestCategory(EndToEnd)]
-		public override void List_TestsOf_<#= executable #>()
+		public void List_TestsOf_<#= executable #>()
 		{
-			base.List_TestsOf_<#= executable #>();
+			ListTestsOf(@"<#= executables[executable] #>");
 		}
 		<# } #>
 
-		#endregion
 	}
 
 }
@@ -130,17 +59,17 @@ namespace GoogleTestAdapter.VsPackage
     {
         internal string TestFile;
         internal string ActualTestFile;
-		internal bool SettingsFile;
-		internal string ActualSettingsFile;
+        internal string SettingsFileNamePart;
+        internal string ActualSettingsFile;
 		internal string TestCaseFilter;
 		internal bool EnableCodeCoverage;
 		internal bool InIsolation;
 
-		internal string MethodName 
+		internal string MethodName
 		{
-			get 
+			get
 			{
-				string settings = SettingsFile ? "_Settings" : "";
+			    string settings = SettingsFileNamePart;
 				string codeCoverage = EnableCodeCoverage ? "_Coverage" : "";
 				string isolation = InIsolation ? "_Isolation" : "";
 				string filter = TestCaseFilter == "none" ? "" : "_" + TestCaseFilter;
@@ -165,7 +94,7 @@ namespace GoogleTestAdapter.VsPackage
 			{
 				string arguments = " \"\"" + ActualTestFile + "\"\"";
 
-				if (SettingsFile)
+				if (!string.IsNullOrWhiteSpace(ActualSettingsFile))
 					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
 
 				if (!"none".Equals(TestCaseFilter))
@@ -188,19 +117,46 @@ namespace GoogleTestAdapter.VsPackage
 
         protected override Line GetObject(string[] columns)
         {
-            bool settingsFile = bool.Parse(columns[1]);
             return new Line
             {
                 TestFile = columns[0],
                 ActualTestFile = GetActualFile(columns[0]),
-                SettingsFile = settingsFile,
+                SettingsFileNamePart = GetSettingsFile(columns[1]),
+                ActualSettingsFile = GetActualSettingsFile(columns[1]),
                 TestCaseFilter = columns[2],
                 EnableCodeCoverage = bool.Parse(columns[3]),
-                InIsolation = bool.Parse(columns[4]),
-				ActualSettingsFile = settingsFile 
-					? TestResources.UserTestSettingsForGeneratedTests 
-					: ""
+                InIsolation = bool.Parse(columns[4])
             };
+        }
+
+        private string GetActualSettingsFile(string key)
+        {
+            switch (key)
+            {
+                case "false":
+                    return "";
+                case "true":
+                    return TestResources.UserTestSettingsForGeneratedTests_Project;
+                case "Solution":
+                    return TestResources.UserTestSettingsForGeneratedTests_Solution;
+                case "SolutionProject":
+                    return TestResources.UserTestSettingsForGeneratedTests_SolutionProject;
+                default:
+                    throw new Exception($"Unknown key: {key}");
+            }
+        }
+
+        private string GetSettingsFile(string key)
+        {
+			switch (key)
+            {
+                case "false":
+                    return "";
+                case "true":
+                    return "_Settings";
+                default:
+                    return $"_{key}Settings";
+            }
         }
 
 		private string GetActualFile(string key)
