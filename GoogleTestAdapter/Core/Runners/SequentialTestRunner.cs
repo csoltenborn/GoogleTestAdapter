@@ -23,6 +23,8 @@ namespace GoogleTestAdapter.Runners
         private readonly SettingsWrapper _settings;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
+        private TestProcessLauncher _processLauncher;
+        private IProcessExecutor _processExecutor;
 
         public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
         {
@@ -162,11 +164,12 @@ namespace GoogleTestAdapter.Runners
 
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
-            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
-        }
+            var testResults = new TestResultCollector(_logger, _threadName)
+                .CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
+            testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 
-        private TestProcessLauncher _processLauncher;
-        private IProcessExecutor _processExecutor;
+            return testResults;
+        }
 
         private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, IProcessExecutor executor,
             StreamingStandardOutputTestResultParser streamingParser)
@@ -215,79 +218,6 @@ namespace GoogleTestAdapter.Runners
             }
             return consoleOutput;
         }
-
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, TestCase crashedTestCase)
-        {
-            var testResults = new List<TestResult>();
-
-            TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _logger);
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
-                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger);
-                List<TestResult> xmlResults = xmlParser.GetTestResults();
-                int nrOfCollectedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestResult testResult in xmlResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
-                {
-                    testResults.Add(testResult);
-                    nrOfCollectedTestResults++;
-                }
-                if (nrOfCollectedTestResults > 0)
-                   _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from result XML file {resultXmlFile}");
-            }
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
-                List<TestResult> consoleResults = consoleParser.GetTestResults();
-                int nrOfCollectedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
-                {
-                    testResults.Add(testResult);
-                    nrOfCollectedTestResults++;
-                }
-                if (nrOfCollectedTestResults > 0)
-                    _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from console output");
-            }
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
-                string errorMessage, errorStackTrace = null;
-                if (consoleParser.CrashedTestCase == null && crashedTestCase == null)
-                {
-                    errorMessage = "";
-                }
-                else
-                {
-                    if (crashedTestCase == null)
-                        crashedTestCase = consoleParser.CrashedTestCase;
-                    errorMessage = $"reason is probably a crash of test {crashedTestCase.DisplayName}";
-                    errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
-                        crashedTestCase.CodeFilePath, crashedTestCase.LineNumber.ToString());
-                }
-                int nrOfCreatedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
-                {
-                    testResults.Add(new TestResult(testCase)
-                    {
-                        ComputerName = Environment.MachineName,
-                        Outcome = TestOutcome.Skipped,
-                        ErrorMessage = errorMessage,
-                        ErrorStackTrace = errorStackTrace
-                    });
-                    nrOfCreatedTestResults++;
-                }
-                _logger.DebugInfo($"{_threadName}Created {nrOfCreatedTestResults} test results for tests which were neither found in result XML file nor in console output");
-            }
-
-            testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
-
-            return testResults;
-        }
-
     }
 
 }

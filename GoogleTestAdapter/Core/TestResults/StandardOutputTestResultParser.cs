@@ -42,7 +42,10 @@ namespace GoogleTestAdapter.TestResults
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);
             while (indexOfNextTestcase >= 0)
             {
-                testResults.Add(CreateTestResult(indexOfNextTestcase));
+                var testResult = CreateTestResult(indexOfNextTestcase);
+                if (testResult != null)
+                    testResults.Add(testResult);
+
                 indexOfNextTestcase = FindIndexOfNextTestcase(indexOfNextTestcase + 1);
             }
             return testResults;
@@ -56,6 +59,11 @@ namespace GoogleTestAdapter.TestResults
             string line = _consoleOutput[currentLineIndex++];
             string qualifiedTestname = RemovePrefix(line).Trim();
             TestCase testCase = FindTestcase(qualifiedTestname);
+            if (testCase == null)
+            {
+                _logger.DebugWarning($"No known test case for test result of line '{line}' - are you repeating a test run, but tests have changed in the meantime?");
+                return null;
+            }
 
             if (currentLineIndex >= _consoleOutput.Count)
             {
@@ -186,7 +194,7 @@ namespace GoogleTestAdapter.TestResults
 
         public static TestCase FindTestcase(string qualifiedTestname, IList<TestCase> testCasesRun)
         {
-            return testCasesRun.Single(tc => tc.FullyQualifiedName == qualifiedTestname);
+            return testCasesRun.SingleOrDefault(tc => tc.FullyQualifiedName == qualifiedTestname);
         }
 
         public static bool IsRunLine(string line)

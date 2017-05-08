@@ -82,7 +82,8 @@ namespace GoogleTestAdapter.TestResults
         {
             string qualifiedTestname = StandardOutputTestResultParser.RemovePrefix(line).Trim();
             TestCase testCase = StandardOutputTestResultParser.FindTestcase(qualifiedTestname, _testCasesRun);
-            _reporter.ReportTestsStarted(testCase.Yield());
+            if (testCase != null)
+                _reporter.ReportTestsStarted(testCase.Yield());
         }
 
         private void ReportTestResult()
@@ -108,6 +109,11 @@ namespace GoogleTestAdapter.TestResults
             string line = _consoleOutput[currentLineIndex++];
             string qualifiedTestname = StandardOutputTestResultParser.RemovePrefix(line).Trim();
             TestCase testCase = StandardOutputTestResultParser.FindTestcase(qualifiedTestname, _testCasesRun);
+            if (testCase == null)
+            {
+                _logger.DebugWarning($"No known test case for test result of line '{line}'' - are you repeating a test run, but tests have changed in the meantime?");
+                return null;
+            }
 
             if (currentLineIndex == _consoleOutput.Count)
             {
