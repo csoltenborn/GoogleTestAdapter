@@ -142,7 +142,7 @@ namespace GoogleTestAdapter.VsPackage
                 case "SolutionProject":
                     return TestResources.UserTestSettingsForGeneratedTests_SolutionProject;
                 default:
-                    throw new Exception($"Unknown key: {key}");
+                    throw new Exception("Unknown key: " + key);
             }
         }
 
@@ -155,7 +155,7 @@ namespace GoogleTestAdapter.VsPackage
                 case "true":
                     return "_Settings";
                 default:
-                    return $"_{key}Settings";
+                    return "_" + key + "Settings";
             }
         }
 
