@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
@@ -118,12 +119,12 @@ namespace GoogleTestAdapter.TestResults
             int durationInMs = 1;
             try
             {
-                // TODO check format in gtest code, replace with regex
+                // duration is a 64-bit number (no decimals) in the user's locale
                 int indexOfOpeningBracket = line.LastIndexOf('(');
                 int lengthOfDurationPart = line.Length - indexOfOpeningBracket - 2;
                 string durationPart = line.Substring(indexOfOpeningBracket + 1, lengthOfDurationPart);
                 durationPart = durationPart.Replace("ms", "").Trim();
-                durationInMs = int.Parse(durationPart);
+                durationInMs = int.Parse(durationPart, NumberStyles.Number);
             }
             catch (Exception)
             {
