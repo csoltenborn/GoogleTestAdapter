@@ -1,9 +1,14 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master) [![codecov](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
+[![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
+[![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-21k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter) 
 
 
 ### Google Test Adapter
 
 Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework.
+
+**Update:** We proudly announce the [collaboration with Microsoft](https://blogs.msdn.microsoft.com/vcblog/2017/05/10/unit-testing-and-the-future-announcing-the-test-adapter-for-google-test/) with the aim of further improving the Google Test experience in Visual Studio! More details of our collaboration can be found at our [wiki pages](https://github.com/csoltenborn/GoogleTestAdapter/wiki) (soon).
 
 ![Screenshot of Test Explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/Screenshot.png "Screenshot of Test Explorer")
 
@@ -34,25 +39,29 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 #### Installation
 
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.10.1-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
+[![Download at GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
+
 Google Test Adapter can be installed in three ways:
 
-* Install through the Visual Studio Gallery at *Tools/Extensions and Updates* - search for *Google Test Adapter*. This will make sure that the extension is updated automatically
-* Download and launch the [VSIX installer](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.10.0/GoogleTestAdapter-0.10.0.vsix) (which can also be downloaded from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/94c02701-8043-4851-8458-34f137d10874))
+* Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
+* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.10.1/GoogleTestAdapter-0.10.1.vsix)
 * Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
 #### <a name="gta_configuration"></a>Configuration
 
-GTA is configured following Visual Studio's approach of configuration inheritance. It provides different ways of configuration:
+GTA provides different ways of configuration:
 * <a name="global_settings"></a>The *Google Test Adapter* section of Visual Studio's *Tools/Options* (not available if installed via NuGet). These options are referred to as *global options* in the following.
 * <a name="toolbar"></a>The GTA toolbar (not available if installed via NuGet). The most important runtime options (i.e., *Parallel test execution*, *Break on failure*, *Catch exceptions*, and *Print test output*) can also be set via a toolbar; this is equivalent to setting the according options via *Tools/Options/Google Test Adapter*.
 * <a name="solution_settings"></a>Solution settings files (not available if run via [VsTest.Console.exe](https://msdn.microsoft.com/en-us/library/jj155800.aspx)). They are provided by means of an XML configuration file; this allows sharing of settings via source control. The configuration file must be placed in the same folder as the solution's `.sln` file, and must have the same name as that file, but with extension `.gta.runsettings`. E.g., if the solution file's name is `Foo.sln`, the settings file must be named `Foo.gta.runsettings`.
-* Visual Studio user settings files. VS allows for the selection of [test settings](https://msdn.microsoft.com/en-us/library/jj635153.aspx) files via the *Test/Test Settings* menu. 
+* Visual Studio user settings files. VS allows for the selection of [test settings](https://msdn.microsoft.com/en-us/library/jj635153.aspx) files via the *Test/Test Settings* menu, and to pass such settings files to `VsTest.Console.exe` via the `/Settings` parameter.
 
 The format of solution and user settings files is the same: a `<GoogleTestAdapterSettings>` node contains the solution settings and the (possibly empty) set of project settings and is itself contained in a `<RunSettings>` node (which in the case of user settings files might contain additional, e.g. VS specific settings). In contrast to solution settings, each set of project settings additionally has a regular expression to be evaluated at test discovery and execution time.
 
-The final settings to be used are computed in two stages:
+The final settings to be used are computed by merging the available settings, vaguely following Visual Studio's approach of configuration inheritance. Merging is done in two stages:
 1. The available global, solution file, and user file settings are merged into solution settings and a set of project settings. This is done in increasing priority, i.e., solution file settings override global settings, and user file settings override solution settings. Project settings of solution and user settings files are merged if they share the exact same regular expression.
 2. At test discovery and execution time, each test executable's full path is matched against the project settings' regular expressions; the first matching project settings are used for the particular test executable. If no project settings are found, the solution settings are used.
 
@@ -118,9 +127,14 @@ Note that since VS 2015 update 1, VS allows for the parallel execution of tests 
 If you need to perform some setup or teardown tasks in addition to the setup/teardown methods of your test code, you can do so by configuring test setup/teardown batch files, to which you can pass several values such as solution directory or test directory for exclusive usage of the tests.
 
 
+### External resources
+
+* [Basic tutorial](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/) for using Google Test with GTA in Visual Studio
+
+
 ### <a name="trouble_shooting"></a>Trouble shooting
 
-None or not all of my tests show up!
+##### None or not all of my tests show up
 * <a name="test_discovery_regex"></a>Switch on *Debug mode* at *Tools/Options/Google Test Adapter/General*, which will show on the test console whether your test executables are found by GTA. If they are not, you have two options:
   * Configure a *Test discovery regex* at the same place. In case of GTA installation via NuGet, do not forget to add the regex to the solution config file (which might be a good idea anyways). 
   * If your test executable is `..\FooTests.exe`, make sure that a file `..\FooTests.exe.is_google_test` exists.
@@ -128,14 +142,14 @@ None or not all of my tests show up!
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 * If your project happens to be a makefile project, there's a pitfall which will prevent GTA from discovering your tests: It appears that when importing a makefile project into VS, the *Output* setting of the project is populated from the makefile's content. However, if the makefile is edited later on such that the location of the generated test executable changes, VS does not find the test executable any more. One symptom of this is that your project can not be launched any more with `F5`. Make sure that the *Output* setting of the project is consistent with its makefile to avoid this problem. 
 
-No source locations and traits are found for my tests!
+##### No source locations and traits are found for my tests
 * The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved (and indicates that with a warning in the test output window). Rebuilding your solution should regenerate the pdb at an appropriate location.
 * The test executable's project settings result in a pdb file not containing the information necessary to resolve source locations and traits (see [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)). Change the setting as indicated below and rebuild your solution.
   * VS 2015 and earlier: `Yes` or `Optimize for debugging (/DEBUG)`
   * VS 2017: `Generate debug information optimized for sharing and publishing (/DEBUG:FULL)`
 * Option *Parse symbol information* is set to `false`, making GTA not parse that information out of the pdb file intentionally. The actual set of options used is potentially composed from VS options, a solution settings file, and a user settings file; the resulting set of options will be logged to the test output window if the *Print debug info* option is set to `true`.
 
-The Google Test Adapter extension is disabled when I start Visual Studio!
+##### The Google Test Adapter extension is disabled when I start Visual Studio
 * Your MEF cache might have been corrupted. Please refer to [this issue](https://github.com/csoltenborn/GoogleTestAdapter/issues/98) for help.
 
 
@@ -144,39 +158,18 @@ The Google Test Adapter extension is disabled when I start Visual Studio!
 Please refer to our [wiki](https://github.com/csoltenborn/GoogleTestAdapter/wiki/Development-Knowledge-Base).
 
 
-### External links
-
-[Basic tutorial for using Google Test with GTA in Visual Studio](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/)
-
-
 ### Credits
 
 #### People
 
-* [Christian Soltenborn](https://github.com/csoltenborn), main author
-* [Jonas Gefele](https://github.com/jgefele), regular contributor
-* [Markus Lindqvist](https://github.com/markusl), author of Google Test Runner (see below)
-* [Matthew Manela](https://github.com/mmanela), author of Chutzpah Test Adapter
-* [Alfred5020](https://github.com/Alfred5020), testing in [#15](https://github.com/csoltenborn/GoogleTestAdapter/issues/15)
-* [Dominik Grabiec](https://github.com/DominikGrabiec), testing in [#15](https://github.com/csoltenborn/GoogleTestAdapter/issues/15) and report and fix in [#18](https://github.com/csoltenborn/GoogleTestAdapter/issues/18))
-* [Dima Sirotnikov](https://github.com/sirotnikov), report and fix in [#25](https://github.com/csoltenborn/GoogleTestAdapter/issues/25)
-* [Eistroll](https://github.com/Eistroll), report and testing in [#27](https://github.com/csoltenborn/GoogleTestAdapter/issues/27) and [#30](https://github.com/csoltenborn/GoogleTestAdapter/issues/30)
-* [loki980](https://github.com/loki980), report and testing in [#28](https://github.com/csoltenborn/GoogleTestAdapter/issues/28))
-* [Achim Stremplat](https://github.com/RaymondKHessel), report and fix in [#29](https://github.com/csoltenborn/GoogleTestAdapter/issues/29)
-* [bbusacker](https://github.com/bbusacker), report and fix in [#36](https://github.com/csoltenborn/GoogleTestAdapter/issues/36)
-* [Péter Budai](https://github.com/peterbudai), report and fix in [#40](https://github.com/csoltenborn/GoogleTestAdapter/issues/40) and [#41](https://github.com/csoltenborn/GoogleTestAdapter/issues/41)
-* [kornman00](https://github.com/kornman00), report and testing in [#42](https://github.com/csoltenborn/GoogleTestAdapter/issues/42)
-* [Stefan Winkler](https://github.com/nafest), report and fix in [#45](https://github.com/csoltenborn/GoogleTestAdapter/issues/45)
-* [Jesse Olmer](https://github.com/JesseOlmer), report and example solution in [#46](https://github.com/csoltenborn/GoogleTestAdapter/issues/46)
-* [cyrilbesse](https://github.com/cyrilbesse), report and fix in [#54](https://github.com/csoltenborn/GoogleTestAdapter/issues/54), report and testing in [#66](https://github.com/csoltenborn/GoogleTestAdapter/issues/66)
-* [Sergey Gomon](https://github.com/gomons), report and example solution in [#63](https://github.com/csoltenborn/GoogleTestAdapter/issues/63)
-* [Florin T.](https://github.com/ftrofin), report and example code in [#89](https://github.com/csoltenborn/GoogleTestAdapter/issues/89)
-* [JackGrinningCat](https://github.com/JackGrinningCat), report and fix in [#96](https://github.com/csoltenborn/GoogleTestAdapter/issues/96)
-* [Farwaykorse](https://github.com/Farwaykorse), report and testing in [#124](https://github.com/csoltenborn/GoogleTestAdapter/issues/124)
-* [ninjaCoder](https://github.com/ninjaCoder), report and testing in [#126](https://github.com/csoltenborn/GoogleTestAdapter/issues/126)
+Google Test Adapter is written and maintained by [Christian Soltenborn](https://github.com/csoltenborn) (main author) and [Jonas Gefele](https://github.com/jgefele) (regular contributor).
+
+The first version of GTA was a slightly enhanced C# port of the F# [Google Test Runner](https://github.com/markusl/GoogleTestRunner), written by [Markus Lindqvist](https://github.com/markusl). We have also learned a lot from the JavaScript test runner [Chutzpah](https://github.com/mmanela/chutzpah), written by [Matthew Manela](https://github.com/mmanela).
+
+GTA has benefited from all kinds of contributions, be it feature requests, bug reports, code snippets, testing of new features and bugfixes, or even pull requests. Most (hopefully all) contributors are mentioned in the according [release notes](https://github.com/csoltenborn/GoogleTestAdapter/releases).
+
 
 #### Tools
-* [Google Test Runner](https://github.com/markusl/GoogleTestRunner) - the starting point for GTA. We have ported the Google Test Runner extension from F# to C# and implemented various enhancements and refactorings.
 * [ReSharper](https://www.jetbrains.com/resharper/) - awesome VS extension for .NET development, including refactoring, static analysis etc.
   * thanks to [JetBrains](https://www.jetbrains.com/) for providing free licenses for our developers!
   * note that JetBrains' [Resharper C++](https://www.jetbrains.com/resharper-cpp/) can also run tests written using Google Test
