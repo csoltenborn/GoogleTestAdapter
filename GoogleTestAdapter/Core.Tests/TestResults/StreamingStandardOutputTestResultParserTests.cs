@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
@@ -37,6 +39,17 @@ namespace GoogleTestAdapter.TestResults
             @"  Actual: 20",
             @"Expected: 1000",
             @"[  FAILED  ] TestMath.AddFails (3 s)"
+        };
+
+        private string[] ConsoleOutput1WithThousandsSeparatorInDuration { get; } = {
+            @"[==========] Running 3 tests from 1 test case.",
+            @"[----------] Global test environment set-up.",
+            @"[----------] 3 tests from TestMath",
+            @"[ RUN      ] TestMath.AddFails",
+            @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp(6): error: Value of: Add(10, 10)",
+            @"  Actual: 20",
+            @"Expected: 1000",
+            @"[  FAILED  ] TestMath.AddFails (4,656 ms)",
         };
 
         private string[] ConsoleOutput2 { get; } = {
@@ -106,6 +119,7 @@ namespace GoogleTestAdapter.TestResults
         private List<string> CrashesAfterErrorMsg { get; set; }
         private List<string> Complete { get; set; }
         private List<string> WrongDurationUnit { get; set; }
+        private List<string> ThousandsSeparatorInDuration { get; set; }
         private List<string> PassingTestProducesConsoleOutput { get; set; }
         private List<string> WithPrefixingOutputPassing { get; set; }
         private List<string> WithPrefixingOutputFailing { get; set; }
@@ -126,6 +140,8 @@ namespace GoogleTestAdapter.TestResults
             Complete.AddRange(ConsoleOutput3);
 
             WrongDurationUnit = new List<string>(ConsoleOutput1WithInvalidDuration);
+
+            ThousandsSeparatorInDuration = new List<string>(ConsoleOutput1WithThousandsSeparatorInDuration);
 
             PassingTestProducesConsoleOutput = new List<string>(ConsoleOutputWithOutputOfExe);
 
@@ -252,6 +268,26 @@ namespace GoogleTestAdapter.TestResults
 
             MockLogger.Verify(l => l.LogWarning(
                 It.Is<string>(s => s.Contains("'[  FAILED  ] TestMath.AddFails (3 s)'"))), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithThousandsSeparatorInDuration_ParsedCorrectly()
+        {
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            try
+            {
+                IList<TestResult> results = ComputeTestResults(ThousandsSeparatorInDuration);
+
+                results.Count.Should().Be(1);
+                results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+                results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(4656));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentCulture;
+            }
         }
 
         [TestMethod]

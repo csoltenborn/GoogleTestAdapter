@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
@@ -225,11 +227,20 @@ namespace GoogleTestAdapter.TestResults
         [TestCategory(Unit)]
         public void GetTestResults_OutputWithThousandsSeparatorInDuration_ParsedCorrectly()
         {
-            List<TestResult> results = ComputeTestResults(ThousandsSeparatorInDuration);
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            try
+            {
+                List<TestResult> results = ComputeTestResults(ThousandsSeparatorInDuration);
 
-            results.Count.Should().Be(1);
-            results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
-            results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(4656));
+                results.Count.Should().Be(1);
+                results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+                results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(4656));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentCulture;
+            }
         }
 
         [TestMethod]
