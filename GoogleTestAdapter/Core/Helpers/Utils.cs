@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -62,6 +63,13 @@ namespace GoogleTestAdapter.Helpers
             return Task.WaitAll(tasks, timeoutInMs);
         }
 
+        public static bool FileContainsString(string executable, string theString, Encoding encoding)
+        {
+            byte[] file = File.ReadAllBytes(executable);
+            byte[] pattern = encoding.GetBytes(theString);
+
+            return file.IndexOf(pattern) >= 0;
+        }
     }
 
 }

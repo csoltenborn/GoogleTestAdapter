@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
@@ -16,8 +17,6 @@ namespace GoogleTestAdapter
     public class GoogleTestDiscoverer
     {
         public const string GoogleTestIndicator = ".is_google_test";
-
-        private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
@@ -89,29 +88,29 @@ namespace GoogleTestAdapter
             string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
             {
-                _logger.DebugInfo($"Google Test indicator file found for executable {executable}");
+                _logger.DebugInfo($"Google Test indicator file found for executable {executable} ({googleTestIndicatorFile})");
                 return true;
             }
-            _logger.DebugInfo($"No Google Test indicator file found for executable {executable}");
 
-            bool matches;
-            string regexSource, regex;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexSource = "default";
-                regex = SettingsWrapper.TestFinderRegex;
-                matches = CompiledTestFinderRegex.IsMatch(executable);
+                if (Utils.FileContainsString(executable, GoogleTestConstants.ListTestsOption, Encoding.ASCII))
+                {
+                    _logger.DebugInfo($"Google Test indicator file found in executable {executable}");
+                    return true;
+                }
             }
             else
             {
-                regexSource = "custom";
-                regex = customRegex;
-                matches = SafeMatches(executable, customRegex);
+                if (SafeMatches(executable, customRegex))
+                {
+                    _logger.DebugInfo($"Custom regex '{customRegex}' matches executable '{executable}'");
+                    return true;
+                }
             }
-            _logger.DebugInfo(
-                $"'{executable}' {(matches ? "matches" : "does not match")} {regexSource} regex '{regex}'");
 
-            return matches;
+            _logger.DebugInfo($"File does not seem to be Google Test executable: '{executable}'");
+            return false;
         }
 
         private IList<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)

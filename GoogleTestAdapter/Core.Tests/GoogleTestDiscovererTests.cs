@@ -25,27 +25,6 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void IsGoogleTestExecutable_MatchingExamples_AreMatched()
-        {
-            AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
-            AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
-            AssertIsGoogleTestExecutable("MyGoogleTest.exe", true);
-            AssertIsGoogleTestExecutable("mygoogletests.exe", true);
-            AssertIsGoogleTestExecutable("mygoogletest.exe", true);
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
-        public void IsGoogleTestExecutable_NotMatchingExamples_AreNotMatched()
-        {
-            AssertIsGoogleTestExecutable("MyGoogleTes.exe", false);
-            AssertIsGoogleTestExecutable("TotallyWrong.exe", false);
-            AssertIsGoogleTestExecutable("TestStuff.exe", false);
-            AssertIsGoogleTestExecutable("TestLibrary.exe", false);
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithRegexFromOptions_MatchesCorrectly()
         {
             AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
@@ -84,7 +63,7 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void IsGoogleTestExecutable_WithoutIndicatorFile_IsNotRecognizedAsTestExecutable()
+        public void IsGoogleTestExecutable_WithoutIndicatorFile_IsRecognizedAsTestExecutable()
         {
             string testExecutable = SetupIndicatorFileTest(false);
             try
@@ -92,7 +71,7 @@ namespace GoogleTestAdapter
                 bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
                     .IsGoogleTestExecutable(testExecutable);
 
-                result.Should().BeFalse();
+                result.Should().BeTrue();
             }
             finally
             {

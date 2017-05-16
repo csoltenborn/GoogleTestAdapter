@@ -55,6 +55,7 @@
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Framework\IDebuggerAttacher.cs" />
+    <Compile Include="Helpers\ByteUtils.cs" />
     <Compile Include="Helpers\ProcessExecutor.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />

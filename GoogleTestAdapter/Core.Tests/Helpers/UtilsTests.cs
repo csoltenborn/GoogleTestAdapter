@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
@@ -12,6 +13,7 @@ namespace GoogleTestAdapter.Helpers
     [TestClass]
     public class UtilsTests
     {
+        private static readonly string GoogleTestIndicator = GoogleTestConstants.ListTestsOption;
 
         [TestMethod]
         [TestCategory(Unit)]
@@ -43,6 +45,48 @@ namespace GoogleTestAdapter.Helpers
 
             string errorMessage;
             Utils.DeleteDirectory(dir, out errorMessage).Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void FileContainsString_TestX86Release_ShouldContainGoogleTestIndicator()
+        {
+            Utils.FileContainsString(TestResources.Tests_ReleaseX86, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void FileContainsString_TestX64Release_ShouldContainGoogleTestIndicator()
+        {
+            Utils.FileContainsString(TestResources.Tests_ReleaseX64, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void FileContainsString_TestX86Debug_ShouldContainGoogleTestIndicator()
+        {
+            Utils.FileContainsString(TestResources.Tests_DebugX86, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void FileContainsString_TestX64Debug_ShouldContainGoogleTestIndicator()
+        {
+            Utils.FileContainsString(TestResources.Tests_DebugX64, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void FileContainsString_TenSecondsWaiter_ShouldNotContainGoogleTestIndicator()
+        {
+            Utils.FileContainsString(TestResources.TenSecondsWaiter, GoogleTestIndicator, Encoding.ASCII).Should().BeFalse();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void FileContainsString_EmptyFile_ShouldNotContainGoogleTestIndicator()
+        {
+            Utils.FileContainsString(TestResources.TenSecondsWaiter, GoogleTestIndicator, Encoding.ASCII).Should().BeFalse();
         }
 
         [TestMethod]

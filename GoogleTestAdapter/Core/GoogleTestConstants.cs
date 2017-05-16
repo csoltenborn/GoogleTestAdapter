@@ -19,7 +19,7 @@
         public const int ShuffleTestsSeedMinValue = 0;
         public static readonly int ShuffleTestsSeedMaxValue = int.Parse(ShuffleTestsSeedMaxValueAsString);
 
-        public const string ListTestsOption = " --gtest_list_tests";
+        public const string ListTestsOption = "--gtest_list_tests";
         public const string FilterOption = " --gtest_filter=";
 
         public const string TestBodySignature = "::TestBody";
