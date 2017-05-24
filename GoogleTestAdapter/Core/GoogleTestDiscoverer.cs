@@ -31,22 +31,24 @@ namespace GoogleTestAdapter
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
-            IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             if (_settings.UseNewTestExecutionFramework)
             {
-                var discoveryActions = googleTestExecutables
+                var discoveryActions = executables
                     .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
                     .ToArray();
                 Utils.SpawnAndWait(discoveryActions);
             }
             else
             {
-                foreach (string executable in googleTestExecutables)
+                foreach (string executable in executables)
                 {
                     _settings.ExecuteWithSettingsForExecutable(executable, () =>
                     {
-                        IList<TestCase> testCases = GetTestsFromExecutable(executable);
-                        reporter.ReportTestsFound(testCases);
+                        if (IsGoogleTestExecutable(executable, _settings.TestDiscoveryRegex, _logger))
+                        {
+                            IList<TestCase> testCases = GetTestsFromExecutable(executable);
+                            reporter.ReportTestsFound(testCases);
+                        }
                     }, _logger);
                 }
             }
@@ -56,6 +58,9 @@ namespace GoogleTestAdapter
         {
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
+                if (!IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
+                    return;
+
                 int nrOfTestCases = 0;
                 Action<TestCase> reportTestCases = tc =>
                 {
@@ -83,12 +88,12 @@ namespace GoogleTestAdapter
             return testCases;
         }
 
-        public bool IsGoogleTestExecutable(string executable, string customRegex = "")
+        public static bool IsGoogleTestExecutable(string executable, string customRegex, ILogger logger)
         {
             string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
             {
-                _logger.DebugInfo($"Google Test indicator file found for executable {executable} ({googleTestIndicatorFile})");
+                logger.DebugInfo($"Google Test indicator file found for executable {executable} ({googleTestIndicatorFile})");
                 return true;
             }
 
@@ -96,38 +101,24 @@ namespace GoogleTestAdapter
             {
                 if (Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
                 {
-                    _logger.DebugInfo($"Google Test indicator file found in executable {executable}");
+                    logger.DebugInfo($"Google Test indicators found in executable {executable}");
                     return true;
                 }
             }
             else
             {
-                if (SafeMatches(executable, customRegex))
+                if (SafeMatches(executable, customRegex, logger))
                 {
-                    _logger.DebugInfo($"Custom regex '{customRegex}' matches executable '{executable}'");
+                    logger.DebugInfo($"Custom regex '{customRegex}' matches executable '{executable}'");
                     return true;
                 }
             }
 
-            _logger.DebugInfo($"File does not seem to be Google Test executable: '{executable}'");
+            logger.DebugInfo($"File does not seem to be Google Test executable: '{executable}'");
             return false;
         }
 
-        private IList<string> GetAllGoogleTestExecutables(IEnumerable<string> allExecutables)
-        {
-            IList<string> testExecutables = new List<string>();
-            foreach (string executable in allExecutables)
-            {
-                _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                {
-                    if (IsGoogleTestExecutable(executable, _settings.TestDiscoveryRegex))
-                        testExecutables.Add(Path.GetFullPath(executable));
-                }, _logger);
-            }
-            return testExecutables;
-        }
-
-        private bool SafeMatches(string executable, string regex)
+        private static bool SafeMatches(string executable, string regex, ILogger logger)
         {
             bool matches = false;
             try
@@ -136,11 +127,11 @@ namespace GoogleTestAdapter
             }
             catch (ArgumentException e)
             {
-                _logger.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
+                logger.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
             }
             catch (RegexMatchTimeoutException e)
             {
-                _logger.LogError($"Regex '{regex}' timed out: {e.Message}");
+                logger.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
         }

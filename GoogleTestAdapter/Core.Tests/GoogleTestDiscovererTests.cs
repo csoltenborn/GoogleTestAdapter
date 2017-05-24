@@ -36,7 +36,7 @@ namespace GoogleTestAdapter
         [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithUnparsableRegexFromOptions_ProducesErrorMessage()
         {
-            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).IsGoogleTestExecutable("my.exe", "d[ddd[");
+            bool result = GoogleTestDiscoverer.IsGoogleTestExecutable("my.exe", "d[ddd[", TestEnvironment.Logger);
 
             result.Should().BeFalse();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("'d[ddd['"))), Times.Exactly(1));
@@ -49,8 +49,8 @@ namespace GoogleTestAdapter
             string testExecutable = SetupIndicatorFileTest(true);
             try
             {
-                bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
-                    .IsGoogleTestExecutable(testExecutable);
+                bool result = GoogleTestDiscoverer
+                    .IsGoogleTestExecutable(testExecutable, "", TestEnvironment.Logger);
 
                 result.Should().BeTrue();
             }
@@ -68,8 +68,8 @@ namespace GoogleTestAdapter
             string testExecutable = SetupIndicatorFileTest(false);
             try
             {
-                bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
-                    .IsGoogleTestExecutable(testExecutable);
+                bool result = GoogleTestDiscoverer
+                    .IsGoogleTestExecutable(testExecutable, "", TestEnvironment.Logger);
 
                 result.Should().BeTrue();
             }
@@ -297,7 +297,7 @@ namespace GoogleTestAdapter
 
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
         {
-            new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).IsGoogleTestExecutable(executable, regex)
+            GoogleTestDiscoverer.IsGoogleTestExecutable(executable, regex, TestEnvironment.Logger)
                 .Should()
                 .Be(isGoogleTestExecutable);
         }
