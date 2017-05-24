@@ -94,7 +94,7 @@ namespace GoogleTestAdapter
 
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                if (Utils.FileContainsString(executable, GoogleTestConstants.ListTestsOption, Encoding.ASCII))
+                if (Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
                 {
                     _logger.DebugInfo($"Google Test indicator file found in executable {executable}");
                     return true;

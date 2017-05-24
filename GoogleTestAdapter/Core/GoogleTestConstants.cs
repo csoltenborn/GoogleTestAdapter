@@ -26,6 +26,14 @@
         public const string ParameterizedTestMarker = "  # GetParam() = ";
         public const string TypedTestMarker = ".  # TypeParam = ";
 
+        public static readonly string[] GoogleTestExecutableMarkers =
+        {
+            "This program contains tests written using Google Test. You can use the",
+            "For more information, please read the Google Test documentation at",
+            "Run only the tests whose name matches one of the positive patterns but",
+            ListTestsOption
+        };
+
         public static string GetResultXmlFileOption(string resultXmlFile)
         {
             return "--gtest_output=\"xml:" + resultXmlFile + "\"";

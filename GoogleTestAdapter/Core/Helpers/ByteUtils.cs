@@ -17,16 +17,16 @@ namespace GoogleTestAdapter.Helpers
             int[] byteBasedJumpTable = CreateByteBasedJumpTable(pattern);
             int[] offsetBasedJumpTable = CreateOffsetBasedJumpTable(pattern);
 
-            for (int i = pattern.Length - 1; i < bytes.Length;)
+            for (int posInBytes = pattern.Length - 1; posInBytes < bytes.Length;)
             {
-                int j;
-                for (j = pattern.Length - 1; pattern[j] == bytes[i]; --i, --j)
+                int posInPattern;
+                for (posInPattern = pattern.Length - 1; pattern[posInPattern] == bytes[posInBytes]; --posInBytes, --posInPattern)
                 {
-                    if (j == 0)
-                        return i;
+                    if (posInPattern == 0)
+                        return posInBytes;
                 }
 
-                i += Math.Max(offsetBasedJumpTable[pattern.Length - 1 - j], byteBasedJumpTable[bytes[i]]);
+                posInBytes += Math.Max(offsetBasedJumpTable[pattern.Length - 1 - posInPattern], byteBasedJumpTable[bytes[posInBytes]]);
             }
 
             return -1;
@@ -50,14 +50,14 @@ namespace GoogleTestAdapter.Helpers
         {
             int[] table = new int[pattern.Length];
             int lastPrefixPosition = pattern.Length;
-            for (int i = pattern.Length - 1; i >= 0; --i)
+            for (int i = pattern.Length; i > 0; i--)
             {
-                if (IsPrefix(pattern, i + 1))
-                    lastPrefixPosition = i + 1;
+                if (IsPrefix(pattern, i))
+                    lastPrefixPosition = i;
 
-                table[pattern.Length - 1 - i] = lastPrefixPosition - i + pattern.Length - 1;
+                table[pattern.Length - i] = lastPrefixPosition - i + pattern.Length;
             }
-            for (int i = 0; i < pattern.Length - 1; ++i)
+            for (int i = 0; i < pattern.Length - 1; i++)
             {
                 int suffixLength = GetSuffixLength(pattern, i);
                 table[suffixLength] = pattern.Length - 1 - i + suffixLength;
@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.Helpers
 
         private static bool IsPrefix(byte[] pattern, int position)
         {
-            for (int i = position, j = 0; i < pattern.Length; ++i, ++j)
+            for (int i = position, j = 0; i < pattern.Length; i++, j++)
             {
                 if (pattern[i] != pattern[j])
                     return false;
@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.Helpers
         private static int GetSuffixLength(byte[] pattern, int position)
         {
             int length = 0;
-            for (int i = position, j = pattern.Length - 1; i >= 0 && pattern[i] == pattern[j]; --i, --j)
+            for (int i = position, j = pattern.Length - 1; i >= 0 && pattern[i] == pattern[j]; i--, j--)
             {
                 length++;
             }

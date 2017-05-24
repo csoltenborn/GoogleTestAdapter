@@ -13,8 +13,6 @@ namespace GoogleTestAdapter.Helpers
     [TestClass]
     public class UtilsTests
     {
-        private static readonly string GoogleTestIndicator = GoogleTestConstants.ListTestsOption;
-
         [TestMethod]
         [TestCategory(Unit)]
         public void DeleteDirectory_CanNotBeDeleted_ReturnsFalseAndMessage()
@@ -49,44 +47,44 @@ namespace GoogleTestAdapter.Helpers
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void FileContainsString_TestX86Release_ShouldContainGoogleTestIndicator()
+        public void BinaryFileContainsStrings_TestX86Release_ShouldContainGoogleTestIndicator()
         {
-            Utils.FileContainsString(TestResources.Tests_ReleaseX86, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+            Utils.BinaryFileContainsStrings(TestResources.Tests_ReleaseX86, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers).Should().BeTrue();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void FileContainsString_TestX64Release_ShouldContainGoogleTestIndicator()
+        public void BinaryFileContainsStrings_TestX64Release_ShouldContainGoogleTestIndicator()
         {
-            Utils.FileContainsString(TestResources.Tests_ReleaseX64, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+            Utils.BinaryFileContainsStrings(TestResources.Tests_ReleaseX64, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers).Should().BeTrue();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void FileContainsString_TestX86Debug_ShouldContainGoogleTestIndicator()
+        public void BinaryFileContainsStrings_TestX86Debug_ShouldContainGoogleTestIndicator()
         {
-            Utils.FileContainsString(TestResources.Tests_DebugX86, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+            Utils.BinaryFileContainsStrings(TestResources.Tests_DebugX86, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers).Should().BeTrue();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void FileContainsString_TestX64Debug_ShouldContainGoogleTestIndicator()
+        public void BinaryFileContainsStrings_TestX64Debug_ShouldContainGoogleTestIndicator()
         {
-            Utils.FileContainsString(TestResources.Tests_DebugX64, GoogleTestIndicator, Encoding.ASCII).Should().BeTrue();
+            Utils.BinaryFileContainsStrings(TestResources.Tests_DebugX64, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers).Should().BeTrue();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void FileContainsString_TenSecondsWaiter_ShouldNotContainGoogleTestIndicator()
+        public void BinaryFileContainsStrings_TenSecondsWaiter_ShouldNotContainGoogleTestIndicator()
         {
-            Utils.FileContainsString(TestResources.TenSecondsWaiter, GoogleTestIndicator, Encoding.ASCII).Should().BeFalse();
+            Utils.BinaryFileContainsStrings(TestResources.TenSecondsWaiter, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers).Should().BeFalse();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void FileContainsString_EmptyFile_ShouldNotContainGoogleTestIndicator()
+        public void BinaryFileContainsStrings_EmptyFile_ShouldNotContainGoogleTestIndicator()
         {
-            Utils.FileContainsString(TestResources.TenSecondsWaiter, GoogleTestIndicator, Encoding.ASCII).Should().BeFalse();
+            Utils.BinaryFileContainsStrings(TestResources.TenSecondsWaiter, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers).Should().BeFalse();
         }
 
         [TestMethod]
