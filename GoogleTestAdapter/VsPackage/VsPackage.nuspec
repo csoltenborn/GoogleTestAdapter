@@ -6,8 +6,8 @@
     <title>Google Test Adapter</title>
     <authors>Christian Soltenborn, Jonas Gefele</authors>
     <owners>Christian Soltenborn, Jonas Gefele</owners>
-    <description>Adds capability to run and debug C++ tests written with the Google Test framework to Visual Studio. Installing this test adapter via NuGet (as compared to installation through the VS Gallery) lacks configuration through VS Options as well as the toolbar (configuration via solution config files is supported).</description>
-    <summary>Supports running Google Test C++ tests within Visual Studio. Limited configurability compared to installation via VS Gallery.</summary>
+    <description>Adds capability to run and debug C++ tests written with the Google Test framework to Visual Studio. Installing this test adapter via NuGet (as compared to installation through the VS Marketplace) lacks debugging and configuration through VS Options as well as the toolbar (configuration via test settings file is supported). Main use case: build servers.</description>
+    <summary>Supports running Google Test C++ tests within Visual Studio. Limited functionality compared to installation via VS Marketplace.</summary>
     <language>en-US</language>
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/gtest-logo.png</iconUrl>
@@ -18,29 +18,25 @@
     <tags>native gtest Google Test adapter C++ unit integration automated testing</tags>
   </metadata>
   <files>
+    <file src="GoogleTestAdapter.Common.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.Core.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.DiaResolver.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.TestAdapter.dll" target="build\_common\" />
 
-    <file src="GoogleTestAdapter.Common.dll" target="lib\net45\" />
-    <file src="GoogleTestAdapter.Core.dll" target="lib\net45\" />
-    <file src="GoogleTestAdapter.DiaResolver.dll" target="lib\net45\" />
-    <file src="GoogleTestAdapter.TestAdapter.dll" target="lib\net45\" />
-    <file src="GoogleTestAdapter.VsPackage.dll" target="lib\net45\" />
-
-    <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\native\" />
-    <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\native\" />
+    <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="build\_common\" />
+    <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="build\_common\" />
     
-    <file src="NamedPipeWrapper.dll" target="lib\net45\" />
-    <file src="NRegFreeCom.dll" target="lib\net45\" />
-    <file src="CommonMark.dll" target="lib\net45\" />
+    <file src="NamedPipeWrapper.dll" target="build\_common\" />
+    <file src="NRegFreeCom.dll" target="build\_common\" />
 
-    <file src="GoogleTestAdapter.DiaResolver.x86.manifest" target="lib\net45\" />
-    <file src="GoogleTestAdapter.DiaResolver.x64.manifest" target="lib\net45\" />
-    <file src="ComComponents\x86\msdia140.dll" target="lib\net45\ComComponents\x86\" />
-    <file src="ComComponents\x86\msdia140.dll.manifest" target="lib\net45\ComComponents\x86\" />
-    <file src="ComComponents\x64\msdia140.dll" target="lib\net45\ComComponents\x64\" />
-    <file src="ComComponents\x64\msdia140.dll.manifest" target="lib\net45\ComComponents\x64\" />
-
-    <file src="VsPackage.targets" target="build\native\" />
+    <file src="GoogleTestAdapter.DiaResolver.x86.manifest" target="build\_common\" />
+    <file src="ComComponents\x86\msdia140.dll" target="build\_common\ComComponents\x86\" />
+    <file src="ComComponents\x86\msdia140.dll.manifest" target="build\_common\ComComponents\x86\" />
+    <file src="GoogleTestAdapter.DiaResolver.x64.manifest" target="build\_common\" />
+    <file src="ComComponents\x64\msdia140.dll" target="build\_common\ComComponents\x64\" />
+    <file src="ComComponents\x64\msdia140.dll.manifest" target="build\_common\ComComponents\x64\" />
 
     <file src="LICENSE.txt" target="" />
+    <file src="LICENSE.txt" target="lib\native\" /> <!-- does not install without a file in lib\native!? -->
   </files>
 </package>
