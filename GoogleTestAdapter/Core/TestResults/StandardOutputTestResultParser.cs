@@ -17,9 +17,12 @@ namespace GoogleTestAdapter.TestResults
         public const string CrashText = "!! This test has probably CRASHED !!";
 
         /// <summary>
-        /// 1000 ticks = 0.1ms to make sure VS shows "&lt;1ms"
+        /// Google Test reports test duration in complete ms. In case of 0ms,
+        /// we assume the actual duration to be &lt;0.5ms, and thus go for 0.25ms on average
+        /// (which also makes VS display the duration properly as "&lt;1ms").
+        /// 2500 ticks = 0.25ms
         /// </summary>
-        public static readonly TimeSpan ShortTestDuration = TimeSpan.FromTicks(1000);
+        public static readonly TimeSpan ShortTestDuration = TimeSpan.FromTicks(2500);
 
         public TestCase CrashedTestCase { get; private set; }
 
