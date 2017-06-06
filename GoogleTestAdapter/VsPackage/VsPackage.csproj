@@ -364,8 +364,9 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
-    </PostBuildEvent>
+    <PostBuildEvent>echo At least one file is needed within the lib/native folder to convince VS that our package can be installed into native C++ projects. &gt;"$(TargetDir)_.txt"
+
+$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureVsSdkBuildToolsGotInstalled" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

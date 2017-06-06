@@ -37,6 +37,6 @@
     <file src="ComComponents\x64\msdia140.dll.manifest" target="build\_common\ComComponents\x64\" />
 
     <file src="LICENSE.txt" target="" />
-    <file src="LICENSE.txt" target="lib\native\" /> <!-- does not install without a file in lib\native!? -->
+    <file src="_.txt" target="lib\native\" />
   </files>
 </package>
