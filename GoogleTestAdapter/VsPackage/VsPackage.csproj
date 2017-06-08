@@ -134,24 +134,78 @@
     <EmbeddedResource Include="ReleaseNotes\ReleaseNotesDialog.resx">
       <DependentUpon>ReleaseNotesDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.4.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.4.1.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.5.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.5.1.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.1.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.1.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.2.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.3.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.3.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.6.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.7.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.7.1.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.9.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.9.1.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.10.0.md" />
-    <EmbeddedResource Include="Resources\ReleaseNotes\0.10.1.md" />
+    <Content Include="Resources\ReleaseNotes\0.4.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.4.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.5.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.5.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.1.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.2.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.2.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.2.2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.2.3.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.3.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.6.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.7.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.7.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.8.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.9.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.9.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.10.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.10.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

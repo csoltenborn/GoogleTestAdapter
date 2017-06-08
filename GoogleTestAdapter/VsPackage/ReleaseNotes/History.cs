@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
@@ -13,9 +15,13 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             return VersionData[version];
         }
 
-        public static string GetResourceName(Version version)
+        public static string GetReleaseNotesFile(Version version)
         {
-            return $"GoogleTestAdapter.VsPackage.Resources.ReleaseNotes.{version}.md";
+            string assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string releaseNotesDir = Path.Combine(assemblyDir, "Resources", "ReleaseNotes");
+
+            return Path.Combine(releaseNotesDir, $"{version}.md");
         }
 
         private static IDictionary<Version, DateTime> VersionData { get; }
