@@ -24,10 +24,9 @@ namespace GoogleTestAdapter.TestCases
             _logger = logger;
         }
 
-        internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+        internal Dictionary<string, TestCaseLocation> ResolveAllTestCases(string executable, IEnumerable<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            List<TestCaseLocation> testCaseLocationsFound =
-                FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension).ToList();
+            var testCaseLocationsFound = FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension);
 
             if (testCaseLocationsFound.Count == 0)
             {
@@ -41,7 +40,13 @@ namespace GoogleTestAdapter.TestCases
                     string importedBinary = Path.Combine(moduleDirectory, import);
                     if (File.Exists(importedBinary))
                     {
-                        testCaseLocationsFound.AddRange(FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension));
+                        foreach (var testCase in FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension))
+                        {
+                            if (testCaseLocationsFound.ContainsKey(testCase.Key))
+                                continue;
+
+                            testCaseLocationsFound.Add(testCase.Key, testCase.Value);
+                        }
                     }
                 }
             }
@@ -49,8 +54,8 @@ namespace GoogleTestAdapter.TestCases
         }
 
 
-        private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
-            string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+        private Dictionary<string, TestCaseLocation> FindTestCaseLocationsInBinary(
+            string binary, IEnumerable<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
             using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _logger))
             {
@@ -60,17 +65,26 @@ namespace GoogleTestAdapter.TestCases
                     IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
                     _logger.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
-                    return allTestMethodSymbols
-                        .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, tms))) // Contains() instead of == because nsfl might contain namespace
-                        .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
-                        .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
+                    var allTestMethods = allTestMethodSymbols
+                        .ToLookup(nsfl => StripTestSymbolNamespace(nsfl.Symbol), nsfl => ToTestCaseLocation(nsfl, allTraitSymbols));
+
+                    return testMethodSignatures
+                        .ToDictionary(tms => tms, tms => allTestMethods[tms].First());
                 }
                 catch (Exception e)
                 {
                     _logger.DebugError($"Exception while resolving test locations and traits in {binary}\n{e}");
-                    return new TestCaseLocation[0];
+                    return new Dictionary<string, TestCaseLocation>();
                 }
             }
+        }
+
+        private static string StripTestSymbolNamespace(string symbol)
+        {
+            var suffixLength = GoogleTestConstants.TestBodySignature.Length;
+            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1);
+            var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
+            return symbol.Substring(nameStart);
         }
 
         private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
