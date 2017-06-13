@@ -61,3 +61,10 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# Disable merging files for GTA<->TAfGT integrations.
+###############################################################################
+CONTRIBUTING.md        merge=ours
+LICENSE.md             merge=ours
+ThirdPartyNotices.txt  merge=ours
