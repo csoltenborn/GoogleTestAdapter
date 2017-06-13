@@ -37,6 +37,12 @@ namespace GoogleTestAdapter.Helpers
             return string.IsNullOrWhiteSpace(theString) ? theString : theString + appendix;
         }
 
+        internal static TV GetValue<TK, TV>(this IDictionary<TK, TV> dict, TK key, TV defaultValue = default(TV))
+        {
+            TV value;
+            return dict.TryGetValue(key, out value) ? value : defaultValue;
+        }
+
     }
 
 }

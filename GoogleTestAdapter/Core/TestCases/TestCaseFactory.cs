@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestCases
                     .SelectMany(descriptor => _signatureCreator.GetTestMethodSignatures(descriptor).Select(s => Tuple.Create(s, descriptor)))
                     .ToDictionary(testCase => testCase.Item1, testCase => testCase.Item2);
                 var testCaseLocations = GetTestCaseLocations(testMethods.Keys, _settings.GetPathExtension(_executable));
-                return testMethods.Select(testMethod => CreateTestCase(testMethod.Value, testCaseLocations[testMethod.Key])).ToList();
+                return testMethods.Select(testMethod => CreateTestCase(testMethod.Value, testCaseLocations.GetValue(testMethod.Key))).ToList();
             }
 
             return testCaseDescriptors.Select(CreateTestCase).ToList();
