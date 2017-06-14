@@ -1,7 +1,7 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(ConfigurationName)\Tests.Common\GoogleTestAdapter.Tests.Common.dll" #>
-<#@ assembly name="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(ConfigurationName)\Tests.Common.EndToEnd\GoogleTestAdapter.Tests.Common.EndToEnd.dll" #>
+<#@ assembly name="GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="GoogleTestAdapter.Tests.Common.EndToEnd.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common.EndToEnd" #>
