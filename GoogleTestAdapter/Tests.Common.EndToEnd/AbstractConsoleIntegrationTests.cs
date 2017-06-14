@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -38,12 +40,12 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
             Assert.IsNotNull(testDll);
-            Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\VsPackage.Tests.*\\bin\\(Debug|Release)\\GoogleTestAdapter.Tests.Common.EndToEnd.dll$");
+            Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\(Debug|Release)\\VsPackage.Tests.*\\GoogleTestAdapter.Tests.Common.EndToEnd.dll$");
             match.Success.Should().BeTrue();
-            string basePath = match.Groups[1].Value;
+            string binariesPath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
-            testAdapterDir = Path.Combine(basePath, @"GoogleTestAdapter\TestAdapter\bin", debugOrRelease);
-            testSolutionFile = Path.Combine(basePath, @"SampleTests\SampleTests.sln");
+            testAdapterDir = Path.Combine(binariesPath, "GoogleTestAdapter", debugOrRelease, "TestAdapter");
+            testSolutionFile = Path.Combine(binariesPath, @"..\..\SampleTests\SampleTests.sln");
         }
 
 

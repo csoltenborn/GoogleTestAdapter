@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -9,26 +11,21 @@ namespace GoogleTestAdapter.Tests.Common
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class TestResources
     {
-#if DEBUG
-        private const string BuildConfig = "Debug";
-#else
-        private const string BuildConfig = "Release";
-#endif
-
-        public const string SampleTestsSolutionDir = @"..\..\..\..\SampleTests\";
-        public const string TestdataDir = @"..\..\..\Tests.Common\bin\" + BuildConfig + @"\Resources\TestData\";
+        public const string SampleTestsSolutionDir = @"..\..\..\..\..\SampleTests\";
+        public const string SampleTestsOutputDir = @"..\..\..\SampleTests\";
+        public const string TestdataDir = @"..\Tests.Common\Resources\TestData\";
 
         public const string Results0Batch = @"Tests\Returns0.bat";
         public const string Results1Batch = @"Tests\Returns1.bat";
 
         public const int NrOfSampleTests = 88;
-        public const string SampleTests = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
-        public const string SampleTestsRelease = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
+        public const string SampleTests = SampleTestsOutputDir + @"Debug\Tests_gta.exe";
+        public const string SampleTestsRelease = SampleTestsOutputDir + @"Release\Tests_gta.exe";
 
-        public static readonly string LoadTests = Path.Combine(SampleTestsSolutionDir, @"Release\LoadTests_gta.exe");
-        public static readonly string LongRunningTests = Path.Combine(SampleTestsSolutionDir, @"Release\LongRunningTests_gta.exe");
+        public static readonly string LoadTests = Path.Combine(SampleTestsOutputDir, @"Release\LoadTests_gta.exe");
+        public static readonly string LongRunningTests = Path.Combine(SampleTestsOutputDir, @"Release\LongRunningTests_gta.exe");
 
-        public const string HardCrashingSampleTests = SampleTestsSolutionDir + @"Debug\CrashingTests_gta.exe";
+        public const string HardCrashingSampleTests = SampleTestsOutputDir + @"Debug\CrashingTests_gta.exe";
 
         public const string X86Dir = TestdataDir + @"_x86\";
         public const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";

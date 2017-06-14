@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
+        <NuGetPackages>$(EnlistmentRoot)NuGetPackages\</NuGetPackages>
+
+        <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+        <OutputPath>$(OutDir)</OutputPath>
+
+        <IntDir>$(EnlistmentRoot)out\intermediate\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+        <IntermediateOutputPath>$(IntDir)</IntermediateOutputPath>
+        <BaseIntermediateOutputPath>$(IntDir)</BaseIntermediateOutputPath>
+    </PropertyGroup>
+</Project>
