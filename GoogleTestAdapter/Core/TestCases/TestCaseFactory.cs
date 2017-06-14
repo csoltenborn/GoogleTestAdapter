@@ -58,11 +58,8 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
             if (_settings.ParseSymbolInformation)
             {
-                var testMethods = testCaseDescriptors
-                    .SelectMany(descriptor => _signatureCreator.GetTestMethodSignatures(descriptor).Select(s => Tuple.Create(s, descriptor)))
-                    .ToDictionary(testCase => testCase.Item1, testCase => testCase.Item2);
-                var testCaseLocations = GetTestCaseLocations(testMethods.Keys, _settings.GetPathExtension(_executable));
-                return testMethods.Select(testMethod => CreateTestCase(testMethod.Value, testCaseLocations.GetValue(testMethod.Key))).ToList();
+                var testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
+                return testCaseDescriptors.Select(descriptor => CreateTestCase(descriptor, testCaseLocations)).ToList();
             }
 
             return testCaseDescriptors.Select(CreateTestCase).ToList();
@@ -145,8 +142,17 @@ namespace GoogleTestAdapter.TestCases
             return true;
         }
 
-        private Dictionary<string, TestCaseLocation> GetTestCaseLocations(IEnumerable<string> testMethodSignatures, string pathExtension)
+        private Dictionary<string, TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
         {
+            var testMethodSignatures = new HashSet<string>();
+            foreach (var descriptor in testCaseDescriptors)
+            {
+                foreach (var signature in _signatureCreator.GetTestMethodSignatures(descriptor))
+                {
+                    testMethodSignatures.Add(signature);
+                }
+            }
+
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
             var resolver = new TestCaseResolver(_diaResolverFactory, _logger);
             return resolver.ResolveAllTestCases(_executable, testMethodSignatures, filterString, pathExtension);
@@ -158,6 +164,18 @@ namespace GoogleTestAdapter.TestCases
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
             testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, new List<Trait>()));
             return testCase;
+        }
+
+        private TestCase CreateTestCase(TestCaseDescriptor descriptor, Dictionary<string, TestCaseLocation> testCaseLocations)
+        {
+            var signature = _signatureCreator.GetTestMethodSignatures(descriptor)
+                .Select(StripTestSymbolNamespace)
+                .FirstOrDefault(s => testCaseLocations.ContainsKey(s));
+            TestCaseLocation location = null;
+            if (signature != null)
+                testCaseLocations.TryGetValue(signature, out location);
+
+            return CreateTestCase(descriptor, location);
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseLocation location)
@@ -173,6 +191,14 @@ namespace GoogleTestAdapter.TestCases
             _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
             return new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
+        }
+
+        internal static string StripTestSymbolNamespace(string symbol)
+        {
+            var suffixLength = GoogleTestConstants.TestBodySignature.Length;
+            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1);
+            var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
+            return symbol.Substring(nameStart);
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)

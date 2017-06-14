@@ -24,7 +24,7 @@ namespace GoogleTestAdapter.TestCases
             _logger = logger;
         }
 
-        internal Dictionary<string, TestCaseLocation> ResolveAllTestCases(string executable, IEnumerable<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+        internal Dictionary<string, TestCaseLocation> ResolveAllTestCases(string executable, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
             var testCaseLocationsFound = FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension);
 
@@ -40,12 +40,9 @@ namespace GoogleTestAdapter.TestCases
                     string importedBinary = Path.Combine(moduleDirectory, import);
                     if (File.Exists(importedBinary))
                     {
-                        foreach (var testCase in FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension))
+                        foreach (var testCaseLocation in FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension))
                         {
-                            if (testCaseLocationsFound.ContainsKey(testCase.Key))
-                                continue;
-
-                            testCaseLocationsFound.Add(testCase.Key, testCase.Value);
+                            testCaseLocationsFound.Add(testCaseLocation.Key, testCaseLocation.Value);
                         }
                     }
                 }
@@ -55,7 +52,7 @@ namespace GoogleTestAdapter.TestCases
 
 
         private Dictionary<string, TestCaseLocation> FindTestCaseLocationsInBinary(
-            string binary, IEnumerable<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+            string binary, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
             using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _logger))
             {
@@ -65,11 +62,10 @@ namespace GoogleTestAdapter.TestCases
                     IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
                     _logger.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
-                    var allTestMethods = allTestMethodSymbols
-                        .ToLookup(nsfl => StripTestSymbolNamespace(nsfl.Symbol), nsfl => ToTestCaseLocation(nsfl, allTraitSymbols));
-
-                    return testMethodSignatures
-                        .ToDictionary(tms => tms, tms => allTestMethods[tms].First());
+                    return allTestMethodSymbols
+                        .Where(nsfl => testMethodSignatures.Contains(TestCaseFactory.StripTestSymbolNamespace(nsfl.Symbol)))
+                        .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
+                        .ToDictionary(nsfl => TestCaseFactory.StripTestSymbolNamespace(nsfl.Symbol));
                 }
                 catch (Exception e)
                 {
@@ -77,14 +73,6 @@ namespace GoogleTestAdapter.TestCases
                     return new Dictionary<string, TestCaseLocation>();
                 }
             }
-        }
-
-        private static string StripTestSymbolNamespace(string symbol)
-        {
-            var suffixLength = GoogleTestConstants.TestBodySignature.Length;
-            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1);
-            var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
-            return symbol.Substring(nameStart);
         }
 
         private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
