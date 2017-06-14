@@ -60,6 +60,19 @@ namespace GoogleTestAdapter.Tests.Common
         public const string UserTestSettingsForListingTests = TestdataDir + "ListTests.runsettings";
         public const string ProviderDeliveredTestSettings = TestdataDir + @"RunSettingsServiceTests\Provider_delivered.runsettings";
 
+        private static string GetPathIfExists(string path)
+        {
+            if (Directory.Exists(path))
+                return path;
+            else
+                return null;
+        }
+        private static readonly Lazy<string> VS2017Location = new Lazy<string>(() =>
+        {
+            return Environment.GetEnvironmentVariable("GTA_TESTS_VS2017") ??
+                GetPathIfExists($@"C:\Program Files (x86)\Microsoft Visual Studio\{VsVersion.VS2017.Year()}\Enterprise") ??
+                GetPathIfExists($@"C:\Program Files (x86)\Microsoft Visual Studio\{VsVersion.VS2017.Year()}\Community");
+        });
         public static string GetGoldenFileName(string typeName, string testCaseName, string fileExtension)
         {
             return typeName + "__" + testCaseName + fileExtension;
@@ -74,7 +87,7 @@ namespace GoogleTestAdapter.Tests.Common
                 case VsVersion.VS2015:
                     return $@"C:\Program Files (x86)\Microsoft Visual Studio {version:d}.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
                 case VsVersion.VS2017:
-                    return $@"C:\Program Files (x86)\Microsoft Visual Studio\{version.Year()}\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
+                    return Path.Combine(VS2017Location.Value, @"Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe");
                 default:
                     throw new InvalidOperationException();
             }
