@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -42,32 +44,6 @@ namespace GoogleTestAdapter.Tests.Common.UI
             SolutionFile = Path.Combine(basePath, @"SampleTests\SampleTests.sln");
             NoSettingsFile = Path.Combine(basePath, @"SampleTests\No.runsettings");
         }
-
-        public void LaunchVsExperimentalInstance()
-        {
-            _application = VisualStudioInstance.Launch();
-            CoreAppXmlConfiguration.Instance.ApplyTemporarySetting(
-                c => { c.BusyTimeout = c.FindWindowTimeout = TimeOutInMs; });
-
-            _mainWindow = _application.GetWindow(
-                SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
-                InitializeOption.NoCache);
-
-            _testExplorer = new TestExplorer(this, _mainWindow);
-        }
-
-//        public void CleanVsExperimentalInstance()
-//        {
-//            _mainWindow?.Dispose();
-//            _application?.Dispose();
-
-////            _testExplorer = null;
-//            _mainWindow = null;
-//            _application = null;
-
-//            CleanVsExperimentalInstance();
-//        }
-
 
         public void OpenSolution()
         {

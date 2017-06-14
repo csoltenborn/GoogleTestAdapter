@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common.EndToEnd.VisualStudio;
@@ -21,8 +24,7 @@ namespace GoogleTestAdapterUiTests
         public static void SetupVanillaVsExperimentalInstance(TestContext testContext)
         {
             Vsui = new Vsui();
-            Vsui.SetupVanillaVsExperimentalInstance("GoogleTestAdapterUiTests", typeof(UiTests).Name);
-            Vsui.LaunchVsExperimentalInstance();
+            throw new NotImplementedException("UI tests are not functional in the current version.");
         }
 
         [TestInitialize]
@@ -41,7 +43,6 @@ namespace GoogleTestAdapterUiTests
         [ClassCleanup]
         public static void CleanVsExperimentalInstance()
         {
-            Vsui.CleanVsExperimentalInstance();
         }
 
 
