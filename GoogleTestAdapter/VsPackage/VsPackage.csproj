@@ -127,13 +127,6 @@
     <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.9.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.9.1.md" />
-    <None Include="VsPackage.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="VsPackage.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -324,10 +317,6 @@
     <StartAction>Program</StartAction>
     <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
-</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
