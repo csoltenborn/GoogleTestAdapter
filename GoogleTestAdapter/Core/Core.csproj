@@ -101,6 +101,10 @@
     <Compile Include="TestResults\XmlTestResultParser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GtaTestDurations.xsd">
+      <SubType>Designer</SubType>
+      <LogicalName>GtaTestDurations.xsd</LogicalName>
+    </EmbeddedResource>
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>

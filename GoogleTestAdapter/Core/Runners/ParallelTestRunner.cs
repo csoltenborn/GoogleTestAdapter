@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
@@ -86,16 +88,24 @@ namespace GoogleTestAdapter.Runners
 
         private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun)
         {
-            var serializer = new TestDurationSerializer();
-            IDictionary<TestCase, int> durations = serializer.ReadTestDurations(testCasesToRun);
-            foreach (KeyValuePair<TestCase, int> duration in durations)
+            IDictionary<TestCase, int> durations = null;
+            try
             {
-                if (!_schedulingAnalyzer.AddExpectedDuration(duration.Key, duration.Value))
-                    _logger.DebugWarning("TestCase already in analyzer: " + duration.Key.FullyQualifiedName);
+                var serializer = new TestDurationSerializer();
+                durations = serializer.ReadTestDurations(testCasesToRun);
+                foreach (KeyValuePair<TestCase, int> duration in durations)
+                {
+                    if (!_schedulingAnalyzer.AddExpectedDuration(duration.Key, duration.Value))
+                        _logger.DebugWarning("TestCase already in analyzer: " + duration.Key.FullyQualifiedName);
+                }
+            }
+            catch (InvalidTestDurationsException e)
+            {
+                _logger.LogWarning($"Could not read test durations: {e.Message}");
             }
 
             ITestsSplitter splitter;
-            if (durations.Count < testCasesToRun.Length)
+            if (durations == null || durations.Count < testCasesToRun.Length)
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun, _settings);
                 _logger.DebugInfo("Using splitter based on number of tests");
