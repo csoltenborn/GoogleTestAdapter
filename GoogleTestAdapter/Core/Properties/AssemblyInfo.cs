@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -34,3 +36,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.0.0")]
 [assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]

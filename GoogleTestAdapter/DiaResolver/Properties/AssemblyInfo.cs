@@ -1,4 +1,6 @@
-﻿using System.Resources;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Resources;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -36,4 +38,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.1.0.0")]
 [assembly: AssemblyFileVersion("0.1.0.0")]
 [assembly: NeutralResourcesLanguage("en-US")]
-
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
