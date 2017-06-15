@@ -64,12 +64,14 @@ namespace GoogleTestAdapter.Tests.Common
             else
                 return null;
         }
+
         private static readonly Lazy<string> VS2017Location = new Lazy<string>(() =>
         {
             return Environment.GetEnvironmentVariable("GTA_TESTS_VS2017") ??
                 GetPathIfExists($@"C:\Program Files (x86)\Microsoft Visual Studio\{VsVersion.VS2017.Year()}\Enterprise") ??
                 GetPathIfExists($@"C:\Program Files (x86)\Microsoft Visual Studio\{VsVersion.VS2017.Year()}\Community");
         });
+
         public static string GetGoldenFileName(string typeName, string testCaseName, string fileExtension)
         {
             return typeName + "__" + testCaseName + fileExtension;
