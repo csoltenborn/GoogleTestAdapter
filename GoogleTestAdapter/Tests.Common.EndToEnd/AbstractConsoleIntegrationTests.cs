@@ -132,7 +132,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
             }
             else
             {
-                // workaround for build server - wtf?
+                // workaround for build server
                 coveragePattern = @"Attachments:\n.*\.coverage\n";
                 if (Regex.IsMatch(resultString, coveragePattern))
                 {
