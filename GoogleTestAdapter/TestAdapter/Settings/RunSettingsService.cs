@@ -1,15 +1,16 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using EnvDTE;
+using GoogleTestAdapter.Settings;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
+using System.Xml;
 using System.Xml.XPath;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestWindow.Extensibility;
-using EnvDTE;
-using GoogleTestAdapter.Settings;
 using Constants = Microsoft.VisualStudio.TestPlatform.ObjectModel.Constants;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
@@ -59,10 +60,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             {
                 if (File.Exists(solutionRunSettingsFile))
                 {
-                    var solutionRunSettingsDocument = new XPathDocument(solutionRunSettingsFile);
-                    XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
-                    if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
-                        CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
+                    var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+                    settings.XmlResolver = null;
+                    using (var reader = XmlReader.Create(solutionRunSettingsFile, settings))
+                    {
+                        var solutionRunSettingsDocument = new XPathDocument(reader);
+                        XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
+                        if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                            CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
+                    }
                 }
             }
             catch (Exception e)
