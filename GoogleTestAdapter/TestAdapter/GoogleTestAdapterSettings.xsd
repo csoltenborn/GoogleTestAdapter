@@ -1,0 +1,73 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="GoogleTestAdapterSettings" type="GoogleTestAdapterSettingsType" />
+
+  <xsd:complexType name="GoogleTestAdapterSettingsType">
+    <xsd:all>
+      <xsd:element name="SolutionSettings" minOccurs="0" type="SolutionSettingsType" />
+      <xsd:element name="ProjectSettings"  minOccurs="0" type="ProjectSettingsType"  />
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="SolutionSettingsType">
+    <xsd:all>
+      <xsd:element name="Settings" minOccurs="0" type="SettingsType" />
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="ProjectSettingsType">
+    <xsd:sequence>
+      <xsd:element name="Settings" minOccurs="0" maxOccurs="unbounded" type="SettingsType" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SettingsType">
+    <xsd:all>
+      <xsd:element name="PrintTestOutput"              minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="TestDiscoveryRegex"           minOccurs="0" type="xsd:string"  />
+      <xsd:element name="WorkingDir"                   minOccurs="0" type="xsd:string"  />
+      <xsd:element name="PathExtension"                minOccurs="0" type="xsd:string"  />
+      <xsd:element name="CatchExceptions"              minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="BreakOnFailure"               minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="RunDisabledTests"             minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="NrOfTestRepetitions"          minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="-1" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="ShuffleTests"                 minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="ShuffleTestsSeed"             minOccurs="0" type="xsd:int"     />
+      <xsd:element name="TraitsRegexesBefore"          minOccurs="0" type="xsd:string"  />
+      <xsd:element name="TraitsRegexesAfter"           minOccurs="0" type="xsd:string"  />
+      <xsd:element name="TestNameSeparator"            minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="16" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="DebugMode"                    minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="TimestampOutput"              minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="ShowReleaseNotes"             minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="ParseSymbolInformation"       minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="AdditionalTestExecutionParam" minOccurs="0" type="xsd:string"  />
+      <xsd:element name="ParallelTestExecution"        minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="MaxNrOfThreads"               minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="0" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="BatchForTestSetup"            minOccurs="0" type="xsd:string"  />
+      <xsd:element name="BatchForTestTeardown"         minOccurs="0" type="xsd:string"  />
+      <xsd:element name="VisualStudioProcessId"        minOccurs="0" type="xsd:int"     />
+      <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="KillProcessesOnCancel"        minOccurs="0" type="xsd:boolean" />
+    </xsd:all>
+    <xsd:attribute name="ProjectRegex" type="xsd:string" />
+  </xsd:complexType>
+
+</xsd:schema>

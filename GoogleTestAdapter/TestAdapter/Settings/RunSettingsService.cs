@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
@@ -41,9 +43,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var settingsContainer = new RunSettingsContainer();
             settingsContainer.SolutionSettings = new RunSettings();
 
-            if (CopyToUnsetValues(runSettingsNavigator, settingsContainer))
+            try
             {
-                runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
+                if (CopyToUnsetValues(runSettingsNavigator, settingsContainer))
+                {
+                    runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
+                }
+            }
+            catch (InvalidRunSettingsException)
+            {
             }
 
             string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
@@ -91,7 +99,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             if (sourceNavigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
             {
-                var sourceRunSettings = RunSettingsContainer.LoadFromXml(sourceNavigator.ReadSubtree());
+                var sourceRunSettings = RunSettingsContainer.LoadFromXml(sourceNavigator);
                 targetSettingsContainer.GetUnsetValuesFrom(sourceRunSettings);
                 return true;
             }

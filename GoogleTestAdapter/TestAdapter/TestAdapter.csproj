@@ -205,6 +205,10 @@
     <Compile Include="CommonFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GoogleTestAdapterSettings.xsd">
+      <SubType>Designer</SubType>
+      <LogicalName>GoogleTestAdapterSettings.xsd</LogicalName>
+    </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-﻿namespace GoogleTestAdapter.Settings
+﻿// This file has been modified by Microsoft on 6/2017.
+
+namespace GoogleTestAdapter.Settings
 {
 
     /*
@@ -9,6 +11,7 @@
     - handle property serialization in class GoogleTestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
+    - update schema in GoogleTestAdapterSettings.xsd
     - add new option to Solution Items/AllTestSettings.gta.runsettings
     - add default mock configuration in method GoogleTestAdapter.Tests.Common.TestsBase.SetUp()
     */
