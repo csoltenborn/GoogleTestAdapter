@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -429,7 +431,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
         public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
-        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<n<"
+        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<=n<="
                                                            + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
                                                            + ": The given seed is used. See note of option '"
                                                            + OptionShuffleTests

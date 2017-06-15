@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿// This file has been modified by Microsoft on 6/2017.
+
 using GoogleTestAdapter.Settings;
+using System;
+using System.ComponentModel;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -22,7 +25,12 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public int MaxNrOfThreads
         {
             get { return _maxNrOfThreads; }
-            set { SetAndNotify(ref _maxNrOfThreads, value); }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected a number greater than or equal to 0.");
+                SetAndNotify(ref _maxNrOfThreads, value);
+            }
         }
         private int _maxNrOfThreads = SettingsWrapper.OptionMaxNrOfThreadsDefaultValue;
     }

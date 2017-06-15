@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿// This file has been modified by Microsoft on 6/2017.
+
 using GoogleTestAdapter.Settings;
+using System;
+using System.ComponentModel;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -48,7 +51,12 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public int NrOfTestRepetitions
         {
             get { return _nrOfTestRepetitions; }
-            set { SetAndNotify(ref _nrOfTestRepetitions, value); }
+            set
+            {
+                if (value < -1)
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected a number greater than or equal to -1.");
+                SetAndNotify(ref _nrOfTestRepetitions, value);
+            }
         }
         private int _nrOfTestRepetitions = SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue;
 
@@ -68,7 +76,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public int ShuffleTestsSeed
         {
             get { return _shuffleTestsSeed; }
-            set { SetAndNotify(ref _shuffleTestsSeed, value); }
+            set
+            {
+                GoogleTestConstants.ValidateShuffleTestsSeedValue(value);
+                SetAndNotify(ref _shuffleTestsSeed, value);
+            }
         }
         private int _shuffleTestsSeed = SettingsWrapper.OptionShuffleTestsSeedDefaultValue;
 

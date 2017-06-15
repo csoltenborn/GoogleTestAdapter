@@ -1,6 +1,10 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
+using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -16,7 +20,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public string TestDiscoveryRegex
         {
             get { return _testDiscoveryRegex; }
-            set { SetAndNotify(ref _testDiscoveryRegex, value); }
+            set
+            {
+                Utils.ValidateRegex(value);
+                SetAndNotify(ref _testDiscoveryRegex, value);
+            }
         }
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
@@ -90,7 +98,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public string TraitsRegexesBefore
         {
             get { return _traitsRegexesBefore; }
-            set { SetAndNotify(ref _traitsRegexesBefore, value); }
+            set
+            {
+                Utils.ValidateTraitRegexes(value);
+                SetAndNotify(ref _traitsRegexesBefore, value);
+            }
         }
         private string _traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
@@ -100,7 +112,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public string TraitsRegexesAfter
         {
             get { return _traitsRegexesAfter; }
-            set { SetAndNotify(ref _traitsRegexesAfter, value); }
+            set
+            {
+                Utils.ValidateTraitRegexes(value);
+                SetAndNotify(ref _traitsRegexesAfter, value);
+            }
         }
         private string _traitsRegexesAfter = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
@@ -134,7 +150,12 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         public string TestNameSeparator
         {
             get { return _testNameSeparator; }
-            set { SetAndNotify(ref _testNameSeparator, value); }
+            set
+            {
+                if (value.Length > 16)
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected string not longer than 16 characters.");
+                SetAndNotify(ref _testNameSeparator, value);
+            }
         }
         private string _testNameSeparator = SettingsWrapper.OptionTestNameSeparatorDefaultValue;
 

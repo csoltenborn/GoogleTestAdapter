@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 6/2017.
+
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.Helpers
@@ -62,7 +65,7 @@ namespace GoogleTestAdapter.Helpers
         {
             string optionsString = ConcatTraitsRegexes(
                 CreateTraitsRegex("MyTest*", "Type", "Small"),
-                CreateTraitsRegex("*MyOtherTest*", "Category", "Integration"));
+                CreateTraitsRegex(".*MyOtherTest*", "Category", "Integration"));
 
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString(optionsString);
 
@@ -73,9 +76,44 @@ namespace GoogleTestAdapter.Helpers
             result[0].Trait.Name.Should().Be("Type");
             result[0].Trait.Value.Should().Be("Small");
 
-            result[1].Regex.Should().Be("*MyOtherTest*");
+            result[1].Regex.Should().Be(".*MyOtherTest*");
             result[1].Trait.Name.Should().Be("Category");
             result[1].Trait.Value.Should().Be("Integration");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ParseTraitsRegexesString_InvalidRegex_IsIgnored()
+        {
+            string optionsString = ConcatTraitsRegexes(
+                CreateTraitsRegex("GoodRegexOne", "Type", "Small"),
+                CreateTraitsRegex("[[MalformedRegex", "Type", "Medium"),
+                CreateTraitsRegex("GoodRegexTwo", "Type", "Large"));
+
+            List<RegexTraitPair> results = Parser.ParseTraitsRegexesString(optionsString);
+
+            results.Should().NotBeNull();
+            results.Count.Should().Be(2);
+
+            results[0].Regex.Should().Be("GoodRegexOne");
+            results[0].Trait.Value.Should().Be("Small");
+
+            results[1].Regex.Should().Be("GoodRegexTwo");
+            results[1].Trait.Value.Should().Be("Large");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ParseTraitsRegexesString_InvalidRegex_Throws()
+        {
+            string optionsString = ConcatTraitsRegexes(
+                CreateTraitsRegex("GoodRegexOne", "Type", "Small"),
+                CreateTraitsRegex("[[MalformedRegex", "Type", "Medium"),
+                CreateTraitsRegex("GoodRegexTwo", "Type", "Large"));
+
+            Action parse = () => Parser.ParseTraitsRegexesString(optionsString, ignoreErrors: false);
+
+            parse.ShouldThrow<Exception>();
         }
 
 

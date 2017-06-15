@@ -1,4 +1,8 @@
-﻿namespace GoogleTestAdapter
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
+
+namespace GoogleTestAdapter
 {
 
     public static class GoogleTestConstants
@@ -41,6 +45,13 @@
         {
             int optionValue = doBreak ? 1 : 0;
             return $"{BreakOnFailure}={optionValue}";
+        }
+
+        public static void ValidateShuffleTestsSeedValue(int value)
+        {
+            if (value < ShuffleTestsSeedMinValue || value > ShuffleTestsSeedMaxValue)
+                throw new ArgumentOutOfRangeException(nameof(value), value,
+                    $"Expected a number between {ShuffleTestsSeedMinValue} and {ShuffleTestsSeedMaxValue}, inclusive.");
         }
 
     }
