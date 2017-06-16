@@ -1,0 +1,18 @@
+﻿<#@ template language="c#" hostspecific="true" #>
+<#@ output extension=".cs" #>
+<#@ parameter type="System.String" name="TestAdapterFlavor" #>
+// This file was generated from a template. Any modifications will be lost.
+namespace GoogleTestAdapter.TestAdapter
+{
+
+    public partial class TestExecutor
+    {
+        public const string ExecutorUriString =
+<# if (TestAdapterFlavor == "GTA") { #>
+            "executor://GoogleTestRunner/v1";
+<# } else if (TestAdapterFlavor == "TAfGT") { #>
+            "executor://TestAdapterForGoogleTest/v1";
+<# } #>
+    }
+
+}

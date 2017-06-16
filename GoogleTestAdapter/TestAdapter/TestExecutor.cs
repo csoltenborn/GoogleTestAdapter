@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
@@ -18,9 +20,8 @@ namespace GoogleTestAdapter.TestAdapter
 {
 
     [ExtensionUri(ExecutorUriString)]
-    public class TestExecutor : ITestExecutor
+    public partial class TestExecutor : ITestExecutor
     {
-        public const string ExecutorUriString = "executor://GoogleTestRunner/v1";
         public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
         private ILogger _logger;

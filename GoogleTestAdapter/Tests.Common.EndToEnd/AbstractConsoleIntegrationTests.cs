@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
         {
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().ContainEquivalentOf(@"executor://GoogleTestRunner/v1");
+            output.ToLower().Should().MatchRegex(@"executor:\/\/(testadapterforgoogletest|googletestrunner)\/v1");
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.Tests.Common.EndToEnd
         {
             string arguments = CreateListExecutorsArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().Contain(@"executor://GoogleTestRunner/v1");
+            output.Should().MatchRegex(@"executor:\/\/(TestAdapterForGoogleTest|GoogleTestRunner)\/v1");
         }
 
         [TestMethod]

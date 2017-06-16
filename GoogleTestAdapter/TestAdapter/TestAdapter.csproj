@@ -203,6 +203,7 @@
     <Compile Include="TestExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CommonFunctions.cs" />
+    <Compile Include="TestExecutorBranding.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GoogleTestAdapterSettings.xsd">
