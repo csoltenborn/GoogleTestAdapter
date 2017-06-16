@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\ProjectTemplates\Test\GoogleTestPT.zip">
+      <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\Packages\googletest.*.nupkg">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -85,6 +89,10 @@
       <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
       <Name>VsPackage</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NewProjectWizard\NewProjectWizard.csproj">
+      <Project>{483fe0c7-4e8d-4591-be45-eac6b2ea5f4f}</Project>
+      <Name>NewProjectWizard</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="use.txt">
@@ -115,5 +123,6 @@
   <Target Name="BeforeBuild">
     <!-- TODO: Express inputs and output in more idiomatic way. -->
     <Copy SourceFiles="$(OutDir)\..\VsPackage\GoogleTestAdapter.VsPackage.pkgdef" DestinationFolder="." />
+    <Exec Command="PowerShell -command Compress-Archive -Force ..\ProjectTemplates\Test\GoogleTest\* ..\ProjectTemplates\Test\GoogleTestPT.zip" />
   </Target>
 </Project>
