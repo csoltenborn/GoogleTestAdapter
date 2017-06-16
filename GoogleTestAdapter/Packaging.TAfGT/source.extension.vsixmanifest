@@ -6,6 +6,7 @@
     <Description xml:space="preserve">Enables Visual Studio's testing tools with unit tests written for Google Test.</Description>
     <MoreInfo>https://go.microsoft.com/fwlink/?linkid=848768</MoreInfo>
     <License>use.txt</License>
+    <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
     <Icon>Resources\gtest-logo.gif</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>
     <Tags>Unit Test, C++, Google Test, GoogleTest, GTest, Test Explorer, Testing</Tags>
