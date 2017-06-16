@@ -51,6 +51,10 @@
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\ItemTemplates\Test\GoogleTestIT.zip">
+      <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\Packages\googletest.*.nupkg">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -124,5 +128,6 @@
     <!-- TODO: Express inputs and output in more idiomatic way. -->
     <Copy SourceFiles="$(OutDir)\..\VsPackage\GoogleTestAdapter.VsPackage.pkgdef" DestinationFolder="." />
     <Exec Command="PowerShell -command Compress-Archive -Force ..\ProjectTemplates\Test\GoogleTest\* ..\ProjectTemplates\Test\GoogleTestPT.zip" />
+    <Exec Command="PowerShell -command Compress-Archive -Force ..\ItemTemplates\Test\GoogleTest\* ..\ItemTemplates\Test\GoogleTestIT.zip" />
   </Target>
 </Project>
