@@ -83,14 +83,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LICENSE.txt">
+    <Content Include="use.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ThirdPartyNotices.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\gtest-logo.png" />
     <Content Include="Resources\Preview.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\gtest-logo.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
