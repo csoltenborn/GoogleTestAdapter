@@ -1,10 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using GoogleTestAdapter.Common;
+using Microsoft.Dia;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Dia;
-using GoogleTestAdapter.Common;
+using System.Linq;
 
 namespace GoogleTestAdapter.DiaResolver
 {
@@ -21,44 +23,8 @@ namespace GoogleTestAdapter.DiaResolver
         }
     }
 
-
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    internal interface IDiaSession
-    {
-        IDiaSymbol globalScope { get; }
-        void findLinesByAddr(uint seg, uint offset, uint length, out IDiaEnumLineNumbers ppResult);
-    }
-
-    internal class DiaSessionAdapter : IDiaSession
-    {
-        private readonly IDiaSession140 _diaSession140;
-        private readonly IDiaSession110 _diaSession110;
-
-        public DiaSessionAdapter(IDiaSession140 diaSession)
-        {
-            _diaSession140 = diaSession;
-        }
-        public DiaSessionAdapter(IDiaSession110 diaSession)
-        {
-            _diaSession110 = diaSession;
-        }
-
-        public IDiaSymbol globalScope => _diaSession140?.globalScope ?? _diaSession110?.globalScope;
-
-        public void findLinesByAddr(uint seg, uint offset, uint length, out IDiaEnumLineNumbers ppResult)
-        {
-            ppResult = null;
-            _diaSession140?.findLinesByAddr(seg, offset, length, out ppResult);
-            _diaSession110?.findLinesByAddr(seg, offset, length, out ppResult);
-        }
-    }
-
     internal sealed class DiaResolver : IDiaResolver
     {
-        private static readonly Guid Dia140 = new Guid("e6756135-1e65-4d17-8576-610761398c3c");
-        private static readonly Guid Dia120 = new Guid("3bfcea48-620f-4b6b-81f7-b9af75454c7d");
-        private static readonly Guid Dia110 = new Guid("761D3BCD-1304-41D5-94E8-EAC54E4AC172");
-
         private readonly string _binary;
         private readonly ILogger _logger;
         private readonly Stream _fileStream;
@@ -66,12 +32,11 @@ namespace GoogleTestAdapter.DiaResolver
 
         private IDiaDataSource _diaDataSource;
 
-        private bool TryCreateDiaInstance(Guid clsid)
+        private bool TryCreateDiaInstance()
         {
             try
             {
-                Type comType = Type.GetTypeFromCLSID(clsid);
-                _diaDataSource = (IDiaDataSource)Activator.CreateInstance(comType);
+                _diaDataSource = DiaFactory.CreateInstance();
                 return true;
             }
             catch (Exception)
@@ -92,7 +57,7 @@ namespace GoogleTestAdapter.DiaResolver
                 return;
             }
 
-            if (!TryCreateDiaInstance(Dia140) && !TryCreateDiaInstance(Dia120) && !TryCreateDiaInstance(Dia110))
+            if (!TryCreateDiaInstance())
             {
                 _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
                 return;
@@ -102,10 +67,7 @@ namespace GoogleTestAdapter.DiaResolver
 
             _fileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
             _diaDataSource.loadDataFromIStream(new DiaMemoryStream(_fileStream));
-
-            dynamic diaSession110Or140;
-            _diaDataSource.openSession(out diaSession110Or140);
-            _diaSession = new DiaSessionAdapter(diaSession110Or140);
+            _diaDataSource.openSession(out _diaSession);
         }
 
         public void Dispose()

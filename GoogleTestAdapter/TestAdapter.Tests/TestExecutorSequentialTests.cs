@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -65,15 +67,19 @@ namespace GoogleTestAdapter.TestAdapter
 
             Stopwatch stopwatch = new Stopwatch();
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            Thread thread = new Thread(() => executor.RunTests(testCasesToRun.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object));
+
+            Thread canceller = new Thread(() =>
+            {
+                Thread.Sleep(1000);
+                executor.Cancel();
+            });
+            canceller.Start();
 
             stopwatch.Start();
-            thread.Start();
-            Thread.Sleep(1000);
-            executor.Cancel();
-            thread.Join();
+            executor.RunTests(testCasesToRun.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
             stopwatch.Stop();
 
+            canceller.Join();
             stopwatch.ElapsedMilliseconds.Should().BeInRange(lower, upper);
         }
 
