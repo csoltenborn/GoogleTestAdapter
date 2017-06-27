@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
+  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -30,30 +31,27 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E6276CAD-E4C3-4B25-876A-65B265EBFF1A}</ProjectGuid>
-    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GoogleTestAdapter.VsPackage</RootNamespace>
     <AssemblyName>GoogleTestAdapter.VsPackage</AssemblyName>
     <TargetFrameworkVersion>$(FlavoredTargetFrameworkVersion)</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
-    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
-    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
-    <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
-    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
-    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <CreateVsixContainer>false</CreateVsixContainer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RealSign)' == 'True'">
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RealSign)' != 'True'">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -73,8 +71,6 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <DeployExtension>False</DeployExtension>
-    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
-    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\AbstractSwitchBooleanOptionCommand.cs" />
@@ -131,9 +127,6 @@
     <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.9.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.9.1.md" />
-    <None Include="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="VsPackage.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -270,24 +263,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LICENSE.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Resources\gtest-logo.ico" />
-    <Content Include="Resources\gtest-logo.png" />
-    <Content Include="Resources\Preview.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\toolbaricons.png" />
     <VSCTCompile Include="GoogleTestExtensionOptionsPage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
-    <Content Include="Resources\gtest-logo.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Resources\Screenshot.png" />
   </ItemGroup>
   <ItemGroup>
@@ -296,6 +276,10 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <FilesToSign Include="$(OutDir)\GoogleTestAdapter.VsPackage.dll" Condition="'$(RealSign)' == 'True'">
+      <Authenticode>Microsoft</Authenticode>
+      <StrongName>StrongName</StrongName>
+    </FilesToSign>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -318,7 +302,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup>
-    <PreBuildEvent>if exist "$(SolutionDir)Keys\Key_Release.snk" (
+    <PreBuildEvent Condition="'$(RealSign)' != 'True'">if exist "$(SolutionDir)Keys\Key_Release.snk" (
     echo Using Release key for signing assembly
     copy "$(SolutionDir)Keys\Key_Release.snk" "$(ProjectDir)Key.snk"
 ) else (
@@ -345,4 +329,12 @@
     <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
 </PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props'))" />
+    <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets'))" />
+  </Target>
+  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
 </Project>
