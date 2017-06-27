@@ -25,7 +25,7 @@
     <FullClassName>Microsoft.NewProjectWizard.WizardImplementation</FullClassName>
   </WizardExtension>
   <WizardData>
-    <packages repository="extension" repositoryId="GoogleTestAdapterVSIX.e57b9720-dfde-4baa-bcb5-0f75772012b4">
+    <packages repository="extension" repositoryId="GoogleTestAdapterVSIX.8486b54e-5768-482b-b224-7d069ca509d8">
       <package id="$nugetpackage$" version="1.8.0" />
     </packages>
   </WizardData>
