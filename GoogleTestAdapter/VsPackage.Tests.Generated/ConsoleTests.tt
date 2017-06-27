@@ -53,11 +53,15 @@ namespace GoogleTestAdapter.VsPackage
 
 		<#
 		List<Line> lines = reader.GetObjects();
-		IDictionary<string, string> executables = new Dictionary<string, string>();
+		IDictionary<string, Executable> executables = new Dictionary<string, Executable>();
 		foreach (Line line in lines)
 		{
 			if (!executables.ContainsKey(line.TestFile))
-				executables.Add(line.TestFile, line.ActualTestFile);
+				executables.Add(line.TestFile, new Executable
+                {
+                    ActualTestFile = line.ActualTestFile,
+                    Ignore = line.Ignore
+                });
 		#>
 
 		public virtual void <#= line.MethodName #>()
@@ -72,7 +76,7 @@ namespace GoogleTestAdapter.VsPackage
 
 		public virtual void List_TestsOf_<#= executable #>()
 		{
-		    string testExecutable = @"<#= executables[executable] #>";
+		    string testExecutable = @"<#= executables[executable].ActualTestFile #>";
 			string arguments = GetAdapterIntegration() + @" /ListTests:""" + testExecutable + @"""";
 			if (!testExecutable.Contains("_x86") && !testExecutable.Contains("_x64"))
 				arguments +=  " /Settings:\"\"" + TestResources.UserTestSettingsForListingTests + "\"\"";
@@ -107,7 +111,7 @@ namespace GoogleTestAdapter.VsPackage
 
 		<# foreach (Line line in lines) { #>
 
-		[TestMethod]
+		[TestMethod <#= line.Ignore ? ", Ignore" : "" #>]
         [TestCategory(EndToEnd)]
 		public override void <#= line.MethodName #>()
 		{
@@ -117,7 +121,7 @@ namespace GoogleTestAdapter.VsPackage
 
 		<# foreach (string executable in executables.Keys) { #>
 
-		[TestMethod]
+		[TestMethod <#= executables[executable].Ignore ? ", Ignore" : "" #>]
         [TestCategory(EndToEnd)]
 		public override void List_TestsOf_<#= executable #>()
 		{
@@ -243,6 +247,7 @@ namespace GoogleTestAdapter.VsPackage
 		internal string TestCaseFilter;
 		internal bool EnableCodeCoverage;
 		internal bool InIsolation;
+		internal bool Ignore;
 
 		internal string MethodName 
 		{
@@ -289,7 +294,13 @@ namespace GoogleTestAdapter.VsPackage
 			}
 		}
     }
-	
+
+    struct Executable
+    {
+        internal string ActualTestFile;
+        internal bool Ignore;
+    }
+
     class TestcaseCsvReader : CsvReader<Line>
     {
         internal TestcaseCsvReader(string csvFile) : base(csvFile, '\t', true) { }
@@ -305,6 +316,7 @@ namespace GoogleTestAdapter.VsPackage
                 TestCaseFilter = columns[2],
                 EnableCodeCoverage = bool.Parse(columns[3]),
                 InIsolation = bool.Parse(columns[4]),
+                Ignore = bool.Parse(columns[5]),
 				ActualSettingsFile = settingsFile 
 					? TestResources.UserTestSettingsForGeneratedTests 
 					: ""
