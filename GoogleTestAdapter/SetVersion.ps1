@@ -17,10 +17,11 @@ $testadaptertests_assembly_info = "TestAdapter.Tests\Properties\AssemblyInfo.cs"
 
 $vsdebuggerattacherwrapper_assembly_info = "VsDebuggerAttacherWrapper\Properties\AssemblyInfo.cs"
 
-$vsix_assembly_info = "VsPackage\Properties\AssemblyInfo.cs"
-$vsixtests_assembly_info = "VsPackage.Tests\Properties\AssemblyInfo.cs"
-$vsixunittests_assembly_info = "VsPackage.Tests.Unit\Properties\AssemblyInfo.cs"
-$vsixgeneratedtests_assembly_info = "VsPackage.Tests.Generated\Properties\AssemblyInfo.cs"
+$vspackage_gta_assembly_info = "VsPackage.GTA\Properties\AssemblyInfo.cs"
+$vspackage_gta_unittests_assembly_info = "VsPackage.GTA.Tests.Unit\Properties\AssemblyInfo.cs"
+$vspackage_tafgt_assembly_info = "VsPackage.TAfGT\Properties\AssemblyInfo.cs"
+$vspackagetests_assembly_info = "VsPackage.Tests\Properties\AssemblyInfo.cs"
+$vspackagegeneratedtests_assembly_info = "VsPackage.Tests.Generated\Properties\AssemblyInfo.cs"
 
 $vsix_manifest_gta = "Packaging.GTA\source.extension.vsixmanifest"
 $vsix_manifest_tafgt = "Packaging.TAfGT\source.extension.vsixmanifest"
@@ -44,10 +45,11 @@ $wizard_assembly_info = "NewProjectWizard\Properties\AssemblyInfo.cs"
 
 (Get-Content $vsdebuggerattacherwrapper_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsdebuggerattacherwrapper_assembly_info
 
-(Get-Content $vsix_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsix_assembly_info
-(Get-Content $vsixtests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsixtests_assembly_info
-(Get-Content $vsixunittests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsixunittests_assembly_info
-(Get-Content $vsixgeneratedtests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsixgeneratedtests_assembly_info
+(Get-Content $vspackage_gta_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackage_gta_assembly_info
+(Get-Content $vspackage_gta_unittests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackage_gta_unittests_assembly_info
+(Get-Content $vspackage_tafgt_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackage_tafgt_assembly_info
+(Get-Content $vspackagetests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackagetests_assembly_info
+(Get-Content $vspackagegeneratedtests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackagegeneratedtests_assembly_info
 
 (Get-Content $vsix_manifest_gta) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsix_manifest_gta
 (Get-Content $vsix_manifest_tafgt) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsix_manifest_tafgt

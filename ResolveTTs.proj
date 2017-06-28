@@ -47,9 +47,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>App.config</OutputFileName>
     </Content>
-    <Content Include="GoogleTestAdapter\VsPackage\packages.config.tt">
+    <Content Include="GoogleTestAdapter\VsPackage.GTA.Tests.Unit\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <OutputFileName>packages.config</OutputFileName>
+      <OutputFileName>app.config</OutputFileName>
     </Content>
     <Content Include="GoogleTestAdapter\VsPackage.Tests\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -60,10 +60,6 @@
       <OutputFileName>packages.config</OutputFileName>
     </Content>
     <Content Include="GoogleTestAdapter\VsPackage.Tests.Generated\app.config.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <OutputFileName>app.config</OutputFileName>
-    </Content>
-    <Content Include="GoogleTestAdapter\VsPackage.Tests.Unit\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
     </Content>

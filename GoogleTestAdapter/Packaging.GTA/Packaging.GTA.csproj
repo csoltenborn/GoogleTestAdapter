@@ -80,9 +80,9 @@
       <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
       <Name>VsDebuggerAttacherWrapper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VsPackage\VsPackage.csproj">
+    <ProjectReference Include="..\VsPackage.GTA\VsPackage.GTA.csproj">
       <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
-      <Name>VsPackage</Name>
+      <Name>VsPackage.GTA</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -99,7 +99,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="GoogleTestAdapter.VsPackage.pkgdef">
+    <Content Include="GoogleTestAdapter.VsPackage.GTA.pkgdef">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -112,6 +112,6 @@
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
   <Target Name="BeforeBuild">
     <!-- TODO: Express inputs and output in more idiomatic way. -->
-    <Copy SourceFiles="$(OutDir)\..\VsPackage\GoogleTestAdapter.VsPackage.pkgdef" DestinationFolder="." />
+    <Copy SourceFiles="$(OutDir)\..\VsPackage.GTA\GoogleTestAdapter.VsPackage.GTA.pkgdef" DestinationFolder="." />
   </Target>
 </Project>

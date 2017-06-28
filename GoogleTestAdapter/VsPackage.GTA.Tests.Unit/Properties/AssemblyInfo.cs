@@ -1,15 +1,17 @@
-﻿using System.Reflection;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GoogleTestAdapter.VsPackage.Tests.Unit")]
+[assembly: AssemblyTitle("GoogleTestAdapter.VsPackage.GTA.Tests.Unit")]
 [assembly: AssemblyDescription("Unit tests for the Google Test Adapter VS integration")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
-[assembly: AssemblyProduct("GoogleTestAdapter.VsPackage.Tests.Unit")]
+[assembly: AssemblyProduct("GoogleTestAdapter.VsPackage.GTA.Tests.Unit")]
 [assembly: AssemblyCopyright("Copyright © 2015, 2016, 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

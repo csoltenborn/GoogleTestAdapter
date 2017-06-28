@@ -15,7 +15,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         public static string GetResourceName(Version version)
         {
-            return $"GoogleTestAdapter.VsPackage.Resources.ReleaseNotes.{version}.md";
+            return $"GoogleTestAdapter.VsPackage.GTA.Resources.ReleaseNotes.{version}.md";
         }
 
         private static IDictionary<Version, DateTime> VersionData { get; }

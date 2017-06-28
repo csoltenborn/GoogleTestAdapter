@@ -26,9 +26,9 @@
         $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.TestAdapter.dll
       </HintPath>
     </Reference>
-    <Reference Include="GoogleTestAdapter.VsPackage.dll">
+    <Reference Include="GoogleTestAdapter.VsPackage.GTA.dll">
       <HintPath>
-        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.VsPackage.dll
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.VsPackage.GTA.dll
       </HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll">

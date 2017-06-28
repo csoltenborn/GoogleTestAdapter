@@ -89,9 +89,9 @@
       <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
       <Name>VsDebuggerAttacherWrapper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VsPackage\VsPackage.csproj">
-      <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
-      <Name>VsPackage</Name>
+    <ProjectReference Include="..\VsPackage.TAfGT\VsPackage.TAfGT.csproj">
+      <Project>{55294B5F-A075-43F2-B0E9-2B11925E8B91}</Project>
+      <Name>VsPackage.TAfGT</Name>
     </ProjectReference>
     <ProjectReference Include="..\NewProjectWizard\NewProjectWizard.csproj">
       <Project>{483fe0c7-4e8d-4591-be45-eac6b2ea5f4f}</Project>
@@ -116,7 +116,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="GoogleTestAdapter.VsPackage.pkgdef">
+    <Content Include="GoogleTestAdapter.VsPackage.TAfGT.pkgdef">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -126,7 +126,7 @@
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
   <Target Name="BeforeBuild">
     <!-- TODO: Express inputs and output in more idiomatic way. -->
-    <Copy SourceFiles="$(OutDir)\..\VsPackage\GoogleTestAdapter.VsPackage.pkgdef" DestinationFolder="." />
+    <Copy SourceFiles="$(OutDir)\..\VsPackage.TAfGT\GoogleTestAdapter.VsPackage.TAfGT.pkgdef" DestinationFolder="." />
     <Exec Command="PowerShell -command Compress-Archive -Force ..\ProjectTemplates\Test\GoogleTest\* ..\ProjectTemplates\Test\GoogleTestPT.zip" />
     <Exec Command="PowerShell -command Compress-Archive -Force ..\ItemTemplates\Test\GoogleTest\* ..\ItemTemplates\Test\GoogleTestIT.zip" />
   </Target>

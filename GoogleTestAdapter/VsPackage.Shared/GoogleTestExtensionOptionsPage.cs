@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +15,6 @@ using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
 using GoogleTestAdapter.VsPackage.OptionsPages;
-using GoogleTestAdapter.VsPackage.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -27,7 +28,7 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), SettingsWrapper.OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage
+    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
 
@@ -59,9 +60,7 @@ namespace GoogleTestAdapter.VsPackage
             SwitchParallelExecutionOptionCommand.Initialize(this);
             SwitchPrintTestOutputOptionCommand.Initialize(this);
 
-            var thread = new Thread(DisplayReleaseNotesIfNecessary);
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
+            DisplayReleaseNotesIfNecessary();
         }
 
         public bool CatchExtensions
@@ -104,40 +103,6 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
-        private void DisplayReleaseNotesIfNecessary()
-        {
-            var versionProvider = new VersionProvider(this);
-
-            Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
-            Version currentVersion = versionProvider.CurrentVersion;
-
-            versionProvider.UpdateLastVersion();
-
-            if (!_generalOptions.ShowReleaseNotes
-                || (formerlyInstalledVersion != null && formerlyInstalledVersion >= currentVersion))
-                return;
-
-            var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion);
-            DisplayReleaseNotes(creator.CreateHtml());
-        }
-
-        private void DisplayReleaseNotes(string html)
-        {
-            string htmlFileBase = Path.GetTempFileName();
-            string htmlFile = Path.ChangeExtension(htmlFileBase, "html");
-            File.Delete(htmlFileBase);
-
-            File.WriteAllText(htmlFile, html);
-
-            using (var dialog = new ReleaseNotesDialog {HtmlFile = new Uri($"file://{htmlFile}")})
-            {
-                dialog.ShowReleaseNotesChanged +=
-                    (sender, args) => _generalOptions.ShowReleaseNotes = args.ShowReleaseNotes;
-                dialog.Closed += (sender, args) => File.Delete(htmlFile);
-                dialog.ShowDialog();
-            }
-        }
-
         private void RefreshVsUi()
         {
             var vsShell = (IVsUIShell)GetService(typeof(IVsUIShell));
@@ -167,7 +132,7 @@ namespace GoogleTestAdapter.VsPackage
                 ParseSymbolInformation = _generalOptions.ParseSymbolInformation,
                 DebugMode = _generalOptions.DebugMode,
                 TimestampOutput = _generalOptions.TimestampOutput,
-                ShowReleaseNotes = _generalOptions.ShowReleaseNotes,
+                ShowReleaseNotes = ShowReleaseNotes,
                 AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = _generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,

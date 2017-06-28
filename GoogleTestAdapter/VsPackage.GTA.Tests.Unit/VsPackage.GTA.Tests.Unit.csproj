@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GoogleTestAdapter.VsPackage</RootNamespace>
-    <AssemblyName>GoogleTestAdapter.VsPackage.Tests.Unit</AssemblyName>
+    <AssemblyName>GoogleTestAdapter.VsPackage.GTA.Tests.Unit</AssemblyName>
     <TargetFrameworkVersion>$(FlavoredTargetFrameworkVersion)</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -76,9 +76,9 @@
       <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
       <Name>Tests.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VsPackage\VsPackage.csproj">
+    <ProjectReference Include="..\VsPackage.GTA\VsPackage.GTA.csproj">
       <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
-      <Name>VsPackage</Name>
+      <Name>VsPackage.GTA</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

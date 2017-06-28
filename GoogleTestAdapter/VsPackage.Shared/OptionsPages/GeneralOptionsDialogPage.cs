@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public class GeneralOptionsDialogPage : NotifyingDialogPage
+    public partial class GeneralOptionsDialogPage : NotifyingDialogPage
     {
         #region Test execution
 
@@ -188,16 +188,6 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set { SetAndNotify(ref _timestampOutput, value); }
         }
         private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
-
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionShowReleaseNotes)]
-        [Description(SettingsWrapper.OptionShowReleaseNotesDescription)]
-        public bool ShowReleaseNotes
-        {
-            get { return _showReleaseNotes; }
-            set { SetAndNotify(ref _showReleaseNotes, value); }
-        }
-        private bool _showReleaseNotes = SettingsWrapper.OptionShowReleaseNotesDefaultValue;
 
         #endregion
     }
