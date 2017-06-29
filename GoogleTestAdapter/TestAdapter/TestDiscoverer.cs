@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
@@ -44,7 +46,7 @@ namespace GoogleTestAdapter.TestAdapter
                 return;
             CommonFunctions.LogVisualStudioVersion(_logger);
 
-            _logger.LogInfo("Google Test Adapter: Test discovery starting...");
+            _logger.LogInfo(Strings.Instance.TestDiscoveryStarting);
             _logger.DebugInfo($"Solution settings: {_settings}");
 
             try

@@ -30,20 +30,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="$(MSBuildThisFileDirectory)GoogleTestExtensionOptionsPage.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-    </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\gtest-logo.ico" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\Screenshot.png" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\toolbaricons.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\VSPackage.resx">
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -9,6 +9,8 @@ namespace GoogleTestAdapter.VsPackage
 {
     public partial class GoogleTestExtensionOptionsPage
     {
+        private const string OptionsCategoryName = "Google Test Adapter";
+
         private void DisplayReleaseNotesIfNecessary()
         {
             var thread = new Thread(DisplayReleaseNotesIfNecessaryProc);

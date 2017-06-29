@@ -125,7 +125,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             CommonFunctions.LogVisualStudioVersion(_logger);
 
-            _logger.LogInfo("Google Test Adapter: Test execution starting...");
+            _logger.LogInfo(Strings.Instance.TestExecutionStarting);
             _logger.DebugInfo($"Solution settings: {_settings}");
 
             return stopwatch;

@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,7 +8,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GoogleTestAdapter.Common")]
-[assembly: AssemblyDescription("Common infrastructure for the Google Test Adapter projects")]
+[assembly: AssemblyDescription("Common infrastructure for the Test Adapter projects")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
 [assembly: AssemblyProduct("GoogleTestAdapter.Common")]

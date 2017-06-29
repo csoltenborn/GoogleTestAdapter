@@ -5,5 +5,8 @@ namespace GoogleTestAdapter.Common
 {
     public class Strings : IStrings
     {
+        public string TroubleShootingLink => "Check out Test Adapter for Google Test's trouble shooting section at https://go.microsoft.com/fwlink/?linkid=848168";
+        public string TestDiscoveryStarting => "Test Adapter for Google Test: Test discovery starting...";
+        public string TestExecutionStarting => "Test Adapter for Google Test: Test execution starting...";
     }
 }

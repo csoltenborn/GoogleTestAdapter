@@ -141,8 +141,6 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        public const string OptionsCategoryName = "Google Test Adapter";
-
         public const string CategoryTestExecutionName = "Test execution";
         public const string CategoryTraitsName = "Regexes for trait assignment";
         public const string CategoryRuntimeBehaviorName = "Runtime behavior";

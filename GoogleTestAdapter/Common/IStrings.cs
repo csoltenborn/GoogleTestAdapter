@@ -5,5 +5,8 @@ namespace GoogleTestAdapter.Common
 {
     public interface IStrings
     {
+        string TroubleShootingLink { get; }
+        string TestDiscoveryStarting { get; }
+        string TestExecutionStarting { get; }
     }
 }

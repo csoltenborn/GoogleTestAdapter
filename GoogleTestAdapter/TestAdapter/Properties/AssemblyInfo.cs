@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GoogleTestAdapter.GoogleTestAdapter")]
-[assembly: AssemblyDescription("Provides main VS integration of the Google Test Adapter")]
+[assembly: AssemblyDescription("Provides main Visual Studio integration of the Test Adapter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
 [assembly: AssemblyProduct("GoogleTestAdapter.GoogleTestAdapter")]

@@ -2,9 +2,9 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="GoogleTestAdapterVSIX.8486b54e-5768-482b-b224-7d069ca509d8" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn, Jonas Gefele" />
-    <DisplayName>Google Test Adapter</DisplayName>
-    <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
-    <MoreInfo>https://github.com/csoltenborn/GoogleTestAdapter</MoreInfo>
+    <DisplayName>Test Adapter for Google Test</DisplayName>
+    <Description xml:space="preserve">Enables Visual Studio's testing tools with unit tests written for Google Test.</Description>
+    <MoreInfo>https://go.microsoft.com/fwlink/?linkid=848768</MoreInfo>
     <License>use.txt</License>
     <Icon>Resources\gtest-logo.gif</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>

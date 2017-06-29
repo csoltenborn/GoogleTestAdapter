@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -139,7 +141,7 @@ namespace GoogleTestAdapter.Runners
             logger.LogError($"{threadName}Failed to run test executable '{executable}': {exception.Message}");
             logger.DebugError($@"{threadName}Stacktrace:{Environment.NewLine}{exception.StackTrace}");
             logger.LogError(
-                $"{threadName}Check out Google Test Adapter's trouble shooting section at https://github.com/csoltenborn/GoogleTestAdapter#trouble_shooting");
+                $"{threadName}{Strings.Instance.TroubleShootingLink}");
             logger.LogError(
                 $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
         }
