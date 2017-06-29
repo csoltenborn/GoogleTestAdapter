@@ -23,6 +23,7 @@
     <file src="CommonMark.dll" target="lib\native\" />
     
     <file src="GoogleTestAdapter.Common.dll" target="lib\net45\" />
+    <file src="GoogleTestAdapter.Common.Dynamic.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.Core.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.DiaResolver.dll" target="lib\net45\" />
     <file src="GoogleTestAdapter.TestAdapter.dll" target="lib\net45\" />

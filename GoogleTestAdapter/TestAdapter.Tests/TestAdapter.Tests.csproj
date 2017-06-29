@@ -117,6 +117,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Dynamic.GTA\Common.Dynamic.GTA.csproj">
+      <Project>{17f4b73f-e4d3-4e40-98fc-788b1d0f8225}</Project>
+      <Name>Common.Dynamic.GTA</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
       <Name>Common</Name>
