@@ -19,6 +19,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
     </Content>
+    <Content Include="GoogleTestAdapter\TestAdapter.Tests\packages.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>packages.config</OutputFileName>
+    </Content>
     <Content Include="GoogleTestAdapter\Tests.Common\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>

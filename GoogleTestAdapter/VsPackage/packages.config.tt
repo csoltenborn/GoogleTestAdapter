@@ -4,10 +4,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packages>
   <package id="CommonMark.NET" version="0.15.1" targetFramework="net45" />
+<# if (TestAdapterFlavor == "GTA") { #>
   <package id="Microsoft.TestPlatform.ObjectModel" version="11.0.0" targetFramework="net45" />
   <package id="Microsoft.VisualStudio.TestWindow.Interfaces" version="11.0.61030" targetFramework="net45" />
-<# if (TestAdapterFlavor == "GTA") { #>
   <package id="Microsoft.VSSDK.BuildTools" version="15.0.26201" targetFramework="net45" developmentDependency="true" />
+<# } else if (TestAdapterFlavor == "TAfGT") { #>
+  <package id="Microsoft.TestPlatform.ObjectModel" version="15.0.1" targetFramework="net46" />
+  <package id="Microsoft.VisualStudio.TestWindow.Interfaces" version="15.0.26510-d15rel" targetFramework="net46" />
 <# } #>
   <package id="NuGet.CommandLine" version="3.5.0" targetFramework="net45" developmentDependency="true" />
 <# if (TestAdapterFlavor == "GTA") { #>
