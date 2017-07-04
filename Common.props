@@ -12,4 +12,12 @@
         <IntermediateOutputPath>$(IntDir)</IntermediateOutputPath>
         <BaseIntermediateOutputPath>$(IntDir)</BaseIntermediateOutputPath>
     </PropertyGroup>
+
+    <!-- Commonly used test adapter-flavored properties. -->
+    <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'GTA'">
+        <FlavoredTargetFrameworkVersion>v4.5</FlavoredTargetFrameworkVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'TAfGT'">
+        <FlavoredTargetFrameworkVersion>v4.6</FlavoredTargetFrameworkVersion>
+    </PropertyGroup>
 </Project>
