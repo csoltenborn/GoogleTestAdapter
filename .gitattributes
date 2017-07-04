@@ -65,6 +65,7 @@
 ###############################################################################
 # Disable merging files for GTA<->TAfGT integrations.
 ###############################################################################
-CONTRIBUTING.md        merge=ours
-LICENSE.md             merge=ours
-ThirdPartyNotices.txt  merge=ours
+CONTRIBUTING.md          merge=ours
+LICENSE.md               merge=ours
+TestAdapterFlavor.props  merge=ours
+ThirdPartyNotices.txt    merge=ours
