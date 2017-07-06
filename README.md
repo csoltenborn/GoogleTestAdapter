@@ -146,6 +146,13 @@ Google Test Adapter has been created using Visual Studio 2015 and NuGet, which a
 * `VsPackage` bundles everything into a Visual Studio Extension Package with an option page and .VSIX installer
 * `*.Tests` contain the tests belonging to the respective project
 
+#### Initial setup
+
+To build the test adapter the following one-time setup steps need to be taken:
+1) Ensure `TestAdapterFlavor.props` is set to the desired value.
+2) In Visual Studio's "Developer Command Prompt" execute `msbuild ResolveTTs.proj`.
+3) Follow additional instructions in `GoogleTestAdapter\DiaResolver\README.md`.
+
 #### Executing the tests
 
 Many of the tests depend on the second solution *SampleTests*, which contains a couple of Google Test tests. Before any of the tests can be run, this second solution needs to be built in Debug mode for X86; this is done for you by a post-build event of project Core.Tests. Afterwards, the GTA tests can be run and should all pass.
