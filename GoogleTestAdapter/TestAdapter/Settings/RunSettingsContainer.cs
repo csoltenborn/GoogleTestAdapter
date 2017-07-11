@@ -50,17 +50,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             _solutionSettings = serializationContainer.SolutionSettings.Settings;
             ProjectSettings.AddRange(serializationContainer.SettingsList);
-            foreach (RunSettings projectSettings in ProjectSettings)
-            {
-                projectSettings.GetUnsetValuesFrom(_solutionSettings);
-            }
         }
 
         public RunSettings GetSettingsForExecutable(string executable)
         {
             return
-                ProjectSettings.FirstOrDefault(s => Regex.IsMatch(executable, s.ProjectRegex))
-                ?? SolutionSettings;
+                ProjectSettings.FirstOrDefault(s => Regex.IsMatch(executable, s.ProjectRegex));
         }
 
         public override XmlElement ToXml()
@@ -126,18 +121,18 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             SolutionSettings.GetUnsetValuesFrom(other.SolutionSettings);
 
-            var allOtherProjectSettings = new List<RunSettings>(other.ProjectSettings);
+            var unmatchedProjectSettings = new List<RunSettings>(other.ProjectSettings);
             foreach (RunSettings myProjectSettings in ProjectSettings)
             {
                 var otherProjectSettings =
-                    allOtherProjectSettings.FirstOrDefault(s => myProjectSettings.ProjectRegex == s.ProjectRegex);
+                    unmatchedProjectSettings.FirstOrDefault(s => myProjectSettings.ProjectRegex == s.ProjectRegex);
                 if (otherProjectSettings != null)
                 {
-                    allOtherProjectSettings.Remove(otherProjectSettings);
+                    unmatchedProjectSettings.Remove(otherProjectSettings);
                     myProjectSettings.GetUnsetValuesFrom(otherProjectSettings);
                 }
             }
-            foreach (RunSettings remainingProjectSettings in allOtherProjectSettings)
+            foreach (RunSettings remainingProjectSettings in unmatchedProjectSettings)
             {
                 ProjectSettings.Add(remainingProjectSettings);
             }

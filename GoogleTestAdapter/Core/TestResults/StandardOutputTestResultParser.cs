@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 
@@ -24,15 +26,13 @@ namespace GoogleTestAdapter.TestResults
         private readonly List<string> _consoleOutput;
         private readonly List<TestCase> _testCasesRun;
         private readonly ILogger _logger;
-        private readonly string _baseDir;
 
 
-        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, ILogger logger, string baseDir)
+        public StandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun, IEnumerable<string> consoleOutput, ILogger logger)
         {
             _consoleOutput = consoleOutput.ToList();
             _testCasesRun = testCasesRun.ToList();
             _logger = logger;
-            _baseDir = baseDir;
         }
 
 
@@ -42,7 +42,10 @@ namespace GoogleTestAdapter.TestResults
             int indexOfNextTestcase = FindIndexOfNextTestcase(0);
             while (indexOfNextTestcase >= 0)
             {
-                testResults.Add(CreateTestResult(indexOfNextTestcase));
+                var testResult = CreateTestResult(indexOfNextTestcase);
+                if (testResult != null)
+                    testResults.Add(testResult);
+
                 indexOfNextTestcase = FindIndexOfNextTestcase(indexOfNextTestcase + 1);
             }
             return testResults;
@@ -56,6 +59,11 @@ namespace GoogleTestAdapter.TestResults
             string line = _consoleOutput[currentLineIndex++];
             string qualifiedTestname = RemovePrefix(line).Trim();
             TestCase testCase = FindTestcase(qualifiedTestname);
+            if (testCase == null)
+            {
+                _logger.DebugWarning($"No known test case for test result of line '{line}' - are you repeating a test run, but tests have changed in the meantime?");
+                return null;
+            }
 
             if (currentLineIndex >= _consoleOutput.Count)
             {
@@ -63,18 +71,22 @@ namespace GoogleTestAdapter.TestResults
                 return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), CrashText, "");
             }
 
-            line = _consoleOutput[currentLineIndex++];
+            line = _consoleOutput[currentLineIndex];
+            SplitLineIfNecessary(ref line, currentLineIndex);
+            currentLineIndex++;
+
 
             string errorMsg = "";
             while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex <= _consoleOutput.Count)
             {
                 errorMsg += line + "\n";
                 line = currentLineIndex < _consoleOutput.Count ? _consoleOutput[currentLineIndex] : "";
+                SplitLineIfNecessary(ref line, currentLineIndex);
                 currentLineIndex++;
             }
             if (IsFailedLine(line))
             {
-                ErrorMessageParser parser = new ErrorMessageParser(errorMsg, _baseDir);
+                ErrorMessageParser parser = new ErrorMessageParser(errorMsg);
                 parser.Parse();
                 return CreateFailedTestResult(testCase, ParseDuration(line), parser.ErrorMessage, parser.ErrorStackTrace);
             }
@@ -89,6 +101,22 @@ namespace GoogleTestAdapter.TestResults
             return CreateFailedTestResult(testCase, TimeSpan.FromMilliseconds(0), message, "");
         }
 
+        private void SplitLineIfNecessary(ref string line, int currentLineIndex)
+        {
+            Match testEndMatch = StreamingStandardOutputTestResultParser.PrefixedLineRegex.Match(line);
+            if (testEndMatch.Success)
+            {
+                string restOfErrorMessage = testEndMatch.Groups[1].Value;
+                string testEndPart = testEndMatch.Groups[2].Value;
+
+                _consoleOutput.RemoveAt(currentLineIndex);
+                _consoleOutput.Insert(currentLineIndex, testEndPart);
+                _consoleOutput.Insert(currentLineIndex, restOfErrorMessage);
+
+                line = restOfErrorMessage;
+            }
+        }
+
         private TimeSpan ParseDuration(string line)
         {
             return ParseDuration(line, _logger);
@@ -99,12 +127,12 @@ namespace GoogleTestAdapter.TestResults
             int durationInMs = 1;
             try
             {
-                // TODO check format in gtest code, replace with regex
+                // duration is a 64-bit number (no decimals) in the user's locale
                 int indexOfOpeningBracket = line.LastIndexOf('(');
                 int lengthOfDurationPart = line.Length - indexOfOpeningBracket - 2;
                 string durationPart = line.Substring(indexOfOpeningBracket + 1, lengthOfDurationPart);
                 durationPart = durationPart.Replace("ms", "").Trim();
-                durationInMs = int.Parse(durationPart);
+                durationInMs = int.Parse(durationPart, NumberStyles.Number);
             }
             catch (Exception)
             {
@@ -166,7 +194,7 @@ namespace GoogleTestAdapter.TestResults
 
         public static TestCase FindTestcase(string qualifiedTestname, IList<TestCase> testCasesRun)
         {
-            return testCasesRun.Single(tc => tc.FullyQualifiedName == qualifiedTestname);
+            return testCasesRun.SingleOrDefault(tc => tc.FullyQualifiedName == qualifiedTestname);
         }
 
         public static bool IsRunLine(string line)

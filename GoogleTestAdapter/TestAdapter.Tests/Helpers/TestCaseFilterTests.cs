@@ -123,6 +123,59 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             AssertAreEqual(testCases, filteredTestCases);
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void SetPropertyValue_Trait_CorrectValidation()
+        {
+            var testCase = TestDataCreator.CreateDummyTestCases("Foo.Bar").Single().ToVsTestCase();
+            testCase.Traits.Add(new Trait("MyTrait", "value1"));
+
+            //registers TestProperty objects for trait names
+            // ReSharper disable once ObjectCreationAsStatement
+            new TestCaseFilter(MockRunContext.Object, new HashSet<string>{"MyTrait"}, TestEnvironment.Logger);
+            TestProperty property = TestProperty.Find("MyTrait");
+
+            Action action = () => testCase.SetPropertyValue(property, "i");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_i");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "äöüÄÖÜß$");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_äöüÄÖÜß$");
+            action.ShouldNotThrow();
+
+            // since we are not at the beginning of the method name
+            action = () => testCase.SetPropertyValue(property, "1");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_1");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "_");
+            action.ShouldNotThrow();
+
+            action = () => testCase.SetPropertyValue(property, "");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "_(");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "a(");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "1(");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "%");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+
+            action = () => testCase.SetPropertyValue(property, "+");
+            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+        }
+
         private void SetupFilterToAcceptTraitForTestCase(TestCase testCase, string traitName, string traitValue)
         {
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCase), It.Is<Func<string, object>>(f => f(traitName).ToString() == traitValue))).Returns(true);

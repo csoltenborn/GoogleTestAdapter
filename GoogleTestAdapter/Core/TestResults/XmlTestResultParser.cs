@@ -20,15 +20,13 @@ namespace GoogleTestAdapter.TestResults
 
 
         private readonly ILogger _logger;
-        private readonly string _baseDir;
         private readonly string _xmlResultFile;
         private readonly IDictionary<string, TestCase> _testCasesMap;
 
 
-        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, ILogger logger, string baseDir)
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, ILogger logger)
         {
             _logger = logger;
-            _baseDir = baseDir;
             _xmlResultFile = xmlResultFile;
             _testCasesMap = testCasesRun.ToDictionary(tc => tc.FullyQualifiedName, tc => tc);
         }
@@ -124,7 +122,7 @@ namespace GoogleTestAdapter.TestResults
                     }
                     else
                     {
-                        var parser = new ErrorMessageParser(failureNodes, _baseDir);
+                        var parser = new ErrorMessageParser(failureNodes);
                         parser.Parse();
                         testResult.Outcome = TestOutcome.Failed;
                         testResult.ErrorMessage = parser.ErrorMessage;

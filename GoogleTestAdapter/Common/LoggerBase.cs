@@ -26,15 +26,21 @@ namespace GoogleTestAdapter.Common
 
         protected void ReportFinalLogEntry(LogEntry logEntry)
         {
-            _messages.Add(logEntry);
+            lock (_messages)
+            {
+                _messages.Add(logEntry);
+            }
         }
 
         public IList<string> GetMessages(params Severity[] severities)
         {
-            return _messages
-                .Where(le => severities.Contains(le.Severity))
-                .Select(le => le.Message)
-                .ToList();
+            lock (_messages)
+            {
+                return _messages
+                    .Where(le => severities.Contains(le.Severity))
+                    .Select(le => le.Message)
+                    .ToList();
+            }
         }
 
         public virtual void LogInfo(string message)

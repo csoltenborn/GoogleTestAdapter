@@ -55,23 +55,17 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         public void ReportTestsFound(IEnumerable<TestCase> testCases)
         {
-            lock (Lock)
+            foreach (TestCase testCase in testCases)
             {
-                foreach (TestCase testCase in testCases)
-                {
-                    _sink.SendTestCase(testCase.ToVsTestCase());
-                }
+                _sink.SendTestCase(testCase.ToVsTestCase());
             }
         }
 
         public void ReportTestsStarted(IEnumerable<TestCase> testCases)
         {
-            lock (Lock)
+            foreach (TestCase testCase in testCases)
             {
-                foreach (TestCase testCase in testCases)
-                {
-                    _frameworkHandle.RecordStart(testCase.ToVsTestCase());
-                }
+                _frameworkHandle.RecordStart(testCase.ToVsTestCase());
             }
         }
 

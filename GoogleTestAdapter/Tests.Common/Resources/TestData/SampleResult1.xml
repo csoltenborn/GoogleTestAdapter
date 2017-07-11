@@ -36,14 +36,14 @@ Should get three animals]]></failure>
     <testcase name="TestInstance/8" value_param="(false, 200, 100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
     <testcase name="TestInstance/9" value_param="(true, 0, -100)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest" />
     <testcase name="TestInstance/10" value_param="(true, 0, 0)" status="run" time="0" classname="ParameterizedTestsTest1/AllEnabledTest">
-      <failure message="someSimpleParameterizedTest.cpp:61&#x0A;Expected: (0) != ((pGSD-&gt;g_outputs64[(g_nOutput[ 8 ]-1)/64] &amp; g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0" type="">
+      <failure message="c:\someSimpleParameterizedTest.cpp:61&#x0A;Expected: (0) != ((pGSD-&gt;g_outputs64[(g_nOutput[ 8 ]-1)/64] &amp; g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0" type="">
         <![CDATA[someSimpleParameterizedTest.cpp:61
 Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0]]>
       </failure>
     </testcase>
     <testcase name="TestInstance/11" value_param="(true, 0, 100)" status="run" time="0.001" classname="ParameterizedTestsTest1/AllEnabledTest">
       <failure message="someSimpleParameterizedTest.cpp:61&#x0A;Expected: (0) != ((pGSD-&gt;g_outputs64[(g_nOutput[ 8 ]-1)/64] &amp; g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0" type="">
-        <![CDATA[someSimpleParameterizedTest.cpp:61
+        <![CDATA[c:\someSimpleParameterizedTest.cpp:61
 Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0]]>
       </failure>
     </testcase>

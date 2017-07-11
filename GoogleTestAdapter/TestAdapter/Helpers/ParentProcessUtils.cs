@@ -19,8 +19,11 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         internal IntPtr UniqueProcessId;
         internal IntPtr InheritedFromUniqueProcessId;
 
-        [DllImport("ntdll.dll")]
-        private static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref ParentProcessUtils processInformation, int processInformationLength, out int returnLength);
+        private static class NativeMethods
+        {
+            [DllImport("ntdll.dll")]
+            internal static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref ParentProcessUtils processInformation, int processInformationLength, out int returnLength);
+        }
 
         /// <summary>
         /// Gets the parent process of the current process.
@@ -51,7 +54,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             ParentProcessUtils pbi = new ParentProcessUtils();
             int returnLength;
-            int status = NtQueryInformationProcess(handle, 0, ref pbi, Marshal.SizeOf(pbi), out returnLength);
+            int status = NativeMethods.NtQueryInformationProcess(handle, 0, ref pbi, Marshal.SizeOf(pbi), out returnLength);
             if (status != 0)
                 return null;
 
