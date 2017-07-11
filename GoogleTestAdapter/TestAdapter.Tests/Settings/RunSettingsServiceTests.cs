@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.XPath;
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,21 +22,13 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     [TestClass]
     public class RunSettingsServiceTests : TestsBase
     {
-
-        private class RunSettingsServiceUnderTest : RunSettingsService
-        {
-            private readonly string _solutionRunSettingsFile;
-
-            internal RunSettingsServiceUnderTest(IGlobalRunSettings globalRunSettings, string solutionRunSettingsFile) : base(globalRunSettings)
-            {
-                _solutionRunSettingsFile = solutionRunSettingsFile;
-            }
-
-            protected override string GetSolutionSettingsXmlFile()
-            {
-                return _solutionRunSettingsFile;
-            }
-        }
+        private const string GlobalWorkingDir = "GlobalWorkingDir";
+        private const string SolutionSolutionWorkingDir = "SolutionSolutionWorkingDir";
+        private const string SolutionProject1WorkingDir = "SolutionProject1WorkingDir";
+        private const string SolutionProject2WorkingDir = "SolutionProject2";
+        private const string UserSolutionWorkingDir = "UserSolutionWorkingDir";
+        private const string UserProject1WorkingDir = "UserProject1WorkingDir";
+        private const string UserProject3WorkingDir = "UserProject3WorkingDir";
 
         [TestMethod]
         [TestCategory(Unit)]
@@ -90,215 +83,216 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void AddRunSettings_GlobalAndSolutionAndUserSettings_CorrectOverridingHierarchy()
+        public void AddRunSettings_CompleteSettings_BasicChecks()
         {
-            var mockLogger = new Mock<ILogger>();
-            var mockRunSettingsConfigInfo = new Mock<IRunSettingsConfigurationInfo>();
-
-            RunSettingsService service = SetupRunSettingsService(TestResources.SolutionTestSettings);
-
-            var xml = new XmlDocument();
-            xml.Load(TestResources.UserTestSettings);
-
-            service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
-
-            // 1: from global, 2: from solution, 3, ShuffleTests: from user test settings
-            AssertContainsSetting(xml, "AdditionalTestExecutionParam", "Global");
-            AssertContainsSetting(xml, "BatchForTestSetup", "Solution");
-            AssertContainsSetting(xml, "ShuffleTests", "true");
-            AssertContainsSetting(xml, "NrOfTestRepetitions", "2");
-            AssertContainsSetting(xml, "MaxNrOfThreads", "3");
-            AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
-            AssertContainsSetting(xml, "TraitsRegexesBefore", "User///A,B");
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
-        public void AddRunSettings_ComplexConfiguration_IsMergedCorrectly()
-        {
-            string global = "GlobalSettings";
-            string solutionSolution = "solutionSolution";
-            string solutionProject1 = "solutionProject1";
-            string solutionProject2 = "solutionProject2";
-            string userSolution = "userSolution";
-            string userProject1 = "userProject1";
-            string userProject3 = "userProject3";
-
-            var solutionSettingsContainer = new RunSettingsContainer
-            {
-                SolutionSettings = new RunSettings
-                {
-                    ProjectRegex = null,
-                    AdditionalTestExecutionParam = solutionSolution,
-                    PathExtension = solutionSolution,
-                    TestDiscoveryRegex = solutionSolution,
-                    TraitsRegexesAfter = solutionSolution + "///A,B",
-                    WorkingDir = solutionSolution,
-                    MaxNrOfThreads = 1,
-                },
-                ProjectSettings = new List<RunSettings>
-                {
-                    new RunSettings
-                    {
-                        ProjectRegex = "project1",
-                        AdditionalTestExecutionParam = solutionProject1,
-                        BatchForTestTeardown = solutionProject1,
-                        PathExtension = solutionProject1,
-                        TestDiscoveryRegex = solutionProject1,
-                        NrOfTestRepetitions = 2,
-                        ShuffleTestsSeed = 2
-                    },
-                    new RunSettings
-                    {
-                        ProjectRegex = "project2",
-                        AdditionalTestExecutionParam = solutionProject2,
-                        BatchForTestTeardown = solutionProject2,
-                        TestNameSeparator = solutionProject2,
-                        TraitsRegexesAfter = solutionProject2 + "///A,B",
-                        WorkingDir = solutionProject2,
-                        NrOfTestRepetitions = 3,
-                    }
-                }
-            };
-
-            var userSettingsContainer = new RunSettingsContainer
-            {
-                SolutionSettings = new RunSettings
-                {
-                    ProjectRegex = null,
-                    BatchForTestSetup = userSolution,
-                    BatchForTestTeardown = userSolution,
-                    TestDiscoveryRegex = userSolution,
-                    TraitsRegexesAfter = userSolution + "///A,B",
-                    MaxNrOfThreads = 4,
-                    ShuffleTestsSeed = 4
-                },
-                ProjectSettings = new List<RunSettings>
-                {
-                    new RunSettings
-                    {
-                        ProjectRegex = "project1",
-                        BatchForTestTeardown = userProject1,
-                        PathExtension = userProject1,
-                        TestNameSeparator = userProject1,
-                        WorkingDir = userProject1,
-                        MaxNrOfThreads = 5,
-                        ShuffleTestsSeed = 5
-                    },
-                    new RunSettings
-                    {
-                        ProjectRegex = "project3",
-                        AdditionalTestExecutionParam = userProject3,
-                        BatchForTestTeardown = userProject3,
-                        TestDiscoveryRegex = userProject3,
-                        TestNameSeparator = userProject3,
-                        TraitsRegexesBefore = userProject3 + "///A,B",
-                        MaxNrOfThreads = 6,
-                    }
-                }
-            };
-
-            var globalSettings = new RunSettings
-            {
-                ProjectRegex = null,
-                AdditionalTestExecutionParam = global,
-                BatchForTestSetup = global,
-                BatchForTestTeardown = global,
-                PathExtension = global,
-                TestDiscoveryRegex = global,
-                TestNameSeparator = global,
-                TraitsRegexesAfter = global + "///A,B",
-                TraitsRegexesBefore = global + "///A,B",
-                WorkingDir = global,
-                MaxNrOfThreads = 0,
-                NrOfTestRepetitions = 0,
-                ShuffleTestsSeed = 0
-            };
-
-            var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
-            mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalSettings);
-
-            var userSettingsNavigator = EmbedSettingsIntoRunSettings(userSettingsContainer);
-
-            string solutionSettingsFile = SerializeSettingsContainer(solutionSettingsContainer);
-            IXPathNavigable navigable;
-            try
-            {
-                var serviceUnderTest = new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, solutionSettingsFile);
-                navigable = serviceUnderTest.AddRunSettings(userSettingsNavigator,
-                    new Mock<IRunSettingsConfigurationInfo>().Object, new Mock<ILogger>().Object);
-            }
-            finally
-            {
-                File.Delete(solutionSettingsFile);
-            }
-
-            var navigator = navigable.CreateNavigator();
-            navigator.MoveToChild(Constants.RunSettingsName, "");
-            navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
-            var resultingContainer = RunSettingsContainer.LoadFromXml(navigator);
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, SolutionProject1WorkingDir, SolutionProject2WorkingDir,
+                UserSolutionWorkingDir, UserProject1WorkingDir, UserProject3WorkingDir);
 
             resultingContainer.Should().NotBeNull();
             resultingContainer.SolutionSettings.Should().NotBeNull();
             resultingContainer.ProjectSettings.Count.Should().Be(3);
 
-            resultingContainer.SolutionSettings.AdditionalTestExecutionParam.Should().Be(solutionSolution);
-            resultingContainer.SolutionSettings.BatchForTestSetup.Should().Be(userSolution);
-            resultingContainer.SolutionSettings.BatchForTestTeardown.Should().Be(userSolution);
-            resultingContainer.SolutionSettings.PathExtension.Should().Be(solutionSolution);
-            resultingContainer.SolutionSettings.TestDiscoveryRegex.Should().Be(userSolution);
-            resultingContainer.SolutionSettings.TestNameSeparator.Should().Be(global);
-            resultingContainer.SolutionSettings.TraitsRegexesAfter.Should().Be(userSolution + "///A,B");
-            resultingContainer.SolutionSettings.TraitsRegexesBefore.Should().Be(global + "///A,B");
-            resultingContainer.SolutionSettings.WorkingDir.Should().Be(solutionSolution);
-            resultingContainer.SolutionSettings.MaxNrOfThreads.Should().Be(4);
-            resultingContainer.SolutionSettings.MaxNrOfThreads.Should().Be(4);
-            resultingContainer.SolutionSettings.NrOfTestRepetitions.Should().Be(0);
+            resultingContainer.GetSettingsForExecutable("project1").Should().NotBeNull();
+            resultingContainer.GetSettingsForExecutable("project2").Should().NotBeNull();
+            resultingContainer.GetSettingsForExecutable("project3").Should().NotBeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
 
-            var projectContainer = resultingContainer.GetSettingsForExecutable("project1");
-            projectContainer.Should().NotBeNull();
-            projectContainer.AdditionalTestExecutionParam.Should().Be(solutionProject1);
-            projectContainer.BatchForTestSetup.Should().Be(userSolution);
-            projectContainer.BatchForTestTeardown.Should().Be(userProject1);
-            projectContainer.PathExtension.Should().Be(userProject1);
-            projectContainer.TestDiscoveryRegex.Should().Be(userSolution);
-            projectContainer.TestNameSeparator.Should().Be(userProject1);
-            projectContainer.TraitsRegexesAfter.Should().Be(userSolution + "///A,B");
-            projectContainer.TraitsRegexesBefore.Should().Be(global + "///A,B");
-            projectContainer.WorkingDir.Should().Be(userProject1);
-            projectContainer.MaxNrOfThreads.Should().Be(5);
-            projectContainer.MaxNrOfThreads.Should().Be(5);
-            projectContainer.NrOfTestRepetitions.Should().Be(2);
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_CompleteSettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, SolutionProject1WorkingDir, SolutionProject2WorkingDir,
+                UserSolutionWorkingDir, UserProject1WorkingDir, UserProject3WorkingDir);
 
-            projectContainer = resultingContainer.GetSettingsForExecutable("project2");
-            projectContainer.Should().NotBeNull();
-            projectContainer.AdditionalTestExecutionParam.Should().Be(solutionProject2);
-            projectContainer.BatchForTestSetup.Should().Be(global);
-            projectContainer.BatchForTestTeardown.Should().Be(solutionProject2);
-            projectContainer.PathExtension.Should().Be(solutionSolution);
-            projectContainer.TestDiscoveryRegex.Should().Be(solutionSolution);
-            projectContainer.TestNameSeparator.Should().Be(solutionProject2);
-            projectContainer.TraitsRegexesAfter.Should().Be(solutionProject2 + "///A,B");
-            projectContainer.TraitsRegexesBefore.Should().Be(global + "///A,B");
-            projectContainer.WorkingDir.Should().Be(solutionProject2);
-            projectContainer.MaxNrOfThreads.Should().Be(1);
-            projectContainer.MaxNrOfThreads.Should().Be(1);
-            projectContainer.NrOfTestRepetitions.Should().Be(3);
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
 
-            projectContainer = resultingContainer.GetSettingsForExecutable("project3");
-            projectContainer.Should().NotBeNull();
-            projectContainer.AdditionalTestExecutionParam.Should().Be(userProject3);
-            projectContainer.BatchForTestSetup.Should().Be(userSolution);
-            projectContainer.BatchForTestTeardown.Should().Be(userProject3);
-            projectContainer.PathExtension.Should().Be(global);
-            projectContainer.TestDiscoveryRegex.Should().Be(userProject3);
-            projectContainer.TestNameSeparator.Should().Be(userProject3);
-            projectContainer.TraitsRegexesAfter.Should().Be(userSolution + "///A,B");
-            projectContainer.TraitsRegexesBefore.Should().Be(userProject3 + "///A,B");
-            projectContainer.WorkingDir.Should().Be(global);
-            projectContainer.MaxNrOfThreads.Should().Be(6);
-            projectContainer.MaxNrOfThreads.Should().Be(6);
-            projectContainer.NrOfTestRepetitions.Should().Be(0);
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_NoSettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, null, null,
+                null, null, null);
+
+            resultingContainer.GetSettingsForExecutable("project1").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_EmptySettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, "", "",
+                null, "", "");
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_CompleteSolutionSettingsNoProjectSettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, SolutionProject1WorkingDir, SolutionProject2WorkingDir,
+                null, null, null);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_NoSolutionSettingsCompleteProjectSettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, null, null,
+                UserSolutionWorkingDir, UserProject1WorkingDir, UserProject3WorkingDir);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_CompleteSolutionSettingsEmptyProjectSettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, SolutionProject1WorkingDir, SolutionProject2WorkingDir,
+                null, "", "");
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_EmptySolutionSettingsCompleteProjectSettings_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, "", "",
+                UserSolutionWorkingDir, UserProject1WorkingDir, UserProject3WorkingDir);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings1_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, null, "",
+                UserSolutionWorkingDir, "", null);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings2_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, SolutionProject1WorkingDir, null,
+                null, "", UserProject3WorkingDir);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings3_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, "", SolutionProject2WorkingDir,
+                null, UserProject1WorkingDir, null);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings4_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, SolutionProject1WorkingDir, "",
+                UserSolutionWorkingDir, null, "");
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(SolutionProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings5_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                SolutionSolutionWorkingDir, "", SolutionProject2WorkingDir,
+                UserSolutionWorkingDir, null, UserProject3WorkingDir);
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings6_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, "", null,
+                null, UserProject1WorkingDir, "");
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_MixedSettings7_()
+        {
+            var resultingContainer = SetupFinalRunSettingsContainer(
+                null, null, SolutionProject2WorkingDir,
+                UserSolutionWorkingDir, UserProject1WorkingDir, "");
+
+            resultingContainer.GetSettingsForExecutable("project1").WorkingDir.Should().Be(UserProject1WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
+            resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
+            resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
         }
 
         private RunSettingsService SetupRunSettingsService(string solutionRunSettingsFile)
@@ -346,6 +340,72 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             return xmlAsString;
         }
 
+        private RunSettingsContainer SetupFinalRunSettingsContainer(
+            string solutionSolutionWorkingDir, string solutionProject1WorkingDir, string solutionProject2WorkingDir, 
+            string userSolutionWorkingDir, string userProject1WorkingDir, string userProject3WorkingDir)
+        {
+            var globalSettings = new RunSettings { ProjectRegex = null, WorkingDir = GlobalWorkingDir };
+            var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
+            mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalSettings);
+
+            var solutionSettingsContainer = SetupSettingsContainer(solutionSolutionWorkingDir, solutionProject1WorkingDir, solutionProject2WorkingDir, null);
+            var solutionSettingsNavigator = EmbedSettingsIntoRunSettings(solutionSettingsContainer);
+            var solutionSettingsFile = SerializeSolutionSettings(solutionSettingsNavigator);
+
+            var userSettingsContainer = SetupSettingsContainer(userSolutionWorkingDir, userProject1WorkingDir, null, userProject3WorkingDir);
+            var userSettingsNavigator = EmbedSettingsIntoRunSettings(userSettingsContainer);
+
+            IXPathNavigable navigable;
+            try
+            {
+                var serviceUnderTest = new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, solutionSettingsFile);
+                navigable = serviceUnderTest.AddRunSettings(userSettingsNavigator,
+                    new Mock<IRunSettingsConfigurationInfo>().Object, new Mock<ILogger>().Object);
+            }
+            finally
+            {
+                File.Delete(solutionSettingsFile);
+            }
+
+            var navigator = navigable.CreateNavigator();
+            navigator.MoveToChild(Constants.RunSettingsName, "");
+            navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
+
+            return RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());
+        }
+
+        private RunSettingsContainer SetupSettingsContainer(string solutionWorkingDir, 
+            string project1WorkingDir, string project2WorkingDir, string project3WorkingDir)
+        {
+            var settingsContainer = new RunSettingsContainer
+            {
+                SolutionSettings = new RunSettings
+                {
+                    ProjectRegex = null,
+                    WorkingDir = solutionWorkingDir
+                },
+                ProjectSettings = new List<RunSettings>()
+            };
+
+            AddProjectSettings(settingsContainer, "project1", project1WorkingDir);
+            AddProjectSettings(settingsContainer, "project2", project2WorkingDir);
+            AddProjectSettings(settingsContainer, "project3", project3WorkingDir);
+
+            return settingsContainer;
+        }
+
+        private static void AddProjectSettings(RunSettingsContainer settingsContainer, string project, string workingDir)
+        {
+            if (workingDir == null)
+                return;
+
+            settingsContainer.ProjectSettings.Add(new RunSettings
+            {
+                ProjectRegex = project,
+                WorkingDir = workingDir == "" ? null : workingDir
+            });
+        }
+
         private static XPathNavigator EmbedSettingsIntoRunSettings(RunSettingsContainer settingsContainer)
         {
             var settingsDocument = new XmlDocument();
@@ -364,16 +424,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             return settingsNavigator;
         }
 
-        private string SerializeSettingsContainer(RunSettingsContainer settingsContainer)
+        private string SerializeSolutionSettings(XPathNavigator settingsNavigator)
         {
-            var settingsNavigator = EmbedSettingsIntoRunSettings(settingsContainer);
+            string settingsFile = Path.GetTempFileName();
 
-            var finalDocument = new XmlDocument();
-            finalDocument.LoadXml(settingsNavigator.OuterXml);
-            string targetFile = Path.GetTempFileName();
-            finalDocument.Save(targetFile);
+            var document = new XmlDocument();
+            document.LoadXml(settingsNavigator.OuterXml);
+            document.Save(settingsFile);
 
-            return targetFile;
+            return settingsFile;
         }
 
     }

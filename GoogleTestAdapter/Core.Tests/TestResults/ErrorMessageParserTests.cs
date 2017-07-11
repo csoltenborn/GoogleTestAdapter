@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.TestResults
         [TestCategory(Unit)]
         public void Parse_EmptyString_EmptyResults()
         {
-            var parser = new ErrorMessageParser("", BaseDir);
+            var parser = new ErrorMessageParser("");
             parser.Parse();
 
             parser.ErrorMessage.Should().Be("");
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string errorString = $"{FullPathOfDummyExecutable}:42: error: Expected: Foo\nActual: Bar";
 
-            var parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString);
             parser.Parse();
 
             parser.ErrorMessage.Should().Be("Expected: Foo\nActual: Bar");
@@ -42,7 +42,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string errorString = "Some weird error message";
 
-            var parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString);
             parser.Parse();
 
             parser.ErrorMessage.Should().Be("Some weird error message");
@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.TestResults
             string errorString = $"{FullPathOfDummyExecutable}:37: error: Expected: Yes\nActual: Maybe";
             errorString += $"\n{FullPathOfDummyExecutable}:42: Failure\nExpected: Foo\nActual: Bar";
 
-            var parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString);
             parser.Parse();
 
             parser.ErrorMessage.Should().Be("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar");
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.TestResults
             string errorString = $"{FullPathOfDummyExecutable}(37): error: Expected: Yes\nActual: Maybe";
             errorString += $"\n{FullPathOfDummyExecutable}:42: error: Expected: Foo\nActual: Bar";
 
-            var parser = new ErrorMessageParser(errorString, BaseDir);
+            var parser = new ErrorMessageParser(errorString);
             parser.Parse();
 
             parser.ErrorMessage.Should().Be("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar");
@@ -86,7 +86,7 @@ namespace GoogleTestAdapter.TestResults
             string errorString = $"{FullPathOfDummyExecutable}:37: error: Expected: Yes\nActual: Maybe";
             errorString += $"\n{FullPathOfDummyExecutable}:42: Failure\nExpected: Foo\nActual: Bar";
 
-            var parser = new ErrorMessageParser(errorString, null);
+            var parser = new ErrorMessageParser(errorString);
             parser.Parse();
 
             parser.ErrorMessage.Should().Be("#1 - Expected: Yes\nActual: Maybe\n#2 - Expected: Foo\nActual: Bar");

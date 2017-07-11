@@ -4,9 +4,9 @@
     <UnitTestResult testName="Crashing.AddFailsAfterCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>Value of: Add(10, 10)
-  Actual: 20
-Expected: 1000</Message>
+          <Message>Expected: 1000
+To be equal to: Add(10, 10)
+      Which is: 20</Message>
           <StackTrace>at crashingtests.cpp:27 in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 27</StackTrace>
         </ErrorInfo>
       </Output>
@@ -14,9 +14,9 @@ Expected: 1000</Message>
     <UnitTestResult testName="Crashing.AddFailsBeforeCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>Value of: Add(10, 10)
-  Actual: 20
-Expected: 1000</Message>
+          <Message>Expected: 1000
+To be equal to: Add(10, 10)
+      Which is: 20</Message>
           <StackTrace>at crashingtests.cpp:12 in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 12</StackTrace>
         </ErrorInfo>
       </Output>
@@ -37,9 +37,7 @@ Expected: 1000</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="Crashing.LongRunning" outcome="Passed">
-      <Output />
-    </UnitTestResult>
+    <UnitTestResult testName="Crashing.LongRunning" outcome="Passed" />
     <UnitTestResult testName="Crashing.TheCrash" outcome="Failed">
       <Output>
         <ErrorInfo>

@@ -30,6 +30,7 @@ namespace GoogleTestAdapter.Settings
         bool? ShuffleTests { get; set; }
         int? ShuffleTestsSeed { get; set; }
         string TestDiscoveryRegex { get; set; }
+        int? TestDiscoveryTimeoutInSeconds { get; set; }
         string WorkingDir { get; set; }
         string PathExtension { get; set; }
         string BatchForTestSetup { get; set; }
@@ -41,9 +42,12 @@ namespace GoogleTestAdapter.Settings
         bool? DebugMode { get; set; }
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
-        int? VisualStudioProcessId { get; set; }
-        bool? UseNewTestExecutionFramework { get; set; }
         bool? KillProcessesOnCancel { get; set; }
+
+        bool? UseNewTestExecutionFramework { get; set; }
+
+        // internal
+        string DebuggingNamedPipeId { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -61,6 +65,7 @@ namespace GoogleTestAdapter.Settings
             self.ShuffleTests = self.ShuffleTests ?? other.ShuffleTests;
             self.ShuffleTestsSeed = self.ShuffleTestsSeed ?? other.ShuffleTestsSeed;
             self.TestDiscoveryRegex = self.TestDiscoveryRegex ?? other.TestDiscoveryRegex;
+            self.TestDiscoveryTimeoutInSeconds = self.TestDiscoveryTimeoutInSeconds ?? other.TestDiscoveryTimeoutInSeconds;
             self.WorkingDir = self.WorkingDir ?? other.WorkingDir;
             self.PathExtension = self.PathExtension ?? other.PathExtension;
             self.BatchForTestSetup = self.BatchForTestSetup ?? other.BatchForTestSetup;
@@ -72,9 +77,11 @@ namespace GoogleTestAdapter.Settings
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
-            self.VisualStudioProcessId = self.VisualStudioProcessId ?? other.VisualStudioProcessId;
-            self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
+
+            self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
+
+            self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
         }
     }
 

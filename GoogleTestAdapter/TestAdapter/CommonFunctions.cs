@@ -38,6 +38,12 @@ namespace GoogleTestAdapter.TestAdapter
         {
             var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
             RunSettingsContainer ourRunSettings = settingsProvider != null ? settingsProvider.SettingsContainer : new RunSettingsContainer();
+
+            foreach (RunSettings projectSettings in ourRunSettings.ProjectSettings)
+            {
+                projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
+            }
+
             var settingsWrapper = new SettingsWrapper(ourRunSettings);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);

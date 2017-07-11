@@ -29,6 +29,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionTestDiscoveryTimeoutInSeconds)]
+        [Description(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDescription)]
+        public int TestDiscoveryTimeoutInSeconds
+        {
+            get { return _testDiscoveryTimeoutInSeconds; }
+            set { SetAndNotify(ref _testDiscoveryTimeoutInSeconds, value); }
+        }
+        private int _testDiscoveryTimeoutInSeconds = SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionWorkingDir)]
         [Description(SettingsWrapper.OptionWorkingDirDescription)]
         public string WorkingDir

@@ -67,14 +67,25 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                         var solutionRunSettingsDocument = new XPathDocument(reader);
                         XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
                         if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                        {
                             CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
-                    }
+                        }
+                        else
+                        {
+                            logger.Log(MessageLevel.Warning, $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
+                        }
+		    }
                 }
             }
             catch (Exception e)
             {
                 logger.Log(MessageLevel.Warning,
                     $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
+            }
+
+            foreach (var projectSettings in settingsContainer.ProjectSettings)
+            {
+                projectSettings.GetUnsetValuesFrom(settingsContainer.SolutionSettings);
             }
 
             GetValuesFromGlobalSettings(settingsContainer);
@@ -88,7 +99,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         private void GetValuesFromGlobalSettings(RunSettings settings)
         {
-            settings.VisualStudioProcessId = null;
+            settings.DebuggingNamedPipeId = null;
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }
 

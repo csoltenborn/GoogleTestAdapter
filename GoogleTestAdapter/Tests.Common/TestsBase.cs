@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Settings;
@@ -25,7 +26,6 @@ namespace GoogleTestAdapter.Tests.Common
 
             Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
             MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object);
-            MockOptions.Setup(o => o.Clone()).Returns(MockOptions.Object);
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
@@ -41,6 +41,11 @@ namespace GoogleTestAdapter.Tests.Common
 
         public static void SetupOptions(Mock<SettingsWrapper> mockOptions)
         {
+            mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
+            mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
+
+            mockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds)
+                .Returns(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue);
             mockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
             mockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new List<RegexTraitPair>());
             mockOptions.Setup(o => o.TestNameSeparator).Returns(SettingsWrapper.OptionTestNameSeparatorDefaultValue);
@@ -67,7 +72,8 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.KillProcessesOnCancel).Returns(SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
 
             mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
-            mockOptions.Setup(o => o.VisualStudioProcessId).Returns(-1);
+
+            mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
         }
 
         [TestCleanup]

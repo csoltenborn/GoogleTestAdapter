@@ -67,6 +67,9 @@
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
+    <Compile Include="Model\TestCaseMetaDataProperty.cs" />
+    <Compile Include="Model\TestProperty.cs" />
+    <Compile Include="Runners\TestResultCollector.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />
     <Compile Include="Settings\RunSettings.cs" />
@@ -108,7 +111,8 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\GTA_Traits.h" />
+    <Content Include="Resources\GTA_Traits_1.8.0.h" />
+    <Content Include="Resources\GTA_Traits_1.7.0.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

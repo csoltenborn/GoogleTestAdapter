@@ -36,7 +36,7 @@
     <ClCompile Include="UmlautTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(ProjectDir)..\3rdparty\gtest-1.7.0\fused-src\gtest\gtest-all.cc">
+    <ClCompile Include="$(ProjectDir)..\3rdparty\gtest-1.8.0\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ApiCreatedTests.cpp">
@@ -45,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest_wrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -61,7 +61,8 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
                 Assert.Inconclusive($"First time this test runs, created golden file - check for correctness! File: {goldenFile}");
             }
             CheckIfFileIsParsable(goldenFile);
-            if (!CompareXmlFiles(goldenFile, transformedResultFile, out string diffFile))
+            string diffFile;
+            if (!CompareXmlFiles(goldenFile, transformedResultFile, out diffFile))
             {
                 if (!Directory.Exists(_diffFilesDir))
                     Directory.CreateDirectory(_diffFilesDir);
@@ -94,7 +95,8 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             string workingDir = "";
 
             var launcher = new TestProcessLauncher();
-            launcher.GetOutputStreams(workingDir, command, arguments, out var standardOut, out var standardErr);
+            List<string> standardOut, standardErr;
+            launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out standardErr);
 
             return ParseResultsFileFromOutput(standardOut);
         }

@@ -1,4 +1,4 @@
-﻿using GoogleTestAdapter.Tests.Common.EndToEnd;
+﻿using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 

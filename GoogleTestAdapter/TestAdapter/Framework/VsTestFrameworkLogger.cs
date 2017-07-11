@@ -8,8 +8,6 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
     public class VsTestFrameworkLogger : LoggerBase
     {
-        private static readonly object Lock = new object();
-
         private readonly IMessageLogger _logger;
         private readonly Func<bool> _timeStampOutput;
 
@@ -51,16 +49,13 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 message = "\u2063";
             }
 
-            lock (Lock)
-            {
-                _logger.SendMessage(level, message);
-                ReportFinalLogEntry(
-                    new LogEntry
-                    {
-                        Severity = level.GetSeverity(),
-                        Message = message
-                    });
-            }
+            _logger.SendMessage(level, message);
+            ReportFinalLogEntry(
+                new LogEntry
+                {
+                    Severity = level.GetSeverity(),
+                    Message = message
+                });
         }
 
     }

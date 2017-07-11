@@ -13,6 +13,7 @@ namespace GoogleTestAdapter.Model
         public int LineNumber { get; }
 
         public List<Trait> Traits { get; } = new List<Trait>();
+        public List<TestProperty> Properties { get; } = new List<TestProperty>();
 
         public TestCase(string fullyQualifiedName, string source, string displayName, string codeFilePath, int lineNumber)
         {
