@@ -2,7 +2,6 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
-  <Import Project="$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props" Condition="Exists('$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -70,8 +69,6 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Debugging\DebuggerAttacherService.cs" />
-    <Compile Include="Helpers\ActivityLogLogger.cs" />
     <Compile Include="GoogleTestExtensionOptionsPage.cs" />
     <Compile Include="OptionsPages\GeneralOptionsDialogPage.cs">
       <SubType>Component</SubType>
@@ -86,7 +83,6 @@
     </Compile>
     <Compile Include="ReleaseNotes\VersionProvider.cs" />
     <Compile Include="ReleaseNotes\History.cs" />
-    <Compile Include="Debugging\VsDebuggerAttacher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
@@ -142,27 +138,27 @@
   <ItemGroup>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\envdte.dll</HintPath>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.7.0.4\lib\net20\envdte.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="envdte100, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\packages\VSSDK.DTE.10.10.0.4\lib\net20\envdte100.dll</HintPath>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.10.10.0.4\lib\net20\envdte100.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\packages\VSSDK.DTE.8.8.0.4\lib\net20\envdte80.dll</HintPath>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.8.8.0.4\lib\net20\envdte80.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="envdte90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\packages\VSSDK.DTE.9.9.0.4\lib\net20\envdte90.dll</HintPath>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.9.9.0.4\lib\net20\envdte90.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="envdte90a, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\packages\VSSDK.DTE.9.9.0.4\lib\net20\envdte90a.dll</HintPath>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.9.9.0.4\lib\net20\envdte90a.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
@@ -247,7 +243,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NamedPipeWrapper, Version=1.5.1.0, Culture=neutral, PublicKeyToken=63e9e311e4e1512f, processorArchitecture=MSIL">
-      <HintPath>..\packages\NamedPipeWrapper.Signed.1.5.1.2-beta2\lib\net40\NamedPipeWrapper.dll</HintPath>
+      <HintPath>$(NuGetPackages)NamedPipeWrapper.Signed.1.5.1.2-beta2\lib\net40\NamedPipeWrapper.dll</HintPath>
     </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -307,8 +303,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props'))" />
-    <Error Condition="!Exists('$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.targets'))" />
+    <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props'))" />
+    <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets'))" />
   </Target>
-  <Import Project="$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.targets')" />
+  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
 </Project>

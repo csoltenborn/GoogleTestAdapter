@@ -166,7 +166,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NamedPipeWrapper, Version=1.5.1.0, Culture=neutral, PublicKeyToken=63e9e311e4e1512f, processorArchitecture=MSIL">
-      <HintPath>..\packages\NamedPipeWrapper.Signed.1.5.1.2-beta2\lib\net40\NamedPipeWrapper.dll</HintPath>
+      <HintPath>$(NuGetPackages)NamedPipeWrapper.Signed.1.5.1.2-beta2\lib\net40\NamedPipeWrapper.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
