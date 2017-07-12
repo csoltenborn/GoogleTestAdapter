@@ -8,18 +8,16 @@
 	   cannot include the custom build step in this project as it would be too late.
 	   So we do it in the "Common" project. -->
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0.26201</VsSdkBuildToolsVersion>
     <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.3.25420</VsSdkBuildToolsVersion>
+    <VsSdkBuildToolsVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0.26201</VsSdkBuildToolsVersion>
   </PropertyGroup>
   <Target Name="GetVsSdkBuildTools" Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)')">
     <Exec Command="$(NuGetPackages)NuGet.CommandLine.3.5.0\tools\NuGet.exe install Microsoft.VSSDK.BuildTools -Version $(VsSdkBuildToolsVersion) -OutputDirectory $(NuGetPackages)" />
   </Target>
   <Import Project="$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props" Condition="Exists('$(NuGetPackages)Microsoft.VSSDK.BuildTools.$(VsSdkBuildToolsVersion)\build\Microsoft.VSSDK.BuildTools.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</MinimumVisualStudioVersion>
-    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0</MinimumVisualStudioVersion>
-    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
