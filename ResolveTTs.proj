@@ -31,10 +31,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
     </Content>
-    <Content Include="GoogleTestAdapter\VsDebuggerAttacherWrapper\App.config.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <OutputFileName>App.config</OutputFileName>
-    </Content>
     <Content Include="GoogleTestAdapter\VsPackage.GTA.Tests.Unit\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>

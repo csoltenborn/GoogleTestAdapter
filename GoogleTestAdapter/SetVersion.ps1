@@ -15,8 +15,6 @@ $projecttemplates_vstemplate = "ProjectTemplates\Test\GoogleTest\GoogleTest.vste
 $testadapter_assembly_info = "TestAdapter\Properties\AssemblyInfo.cs"
 $testadaptertests_assembly_info = "TestAdapter.Tests\Properties\AssemblyInfo.cs"
 
-$vsdebuggerattacherwrapper_assembly_info = "VsDebuggerAttacherWrapper\Properties\AssemblyInfo.cs"
-
 $vspackage_gta_assembly_info = "VsPackage.GTA\Properties\AssemblyInfo.cs"
 $vspackage_gta_unittests_assembly_info = "VsPackage.GTA.Tests.Unit\Properties\AssemblyInfo.cs"
 $vspackage_tafgt_assembly_info = "VsPackage.TAfGT\Properties\AssemblyInfo.cs"
@@ -42,8 +40,6 @@ $wizard_assembly_info = "NewProjectWizard\Properties\AssemblyInfo.cs"
 
 (Get-Content $testadapter_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $testadapter_assembly_info
 (Get-Content $testadaptertests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $testadaptertests_assembly_info
-
-(Get-Content $vsdebuggerattacherwrapper_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vsdebuggerattacherwrapper_assembly_info
 
 (Get-Content $vspackage_gta_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackage_gta_assembly_info
 (Get-Content $vspackage_gta_unittests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $vspackage_gta_unittests_assembly_info
