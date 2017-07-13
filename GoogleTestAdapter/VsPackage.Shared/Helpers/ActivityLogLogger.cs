@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.Shell.Interop;
