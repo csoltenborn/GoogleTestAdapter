@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoogleTestAdapter.Tests.Common;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter.Helpers
@@ -50,8 +51,8 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         {
             var duration = (Events.Last().Time - Events.First().Time).TotalMilliseconds;
             var minimumDuration = ((TotalEvents / MaxEvents - 1) * TimeSpan.TotalMilliseconds);
-            duration.Should().BeGreaterThan(minimumDuration);
-            duration.Should().BeLessThan(minimumDuration + TimeSpan.TotalMilliseconds + 20); // TODO 20 is an arbitrary tolerance to make test pass
+            duration.Should().BeGreaterThan(minimumDuration - TestMetadata.ToleranceInMs);
+            duration.Should().BeLessThan(minimumDuration + TimeSpan.TotalMilliseconds + TestMetadata.ToleranceInMs);
         }
 
         [TestMethod]

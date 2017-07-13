@@ -21,6 +21,12 @@ Traits.With3Traits
 Traits.With2Traits
 Traits.With1Traits
 Traits.WithEqualTraits
+OutputHandling.Output_ManyLinesWithNewlines
+OutputHandling.Output_OneLineWithNewlines
+OutputHandling.Output_OneLine
+OutputHandling.ManyLinesWithNewlines
+OutputHandling.OneLineWithNewlines
+OutputHandling.OneLine
 MessageParserTests.SimpleAssert
 MessageParserTests.SimpleExpect
 MessageParserTests.ExpectAndAssert

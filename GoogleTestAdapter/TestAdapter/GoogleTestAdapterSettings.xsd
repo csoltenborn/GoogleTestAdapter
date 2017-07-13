@@ -25,6 +25,13 @@
     <xsd:all>
       <xsd:element name="PrintTestOutput"              minOccurs="0" type="xsd:boolean" />
       <xsd:element name="TestDiscoveryRegex"           minOccurs="0" type="xsd:string"  />
+      <xsd:element name="TestDiscoveryTimeoutInSeconds" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="0" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="WorkingDir"                   minOccurs="0" type="xsd:string"  />
       <xsd:element name="PathExtension"                minOccurs="0" type="xsd:string"  />
       <xsd:element name="CatchExceptions"              minOccurs="0" type="xsd:boolean" />
@@ -63,7 +70,6 @@
       </xsd:element>
       <xsd:element name="BatchForTestSetup"            minOccurs="0" type="xsd:string"  />
       <xsd:element name="BatchForTestTeardown"         minOccurs="0" type="xsd:string"  />
-      <xsd:element name="VisualStudioProcessId"        minOccurs="0" type="xsd:int"     />
       <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean" />
       <xsd:element name="KillProcessesOnCancel"        minOccurs="0" type="xsd:boolean" />
     </xsd:all>

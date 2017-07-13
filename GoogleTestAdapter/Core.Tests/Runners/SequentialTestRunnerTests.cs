@@ -39,13 +39,12 @@ namespace GoogleTestAdapter.Runners
         private void DoRunCancelingTests(bool killProcesses, int lower, int upper)
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
-            List<TestCase> allTestCases = TestDataCreator.AllTestCasesExceptLoadTests;
             List<TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
 
             var stopwatch = new Stopwatch();
             var runner = new SequentialTestRunner("", MockFrameworkReporter.Object, TestEnvironment.Logger, TestEnvironment.Options, new SchedulingAnalyzer(TestEnvironment.Logger));
             var executor = new ProcessExecutor(null, MockLogger.Object);
-            var thread = new Thread(() => runner.RunTests(allTestCases, testCasesToRun, "", "", "", false, null, executor));
+            var thread = new Thread(() => runner.RunTests(testCasesToRun, "", "", "", false, null, executor));
 
             stopwatch.Start();
             thread.Start();

@@ -108,6 +108,8 @@
     <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.9.0.md" />
     <EmbeddedResource Include="Resources\ReleaseNotes\0.9.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.10.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.10.1.md" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="GoogleTestExtensionOptionsPage.vsct">
@@ -134,6 +136,31 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.7.0.4\lib\net20\envdte.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="envdte100, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.10.10.0.4\lib\net20\envdte100.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.8.8.0.4\lib\net20\envdte80.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="envdte90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.9.9.0.4\lib\net20\envdte90.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="envdte90a, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>$(NuGetPackages)VSSDK.DTE.9.9.0.4\lib\net20\envdte90a.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <HintPath>$(NuGetPackages)CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
     </Reference>
@@ -215,6 +242,9 @@
       <Private>True</Private>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NamedPipeWrapper, Version=1.5.1.0, Culture=neutral, PublicKeyToken=63e9e311e4e1512f, processorArchitecture=MSIL">
+      <HintPath>$(NuGetPackages)NamedPipeWrapper.Signed.1.5.1.2-beta2\lib\net40\NamedPipeWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>$(NuGetPackages)VSSDK.DTE.7.0.4\lib\net20\stdole.dll</HintPath>
@@ -240,10 +270,6 @@
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VsDebuggerAttacherWrapper\VsDebuggerAttacherWrapper.csproj">
-      <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
-      <Name>VsDebuggerAttacherWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\VsPackage.Shared\VsPackage.Shared.projitems" Label="Shared" />

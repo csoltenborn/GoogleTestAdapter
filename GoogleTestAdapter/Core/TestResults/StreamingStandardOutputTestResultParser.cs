@@ -11,14 +11,13 @@ namespace GoogleTestAdapter.TestResults
 {
     public class StreamingStandardOutputTestResultParser
     {
-        private static readonly Regex PrefixedLineRegex;
+        public static readonly Regex PrefixedLineRegex;
 
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
 
         private readonly List<TestCase> _testCasesRun;
         private readonly ILogger _logger;
-        private readonly string _baseDir;
         private readonly ITestFrameworkReporter _reporter;
 
         private readonly List<string> _consoleOutput = new List<string>();
@@ -27,15 +26,14 @@ namespace GoogleTestAdapter.TestResults
         {
             string passedMarker = Regex.Escape(StandardOutputTestResultParser.Passed);
             string failedMarker = Regex.Escape(StandardOutputTestResultParser.Failed);
-            PrefixedLineRegex = new Regex($"(.*)((?:{passedMarker}|{failedMarker}).*)", RegexOptions.Compiled);
+            PrefixedLineRegex = new Regex($"(.+)((?:{passedMarker}|{failedMarker}).*)", RegexOptions.Compiled);
         }
 
         public StreamingStandardOutputTestResultParser(IEnumerable<TestCase> testCasesRun,
-                ILogger logger, string baseDir, ITestFrameworkReporter reporter)
+                ILogger logger, ITestFrameworkReporter reporter)
         {
             _testCasesRun = testCasesRun.ToList();
             _logger = logger;
-            _baseDir = baseDir;
             _reporter = reporter;
         }
 
@@ -84,7 +82,8 @@ namespace GoogleTestAdapter.TestResults
         {
             string qualifiedTestname = StandardOutputTestResultParser.RemovePrefix(line).Trim();
             TestCase testCase = StandardOutputTestResultParser.FindTestcase(qualifiedTestname, _testCasesRun);
-            _reporter.ReportTestsStarted(testCase.Yield());
+            if (testCase != null)
+                _reporter.ReportTestsStarted(testCase.Yield());
         }
 
         private void ReportTestResult()
@@ -103,12 +102,18 @@ namespace GoogleTestAdapter.TestResults
             while (currentLineIndex < _consoleOutput.Count &&
                 !StandardOutputTestResultParser.IsRunLine(_consoleOutput[currentLineIndex]))
                 currentLineIndex++;
+
             if (currentLineIndex == _consoleOutput.Count)
                 return null;
 
             string line = _consoleOutput[currentLineIndex++];
             string qualifiedTestname = StandardOutputTestResultParser.RemovePrefix(line).Trim();
             TestCase testCase = StandardOutputTestResultParser.FindTestcase(qualifiedTestname, _testCasesRun);
+            if (testCase == null)
+            {
+                _logger.DebugWarning($"No known test case for test result of line '{line}'' - are you repeating a test run, but tests have changed in the meantime?");
+                return null;
+            }
 
             if (currentLineIndex == _consoleOutput.Count)
             {
@@ -134,7 +139,7 @@ namespace GoogleTestAdapter.TestResults
             }
             if (StandardOutputTestResultParser.IsFailedLine(line))
             {
-                ErrorMessageParser parser = new ErrorMessageParser(errorMsg, _baseDir);
+                ErrorMessageParser parser = new ErrorMessageParser(errorMsg);
                 parser.Parse();
                 return StandardOutputTestResultParser.CreateFailedTestResult(
                     testCase,

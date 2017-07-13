@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 7/2017.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -9,40 +9,52 @@ using GoogleTestAdapter.TestAdapter.Framework;
 namespace GoogleTestAdapter.Tests.Common
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class TestResources
     {
-        public const string SampleTestsSolutionDir = @"..\..\..\..\..\SampleTests\";
-        public const string SampleTestsOutputDir = @"..\..\..\SampleTests\";
-        public const string TestdataDir = @"..\Tests.Common\Resources\TestData\";
+#if DEBUG
+        private const string BuildConfig = "Debug";
+#else
+        private const string BuildConfig = "Release";
+#endif
 
-        public const string Results0Batch = @"Tests\Returns0.bat";
-        public const string Results1Batch = @"Tests\Returns1.bat";
+        public const string RootDir = @"..\..\..\..\..\";
+        public const string SampleTestsSolutionDir = RootDir + @"SampleTests\";
+        public const string GoogleTestAdapterBuildDir = RootDir + @"out\binaries\GoogleTestAdapter\" + BuildConfig + @"\";
+        public const string SampleTestsBuildDir = RootDir + @"out\binaries\SampleTests\";
+        public const string TestdataDir = GoogleTestAdapterBuildDir + @"Tests.Common\Resources\TestData\";
 
-        public const int NrOfSampleTests = 88;
-        public const string SampleTests = SampleTestsOutputDir + @"Debug\Tests_gta.exe";
-        public const string SampleTestsRelease = SampleTestsOutputDir + @"Release\Tests_gta.exe";
+        // helpers
+        public const string TenSecondsWaiter = GoogleTestAdapterBuildDir + @"TenSecondsWaiter\TenSecondsWaiter.exe";
+        public const string AlwaysCrashingExe = GoogleTestAdapterBuildDir + @"CrashingExe\CrashingExe.exe";
+        public const string AlwaysFailingExe = GoogleTestAdapterBuildDir + @"FailingExe\FailingExe.exe";
 
-        public static readonly string LoadTests = Path.Combine(SampleTestsOutputDir, @"Release\LoadTests_gta.exe");
-        public static readonly string LongRunningTests = Path.Combine(SampleTestsOutputDir, @"Release\LongRunningTests_gta.exe");
+        public const string Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Tests_gta.exe";
+        public const string Tests_ReleaseX86 = SampleTestsBuildDir + @"Release\Tests_gta.exe";
+        public const string Tests_DebugX86_Gtest170 = SampleTestsBuildDir + @"Debug\Tests_1.7.0_gta.exe";
+        public const string Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Tests_gta.exe";
+        public const string Tests_ReleaseX64_Output = TestdataDir + @"Tests_gta_exe_output.txt";
+        public const int NrOfTests = 94;
+        public const int NrOfPassingTests = 40;
+        public const int NrOfFailingTests = 54;
 
-        public const string HardCrashingSampleTests = SampleTestsOutputDir + @"Debug\CrashingTests_gta.exe";
+        public static readonly string LoadTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LoadTests_gta.exe");
 
-        public const string X86Dir = TestdataDir + @"_x86\";
-        public const string X86StaticallyLinkedTests = X86Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        public const string X86ExternallyLinkedTests = X86Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        public const string X86ExternallyLinkedTestsDll = X86Dir + @"ExternallyLinkedGoogleTests\ExternalGoogleTestLibrary.dll";
-        public const string X86CrashingTests = X86Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
-        public const string X86TestsWithoutPdb = X86Dir + @"NoPdbFile\ConsoleApplication1Tests.exe";
-        public const string PathExtensionTestsExe = X86Dir + @"PathExtension\exe\Tests.exe";
-        public static readonly string PathExtensionTestsDllDir = Path.GetFullPath(X86Dir + @"PathExtension\lib");
-        public const string AlwaysCrashingExe = X86Dir + @"Crash\CrashingExe.exe";
-        public const string AlwaysFailingExe = X86Dir + @"Fail\FailingExe.exe";
-        public const int NrOfPathExtensionTests = 72;
+        public static readonly string LongRunningTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LongRunningTests_gta.exe");
 
-        public const string X64Dir = TestdataDir + @"_x64\";
-        public const string X64StaticallyLinkedTests = X64Dir + @"StaticallyLinkedGoogleTests\StaticallyLinkedGoogleTests.exe";
-        public const string X64ExternallyLinkedTests = X64Dir + @"ExternallyLinkedGoogleTests\ExternallyLinkedGoogleTests.exe";
-        public const string X64CrashingTests = X64Dir + @"CrashingGoogleTests\CrashingGoogleTests.exe";
+        public const string CrashingTests_DebugX86 = SampleTestsBuildDir + @"Debug\CrashingTests_gta.exe";
+        public const string CrashingTests_ReleaseX86 = SampleTestsBuildDir + @"Release\CrashingTests_gta.exe";
+        public const string CrashingTests_DebugX64 = SampleTestsBuildDir + @"Debug-x64\CrashingTests_gta.exe";
+        public const string CrashingTests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\CrashingTests_gta.exe";
+
+        public const string DllTests_ReleaseX86 = SampleTestsBuildDir + @"Release\DllTests_gta.exe";
+        public const string DllTestsDll_ReleaseX86 = SampleTestsBuildDir + @"Release\DllProject.dll";
+        public const string DllTests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\DllTests_gta.exe";
+        public const string DllTestsDll_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\DllProject.dll";
+        public const int NrOfDllTests = 2;
+
+        public const string SucceedingBatch = @"Tests\Returns0.bat";
+        public const string FailingBatch = @"Tests\Returns1.bat";
 
         public const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         public const string XmlFile2 = TestdataDir + @"SampleResult2.xml";
@@ -53,7 +65,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution.gta.runsettings";
         public const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
         public const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
-        public const string UserTestSettingsForGeneratedTests = TestdataDir + "User.runsettings";
+        public const string UserTestSettingsForGeneratedTests_Project = TestdataDir + "Project.runsettings";
+        public const string UserTestSettingsForGeneratedTests_Solution = TestdataDir + "Solution.runsettings";
+        public const string UserTestSettingsForGeneratedTests_SolutionProject = TestdataDir + "SolutionProject.runsettings";
         public const string UserTestSettingsForListingTests = TestdataDir + "ListTests.runsettings";
         public const string ProviderDeliveredTestSettings = TestdataDir + @"RunSettingsServiceTests\Provider_delivered.runsettings";
 

@@ -25,6 +25,8 @@ namespace GoogleTestAdapter.Runners
         private readonly SettingsWrapper _settings;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
+        private TestProcessLauncher _processLauncher;
+        private IProcessExecutor _processExecutor;
 
         public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
         {
@@ -36,14 +38,13 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir,
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
             string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
             DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
 
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
-            TestCase[] allTestCasesAsArray = allTestCases as TestCase[] ?? allTestCases.ToArray();
             foreach (string executable in groupedTestCases.Keys)
             {
                 string finalParameters = SettingsWrapper.ReplacePlaceholders(userParameters, executable);
@@ -57,9 +58,7 @@ namespace GoogleTestAdapter.Runners
                     RunTestsFromExecutable(
                         executable,
                         finalWorkingDir,
-                        allTestCasesAsArray.Where(tc => tc.Source == executable),
                         groupedTestCases[executable],
-                        baseDir,
                         finalParameters,
                         isBeingDebugged,
                         debuggedLauncher,
@@ -82,21 +81,21 @@ namespace GoogleTestAdapter.Runners
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable, string workingDir,
-            IEnumerable<TestCase> allTestCases, IEnumerable<TestCase> testCasesToRun, string baseDir, string userParameters,
+            IEnumerable<TestCase> testCasesToRun, string userParameters,
             bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(allTestCases, testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
+            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)
                 {
                     break;
                 }
-                var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, baseDir, _frameworkReporter);
-                var results = RunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
+                var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, _frameworkReporter);
+                var results = RunTests(executable, workingDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
 
                 try
                 {
@@ -122,12 +121,12 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private IEnumerable<TestResult> RunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
+        private IEnumerable<TestResult> RunTests(string executable, string workingDir, bool isBeingDebugged,
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
         {
             try
             {
-                return TryRunTests(executable, workingDir, baseDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
+                return TryRunTests(executable, workingDir, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
             }
             catch (Exception e)
             {
@@ -146,7 +145,7 @@ namespace GoogleTestAdapter.Runners
                 $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
         }
 
-        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, string baseDir, bool isBeingDebugged,
+        private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, bool isBeingDebugged,
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
             StreamingStandardOutputTestResultParser streamingParser)
         {
@@ -167,11 +166,12 @@ namespace GoogleTestAdapter.Runners
 
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
-            return CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, baseDir, streamingParser.CrashedTestCase);
-        }
+            var testResults = new TestResultCollector(_logger, _threadName)
+                .CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
+            testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 
-        private TestProcessLauncher _processLauncher;
-        private IProcessExecutor _processExecutor;
+            return testResults;
+        }
 
         private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, IProcessExecutor executor,
             StreamingStandardOutputTestResultParser streamingParser)
@@ -220,79 +220,6 @@ namespace GoogleTestAdapter.Runners
             }
             return consoleOutput;
         }
-
-        private List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, string baseDir, TestCase crashedTestCase)
-        {
-            var testResults = new List<TestResult>();
-
-            TestCase[] testCasesRunAsArray = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-            var consoleParser = new StandardOutputTestResultParser(testCasesRunAsArray, consoleOutput, _logger, baseDir);
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
-                var xmlParser = new XmlTestResultParser(testCasesRunAsArray, resultXmlFile, _logger, baseDir);
-                List<TestResult> xmlResults = xmlParser.GetTestResults();
-                int nrOfCollectedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestResult testResult in xmlResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
-                {
-                    testResults.Add(testResult);
-                    nrOfCollectedTestResults++;
-                }
-                if (nrOfCollectedTestResults > 0)
-                   _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from result XML file {resultXmlFile}");
-            }
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
-                List<TestResult> consoleResults = consoleParser.GetTestResults();
-                int nrOfCollectedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestResult testResult in consoleResults.Where(tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
-                {
-                    testResults.Add(testResult);
-                    nrOfCollectedTestResults++;
-                }
-                if (nrOfCollectedTestResults > 0)
-                    _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from console output");
-            }
-
-            if (testResults.Count < testCasesRunAsArray.Length)
-            {
-                string errorMessage, errorStackTrace = null;
-                if (consoleParser.CrashedTestCase == null && crashedTestCase == null)
-                {
-                    errorMessage = "";
-                }
-                else
-                {
-                    if (crashedTestCase == null)
-                        crashedTestCase = consoleParser.CrashedTestCase;
-                    errorMessage = $"reason is probably a crash of test {crashedTestCase.DisplayName}";
-                    errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
-                        crashedTestCase.CodeFilePath, crashedTestCase.LineNumber.ToString());
-                }
-                int nrOfCreatedTestResults = 0;
-                // ReSharper disable once AccessToModifiedClosure
-                foreach (TestCase testCase in testCasesRunAsArray.Where(tc => !testResults.Exists(tr => tr.TestCase.FullyQualifiedName == tc.FullyQualifiedName)))
-                {
-                    testResults.Add(new TestResult(testCase)
-                    {
-                        ComputerName = Environment.MachineName,
-                        Outcome = TestOutcome.Skipped,
-                        ErrorMessage = errorMessage,
-                        ErrorStackTrace = errorStackTrace
-                    });
-                    nrOfCreatedTestResults++;
-                }
-                _logger.DebugInfo($"{_threadName}Created {nrOfCreatedTestResults} test results for tests which were neither found in result XML file nor in console output");
-            }
-
-            testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
-
-            return testResults;
-        }
-
     }
 
 }

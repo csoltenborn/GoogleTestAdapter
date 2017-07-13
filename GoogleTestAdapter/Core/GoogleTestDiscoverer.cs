@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
@@ -14,6 +15,8 @@ namespace GoogleTestAdapter
 {
     public class GoogleTestDiscoverer
     {
+        public const string GoogleTestIndicator = ".is_google_test";
+
         private static readonly Regex CompiledTestFinderRegex = new Regex(SettingsWrapper.TestFinderRegex, RegexOptions.Compiled);
 
         private readonly ILogger _logger;
@@ -32,22 +35,10 @@ namespace GoogleTestAdapter
             IList<string> googleTestExecutables = GetAllGoogleTestExecutables(executables);
             if (_settings.UseNewTestExecutionFramework)
             {
-                foreach (string executable in googleTestExecutables)
-                {
-                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                    {
-                        int nrOfTestCases = 0;
-                        Action<TestCase> reportTestCases = tc =>
-                        {
-                            reporter.ReportTestsFound(tc.Yield());
-                            _logger.DebugInfo("Added testcase " + tc.DisplayName);
-                            nrOfTestCases++;
-                        };
-                        var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
-                        factory.CreateTestCases(reportTestCases);
-                        _logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-                    }, _logger);
-                }
+                var discoveryActions = googleTestExecutables
+                    .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
+                    .ToArray();
+                Utils.SpawnAndWait(discoveryActions);
             }
             else
             {
@@ -60,6 +51,23 @@ namespace GoogleTestAdapter
                     }, _logger);
                 }
             }
+        }
+
+        private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory)
+        {
+            settings.ExecuteWithSettingsForExecutable(executable, () =>
+            {
+                int nrOfTestCases = 0;
+                Action<TestCase> reportTestCases = tc =>
+                {
+                    reporter.ReportTestsFound(tc.Yield());
+                    logger.DebugInfo("Added testcase " + tc.DisplayName);
+                    nrOfTestCases++;
+                };
+                var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory);
+                factory.CreateTestCases(reportTestCases);
+                logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+            }, logger);
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
@@ -78,21 +86,30 @@ namespace GoogleTestAdapter
 
         public bool IsGoogleTestExecutable(string executable, string customRegex = "")
         {
+            string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
+            if (File.Exists(googleTestIndicatorFile))
+            {
+                _logger.DebugInfo($"Google Test indicator file found for executable {executable}");
+                return true;
+            }
+            _logger.DebugInfo($"No Google Test indicator file found for executable {executable}");
+
             bool matches;
-            string regexUsed;
+            string regexSource, regex;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexUsed = SettingsWrapper.TestFinderRegex;
+                regexSource = "default";
+                regex = SettingsWrapper.TestFinderRegex;
                 matches = CompiledTestFinderRegex.IsMatch(executable);
             }
             else
             {
-                regexUsed = customRegex;
+                regexSource = "custom";
+                regex = customRegex;
                 matches = SafeMatches(executable, customRegex);
             }
-
             _logger.DebugInfo(
-                    executable + (matches ? " matches " : " does not match ") + "regex '" + regexUsed + "'");
+                $"'{executable}' {(matches ? "matches" : "does not match")} {regexSource} regex '{regex}'");
 
             return matches;
         }

@@ -1,0 +1,504 @@
+[==========] Running 94 tests from 26 test cases.
+[----------] Global test environment set-up.
+[----------] 1 test from Api.Created.Tests
+[ RUN      ] Api.Created.Tests.PassingTest
+[       OK ] Api.Created.Tests.PassingTest (0 ms)
+[----------] 1 test from Api.Created.Tests (0 ms total)
+
+[----------] 1 test from Api_Created_Tests
+[ RUN      ] Api_Created_Tests.FailingTest
+c:\users\chris\git\googletestadapter\sampletests\tests\apicreatedtests.cpp(40): error: Value of: message == ""
+  Actual: false
+Expected: true
+Test failed: Something is wrong
+[  FAILED  ] Api_Created_Tests.FailingTest (1 ms)
+[----------] 1 test from Api_Created_Tests (1 ms total)
+
+[----------] 6 tests from TheFixture
+[ RUN      ] TheFixture.AddFails
+c:\users\chris\git\googletestadapter\sampletests\tests\fixturetests.cpp(12): error:       Expected: 1000
+To be equal to: Add(10, 10)
+      Which is: 20
+[  FAILED  ] TheFixture.AddFails (1 ms)
+[ RUN      ] TheFixture.AddPasses
+[       OK ] TheFixture.AddPasses (0 ms)
+[ RUN      ] TheFixture.Crash
+unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.
+[  FAILED  ] TheFixture.Crash (1 ms)
+[ RUN      ] TheFixture.AddPassesWithTraits
+[       OK ] TheFixture.AddPassesWithTraits (0 ms)
+[ RUN      ] TheFixture.AddPassesWithTraits2
+[       OK ] TheFixture.AddPassesWithTraits2 (0 ms)
+[ RUN      ] TheFixture.AddPassesWithTraits3
+[       OK ] TheFixture.AddPassesWithTraits3 (0 ms)
+[----------] 6 tests from TheFixture (2 ms total)
+
+[----------] 1 test from CommandArgs
+[ RUN      ] CommandArgs.TestDirectoryIsSet
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(24): error: Expected: ("") != (TEST_DIRECTORY.c_str()), actual: "" vs ""
+[  FAILED  ] CommandArgs.TestDirectoryIsSet (1 ms)
+[----------] 1 test from CommandArgs (1 ms total)
+
+[----------] 1 test from WorkingDir
+[ RUN      ] WorkingDir.IsSolutionDirectory
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(40): error: Value of: ends_with(working_directory, "SampleTests")
+  Actual: false
+Expected: true
+working_directory is C:\Users\chris\git\GoogleTestAdapter\SampleTests\x64\Debug
+[  FAILED  ] WorkingDir.IsSolutionDirectory (1 ms)
+[----------] 1 test from WorkingDir (1 ms total)
+
+[----------] 4 tests from TestMath
+[ RUN      ] TestMath.AddFails
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(45): error:       Expected: 1000
+To be equal to: Add(10, 10)
+      Which is: 20
+[  FAILED  ] TestMath.AddFails (1 ms)
+[ RUN      ] TestMath.AddPasses
+[       OK ] TestMath.AddPasses (0 ms)
+[ RUN      ] TestMath.Crash
+unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.
+[  FAILED  ] TestMath.Crash (0 ms)
+[ RUN      ] TestMath.AddPassesWithTraits
+[       OK ] TestMath.AddPassesWithTraits (0 ms)
+[----------] 4 tests from TestMath (1 ms total)
+
+[----------] 9 tests from Traits
+[ RUN      ] Traits.With8Traits
+[       OK ] Traits.With8Traits (0 ms)
+[ RUN      ] Traits.With7Traits
+[       OK ] Traits.With7Traits (0 ms)
+[ RUN      ] Traits.With6Traits
+[       OK ] Traits.With6Traits (0 ms)
+[ RUN      ] Traits.With5Traits
+[       OK ] Traits.With5Traits (0 ms)
+[ RUN      ] Traits.With4Traits
+[       OK ] Traits.With4Traits (0 ms)
+[ RUN      ] Traits.With3Traits
+[       OK ] Traits.With3Traits (0 ms)
+[ RUN      ] Traits.With2Traits
+[       OK ] Traits.With2Traits (0 ms)
+[ RUN      ] Traits.With1Traits
+[       OK ] Traits.With1Traits (0 ms)
+[ RUN      ] Traits.WithEqualTraits
+[       OK ] Traits.WithEqualTraits (0 ms)
+[----------] 9 tests from Traits (1 ms total)
+
+[----------] 6 tests from OutputHandling
+[ RUN      ] OutputHandling.Output_ManyLinesWithNewlines
+before test 1
+before test 2
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(113): error:       Expected: 1
+To be equal to: 2
+test output
+after test 1
+after test 2
+[  FAILED  ] OutputHandling.Output_ManyLinesWithNewlines (1 ms)
+[ RUN      ] OutputHandling.Output_OneLineWithNewlines
+before test
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(121): error:       Expected: 1
+To be equal to: 2
+test output
+after test
+[  FAILED  ] OutputHandling.Output_OneLineWithNewlines (1 ms)
+[ RUN      ] OutputHandling.Output_OneLine
+before testc:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(128): error:       Expected: 1
+To be equal to: 2
+test output
+after test[  FAILED  ] OutputHandling.Output_OneLine (1 ms)
+[ RUN      ] OutputHandling.ManyLinesWithNewlines
+before test 1
+before test 2
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(136): error:       Expected: 1
+To be equal to: 2
+after test 1
+after test 2
+[  FAILED  ] OutputHandling.ManyLinesWithNewlines (1 ms)
+[ RUN      ] OutputHandling.OneLineWithNewlines
+before test
+c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(144): error:       Expected: 1
+To be equal to: 2
+after test
+[  FAILED  ] OutputHandling.OneLineWithNewlines (1 ms)
+[ RUN      ] OutputHandling.OneLine
+before testc:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp(151): error:       Expected: 1
+To be equal to: 2
+after test[  FAILED  ] OutputHandling.OneLine (1 ms)
+[----------] 6 tests from OutputHandling (6 ms total)
+
+[----------] 11 tests from MessageParserTests
+[ RUN      ] MessageParserTests.SimpleAssert
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(23): error:       Expected: 1
+To be equal to: 2
+[  FAILED  ] MessageParserTests.SimpleAssert (1 ms)
+[ RUN      ] MessageParserTests.SimpleExpect
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(28): error:       Expected: 2
+To be equal to: 3
+[  FAILED  ] MessageParserTests.SimpleExpect (0 ms)
+[ RUN      ] MessageParserTests.ExpectAndAssert
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(33): error:       Expected: 3
+To be equal to: 4
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(34): error:       Expected: 4
+To be equal to: 5
+[  FAILED  ] MessageParserTests.ExpectAndAssert (1 ms)
+[ RUN      ] MessageParserTests.ExpectInOtherMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+[  FAILED  ] MessageParserTests.ExpectInOtherMethod (0 ms)
+[ RUN      ] MessageParserTests.ExpectInOtherFile
+c:\users\chris\git\googletestadapter\sampletests\tests\main.cpp(27): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+[  FAILED  ] MessageParserTests.ExpectInOtherFile (1 ms)
+[ RUN      ] MessageParserTests.ExpectInTestAndMethodAndOtherFile
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(49): error:       Expected: 5
+To be equal to: 6
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+c:\users\chris\git\googletestadapter\sampletests\tests\main.cpp(27): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+[  FAILED  ] MessageParserTests.ExpectInTestAndMethodAndOtherFile (2 ms)
+[ RUN      ] MessageParserTests.ScopedTraceInTestMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+Google Test trace:
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(56): TestMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInTestMethod (1 ms)
+[ RUN      ] MessageParserTests.TwoScopedTracesInTestMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+Google Test trace:
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(64): TestMethod Inner
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(62): TestMethod Outer
+[  FAILED  ] MessageParserTests.TwoScopedTracesInTestMethod (1 ms)
+[ RUN      ] MessageParserTests.ScopedTraceInHelperMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+Google Test trace:
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(17): HelperMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInHelperMethod (1 ms)
+[ RUN      ] MessageParserTests.ScopedTraceInTestMethodANdHelperMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+Google Test trace:
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(17): HelperMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(76): TestMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInTestMethodANdHelperMethod (1 ms)
+[ RUN      ] MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(12): error:       Expected: 0
+To be equal to: i
+      Which is: 1
+Google Test trace:
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(17): HelperMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(82): TestMethod
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(84): error:       Expected: 0
+To be equal to: 1
+Google Test trace:
+c:\users\chris\git\googletestadapter\sampletests\tests\scopedtracestests.cpp(82): TestMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod (3 ms)
+[----------] 11 tests from MessageParserTests (13 ms total)
+
+[----------] 4 tests from TypedTests/0, where TypeParam = class std::vector<int,class std::allocator<int> >
+[ RUN      ] TypedTests/0.CanIterate
+[       OK ] TypedTests/0.CanIterate (0 ms)
+[ RUN      ] TypedTests/0.CanDefeatMath
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(29): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] TypedTests/0.CanDefeatMath, where TypeParam = class std::vector<int,class std::allocator<int> > (0 ms)
+[ RUN      ] TypedTests/0.TwoTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(33): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] TypedTests/0.TwoTraits, where TypeParam = class std::vector<int,class std::allocator<int> > (1 ms)
+[ RUN      ] TypedTests/0.ThreeTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(37): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] TypedTests/0.ThreeTraits, where TypeParam = class std::vector<int,class std::allocator<int> > (1 ms)
+[----------] 4 tests from TypedTests/0 (4 ms total)
+
+[----------] 4 tests from TypedTests/1, where TypeParam = class std::array<int,3>
+[ RUN      ] TypedTests/1.CanIterate
+[       OK ] TypedTests/1.CanIterate (0 ms)
+[ RUN      ] TypedTests/1.CanDefeatMath
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(29): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] TypedTests/1.CanDefeatMath, where TypeParam = class std::array<int,3> (2 ms)
+[ RUN      ] TypedTests/1.TwoTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(33): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] TypedTests/1.TwoTraits, where TypeParam = class std::array<int,3> (1 ms)
+[ RUN      ] TypedTests/1.ThreeTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(37): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] TypedTests/1.ThreeTraits, where TypeParam = class std::array<int,3> (1 ms)
+[----------] 4 tests from TypedTests/1 (5 ms total)
+
+[----------] 4 tests from TypedTests/2, where TypeParam = struct MyStrangeArray
+[ RUN      ] TypedTests/2.CanIterate
+[       OK ] TypedTests/2.CanIterate (0 ms)
+[ RUN      ] TypedTests/2.CanDefeatMath
+[       OK ] TypedTests/2.CanDefeatMath (0 ms)
+[ RUN      ] TypedTests/2.TwoTraits
+[       OK ] TypedTests/2.TwoTraits (0 ms)
+[ RUN      ] TypedTests/2.ThreeTraits
+[       OK ] TypedTests/2.ThreeTraits (0 ms)
+[----------] 4 tests from TypedTests/2 (1 ms total)
+
+[----------] 4 tests from Vec/TypeParameterizedTests/0, where TypeParam = class std::vector<int,class std::allocator<int> >
+[ RUN      ] Vec/TypeParameterizedTests/0.CanIterate
+[       OK ] Vec/TypeParameterizedTests/0.CanIterate (0 ms)
+[ RUN      ] Vec/TypeParameterizedTests/0.CanDefeatMath
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(54): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] Vec/TypeParameterizedTests/0.CanDefeatMath, where TypeParam = class std::vector<int,class std::allocator<int> > (1 ms)
+[ RUN      ] Vec/TypeParameterizedTests/0.TwoTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(58): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] Vec/TypeParameterizedTests/0.TwoTraits, where TypeParam = class std::vector<int,class std::allocator<int> > (1 ms)
+[ RUN      ] Vec/TypeParameterizedTests/0.ThreeTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(62): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] Vec/TypeParameterizedTests/0.ThreeTraits, where TypeParam = class std::vector<int,class std::allocator<int> > (1 ms)
+[----------] 4 tests from Vec/TypeParameterizedTests/0 (3 ms total)
+
+[----------] 4 tests from Arr/TypeParameterizedTests/0, where TypeParam = class std::array<int,3>
+[ RUN      ] Arr/TypeParameterizedTests/0.CanIterate
+[       OK ] Arr/TypeParameterizedTests/0.CanIterate (0 ms)
+[ RUN      ] Arr/TypeParameterizedTests/0.CanDefeatMath
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(54): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] Arr/TypeParameterizedTests/0.CanDefeatMath, where TypeParam = class std::array<int,3> (1 ms)
+[ RUN      ] Arr/TypeParameterizedTests/0.TwoTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(58): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] Arr/TypeParameterizedTests/0.TwoTraits, where TypeParam = class std::array<int,3> (1 ms)
+[ RUN      ] Arr/TypeParameterizedTests/0.ThreeTraits
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(62): error: Expected: (this->container[0] + this->container[1]) != (this->container[2]), actual: 3 vs 3
+[  FAILED  ] Arr/TypeParameterizedTests/0.ThreeTraits, where TypeParam = class std::array<int,3> (1 ms)
+[----------] 4 tests from Arr/TypeParameterizedTests/0 (3 ms total)
+
+[----------] 4 tests from Arr/TypeParameterizedTests/1, where TypeParam = struct MyStrangeArray
+[ RUN      ] Arr/TypeParameterizedTests/1.CanIterate
+[       OK ] Arr/TypeParameterizedTests/1.CanIterate (0 ms)
+[ RUN      ] Arr/TypeParameterizedTests/1.CanDefeatMath
+[       OK ] Arr/TypeParameterizedTests/1.CanDefeatMath (0 ms)
+[ RUN      ] Arr/TypeParameterizedTests/1.TwoTraits
+[       OK ] Arr/TypeParameterizedTests/1.TwoTraits (0 ms)
+[ RUN      ] Arr/TypeParameterizedTests/1.ThreeTraits
+[       OK ] Arr/TypeParameterizedTests/1.ThreeTraits (0 ms)
+[----------] 4 tests from Arr/TypeParameterizedTests/1 (0 ms total)
+
+[----------] 1 test from PrimitivelyTypedTests/0, where TypeParam = signed char
+[ RUN      ] PrimitivelyTypedTests/0.CanHasBigNumbers
+c:\users\chris\git\googletestadapter\sampletests\tests\typeparameterizedtests.cpp(87): error:       Expected: 130
+To be equal to: sum
+      Which is: '\x82' (-126)
+[  FAILED  ] PrimitivelyTypedTests/0.CanHasBigNumbers, where TypeParam = signed char (1 ms)
+[----------] 1 test from PrimitivelyTypedTests/0 (1 ms total)
+
+[----------] 1 test from PrimitivelyTypedTests/1, where TypeParam = int
+[ RUN      ] PrimitivelyTypedTests/1.CanHasBigNumbers
+[       OK ] PrimitivelyTypedTests/1.CanHasBigNumbers (0 ms)
+[----------] 1 test from PrimitivelyTypedTests/1 (0 ms total)
+
+[----------] 1 test from PrimitivelyTypedTests/2, where TypeParam = long
+[ RUN      ] PrimitivelyTypedTests/2.CanHasBigNumbers
+[       OK ] PrimitivelyTypedTests/2.CanHasBigNumbers (1 ms)
+[----------] 1 test from PrimitivelyTypedTests/2 (1 ms total)
+
+[----------] 2 tests from Ümlautß
+[ RUN      ] Ümlautß.Täst
+c:\users\chris\git\googletestadapter\sampletests\tests\umlauttests.cpp(9): error:       Expected: 1
+To be equal to: 2
+[  FAILED  ] Ümlautß.Täst (0 ms)
+[ RUN      ] Ümlautß.Träits
+[       OK ] Ümlautß.Träits (1 ms)
+[----------] 2 tests from Ümlautß (1 ms total)
+
+[----------] 2 tests from TheFixtüre
+[ RUN      ] TheFixtüre.Täst
+c:\users\chris\git\googletestadapter\sampletests\tests\umlauttests.cpp(25): error:       Expected: 1
+To be equal to: 2
+[  FAILED  ] TheFixtüre.Täst (1 ms)
+[ RUN      ] TheFixtüre.Träits
+[       OK ] TheFixtüre.Träits (0 ms)
+[----------] 2 tests from TheFixtüre (1 ms total)
+
+[----------] 1 test from ÜmlautTypedTests/0, where TypeParam = class ImplementationA
+[ RUN      ] ÜmlautTypedTests/0.Täst
+[       OK ] ÜmlautTypedTests/0.Täst (0 ms)
+[----------] 1 test from ÜmlautTypedTests/0 (0 ms total)
+
+[----------] 1 test from ÜmlautTypedTests/1, where TypeParam = class ImplementationB
+[ RUN      ] ÜmlautTypedTests/1.Täst
+c:\users\chris\git\googletestadapter\sampletests\tests\umlauttests.cpp(94): error:       Expected: 2
+To be equal to: theInstance.GetValue(1)
+      Which is: 3
+[  FAILED  ] ÜmlautTypedTests/1.Täst, where TypeParam = class ImplementationB (1 ms)
+[----------] 1 test from ÜmlautTypedTests/1 (1 ms total)
+
+[----------] 12 tests from InstantiationName/ParameterizedTests
+[ RUN      ] InstantiationName/ParameterizedTests.Simple/0
+[       OK ] InstantiationName/ParameterizedTests.Simple/0 (0 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.Simple/1
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(25): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "!"
+[  FAILED  ] InstantiationName/ParameterizedTests.Simple/1, where GetParam() = (1,!) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.Simple/2
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(24): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: -1
+[  FAILED  ] InstantiationName/ParameterizedTests.Simple/2, where GetParam() = (-1,) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits/0
+[       OK ] InstantiationName/ParameterizedTests.SimpleTraits/0 (0 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits/1
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(30): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "!"
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits/1, where GetParam() = (1,!) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits/2
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(29): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: -1
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits/2, where GetParam() = (-1,) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits2/0
+[       OK ] InstantiationName/ParameterizedTests.SimpleTraits2/0 (0 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits2/1
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(35): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "!"
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits2/1, where GetParam() = (1,!) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits2/2
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(34): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: -1
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits2/2, where GetParam() = (-1,) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits3/0
+[       OK ] InstantiationName/ParameterizedTests.SimpleTraits3/0 (0 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits3/1
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(40): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "!"
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits3/1, where GetParam() = (1,!) (1 ms)
+[ RUN      ] InstantiationName/ParameterizedTests.SimpleTraits3/2
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(39): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: -1
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits3/2, where GetParam() = (-1,) (1 ms)
+[----------] 12 tests from InstantiationName/ParameterizedTests (9 ms total)
+
+[----------] 4 tests from ParameterizedTests
+[ RUN      ] ParameterizedTests.Simple/0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(24): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: 0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(25): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "_"
+[  FAILED  ] ParameterizedTests.Simple/0, where GetParam() = (0,_) (2 ms)
+[ RUN      ] ParameterizedTests.SimpleTraits/0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(29): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: 0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(30): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "_"
+[  FAILED  ] ParameterizedTests.SimpleTraits/0, where GetParam() = (0,_) (3 ms)
+[ RUN      ] ParameterizedTests.SimpleTraits2/0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(34): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: 0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(35): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "_"
+[  FAILED  ] ParameterizedTests.SimpleTraits2/0, where GetParam() = (0,_) (2 ms)
+[ RUN      ] ParameterizedTests.SimpleTraits3/0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(39): error:       Expected: 1
+To be equal to: GetParam().i
+      Which is: 0
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(40): error:       Expected: ""
+To be equal to: GetParam().s
+      Which is: "_"
+[  FAILED  ] ParameterizedTests.SimpleTraits3/0, where GetParam() = (0,_) (2 ms)
+[----------] 4 tests from ParameterizedTests (10 ms total)
+
+[----------] 3 tests from PointerParameterizedTests
+[ RUN      ] PointerParameterizedTests.CheckStringLength/0
+[       OK ] PointerParameterizedTests.CheckStringLength/0 (0 ms)
+[ RUN      ] PointerParameterizedTests.CheckStringLength/1
+[       OK ] PointerParameterizedTests.CheckStringLength/1 (0 ms)
+[ RUN      ] PointerParameterizedTests.CheckStringLength/2
+c:\users\chris\git\googletestadapter\sampletests\tests\parameterizedtests.cpp(64): error:       Expected: GetParam().second
+      Which is: 23
+To be equal to: strlen(GetParam().first)
+      Which is: 5
+[  FAILED  ] PointerParameterizedTests.CheckStringLength/2, where GetParam() = (000001EFD60E1220 pointing to "ooops", 23) (1 ms)
+[----------] 3 tests from PointerParameterizedTests (2 ms total)
+
+[----------] 2 tests from ÜnstanceName/ParameterizedTästs
+[ RUN      ] ÜnstanceName/ParameterizedTästs.Täst/0
+[       OK ] ÜnstanceName/ParameterizedTästs.Täst/0 (0 ms)
+[ RUN      ] ÜnstanceName/ParameterizedTästs.Träits/0
+c:\users\chris\git\googletestadapter\sampletests\tests\umlauttests.cpp(58): error:       Expected: "äöüßÄÖÜ"
+      Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"
+To be equal to: GetParam().s
+      Which is: "\xC4\xD6\xDC\xE4\xF6\xFC\xDF"
+[  FAILED  ] ÜnstanceName/ParameterizedTästs.Träits/0, where GetParam() = (1,ÄÖÜäöüß) (2 ms)
+[----------] 2 tests from ÜnstanceName/ParameterizedTästs (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 94 tests from 26 test cases ran. (77 ms total)
+[  PASSED  ] 40 tests.
+[  FAILED  ] 54 tests, listed below:
+[  FAILED  ] Api_Created_Tests.FailingTest
+[  FAILED  ] TheFixture.AddFails
+[  FAILED  ] TheFixture.Crash
+[  FAILED  ] CommandArgs.TestDirectoryIsSet
+[  FAILED  ] WorkingDir.IsSolutionDirectory
+[  FAILED  ] TestMath.AddFails
+[  FAILED  ] TestMath.Crash
+[  FAILED  ] OutputHandling.Output_ManyLinesWithNewlines
+[  FAILED  ] OutputHandling.Output_OneLineWithNewlines
+[  FAILED  ] OutputHandling.Output_OneLine
+[  FAILED  ] OutputHandling.ManyLinesWithNewlines
+[  FAILED  ] OutputHandling.OneLineWithNewlines
+[  FAILED  ] OutputHandling.OneLine
+[  FAILED  ] MessageParserTests.SimpleAssert
+[  FAILED  ] MessageParserTests.SimpleExpect
+[  FAILED  ] MessageParserTests.ExpectAndAssert
+[  FAILED  ] MessageParserTests.ExpectInOtherMethod
+[  FAILED  ] MessageParserTests.ExpectInOtherFile
+[  FAILED  ] MessageParserTests.ExpectInTestAndMethodAndOtherFile
+[  FAILED  ] MessageParserTests.ScopedTraceInTestMethod
+[  FAILED  ] MessageParserTests.TwoScopedTracesInTestMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInHelperMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInTestMethodANdHelperMethod
+[  FAILED  ] MessageParserTests.ScopedTraceInTestMethodANdHelperMethodAndExpectInTestMethod
+[  FAILED  ] TypedTests/0.CanDefeatMath, where TypeParam = class std::vector<int,class std::allocator<int> >
+[  FAILED  ] TypedTests/0.TwoTraits, where TypeParam = class std::vector<int,class std::allocator<int> >
+[  FAILED  ] TypedTests/0.ThreeTraits, where TypeParam = class std::vector<int,class std::allocator<int> >
+[  FAILED  ] TypedTests/1.CanDefeatMath, where TypeParam = class std::array<int,3>
+[  FAILED  ] TypedTests/1.TwoTraits, where TypeParam = class std::array<int,3>
+[  FAILED  ] TypedTests/1.ThreeTraits, where TypeParam = class std::array<int,3>
+[  FAILED  ] Vec/TypeParameterizedTests/0.CanDefeatMath, where TypeParam = class std::vector<int,class std::allocator<int> >
+[  FAILED  ] Vec/TypeParameterizedTests/0.TwoTraits, where TypeParam = class std::vector<int,class std::allocator<int> >
+[  FAILED  ] Vec/TypeParameterizedTests/0.ThreeTraits, where TypeParam = class std::vector<int,class std::allocator<int> >
+[  FAILED  ] Arr/TypeParameterizedTests/0.CanDefeatMath, where TypeParam = class std::array<int,3>
+[  FAILED  ] Arr/TypeParameterizedTests/0.TwoTraits, where TypeParam = class std::array<int,3>
+[  FAILED  ] Arr/TypeParameterizedTests/0.ThreeTraits, where TypeParam = class std::array<int,3>
+[  FAILED  ] PrimitivelyTypedTests/0.CanHasBigNumbers, where TypeParam = signed char
+[  FAILED  ] Ümlautß.Täst
+[  FAILED  ] TheFixtüre.Täst
+[  FAILED  ] ÜmlautTypedTests/1.Täst, where TypeParam = class ImplementationB
+[  FAILED  ] InstantiationName/ParameterizedTests.Simple/1, where GetParam() = (1,!)
+[  FAILED  ] InstantiationName/ParameterizedTests.Simple/2, where GetParam() = (-1,)
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits/1, where GetParam() = (1,!)
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits/2, where GetParam() = (-1,)
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits2/1, where GetParam() = (1,!)
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits2/2, where GetParam() = (-1,)
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits3/1, where GetParam() = (1,!)
+[  FAILED  ] InstantiationName/ParameterizedTests.SimpleTraits3/2, where GetParam() = (-1,)
+[  FAILED  ] ParameterizedTests.Simple/0, where GetParam() = (0,_)
+[  FAILED  ] ParameterizedTests.SimpleTraits/0, where GetParam() = (0,_)
+[  FAILED  ] ParameterizedTests.SimpleTraits2/0, where GetParam() = (0,_)
+[  FAILED  ] ParameterizedTests.SimpleTraits3/0, where GetParam() = (0,_)
+[  FAILED  ] PointerParameterizedTests.CheckStringLength/2, where GetParam() = (000001EFD60E1220 pointing to "ooops", 23)
+[  FAILED  ] ÜnstanceName/ParameterizedTästs.Träits/0, where GetParam() = (1,ÄÖÜäöüß)
+
+54 FAILED TESTS

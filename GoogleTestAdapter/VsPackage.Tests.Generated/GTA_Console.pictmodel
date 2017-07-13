@@ -1,13 +1,12 @@
 # TestFiles are mapped to actual executables in TestcaseCsvReader
-TestFile: SampleTests, HardCrashingSampleTests, X861, X862, X641, X642
-Settings: true, false
+TestFile: SampleTests, HardCrashingSampleTests, SampleTests170, SampleTestsX64
+Settings: true, false, Solution, SolutionProject
 TestCaseFilter: none, DisplayName=TestMath.AddPassesWithTraits, Type=Small, DisplayName=TestMath.AddPassesWithTraits|Type=Small, TestCategory=Unit&Type=Medium, TestCategory=NotExisting, *NotExisting=Foo
 EnableCodeCoverage: true, false
 InIsolation: true, false
 
 # only SampleTests has tests with traits
-IF [TestCaseFilter] <> "none" THEN [TestFile] = "SampleTests";
+IF [TestCaseFilter] <> "none" THEN ([TestFile] = "SampleTests" OR [TestFile] = "SampleTests170" OR [TestFile] = "SampleTestsX64");
 
-# X64 currently does not work (#21)
-[TestFile] <> "X641";
-[TestFile] <> "X642";
+# X64 does not work (why?)
+[TestFile] <> "SampleTestsX64";

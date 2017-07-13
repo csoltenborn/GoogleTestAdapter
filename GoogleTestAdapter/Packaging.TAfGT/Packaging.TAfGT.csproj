@@ -89,10 +89,6 @@
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VsDebuggerAttacherWrapper\VsDebuggerAttacherWrapper.csproj">
-      <Project>{9947ae87-92e3-4184-ae57-6e782c2cce00}</Project>
-      <Name>VsDebuggerAttacherWrapper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VsPackage.TAfGT\VsPackage.TAfGT.csproj">
       <Project>{55294B5F-A075-43F2-B0E9-2B11925E8B91}</Project>
       <Name>VsPackage.TAfGT</Name>

@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
 using FluentAssertions;
+using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,6 +39,17 @@ namespace GoogleTestAdapter.TestResults
             @"  Actual: 20",
             @"Expected: 1000",
             @"[  FAILED  ] TestMath.AddFails (3 s)"
+        };
+
+        private string[] ConsoleOutput1WithThousandsSeparatorInDuration { get; } = {
+            @"[==========] Running 3 tests from 1 test case.",
+            @"[----------] Global test environment set-up.",
+            @"[----------] 3 tests from TestMath",
+            @"[ RUN      ] TestMath.AddFails",
+            @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp(6): error: Value of: Add(10, 10)",
+            @"  Actual: 20",
+            @"Expected: 1000",
+            @"[  FAILED  ] TestMath.AddFails (4,656 ms)",
         };
 
         private string[] ConsoleOutput2 { get; } = {
@@ -102,9 +119,11 @@ namespace GoogleTestAdapter.TestResults
         private List<string> CrashesAfterErrorMsg { get; set; }
         private List<string> Complete { get; set; }
         private List<string> WrongDurationUnit { get; set; }
+        private List<string> ThousandsSeparatorInDuration { get; set; }
         private List<string> PassingTestProducesConsoleOutput { get; set; }
         private List<string> WithPrefixingOutputPassing { get; set; }
         private List<string> WithPrefixingOutputFailing { get; set; }
+        private List<string> CompleteStandardOutput { get; set; }
 
         [TestInitialize]
         public override void SetUp()
@@ -122,6 +141,8 @@ namespace GoogleTestAdapter.TestResults
 
             WrongDurationUnit = new List<string>(ConsoleOutput1WithInvalidDuration);
 
+            ThousandsSeparatorInDuration = new List<string>(ConsoleOutput1WithThousandsSeparatorInDuration);
+
             PassingTestProducesConsoleOutput = new List<string>(ConsoleOutputWithOutputOfExe);
 
             WithPrefixingOutputFailing = new List<string>(ConsoleOutput1);
@@ -129,6 +150,8 @@ namespace GoogleTestAdapter.TestResults
 
             WithPrefixingOutputPassing = new List<string>(ConsoleOutput1);
             WithPrefixingOutputPassing.AddRange(ConsoleOutput2WithPrefixingOutput);
+
+            CompleteStandardOutput = new List<string>(File.ReadAllLines(TestResources.Tests_ReleaseX64_Output, Encoding.Default));
         }
 
 
@@ -249,6 +272,26 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetTestResults_OutputWithThousandsSeparatorInDuration_ParsedCorrectly()
+        {
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            try
+            {
+                IList<TestResult> results = ComputeTestResults(ThousandsSeparatorInDuration);
+
+                results.Count.Should().Be(1);
+                results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
+                results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(4656));
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = currentCulture;
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithConsoleOutput_ConsoleOutputIsIgnored()
         {
             IList<TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
@@ -270,7 +313,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\")
+            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger)
                 .GetTestResults();
 
             results.Count.Should().Be(2);
@@ -278,6 +321,90 @@ namespace GoogleTestAdapter.TestResults
             XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
             results[1].TestCase.FullyQualifiedName.Should().Be("Test.A");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OutputManyLinesWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_ManyLinesWithNewlines");
+            var expectedErrorMessage =
+                "before test 1\nbefore test 2\nExpected: 1\nTo be equal to: 2\ntest output\nafter test 1\nafter test 2";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OutputOneLineWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_OneLineWithNewlines");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\ntest output\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OutputOneLine_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_OneLine");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\ntest output\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_ManyLinesWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.ManyLinesWithNewlines");
+            var expectedErrorMessage =
+                "before test 1\nbefore test 2\nExpected: 1\nTo be equal to: 2\nafter test 1\nafter test 2";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OneLineWithNewlines_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.Output_OneLineWithNewlines");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\ntest output\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void OutputHandling_OneLine_IsParsedCorrectly()
+        {
+            var results = GetTestResultsFromCompleteOutputFile();
+
+            var testResult = results.Single(tr => tr.DisplayName == "OutputHandling.OneLine");
+            var expectedErrorMessage =
+                "before test\nExpected: 1\nTo be equal to: 2\nafter test";
+            testResult.ErrorMessage.Should().Be(expectedErrorMessage);
+        }
+
+        private IList<TestResult> GetTestResultsFromCompleteOutputFile()
+        {
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, MockOptions.Object, new DefaultDiaResolverFactory())
+                .GetTestsFromExecutable(TestResources.Tests_ReleaseX64);
+
+            var parser = new StreamingStandardOutputTestResultParser(testCases, MockLogger.Object, MockFrameworkReporter.Object);
+            CompleteStandardOutput.ForEach(parser.ReportLine);
+            parser.Flush();
+
+            return parser.TestResults;
         }
 
 
@@ -293,7 +420,7 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\", MockFrameworkReporter.Object);
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
             consoleOutput.ForEach(parser.ReportLine);
             parser.Flush();
 

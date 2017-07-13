@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 7/2017.
 
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
@@ -27,6 +27,21 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             }
         }
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionTestDiscoveryTimeoutInSeconds)]
+        [Description(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDescription)]
+        public int TestDiscoveryTimeoutInSeconds
+        {
+            get { return _testDiscoveryTimeoutInSeconds; }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected a number greater than or equal to 0.");
+                SetAndNotify(ref _testDiscoveryTimeoutInSeconds, value);
+            }
+        }
+        private int _testDiscoveryTimeoutInSeconds = SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionWorkingDir)]

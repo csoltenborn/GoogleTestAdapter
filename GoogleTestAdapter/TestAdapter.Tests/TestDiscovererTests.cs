@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Moq;
@@ -17,7 +18,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_WithDefaultRegex_RegistersFoundTestsAtDiscoverySink()
         {
-            CheckForDiscoverySinkCalls(2);
+            CheckForDiscoverySinkCalls(TestResources.NrOfTests);
         }
 
         [TestMethod]
@@ -58,15 +59,26 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void CheckForDiscoverySinkCalls(int expectedNrOfTests, string customRegex = null)
         {
-            Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
-            Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
-            MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
+            string dir = Utils.GetTempDirectory();
+            try
+            {
+                string targetFile = Path.Combine(dir, "MyTests.exe");
+                File.Copy(TestResources.Tests_DebugX86, targetFile);
 
-            TestDiscoverer discoverer = new TestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            Mock<IMessageLogger> mockVsLogger = new Mock<IMessageLogger>();
-            discoverer.DiscoverTests(TestResources.X86StaticallyLinkedTests.Yield(), mockDiscoveryContext.Object, mockVsLogger.Object, mockDiscoverySink.Object);
+                Mock<IDiscoveryContext> mockDiscoveryContext = new Mock<IDiscoveryContext>();
+                Mock<ITestCaseDiscoverySink> mockDiscoverySink = new Mock<ITestCaseDiscoverySink>();
+                MockOptions.Setup(o => o.TestDiscoveryRegex).Returns(() => customRegex);
 
-            mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>()), Times.Exactly(expectedNrOfTests));
+                TestDiscoverer discoverer = new TestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+                Mock<IMessageLogger> mockVsLogger = new Mock<IMessageLogger>();
+                discoverer.DiscoverTests(targetFile.Yield(), mockDiscoveryContext.Object, mockVsLogger.Object, mockDiscoverySink.Object);
+
+                mockDiscoverySink.Verify(h => h.SendTestCase(It.IsAny<Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase>()), Times.Exactly(expectedNrOfTests));
+            }
+            finally
+            {
+                Utils.DeleteDirectory(dir);
+            }
         }
 
     }

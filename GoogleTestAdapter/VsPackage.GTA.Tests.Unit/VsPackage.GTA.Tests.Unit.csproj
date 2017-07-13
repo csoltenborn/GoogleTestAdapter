@@ -41,6 +41,9 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>$(NuGetPackages)Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
@@ -50,6 +53,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>$(NuGetPackages)Moq.4.5.30\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NamedPipeWrapper, Version=1.5.1.0, Culture=neutral, PublicKeyToken=63e9e311e4e1512f, processorArchitecture=MSIL">
+      <HintPath>$(NuGetPackages)NamedPipeWrapper.Signed.1.5.1.2-beta2\lib\net40\NamedPipeWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -67,11 +76,25 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Debugging\MessageBasedDebuggerAttacherTests.cs" />
+    <Compile Include="Debugging\DebuggerAttacherServiceTests.cs" />
     <Compile Include="ReleaseNotes\HistoryTests.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
+      <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
+      <Name>TestAdapter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj">
       <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
       <Name>Tests.Common</Name>
