@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.VsPackage
         [TestCategory(EndToEnd)]
 		public void List_TestsOf_<#= executable #>()
 		{
-			ListTestsOf(@"<#= executables[executable] #>");
+			ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
 		}
 		<# } #>
 
