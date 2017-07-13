@@ -43,6 +43,7 @@ build/
 *.scc
 
 # Visual C++ cache files
+.vs/
 ipch/
 *.aps
 *.ncb
