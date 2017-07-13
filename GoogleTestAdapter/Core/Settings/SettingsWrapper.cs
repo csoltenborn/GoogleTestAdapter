@@ -133,7 +133,7 @@ namespace GoogleTestAdapter.Settings
 
             if (_currentThread != Thread.CurrentThread)
                 throw new InvalidOperationException(
-                    $"SettingsWrapper is already running with settings for an executable withing thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
+                    $"SettingsWrapper is already running with settings for an executable on thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
 
             if (executable != _currentExecutable)
                 throw new InvalidOperationException(
