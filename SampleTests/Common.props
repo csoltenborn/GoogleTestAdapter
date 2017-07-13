@@ -3,8 +3,11 @@
     <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)..\, Common.props))\Common.props" />
     <PropertyGroup>
 
+        <PlatformSuffix Condition="'$(Platform)' == 'Win32'" />
+        <PlatformSuffix Condition="'$(Platform)' != 'Win32'">-$(Platform)</PlatformSuffix>
+
         <!-- All test binaries should be placed in the same directory -->
-        <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)\</OutDir>
+        <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)$(PlatformSuffix)\</OutDir>
         <OutputPath>$(OutDir)</OutputPath>
 
     </PropertyGroup>
