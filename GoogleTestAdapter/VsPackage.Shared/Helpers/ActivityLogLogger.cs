@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.VsPackage.Helpers
                     throw new Exception($"Unknown enum literal: {severity}");
             }
 
-            activityLog.LogEntry((uint)activitylogEntrytype, SettingsWrapper.OptionsCategoryName, message);
+            activityLog.LogEntry((uint)activitylogEntrytype, Strings.Instance.ExtensionName, message);
         }
     }
 

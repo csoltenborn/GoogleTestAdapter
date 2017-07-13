@@ -45,7 +45,7 @@ namespace GoogleTestAdapter.VsPackage
 		<# } #>
 		<# foreach (string executable in executables.Keys) { #>
 
-		[TestMethod <#= line.Ignore ? ", Ignore" : "" #>]
+		[TestMethod <#= executables[executable].Ignore ? ", Ignore" : "" #>]
         [TestCategory(EndToEnd)]
 		public void List_TestsOf_<#= executable #>()
 		{

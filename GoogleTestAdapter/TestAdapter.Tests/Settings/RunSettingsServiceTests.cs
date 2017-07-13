@@ -371,7 +371,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             navigator.MoveToChild(Constants.RunSettingsName, "");
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
 
-            return RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());
+            return RunSettingsContainer.LoadFromXml(navigator);
         }
 
         private RunSettingsContainer SetupSettingsContainer(string solutionWorkingDir, 
