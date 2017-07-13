@@ -178,6 +178,5 @@ GTA has benefited from all kinds of contributions, be it feature requests, bug r
 * [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [CommonMark.NET](https://github.com/Knagis/CommonMark.NET) - open source Markdown to HTML converter
-* [NRegFreeCom](https://github.com/OpenSharp/NRegFreeCom) - open source library for accessing unregistered COM objects
 * [NamedPipeWrapper](https://github.com/acdvorak/named-pipe-wrapper) - open source library for easily working with Named Pipes
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage

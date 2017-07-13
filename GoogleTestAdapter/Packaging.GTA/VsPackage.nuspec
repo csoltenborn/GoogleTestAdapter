@@ -30,15 +30,10 @@
     <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\native\" />
     
     <file src="NamedPipeWrapper.dll" target="lib\net45\" />
-    <file src="NRegFreeCom.dll" target="lib\net45\" />
     <file src="CommonMark.dll" target="lib\net45\" />
 
-    <file src="GoogleTestAdapter.DiaResolver.x86.manifest" target="lib\net45\" />
-    <file src="GoogleTestAdapter.DiaResolver.x64.manifest" target="lib\net45\" />
-    <file src="ComComponents\x86\msdia140.dll" target="lib\net45\ComComponents\x86\" />
-    <file src="ComComponents\x86\msdia140.dll.manifest" target="lib\net45\ComComponents\x86\" />
-    <file src="ComComponents\x64\msdia140.dll" target="lib\net45\ComComponents\x64\" />
-    <file src="ComComponents\x64\msdia140.dll.manifest" target="lib\net45\ComComponents\x64\" />
+    <file src="x86\msdia140.dll" target="lib\net45\x86\" />
+    <file src="x64\msdia140.dll" target="lib\net45\x64\" />
 
     <file src="VsPackage.targets" target="build\native\" />
 
