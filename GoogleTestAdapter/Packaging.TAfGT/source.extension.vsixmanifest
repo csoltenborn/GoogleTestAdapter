@@ -7,7 +7,7 @@
     <MoreInfo>https://go.microsoft.com/fwlink/?linkid=848768</MoreInfo>
     <License>use.txt</License>
     <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
-    <Icon>Resources\gtest-logo.gif</Icon>
+    <Icon>Resources\Icons\Icon.ico</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>
     <Tags>Unit Test, C++, Google Test, GoogleTest, GTest, Test Explorer, Testing</Tags>
   </Metadata>

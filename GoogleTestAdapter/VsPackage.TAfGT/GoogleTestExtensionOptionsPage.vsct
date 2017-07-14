@@ -65,7 +65,7 @@
     </Buttons>
 
     <Bitmaps>
-      <Bitmap guid="toolbaricons" href="..\VsPackage.Shared\Resources\toolbaricons.png" 
+      <Bitmap guid="toolbaricons" href="..\Resources\Icons\toolbaricons.png" 
               usedList="catch_exceptions, parallel_test_execution, break_on_failure, print_test_output"/>
     </Bitmaps>
   </Commands>
