@@ -107,7 +107,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\gtest-logo.png" />
     <Content Include="ReleaseNotes.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -116,7 +115,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\gtest-logo.gif">
+    <Content Include="..\Resources\Icons\Icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -131,7 +130,11 @@
   <Target Name="BeforeBuild">
     <!-- TODO: Express inputs and output in more idiomatic way. -->
     <Copy SourceFiles="$(OutDir)\..\VsPackage.TAfGT\GoogleTestAdapter.VsPackage.TAfGT.pkgdef" DestinationFolder="." />
+    <Copy SourceFiles="..\Resources\Icons\Icon.ico" DestinationFolder="..\ProjectTemplates\Test\GoogleTest" />
     <Exec Command="PowerShell -command Compress-Archive -Force ..\ProjectTemplates\Test\GoogleTest\* ..\ProjectTemplates\Test\GoogleTestPT.zip" />
+    <Delete Files="..\ProjectTemplates\Test\GoogleTest\Icon.ico" />
+    <Copy SourceFiles="..\Resources\Icons\Icon.ico" DestinationFolder="..\ItemTemplates\Test\GoogleTest" />
     <Exec Command="PowerShell -command Compress-Archive -Force ..\ItemTemplates\Test\GoogleTest\* ..\ItemTemplates\Test\GoogleTestIT.zip" />
+    <Delete Files="..\ItemTemplates\Test\GoogleTest\Icon.ico" />
   </Target>
 </Project>

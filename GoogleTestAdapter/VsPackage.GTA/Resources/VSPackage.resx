@@ -66,6 +66,6 @@
     <value>Google Test Adapter adds support for the C++ test framework Google Test</value>
   </data>
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\VsPackage.Shared\Resources\gtest-logo.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\..\Resources\Icons\Icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
