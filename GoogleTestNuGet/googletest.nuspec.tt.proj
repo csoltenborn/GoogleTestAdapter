@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TextTemplating\Microsoft.TextTemplating.targets" />
+  <ItemGroup>
+    <Content Include="googletest.nuspec.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>$(OutputFileName)</OutputFileName>  
+    </Content>
+    <!-- Pass-through parameters for T4. -->
+    <T4ParameterValues Include="PackageName"><Value>$(PackageName)</Value></T4ParameterValues>
+  </ItemGroup>
+  <Target Name="Build" DependsOnTargets="TransformAll" />
+</Project>
