@@ -112,7 +112,7 @@ namespace Microsoft.NewProjectWizard
 
                 string consumeGTestAs = configurationData.IsGTestStatic ? "static" : "dyn";
                 string runtimeLibs = configurationData.IsRuntimeStatic ? "static" : "dyn";
-                string nugetPackage = "googletest.v140.windesktop.msvcstl." + consumeGTestAs + ".rt-" + runtimeLibs;
+                string nugetPackage = "Microsoft.googletest.v140.windesktop.msvcstl." + consumeGTestAs + ".rt-" + runtimeLibs;
 
                 // Work around so we can choose the package for the nuget wizard
                 string tmpWizardData = Path.GetTempFileName();
