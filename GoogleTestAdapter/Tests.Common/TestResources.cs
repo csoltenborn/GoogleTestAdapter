@@ -28,6 +28,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Tests_DebugX86 = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
         public const string Tests_ReleaseX86 = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
         public const string Tests_DebugX86_Gtest170 = SampleTestsSolutionDir + @"Debug\Tests_1.7.0_gta.exe";
+        public const string Tests_DebugX64 = SampleTestsSolutionDir + @"x64\Debug\Tests_gta.exe";
         public const string Tests_ReleaseX64 = SampleTestsSolutionDir + @"x64\Release\Tests_gta.exe";
         public const string Tests_ReleaseX64_Output = TestdataDir + @"Tests_gta_exe_output.txt";
         public const int NrOfTests = 94;
