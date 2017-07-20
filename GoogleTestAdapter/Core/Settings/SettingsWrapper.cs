@@ -45,8 +45,6 @@ namespace GoogleTestAdapter.Settings
             .OrderBy(p => p.Name)
             .ToArray();
 
-        public const string TestFinderRegex = @"[Tt]est[s]?[0-9]*\.exe";
-
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
         public RegexTraitParser RegexTraitParser { private get; set; }
 
