@@ -2,7 +2,6 @@
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
-using NamedPipeWrapper;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {

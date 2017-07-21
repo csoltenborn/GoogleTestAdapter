@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using NamedPipeWrapper;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
