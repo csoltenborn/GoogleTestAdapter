@@ -45,10 +45,14 @@
     </FilesToSign>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DebuggerAttacherServiceConfiguration.cs" />
+    <Compile Include="IDebuggerAttacherService.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IStrings.cs" />
     <Compile Include="LoggerBase.cs" />

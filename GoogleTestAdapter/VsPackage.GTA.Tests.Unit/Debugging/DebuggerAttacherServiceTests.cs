@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿// This file has been modified by Microsoft on 7/2017.
+
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.ServiceModel;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
@@ -21,7 +22,6 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         private Mock<ILogger> MockLogger { get; } = new Mock<ILogger>();
 
         private readonly IList<AttachDebuggerMessage> _messages = new List<AttachDebuggerMessage>();
-        private ManualResetEventSlim _resetEvent;
 
         [TestInitialize]
         public void Setup()
@@ -29,7 +29,6 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             MockDebuggerAttacher.Reset();
             MockLogger.Reset();
             _messages.Clear();
-            _resetEvent = new ManualResetEventSlim(false);
         }
 
         [TestMethod]
@@ -39,7 +38,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             MockDebuggerAttacher
                 .Setup(a => a.AttachDebugger(It.IsAny<int>()))
                 .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => true));
-            DoTest(true, null);
+            DoTest(null);
         }
 
         [TestMethod]
@@ -49,7 +48,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             MockDebuggerAttacher
                 .Setup(a => a.AttachDebugger(It.IsAny<int>()))
                 .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => { throw new Exception("my message"); }));
-            DoTest(false, "my message");
+            DoTest("my message");
         }
 
         [TestMethod]
@@ -59,35 +58,44 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             MockDebuggerAttacher
                 .Setup(a => a.AttachDebugger(It.IsAny<int>()))
                 .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => false));
-            DoTest(false, "unknown reasons");
+            DoTest("unknown reasons");
         }
 
-        private void DoTest(bool expectedOutcome, string expectedErrorMessagePart)
+        private void DoTest(string expectedErrorMessagePart)
         {
             string pipeId = Guid.NewGuid().ToString();
             int debuggeeProcessId = 2017;
 
             // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object, MockLogger.Object))
+            var host = new DebuggerAttacherServiceHost(pipeId, MockDebuggerAttacher.Object, MockLogger.Object);
+            try
             {
-                var client = MessageBasedDebuggerAttacher.CreateAndStartPipeClient(
-                    pipeId,
-                    (connection, msg) => { _messages.Add(msg); _resetEvent.Set(); },
-                    MockLogger.Object);
-                client.Should().NotBeNull();
+                host.Open();
 
-                client.PushMessage(new AttachDebuggerMessage { ProcessId = debuggeeProcessId });
+                var proxy = DebuggerAttacherServiceConfiguration.CreateProxy(pipeId, WaitingTime);
+                using (var client = new DebuggerAttacherServiceProxyWrapper(proxy))
+                {
+                    client.Should().NotBeNull();
+                    client.Service.Should().NotBeNull();
 
-                _resetEvent.Wait(WaitingTime).Should().BeTrue();
-                _messages.Count.Should().Be(1);
+                    Action attaching = () => client.Service.AttachDebugger(debuggeeProcessId);
+                    if (expectedErrorMessagePart == null)
+                    {
+                        attaching.ShouldNotThrow();
+                    }
+                    else
+                    {
+                        attaching.ShouldThrow<FaultException<DebuggerAttacherServiceFault>>().Where(
+                            (FaultException<DebuggerAttacherServiceFault> ex) => ex.Detail.Message.Contains(expectedErrorMessagePart));
+                    }
+                }
 
-                var message = _messages.Single();
-                message.ProcessId.Should().Be(debuggeeProcessId);
-                message.DebuggerAttachedSuccessfully.Should().Be(expectedOutcome);
-                if (string.IsNullOrEmpty(expectedErrorMessagePart))
-                    message.ErrorMessage.Should().Be(expectedErrorMessagePart);
-                else
-                    message.ErrorMessage.Should().Contain(expectedErrorMessagePart);
+                host.Close();
+            }
+            catch (CommunicationException)
+            {
+                host.Abort();
+                throw;
             }
         }
 
