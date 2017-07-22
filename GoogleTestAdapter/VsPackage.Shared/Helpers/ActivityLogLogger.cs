@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.VsPackage.Helpers
             var activityLog = _package.GetActivityLog();
             if (activityLog == null)
             {
-                Console.WriteLine($"Google Test Adapter: {severity} - {message}");
+                Console.WriteLine($"{Strings.Instance.ExtensionName}: {severity} - {message}");
                 return;
             }
 
