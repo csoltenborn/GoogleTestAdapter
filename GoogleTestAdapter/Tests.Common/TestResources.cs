@@ -28,6 +28,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string TenSecondsWaiter = GoogleTestAdapterBuildDir + @"TenSecondsWaiter\TenSecondsWaiter.exe";
         public const string AlwaysCrashingExe = GoogleTestAdapterBuildDir + @"CrashingExe\CrashingExe.exe";
         public const string AlwaysFailingExe = GoogleTestAdapterBuildDir + @"FailingExe\FailingExe.exe";
+        public const string SemaphoreExe = GoogleTestAdapterBuildDir + @"SemaphoreExe\SemaphoreExe.exe";
 
         public const string Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Tests_gta.exe";
         public const string Tests_ReleaseX86 = SampleTestsBuildDir + @"Release\Tests_gta.exe";

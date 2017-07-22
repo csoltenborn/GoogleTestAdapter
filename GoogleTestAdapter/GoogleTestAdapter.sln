@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26606.0
+VisualStudioVersion = 15.0.26717.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F754A4D-BD42-4368-8B90-F3C03F24A2F3}"
 	ProjectSection(SolutionItems) = preProject
@@ -127,6 +127,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packaging.GTA", "Packaging.GTA\Packaging.GTA.csproj", "{4735D8CC-FA30-432D-854C-2984A7DA5DD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packaging.TAfGT", "Packaging.TAfGT\Packaging.TAfGT.csproj", "{B3AEAD11-8EA3-4AB0-9DB0-643BFAAEB9B2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SemaphoreExe", "SemaphoreExe\SemaphoreExe.vcxproj", "{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -487,6 +489,16 @@ Global
 		{B3AEAD11-8EA3-4AB0-9DB0-643BFAAEB9B2}.Release|x64.Build.0 = Release|Any CPU
 		{B3AEAD11-8EA3-4AB0-9DB0-643BFAAEB9B2}.Release|x86.ActiveCfg = Release|Any CPU
 		{B3AEAD11-8EA3-4AB0-9DB0-643BFAAEB9B2}.Release|x86.Build.0 = Release|Any CPU
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Debug|x64.ActiveCfg = Debug|x64
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Debug|x64.Build.0 = Debug|x64
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Debug|x86.ActiveCfg = Debug|Win32
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Debug|x86.Build.0 = Debug|Win32
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Release|x64.ActiveCfg = Release|x64
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Release|x64.Build.0 = Release|x64
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Release|x86.ActiveCfg = Release|Win32
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -514,5 +526,9 @@ Global
 		{72AEA89D-FA32-4E4F-BA04-9C670B53F746} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
 		{BAB53542-85AA-4780-9F48-2984C036189A} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{2E3221EB-86DA-427D-84EC-DEFD3F966D9A} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
+		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C942DDD5-B04E-4D57-BA9F-A444392C9480}
 	EndGlobalSection
 EndGlobal
