@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System.Collections.Generic;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Helpers

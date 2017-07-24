@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
