@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,7 +59,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            List<TestCaseLocation> testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
+            var testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
 
             IList<TestCase> testCases = new List<TestCase>();
             IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
@@ -105,7 +107,7 @@ namespace GoogleTestAdapter.TestCases
                     TestCaseLocation testCaseLocation =
                         resolver.FindTestCaseLocation(
                             _signatureCreator.GetTestMethodSignatures(args.TestCaseDescriptor).ToList());
-                    testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation.Yield().ToList());
+                    testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation);
                 }
                 else
                 {
@@ -196,12 +198,15 @@ namespace GoogleTestAdapter.TestCases
             return true;
         }
 
-        private List<TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
+        private Dictionary<string, TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
         {
-            var testMethodSignatures = new List<string>();
-            foreach (TestCaseDescriptor descriptor in testCaseDescriptors)
+            var testMethodSignatures = new HashSet<string>();
+            foreach (var descriptor in testCaseDescriptors)
             {
-                testMethodSignatures.AddRange(_signatureCreator.GetTestMethodSignatures(descriptor));
+                foreach (var signature in _signatureCreator.GetTestMethodSignatures(descriptor))
+                {
+                    testMethodSignatures.Add(signature);
+                }
             }
 
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
@@ -217,11 +222,20 @@ namespace GoogleTestAdapter.TestCases
             return testCase;
         }
 
-        private TestCase CreateTestCase(TestCaseDescriptor descriptor, List<TestCaseLocation> testCaseLocations)
+        private TestCase CreateTestCase(TestCaseDescriptor descriptor, Dictionary<string, TestCaseLocation> testCaseLocations)
         {
-            TestCaseLocation location = testCaseLocations.FirstOrDefault(
-                l => l != null && _signatureCreator.GetTestMethodSignatures(descriptor).Any(s => Regex.IsMatch(l.Symbol, s)));
+            var signature = _signatureCreator.GetTestMethodSignatures(descriptor)
+                .Select(StripTestSymbolNamespace)
+                .FirstOrDefault(s => testCaseLocations.ContainsKey(s));
+            TestCaseLocation location = null;
+            if (signature != null)
+                testCaseLocations.TryGetValue(signature, out location);
 
+            return CreateTestCase(descriptor, location);
+        }
+
+        private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseLocation location)
+        {
             if (location != null)
             {
                 var testCase = new TestCase(
@@ -233,6 +247,14 @@ namespace GoogleTestAdapter.TestCases
             _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
             return new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
+        }
+
+        internal static string StripTestSymbolNamespace(string symbol)
+        {
+            var suffixLength = GoogleTestConstants.TestBodySignature.Length;
+            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1);
+            var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
+            return symbol.Substring(nameStart);
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)
