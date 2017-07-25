@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿// This file has been modified by Microsoft on 7/2017.
+
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
@@ -10,6 +7,12 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestCases;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 namespace GoogleTestAdapter
 {
@@ -46,6 +49,9 @@ namespace GoogleTestAdapter
                 {
                     _settings.ExecuteWithSettingsForExecutable(executable, () =>
                     {
+                        if (!VerifyExecutableTrust(executable, _logger))
+                            return;
+
                         IList<TestCase> testCases = GetTestsFromExecutable(executable);
                         reporter.ReportTestsFound(testCases);
                     }, _logger);
@@ -57,6 +63,9 @@ namespace GoogleTestAdapter
         {
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
+                if (!VerifyExecutableTrust(executable, logger))
+                    return;
+
                 int nrOfTestCases = 0;
                 Action<TestCase> reportTestCases = tc =>
                 {
@@ -144,6 +153,17 @@ namespace GoogleTestAdapter
                 _logger.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
+        }
+
+        private static bool VerifyExecutableTrust(string executable, ILogger logger)
+        {
+            var zone = Zone.CreateFromUrl(executable);
+            if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
+            {
+                logger.LogError("Executable " + executable + " came from another computer and was blocked to help protect this computer.");
+                return false;
+            }
+            return true;
         }
 
     }
