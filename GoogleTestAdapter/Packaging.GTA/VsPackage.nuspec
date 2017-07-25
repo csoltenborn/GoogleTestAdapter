@@ -28,8 +28,7 @@
 
     <file src="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\native\" />
     <file src="Microsoft.VisualStudio.TestWindow.Interfaces.dll" target="lib\native\" />
-    
-    <file src="NamedPipeWrapper.dll" target="lib\net45\" />
+
     <file src="CommonMark.dll" target="lib\net45\" />
 
     <file src="x86\msdia140.dll" target="lib\net45\x86\" />

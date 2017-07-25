@@ -1,84 +1,62 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.TestAdapter.Framework;
-using NamedPipeWrapper;
+using System.ServiceModel;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {
-    public sealed class DebuggerAttacherService : IDisposable
+    /// <summary>
+    /// Implements IDebuggerAttacherService to expose Visual Studio interfaces for the out-of-process adapter.
+    /// </summary>
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    public sealed class DebuggerAttacherService : IDebuggerAttacherService
     {
-        private readonly string _debuggingNampedPipeId;
         private readonly IDebuggerAttacher _debuggerAttacher;
         private readonly ILogger _logger;
 
-        private NamedPipeServer<AttachDebuggerMessage> _server;
-
-        public DebuggerAttacherService(string debuggingNampedPipeId, IDebuggerAttacher debuggerAttacher, ILogger logger)
+        public DebuggerAttacherService(IDebuggerAttacher debuggerAttacher, ILogger logger)
         {
-            _debuggingNampedPipeId = debuggingNampedPipeId;
             _debuggerAttacher = debuggerAttacher;
             _logger = logger;
-
-            _server = CreateAndStartPipeServer();
-            if (_server != null)
-                _logger.DebugInfo("Server side of named pipe started");
         }
 
-        private NamedPipeServer<AttachDebuggerMessage> CreateAndStartPipeServer()
+        public void AttachDebugger(int processId)
         {
-            string pipeName = MessageBasedDebuggerAttacher.GetPipeName(_debuggingNampedPipeId);
-
-            var server = new NamedPipeServer<AttachDebuggerMessage>(pipeName);
-            server.Error +=
-                exception => _logger.LogError($"Error on Named Pipe server:{Environment.NewLine}{exception}");
-            server.ClientMessage += OnAttachDebuggerMessageReceived;
-
-            if (!server.Start())
-            {
-                _logger.LogError($"Server side of named pipe could not be started, pipe name: {MessageBasedDebuggerAttacher.GetPipeName(_debuggingNampedPipeId)}");
-                return null;
-            }
-
-            return server;
-        }
-
-        private void OnAttachDebuggerMessageReceived(NamedPipeConnection<AttachDebuggerMessage, AttachDebuggerMessage> connection,
-            AttachDebuggerMessage message)
-        {
+            bool success = false;
             try
             {
-                message.DebuggerAttachedSuccessfully = _debuggerAttacher.AttachDebugger(message.ProcessId);
-                if (!message.DebuggerAttachedSuccessfully)
-                    message.ErrorMessage = $"Could not attach debugger to process {message.ProcessId} for unknown reasons";
+                success = _debuggerAttacher.AttachDebugger(processId);
             }
             catch (Exception e)
             {
-                message.DebuggerAttachedSuccessfully = false;
-                message.ErrorMessage = $"Could not attach debugger to process {message.ProcessId} because of exception on server side:{Environment.NewLine}{e}";
+                ThrowFaultException($"Could not attach debugger to process {processId} because of exception on the server side:{Environment.NewLine}{e}");
             }
-            finally
+            if (!success)
             {
-                try
-                {
-                    _server.PushMessage(message);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError($"Exception on server side while sending debugging response message:{Environment.NewLine}{e}");
-                }
+                ThrowFaultException($"Could not attach debugger to process {processId} for unknown reasons");
             }
         }
 
-        public void Dispose()
+        private void ThrowFaultException(string message)
         {
-            if (_server != null)
-            {
-                _server.Stop();
-                _server = null;
-                _logger.DebugInfo("Server side of named pipe stopped");
-            }
+            throw new FaultException<DebuggerAttacherServiceFault>(new DebuggerAttacherServiceFault(message));
         }
     }
 
+    public class DebuggerAttacherServiceHost : ServiceHost
+    {
+        /// <summary>
+        /// Constructs the host for DebuggerAttacherService.
+        /// </summary>
+        /// <param name="id">Identifier of the service end-point</param>
+        public DebuggerAttacherServiceHost(string id, IDebuggerAttacher debuggerAttacher, ILogger logger) :
+            base(new DebuggerAttacherService(debuggerAttacher, logger), new Uri[] {
+                DebuggerAttacherServiceConfiguration.ConstructPipeUri(id)
+            })
+        {
+            AddServiceEndpoint(typeof(IDebuggerAttacherService), new NetNamedPipeBinding(), DebuggerAttacherServiceConfiguration.InterfaceAddress);
+        }
+    }
 }

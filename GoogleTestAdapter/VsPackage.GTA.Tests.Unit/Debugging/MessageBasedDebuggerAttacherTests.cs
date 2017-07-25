@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading;
+﻿// This file has been modified by Microsoft on 7/2017.
+
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
@@ -7,6 +7,9 @@ using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.ServiceModel;
+using System.Threading;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
@@ -37,8 +40,8 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
             DoTest(true);
 
-            MockLogger.Verify(l => l.DebugInfo(It.IsAny<string>()), Times.Exactly(3));
-            MockLogger.Verify(l => l.DebugInfo(It.Is<string>(s => s.ToLower().Contains("server"))), Times.Exactly(2));
+            MockLogger.Verify(l => l.DebugInfo(It.IsAny<string>()), Times.Exactly(1));
+            MockLogger.Verify(l => l.DebugInfo(It.Is<string>(s => s.ToLower().Contains("attached"))));
         }
 
         [TestMethod]
@@ -74,7 +77,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             var client = new MessageBasedDebuggerAttacher(Guid.NewGuid().ToString(), Timeout, MockLogger.Object);
             client.AttachDebugger(2017).Should().BeFalse();
 
-            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not connect to NamedPipe"))), Times.Once);
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("There was no endpoint"))), Times.Once);
         }
 
         private void DoTest(bool expectedResult)
@@ -83,14 +86,24 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             int debuggeeProcessId = 2017;
 
             // ReSharper disable once UnusedVariable
-            using (var service = new DebuggerAttacherService(pipeId, MockDebuggerAttacher.Object, MockLogger.Object))
+            var host = new DebuggerAttacherServiceHost(pipeId, MockDebuggerAttacher.Object, MockLogger.Object);
+            try
             {
+                host.Open();
+
                 var client = new MessageBasedDebuggerAttacher(pipeId, Timeout, MockLogger.Object);
 
                 client.AttachDebugger(debuggeeProcessId).Should().Be(expectedResult);
 
                 MockDebuggerAttacher.Verify(a => a.AttachDebugger(It.Is<int>(processId => processId == debuggeeProcessId)),
                     Times.Once);
+
+                host.Close();
+            }
+            catch (CommunicationException)
+            {
+                host.Abort();
+                throw;
             }
         }
 

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
+﻿// This file has been modified by Microsoft on 7/2017.
+
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using NamedPipeWrapper;
+using System;
+using System.Diagnostics;
+using System.ServiceModel;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
@@ -35,50 +36,20 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             try
             {
-                return TryAttachDebugger(processId);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Could not attach debugger to process {processId} because of exception on client side:{Environment.NewLine}{e}");
-                return false;
-            }
-        }
+                var stopWatch = Stopwatch.StartNew();
 
-        private bool TryAttachDebugger(int processId)
-        {
-            var stopWatch = Stopwatch.StartNew();
-            var resetEvent = new ManualResetEventSlim(false);
-            bool debuggerAttachedSuccessfully = false;
-            string errorMessage = null;
-
-            ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage
-                = (connection, message) =>
+                var proxy = DebuggerAttacherServiceConfiguration.CreateProxy(_debuggingNamedPipeId, _timeout);
+                using (var client = new DebuggerAttacherServiceProxyWrapper(proxy))
                 {
-                    if (message.ProcessId != processId)
-                        return;
-
-                    debuggerAttachedSuccessfully = message.DebuggerAttachedSuccessfully;
-                    errorMessage = message.ErrorMessage;
-                    resetEvent.Set();
-                };
-
-            var client = CreateAndStartPipeClient(_debuggingNamedPipeId, onServerMessage, _logger);
-            if (client == null)
-                return false;
-
-            client.PushMessage(new AttachDebuggerMessage { ProcessId = processId });
-
-            if (!resetEvent.Wait(_timeout))
-                errorMessage = $"Could not attach debugger to process {processId} since attaching timed out after {_timeout.TotalSeconds}s";
-
-            stopWatch.Stop();
-
-            if (debuggerAttachedSuccessfully)
-            {
-                _logger.DebugInfo($"Debugger attached to process {processId}, took {stopWatch.ElapsedMilliseconds}ms");
+                    client.Service.AttachDebugger(processId);
+                    stopWatch.Stop();
+                    _logger.DebugInfo($"Debugger attached to process {processId}, took {stopWatch.ElapsedMilliseconds} ms");
+                    return true;
+                }
             }
-            else
+            catch (FaultException<DebuggerAttacherServiceFault> serviceFault)
             {
+                var errorMessage = serviceFault.Detail.Message;
                 if (string.IsNullOrWhiteSpace(errorMessage))
                     errorMessage = $"Could not attach debugger to process {processId}, no error message available";
 
@@ -86,36 +57,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
                 _logger.LogError(errorMessage);
             }
-
-            client.Stop();
-
-            return debuggerAttachedSuccessfully;
-        }
-
-        public static NamedPipeClient<AttachDebuggerMessage> CreateAndStartPipeClient(string pipeId, ConnectionMessageEventHandler<AttachDebuggerMessage, AttachDebuggerMessage> onServerMessage, ILogger logger)
-        {
-            var client = new NamedPipeClient<AttachDebuggerMessage>(GetPipeName(pipeId));
-            client.Error += exception =>
+            catch (Exception e)
             {
-                logger.DebugError(
-                    $"Named pipe error: Named pipe: {GetPipeName(pipeId)}, exception:{Environment.NewLine}{exception}");
-            };
-            client.ServerMessage += onServerMessage;
-
-            client.Start();
-
-            // workaround for NamedPipeClient not telling if connection has been established :-)
-            var stopwatch = Stopwatch.StartNew();
-            client.WaitForConnection(TimeSpan.FromSeconds(3));
-            stopwatch.Stop();
-            if (stopwatch.Elapsed > TimeSpan.FromSeconds(2.5))
-            {
-                logger.LogError($"Could not connect to NamedPipe {GetPipeName(pipeId)} - not able to attach debugger");
-                client.Stop();
-                return null;
+                _logger.LogError($"Could not attach debugger to process {processId}:{Environment.NewLine}{e}");
             }
-
-            return client;
+            return false;
         }
     }
 

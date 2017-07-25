@@ -1,21 +1,20 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 7/2017.
 
-using System;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.Commands;
 using GoogleTestAdapter.VsPackage.Debugging;
 using GoogleTestAdapter.VsPackage.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using System.ServiceModel;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -42,7 +41,7 @@ namespace GoogleTestAdapter.VsPackage
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
         // ReSharper disable once NotAccessedField.Local
-        private DebuggerAttacherService _debuggerAttacherService;
+        private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
 
         protected override void Initialize()
         {
@@ -70,7 +69,16 @@ namespace GoogleTestAdapter.VsPackage
 
             var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
             var debuggerAttacher = new VsDebuggerAttacher(this);
-            _debuggerAttacherService = new DebuggerAttacherService(_debuggingNamedPipeId, debuggerAttacher, logger);
+            _debuggerAttacherServiceHost = new DebuggerAttacherServiceHost(_debuggingNamedPipeId, debuggerAttacher, logger);
+            try
+            {
+                _debuggerAttacherServiceHost.Open();
+            }
+            catch (CommunicationException)
+            {
+                _debuggerAttacherServiceHost.Abort();
+                _debuggerAttacherServiceHost = null;
+            }
         }
 
         public IVsActivityLog GetActivityLog()
@@ -92,7 +100,18 @@ namespace GoogleTestAdapter.VsPackage
                 _parallelizationOptions?.Dispose();
                 _googleTestOptions?.Dispose();
 
-                _debuggerAttacherService.Dispose();
+                try
+                {
+                    // Cannot simply do ".?" because Code Analysis does not understand that.
+                    if (_debuggerAttacherServiceHost != null)
+                    {
+                        _debuggerAttacherServiceHost.Close();
+                    }
+                }
+                catch (CommunicationException)
+                {
+                    _debuggerAttacherServiceHost.Abort();
+                }
             }
             base.Dispose(disposing);
         }

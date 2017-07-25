@@ -70,8 +70,9 @@
       </xsd:element>
       <xsd:element name="BatchForTestSetup"            minOccurs="0" type="xsd:string"  />
       <xsd:element name="BatchForTestTeardown"         minOccurs="0" type="xsd:string"  />
-      <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean" />
       <xsd:element name="KillProcessesOnCancel"        minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="DebuggingNamedPipeId"         minOccurs="0" type="xsd:string"  />
     </xsd:all>
     <xsd:attribute name="ProjectRegex" type="xsd:string" />
   </xsd:complexType>
