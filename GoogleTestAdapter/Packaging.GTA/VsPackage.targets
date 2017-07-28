@@ -11,6 +11,11 @@
         $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.Common.dll
       </HintPath>
     </Reference>
+    <Reference Include="GoogleTestAdapter.Common.Dynamic.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.Common.Dynamic.dll
+      </HintPath>
+    </Reference>
     <Reference Include="GoogleTestAdapter.Core.dll">
       <HintPath>
         $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.Core.dll
@@ -29,16 +34,6 @@
     <Reference Include="GoogleTestAdapter.VsPackage.GTA.dll">
       <HintPath>
         $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.VsPackage.GTA.dll
-      </HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll">
-      <HintPath>
-        $(MSBuildThisFileDirectory)..\lib\native\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
-      </HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces.dll">
-      <HintPath>
-        $(MSBuildThisFileDirectory)..\lib\native\Microsoft.VisualStudio.TestWindow.Interfaces.dll
       </HintPath>
     </Reference>
   </ItemGroup>
