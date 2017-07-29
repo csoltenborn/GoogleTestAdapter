@@ -128,8 +128,8 @@ function Add-Signing {
     $xml = [xml](Get-Content "$Directory\$ProjectName.vcxproj")
 
     $MicroBuildProps = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $MicroBuildProps.SetAttribute("Project", "..\..\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props")
-    $MicroBuildProps.SetAttribute("Condition", "Exists('..\..\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')")
+    $MicroBuildProps.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props")
+    $MicroBuildProps.SetAttribute("Condition", "Exists('$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')")
 
     $RealSignGroup = $xml.CreateElement("PropertyGroup", "http://schemas.microsoft.com/developer/msbuild/2003")
     $RealSignGroup.SetAttribute("Condition", "'`$(RealSign)' == 'True'")
@@ -153,8 +153,8 @@ function Add-Signing {
     $FileSignGroup.AppendChild($FilesToSign) | Out-Null
 
     $MicroBuildTargets = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $MicroBuildTargets.SetAttribute("Project", "..\..\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets")
-    $MicroBuildTargets.SetAttribute("Condition", "Exists('..\..\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')")
+    $MicroBuildTargets.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets")
+    $MicroBuildTargets.SetAttribute("Condition", "Exists('$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')")
 
     $xml.Project.AppendChild($MicroBuildProps) | Out-Null
     $xml.Project.AppendChild($RealSignGroup) | Out-Null
@@ -328,10 +328,10 @@ function Main {
 
     # Ensure nuget is available.
     if ((Get-Command "nuget" -ErrorAction SilentlyContinue) -eq $null) {
-        if (!(Test-Path "$pwd\..\NuGetPackages\NuGet.CommandLine.3.5.0\tools\NuGet.exe")) {
+        if (!(Test-Path "$PSScriptRoot\..\NuGetPackages\NuGet.CommandLine.3.5.0\tools\NuGet.exe")) {
             throw "nuget.exe is not available. Provide through PATH or restore NuGet packages for the solution."
         }
-        $env:Path += ";$pwd\..\NuGetPackages\NuGet.CommandLine.3.5.0\tools"
+        $env:Path += ";$PSScriptRoot\..\NuGetPackages\NuGet.CommandLine.3.5.0\tools"
     }
     Invoke-Executable nuget
 

@@ -137,7 +137,6 @@
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
   <Target Name="BeforeBuild">
     <!-- TODO: Express inputs and output in more idiomatic way. -->
-    <Copy SourceFiles="$(OutDir)\..\VsPackage.TAfGT\GoogleTestAdapter.VsPackage.TAfGT.pkgdef" DestinationFolder="." />
     <Copy SourceFiles="..\Resources\Icons\Icon.ico" DestinationFolder="..\ProjectTemplates\Test\GoogleTest" />
     <Exec Command="PowerShell -command Compress-Archive -Force ..\ProjectTemplates\Test\GoogleTest\* ..\ProjectTemplates\Test\GoogleTestPT.zip" />
     <Delete Files="..\ProjectTemplates\Test\GoogleTest\Icon.ico" />
