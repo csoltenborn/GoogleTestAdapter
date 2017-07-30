@@ -136,7 +136,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C5996129
 		..\Tools\Flatten-NuGetPackages.ps1 = ..\Tools\Flatten-NuGetPackages.ps1
 		..\Tools\GoogleTestAdapter.FxCop = ..\Tools\GoogleTestAdapter.FxCop
 		..\Tools\New-CleanDirectory.ps1 = ..\Tools\New-CleanDirectory.ps1
-		..\Tools\RemoveGtaProjects.ps1 = ..\Tools\RemoveGtaProjects.ps1
+		..\Tools\RemoveProjects.ps1 = ..\Tools\RemoveProjects.ps1
 	EndProjectSection
 EndProject
 Global
