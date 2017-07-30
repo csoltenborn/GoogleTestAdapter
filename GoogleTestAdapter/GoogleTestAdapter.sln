@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26717.1
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F754A4D-BD42-4368-8B90-F3C03F24A2F3}"
 	ProjectSection(SolutionItems) = preProject
@@ -129,6 +129,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packaging.TAfGT", "Packaging.TAfGT\Packaging.TAfGT.csproj", "{B3AEAD11-8EA3-4AB0-9DB0-643BFAAEB9B2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SemaphoreExe", "SemaphoreExe\SemaphoreExe.vcxproj", "{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C5996129-A88E-45E1-A7B0-0B145B4FA0D8}"
+	ProjectSection(SolutionItems) = preProject
+		..\Tools\Expand-Vsix.ps1 = ..\Tools\Expand-Vsix.ps1
+		..\Tools\Flatten-NuGetPackages.ps1 = ..\Tools\Flatten-NuGetPackages.ps1
+		..\Tools\GoogleTestAdapter.FxCop = ..\Tools\GoogleTestAdapter.FxCop
+		..\Tools\New-CleanDirectory.ps1 = ..\Tools\New-CleanDirectory.ps1
+		..\Tools\RemoveGtaProjects.ps1 = ..\Tools\RemoveGtaProjects.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -529,6 +538,7 @@ Global
 		{BAB53542-85AA-4780-9F48-2984C036189A} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{2E3221EB-86DA-427D-84EC-DEFD3F966D9A} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
+		{C5996129-A88E-45E1-A7B0-0B145B4FA0D8} = {1F754A4D-BD42-4368-8B90-F3C03F24A2F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C942DDD5-B04E-4D57-BA9F-A444392C9480}
