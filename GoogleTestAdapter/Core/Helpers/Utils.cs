@@ -1,8 +1,11 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,6 +85,12 @@ namespace GoogleTestAdapter.Helpers
             // The parser will throw if the value is not well formed.
             var parser = new RegexTraitParser(null);
             parser.ParseTraitsRegexesString(value, ignoreErrors: false);
+        }
+
+        public static bool BinaryFileContainsStrings(string executable, Encoding encoding, IEnumerable<string> strings)
+        {
+            byte[] file = File.ReadAllBytes(executable);
+            return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
         }
     }
 

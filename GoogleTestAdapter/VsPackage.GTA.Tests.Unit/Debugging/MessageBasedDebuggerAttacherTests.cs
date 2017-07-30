@@ -77,7 +77,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             var client = new MessageBasedDebuggerAttacher(Guid.NewGuid().ToString(), Timeout, MockLogger.Object);
             client.AttachDebugger(2017).Should().BeFalse();
 
-            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("There was no endpoint"))), Times.Once);
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("EndpointNotFoundException"))), Times.Once);
         }
 
         private void DoTest(bool expectedResult)
