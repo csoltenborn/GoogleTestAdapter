@@ -4,7 +4,7 @@ This adapter is compatible with Visual Studio 2017 only. For earlier versions of
 
 === v0.10.1.0 ===
   - enhancement: a Visual Studio bug results in wrong behavior for Repeat Last Run (Ctrl+R, L): VS does not respect changes to the available tests since the last run. Tests which do not exist any more as well as test results for tests not known by VS are now ignored and produce a warning in debug mode. Note that VS still might run other tests than expected by the user - see issue for examples
-  - enhancement: runtime for test discovery was substantially improved (thanks to Russell Johnston for the contribution)
+  - enhancement: runtime for test discovery was substantially improved
   - bugfix: solution settings were overridden by project settings in case of NuGet and VsTestConsole execution
   - bugfix: occasional exceptions caused by missing synchronization when performing test discovery in parallel
   - bugfix: NuGet package had installation issue (thanks to JackGrinningCat for report, idea for fix, and testing)
@@ -32,7 +32,7 @@ This adapter is compatible with Visual Studio 2017 only. For earlier versions of
 === Earlier Versions ===
 See: https://github.com/csoltenborn/GoogleTestAdapter/releases
 
-Known Issues:
+=== Known Issues ===
   - Adapter currently only supports Windows desktop applications.
   - Adapter does not work in Open Folder mode (including for CMake projects).
   - Visual Studio ships with a feature called debug:fastlink that is on by default to improve compilation times. This feature is currently unsupported with the Test Adapter for Google Test. You can disable fastlink by doing the following:
