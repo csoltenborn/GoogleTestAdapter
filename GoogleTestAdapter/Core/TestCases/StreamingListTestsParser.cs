@@ -9,6 +9,7 @@ namespace GoogleTestAdapter.TestCases
         private static readonly Regex SuiteRegex = new Regex($@"([\w\/]*(?:\.[\w\/]+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
         private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
         private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\w+", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegexPreNamedParameters = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;
 
@@ -61,9 +62,11 @@ namespace GoogleTestAdapter.TestCases
                 displayName = displayName.Replace("/", _testNameSeparator);
 
             TestCaseDescriptor.TestTypes testType = TestCaseDescriptor.TestTypes.Simple;
-            if (!string.IsNullOrWhiteSpace(typeParam) && IsParamRegex.IsMatch(suite))
+            if ((!string.IsNullOrWhiteSpace(typeParam) && IsParamRegex.IsMatch(suite))
+                || (_testNameSeparator.Equals("::") && IsParamRegexPreNamedParameters.IsMatch(suite)))
                 testType = TestCaseDescriptor.TestTypes.TypeParameterized;
-            else if (!string.IsNullOrWhiteSpace(param) && IsParamRegex.IsMatch(name))
+            else if ((!string.IsNullOrWhiteSpace(param) && IsParamRegex.IsMatch(name))
+                || (_testNameSeparator.Equals("::") && IsParamRegexPreNamedParameters.IsMatch(name)))
                 testType = TestCaseDescriptor.TestTypes.Parameterized;
 
             return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType);
