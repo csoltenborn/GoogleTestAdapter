@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
+    <UnitTestResult testName="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|01234567890_ [&quot;01234567890_&quot;]" outcome="Passed" />
+    <UnitTestResult testName="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|abcdefghijklmnopqrstuvwxyz [&quot;abcdefghijklmnopqrstuvwxyz&quot;]" outcome="Passed" />
+    <UnitTestResult testName="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|ABCDEFGHIJKLMNOPQRSTUVWXYZ [&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;]" outcome="Passed" />
     <UnitTestResult testName="Api.Created.Tests.PassingTest" outcome="Passed" />
     <UnitTestResult testName="Api_Created_Tests.FailingTest" outcome="Failed">
       <Output>
@@ -50,6 +53,7 @@ Test failed: Something is wrong</Message>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
+    <UnitTestResult testName="CustomParamNameFunctor|CustomFunctorNamingTest.CustomTestNames|FunctorName [&quot;FunctorName&quot;]" outcome="Passed" />
     <UnitTestResult testName="InstantiationName|ParameterizedTests.Simple|0 [(1,)]" outcome="Passed" />
     <UnitTestResult testName="InstantiationName|ParameterizedTests.Simple|1 [(1,!)]" outcome="Failed">
       <Output>
@@ -593,6 +597,15 @@ To be equal to: GetParam().s
     <UnitTestResult testName="WorkingDir.IsSolutionDirectory" outcome="Passed" />
   </Results>
   <TestDefinitions>
+    <UnitTest name="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|01234567890_ [&quot;01234567890_&quot;]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|01234567890_ [&quot;01234567890_&quot;]" className="AllAllowedCharacters/CustomFunctorNamingTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|abcdefghijklmnopqrstuvwxyz [&quot;abcdefghijklmnopqrstuvwxyz&quot;]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|abcdefghijklmnopqrstuvwxyz [&quot;abcdefghijklmnopqrstuvwxyz&quot;]" className="AllAllowedCharacters/CustomFunctorNamingTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|ABCDEFGHIJKLMNOPQRSTUVWXYZ [&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="AllAllowedCharacters|CustomFunctorNamingTest.CustomTestNames|ABCDEFGHIJKLMNOPQRSTUVWXYZ [&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;]" className="AllAllowedCharacters/CustomFunctorNamingTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
     <UnitTest name="Api.Created.Tests.PassingTest" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="Api.Created.Tests.PassingTest" className="Api.Created.Tests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
@@ -625,6 +638,9 @@ To be equal to: GetParam().s
     </UnitTest>
     <UnitTest name="CommandArgs.TestDirectoryIsSet" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="CommandArgs.TestDirectoryIsSet" className="CommandArgs" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
+    </UnitTest>
+    <UnitTest name="CustomParamNameFunctor|CustomFunctorNamingTest.CustomTestNames|FunctorName [&quot;FunctorName&quot;]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
+      <TestMethod name="CustomParamNameFunctor|CustomFunctorNamingTest.CustomTestNames|FunctorName [&quot;FunctorName&quot;]" className="CustomParamNameFunctor/CustomFunctorNamingTest" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
     </UnitTest>
     <UnitTest name="InstantiationName|ParameterizedTests.Simple|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_gta.exe">
       <TestMethod name="InstantiationName|ParameterizedTests.Simple|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_gta.exe" />
@@ -877,7 +893,7 @@ To be equal to: GetParam().s
     </UnitTest>
   </TestDefinitions>
   <ResultSummary outcome="Failed">
-    <Counters total="94" executed="94" passed="41" failed="53" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="98" executed="98" passed="45" failed="53" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>
