@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -171,12 +173,11 @@ namespace GoogleTestAdapter.Helpers
                     }
                 };
 
-                string commandLine = command;
+                string commandLine = $"\"{command}\"";
                 if (!string.IsNullOrEmpty(parameters))
                     commandLine += $" {parameters}";
                 if (string.IsNullOrEmpty(workingDir))
                     workingDir = null;
-
 
                 PROCESS_INFORMATION processInfo;
                 // ReSharper disable ArgumentsStyleNamedExpression
