@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using GoogleTestAdapter.Tests.Common.Assertions;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.TestAdapter
@@ -39,7 +40,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_CrashingExecutable_CrashIsLogged()
         {
-            RunExecutableAndCheckLogging(TestResources.AlwaysCrashingExe,
+            RunExecutableAndCheckLogging(Path.GetFullPath(TestResources.AlwaysCrashingExe),
                 () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not list test cases of executable"))),
                     Times.Once));
         }
@@ -48,7 +49,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_FailingExecutable_ExitCodeIsLogged()
         {
-            RunExecutableAndCheckLogging(TestResources.AlwaysFailingExe,
+            RunExecutableAndCheckLogging(Path.GetFullPath(TestResources.AlwaysFailingExe),
                 () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 4711"))),
                     Times.Once));
         }
@@ -75,19 +76,19 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_UntrustedExecutable_IsNotRun()
         {
-            var SemPath = Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem");
-            var Temp1Exe = Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe");
-            var Temp2Exe = Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe");
+            var SemPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            var Temp1Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe"));
+            var Temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
 
             // Verify baseline
             try
             {
                 File.Copy(TestResources.SemaphoreExe, Temp1Exe);
-                File.Exists(SemPath).Should().BeFalse();
+                SemPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(Temp1Exe,
                     () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
                         Times.Once));
-                File.Exists(SemPath).Should().BeTrue("because exe should have been run");
+                SemPath.AsFileInfo().Should().Exist("exe should have been run");
             }
             finally
             {
@@ -100,11 +101,11 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 File.Copy(TestResources.SemaphoreExe, Temp2Exe);
                 MarkUntrusted(Temp2Exe);
-                File.Exists(SemPath).Should().BeFalse();
+                SemPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(Temp2Exe,
                     () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("was blocked to help protect"))),
                         Times.Once));
-                File.Exists(SemPath).Should().BeFalse("because exe should not have been run");
+                SemPath.AsFileInfo().Should().NotExist("exe should not have been run");
             }
             finally
             {

@@ -6,12 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F754A4D-BD42-4368-8B90-F3C03F24A2F3}"
 	ProjectSection(SolutionItems) = preProject
 		Resources\AllTestSettings.gta.runsettings = Resources\AllTestSettings.gta.runsettings
-		..\appveyor.yml = ..\appveyor.yml
-		..\codecov.yml = ..\codecov.yml
 		..\LICENSE.md = ..\LICENSE.md
 		..\README.md = ..\README.md
-		SetVersion.bat = SetVersion.bat
-		SetVersion.ps1 = SetVersion.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DF889D8C-7879-48EE-811D-7D8D1EEF6F0A}"
@@ -137,6 +133,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C5996129
 		..\Tools\GoogleTestAdapter.FxCop = ..\Tools\GoogleTestAdapter.FxCop
 		..\Tools\New-CleanDirectory.ps1 = ..\Tools\New-CleanDirectory.ps1
 		..\Tools\RemoveProjects.ps1 = ..\Tools\RemoveProjects.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppVeyor", "AppVeyor", "{B56D9603-616A-497D-92F2-1840526DE534}"
+	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
+		..\build_preparation.bat = ..\build_preparation.bat
+		..\codecov.yml = ..\codecov.yml
+		SetVersion.bat = SetVersion.bat
+		SetVersion.ps1 = SetVersion.ps1
 	EndProjectSection
 EndProject
 Global
@@ -539,6 +544,7 @@ Global
 		{2E3221EB-86DA-427D-84EC-DEFD3F966D9A} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 		{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
 		{C5996129-A88E-45E1-A7B0-0B145B4FA0D8} = {1F754A4D-BD42-4368-8B90-F3C03F24A2F3}
+		{B56D9603-616A-497D-92F2-1840526DE534} = {1F754A4D-BD42-4368-8B90-F3C03F24A2F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C942DDD5-B04E-4D57-BA9F-A444392C9480}

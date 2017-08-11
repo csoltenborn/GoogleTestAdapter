@@ -352,7 +352,7 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>echo At least one file is needed within the lib/native folder to convince VS that our package can be installed into native C++ projects. &gt;"$(TargetDir)_.txt"</PostBuildEvent>
+    <PostBuildEvent>copy $(OutDir)GoogleTestAdapter.VsPackage.GTA.pkgdef $(SolutionDir)Packaging.GTA</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

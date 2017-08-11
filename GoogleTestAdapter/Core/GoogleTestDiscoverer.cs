@@ -139,7 +139,7 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        private static bool VerifyExecutableTrust(string executable, ILogger logger)
+        public static bool VerifyExecutableTrust(string executable, ILogger logger)
         {
             var zone = Zone.CreateFromUrl(executable);
             if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)

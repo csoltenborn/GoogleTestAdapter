@@ -25,6 +25,33 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void VerifyExecutableTrust_TestsResources_AreVerified()
+        {
+            VerifyExecutableIsTrusted(TestResources.SemaphoreExe);
+            VerifyExecutableIsTrusted(TestResources.Tests_ReleaseX86);
+            VerifyExecutableIsTrusted(TestResources.Tests_DebugX86);
+            VerifyExecutableIsTrusted(TestResources.Tests_ReleaseX64);
+            VerifyExecutableIsTrusted(TestResources.Tests_DebugX64);
+            VerifyExecutableIsTrusted(TestResources.Tests_ReleaseX64);
+            VerifyExecutableIsTrusted(TestResources.Tests_DebugX86_Gtest170);
+            VerifyExecutableIsTrusted(TestResources.CrashingTests_ReleaseX86);
+            VerifyExecutableIsTrusted(TestResources.CrashingTests_DebugX86);
+            VerifyExecutableIsTrusted(TestResources.CrashingTests_ReleaseX64);
+            VerifyExecutableIsTrusted(TestResources.CrashingTests_DebugX64);
+            VerifyExecutableIsTrusted(TestResources.AlwaysCrashingExe);
+            VerifyExecutableIsTrusted(TestResources.AlwaysFailingExe);
+        }
+
+        private void VerifyExecutableIsTrusted(string executable)
+        {
+            executable = Path.GetFullPath(executable);
+            executable.AsFileInfo().Should().Exist();
+            GoogleTestDiscoverer.VerifyExecutableTrust(executable, MockLogger.Object)
+                .Should().BeTrue($"'{executable}' is built by us");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithRegexFromOptions_MatchesCorrectly()
         {
             AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
