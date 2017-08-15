@@ -152,21 +152,32 @@ namespace Microsoft.NewProjectWizard
 
                     if (latestSdk == null)
                     {
+                        MessageBox.Show(Resources.WinSDKNotFound);
                         throw new WizardCancelledException(Resources.WinSDKNotFound);
                     }
 
-                    List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
-                        .Select(moniker => TryParsePlatformVersion(moniker))
-                        .Where(name => name != null)
-                        .OrderByDescending(p => p.Version).ToList();
-                    Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
+                    string versionString;
 
-                    if (latestPlatform == null)
+                    if (latestSdk.TargetPlatformVersion.Revision >= 10)
                     {
-                        throw new WizardCancelledException(Resources.WinSDKNotFound);
-                    }
+                        List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
+                            .Select(moniker => TryParsePlatformVersion(moniker))
+                            .Where(name => name != null)
+                            .OrderByDescending(p => p.Version).ToList();
+                        Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
 
-                    string versionString = latestPlatform.Version.ToString();
+                        if (latestPlatform == null)
+                        {
+                            MessageBox.Show(Resources.WinSDKNotFound);
+                            throw new WizardCancelledException(Resources.WinSDKNotFound);
+                        }
+
+                        versionString = latestPlatform.Version.ToString();
+                    }
+                    else
+                    {
+                        versionString = latestSdk.TargetPlatformVersion.ToString();
+                    }
 
                     replacementsDictionary[TargetPlatformVersion] = versionString;
                 }
