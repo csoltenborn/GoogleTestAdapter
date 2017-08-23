@@ -92,6 +92,7 @@
     <EmbeddedResource Include="ReleaseNotes\ReleaseNotesDialog.resx">
       <DependentUpon>ReleaseNotesDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Resources\gtest-logo.ico" />
     <Content Include="Resources\ReleaseNotes\0.4.0.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

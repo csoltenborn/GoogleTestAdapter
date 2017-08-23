@@ -13,7 +13,8 @@ echo:
 echo ======================================================================
 echo You have to accept the following licenses before executing this batch file:
 echo:
-echo Google Test: BSD-3-Clause (https://raw.githubusercontent.com/google/googletest/master/googletest/LICENSE)
+echo Microsoft DIA SDK: Visual Studio End-User License Agreement (https://www.visualstudio.com/license-terms/mlt687465)
+echo Google Test: BSD-3-Clause (https://raw.githubusercontent.com/google/googletest/675686a139a731a2c796633e67e9421792363709/googletest/LICENSE)
 echo:
 set /p input= "Do you accept these licenses? (yes/no) "
 
