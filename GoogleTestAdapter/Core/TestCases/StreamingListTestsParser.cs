@@ -62,11 +62,9 @@ namespace GoogleTestAdapter.TestCases
                 displayName = displayName.Replace("/", _testNameSeparator);
 
             TestCaseDescriptor.TestTypes testType = TestCaseDescriptor.TestTypes.Simple;
-            if ((!string.IsNullOrWhiteSpace(typeParam) && IsParamRegex.IsMatch(suite))
-                || (_testNameSeparator.Equals("::") && IsParamRegexPreNamedParameters.IsMatch(suite)))
+            if (string.IsNullOrWhiteSpace(typeParam) ? IsParamRegexPreNamedParameters.IsMatch(suite): IsParamRegex.IsMatch(suite))
                 testType = TestCaseDescriptor.TestTypes.TypeParameterized;
-            else if ((!string.IsNullOrWhiteSpace(param) && IsParamRegex.IsMatch(name))
-                || (_testNameSeparator.Equals("::") && IsParamRegexPreNamedParameters.IsMatch(name)))
+            else if (string.IsNullOrWhiteSpace(param) ? IsParamRegexPreNamedParameters.IsMatch(name) : IsParamRegex.IsMatch(name))
                 testType = TestCaseDescriptor.TestTypes.Parameterized;
 
             return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType);
