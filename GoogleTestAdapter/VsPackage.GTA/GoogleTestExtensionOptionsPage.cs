@@ -9,6 +9,7 @@ namespace GoogleTestAdapter.VsPackage
 {
     public partial class GoogleTestExtensionOptionsPage
     {
+        private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
         private const string OptionsCategoryName = "Google Test Adapter";
 
         private void DisplayReleaseNotesIfNecessary()
