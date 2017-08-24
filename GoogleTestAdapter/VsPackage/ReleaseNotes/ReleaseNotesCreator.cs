@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using CommonMark;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
@@ -86,13 +87,24 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private string ReadReleaseNotesFile(Version version)
         {
+            Stream stream = null;
             try
             {
-                return File.ReadAllText(History.GetReleaseNotesFile(version));
+                stream = Assembly.GetAssembly(typeof(History)).GetManifestResourceStream(History.GetResourceName(version));
+                // ReSharper disable once AssignNullToNotNullAttribute
+                using (var reader = new StreamReader(stream))
+                {
+                    stream = null;
+                    return reader.ReadToEnd().Trim();
+                }
             }
             catch (Exception)
             {
                 return "";
+            }
+            finally
+            {
+                stream?.Dispose();
             }
         }
 

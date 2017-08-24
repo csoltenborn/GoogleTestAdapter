@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="'$(Language)' == 'C++'">
+    <Reference Include="CommonMark.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\CommonMark.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="GoogleTestAdapter.Common.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.Common.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="GoogleTestAdapter.Core.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.Core.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="GoogleTestAdapter.DiaResolver.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.DiaResolver.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="GoogleTestAdapter.TestAdapter.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.TestAdapter.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="GoogleTestAdapter.VsPackage.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\GoogleTestAdapter.VsPackage.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+      </HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces.dll">
+      <HintPath>
+        $(MSBuildThisFileDirectory)..\lib\native\Microsoft.VisualStudio.TestWindow.Interfaces.dll
+      </HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

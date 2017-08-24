@@ -134,84 +134,33 @@
     <EmbeddedResource Include="ReleaseNotes\ReleaseNotesDialog.resx">
       <DependentUpon>ReleaseNotesDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Resources\ReleaseNotes\0.4.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.4.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.5.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.5.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.1.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.2.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.2.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.2.2.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.2.3.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.3.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.6.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.7.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.7.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.8.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.9.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.9.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.10.0.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\ReleaseNotes\0.10.1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.4.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.4.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.5.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.5.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.1.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.2.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.2.3.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.3.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.6.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.7.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.7.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.8.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.9.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.9.1.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.10.0.md" />
+    <EmbeddedResource Include="Resources\ReleaseNotes\0.10.1.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
     <None Include="VsPackage.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+    </None>
+    <None Include="VsPackage.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -418,9 +367,8 @@
     <StartArguments>/rootsuffix Exp</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>echo At least one file is needed within the lib/native folder to convince VS that our package can be installed into native C++ projects. &gt;"$(TargetDir)_.txt"
-
-$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)packages\NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonInteractive
+    </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureVsSdkBuildToolsGotInstalled" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
