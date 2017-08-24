@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
@@ -31,7 +34,7 @@ namespace GoogleTestAdapter
         public void RunTests(IEnumerable<TestCase> testCasesToRun, ITestFrameworkReporter reporter, IDebuggedProcessLauncher launcher, bool isBeingDebugged, string solutionDirectory, IProcessExecutor executor)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
-            _logger.LogInfo("Running " + testCasesToRunAsArray.Length + " tests...");
+            _logger.LogInfo(String.Format(Resources.NumberOfTestsRunningMessage, testCasesToRunAsArray.Length));
 
             lock (this)
             {
@@ -68,8 +71,7 @@ namespace GoogleTestAdapter
                 _runner = new PreparingTestRunner(solutionDirectory, reporter, _logger, _settings, _schedulingAnalyzer);
                 if (_settings.ParallelTestExecution && isBeingDebugged)
                 {
-                    _logger.DebugInfo(
-                        "Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.");
+                    _logger.DebugInfo(Resources.ParallelExecution);
                 }
             }
         }

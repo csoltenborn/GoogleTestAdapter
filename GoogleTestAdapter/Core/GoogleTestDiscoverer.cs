@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
@@ -70,12 +70,12 @@ namespace GoogleTestAdapter
                 Action<TestCase> reportTestCases = tc =>
                 {
                     reporter.ReportTestsFound(tc.Yield());
-                    logger.DebugInfo("Added testcase " + tc.DisplayName);
+                    logger.DebugInfo(String.Format(Resources.AddedTestCase, tc.DisplayName));
                     nrOfTestCases++;
                 };
                 var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory);
                 factory.CreateTestCases(reportTestCases);
-                logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                logger.LogInfo(String.Format(Resources.NumberOfTestsMessage, nrOfTestCases, executable));
             }, logger);
         }
 
@@ -86,9 +86,9 @@ namespace GoogleTestAdapter
 
             foreach (TestCase testCase in testCases)
             {
-                _logger.DebugInfo("Added testcase " + testCase.DisplayName);
+                _logger.DebugInfo(String.Format(Resources.AddedTestCase, testCase.DisplayName));
             }
-            _logger.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
+            _logger.LogInfo(String.Format(Resources.NumberOfTestsMessage, testCases.Count, executable));
 
             return testCases;
         }
@@ -98,27 +98,25 @@ namespace GoogleTestAdapter
             string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
             {
-                _logger.DebugInfo($"Google Test indicator file found for executable {executable}");
+                _logger.DebugInfo(String.Format(Resources.FileFound, executable));
                 return true;
             }
-            _logger.DebugInfo($"No Google Test indicator file found for executable {executable}");
+            _logger.DebugInfo(String.Format(Resources.FileNotFound, executable));
 
             bool matches;
-            string regexSource, regex;
+            string regex;
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                regexSource = "default";
                 regex = SettingsWrapper.TestFinderRegex;
                 matches = CompiledTestFinderRegex.IsMatch(executable);
+                _logger.DebugInfo(String.Format(matches ? Resources.MatchesDefault : Resources.DoesntMatchDefault, executable, regex));
             }
             else
             {
-                regexSource = "custom";
                 regex = customRegex;
                 matches = SafeMatches(executable, customRegex);
+                _logger.DebugInfo(String.Format(matches ? Resources.MatchesCustom : Resources.DoesntMatchCustom, executable, regex));
             }
-            _logger.DebugInfo(
-                $"'{executable}' {(matches ? "matches" : "does not match")} {regexSource} regex '{regex}'");
 
             return matches;
         }
@@ -146,11 +144,11 @@ namespace GoogleTestAdapter
             }
             catch (ArgumentException e)
             {
-                _logger.LogError($"Regex '{regex}' can not be parsed: {e.Message}");
+                _logger.LogError(String.Format(Resources.RegexParseError, regex, e.Message));
             }
             catch (RegexMatchTimeoutException e)
             {
-                _logger.LogError($"Regex '{regex}' timed out: {e.Message}");
+                _logger.LogError(String.Format(Resources.RegexTimedOut, regex, e.Message));
             }
             return matches;
         }
@@ -160,7 +158,7 @@ namespace GoogleTestAdapter
             var zone = Zone.CreateFromUrl(executable);
             if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
             {
-                logger.LogError("Executable " + executable + " came from another computer and was blocked to help protect this computer.");
+                logger.LogError(String.Format(Resources.ExecutableError, executable));
                 return false;
             }
             return true;

@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Collections.Generic;
@@ -88,13 +88,13 @@ namespace GoogleTestAdapter.Settings
                         _currentSettings = projectSettings;
                         string settingsString = ToString();
                         _currentSettings = _settingsContainer.SolutionSettings;
-                        logger.DebugInfo($"Settings for test executable '{executable}': {settingsString}");
+                        logger.DebugInfo(String.Format(Resources.SettingsMessage, executable, settingsString));
 
                         _currentSettings = projectSettings;
                     }
                     else
                     {
-                        logger.DebugInfo($"No settings configured for test executable '{executable}'; running with solution settings: {this}");
+                        logger.DebugInfo(String.Format(Resources.NoSettingConfigured, executable, this));
                     }
                 }
 
@@ -116,7 +116,7 @@ namespace GoogleTestAdapter.Settings
                         if (_currentSettings != _settingsContainer.SolutionSettings)
                         {
                             _currentSettings = _settingsContainer.SolutionSettings;
-                            logger.DebugInfo($"Back to solution settings: {this}");
+                            logger.DebugInfo(String.Format(Resources.RestoringSolutionSettings, this));
                         }
                     }
                 }
@@ -129,15 +129,13 @@ namespace GoogleTestAdapter.Settings
             if (_nrOfRunningExecutions == 0)
                 return;
             if (_nrOfRunningExecutions < 0)
-                throw new InvalidOperationException($"{nameof(_nrOfRunningExecutions)} must never be < 0");
+                throw new InvalidOperationException(String.Format(Resources.NeverBeZero, nameof(_nrOfRunningExecutions)));
 
             if (_currentThread != Thread.CurrentThread)
-                throw new InvalidOperationException(
-                    $"SettingsWrapper is already running with settings for an executable on thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
+                throw new InvalidOperationException(String.Format(Resources.SettingsWrapperString, _currentThread.Name, Thread.CurrentThread.Name));
 
             if (executable != _currentExecutable)
-                throw new InvalidOperationException(
-                    $"Execution is already running with settings for executable {_currentExecutable}, can not switch to settings for {executable}");
+                throw new InvalidOperationException(String.Format(Resources.ExecutionString, _currentExecutable, executable));
         }
 
         public override string ToString()

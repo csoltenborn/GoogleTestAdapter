@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using GoogleTestAdapter.Common;
@@ -127,7 +129,7 @@ namespace GoogleTestAdapter.DiaResolver
             finally
             {
                 if (loaded && !NativeMethods.UnMapAndLoad(ref image))
-                    logger.LogError("UnMapAndLoad failed!");
+                    logger.LogError(Resources.UnMapLoad);
             }
         }
 

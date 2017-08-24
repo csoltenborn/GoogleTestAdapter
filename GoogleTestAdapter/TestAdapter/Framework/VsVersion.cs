@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -63,7 +65,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 }
                 catch (Exception e)
                 {
-                    logger?.LogError($"Could not find out VisualStudio version: {e.Message}");
+                    logger?.LogError(String.Format(Resources.VSVersionMessage, e.Message));
                     _version = VsVersion.Unknown;
                 }
                 return _version.Value;
@@ -75,7 +77,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             string pathToBinary = FindVsOrVsTestConsoleExe()?.MainModule.FileName;
             if (pathToBinary == null)
-                throw new InvalidOperationException("Could not find process");
+                throw new InvalidOperationException(Resources.ProcessNotFound);
 
             FileVersionInfo binaryVersionInfo = FileVersionInfo.GetVersionInfo(pathToBinary);
 
@@ -114,7 +116,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 return VsVersion.VS2012;
 
             if (version.Major < (int) FirstSupportedVersion || version.Major > (int) LastSupportedVersion)
-                throw new InvalidOperationException($"Unknown VisualStudio version: {versionString}");
+                throw new InvalidOperationException(String.Format(Resources.UnknownVisualStudioVersion, versionString));
 
             return (VsVersion) version.Major;
         }

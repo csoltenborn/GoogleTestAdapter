@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Linq;
@@ -50,10 +50,10 @@ namespace GoogleTestAdapter.TestAdapter
             }
             catch (Exception e)
             {
-                _logger.LogError($"Exception while running tests: {e}");
+                _logger.LogError(String.Format(Resources.TestRunningException, e));
             }
 
-            CommonFunctions.ReportErrors(_logger, "test execution", _settings.DebugMode);
+            CommonFunctions.ReportErrors(_logger, TestPhase.TestExecution, _settings.DebugMode);
         }
 
         public void RunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
@@ -64,10 +64,10 @@ namespace GoogleTestAdapter.TestAdapter
             }
             catch (Exception e)
             {
-                _logger.LogError("Exception while running tests: " + e);
+                _logger.LogError(String.Format(Resources.TestRunningException, e));
             }
 
-            CommonFunctions.ReportErrors(_logger, "test execution", _settings.DebugMode);
+            CommonFunctions.ReportErrors(_logger, TestPhase.TestExecution, _settings.DebugMode);
         }
 
         public void Cancel()
@@ -79,7 +79,7 @@ namespace GoogleTestAdapter.TestAdapter
 
                 _canceled = true;
                 _executor?.Cancel();
-                _logger.LogInfo("Test execution canceled.");
+                _logger.LogInfo(Resources.TestExecutionCancelled);
             }
         }
 
@@ -103,7 +103,7 @@ namespace GoogleTestAdapter.TestAdapter
             DoRunTests(testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
-            _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+            _logger.LogInfo(String.Format(Resources.TestExecutionCompleted, stopwatch.Elapsed));
         }
 
         private void TryRunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
@@ -122,7 +122,7 @@ namespace GoogleTestAdapter.TestAdapter
             DoRunTests(testCasesToRun, runContext, frameworkHandle);
 
             stopwatch.Stop();
-            _logger.LogInfo($"Google Test execution completed, overall duration: {stopwatch.Elapsed}.");
+            _logger.LogInfo(String.Format(Resources.TestExecutionCompleted, stopwatch.Elapsed));
         }
 
         private Stopwatch StartStopWatchAndInitEnvironment(IRunContext runContext, IFrameworkHandle frameworkHandle)
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter.TestAdapter
             CommonFunctions.LogVisualStudioVersion(_logger);
 
             _logger.LogInfo(Strings.Instance.TestExecutionStarting);
-            _logger.DebugInfo($"Solution settings: {_settings}");
+            _logger.DebugInfo(String.Format(Resources.Settings, _settings));
 
             return stopwatch;
         }
@@ -149,7 +149,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             if (!IsVisualStudioProcessAvailable() && runContext.IsBeingDebugged)
             {
-                _logger.LogError("Debugging is only possible if GoogleTestAdapter has been installed into Visual Studio - NuGet installation does not support this (and other features such as Visual Studio Options, toolbar, and solution settings).");
+                _logger.LogError(Resources.DebuggingMessage);
                 return false;
             }
 

@@ -195,6 +195,11 @@
     <Compile Include="Helpers\ParentProcessUtils.cs" />
     <Compile Include="Helpers\TestCaseFilter.cs" />
     <Compile Include="Helpers\Throttle.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="Settings\IGlobalRunSettings.cs" />
     <Compile Include="Settings\IGlobalRunSettingsInternal.cs" />
@@ -211,6 +216,11 @@
     <EmbeddedResource Include="GoogleTestAdapterSettings.xsd">
       <SubType>Designer</SubType>
       <LogicalName>GoogleTestAdapterSettings.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config">

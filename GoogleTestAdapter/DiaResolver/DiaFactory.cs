@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.DiaResolver
             string path = Path.Combine(GetAssemblyBaseDir(), Is32Bit() ? "x86" : "x64", DiaDll);
             var ptrDll = LoadLibrary(path);
             if (ptrDll == IntPtr.Zero)
-                throw new Exception($"Cannot load {path}.");
+                throw new Exception(String.Format(Resources.LoadError, path));
         }
 
         public static IDiaDataSource CreateInstance()

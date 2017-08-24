@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests_CrashingExecutable_CrashIsLogged()
         {
             RunExecutableAndCheckLogging(TestResources.AlwaysCrashingExe,
-                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not list test cases of executable"))),
+                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not list test cases for executable"))),
                     Times.Once));
         }
 
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests_FailingExecutable_ExitCodeIsLogged()
         {
             RunExecutableAndCheckLogging(TestResources.AlwaysFailingExe,
-                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 4711"))),
+                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("process execution failed with exit code 4711"))),
                     Times.Once));
         }
 
@@ -85,7 +85,7 @@ namespace GoogleTestAdapter.TestAdapter
                 File.Copy(TestResources.SemaphoreExe, Temp1Exe);
                 File.Exists(SemPath).Should().BeFalse();
                 RunExecutableAndCheckLogging(Temp1Exe,
-                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("process execution failed with exit code 143"))),
                         Times.Once));
                 File.Exists(SemPath).Should().BeTrue("because exe should have been run");
             }

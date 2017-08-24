@@ -1,3 +1,5 @@
+// This file has been modified by Microsoft on 8/2017.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +63,7 @@ namespace GoogleTestAdapter.Runners
             }
             if (nrOfCollectedTestResults > 0)
                 _logger.DebugInfo(
-                    $"{_threadName}Collected {nrOfCollectedTestResults} test results from result XML file {resultXmlFile}");
+                    String.Format(Resources.CollectedResults, _threadName, nrOfCollectedTestResults, resultXmlFile));
         }
 
         private void CollectResultsFromConsoleOutput(StandardOutputTestResultParser consoleParser, List<TestResult> testResults)
@@ -75,12 +77,12 @@ namespace GoogleTestAdapter.Runners
                 nrOfCollectedTestResults++;
             }
             if (nrOfCollectedTestResults > 0)
-                _logger.DebugInfo($"{_threadName}Collected {nrOfCollectedTestResults} test results from console output");
+                _logger.DebugInfo(String.Format(Resources.CollectedResultsFromConsole, _threadName, nrOfCollectedTestResults));
         }
 
         private void CreateMissingResults(TestCase[] testCases, TestCase crashedTestCase, List<TestResult> testResults)
         {
-            var errorMessage = $"reason is probably a crash of test {crashedTestCase.DisplayName}";
+            var errorMessage = String.Format(Resources.CrashTest, crashedTestCase.DisplayName);
             var errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
                 crashedTestCase.CodeFilePath, crashedTestCase.LineNumber.ToString());
 
@@ -95,14 +97,13 @@ namespace GoogleTestAdapter.Runners
                 });
             }
             if (testCases.Length > 0)
-                _logger.DebugInfo($"{_threadName}Created {testCases.Length} test results for tests which were neither found in result XML file nor in console output");
+                _logger.DebugInfo(String.Format(Resources.CreatedTestResults, _threadName, testCases.Length));
         }
 
         private void ReportSuspiciousTestCases(TestCase[] testCases)
         {
             string testCasesAsString = string.Join(Environment.NewLine, testCases.Select(tc => tc.DisplayName));
-            _logger.DebugWarning(
-                $"{_threadName}{testCases.Length} test cases seem to not have been run - are you repeating a test run, but tests have changed in the meantime? Test cases:{Environment.NewLine}{testCasesAsString}");
+            _logger.DebugWarning(String.Format(Resources.TestCaseNotRun, _threadName, testCases.Length, Environment.NewLine, testCasesAsString));
         }
 
     }

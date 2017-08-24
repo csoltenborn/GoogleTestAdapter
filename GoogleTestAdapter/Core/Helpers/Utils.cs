@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Globalization;
@@ -73,7 +73,7 @@ namespace GoogleTestAdapter.Helpers
             }
             catch (ArgumentException e)
             {
-                throw new Exception($"Invalid regular expression \"{pattern}\", exception message: {e.Message}");
+                throw new Exception(String.Format(Resources.InvalidRegularExpression, pattern, e.Message));
             }
         }
 

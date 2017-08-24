@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -61,7 +63,7 @@ namespace GoogleTestAdapter.TestResults
             TestCase testCase = FindTestcase(qualifiedTestname);
             if (testCase == null)
             {
-                _logger.DebugWarning($"No known test case for test result of line '{line}' - are you repeating a test run, but tests have changed in the meantime?");
+                _logger.DebugWarning(String.Format(Resources.NoKnownTestCaseMessage, line));
                 return null;
             }
 
@@ -136,7 +138,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                logger.LogWarning("Could not parse duration in line '" + line + "'");
+                logger.LogWarning(String.Format(Resources.ParseDurationMessage, line));
             }
 
             return NormalizeDuration(TimeSpan.FromMilliseconds(durationInMs));

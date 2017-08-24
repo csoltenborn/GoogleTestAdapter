@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
@@ -61,11 +63,11 @@ namespace GoogleTestAdapter.Helpers
                 try
                 {
                     process.Kill();
-                    logger.DebugInfo($"Killed process {process} with startTime={startTime.ToShortTimeString()}");
+                    logger.DebugInfo(String.Format(Resources.TerminatedProcess, process, startTime.ToShortTimeString()));
                 }
                 catch (Exception e)
                 {
-                    logger.DebugWarning($"Could not kill process {process} with startTime={startTime.ToShortTimeString()}: {e.Message}");
+                    logger.DebugWarning(String.Format(Resources.CouldNotTerminate, process, startTime.ToShortTimeString(), e.Message));
                 }
             }
             catch (Exception)
@@ -78,7 +80,7 @@ namespace GoogleTestAdapter.Helpers
         private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command, string param, bool printTestOutput,
             IDebuggedProcessLauncher handle)
         {
-            _logger.LogInfo("Attaching debugger to " + command);
+            _logger.LogInfo(String.Format(Resources.AttachDebuggerMessage, command));
             if (printTestOutput)
             {
                 _logger.DebugInfo(

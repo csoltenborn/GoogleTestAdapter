@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using GoogleTestAdapter.Common;
 using Microsoft.Dia;
@@ -53,17 +53,17 @@ namespace GoogleTestAdapter.DiaResolver
             string pdb = FindPdbFile(binary, pathExtension);
             if (pdb == null)
             {
-                _logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
+                _logger.LogWarning(String.Format(Resources.PdbFileNotFoundError, binary));
                 return;
             }
 
             if (!TryCreateDiaInstance())
             {
-                _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
+                _logger.LogError(Resources.msdiaError);
                 return;
             }
 
-            _logger.DebugInfo($"Parsing pdb file \"{pdb}\"");
+            _logger.DebugInfo(String.Format(Resources.ParsingFile, pdb));
 
             _fileStream = File.Open(pdb, FileMode.Open, FileAccess.Read, FileShare.Read);
             _diaDataSource.loadDataFromIStream(new DiaMemoryStream(_fileStream));
@@ -93,7 +93,7 @@ namespace GoogleTestAdapter.DiaResolver
             string pdb = PeParser.ExtractPdbPath(binary, _logger);
             if (pdb != null && File.Exists(pdb))
                 return pdb;
-            attempts.Add("parsing from executable");
+            attempts.Add($"\"{binary}\"");
 
             pdb = Path.ChangeExtension(binary, ".pdb");
             if (File.Exists(pdb))
@@ -120,7 +120,7 @@ namespace GoogleTestAdapter.DiaResolver
                 }
             }
 
-            _logger.DebugInfo("Attempts to find pdb: " + string.Join("::", attempts));
+            _logger.DebugInfo(String.Format(Resources.AttemptsToFind, string.Join("::", attempts)));
 
             return null;
         }
@@ -147,7 +147,7 @@ namespace GoogleTestAdapter.DiaResolver
             IDiaEnumLineNumbers lineNumbers = GetLineNumbers(nativeSymbol.AddressSection, nativeSymbol.AddressOffset, nativeSymbol.Length);
             if (lineNumbers.count <= 0)
             {
-                _logger.LogWarning("Failed to locate line number for " + nativeSymbol);
+                _logger.LogWarning(String.Format(Resources.LineNumberError, nativeSymbol));
                 return new SourceFileLocation(_binary, "", 0);
             }
 
@@ -186,8 +186,8 @@ namespace GoogleTestAdapter.DiaResolver
             catch (NotImplementedException)
             {
                 // https://developercommunity.visualstudio.com/content/problem/4631/dia-sdk-still-doesnt-support-debugfastlink.html
-                _logger.LogWarning("In order to get source locations for your tests, please ensure to generate *full* PDBs for your test executables.");
-                _logger.LogWarning("Use linker option /DEBUG:FULL (VS2017) or /DEBUG (VS2015 and older) - do not use /DEBUG:FASTLINK!");
+                _logger.LogWarning(Resources.GenerateFullPDBMessage);
+                _logger.LogWarning(Resources.UseLinkerOption);
             }
             return result;
         }

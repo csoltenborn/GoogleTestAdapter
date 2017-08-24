@@ -67,6 +67,11 @@
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Model\TestCaseMetaDataProperty.cs" />
     <Compile Include="Model\TestProperty.cs" />
     <Compile Include="Runners\TestResultCollector.cs" />
@@ -107,6 +112,11 @@
     <EmbeddedResource Include="GtaTestDurations.xsd">
       <SubType>Designer</SubType>
       <LogicalName>GtaTestDurations.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Key.snk" />
   </ItemGroup>

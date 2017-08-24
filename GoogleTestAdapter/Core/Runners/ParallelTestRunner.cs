@@ -1,5 +1,6 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -70,8 +71,8 @@ namespace GoogleTestAdapter.Runners
             ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
             List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
 
-            _logger.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
-            _logger.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
+            _logger.LogInfo(string.Format(Resources.ThreadExecutionMessage, splittedTestCasesToRun.Count));
+            _logger.DebugInfo(Resources.NoTestOutputShown);
 
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
@@ -97,24 +98,24 @@ namespace GoogleTestAdapter.Runners
                 foreach (KeyValuePair<TestCase, int> duration in durations)
                 {
                     if (!_schedulingAnalyzer.AddExpectedDuration(duration.Key, duration.Value))
-                        _logger.DebugWarning("TestCase already in analyzer: " + duration.Key.FullyQualifiedName);
+                        _logger.DebugWarning(String.Format(Resources.TestCaseInAnalyzer, duration.Key.FullyQualifiedName));
                 }
             }
             catch (InvalidTestDurationsException e)
             {
-                _logger.LogWarning($"Could not read test durations: {e.Message}");
+                _logger.LogWarning(string.Format(Resources.ReadTestDurationError, e.Message));
             }
 
             ITestsSplitter splitter;
             if (durations == null || durations.Count < testCasesToRun.Length)
             {
                 splitter = new NumberBasedTestsSplitter(testCasesToRun, _settings);
-                _logger.DebugInfo("Using splitter based on number of tests");
+                _logger.DebugInfo(Resources.UsingSplitterOnNumber);
             }
             else
             {
                 splitter = new DurationBasedTestsSplitter(durations, _settings);
-                _logger.DebugInfo("Using splitter based on test durations");
+                _logger.DebugInfo(Resources.UsingSplitterOnDuration);
             }
 
             return splitter;
