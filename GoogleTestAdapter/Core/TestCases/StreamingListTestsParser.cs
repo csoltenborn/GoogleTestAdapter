@@ -8,8 +8,10 @@ namespace GoogleTestAdapter.TestCases
     {
         private static readonly Regex SuiteRegex = new Regex($@"([\w\/]*(?:\.[\w\/]+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
         private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
-        private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\w+", RegexOptions.Compiled);
-        private static readonly Regex IsParamRegexPreNamedParameters = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
+//        private static readonly Regex SuiteRegex = new Regex($@"(\w+(?:\.\w+)*((?:\/\w+(?:\.\w+)*)*))(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
+ //       private static readonly Regex NameRegex = new Regex($@"([\w]*((?:\/[\w]+)*))(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
+  //      private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\w+", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;
 
@@ -47,12 +49,14 @@ namespace GoogleTestAdapter.TestCases
         {
             Match suiteMatch = SuiteRegex.Match(suiteLine);
             string suite = suiteMatch.Groups[1].Value;
+            //string typedSuite = suiteMatch.Groups[2].Value;
             string typeParam = suiteMatch.Groups[2].Value
                 .Replace("class ", "")
                 .Replace("struct ", "");
 
             Match nameMatch = NameRegex.Match(testCaseLine);
             string name = nameMatch.Groups[1].Value;
+//            string parameterizedName = nameMatch.Groups[2].Value;
             string param = nameMatch.Groups[2].Value;
 
             string fullyQualifiedName = $"{suite}.{name}";
@@ -62,11 +66,11 @@ namespace GoogleTestAdapter.TestCases
                 displayName = displayName.Replace("/", _testNameSeparator);
 
             TestCaseDescriptor.TestTypes testType = TestCaseDescriptor.TestTypes.Simple;
-            if ((!string.IsNullOrWhiteSpace(typeParam) && IsParamRegex.IsMatch(suite))
-                || (_testNameSeparator.Equals("::") && IsParamRegexPreNamedParameters.IsMatch(suite)))
+            if (IsParamRegex.IsMatch(suite))
+//                if (!string.IsNullOrWhiteSpace(typedSuite) && IsParamRegex.IsMatch(suite))
                 testType = TestCaseDescriptor.TestTypes.TypeParameterized;
-            else if ((!string.IsNullOrWhiteSpace(param) && IsParamRegex.IsMatch(name))
-                || (_testNameSeparator.Equals("::") && IsParamRegexPreNamedParameters.IsMatch(name)))
+            //            else if (!string.IsNullOrWhiteSpace(parameterizedName) && IsParamRegex.IsMatch(name))
+            else if (IsParamRegex.IsMatch(name))
                 testType = TestCaseDescriptor.TestTypes.Parameterized;
 
             return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType);
