@@ -43,7 +43,7 @@ namespace GoogleTestAdapter.TestCases
             {
                 var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
                 int processExitCode;
-                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(),
+                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption,
                     false, false, out processExitCode);
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
@@ -52,7 +52,7 @@ namespace GoogleTestAdapter.TestCases
             catch (Exception e)
             {
                 SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption.Trim(), e);
+                    GoogleTestConstants.ListTestsOption, e);
                 return new List<TestCase>();
             }
 
@@ -134,7 +134,7 @@ namespace GoogleTestAdapter.TestCases
                     executor = new ProcessExecutor(null, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
-                        GoogleTestConstants.ListTestsOption.Trim(),
+                        GoogleTestConstants.ListTestsOption,
                         "",
                         _settings.GetPathExtension(_executable),
                         lineAction);
@@ -148,7 +148,7 @@ namespace GoogleTestAdapter.TestCases
                     string dir = Path.GetDirectoryName(_executable);
                     string file = Path.GetFileName(_executable);
                     string cdToWorkingDir = $@"cd ""{dir}""";
-                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption.Trim()}";
+                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption}";
 
                     _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
                     _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
@@ -171,7 +171,7 @@ namespace GoogleTestAdapter.TestCases
             catch (Exception e)
             {
                 SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption.Trim(), e);
+                    GoogleTestConstants.ListTestsOption, e);
                 return new List<TestCase>();
             }
             return testCases;
@@ -184,7 +184,7 @@ namespace GoogleTestAdapter.TestCases
                 string messsage =
                     $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
                 messsage +=
-                    $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption.Trim()}', working directory: '{Path.GetDirectoryName(_executable)}'";
+                    $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption}', working directory: '{Path.GetDirectoryName(_executable)}'";
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
                     messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
                 else

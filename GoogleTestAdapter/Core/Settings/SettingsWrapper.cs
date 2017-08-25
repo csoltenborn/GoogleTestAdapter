@@ -43,8 +43,6 @@ namespace GoogleTestAdapter.Settings
             .OrderBy(p => p.Name)
             .ToArray();
 
-        public const string TestFinderRegex = @"[Tt]est[s]?\.exe";
-
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
         public RegexTraitParser RegexTraitParser { private get; set; }
 
@@ -255,8 +253,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionTestDiscoveryRegex = "Regex for test discovery";
         public const string OptionTestDiscoveryRegexDefaultValue = "";
         public const string OptionTestDiscoveryRegexDescription =
-            "If non-empty, this regex will be used to discover the Google Test executables containing your tests.\nDefault regex: "
-            + TestFinderRegex;
+            "If non-empty, this regex will be used to identify the Google Test executables containing your tests, and the executable itself will not be scanned.";
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
