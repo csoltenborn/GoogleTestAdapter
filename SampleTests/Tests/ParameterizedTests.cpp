@@ -69,3 +69,28 @@ INSTANTIATE_TEST_CASE_P(/* no instantiation name*/,
 	// use _strdup to have strings on the heap and enforce a new address each test run (yes... we leak memory)
 	testing::Values(MyPointerParam(_strdup(""), 0), MyPointerParam(_strdup("Test"), 4), MyPointerParam(_strdup("ooops"), 23))
 	);
+
+
+#ifndef GTEST_1_7_0
+class CustomFunctorNamingTest : public testing::TestWithParam<std::string> {};
+TEST_P(CustomFunctorNamingTest, CustomTestNames) {}
+
+struct CustomParamNameFunctor {
+	std::string operator()(const testing::TestParamInfo<std::string>& info) {
+		return info.param;
+	}
+};
+
+INSTANTIATE_TEST_CASE_P(CustomParamNameFunctor,
+	CustomFunctorNamingTest,
+	testing::Values(std::string("FunctorName")),
+	CustomParamNameFunctor());
+
+INSTANTIATE_TEST_CASE_P(AllAllowedCharacters,
+	CustomFunctorNamingTest,
+	testing::Values("abcdefghijklmnopqrstuvwxyz",
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+		"01234567890_"),
+	CustomParamNameFunctor());
+#endif
+

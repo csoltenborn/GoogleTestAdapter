@@ -167,7 +167,7 @@ namespace GoogleTestAdapter.DiaResolver
             {
                 uint size = 0u;
                 var dbgDir = (IMAGE_DEBUG_DIRECTORY*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 6, &size);
-                if (dbgDir->SizeOfData > 0)
+                if (dbgDir != null && dbgDir->SizeOfData > 0)
                 {
                     var pdbInfo = (PdbInfo*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, dbgDir->AddressOfRawData, IntPtr.Zero);
                     pdbPath = Marshal.PtrToStringAnsi(new IntPtr(&pdbInfo->PdbFileName));
