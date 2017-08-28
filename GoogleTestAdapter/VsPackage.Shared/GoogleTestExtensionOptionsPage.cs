@@ -30,8 +30,6 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IDisposable
     {
-        private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
-
         private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
         private IGlobalRunSettingsInternal _globalRunSettings;
