@@ -302,12 +302,12 @@ namespace GoogleTestAdapter
                 .Be(isGoogleTestExecutable);
         }
 
-        private void FindTests(string location, int? expectedNrOfTestCases = null)
+        private void FindTests(string location, int expectedNrOfTestCases = TestResources.NrOfTests)
         {
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            testCases.Count.Should().Be(expectedNrOfTestCases != null ? expectedNrOfTestCases.Value : TestResources.NrOfTests);
+            testCases.Count.Should().Be(expectedNrOfTestCases);
 
             TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
             testCase.DisplayName.Should().Be("TheFixture.AddFails");
