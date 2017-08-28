@@ -1,4 +1,7 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿<#@ template language="c#" hostspecific="true" #> 
+<#@ output extension=".cs" #> 
+<#@ parameter type="System.String" name="TestAdapterFlavor" #> 
+// This file has been modified by Microsoft on 8/2017.
 
 using System.Collections.Generic;
 using System.IO;
@@ -44,7 +47,11 @@ namespace GoogleTestAdapter.Tests.Common
             match.Success.Should().BeTrue();
             string binariesPath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
+<# if (TestAdapterFlavor == "GTA") { #>
             testAdapterDir = Path.Combine(binariesPath, "GoogleTestAdapter", debugOrRelease, "Packaging.GTA");
+<# } else if (TestAdapterFlavor == "TAfGT") { #>
+            testAdapterDir = Path.Combine(binariesPath, "GoogleTestAdapter", debugOrRelease, "Packaging.TAfGT");
+<# } #>
             testSolutionFile = Path.Combine(binariesPath, @"..\..\SampleTests\SampleTests.sln");
         }
 

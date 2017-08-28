@@ -31,6 +31,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
     </Content>
+    <Content Include="GoogleTestAdapter\Tests.Common\AbstractConsoleIntegrationTests.cs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>AbstractConsoleIntegrationTests.cs</OutputFileName>
+    </Content>
     <Content Include="GoogleTestAdapter\VsPackage.GTA.Tests.Unit\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
