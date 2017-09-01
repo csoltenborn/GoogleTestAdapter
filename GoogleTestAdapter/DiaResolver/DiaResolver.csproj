@@ -43,10 +43,17 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.DiaResolver.dll">
+      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\GoogleTestAdapter.DiaResolver.lcl</TranslationFile> 
+    </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.DiaResolver.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning"> 
+      <!-- Do not have this show up in Solution Explorer in VS --> 
+      <InProject>false</InProject> 
+    </SignFilesDependsOn>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="dia2">
@@ -118,4 +125,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'"> 
+    <ItemGroup> 
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll"> 
+        <Authenticode>Microsoft</Authenticode> 
+        <StrongName>StrongName</StrongName> 
+      </FilesToSign> 
+    </ItemGroup> 
+  </Target>
 </Project>
