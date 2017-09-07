@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void MarkUntrusted(string path)
         {
-            using (var handle = NativeMethods.CreateFileW(path + ":Zone.Identifier", NativeMethods.GENERIC_WRITE, 0, IntPtr.Zero,
+            using (var handle = NativeMethods.CreateFile(path + ":Zone.Identifier", NativeMethods.GENERIC_WRITE, 0, IntPtr.Zero,
                 NativeMethods.CREATE_NEW, 0, IntPtr.Zero))
             {
                 if (handle.IsInvalid)
@@ -155,13 +155,13 @@ namespace GoogleTestAdapter.TestAdapter
 
     static class NativeMethods
     {
-        public const int GENERIC_WRITE = 1073741824;
-        public const int CREATE_NEW = 1;
+        public const uint GENERIC_WRITE = 0x40000000;
+        public const uint CREATE_NEW = 1;
 
-        [DllImport("kernel32.dll")]
-        public static extern SafeFileHandle CreateFileW(
-            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes,
-            uint dwCreationDisposition,uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern SafeFileHandle CreateFile(
+            string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes,
+            uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
     }
 
 }
