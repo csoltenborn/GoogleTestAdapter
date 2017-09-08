@@ -51,8 +51,8 @@ namespace GoogleTestAdapter.DiaResolver
         [TestCategory(Unit)]
         public void PeParser_X86UnicodeName_FindsEmbeddedPdbPath()
         {
-            string pdb = PeParser.ExtractPdbPath(TestResources.UnicodeExe, MockLogger.Object);
-            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.UnicodeExe, ".pdb"));
+            string pdb = PeParser.ExtractPdbPath(TestResources.UnicodeNameExe, MockLogger.Object);
+            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.UnicodeNameExe, ".pdb"));
             pdb.Should().Be(expectedPdb);
         }
 
