@@ -130,7 +130,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packaging.TAfGT", "Packagin
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SemaphoreExe", "SemaphoreExe\SemaphoreExe.vcxproj", "{F48AD2EC-96B3-41C6-9F89-3542EC7A3D43}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "㐀㕵ExtAxCP936丂狛狜", "㐀㕵ExtAxCP936丂狛狜\㐀㕵ExtAxCP936丂狛狜.vcxproj", "{8B27FD59-F03C-468E-B878-CFFC7484B7F7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnicodeNameExe", "UnicodeNameExe\UnicodeNameExe.vcxproj", "{8B27FD59-F03C-468E-B878-CFFC7484B7F7}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
