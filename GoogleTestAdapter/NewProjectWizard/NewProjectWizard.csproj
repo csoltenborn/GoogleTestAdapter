@@ -44,15 +44,16 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\NewProjectWizard.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\NewProjectWizard.lcl</TranslationFile> 
+      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\NewProjectWizard.lcl</TranslationFile>
+      <SettingsFile>$(LSBuildRoot)\MCP_excludeBaml.lss</SettingsFile>
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\NewProjectWizard.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
-    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning"> 
-      <!-- Do not have this show up in Solution Explorer in VS --> 
-      <InProject>false</InProject> 
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning">
+      <!-- Do not have this show up in Solution Explorer in VS -->
+      <InProject>false</InProject>
     </SignFilesDependsOn>
   </ItemGroup>
   <ItemGroup>
@@ -177,12 +178,12 @@
     <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props'))" />
     <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets'))" />
   </Target>
-  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'"> 
-    <ItemGroup> 
-      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll"> 
-        <Authenticode>Microsoft</Authenticode> 
-        <StrongName>StrongName</StrongName> 
-      </FilesToSign> 
-    </ItemGroup> 
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'">
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">
+        <Authenticode>Microsoft</Authenticode>
+        <StrongName>StrongName</StrongName>
+      </FilesToSign>
+    </ItemGroup>
   </Target>
 </Project>
