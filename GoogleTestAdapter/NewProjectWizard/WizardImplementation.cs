@@ -158,7 +158,7 @@ namespace Microsoft.NewProjectWizard
 
                     string versionString;
 
-                    if (latestSdk.TargetPlatformVersion.Revision >= 10)
+                    if (latestSdk.TargetPlatformVersion.Major >= 10)
                     {
                         List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
                             .Select(moniker => TryParsePlatformVersion(moniker))
