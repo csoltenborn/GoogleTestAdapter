@@ -124,6 +124,51 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Misc.
+        /// </summary>
+        internal static string CategoryMiscName {
+            get {
+                return ResourceManager.GetString("CategoryMiscName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parallelization.
+        /// </summary>
+        internal static string CategoryParallelizationName {
+            get {
+                return ResourceManager.GetString("CategoryParallelizationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runtime behavior.
+        /// </summary>
+        internal static string CategoryRuntimeBehaviorName {
+            get {
+                return ResourceManager.GetString("CategoryRuntimeBehaviorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution.
+        /// </summary>
+        internal static string CategoryTestExecutionName {
+            get {
+                return ResourceManager.GetString("CategoryTestExecutionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regexes for trait assignment.
+        /// </summary>
+        internal static string CategoryTraitsName {
+            get {
+                return ResourceManager.GetString("CategoryTraitsName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}Collected {1} test result(s) from result XML file {2}.
         /// </summary>
         internal static string CollectedResults {
@@ -201,6 +246,43 @@ namespace GoogleTestAdapter {
         internal static string DeleteTestDir {
             get {
                 return ResourceManager.GetString("DeleteTestDir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - directory containing the test executable.
+        /// </summary>
+        internal static string DescriptionOfExecutableDirPlaceHolder {
+            get {
+                return ResourceManager.GetString("DescriptionOfExecutableDirPlaceHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - path of a directory which can be used by the tests
+        ///{1} - id of thread executing the current tests.
+        /// </summary>
+        internal static string DescriptionOfPlaceholdersForBatches {
+            get {
+                return ResourceManager.GetString("DescriptionOfPlaceholdersForBatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - executable containing the tests.
+        /// </summary>
+        internal static string DescriptionOfPlaceholdersForExecutables {
+            get {
+                return ResourceManager.GetString("DescriptionOfPlaceholdersForExecutables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} - directory of the solution (only available inside VS).
+        /// </summary>
+        internal static string DescriptionOfSolutionDirPlaceHolder {
+            get {
+                return ResourceManager.GetString("DescriptionOfSolutionDirPlaceHolder", resourceCulture);
             }
         }
         
@@ -453,6 +535,460 @@ namespace GoogleTestAdapter {
         internal static string NumberOfTestsRunningMessage {
             get {
                 return ResourceManager.GetString("NumberOfTestsRunningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional test execution parameters.
+        /// </summary>
+        internal static string OptionAdditionalTestExecutionParams {
+            get {
+                return ResourceManager.GetString("OptionAdditionalTestExecutionParams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional parameters for Google Test executable. Placeholders:.
+        /// </summary>
+        internal static string OptionAdditionalTestExecutionParamsDescription {
+            get {
+                return ResourceManager.GetString("OptionAdditionalTestExecutionParamsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test setup batch file.
+        /// </summary>
+        internal static string OptionBatchForTestSetup {
+            get {
+                return ResourceManager.GetString("OptionBatchForTestSetup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:.
+        /// </summary>
+        internal static string OptionBatchForTestSetupDescription {
+            get {
+                return ResourceManager.GetString("OptionBatchForTestSetupDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test teardown batch file.
+        /// </summary>
+        internal static string OptionBatchForTestTeardown {
+            get {
+                return ResourceManager.GetString("OptionBatchForTestTeardown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:.
+        /// </summary>
+        internal static string OptionBatchForTestTeardownDescription {
+            get {
+                return ResourceManager.GetString("OptionBatchForTestTeardownDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Break on failure.
+        /// </summary>
+        internal static string OptionBreakOnFailure {
+            get {
+                return ResourceManager.GetString("OptionBreakOnFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.
+        ///Google Test option: {0}.
+        /// </summary>
+        internal static string OptionBreakOnFailureDescription {
+            get {
+                return ResourceManager.GetString("OptionBreakOnFailureDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Catch exceptions.
+        /// </summary>
+        internal static string OptionCatchExceptions {
+            get {
+                return ResourceManager.GetString("OptionCatchExceptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.
+        ///Google Test option: {0}.
+        /// </summary>
+        internal static string OptionCatchExceptionsDescription {
+            get {
+                return ResourceManager.GetString("OptionCatchExceptionsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print debug info.
+        /// </summary>
+        internal static string OptionDebugMode {
+            get {
+                return ResourceManager.GetString("OptionDebugMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, debug output will be printed to the test console..
+        /// </summary>
+        internal static string OptionDebugModeDescription {
+            get {
+                return ResourceManager.GetString("OptionDebugModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parallel test execution.
+        /// </summary>
+        internal static string OptionEnableParallelTestExecution {
+            get {
+                return ResourceManager.GetString("OptionEnableParallelTestExecution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results..
+        /// </summary>
+        internal static string OptionEnableParallelTestExecutionDescription {
+            get {
+                return ResourceManager.GetString("OptionEnableParallelTestExecutionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill processes on cancel.
+        /// </summary>
+        internal static string OptionKillProcessesOnCancel {
+            get {
+                return ResourceManager.GetString("OptionKillProcessesOnCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, running test executables are actively killed if the test execution is canceled. Note that killing a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks..
+        /// </summary>
+        internal static string OptionKillProcessesOnCancelDescription {
+            get {
+                return ResourceManager.GetString("OptionKillProcessesOnCancelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum number of threads.
+        /// </summary>
+        internal static string OptionMaxNrOfThreads {
+            get {
+                return ResourceManager.GetString("OptionMaxNrOfThreads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum number of threads to be used for test execution (0: one thread for each processor)..
+        /// </summary>
+        internal static string OptionMaxNrOfThreadsDescription {
+            get {
+                return ResourceManager.GetString("OptionMaxNrOfThreadsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of test repetitions.
+        /// </summary>
+        internal static string OptionNrOfTestRepetitions {
+            get {
+                return ResourceManager.GetString("OptionNrOfTestRepetitions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tests will be run for the selected number of times (-1: infinite).
+        ///Google Test option: {0}.
+        /// </summary>
+        internal static string OptionNrOfTestRepetitionsDescription {
+            get {
+                return ResourceManager.GetString("OptionNrOfTestRepetitionsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parse symbol information.
+        /// </summary>
+        internal static string OptionParseSymbolInformation {
+            get {
+                return ResourceManager.GetString("OptionParseSymbolInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).
+        ///If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective..
+        /// </summary>
+        internal static string OptionParseSymbolInformationDescription {
+            get {
+                return ResourceManager.GetString("OptionParseSymbolInformationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PATH extension.
+        /// </summary>
+        internal static string OptionPathExtension {
+            get {
+                return ResourceManager.GetString("OptionPathExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.
+        ///Example: C:\MyBins;{0}\MyOtherBins;
+        ///Placeholders:.
+        /// </summary>
+        internal static string OptionPathExtensionDescription {
+            get {
+                return ResourceManager.GetString("OptionPathExtensionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print test output.
+        /// </summary>
+        internal static string OptionPrintTestOutput {
+            get {
+                return ResourceManager.GetString("OptionPrintTestOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print the output of the Google Test executable(s) to the Tests Output window..
+        /// </summary>
+        internal static string OptionPrintTestOutputDescription {
+            get {
+                return ResourceManager.GetString("OptionPrintTestOutputDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also run disabled tests.
+        /// </summary>
+        internal static string OptionRunDisabledTests {
+            get {
+                return ResourceManager.GetString("OptionRunDisabledTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, all (selected) tests will be run, even if they have been disabled.
+        ///Google Test option: {0}.
+        /// </summary>
+        internal static string OptionRunDisabledTestsDescription {
+            get {
+                return ResourceManager.GetString("OptionRunDisabledTestsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show release notes after update.
+        /// </summary>
+        internal static string OptionShowReleaseNotes {
+            get {
+                return ResourceManager.GetString("OptionShowReleaseNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, a dialog with release notes is shown after the extension has been updated..
+        /// </summary>
+        internal static string OptionShowReleaseNotesDescription {
+            get {
+                return ResourceManager.GetString("OptionShowReleaseNotesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shuffle tests per execution.
+        /// </summary>
+        internal static string OptionShuffleTests {
+            get {
+                return ResourceManager.GetString("OptionShuffleTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.
+        ///Google Test option: {0}.
+        /// </summary>
+        internal static string OptionShuffleTestsDescription {
+            get {
+                return ResourceManager.GetString("OptionShuffleTestsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shuffle tests: Seed.
+        /// </summary>
+        internal static string OptionShuffleTestsSeed {
+            get {
+                return ResourceManager.GetString("OptionShuffleTestsSeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0: Seed is computed from system time, 1&lt;=n&lt;={0}: The given seed is used. See note of option &apos;{1}&apos;.
+        ///Google Test option: {2}.
+        /// </summary>
+        internal static string OptionShuffleTestsSeedDescription {
+            get {
+                return ResourceManager.GetString("OptionShuffleTestsSeedDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regex for test discovery.
+        /// </summary>
+        internal static string OptionTestDiscoveryRegex {
+            get {
+                return ResourceManager.GetString("OptionTestDiscoveryRegex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If non-empty, this regex will be used to discover the Google Test executables containing your tests.
+        ///Default regex:.
+        /// </summary>
+        internal static string OptionTestDiscoveryRegexDescription {
+            get {
+                return ResourceManager.GetString("OptionTestDiscoveryRegexDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery timeout in s.
+        /// </summary>
+        internal static string OptionTestDiscoveryTimeoutInSeconds {
+            get {
+                return ResourceManager.GetString("OptionTestDiscoveryTimeoutInSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout.
+        /// </summary>
+        internal static string OptionTestDiscoveryTimeoutInSecondsDescription {
+            get {
+                return ResourceManager.GetString("OptionTestDiscoveryTimeoutInSecondsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test name separator.
+        /// </summary>
+        internal static string OptionTestNameSeparator {
+            get {
+                return ResourceManager.GetString("OptionTestNameSeparator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test names produced by Google Test might contain the character &apos;/&apos;, which makes VS cut the name after the &apos;/&apos; if the test explorer window is not wide enough. This option&apos;s value, if non-empty, will replace the &apos;/&apos; character to avoid that behavior. Note that &apos;\&apos;, &apos; &apos;, &apos;|&apos;, and &apos;-&apos; produce the same behavior (&apos;.&apos;, &apos;_&apos;, &apos;:&apos;, and &apos;::&apos; are known to work - there might be more). Note also that traits regexes are evaluated against the tests&apos; display names (and must thus be consistent with this option)..
+        /// </summary>
+        internal static string OptionTestNameSeparatorDescription {
+            get {
+                return ResourceManager.GetString("OptionTestNameSeparatorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timestamp output.
+        /// </summary>
+        internal static string OptionTimestampOutput {
+            get {
+                return ResourceManager.GetString("OptionTimestampOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If true, a timestamp is added to test and debug output..
+        /// </summary>
+        internal static string OptionTimestampOutputDescription {
+            get {
+                return ResourceManager.GetString("OptionTimestampOutputDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the &apos;Traits before&apos; option. 2nd, the tests&apos; traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the &apos;Traits after&apos; option is evaluated, again in an overriding manner.
+        ///Syntax: {0} separates the regex from the traits, the trait&apos;s name and value are separated by {1} and each pair of regex and trait [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string OptionTraitsDescription {
+            get {
+                return ResourceManager.GetString("OptionTraitsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After test discovery.
+        /// </summary>
+        internal static string OptionTraitsRegexesAfter {
+            get {
+                return ResourceManager.GetString("OptionTraitsRegexesAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Before test discovery.
+        /// </summary>
+        internal static string OptionTraitsRegexesBefore {
+            get {
+                return ResourceManager.GetString("OptionTraitsRegexesBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use new test execution framework (experimental).
+        /// </summary>
+        internal static string OptionUseNewTestExecutionFramework {
+            get {
+                return ResourceManager.GetString("OptionUseNewTestExecutionFramework", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode..
+        /// </summary>
+        internal static string OptionUseNewTestExecutionFrameworkDescription {
+            get {
+                return ResourceManager.GetString("OptionUseNewTestExecutionFrameworkDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Working directory.
+        /// </summary>
+        internal static string OptionWorkingDir {
+            get {
+                return ResourceManager.GetString("OptionWorkingDir", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If non-empty, will set the working directory for running the tests (default: {0})
+        ///Example: {1}\MyTestDir
+        ///Placeholders:.
+        /// </summary>
+        internal static string OptionWorkingDirDescription {
+            get {
+                return ResourceManager.GetString("OptionWorkingDirDescription", resourceCulture);
             }
         }
         
