@@ -188,9 +188,16 @@
     <value>reason is probably a crash of test {0}</value>
     <comment>{0} represents an unlocalized name of test (e.g. foo)</comment>
   </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! This test has probably CRASHED !!</value>
+    <comment>The exclamation points and all-caps are for emphasis.</comment>
+  </data>
   <data name="CreatedTestResults" xml:space="preserve">
     <value>{0}Created {1} test results for tests which were neither found in result XML file nor in console output</value>
     <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!</value>
   </data>
   <data name="DeleteTestDir" xml:space="preserve">
     <value>{0}Could not delete test directory '{1}': {2}</value>
@@ -602,6 +609,10 @@ Placeholders:</value>
   <data name="TestDiscoveryCancelled" xml:space="preserve">
     <value>Test discovery was cancelled after {0} s for executable {1}</value>
     <comment>{0} represents a number (e.g. 5), {1} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Test output:</value>
+    <comment>Followed by the output of a test case</comment>
   </data>
   <data name="TestResultParse" xml:space="preserve">
     <value>Test result file {0} could not be parsed (completely) - your test executable has probably crashed. Exception message: {1}</value>

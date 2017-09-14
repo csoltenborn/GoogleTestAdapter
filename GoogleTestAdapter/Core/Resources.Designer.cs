@@ -232,11 +232,29 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to !! This test has probably CRASHED !!.
+        /// </summary>
+        internal static string CrashText {
+            get {
+                return ResourceManager.GetString("CrashText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}Created {1} test results for tests which were neither found in result XML file nor in console output.
         /// </summary>
         internal static string CreatedTestResults {
             get {
                 return ResourceManager.GetString("CreatedTestResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note that due to restrictions of the VS Unit Testing framework, the test executable&apos;s output can not be displayed in the test console when debugging tests!.
+        /// </summary>
+        internal static string DebuggerAttachedOutputMessage {
+            get {
+                return ResourceManager.GetString("DebuggerAttachedOutputMessage", resourceCulture);
             }
         }
         
@@ -1232,6 +1250,15 @@ namespace GoogleTestAdapter {
         internal static string TestDiscoveryCancelled {
             get {
                 return ResourceManager.GetString("TestDiscoveryCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test output:.
+        /// </summary>
+        internal static string TestOutput {
+            get {
+                return ResourceManager.GetString("TestOutput", resourceCulture);
             }
         }
         

@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -158,7 +158,7 @@ namespace GoogleTestAdapter.TestResults
 
             CrashedTestCase = testCase;
             string message = StandardOutputTestResultParser.CrashText;
-            message += errorMsg == "" ? "" : $"\nTest output:\n\n{errorMsg}";
+            message += errorMsg == "" ? "" : ("\n" + Resources.TestOutput + $"\n\n{errorMsg}");
             TestResult result = StandardOutputTestResultParser.CreateFailedTestResult(
                 testCase,
                 TimeSpan.FromMilliseconds(0),

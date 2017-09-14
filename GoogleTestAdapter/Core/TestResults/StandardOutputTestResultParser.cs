@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.TestResults
         public const string Failed = "[  FAILED  ]";
         public const string Passed = "[       OK ]";
 
-        public const string CrashText = "!! This test has probably CRASHED !!";
+        public static string CrashText = Resources.CrashText;
 
         /// <summary>
         /// 1000 ticks = 0.1ms to make sure VS shows "&lt;1ms"

@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using EnvDTE;
 using GoogleTestAdapter.Settings;
@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             Debug.Assert(runSettingsNavigator != null, "userRunSettingsNavigator == null!");
             if (!runSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
             {
-                logger.Log(MessageLevel.Warning, "RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...");
+                logger.Log(MessageLevel.Warning, Resources.RunSettingsMissingNode);
                 return runSettingsNavigator;
             }
 
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                         }
                         else
                         {
-                            logger.Log(MessageLevel.Warning, $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
+                            logger.Log(MessageLevel.Warning, string.Format(Resources.SolutionFoundButMissingNode, solutionRunSettingsFile, Constants.RunSettingsName));
                         }
 		    }
                 }
@@ -80,7 +80,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             catch (Exception e)
             {
                 logger.Log(MessageLevel.Warning,
-                    $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
+                    string.Format(Resources.CantParseSettings, solutionRunSettingsFile, e));
             }
 
             foreach (var projectSettings in settingsContainer.ProjectSettings)
