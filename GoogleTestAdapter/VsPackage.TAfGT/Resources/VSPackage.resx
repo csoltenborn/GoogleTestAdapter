@@ -137,6 +137,6 @@
   </data>
   <data name="503" xml:space="preserve">
     <value>Google Test</value>
-    <comment>The name of page of options</comment>
+    <comment>The name of page of options. Google Test is the name of a library and should not be localized.</comment>
   </data>
 </root>
