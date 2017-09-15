@@ -201,17 +201,17 @@ namespace GoogleTestAdapter.TestResults
 
         public static bool IsRunLine(string line)
         {
-            return line.StartsWith(Run);
+            return line.StartsWith(Run, StringComparison.Ordinal);
         }
 
         public static bool IsPassedLine(string line)
         {
-            return line.StartsWith(Passed);
+            return line.StartsWith(Passed, StringComparison.Ordinal);
         }
 
         public static bool IsFailedLine(string line)
         {
-            return line.StartsWith(Failed);
+            return line.StartsWith(Failed, StringComparison.Ordinal);
         }
 
         public static string RemovePrefix(string line)

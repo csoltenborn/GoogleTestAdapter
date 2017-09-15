@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.DiaResolver
             return IntPtr.Size == 4;
         }
 
-        [DllImport("Kernel32.dll")]
+        [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern IntPtr LoadLibrary(string path);
 
         [DllImport(DiaDll, ExactSpelling = true, PreserveSig = false)]

@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Diagnostics;
@@ -8,6 +8,7 @@ using System.Linq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using Process = System.Diagnostics.Process;
+using System.Globalization;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
@@ -97,12 +98,12 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private static Process FindVsOrVsTestConsoleExe()
         {
             var process = Process.GetCurrentProcess();
-            string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToLower();
-            while (executable != null && executable != "devenv.exe" && executable != "vstest.console.exe")
+            string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToUpperInvariant();
+            while (executable != null && executable != "DEVENV.EXE" && executable != "VSTEST.CONSOLE.EXE")
             {
                 process = ParentProcessUtils.GetParentProcess(process.Id);
-                executable = process != null 
-                    ? Path.GetFileName(process.MainModule.FileName).Trim().ToLower()
+                executable = process != null
+                    ? Path.GetFileName(process.MainModule.FileName).Trim().ToUpperInvariant()
                     : null;
             }
             return process;
