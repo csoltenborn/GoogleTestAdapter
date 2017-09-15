@@ -1,17 +1,16 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.Settings;
 using System;
-using System.ComponentModel;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     public class ParallelizationOptionsDialogPage : NotifyingDialogPage
     {
-        [Category(SettingsWrapper.CategoryParallelizationName)]
-        [DisplayName(SettingsWrapper.OptionEnableParallelTestExecution)]
-        [Description(SettingsWrapper.OptionEnableParallelTestExecutionDescription)]
+        [LocalizedCategory("CategoryParallelizationName")]
+        [LocalizedDisplayName("OptionEnableParallelTestExecution")]
+        [LocalizedDescription("OptionEnableParallelTestExecutionDescription")]
         public bool EnableParallelTestExecution
         {
             get { return _enableParallelTestExecution; }
@@ -19,9 +18,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _enableParallelTestExecution = SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue;
 
-        [Category(SettingsWrapper.CategoryParallelizationName)]
-        [DisplayName(SettingsWrapper.OptionMaxNrOfThreads)]
-        [Description(SettingsWrapper.OptionMaxNrOfThreadsDescription)]
+        [LocalizedCategory("CategoryParallelizationName")]
+        [LocalizedDisplayName("OptionMaxNrOfThreads")]
+        [LocalizedDescription("OptionMaxNrOfThreadsDescription")]
         public int MaxNrOfThreads
         {
             get { return _maxNrOfThreads; }

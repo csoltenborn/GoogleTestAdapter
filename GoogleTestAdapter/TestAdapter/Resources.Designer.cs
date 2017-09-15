@@ -61,6 +61,16 @@ namespace GoogleTestAdapter.TestAdapter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Solution test settings file could not be parsed, check file: {0}
+        ///Exception: {1}.
+        /// </summary>
+        internal static string CantParseSettings {
+            get {
+                return ResourceManager.GetString("CantParseSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not attach debugger to process {0}:{1}{2}.
         /// </summary>
         internal static string CouldNotAttachMessage {
@@ -196,11 +206,29 @@ namespace GoogleTestAdapter.TestAdapter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RunSettingsDocument does not contain a RunSettings node! Canceling settings merging....
+        /// </summary>
+        internal static string RunSettingsMissingNode {
+            get {
+                return ResourceManager.GetString("RunSettingsMissingNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Solution settings: {0}.
         /// </summary>
         internal static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution test settings file found at &apos;{0}&apos;, but does not contain {1} node.
+        /// </summary>
+        internal static string SolutionFoundButMissingNode {
+            get {
+                return ResourceManager.GetString("SolutionFoundButMissingNode", resourceCulture);
             }
         }
         

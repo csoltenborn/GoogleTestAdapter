@@ -145,6 +145,21 @@
     <value>{0}{1}: Exited with code {2}, executed command: '{3}'</value>
     <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents a number (e.g. 5), {3} represents unlocalized file path (e.g c:\test\foo.bat)</comment>
   </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Misc</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Parallelization</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Runtime behavior</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Test execution</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Regexes for trait assignment</value>
+  </data>
   <data name="CollectedResults" xml:space="preserve">
     <value>{0}Collected {1} test result(s) from result XML file {2}</value>
     <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5), {2} represents unlocalized file path (e.g c:\test\results.xml)</comment>
@@ -173,13 +188,37 @@
     <value>reason is probably a crash of test {0}</value>
     <comment>{0} represents an unlocalized name of test (e.g. foo)</comment>
   </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! This test has probably CRASHED !!</value>
+    <comment>The exclamation points and all-caps are for emphasis.</comment>
+  </data>
   <data name="CreatedTestResults" xml:space="preserve">
     <value>{0}Created {1} test results for tests which were neither found in result XML file nor in console output</value>
     <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5)</comment>
   </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!</value>
+  </data>
   <data name="DeleteTestDir" xml:space="preserve">
     <value>{0}Could not delete test directory '{1}': {2}</value>
     <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents unlocalized directory path (e.g c:\test\dir), {2} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - directory containing the test executable</value>
+    <comment>{0} represents a directory containing a test executable</comment>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - path of a directory which can be used by the tests
+{1} - id of the thread executing the current tests</value>
+    <comment>{0} represents a directory. {1} represents a thread id.</comment>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - executable containing the tests</value>
+    <comment>{0} represents the path of a test executable</comment>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - directory of the solution (only available inside Visual Studio)</value>
+    <comment>{0} represents a directory containing a solution file</comment>
   </data>
   <data name="DoesntMatchCustom" xml:space="preserve">
     <value>{0} does not match custom regex {1}</value>
@@ -290,6 +329,182 @@
     <value>Running {0} tests...</value>
     <comment>{0} represents a number (e.g. 5)</comment>
   </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Additional test execution parameters</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Additional parameters for Google Test executable. Placeholders:</value>
+    <comment>Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Test setup batch file</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:</value>
+    <comment>Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Test teardown batch file</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:</value>
+    <comment>Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Break on failure</value>
+  </data>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Catch exceptions</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Print debug info</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>If true, debug output will be printed to the test console.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Parallel test execution</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>Terminate processes on cancel</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>If true, running test executables are actively terminated if the test execution is canceled. Note that terminating a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>Maximum number of threads</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>Maximum number of threads to be used for test execution (0: one thread for each processor).</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Number of test repetitions</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Tests will be run for the selected number of times (-1: infinite).
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Parse symbol information</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).
+If this is set to false, step 2 of traits discovery will be left out and only traits regexes will be effective.</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>PATH extension</value>
+    <comment>PATH represents an environment variable and should not be localized</comment>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.
+Example: C:\MyBins;{0}\MyOtherBins;
+Placeholders:</value>
+    <comment>{0} represents a directory. Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Print test output</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Print the output of the Google Test executable(s) to the Tests Output window.</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Also run disabled tests</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>If true, all (selected) tests will be run, even if they have been disabled.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Show release notes after update</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>If true, a dialog with release notes is shown after the extension has been updated.</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Shuffle tests per execution</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Shuffle tests: Seed</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: Seed is computed from system time, 1&lt;=n&lt;={0}: The given seed is used. See note of option '{1}'.
+Google Test option: {2}</value>
+    <comment>{0} is an integer representing the maximum value of a seed. {1} represents the localized name of another option. {2} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Regex for test discovery</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>If non-empty, this regex will be used to discover the Google Test executables containing your tests.
+Default regex: {0}</value>
+    <comment>{0} represents a regular expression</comment>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Test discovery timeout in s</value>
+    <comment>"s" stands for seconds</comment>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Test name separator</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Test names produced by Google Test might contain the character '/', which makes Visual Studio cut the name after the '/' if the Test Explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Timestamp output</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>If true, a timestamp is added to test and debug output.</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases. First, traits are assigned to tests according to the 'Traits before' option. Next, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. Finally, the 'Traits after' option is evaluated, again in an overriding manner.
+Syntax: {0} separates the regex from the traits, the trait's name and value are separated by {1} and each pair of regex and trait is separated by {2}.
+Example: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+    <comment>{0} represents a string used to separate a regex from its traits. {1} represents a string used to separate names and values. {2} represents a string used to separate regexs.</comment>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>After test discovery</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>Before test discovery</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Use new test execution framework (experimental)</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Working directory</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>If non-empty, will set the working directory for running the tests (default: {0})
+Example: {1}\MyTestDir
+Placeholders:</value>
+    <comment>{0} represents the default value of the working directory. {1} represents the directory containing the solution file. Followed by a list of placeholders.</comment>
+  </data>
   <data name="OutputFileMissing" xml:space="preserve">
     <value>Output file does not exist, did your tests crash?</value>
   </data>
@@ -394,6 +609,10 @@
   <data name="TestDiscoveryCancelled" xml:space="preserve">
     <value>Test discovery was cancelled after {0} s for executable {1}</value>
     <comment>{0} represents a number (e.g. 5), {1} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Test output:</value>
+    <comment>Followed by the output of a test case</comment>
   </data>
   <data name="TestResultParse" xml:space="preserve">
     <value>Test result file {0} could not be parsed (completely) - your test executable has probably crashed. Exception message: {1}</value>

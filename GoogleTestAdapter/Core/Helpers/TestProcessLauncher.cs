@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -83,8 +83,7 @@ namespace GoogleTestAdapter.Helpers
             _logger.LogInfo(String.Format(Resources.AttachDebuggerMessage, command));
             if (printTestOutput)
             {
-                _logger.DebugInfo(
-                    "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
+                _logger.DebugInfo(Resources.DebuggerAttachedOutputMessage);
             }
             _processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _settings.GetPathExtension(command));
             Process process = Process.GetProcessById(_processId.Value);

@@ -1,8 +1,7 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.Settings;
 using System;
-using System.ComponentModel;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -11,9 +10,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
     {
         #region Runtime behavior
 
-        [Category(SettingsWrapper.CategoryRuntimeBehaviorName)]
-        [DisplayName(SettingsWrapper.OptionCatchExceptions)]
-        [Description(SettingsWrapper.OptionCatchExceptionsDescription)]
+        [LocalizedCategory("CategoryRuntimeBehaviorName")]
+        [LocalizedDisplayName("OptionCatchExceptions")]
+        [LocalizedDescription("OptionCatchExceptionsDescription")]
         public bool CatchExceptions
         {
             get { return _catchExceptions; }
@@ -21,9 +20,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _catchExceptions = SettingsWrapper.OptionCatchExceptionsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryRuntimeBehaviorName)]
-        [DisplayName(SettingsWrapper.OptionBreakOnFailure)]
-        [Description(SettingsWrapper.OptionBreakOnFailureDescription)]
+        [LocalizedCategory("CategoryRuntimeBehaviorName")]
+        [LocalizedDisplayName("OptionBreakOnFailure")]
+        [LocalizedDescription("OptionBreakOnFailureDescription")]
         public bool BreakOnFailure
         {
             get { return _breakOnFailure; }
@@ -35,9 +34,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Test execution
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionRunDisabledTests)]
-        [Description(SettingsWrapper.OptionRunDisabledTestsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionRunDisabledTests")]
+        [LocalizedDescription("OptionRunDisabledTestsDescription")]
         public bool RunDisabledTests
         {
             get { return _runDisabledTests; }
@@ -45,9 +44,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _runDisabledTests = SettingsWrapper.OptionRunDisabledTestsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionNrOfTestRepetitions)]
-        [Description(SettingsWrapper.OptionNrOfTestRepetitionsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionNrOfTestRepetitions")]
+        [LocalizedDescription("OptionNrOfTestRepetitionsDescription")]
         public int NrOfTestRepetitions
         {
             get { return _nrOfTestRepetitions; }
@@ -60,9 +59,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private int _nrOfTestRepetitions = SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionShuffleTests)]
-        [Description(SettingsWrapper.OptionShuffleTestsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionShuffleTests")]
+        [LocalizedDescription("OptionShuffleTestsDescription")]
         public bool ShuffleTests
         {
             get { return _shuffleTests; }
@@ -70,9 +69,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _shuffleTests = SettingsWrapper.OptionShuffleTestsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionShuffleTestsSeed)]
-        [Description(SettingsWrapper.OptionShuffleTestsSeedDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionShuffleTestsSeed")]
+        [LocalizedDescription("OptionShuffleTestsSeedDescription")]
         public int ShuffleTestsSeed
         {
             get { return _shuffleTestsSeed; }
