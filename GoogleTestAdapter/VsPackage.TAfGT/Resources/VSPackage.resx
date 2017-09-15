@@ -133,8 +133,10 @@
   </data>
   <data name="502" xml:space="preserve">
     <value>Parallelization</value>
+    <comment>The name of page of options</comment>
   </data>
   <data name="503" xml:space="preserve">
     <value>Google Test</value>
+    <comment>The name of page of options</comment>
   </data>
 </root>

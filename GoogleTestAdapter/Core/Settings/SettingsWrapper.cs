@@ -55,38 +55,6 @@ namespace GoogleTestAdapter.Settings
         private Thread _currentThread;
         private IGoogleTestAdapterSettings _currentSettings;
 
-        static SettingsWrapper()
-        {
-            DescriptionOfPlaceholdersForBatches =
-                string.Format(Resources.DescriptionOfPlaceholdersForBatches, TestDirPlaceholder, ThreadIdPlaceholder) +
-                "\n" + DescriptionOfSolutionDirPlaceHolder;
-
-            DescriptionOfPlaceholdersForExecutables =
-                DescriptionOfPlaceholdersForBatches + "\n" +
-                string.Format(Resources.DescriptionOfPlaceholdersForExecutables, ExecutablePlaceholder) +
-                "\n" + DescriptionOfExecutableDirPlaceHolder;
-
-            OptionWorkingDirDescription =
-                string.Format(Resources.OptionWorkingDirDescription, DescriptionOfExecutableDirPlaceHolder, SolutionDirPlaceholder) +
-                "\n" + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfSolutionDirPlaceHolder;
-
-            OptionPathExtensionDescription =
-                string.Format(Resources.OptionPathExtensionDescription, ExecutableDirPlaceholder) +
-                "\n" + DescriptionOfExecutableDirPlaceHolder;
-
-            OptionAdditionalTestExecutionParamsDescription =
-                Resources.OptionAdditionalTestExecutionParamsDescription +
-                "\n" + DescriptionOfPlaceholdersForExecutables;
-
-            OptionBatchForTestSetupDescription =
-                Resources.OptionBatchForTestSetupDescription +
-                "\n" + DescriptionOfPlaceholdersForBatches;
-
-            OptionBatchForTestTeardownDescription =
-                Resources.OptionBatchForTestTeardownDescription +
-                "\n" + DescriptionOfPlaceholdersForBatches;
-        }
-
         public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer)
         {
             _settingsContainer = settingsContainer;
@@ -230,11 +198,11 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        public static string CategoryTestExecutionName = Resources.CategoryTestExecutionName;
-        public static string CategoryTraitsName = Resources.CategoryTraitsName;
-        public static string CategoryRuntimeBehaviorName = Resources.CategoryRuntimeBehaviorName;
-        public static string CategoryParallelizationName = Resources.CategoryParallelizationName;
-        public static string CategoryMiscName = Resources.CategoryMiscName;
+        public static readonly string CategoryTestExecutionName = Resources.CategoryTestExecutionName;
+        public static readonly string CategoryTraitsName = Resources.CategoryTraitsName;
+        public static readonly string CategoryRuntimeBehaviorName = Resources.CategoryRuntimeBehaviorName;
+        public static readonly string CategoryParallelizationName = Resources.CategoryParallelizationName;
+        public static readonly string CategoryMiscName = Resources.CategoryMiscName;
 
         public const string SolutionDirPlaceholder = "$(SolutionDir)";
         public const string TestDirPlaceholder = "$(TestDir)";
@@ -242,46 +210,49 @@ namespace GoogleTestAdapter.Settings
         public const string ExecutablePlaceholder = "$(Executable)";
         public const string ExecutableDirPlaceholder = "$(ExecutableDir)";
 
-        private static string DescriptionOfSolutionDirPlaceHolder =
+        private static readonly string DescriptionOfSolutionDirPlaceHolder =
             string.Format(Resources.DescriptionOfSolutionDirPlaceHolder, SolutionDirPlaceholder);
 
-        private static string DescriptionOfExecutableDirPlaceHolder =
+        private static readonly string DescriptionOfExecutableDirPlaceHolder =
             string.Format(Resources.DescriptionOfExecutableDirPlaceHolder, ExecutableDirPlaceholder);
 
-        // Set in constructor because it depends on other strings
-        private static string DescriptionOfPlaceholdersForBatches;
+        private static readonly string DescriptionOfPlaceholdersForBatches =
+            string.Format(Resources.DescriptionOfPlaceholdersForBatches, TestDirPlaceholder, ThreadIdPlaceholder) +
+            "\n" + DescriptionOfSolutionDirPlaceHolder;
 
-        // Set in constructor because it depends on other strings
-        private static string DescriptionOfPlaceholdersForExecutables;
+        private static readonly string DescriptionOfPlaceholdersForExecutables =
+            DescriptionOfPlaceholdersForBatches + "\n" +
+            string.Format(Resources.DescriptionOfPlaceholdersForExecutables, ExecutablePlaceholder) +
+            "\n" + DescriptionOfExecutableDirPlaceHolder;
 
         #region GeneralOptionsPage
 
         public virtual string DebuggingNamedPipeId => _currentSettings.DebuggingNamedPipeId;
 
-        public static string OptionUseNewTestExecutionFramework = Resources.OptionUseNewTestExecutionFramework;
+        public static readonly string OptionUseNewTestExecutionFramework = Resources.OptionUseNewTestExecutionFramework;
         public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
-        public static string OptionUseNewTestExecutionFrameworkDescription = Resources.OptionUseNewTestExecutionFrameworkDescription;
+        public static readonly string OptionUseNewTestExecutionFrameworkDescription = Resources.OptionUseNewTestExecutionFrameworkDescription;
 
         public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
 
 
-        public static string OptionPrintTestOutput = Resources.OptionPrintTestOutput;
+        public static readonly string OptionPrintTestOutput = Resources.OptionPrintTestOutput;
         public const bool OptionPrintTestOutputDefaultValue = false;
-        public static string OptionPrintTestOutputDescription = Resources.OptionPrintTestOutputDescription;
+        public static readonly string OptionPrintTestOutputDescription = Resources.OptionPrintTestOutputDescription;
 
         public virtual bool PrintTestOutput => _currentSettings.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
 
 
-        public static string OptionTestDiscoveryRegex = Resources.OptionTestDiscoveryRegex;
+        public static readonly string OptionTestDiscoveryRegex = Resources.OptionTestDiscoveryRegex;
         public const string OptionTestDiscoveryRegexDefaultValue = "";
-        public static string OptionTestDiscoveryRegexDescription = Resources.OptionTestDiscoveryRegexDescription + TestFinderRegex;
+        public static readonly string OptionTestDiscoveryRegexDescription = string.Format(Resources.OptionTestDiscoveryRegexDescription, TestFinderRegex);
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
-        public static string OptionTestDiscoveryTimeoutInSeconds = Resources.OptionTestDiscoveryTimeoutInSeconds;
+        public static readonly string OptionTestDiscoveryTimeoutInSeconds = Resources.OptionTestDiscoveryTimeoutInSeconds;
         public const int OptionTestDiscoveryTimeoutInSecondsDefaultValue = 30;
-        public static string OptionTestDiscoveryTimeoutInSecondsDescription = Resources.OptionTestDiscoveryTimeoutInSecondsDescription;
+        public static readonly string OptionTestDiscoveryTimeoutInSecondsDescription = Resources.OptionTestDiscoveryTimeoutInSecondsDescription;
 
         public virtual int TestDiscoveryTimeoutInSeconds {
             get
@@ -295,18 +266,20 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        public static string OptionWorkingDir = Resources.OptionWorkingDir;
+        public static readonly string OptionWorkingDir = Resources.OptionWorkingDir;
         public const string OptionWorkingDirDefaultValue = ExecutableDirPlaceholder;
-        // Set in constructor because it depends on other strings
-        public static string OptionWorkingDirDescription;
+        public static readonly string OptionWorkingDirDescription =
+            string.Format(Resources.OptionWorkingDirDescription, DescriptionOfExecutableDirPlaceHolder, SolutionDirPlaceholder) +
+            "\n" + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfSolutionDirPlaceHolder;
 
         public virtual string WorkingDir => _currentSettings.WorkingDir ?? OptionWorkingDirDefaultValue;
 
 
-        public static string OptionPathExtension = Resources.OptionPathExtension;
+        public static readonly string OptionPathExtension = Resources.OptionPathExtension;
         public const string OptionPathExtensionDefaultValue = "";
-        // Set in constructor because it depends on other strings
-        public static string OptionPathExtensionDescription;
+        public static readonly string OptionPathExtensionDescription =
+            string.Format(Resources.OptionPathExtensionDescription, ExecutableDirPlaceholder) +
+            "\n" + DescriptionOfExecutableDirPlaceHolder;
 
         public virtual string PathExtension => _currentSettings.PathExtension ?? OptionPathExtensionDefaultValue;
 
@@ -315,13 +288,13 @@ namespace GoogleTestAdapter.Settings
         public const string TraitsRegexesRegexSeparator = "///";
         public const string TraitsRegexesTraitSeparator = ",";
         public const string OptionTraitsRegexesDefaultValue = "";
-        public static string OptionTraitsDescription = string.Format(
+        public static readonly string OptionTraitsDescription = string.Format(
             Resources.OptionTraitsDescription,
             TraitsRegexesRegexSeparator,
             TraitsRegexesTraitSeparator,
             TraitsRegexesPairSeparator);
 
-        public static string OptionTraitsRegexesBefore = Resources.OptionTraitsRegexesBefore;
+        public static readonly string OptionTraitsRegexesBefore = Resources.OptionTraitsRegexesBefore;
 
         public virtual List<RegexTraitPair> TraitsRegexesBefore
         {
@@ -332,7 +305,7 @@ namespace GoogleTestAdapter.Settings
             }
         }
 
-        public static string OptionTraitsRegexesAfter = Resources.OptionTraitsRegexesAfter;
+        public static readonly string OptionTraitsRegexesAfter = Resources.OptionTraitsRegexesAfter;
 
         public virtual List<RegexTraitPair> TraitsRegexesAfter
         {
@@ -344,67 +317,70 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        public static string OptionTestNameSeparator = Resources.OptionTestNameSeparator;
+        public static readonly string OptionTestNameSeparator = Resources.OptionTestNameSeparator;
         public const string OptionTestNameSeparatorDefaultValue = "";
-        public static string OptionTestNameSeparatorDescription = Resources.OptionTestNameSeparatorDescription;
+        public static readonly string OptionTestNameSeparatorDescription = Resources.OptionTestNameSeparatorDescription;
 
         public virtual string TestNameSeparator => _currentSettings.TestNameSeparator ?? OptionTestNameSeparatorDefaultValue;
 
 
-        public static string OptionParseSymbolInformation = Resources.OptionParseSymbolInformation;
+        public static readonly string OptionParseSymbolInformation = Resources.OptionParseSymbolInformation;
         public const bool OptionParseSymbolInformationDefaultValue = true;
-        public static string OptionParseSymbolInformationDescription = Resources.OptionParseSymbolInformationDescription;
+        public static readonly string OptionParseSymbolInformationDescription = Resources.OptionParseSymbolInformationDescription;
 
         public virtual bool ParseSymbolInformation => _currentSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
 
-        public static string OptionDebugMode = Resources.OptionDebugMode;
+        public static readonly string OptionDebugMode = Resources.OptionDebugMode;
         public const bool OptionDebugModeDefaultValue = false;
-        public static string OptionDebugModeDescription = Resources.OptionDebugModeDescription;
+        public static readonly string OptionDebugModeDescription = Resources.OptionDebugModeDescription;
 
         public virtual bool DebugMode => _currentSettings.DebugMode ?? OptionDebugModeDefaultValue;
 
 
-        public static string OptionTimestampOutput = Resources.OptionTimestampOutput;
+        public static readonly string OptionTimestampOutput = Resources.OptionTimestampOutput;
         public const bool OptionTimestampOutputDefaultValue = false;
-        public static string OptionTimestampOutputDescription = Resources.OptionTimestampOutputDescription;
+        public static readonly string OptionTimestampOutputDescription = Resources.OptionTimestampOutputDescription;
 
         public virtual bool TimestampOutput => _currentSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
 
 
-        public static string OptionShowReleaseNotes = Resources.OptionShowReleaseNotes;
+        public static readonly string OptionShowReleaseNotes = Resources.OptionShowReleaseNotes;
         public const bool OptionShowReleaseNotesDefaultValue = true;
-        public static string OptionShowReleaseNotesDescription = Resources.OptionShowReleaseNotesDescription;
+        public static readonly string OptionShowReleaseNotesDescription = Resources.OptionShowReleaseNotesDescription;
 
         public virtual bool ShowReleaseNotes => _currentSettings.ShowReleaseNotes ?? OptionShowReleaseNotesDefaultValue;
 
 
-        public static string OptionAdditionalTestExecutionParams = Resources.OptionAdditionalTestExecutionParams;
+        public static readonly string OptionAdditionalTestExecutionParams = Resources.OptionAdditionalTestExecutionParams;
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
-        // Set in constructor because it depends on other strings
-        public static string OptionAdditionalTestExecutionParamsDescription;
+        public static readonly string OptionAdditionalTestExecutionParamsDescription =
+            Resources.OptionAdditionalTestExecutionParamsDescription +
+            "\n" + DescriptionOfPlaceholdersForExecutables;
 
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
 
-        public static string OptionBatchForTestSetup = Resources.OptionBatchForTestSetup;
+        public static readonly string OptionBatchForTestSetup = Resources.OptionBatchForTestSetup;
         public const string OptionBatchForTestSetupDefaultValue = "";
-        // Set in constructor because it depends on other strings
-        public static string OptionBatchForTestSetupDescription;
+        public static readonly string OptionBatchForTestSetupDescription =
+            Resources.OptionBatchForTestSetupDescription +
+            "\n" + DescriptionOfPlaceholdersForBatches;
 
         public virtual string BatchForTestSetup => _currentSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
 
-        public static string OptionBatchForTestTeardown = Resources.OptionBatchForTestTeardown;
+        public static readonly string OptionBatchForTestTeardown = Resources.OptionBatchForTestTeardown;
         public const string OptionBatchForTestTeardownDefaultValue = "";
-        // Set in constructor because it depends on other strings
-        public static string OptionBatchForTestTeardownDescription;
+        public static readonly string OptionBatchForTestTeardownDescription =
+            Resources.OptionBatchForTestTeardownDescription +
+            "\n" + DescriptionOfPlaceholdersForBatches;
 
         public virtual string BatchForTestTeardown => _currentSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
 
-        public static string OptionKillProcessesOnCancel = Resources.OptionKillProcessesOnCancel;
+        public static readonly string OptionKillProcessesOnCancel = Resources.OptionKillProcessesOnCancel;
         public const bool OptionKillProcessesOnCancelDefaultValue = false;
-        public static string OptionKillProcessesOnCancelDescription = Resources.OptionKillProcessesOnCancelDescription;
+        public static readonly string OptionKillProcessesOnCancelDescription = Resources.OptionKillProcessesOnCancelDescription;
 
         public virtual bool KillProcessesOnCancel => _currentSettings.KillProcessesOnCancel ?? OptionKillProcessesOnCancelDefaultValue;
 
@@ -412,16 +388,16 @@ namespace GoogleTestAdapter.Settings
 
         #region ParallelizationOptionsPage
 
-        public static string OptionEnableParallelTestExecution = Resources.OptionEnableParallelTestExecution;
+        public static readonly string OptionEnableParallelTestExecution = Resources.OptionEnableParallelTestExecution;
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
-        public static string OptionEnableParallelTestExecutionDescription = Resources.OptionEnableParallelTestExecutionDescription;
+        public static readonly string OptionEnableParallelTestExecutionDescription = Resources.OptionEnableParallelTestExecutionDescription;
 
         public virtual bool ParallelTestExecution => _currentSettings.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
 
 
-        public static string OptionMaxNrOfThreads = Resources.OptionMaxNrOfThreads;
+        public static readonly string OptionMaxNrOfThreads = Resources.OptionMaxNrOfThreads;
         public const int OptionMaxNrOfThreadsDefaultValue = 0;
-        public static string OptionMaxNrOfThreadsDescription = Resources.OptionMaxNrOfThreadsDescription;
+        public static readonly string OptionMaxNrOfThreadsDescription = Resources.OptionMaxNrOfThreadsDescription;
 
         public virtual int MaxNrOfThreads
         {
@@ -440,33 +416,33 @@ namespace GoogleTestAdapter.Settings
 
         #region GoogleTestOptionsPage
 
-        public static string OptionCatchExceptions = Resources.OptionCatchExceptions;
+        public static readonly string OptionCatchExceptions = Resources.OptionCatchExceptions;
         public const bool OptionCatchExceptionsDefaultValue = true;
-        public static string OptionCatchExceptionsDescription =
+        public static readonly string OptionCatchExceptionsDescription =
             string.Format(Resources.OptionCatchExceptionsDescription, GoogleTestConstants.CatchExceptions);
 
         public virtual bool CatchExceptions => _currentSettings.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
 
 
-        public static string OptionBreakOnFailure = Resources.OptionBreakOnFailure;
+        public static readonly string OptionBreakOnFailure = Resources.OptionBreakOnFailure;
         public const bool OptionBreakOnFailureDefaultValue = false;
-        public static string OptionBreakOnFailureDescription =
+        public static readonly string OptionBreakOnFailureDescription =
             string.Format(Resources.OptionBreakOnFailureDescription, GoogleTestConstants.BreakOnFailure);
 
         public virtual bool BreakOnFailure => _currentSettings.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
 
 
-        public static string OptionRunDisabledTests = Resources.OptionRunDisabledTests;
+        public static readonly string OptionRunDisabledTests = Resources.OptionRunDisabledTests;
         public const bool OptionRunDisabledTestsDefaultValue = false;
-        public static string OptionRunDisabledTestsDescription =
+        public static readonly string OptionRunDisabledTestsDescription =
             string.Format(Resources.OptionRunDisabledTestsDescription, GoogleTestConstants.AlsoRunDisabledTestsOption);
 
         public virtual bool RunDisabledTests => _currentSettings.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
 
 
-        public static string OptionNrOfTestRepetitions = Resources.OptionNrOfTestRepetitions;
+        public static readonly string OptionNrOfTestRepetitions = Resources.OptionNrOfTestRepetitions;
         public const int OptionNrOfTestRepetitionsDefaultValue = 1;
-        public static string OptionNrOfTestRepetitionsDescription =
+        public static readonly string OptionNrOfTestRepetitionsDescription =
             string.Format(Resources.OptionNrOfTestRepetitionsDescription, GoogleTestConstants.NrOfRepetitionsOption);
 
         public virtual int NrOfTestRepetitions
@@ -483,17 +459,17 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        public static string OptionShuffleTests = Resources.OptionShuffleTests;
+        public static readonly string OptionShuffleTests = Resources.OptionShuffleTests;
         public const bool OptionShuffleTestsDefaultValue = false;
-        public static string OptionShuffleTestsDescription =
+        public static readonly string OptionShuffleTestsDescription =
             string.Format(Resources.OptionShuffleTestsDescription, GoogleTestConstants.ShuffleTestsOption);
 
         public virtual bool ShuffleTests => _currentSettings.ShuffleTests ?? OptionShuffleTestsDefaultValue;
 
 
-        public static string OptionShuffleTestsSeed = Resources.OptionShuffleTestsSeed;
+        public static readonly string OptionShuffleTestsSeed = Resources.OptionShuffleTestsSeed;
         public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
-        public static string OptionShuffleTestsSeedDescription = string.Format(
+        public static readonly string OptionShuffleTestsSeedDescription = string.Format(
             Resources.OptionShuffleTestsSeedDescription,
             GoogleTestConstants.ShuffleTestsSeedMaxValueAsString,
             Resources.OptionShuffleTests,

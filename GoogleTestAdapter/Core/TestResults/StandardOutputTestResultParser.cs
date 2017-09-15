@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.TestResults
         public const string Failed = "[  FAILED  ]";
         public const string Passed = "[       OK ]";
 
-        public static string CrashText = Resources.CrashText;
+        public static readonly string CrashText = Resources.CrashText;
 
         /// <summary>
         /// 1000 ticks = 0.1ms to make sure VS shows "&lt;1ms"

@@ -278,7 +278,7 @@ namespace GoogleTestAdapter {
         
         /// <summary>
         ///   Looks up a localized string similar to {0} - path of a directory which can be used by the tests
-        ///{1} - id of thread executing the current tests.
+        ///{1} - id of the thread executing the current tests.
         /// </summary>
         internal static string DescriptionOfPlaceholdersForBatches {
             get {
@@ -296,7 +296,7 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} - directory of the solution (only available inside VS).
+        ///   Looks up a localized string similar to {0} - directory of the solution (only available inside Visual Studio).
         /// </summary>
         internal static string DescriptionOfSolutionDirPlaceHolder {
             get {
@@ -685,7 +685,7 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kill processes on cancel.
+        ///   Looks up a localized string similar to Terminate processes on cancel.
         /// </summary>
         internal static string OptionKillProcessesOnCancel {
             get {
@@ -694,7 +694,7 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If true, running test executables are actively killed if the test execution is canceled. Note that killing a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks..
+        ///   Looks up a localized string similar to If true, running test executables are actively terminated if the test execution is canceled. Note that terminating a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks..
         /// </summary>
         internal static string OptionKillProcessesOnCancelDescription {
             get {
@@ -750,7 +750,7 @@ namespace GoogleTestAdapter {
         
         /// <summary>
         ///   Looks up a localized string similar to Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).
-        ///If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective..
+        ///If this is set to false, step 2 of traits discovery will be left out and only traits regexes will be effective..
         /// </summary>
         internal static string OptionParseSymbolInformationDescription {
             get {
@@ -882,7 +882,7 @@ namespace GoogleTestAdapter {
         
         /// <summary>
         ///   Looks up a localized string similar to If non-empty, this regex will be used to discover the Google Test executables containing your tests.
-        ///Default regex:.
+        ///Default regex: {0}.
         /// </summary>
         internal static string OptionTestDiscoveryRegexDescription {
             get {
@@ -918,7 +918,7 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test names produced by Google Test might contain the character &apos;/&apos;, which makes VS cut the name after the &apos;/&apos; if the test explorer window is not wide enough. This option&apos;s value, if non-empty, will replace the &apos;/&apos; character to avoid that behavior. Note that &apos;\&apos;, &apos; &apos;, &apos;|&apos;, and &apos;-&apos; produce the same behavior (&apos;.&apos;, &apos;_&apos;, &apos;:&apos;, and &apos;::&apos; are known to work - there might be more). Note also that traits regexes are evaluated against the tests&apos; display names (and must thus be consistent with this option)..
+        ///   Looks up a localized string similar to Test names produced by Google Test might contain the character &apos;/&apos;, which makes Visual Studio cut the name after the &apos;/&apos; if the Test Explorer window is not wide enough. This option&apos;s value, if non-empty, will replace the &apos;/&apos; character to avoid that behavior. Note that &apos;\&apos;, &apos; &apos;, &apos;|&apos;, and &apos;-&apos; produce the same behavior (&apos;.&apos;, &apos;_&apos;, &apos;:&apos;, and &apos;::&apos; are known to work). Note also that traits regexes are evaluated against the tests&apos; display names (and must thus be consistent with this option)..
         /// </summary>
         internal static string OptionTestNameSeparatorDescription {
             get {
@@ -945,8 +945,8 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the &apos;Traits before&apos; option. 2nd, the tests&apos; traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the &apos;Traits after&apos; option is evaluated, again in an overriding manner.
-        ///Syntax: {0} separates the regex from the traits, the trait&apos;s name and value are separated by {1} and each pair of regex and trait [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases. First, traits are assigned to tests according to the &apos;Traits before&apos; option. Next, the tests&apos; traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. Finally, the &apos;Traits after&apos; option is evaluated, again in an overriding manner.
+        ///Syntax: {0} separates the regex from the traits, the trait&apos;s name and value are separated by {1} and each pair of regex an [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string OptionTraitsDescription {
             get {

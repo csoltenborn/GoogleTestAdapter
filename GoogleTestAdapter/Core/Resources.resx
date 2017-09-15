@@ -209,7 +209,7 @@
   </data>
   <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
     <value>{0} - path of a directory which can be used by the tests
-{1} - id of thread executing the current tests</value>
+{1} - id of the thread executing the current tests</value>
     <comment>{0} represents a directory. {1} represents a thread id.</comment>
   </data>
   <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
@@ -217,7 +217,7 @@
     <comment>{0} represents the path of a test executable</comment>
   </data>
   <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
-    <value>{0} - directory of the solution (only available inside VS)</value>
+    <value>{0} - directory of the solution (only available inside Visual Studio)</value>
     <comment>{0} represents a directory containing a solution file</comment>
   </data>
   <data name="DoesntMatchCustom" xml:space="preserve">
@@ -379,10 +379,10 @@ Google Test option: {0}</value>
     <value>Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.</value>
   </data>
   <data name="OptionKillProcessesOnCancel" xml:space="preserve">
-    <value>Kill processes on cancel</value>
+    <value>Terminate processes on cancel</value>
   </data>
   <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
-    <value>If true, running test executables are actively killed if the test execution is canceled. Note that killing a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.</value>
+    <value>If true, running test executables are actively terminated if the test execution is canceled. Note that terminating a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.</value>
   </data>
   <data name="OptionMaxNrOfThreads" xml:space="preserve">
     <value>Maximum number of threads</value>
@@ -403,7 +403,7 @@ Google Test option: {0}</value>
   </data>
   <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
     <value>Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).
-If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective.</value>
+If this is set to false, step 2 of traits discovery will be left out and only traits regexes will be effective.</value>
   </data>
   <data name="OptionPathExtension" xml:space="preserve">
     <value>PATH extension</value>
@@ -456,8 +456,8 @@ Google Test option: {2}</value>
   </data>
   <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
     <value>If non-empty, this regex will be used to discover the Google Test executables containing your tests.
-Default regex:</value>
-    <comment>Followed by a regular expression</comment>
+Default regex: {0}</value>
+    <comment>{0} represents a regular expression</comment>
   </data>
   <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
     <value>Test discovery timeout in s</value>
@@ -470,7 +470,7 @@ Default regex:</value>
     <value>Test name separator</value>
   </data>
   <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
-    <value>Test names produced by Google Test might contain the character '/', which makes VS cut the name after the '/' if the test explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work - there might be more). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).</value>
+    <value>Test names produced by Google Test might contain the character '/', which makes Visual Studio cut the name after the '/' if the Test Explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).</value>
   </data>
   <data name="OptionTimestampOutput" xml:space="preserve">
     <value>Timestamp output</value>
@@ -479,7 +479,7 @@ Default regex:</value>
     <value>If true, a timestamp is added to test and debug output.</value>
   </data>
   <data name="OptionTraitsDescription" xml:space="preserve">
-    <value>Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the 'Traits before' option. 2nd, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the 'Traits after' option is evaluated, again in an overriding manner.
+    <value>Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases. First, traits are assigned to tests according to the 'Traits before' option. Next, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. Finally, the 'Traits after' option is evaluated, again in an overriding manner.
 Syntax: {0} separates the regex from the traits, the trait's name and value are separated by {1} and each pair of regex and trait is separated by {2}.
 Example: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
     <comment>{0} represents a string used to separate a regex from its traits. {1} represents a string used to separate names and values. {2} represents a string used to separate regexs.</comment>
