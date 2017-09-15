@@ -1,0 +1,789 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="E:\A\_work\76\s\out\binaries\GoogleTestAdapter\Release\Core\GoogleTestAdapter.Core.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ru-RU" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="RCCX" />
+  </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
+  <Item ItemId=";GoogleTestAdapter.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" Disp="true" LocTbl="false" />
+      <Item ItemId=";ActualTestCase" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Number of actual test case durations: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AddedTestCase" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Added test case '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized test name (e.g. "TestSuite1.Test2")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AlreadyInAnalyzer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Test case already in analyzer: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents an unlocalized test name (e.g. "TestSuite1.Test2")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AttachDebuggerMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Attaching debugger to {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized command to which debugger attaches (e.g. cmd.exe)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AvgDifference" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Average difference between expected and actual duration: {0} ms]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";BatchFileMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}{1}: Did not find file: {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents unlocalized file path (e.g c:\test\foo.bat)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";BatchReturnedExitCode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}{1}: Exited with code {2}, executed command: '{3}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents a number (e.g. 5), {3} represents unlocalized file path (e.g c:\test\foo.bat)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CollectedResults" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Collected {1} test result(s) from result XML file {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents a number (e.g. 5), {2} represents unlocalized file path (e.g c:\test\results.xml)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CollectedResultsFromConsole" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Collected {1} test results from console output]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CommandExecuted" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Command executed: '{0} {1}', working directory: '{2}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized options to test (e.g. "gtest_list_tests"), {2} represents unlocalized directory path (e.g c:\test\dir)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CommandLineGeneratorError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Exceeded maximum allowed command line length ({0}) after including {1} tests (next string length is {2})]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5), {1} represents a number (e.g. 5), {2} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CouldNotListTestCases" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not list test cases for executable '{0}': process execution failed with exit code {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} is a number]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CouldNotTerminate" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not terminate process {0} started at {1}: {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized process name (e.g notepad.exe), {1} represents unlocalized string for time (e.g. "3/1/2008 7:00:00 AM"), {2} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CrashTest" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[reason is probably a crash of test {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of test (e.g. foo)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CreatedTestResults" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Created {1} test results for tests which were neither found in result XML file nor in console output]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DeleteTestDir" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Could not delete test directory '{1}': {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents unlocalized directory path (e.g c:\test\dir), {2} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DoesntMatchCustom" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not match custom regex {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DoesntMatchDefault" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not match default regex {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EndOfOutputMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}<<<<<<<<<<<<<<< End of Output]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; ")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExceptionMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Exception while running tests: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExceptionResolving" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Exception while resolving test locations and traits in {0}\n{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized binary name (e.g notepad.exe), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExecutableError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Executable {0} came from another computer and was blocked to help protect this computer.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExecuteSteps" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}In particular: launch command prompt, change into directory '{1}', and execute the following command to make sure your tests can be run in general.{2}{3} {4}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[This sentence is continuation of TroubleShootingLink string from Common.Dynamic.TAfGT resources file. {0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents unlocalized directory path (e.g c:\test\dir), {2} represents an unlocalized new line string (e.g "\n"), {3} is a name of an executable (e.g. foo.exe), {4} are parameters passed to the executable (e.g. /bar)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExecutionCancelled" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Execution has been cancelled: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExecutionString" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Execution is already running with settings for executable {0}, cannot switch to settings for {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents an unlocalized name of executable (e.g. cmd.exe) file]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExecutionTime" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Execution took {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents unlocalized string for time it took (e.g. "0:00:02.0504161")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExpectedDurations" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} expected durations have been found in actual durations]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExpectedTestCase" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Number of expected test case durations: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";FileFound" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Google Test indicator file found for executable {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";FileNotFound" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No Google Test indicator file found for executable {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";FoundTestMethod" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Found {0} test method symbols and {1} trait symbols in binary {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5), {1} represents a number (e.g. 5), {2} represents an unlocalized binary name (e.g notepad.exe)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";InvalidFile" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid file {0}. {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized file name (e.g. c:\foo.exe.gta.testdurations), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";InvalidRegularExpression" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid regular expression "{0}", exception message: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized regex (e.g. "abc*d+e*"), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";LocationNotFoundError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find source location for test {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized test name (e.g. "TestSuite1.Test2")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MatchesCustom" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} matches custom regex {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MatchesDefault" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} matches default regex {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NeverBeZero" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} must never be < 0]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized string for name of variable (e.g. _nrOfRunningExecutions)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NoKnownTestCaseMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No known test case for test result of line '{0}' - are you repeating a test run, but tests have changed in the meantime?]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized string for line in test]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NoOutput" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Command produced no output]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";NoSettingConfigured" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No settings configured for test executable '{0}'; running with solution settings: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents a comma-separated list of setting properties]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NoTestOutputShown" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Note that no test output will be shown on the test console when executing tests concurrently!]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";NothingToReport" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Nothing to report.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";NumberOfTestsMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Found {0} tests in executable {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5), {1} represents an unlocalized binary name (e.g notepad.exe)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NumberOfTestsRunningMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Running {0} tests...]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";OutputFileMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Output file does not exist, did your tests crash?]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";OutputOfCommand" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Output of command:]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[Followed by standard output from the command ran]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";OutputOfCommandMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}>>>>>>>>>>>>>>> Output of command '{1} {2}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents unlocalized command (e.g. cmd.exe), {2} represents unlocalized paramaters to executable (e.g. "/C exit 2")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ParallelExecution" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";ParseDurationMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse duration in line '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents the line text]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ParsePair" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse pair '{0}', exception message: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is regex pair, {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ProcessExitCode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Process has exited with code {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ReadTestDurationError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not read test durations: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RegexParseError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Regex '{0}' cannot be parsed: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents unlocalized regex pattern used (e.g. ab*d+), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RegexTimedOut" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Regex '{0}' timed out: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents unlocalized regex pattern used (e.g. ab*d+), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ReportedResultsToVS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Reported {1} test results to Visual Studio during test execution, executable: '{2}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents a number (e.g. 5), {2} represents an unlocalized name of executable (e.g. cmd.exe) file]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ReportedTestResults" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Reported {1} test results to Visual Studio, executable: '{2}', duration: {3}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents a number (e.g. 5), {2} represents an unlocalized name of executable (e.g. cmd.exe) file, {3} means stopwatch time]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RestoringSolutionSettings" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Restoring solution settings: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a comma-separated list of setting properties]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Results" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test {0}: Expected {1} ms, actual {2} ms]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of a test (e.g. foo), {1} represents a number (e.g. 5), {2} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RunBatchException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}{1}: Exception caught, message: '{2}', executed command: '{3}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents localized exception message (e.g. "Cannot load file"), {3} represents unlocalized file path (e.g c:\test\foo.bat)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RunExecutableError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Failed to run test executable '{1}': {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents an unlocalized name of executable (e.g. cmd.exe) file, {2} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SchedulingStats" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[>>> Scheduling statistics <<<]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";SettingsMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Settings for test executable '{0}': {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents an unlocalized settings string]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SettingsWrapperString" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[SettingsWrapper is already running with settings for an executable on thread '{0}', cannot also be used by thread '{1}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is a name of a thread (e.g. "T0"), {1} is a name of a thread (e.g. "T0")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";StackTrace" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Stack trace:{1}{2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} means new line string, {2} represents unlocalized exception stack trace]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";StandardDeviation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Standard deviation: {0} ms]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents the standardDeviation for statistics to debug output]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SuccessfullyRun" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}{1}: Successfully ran '{2}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents unlocalized file path (e.g c:\test\foo.bat)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TerminatedProcess" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Terminated process {0} started at {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized process name (e.g notepad.exe), {1} represents unlocalized string for time (e.g. "3/1/2008 7:00:00 AM")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TestCaseInAnalyzer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test case already in analyzer: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized string for test name (e.g. "TestSuite1.Test2")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TestCaseNotRun" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}{1} test cases seem to not have been run - are you repeating a test run, but tests have changed in the meantime? Test cases:{2}{3}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is empty or a name of a thread followed by space (e.g. "[T0]5D; "), {1} represents a number (e.g. 5), {2} represents an unlocalized new line string (e.g "\n"), {3} is a new-line separated list of unlocalized test case names]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TestCommandCanBeRun" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{0}{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized new line string (e.g "\n"), {1} is a new-line separated sequence of commands]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TestDiscoveryCancelled" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test discovery was cancelled after {0} s for executable {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5), {1} represents an unlocalized name of executable (e.g. cmd.exe) file]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TestResultParse" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test result file {0} could not be parsed (completely) - your test executable has probably crashed. Exception message: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents unlocalized file path (e.g c:\test\results.xml), {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TestSetupBatchFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test setup batch file]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestTeardownBatchFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test teardown batch file]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";ThreadExecutionMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Executing tests on {0} threads]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnknownLiteral" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown literal: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} is a name of enum literal]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnknownTestCase" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown test case status: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized status of test (e.g. "run" or "notrun")]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UsingSplitterOnDuration" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using splitter based on test durations]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";UsingSplitterOnNumber" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using splitter based on number of tests]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";WorstDifferences" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} worst differences:]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents a number (e.g. 5)]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";XmlNodeParse" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XmlNode could not be parsed: '{0}'. Exception message: {1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized name of an XML node, {1} represents localized exception message (e.g. "Cannot load file")]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";GtaTestDurations.xsd" ItemType="0" PsrId="210" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" Path=" \ ;XML \ 0 \ 0" />
+  </Item>
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[0.10.1.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Adds support for the C++ unit testing framework Google Tests]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Christian Soltenborn, Jonas Gefele]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[GoogleTestAdapter.Core]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[0.10.1.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[GoogleTestAdapter.Core.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Copyright © 2015, 2016, 2017]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[GoogleTestAdapter.Core.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[GoogleTestAdapter.Core]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[0.10.1.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+  </Item>
+  <Item ItemId=";XML" ItemType="0" PsrId="210" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+  </Item>
+</LCX>
