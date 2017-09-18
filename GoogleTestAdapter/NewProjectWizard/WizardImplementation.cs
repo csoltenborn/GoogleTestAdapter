@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TemplateWizard;
 using NewProjectWizard.Properties;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -129,7 +130,7 @@ namespace Microsoft.NewProjectWizard
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show(Resources.NuGetInteropNotFound);
+                    ShowRtlAwareMessageBox(Resources.NuGetInteropNotFound);
                     throw;
                 }
 
@@ -152,7 +153,7 @@ namespace Microsoft.NewProjectWizard
 
                     if (latestSdk == null)
                     {
-                        MessageBox.Show(Resources.WinSDKNotFound);
+                        ShowRtlAwareMessageBox(Resources.WinSDKNotFound);
                         throw new WizardCancelledException(Resources.WinSDKNotFound);
                     }
 
@@ -168,7 +169,7 @@ namespace Microsoft.NewProjectWizard
 
                         if (latestPlatform == null)
                         {
-                            MessageBox.Show(Resources.WinSDKNotFound);
+                            ShowRtlAwareMessageBox(Resources.WinSDKNotFound);
                             throw new WizardCancelledException(Resources.WinSDKNotFound);
                         }
 
@@ -198,6 +199,22 @@ namespace Microsoft.NewProjectWizard
             return true;
         }
 #endregion
+
+        private void ShowRtlAwareMessageBox(string text)
+        {
+            MessageBoxOptions options = 0;
+            if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+            {
+                options |= MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign;
+            }
+            MessageBox.Show(
+                text,
+                Resources.WizardTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error,
+                MessageBoxDefaultButton.Button1,
+                options);
+        }
 
         private static IEnumerable<TargetPlatformSDK> GetAllPlatformSdks()
         {

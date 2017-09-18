@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -249,7 +249,7 @@ namespace GoogleTestAdapter.TestCases
         internal static string StripTestSymbolNamespace(string symbol)
         {
             var suffixLength = GoogleTestConstants.TestBodySignature.Length;
-            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1);
+            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1, StringComparison.Ordinal);
             var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
             return symbol.Substring(nameStart);
         }

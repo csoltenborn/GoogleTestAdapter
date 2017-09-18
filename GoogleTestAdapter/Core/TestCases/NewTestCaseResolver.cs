@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -106,7 +106,7 @@ namespace GoogleTestAdapter.TestCases
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (SourceFileLocation nativeTraitSymbol in allTraitSymbols)
             {
-                if (nativeSymbol.Symbol.StartsWith(nativeTraitSymbol.TestClassSignature))
+                if (nativeSymbol.Symbol.StartsWith(nativeTraitSymbol.TestClassSignature, StringComparison.Ordinal))
                 {
                     int lengthOfSerializedTrait = nativeTraitSymbol.Symbol.Length - nativeTraitSymbol.IndexOfSerializedTrait - TraitAppendix.Length;
                     string serializedTrait = nativeTraitSymbol.Symbol.Substring(nativeTraitSymbol.IndexOfSerializedTrait, lengthOfSerializedTrait);
