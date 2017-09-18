@@ -56,6 +56,27 @@ namespace GoogleTestAdapter.TestCases
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void ParseListTestsOutput_TestWithParamGeneratedNames_CorrectParsing()
+        {
+            var consoleOutput = new List<string>
+            {
+                "InstantiationName/ParameterisedTests.",
+                "  Name/NamedTest  # GetParam() = 0000023AD11C0C20"
+            };
+
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+                .ParseListTestsOutput(consoleOutput);
+
+            descriptors.Count.Should().Be(1);
+            descriptors[0].Suite.Should().Be("InstantiationName/ParameterisedTests");
+            descriptors[0].Name.Should().Be("Name/NamedTest");
+            descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterisedTests.Name/NamedTest");
+            descriptors[0].DisplayName.Should().Be("InstantiationName/ParameterisedTests.Name/NamedTest [0000023AD11C0C20]");
+            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void ParseListTestsOutput_TestWithTypeParam_CorrectParsing()
         {
             var consoleOutput = new List<string>
