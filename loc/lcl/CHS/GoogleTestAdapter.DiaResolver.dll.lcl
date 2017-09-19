@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LCX SchemaVersion="6.0" Name="E:\A\_work\76\s\out\binaries\GoogleTestAdapter\Release\DiaResolver\GoogleTestAdapter.DiaResolver.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="zh-CN" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
@@ -15,9 +15,6 @@
           <Val><![CDATA[Attempts to find PDB: {0}]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[{0} is a list of locations attempted]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";GenerateFullPDBMessage" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
@@ -30,36 +27,24 @@
           <Val><![CDATA[Failed to locate line number for {0}]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[{0} represents an unlocalized symbol name (e.g. "foo")]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";LoadError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cannot load {0}.]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[{0} represents unlocalized file path (e.g c:\test\foo.pdb)]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";ParsingFile" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parsing PDB file {0}]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[{0} represents unlocalized file path (e.g c:\test\foo.pdb)]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";PdbFileNotFoundError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Couldn't find the .pdb file of file '{0}'. You will not get any source locations for your tests.]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[{0} represents unlocalized file path (e.g c:\test\foo.exe)]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";UnMapLoad" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
@@ -107,6 +92,9 @@
     <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
       <Str Cat="Text">
         <Val><![CDATA[GoogleTestAdapter.DiaResolver]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[GoogleTestAdapter.DiaResolver]]></Val>
+        </Tgt>
       </Str>
       <Disp Icon="Str" />
     </Item>
@@ -137,6 +125,9 @@
     <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
       <Str Cat="Text">
         <Val><![CDATA[GoogleTestAdapter.DiaResolver]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[GoogleTestAdapter.DiaResolver]]></Val>
+        </Tgt>
       </Str>
       <Disp Icon="Str" />
     </Item>
