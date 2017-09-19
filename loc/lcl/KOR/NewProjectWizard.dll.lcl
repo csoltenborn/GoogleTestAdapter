@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LCX SchemaVersion="6.0" Name="E:\A\_work\76\s\out\binaries\GoogleTestAdapter\Release\NewProjectWizard\NewProjectWizard.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ko-KR" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
@@ -18,9 +18,6 @@
           <Val><![CDATA[Consume Google Test as:]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[Followed by radio buttons to select a static or dynamic library]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";DynamicLib" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
@@ -45,9 +42,6 @@
           <Val><![CDATA[<No project>]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[Default selection in a project selection dropdown]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";NuGetInteropNotFound" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
@@ -60,9 +54,6 @@
           <Val><![CDATA[C++ runtime libraries:]]></Val>
         </Str>
         <Disp Icon="Str" />
-        <Cmts>
-          <Cmt Name="RCCX"><![CDATA[Followed by radio buttons to "link statically" or "link dynamically"]]></Cmt>
-        </Cmts>
       </Item>
       <Item ItemId=";SelectProject" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
@@ -122,6 +113,9 @@
     <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
       <Str Cat="Text">
         <Val><![CDATA[Microsoft]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[Microsoft]]></Val>
+        </Tgt>
       </Str>
       <Disp Icon="Str" />
     </Item>
