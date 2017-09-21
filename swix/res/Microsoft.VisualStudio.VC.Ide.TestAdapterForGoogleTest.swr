@@ -1,0 +1,14 @@
+use vs
+
+package name=Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest
+        version=$(Version)
+        vs.package.type=vsix
+        vs.package.installSize=22265856
+        vs.package.vsixId=GoogleTestAdapterVSIX.8486b54e-5768-482b-b224-7d069ca509d8
+
+vs.payloads
+  vs.payload source=$(VsixOutDir)\Packaging.TAfGT.vsix
+
+vs.dependencies
+  vs.dependency id=Microsoft.VisualStudio.MinShell
+                version=[$(VSGeneralVersion),$(VSNextGeneralVersion))

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
+  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" />
+
+  <PropertyGroup>
+    <FinalizeManifest>true</FinalizeManifest>
+    <FinalizeSkipLayout>true</FinalizeSkipLayout>
+
+    <!-- Set ValidateManifest to false because the tooling currently doesn't
+     support finding the dependency for MinShell outside of VS -->
+    <ValidateManifest>false</ValidateManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest.swixproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <MergeManifest Include="$(OutputPath)\Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest.json" />
+  </ItemGroup>
+
+  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" /> 
+</Project> 
