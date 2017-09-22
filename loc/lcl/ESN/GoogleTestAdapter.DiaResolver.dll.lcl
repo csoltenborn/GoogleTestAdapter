@@ -76,6 +76,9 @@
       <Item ItemId=";UseLinkerOption" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use linker option /DEBUG:FULL (Visual Studio 2017) or /DEBUG (Visual Studio 2015 and older) - do not use /DEBUG:FASTLINK!]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Use la opción del enlazador /DEBUG:FULL (Visual Studio 2017) o /DEBUG (Visual Studio 2015 y versiones posteriores). No use /DEBUG:FASTLINK.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
