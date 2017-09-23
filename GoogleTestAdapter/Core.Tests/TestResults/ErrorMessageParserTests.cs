@@ -93,6 +93,32 @@ namespace GoogleTestAdapter.TestResults
             parser.ErrorStackTrace.Should().Contain($"#1 - {DummyExecutable}:37");
             parser.ErrorStackTrace.Should().Contain($"#2 - {DummyExecutable}:42");
         }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void Parse_MessageWithSourceLocation()
+        {
+            string errorString = @"unknown file: error: C++ exception with description ""Assertion failed in c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp:174"" thrown in the test body.";
+
+            var parser = new ErrorMessageParser(errorString);
+            parser.Parse();
+
+            parser.ErrorStackTrace.Should().BeEmpty();
+            parser.ErrorMessage.Should().Contain(@"c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp:174");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void Parse_MessageWithSourceLocationInDifferentFormat()
+        {
+            string errorString = @"unknown file: error: C++ exception with description ""Assertion failed in c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp:-179"" thrown in the test body.";
+
+            var parser = new ErrorMessageParser(errorString);
+            parser.Parse();
+
+            parser.ErrorStackTrace.Should().BeEmpty();
+            parser.ErrorMessage.Should().Contain(@"c:\users\chris\git\googletestadapter\sampletests\tests\basictests.cpp:-179");
+        }
     }
 
 }

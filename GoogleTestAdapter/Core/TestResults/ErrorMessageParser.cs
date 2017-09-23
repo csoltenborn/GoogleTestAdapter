@@ -27,7 +27,7 @@ namespace GoogleTestAdapter.TestResults
             string error = @"(?:error: |Failure\n)";
 
             SplitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.IgnoreCase);
-            ParseRegex = new Regex($"{fileAndLine}(?::? {error})?", RegexOptions.IgnoreCase);
+            ParseRegex = new Regex($"^{fileAndLine}(?::? {error})?", RegexOptions.IgnoreCase);
             // TODO make expression parse "unknown file: error: SEH exception with code 0xc0000005 thrown in the test body."
             ScopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.IgnoreCase);
             ScopedTraceStartRegex
