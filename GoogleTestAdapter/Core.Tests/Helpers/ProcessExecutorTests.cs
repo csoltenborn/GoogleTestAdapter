@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.Helpers
 
             exitCode.Should().Be(1);
             output.Should().Contain(s => s.Contains("TestMath.AddPasses"));
-            output.Count.Should().Be(504);
+            output.Count.Should().Be(518);
         }
 
     }

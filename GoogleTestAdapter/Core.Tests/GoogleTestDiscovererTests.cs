@@ -125,7 +125,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTests170_FindsTestsWithLocation()
         {
-            FindTests(TestResources.Tests_DebugX86_Gtest170);
+            FindTests(TestResources.Tests_DebugX86_Gtest170, TestResources.NrOfGtest170CompatibleTests);
         }
 
         [TestMethod]
@@ -329,12 +329,12 @@ namespace GoogleTestAdapter
                 .Be(isGoogleTestExecutable);
         }
 
-        private void FindTests(string location)
+        private void FindTests(string location, int expectedNrOfTestCases = TestResources.NrOfTests)
         {
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            testCases.Count.Should().Be(TestResources.NrOfTests);
+            testCases.Count.Should().Be(expectedNrOfTestCases);
 
             TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
             testCase.DisplayName.Should().Be("TheFixture.AddFails");
