@@ -1,12 +1,15 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 using System.Threading;
 
 namespace GoogleTestAdapter.VsPackage
 {
+    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public partial class GoogleTestExtensionOptionsPage
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
