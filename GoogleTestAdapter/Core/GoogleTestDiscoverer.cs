@@ -106,7 +106,6 @@ namespace GoogleTestAdapter
             {
                 if (Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
                 {
-                    logger.DebugInfo($"Google Test indicators found in executable {executable}");
                     return true;
                 }
             }
@@ -114,12 +113,12 @@ namespace GoogleTestAdapter
             {
                 if (SafeMatches(executable, customRegex, logger))
                 {
-                    logger.DebugInfo($"Custom regex '{customRegex}' matches executable '{executable}'");
+                    logger.DebugInfo(String.Format(Resources.MatchesCustom, executable, customRegex));
                     return true;
                 }
             }
 
-            logger.DebugInfo($"File does not seem to be Google Test executable: '{executable}'");
+            logger.DebugInfo(String.Format(Resources.FileNotFound, executable));
             return false;
         }
 
