@@ -98,7 +98,7 @@ namespace GoogleTestAdapter
             string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
             {
-                _logger.DebugInfo(String.Format(Resources.FileFound, executable));
+                logger.DebugInfo(String.Format(Resources.FileFound, executable));
                 return true;
             }
 
@@ -143,7 +143,7 @@ namespace GoogleTestAdapter
 
         private static bool VerifyExecutableTrust(string executable, ILogger logger)
         {
-            var zone = Zone.CreateFromUrl(executable);
+            var zone = Zone.CreateFromUrl(Path.GetFullPath(executable));
             if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
             {
                 logger.LogError(String.Format(Resources.ExecutableError, executable));

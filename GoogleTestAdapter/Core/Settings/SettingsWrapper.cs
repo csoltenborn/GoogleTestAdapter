@@ -243,7 +243,7 @@ namespace GoogleTestAdapter.Settings
 
         public static readonly string OptionTestDiscoveryRegex = Resources.OptionTestDiscoveryRegex;
         public const string OptionTestDiscoveryRegexDefaultValue = "";
-        public static readonly string OptionTestDiscoveryRegexDescription = string.Format(Resources.OptionTestDiscoveryRegexDescription, TestFinderRegex);
+        public static readonly string OptionTestDiscoveryRegexDescription = string.Format(Resources.OptionTestDiscoveryRegexDescription, String.Empty);
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
