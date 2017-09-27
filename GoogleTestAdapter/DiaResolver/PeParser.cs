@@ -246,20 +246,41 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        public static List<string> ParseImports(string executable, ILogger logger)
+        private static void ProcessImports(string executable, ILogger logger, Func<string, bool> predicate)
         {
-            var imports = new List<string>();
             ParsePeFile(executable, logger, (image) =>
             {
+                bool shouldContinue = true;
                 uint size = 0u;
                 var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 1, &size);
-                while (directoryEntry->OriginalFirstThunk != 0u)
+                while (shouldContinue && directoryEntry->OriginalFirstThunk != 0u)
                 {
-                    imports.Add(GetString(image, directoryEntry->Name));
+                    shouldContinue = predicate(GetString(image, directoryEntry->Name));
                     directoryEntry++;
                 }
             });
+        }
+
+        public static List<string> ParseImports(string executable, ILogger logger)
+        {
+            var imports = new List<string>();
+            ProcessImports(executable, logger, (import) =>
+            {
+                imports.Add(import);
+                return true; // Always continue.
+            });
             return imports;
+        }
+
+        public static bool FindImport(string executable, string import, StringComparison comparisonType, ILogger logger)
+        {
+            var found = false;
+            ProcessImports(executable, logger, (currentImport) =>
+            {
+                found = String.Compare(import, currentImport, comparisonType) == 0;
+                return !found; // Continue only if not found yet.
+            });
+            return found;
         }
 
         private static string PtrToStringUtf8(IntPtr ptr)
