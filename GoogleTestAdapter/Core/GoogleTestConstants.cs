@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 
@@ -29,6 +29,8 @@ namespace GoogleTestAdapter
         public const string TestBodySignature = "::TestBody";
         public const string ParameterizedTestMarker = "  # GetParam() = ";
         public const string TypedTestMarker = ".  # TypeParam = ";
+
+        public const string GoogleTestDllMarker = "gtest.dll";
 
         public static readonly string[] GoogleTestExecutableMarkers =
         {
