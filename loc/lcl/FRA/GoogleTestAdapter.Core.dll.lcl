@@ -76,30 +76,45 @@
       <Item ItemId=";CategoryMiscName" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Misc]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Divers]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";CategoryParallelizationName" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parallelization]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Parallélisation]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";CategoryRuntimeBehaviorName" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Runtime behavior]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Comportement au moment de l'exécution]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";CategoryTestExecutionName" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test execution]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Exécution des tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";CategoryTraitsName" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Regexes for trait assignment]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Regex pour l'assignation de caractéristiques]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -169,6 +184,9 @@
       <Item ItemId=";CrashText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[!! This test has probably CRASHED !!]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[!! Ce test est probablement bloqué en raison d'un INCIDENT !!]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -184,6 +202,9 @@
       <Item ItemId=";DebuggerAttachedOutputMessage" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Notez qu'en raison de restrictions du framework de tests unitaires VS, la sortie de l'exécutable de test ne peut pas être affichée dans la console de test durant le débogage des tests !]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -199,24 +220,36 @@
       <Item ItemId=";DescriptionOfExecutableDirPlaceHolder" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{0} - directory containing the test executable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} - répertoire contenant l'exécutable de test]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";DescriptionOfPlaceholdersForBatches" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{0} - path of a directory which can be used by the tests]D;]A;{1} - id of the thread executing the current tests]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} - chemin d'un répertoire utilisable par les tests]D;]A;{1} - ID du thread exécutant les tests actuels]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";DescriptionOfPlaceholdersForExecutables" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{0} - executable containing the tests]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} - exécutable contenant les tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";DescriptionOfSolutionDirPlaceHolder" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{0} - directory of the solution (only available inside Visual Studio)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} - répertoire de la solution (disponible uniquement dans Visual Studio)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -475,294 +508,441 @@
       <Item ItemId=";OptionAdditionalTestExecutionParams" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional test execution parameters]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Paramètres d'exécution de tests supplémentaires]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionAdditionalTestExecutionParamsDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional parameters for Google Test executable. Placeholders:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Paramètres supplémentaires pour l'exécutable Google Test. Espaces réservés :]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionBatchForTestSetup" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test setup batch file]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Fichier de commandes de préparation des tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionBatchForTestSetupDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Fichier de commandes à exécuter avant l'exécution des tests. Si les tests sont exécutés en parallèle, le fichier de commandes est exécuté une fois par thread. Espaces réservés :]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionBatchForTestTeardown" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test teardown batch file]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Fichier de commandes de nettoyage des tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionBatchForTestTeardownDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Fichier de commandes à exécuter après l'exécution des tests. Si les tests sont exécutés en parallèle, le fichier de commandes est exécuté une fois par thread. Espaces réservés :]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionBreakOnFailure" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Break on failure]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Arrêter en cas d'échec]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionBreakOnFailureDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.]D;]A;Google Test option: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[S'il est activé, tout débogueur potentiellement attaché intercepte les échecs d'assertion et passe automatiquement en mode interactif.]D;]A;Option Google Test : {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionCatchExceptions" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Catch exceptions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Intercepter les exceptions]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionCatchExceptionsDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.]D;]A;Google Test option: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Google Test intercepte les exceptions par défaut. Le test correspondant donne lieu à un échec et l'exécution des tests se poursuit. Si vous choisissez la valeur false, les exceptions peuvent passer, ce qui permet au débogueur de les intercepter.]D;]A;Option Google Test : {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionDebugMode" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Print debug info]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Afficher les informations de débogage]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionDebugModeDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true, debug output will be printed to the test console.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur est true, la sortie de débogage est affichée sur la console de test.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionEnableParallelTestExecution" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parallel test execution]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Exécution parallèle des tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionEnableParallelTestExecutionDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L'exécution parallèle des tests s'effectue via différents threads, chacun d'eux étant chargé d'exécuter un certain nombre de tests. Les threads appellent ensuite séquentiellement les exécutables nécessaires pour produire les résultats des tests correspondants.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionKillProcessesOnCancel" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Terminate processes on cancel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Terminer les processus en cas d'annulation]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionKillProcessesOnCancelDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true, running test executables are actively terminated if the test execution is canceled. Note that terminating a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur est true, les exécutables de test en cours d'exécution s'arrêtent quand l'exécution du test est annulée. Notez que l'arrêt d'un processus de test peut avoir toutes sortes d'effets secondaires ; par exemple, Google Test ne peut effectuer aucune tâche d'arrêt.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionMaxNrOfThreads" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maximum number of threads]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nombre maximal de threads]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionMaxNrOfThreadsDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Maximum number of threads to be used for test execution (0: one thread for each processor).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nombre maximal de threads à utiliser pour l'exécution des tests (0 : un thread pour chaque processeur).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionNrOfTestRepetitions" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Number of test repetitions]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nombre de répétitions de tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionNrOfTestRepetitionsDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Tests will be run for the selected number of times (-1: infinite).]D;]A;Google Test option: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les tests sont exécutés en fonction du nombre de répétitions sélectionné (-1 : infini).]D;]A;Option Google Test : {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionParseSymbolInformation" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parse symbol information]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Analyser les informations de symboles]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionParseSymbolInformationDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).]D;]A;If this is set to false, step 2 of traits discovery will be left out and only traits regexes will be effective.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Permet d'analyser les informations liées aux symboles de débogage des exécutables de test pour obtenir les informations et les caractéristiques relatives à l'emplacement source (définies via les macros de GTA_Traits.h).]D;]A;Si ceci a la valeur false, l'étape 2 de la découverte des caractéristiques est ignorée, et seuls les regex des caractéristiques sont pris en compte.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionPathExtension" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[PATH extension]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Extension de PATH]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionPathExtensionDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.]D;]A;Example: C:\MyBins;{0}\MyOtherBins;]D;]A;Placeholders:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si sa valeur n'est pas vide, le contenu est ajouté à la variable PATH des processus d'exécution et de découverte des tests.]D;]A;Exemple : C:\MyBins;{0}\MyOtherBins;]D;]A;Espaces réservés :]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionPrintTestOutput" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Print test output]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Afficher la sortie des tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionPrintTestOutputDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Print the output of the Google Test executable(s) to the Tests Output window.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Permet d'afficher la sortie des exécutables Google Test dans la fenêtre Sortie des tests.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionRunDisabledTests" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Also run disabled tests]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Exécuter également les tests désactivés]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionRunDisabledTestsDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true, all (selected) tests will be run, even if they have been disabled.]D;]A;Google Test option: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur est true, tous les tests (sélectionnés) sont exécutés, même s'ils ont été désactivés.]D;]A;Option Google Test : {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionShowReleaseNotes" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Show release notes after update]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Afficher les notes de publication après la mise à jour]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionShowReleaseNotesDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true, a dialog with release notes is shown after the extension has been updated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur est true, une boîte de dialogue contenant les notes de publication s'affiche après la mise à jour de l'extension.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionShuffleTests" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Shuffle tests per execution]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Lecture aléatoire des tests par exécution]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionShuffleTestsDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.]D;]A;Google Test option: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur est true, les tests sont exécutés dans un ordre aléatoire. Notez qu'un véritable ordre aléatoire est obtenu uniquement au moment de l'exécution de tous les tests de manière non parallèle. Sinon, les exécutables de test sont plutôt exécutés plusieurs fois, l'ordre aléatoire étant limité aux exécutions correspondantes.]D;]A;Option Google Test : {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionShuffleTestsSeed" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Shuffle tests: Seed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Lecture aléatoire des tests : valeur initiale]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionShuffleTestsSeedDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[0: Seed is computed from system time, 1<=n<={0}: The given seed is used. See note of option '{1}'.]D;]A;Google Test option: {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[0 : la valeur initiale est calculée à partir de l'heure du système, 1<=n<={0} : la valeur initiale donnée est utilisée. Consultez la remarque de l'option '{1}'.]D;]A;Option Google Test : {2}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTestDiscoveryRegex" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Regex for test discovery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Regex pour la découverte de tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTestDiscoveryRegexDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If non-empty, this regex will be used to discover the Google Test executables containing your tests.]D;]A;Default regex: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si sa valeur n'est pas vide, ce regex est utilisé pour découvrir les exécutables Google Test contenant vos tests.]D;]A;Regex par défaut : {0}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTestDiscoveryTimeoutInSeconds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test discovery timeout in s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Délai d'expiration de la découverte de tests en secondes]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTestDiscoveryTimeoutInSecondsDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Seuil en secondes au-delà duquel la découverte de tests est considérée comme un échec. 0 : délai d'expiration infini]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTestNameSeparator" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test name separator]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Séparateur de noms de tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTestNameSeparatorDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test names produced by Google Test might contain the character '/', which makes Visual Studio cut the name after the '/' if the Test Explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les noms de tests produits par Google Test peuvent contenir le caractère '/', ce qui amène Visual Studio à couper le nom après le signe '/' si la fenêtre de l'Explorateur de tests n'est pas assez large. La valeur de cette option, si elle n'est pas vide, remplace le caractère '/' pour éviter ce comportement. Notez que '\', ' ', '|' et '-' entraînent le même comportement ('.', '_', ':', et '::' fonctionnent correctement). Notez également que les regex de caractéristiques sont évalués par rapport aux noms d'affichages des tests (et qu'ils doivent donc être cohérents par rapport à cette option).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTimestampOutput" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Timestamp output]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sortie de l'horodatage]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTimestampOutputDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If true, a timestamp is added to test and debug output.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur est true, un horodatage est ajouté à la sortie de test et à la de sortie de débogage.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTraitsDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases. First, traits are assigned to tests according to the 'Traits before' option. Next, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. Finally, the 'Traits after' option is evaluated, again in an overriding manner.]D;]A;Syntax: {0} separates the regex from the traits, the trait's name and value are separated by {1} and each pair of regex and trait is separated by {2}.]D;]A;Example: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Permet de remplacer/d'ajouter des caractéristiques pour les cas de test qui correspondent à un regex. Les caractéristiques comportent 3 phases. Tout d'abord, les caractéristiques sont assignées aux tests en fonction de l'option 'Caractéristiques avant'. Ensuite, les caractéristiques des tests (définies via les macros de GTA_Traits.h) sont ajoutées aux tests pour remplacer les caractéristiques de la phase 1 par de nouvelles valeurs. Enfin, l'option 'Caractéristiques après' est évaluée, une fois de plus selon le mode du remplacement.]D;]A;Syntaxe : {0} sépare le regex des caractéristiques. Le nom et la valeur de la caractéristique sont séparés par {1}, et chaque paire associant un regex à une caractéristique est séparée par {2}.]D;]A;Exemple : MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTraitsRegexesAfter" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[After test discovery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Après la découverte de tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionTraitsRegexesBefore" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Before test discovery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Avant la découverte de tests]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionUseNewTestExecutionFramework" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Use new test execution framework (experimental)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utiliser le nouveau framework d'exécution de tests (expérimental)]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionUseNewTestExecutionFrameworkDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Utilisez le nouveau framework d'exécution de tests. Avantages : la détection des incidents de tests et l'affichage des sorties de tests fonctionnent également en mode débogage.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionWorkingDir" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Working directory]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Répertoire de travail]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionWorkingDirDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[If non-empty, will set the working directory for running the tests (default: {0})]D;]A;Example: {1}\MyTestDir]D;]A;Placeholders:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Si la valeur n'est pas vide, permet de définir le répertoire de travail pour l'exécution des tests (valeur par défaut : {0})]D;]A;Exemple : {1}\MyTestDir]D;]A;Espaces réservés :]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -1012,6 +1192,9 @@
       <Item ItemId=";TestOutput" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Test output:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Sortie de test :]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
