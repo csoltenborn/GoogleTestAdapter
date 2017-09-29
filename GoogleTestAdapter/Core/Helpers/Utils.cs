@@ -1,8 +1,11 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,6 +66,12 @@ namespace GoogleTestAdapter.Helpers
             }
       
             return Task.WaitAll(tasks, timeoutInMs);
+        }
+
+        public static bool BinaryFileContainsStrings(string executable, Encoding encoding, IEnumerable<string> strings)
+        {
+            byte[] file = File.ReadAllBytes(executable);
+            return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
         }
 
         public static void ValidateRegex(string pattern)

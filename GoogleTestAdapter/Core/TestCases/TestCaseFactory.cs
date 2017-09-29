@@ -45,7 +45,7 @@ namespace GoogleTestAdapter.TestCases
             {
                 var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
                 int processExitCode;
-                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption.Trim(),
+                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption,
                     false, false, out processExitCode);
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
@@ -54,7 +54,7 @@ namespace GoogleTestAdapter.TestCases
             catch (Exception e)
             {
                 SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption.Trim(), e);
+                    GoogleTestConstants.ListTestsOption, e);
                 return new List<TestCase>();
             }
 
@@ -136,7 +136,7 @@ namespace GoogleTestAdapter.TestCases
                     executor = new ProcessExecutor(null, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
-                        GoogleTestConstants.ListTestsOption.Trim(),
+                        GoogleTestConstants.ListTestsOption,
                         "",
                         _settings.GetPathExtension(_executable),
                         lineAction);
@@ -149,7 +149,7 @@ namespace GoogleTestAdapter.TestCases
 
                     string dir = Path.GetDirectoryName(_executable);
                     string file = Path.GetFileName(_executable);
-                    string command = $@"cd ""{dir}""{Environment.NewLine}{file} {GoogleTestConstants.ListTestsOption.Trim()}";
+                    string command = $@"cd ""{dir}""{Environment.NewLine}{file} {GoogleTestConstants.ListTestsOption}";
 
                     _logger.LogError(String.Format(Resources.TestDiscoveryCancelled, _settings.TestDiscoveryTimeoutInSeconds, _executable));
                     _logger.DebugError(String.Format(Resources.TestCommandCanBeRun, Environment.NewLine, command));
@@ -172,7 +172,7 @@ namespace GoogleTestAdapter.TestCases
             catch (Exception e)
             {
                 SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption.Trim(), e);
+                    GoogleTestConstants.ListTestsOption, e);
                 return new List<TestCase>();
             }
             return testCases;
@@ -183,7 +183,7 @@ namespace GoogleTestAdapter.TestCases
             if (processExitCode != 0)
             {
                 string messsage = String.Format(Resources.CouldNotListTestCases, _executable, processExitCode);
-                messsage += Environment.NewLine + String.Format(Resources.CommandExecuted, _executable, GoogleTestConstants.ListTestsOption.Trim(), Path.GetDirectoryName(_executable));
+                messsage += Environment.NewLine + String.Format(Resources.CommandExecuted, _executable, GoogleTestConstants.ListTestsOption, Path.GetDirectoryName(_executable));
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
                     messsage += Environment.NewLine + Resources.OutputOfCommand + Environment.NewLine + string.Join(Environment.NewLine, standardOutput);
                 else
