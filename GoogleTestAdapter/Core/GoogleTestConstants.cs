@@ -1,4 +1,8 @@
-﻿namespace GoogleTestAdapter
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
+
+namespace GoogleTestAdapter
 {
 
     public static class GoogleTestConstants
@@ -25,6 +29,8 @@
         public const string TestBodySignature = "::TestBody";
         public const string ParameterizedTestMarker = "  # GetParam() = ";
         public const string TypedTestMarker = ".  # TypeParam = ";
+
+        public const string GoogleTestDllMarker = "gtest.dll";
 
         public static readonly string[] GoogleTestExecutableMarkers =
         {

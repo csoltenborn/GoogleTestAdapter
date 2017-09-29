@@ -24,6 +24,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string TenSecondsWaiter = GtaSolutionDir + @"TenSecondsWaiter\bin\" + BuildConfig + @"\TenSecondsWaiter.exe";
         public const string AlwaysCrashingExe = GtaSolutionDir + BuildConfig + @"\CrashingExe.exe";
         public const string AlwaysFailingExe = GtaSolutionDir + BuildConfig + @"\FailingExe.exe";
+        public const string FakeGtestDllExe = GtaSolutionDir + BuildConfig + @"\FakeGtestDllApplication.exe";
+        public const string FakeGtestDllExeX64 = GtaSolutionDir + @"x64\" + BuildConfig + @"\FakeGtestDllApplication-x64.exe";
+        public const string SemaphoreExe = GtaSolutionDir + @"SemaphoreExe\SemaphoreExe.exe";
 
         public const string Tests_DebugX86 = SampleTestsSolutionDir + @"Debug\Tests_gta.exe";
         public const string Tests_ReleaseX86 = SampleTestsSolutionDir + @"Release\Tests_gta.exe";
