@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 
@@ -23,12 +23,22 @@ namespace GoogleTestAdapter
         public const int ShuffleTestsSeedMinValue = 0;
         public static readonly int ShuffleTestsSeedMaxValue = int.Parse(ShuffleTestsSeedMaxValueAsString);
 
-        public const string ListTestsOption = " --gtest_list_tests";
+        public const string ListTestsOption = "--gtest_list_tests";
         public const string FilterOption = " --gtest_filter=";
 
         public const string TestBodySignature = "::TestBody";
         public const string ParameterizedTestMarker = "  # GetParam() = ";
         public const string TypedTestMarker = ".  # TypeParam = ";
+
+        public const string GoogleTestDllMarker = "gtest.dll";
+
+        public static readonly string[] GoogleTestExecutableMarkers =
+        {
+            "This program contains tests written using Google Test. You can use the",
+            "For more information, please read the Google Test documentation at",
+            "Run only the tests whose name matches one of the positive patterns but",
+            ListTestsOption
+        };
 
         public static string GetResultXmlFileOption(string resultXmlFile)
         {
