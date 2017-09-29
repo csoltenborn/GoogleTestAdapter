@@ -44,7 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\NewProjectWizard.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\NewProjectWizard.lcl</TranslationFile>
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\NewProjectWizard.dll.lcl</TranslationFile>
       <SettingsFile>$(LSBuildRoot)\MCP_excludeBaml.lss</SettingsFile>
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\NewProjectWizard.dll" Condition="'$(RealSign)' == 'True'">

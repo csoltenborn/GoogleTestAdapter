@@ -26,7 +26,7 @@
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
     <BypassVsixValidation>true</BypassVsixValidation>
     <DeployExtension Condition="'$(TestAdapterFlavor)' != 'TAfGT'">false</DeployExtension>
-    <IsProductComponent>true</IsProductComponent>
+    <IsProductComponent Condition="'$(ProductComponent)' == 'true'">true</IsProductComponent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

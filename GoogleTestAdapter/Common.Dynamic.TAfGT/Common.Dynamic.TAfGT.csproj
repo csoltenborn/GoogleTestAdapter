@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.Common.Dynamic.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\GoogleTestAdapter.Common.Dynamic.lcl</TranslationFile> 
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Common.Dynamic.dll.lcl</TranslationFile> 
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.Common.Dynamic.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>

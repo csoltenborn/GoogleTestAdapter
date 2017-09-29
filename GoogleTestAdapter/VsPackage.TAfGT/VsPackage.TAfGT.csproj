@@ -211,7 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.VsPackage.TAfGT.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\GoogleTestAdapter.VsPackage.TAfGT.lcl</TranslationFile> 
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.VsPackage.TAfGT.dll.lcl</TranslationFile> 
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.VsPackage.TAfGT.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>

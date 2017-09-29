@@ -44,7 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.DiaResolver.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\loc\lcl\{Lang}\GoogleTestAdapter.DiaResolver.lcl</TranslationFile> 
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.DiaResolver.dll.lcl</TranslationFile> 
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.DiaResolver.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
