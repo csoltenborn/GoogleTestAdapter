@@ -6,7 +6,7 @@
         <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
         <MoreInfo>https://github.com/csoltenborn/GoogleTestAdapter</MoreInfo>
         <License>LICENSE.txt</License>
-        <Icon>gtest-logo.ico</Icon>
+        <Icon>Resources\gtest-logo.ico</Icon>
         <PreviewImage>Resources\Preview.png</PreviewImage>
         <Tags>Unit Test, C++, Google Test, GoogleTest, GTest, Test Explorer, Testing</Tags>
     </Metadata>
