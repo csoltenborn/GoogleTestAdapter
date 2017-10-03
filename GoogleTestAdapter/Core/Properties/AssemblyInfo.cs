@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GoogleTestAdapter.Core")]
 [assembly: AssemblyDescription("Adds support for the C++ unit testing framework Google Tests")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
+[assembly: AssemblyCompany("Christian Soltenborn")]
 [assembly: AssemblyProduct("GoogleTestAdapter.Core")]
 [assembly: AssemblyCopyright("Copyright © 2015, 2016, 2017")]
 [assembly: AssemblyTrademark("")]

@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GoogleTestAdapter.GoogleTestAdapter")]
 [assembly: AssemblyDescription("Provides main Visual Studio integration of the Test Adapter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
+[assembly: AssemblyCompany("Christian Soltenborn")]
 [assembly: AssemblyProduct("GoogleTestAdapter.GoogleTestAdapter")]
 [assembly: AssemblyCopyright("Copyright © 2015, 2016, 2017")]
 [assembly: AssemblyTrademark("")]

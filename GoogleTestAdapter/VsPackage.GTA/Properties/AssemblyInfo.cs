@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GoogleTestAdapter.VsPackage.GTA")]
 [assembly: AssemblyDescription("Visual Studio options integration of the Google Test Adapter.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
+[assembly: AssemblyCompany("Christian Soltenborn")]
 [assembly: AssemblyProduct("GoogleTestAdapter.VsPackage.GTA")]
 [assembly: AssemblyCopyright("Copyright © 2015, 2016, 2017")]
 [assembly: AssemblyTrademark("")]

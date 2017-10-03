@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DiaResolver.Tests")]
 [assembly: AssemblyDescription("Tests for the DIA Resolver")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
+[assembly: AssemblyCompany("Christian Soltenborn")]
 [assembly: AssemblyProduct("DiaResolver.Tests")]
 [assembly: AssemblyCopyright("Copyright © 2015, 2016, 2017")]
 [assembly: AssemblyTrademark("")]

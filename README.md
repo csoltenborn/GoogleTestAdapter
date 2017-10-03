@@ -162,11 +162,13 @@ Please refer to our [wiki](https://github.com/csoltenborn/GoogleTestAdapter/wiki
 
 #### People
 
-Google Test Adapter is written and maintained by [Christian Soltenborn](https://github.com/csoltenborn) (main author) and [Jonas Gefele](https://github.com/jgefele) (regular contributor).
+Google Test Adapter is written and maintained by [Christian Soltenborn](https://github.com/csoltenborn). 
 
 The first version of GTA was a slightly enhanced C# port of the F# [Google Test Runner](https://github.com/markusl/GoogleTestRunner), written by [Markus Lindqvist](https://github.com/markusl). We have also learned a lot from the JavaScript test runner [Chutzpah](https://github.com/mmanela/chutzpah), written by [Matthew Manela](https://github.com/mmanela).
 
-GTA has benefited from all kinds of contributions, be it feature requests, bug reports, code snippets, testing of new features and bugfixes, or even pull requests. Most (hopefully all) contributors are mentioned in the according [release notes](https://github.com/csoltenborn/GoogleTestAdapter/releases).
+GTA has benefited from all kinds of contributions, be it feature requests, bug reports, code snippets, testing of new features and bugfixes, or even pull requests: 
+* [Jonas Gefele](https://github.com/jgefele) has been a regular and significant contributor up to version 0.10.1 (with more to come in the future, as I hope :-))
+* Most (hopefully all) other contributors are mentioned in the according [release notes](https://github.com/csoltenborn/GoogleTestAdapter/releases).
 
 
 #### Tools
