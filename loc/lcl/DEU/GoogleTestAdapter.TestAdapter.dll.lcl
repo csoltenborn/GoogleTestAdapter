@@ -13,6 +13,9 @@
       <Item ItemId=";CantParseSettings" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Solution test settings file could not be parsed, check file: {0}]D;]A;Exception: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Datei mit den Projektmappen-Testeinstellungen konnte nicht analysiert werden. Prüfen Sie folgende Datei: {0}]D;]A;Ausnahme: {1}]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -154,6 +157,9 @@
       <Item ItemId=";RunSettingsMissingNode" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[RunSettingsDocument enthält keinen RunSettings-Knoten! Das Zusammenführen von Einstellungen wird abgebrochen...]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -169,6 +175,9 @@
       <Item ItemId=";SolutionFoundButMissingNode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Solution test settings file found at '{0}', but does not contain {1} node]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Eine Datei mit Projektmappen-Testeinstellungen wurde unter "{0}" gefunden, enthält aber keinen {1}-Knoten.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
