@@ -133,7 +133,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             CommonFunctions.LogVisualStudioVersion(_logger);
 
-            _logger.LogInfo(Strings.Instance.TestExecutionStarting);
+            _logger.LogInfo(Common.Resources.TestExecutionStarting);
             _logger.DebugInfo(String.Format(Resources.Settings, _settings));
 
             return stopwatch;

@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test Adapter for Google Test.
+        ///   Looks up a localized string similar to Google Test Adapter.
         /// </summary>
         public static string ExtensionName {
             get {
@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test Adapter for Google Test: Test discovery starting....
+        ///   Looks up a localized string similar to Google Test Adapter: Test discovery starting....
         /// </summary>
         public static string TestDiscoveryStarting {
             get {
@@ -79,7 +79,7 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test Adapter for Google Test: Test execution starting....
+        ///   Looks up a localized string similar to Google Test Adapter: Test execution starting....
         /// </summary>
         public static string TestExecutionStarting {
             get {
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}Check out Test Adapter for Google Test&apos;s trouble shooting section at https://go.microsoft.com/fwlink/?linkid=848168.
+        ///   Looks up a localized string similar to {0}Check out Google Test Adapter&apos;s trouble shooting section at https://github.com/csoltenborn/GoogleTestAdapter#trouble_shooting.
         /// </summary>
         public static string TroubleShootingLink {
             get {

@@ -40,15 +40,15 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.Common.Dynamic.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Common.Dynamic.dll.lcl</TranslationFile> 
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Common.Dynamic.dll.lcl</TranslationFile>
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.Common.Dynamic.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
-    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning"> 
-      <!-- Do not have this show up in Solution Explorer in VS --> 
-      <InProject>false</InProject> 
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning">
+      <!-- Do not have this show up in Solution Explorer in VS -->
+      <InProject>false</InProject>
     </SignFilesDependsOn>
   </ItemGroup>
   <ItemGroup>
@@ -62,7 +62,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Strings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
@@ -75,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -91,12 +90,12 @@
     copy "$(SolutionDir)Keys\Key_Debug.snk" "$(ProjectDir)Key.snk"
 )</PreBuildEvent>
   </PropertyGroup>
-  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'"> 
-    <ItemGroup> 
-      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll"> 
-        <Authenticode>Microsoft</Authenticode> 
-        <StrongName>StrongName</StrongName> 
-      </FilesToSign> 
-    </ItemGroup> 
-  </Target> 
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'">
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">
+        <Authenticode>Microsoft</Authenticode>
+        <StrongName>StrongName</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
 </Project>
