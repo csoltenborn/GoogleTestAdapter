@@ -41,7 +41,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Attaching debugger to {0}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Hata ayıklayıcısı {0} komutuna ekleniyor]]></Val>
+            <Val><![CDATA[Hata ayıklayıcısı {0} komutuna iliştiriliyor]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -572,7 +572,7 @@
         <Str Cat="Text">
           <Val><![CDATA[If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.]D;]A;Google Test option: {0}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Etkinleştirilirse, eklenmiş olabilecek bir hata ayıklayıcısı, onaylama hatalarını yakalar ve etkileşimli moda otomatik olarak bırakır.]D;]A;Google Test seçeneği: {0}]]></Val>
+            <Val><![CDATA[Etkinleştirilirse, iliştirilmiş olabilecek bir hata ayıklayıcısı, onaylama hatalarını yakalar ve etkileşimli moda otomatik olarak bırakır.]D;]A;Google Test seçeneği: {0}]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -977,7 +977,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Seçeneklerde paralel çalıştırma belirtilmiş, ancak hata ayıklayıcısı ekli olduğundan testler sırayla çalıştırılıyor.]]></Val>
+            <Val><![CDATA[Seçeneklerde paralel çalıştırma belirtilmiş, ancak hata ayıklayıcısı iliştirilmiş olduğundan testler sırayla çalıştırılıyor.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
