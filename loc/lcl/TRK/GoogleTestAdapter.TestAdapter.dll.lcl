@@ -23,7 +23,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Could not attach debugger to process {0}:{1}{2}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Hata ayıklayıcısı {0} işlemine eklenemedi:{1}{2}]]></Val>
+            <Val><![CDATA[Hata ayıklayıcısı {0} işlemine iliştirilemedi:{1}{2}]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -32,7 +32,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Could not attach debugger to process {0}, no error message available]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Hata ayıklayıcısı {0} işlemine eklenemedi, hata iletisi yok]]></Val>
+            <Val><![CDATA[Hata ayıklayıcısı {0} işlemine iliştirilemedi, hata iletisi yok]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -41,7 +41,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Debugger attached to process {0}, took {1} ms]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Hata ayıklayıcısı {0} işlemine eklendi, işlem {1} ms sürdü]]></Val>
+            <Val><![CDATA[Hata ayıklayıcısı {0} işlemine iliştirildi, işlem {1} ms sürdü]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
