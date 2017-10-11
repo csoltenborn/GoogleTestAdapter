@@ -123,21 +123,33 @@
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width=".4*"/>
+                    <ColumnDefinition Width=".6*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="0,12,0,0">
-                    <Label x:Name="consumeGTestAsLabel" x:Uid="consumeGTestAsLabel" Content="{x:Static resx:Resources.ConsumeAs}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="consumeGTestAsLabel" x:Uid="consumeGTestAsLabel" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.ConsumeAs}"/>
+                    </Label>
                     <StackPanel Margin="12,0,0,0">
-                        <RadioButton x:Name="staticLibRadioButton" x:Uid="staticLibRadioButton" Content="{x:Static resx:Resources.StaticLib}" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7"/>
-                        <RadioButton x:Name="dynamicLibRadioButton" x:Uid="dynamicLibRadioButton" Content="{x:Static resx:Resources.DynamicLib}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="staticLibRadioButton" x:Uid="staticLibRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.StaticLib}"/>
+                        </RadioButton>
+                        <RadioButton x:Name="dynamicLibRadioButton" x:Uid="dynamicLibRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.DynamicLib}"/>
+                        </RadioButton>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="24,12,0,0">
-                    <Label x:Name="runtimeLibrariesLabel" x:Uid="runtimeLibrariesLabel" Content="{x:Static resx:Resources.RuntimeLibs}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="runtimeLibrariesLabel" x:Uid="runtimeLibrariesLabel" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.RuntimeLibs}"/>
+                    </Label>
                     <StackPanel Margin="12,0,0,0">
-                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" Content="{x:Static resx:Resources.LinkDynamic}" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Width="203" Margin="0,0,0,7"/>
-                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" Content="{x:Static resx:Resources.LinkStatic}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.LinkDynamic}"/>
+                        </RadioButton>
+                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.LinkStatic}"/>
+                        </RadioButton>
                     </StackPanel>
                 </StackPanel>
             </Grid>
