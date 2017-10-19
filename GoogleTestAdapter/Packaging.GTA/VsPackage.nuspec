@@ -10,8 +10,8 @@
     <summary>Supports running Google Test C++ tests within Visual Studio. Limited functionality compared to installation via VS Marketplace.</summary>
     <language>en-US</language>
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Packaging.GTA/Resources/gtest-logo.png</iconUrl>
-    <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Packaging.GTA/LICENSE.txt</licenseUrl>
+    <iconUrl>https://github.com/csoltenborn/GoogleTestAdapter/raw/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/Resources/gtest-logo.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>true</developmentDependency>
     <copyright>Copyright 2015, 2016, 2017 Christian Soltenborn</copyright>

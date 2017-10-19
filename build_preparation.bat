@@ -1,4 +1,5 @@
 @echo off
+setlocal
  
 set VS_LOCATION=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community
 set DIA_SDK="%VS_LOCATION%\DIA SDK\bin"
