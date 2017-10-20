@@ -1,0 +1,29 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="GtaTestDurations" type="GtaTestDurationsType" />
+
+  <xsd:complexType name="GtaTestDurationsType">
+    <xsd:all>
+      <xsd:element name="Executable"                   type="xsd:string" />
+      <xsd:element name="TestDurations"  minOccurs="0" type="TestDurationsType"  />
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="TestDurationsType">
+    <xsd:sequence>
+      <xsd:element name="TestDuration" minOccurs="0" maxOccurs="unbounded" type="TestDurationType" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="TestDurationType">
+    <xsd:attribute name="Test" type="xsd:string" />
+    <xsd:attribute name="Duration">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:int">
+          <xsd:minInclusive value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+
+</xsd:schema>

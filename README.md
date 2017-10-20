@@ -39,14 +39,14 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.11.1-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.12.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download at GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
 Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
-* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.11.1/GoogleTestAdapter-0.11.1.vsix)
+* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.12.0/GoogleTestAdapter-0.12.0.vsix)
 * Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
@@ -162,11 +162,13 @@ Please refer to our [wiki](https://github.com/csoltenborn/GoogleTestAdapter/wiki
 
 #### People
 
-Google Test Adapter is written and maintained by [Christian Soltenborn](https://github.com/csoltenborn) (main author) and [Jonas Gefele](https://github.com/jgefele) (regular contributor).
+Google Test Adapter is written and maintained by [Christian Soltenborn](https://github.com/csoltenborn). 
 
 The first version of GTA was a slightly enhanced C# port of the F# [Google Test Runner](https://github.com/markusl/GoogleTestRunner), written by [Markus Lindqvist](https://github.com/markusl). We have also learned a lot from the JavaScript test runner [Chutzpah](https://github.com/mmanela/chutzpah), written by [Matthew Manela](https://github.com/mmanela).
 
-GTA has benefited from all kinds of contributions, be it feature requests, bug reports, code snippets, testing of new features and bugfixes, or even pull requests. Most (hopefully all) contributors are mentioned in the according [release notes](https://github.com/csoltenborn/GoogleTestAdapter/releases).
+GTA has benefited from all kinds of contributions, be it feature requests, bug reports, code snippets, testing of new features and bugfixes, or even pull requests: 
+* [Jonas Gefele](https://github.com/jgefele) has been a regular and significant contributor up to version 0.10.1 (with more to come in the future, as I hope :-))
+* Most (hopefully all) other contributors are mentioned in the according [release notes](https://github.com/csoltenborn/GoogleTestAdapter/releases).
 
 
 #### Tools
@@ -178,6 +180,4 @@ GTA has benefited from all kinds of contributions, be it feature requests, bug r
 * [Codecov](https://codecov.io/) - code coverage visualization facilities
   * thanks for providing free services for open source projects!
 * [CommonMark.NET](https://github.com/Knagis/CommonMark.NET) - open source Markdown to HTML converter
-* [NRegFreeCom](https://github.com/OpenSharp/NRegFreeCom) - open source library for accessing unregistered COM objects
-* [NamedPipeWrapper](https://github.com/acdvorak/named-pipe-wrapper) - open source library for easily working with Named Pipes
 * [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage

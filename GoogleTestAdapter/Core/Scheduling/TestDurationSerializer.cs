@@ -1,11 +1,16 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.Scheduling
 {
@@ -35,6 +40,17 @@ namespace GoogleTestAdapter.Scheduling
         public int Duration { get; set; }
     }
 
+
+    [Serializable]
+    public class InvalidTestDurationsException : Exception
+    {
+        public InvalidTestDurationsException() { }
+        public InvalidTestDurationsException(string message) : base(message) { }
+        public InvalidTestDurationsException(string message, Exception inner) : base(message, inner) { }
+        protected InvalidTestDurationsException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
 
     public class TestDurationSerializer
     {
@@ -97,7 +113,18 @@ namespace GoogleTestAdapter.Scheduling
         private void UpdateTestDurations(string executable, List<TestResult> testresults)
         {
             string durationsFile = GetDurationsFile(executable);
-            GtaTestDurations container = File.Exists(durationsFile) ? LoadTestDurations(durationsFile) : new GtaTestDurations();
+            GtaTestDurations container = null;
+            if (File.Exists(durationsFile))
+            {
+                try
+                {
+                    container = LoadTestDurations(durationsFile);
+                }
+                catch
+                { }
+            }
+            if (container == null)
+                container = new GtaTestDurations();
             container.Executable = Path.GetFullPath(executable);
 
             IDictionary<string, TestDuration> durations = container.TestDurations.ToDictionary(x => x.Test, x => x);
@@ -116,9 +143,28 @@ namespace GoogleTestAdapter.Scheduling
 
         private GtaTestDurations LoadTestDurations(string durationsFile)
         {
-            using (var fileStream = new FileStream(durationsFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var schemaSet = new XmlSchemaSet();
+            var schemaStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GtaTestDurations.xsd");
+            var schemaSettings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+            schemaSettings.XmlResolver = null;
+            schemaSet.Add(null, XmlReader.Create(schemaStream, schemaSettings));
+
+            var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+            settings.Schemas = schemaSet;
+            settings.ValidationType = ValidationType.Schema;
+            settings.ValidationFlags = XmlSchemaValidationFlags.ReportValidationWarnings;
+            settings.XmlResolver = null;
+            settings.ValidationEventHandler += (object o, ValidationEventArgs e) => throw e.Exception;
+            using (var reader = XmlReader.Create(durationsFile, settings))
             {
-                return _serializer.Deserialize(fileStream) as GtaTestDurations;
+                try
+                {
+                    return _serializer.Deserialize(reader) as GtaTestDurations;
+                }
+                catch (InvalidOperationException e) when (e.InnerException is XmlSchemaValidationException)
+                {
+                    throw new InvalidTestDurationsException($"Invalid file {durationsFile}. {e.InnerException.Message}", e.InnerException);
+                }
             }
         }
 

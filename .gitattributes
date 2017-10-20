@@ -61,3 +61,17 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# Disable merging files for GTA<->TAfGT integrations.
+###############################################################################
+CONTRIBUTING.md          merge=ours
+LICENSE.md               merge=ours
+TestAdapterFlavor.props  merge=ours
+ThirdPartyNotices.txt    merge=ours
+
+###############################################################################
+# Make sure T4 scripts are always checked out with Windows line endings.
+# See https://stackoverflow.com/questions/10478763/t4-templates-avoid-empty-lines-from-included-files
+###############################################################################
+*.tt text eol=crlf

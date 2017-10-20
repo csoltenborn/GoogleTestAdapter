@@ -1,6 +1,8 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using Microsoft.Dia;
+using System;
 using System.IO;
-using Dia;
 
 namespace GoogleTestAdapter.DiaResolver
 {

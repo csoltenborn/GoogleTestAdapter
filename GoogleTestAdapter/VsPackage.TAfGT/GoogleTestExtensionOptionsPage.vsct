@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidGoogleTestExtensionOptionsPage">
+    <Menus>
+      <Menu guid="guidGoogleTestExtensionOptionsPageCmdSet" id="Toolbar" type="Toolbar">
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <ButtonText>Test Adapter for Google Test</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" priority="0x0000">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="Toolbar"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+
+      <Button guid="guidGoogleTestExtensionOptionsPageCmdSet" id="SwitchCatchExceptionsOptionCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" />
+        <Icon guid="toolbaricons" id="catch_exceptions" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Catch exceptions</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidGoogleTestExtensionOptionsPageCmdSet" id="SwitchBreakOnFailureOptionCommandId" priority="0x0101" type="Button">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" />
+        <Icon guid="toolbaricons" id="break_on_failure" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Break on failure</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidGoogleTestExtensionOptionsPageCmdSet" id="SwitchParallelExecutionOptionCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" />
+        <Icon guid="toolbaricons" id="parallel_test_execution" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Parallel test execution</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidGoogleTestExtensionOptionsPageCmdSet" id="SwitchPrintTestOutputOptionCommandId" priority="0x0104" type="Button">
+        <Parent guid="guidGoogleTestExtensionOptionsPageCmdSet" id="ToolbarGroup" />
+        <Icon guid="toolbaricons" id="print_test_output" />
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Print test output</ButtonText>
+        </Strings>
+      </Button>
+
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="toolbaricons" href="..\Resources\Icons\toolbaricons.png" 
+              usedList="catch_exceptions, parallel_test_execution, break_on_failure, print_test_output"/>
+    </Bitmaps>
+  </Commands>
+
+  <VisibilityConstraints>
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchCatchExceptionsOptionCommandId"
+          context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchCatchExceptionsOptionCommandId"
+          context="UICONTEXT_SolutionHasMultipleProjects" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchBreakOnFailureOptionCommandId"
+          context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchBreakOnFailureOptionCommandId"
+          context="UICONTEXT_SolutionHasMultipleProjects" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchParallelExecutionOptionCommandId"
+          context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchParallelExecutionOptionCommandId"
+          context="UICONTEXT_SolutionHasMultipleProjects" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchPrintTestOutputOptionCommandId"
+          context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidGoogleTestExtensionOptionsPageCmdSet"
+          id="SwitchPrintTestOutputOptionCommandId"
+          context="UICONTEXT_SolutionHasMultipleProjects" />
+  </VisibilityConstraints>
+
+  <Symbols>
+    <GuidSymbol name="guidGoogleTestExtensionOptionsPage" value="{e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e}" />
+
+    <GuidSymbol name="guidGoogleTestExtensionOptionsPageCmdSet" value="{e0d9835f-9c16-4d27-a9ad-4df7568650f7}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="SwitchCatchExceptionsOptionCommandId" value="0x0100" />
+      <IDSymbol name="SwitchBreakOnFailureOptionCommandId" value="0x0101" />
+      <IDSymbol name="SwitchParallelExecutionOptionCommandId" value="0x0102" />
+      <IDSymbol name="SwitchPrintTestOutputOptionCommandId" value="0x0103" />
+      <IDSymbol name="Toolbar" value="0x1000" />
+      <IDSymbol name="ToolbarGroup" value="0x1050" />
+    </GuidSymbol>
+
+    <GuidSymbol name="toolbaricons" value="{bbf62e40-ec35-4371-bd35-abcc599796ca}" >
+      <IDSymbol name="catch_exceptions" value="1" />
+      <IDSymbol name="parallel_test_execution" value="2" />
+      <IDSymbol name="break_on_failure" value="3" />
+      <IDSymbol name="print_test_output" value="4" />
+    </GuidSymbol>
+
+  </Symbols>
+</CommandTable>

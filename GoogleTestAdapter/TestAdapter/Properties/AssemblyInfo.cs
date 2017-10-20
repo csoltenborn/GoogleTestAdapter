@@ -1,4 +1,6 @@
-﻿using System.Resources;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Resources;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -7,9 +9,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GoogleTestAdapter.GoogleTestAdapter")]
-[assembly: AssemblyDescription("Provides main VS integration of the Google Test Adapter")]
+[assembly: AssemblyDescription("Provides main Visual Studio integration of the Test Adapter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Christian Soltenborn, Jonas Gefele")]
+[assembly: AssemblyCompany("Christian Soltenborn")]
 [assembly: AssemblyProduct("GoogleTestAdapter.GoogleTestAdapter")]
 [assembly: AssemblyCopyright("Copyright © 2015, 2016, 2017")]
 [assembly: AssemblyTrademark("")]
@@ -37,4 +39,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("0.1.0.0")]
 
 [assembly: NeutralResourcesLanguage("en-US")]
-
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]

@@ -57,6 +57,13 @@ namespace GoogleTestAdapter
             return $"{BreakOnFailure}={optionValue}";
         }
 
+        public static void ValidateShuffleTestsSeedValue(int value)
+        {
+            if (value < ShuffleTestsSeedMinValue || value > ShuffleTestsSeedMaxValue)
+                throw new ArgumentOutOfRangeException(nameof(value), value,
+                    $"Expected a number between {ShuffleTestsSeedMinValue} and {ShuffleTestsSeedMaxValue}, inclusive.");
+        }
+
     }
 
 }

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using GoogleTestAdapter.Common;
+using Microsoft.Dia;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
-using Dia;
-using GoogleTestAdapter.Common;
+using System.Linq;
 
 namespace GoogleTestAdapter.DiaResolver
 {
@@ -21,18 +22,28 @@ namespace GoogleTestAdapter.DiaResolver
             return Symbol;
         }
     }
-    
+
     internal sealed class DiaResolver : IDiaResolver
     {
-        private static readonly Guid Dia140Guid = new Guid("e6756135-1e65-4d17-8576-610761398c3c");
-        private const string ManifestFileNameX86 = "GoogleTestAdapter.DiaResolver.x86.manifest";
-        private const string ManifestFileNameX64 = "GoogleTestAdapter.DiaResolver.x64.manifest";
-
         private readonly string _binary;
         private readonly ILogger _logger;
         private readonly Stream _fileStream;
         private readonly IDiaSession _diaSession;
-        private readonly IDiaDataSource _diaDataSource;
+
+        private IDiaDataSource _diaDataSource;
+
+        private bool TryCreateDiaInstance()
+        {
+            try
+            {
+                _diaDataSource = DiaFactory.CreateInstance();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         internal DiaResolver(string binary, string pathExtension, ILogger logger)
         {
@@ -46,16 +57,9 @@ namespace GoogleTestAdapter.DiaResolver
                 return;
             }
 
-            try
+            if (!TryCreateDiaInstance())
             {
-                var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var manifest = IntPtr.Size == 8 ? ManifestFileNameX64 : ManifestFileNameX86;
-                var path = Path.Combine(directory, manifest);
-                _diaDataSource = (IDiaDataSource)NRegFreeCom.ActivationContext.CreateInstanceWithManifest(Dia140Guid, path);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Couldn't load the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.\n{e.Message}");
+                _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
                 return;
             }
 

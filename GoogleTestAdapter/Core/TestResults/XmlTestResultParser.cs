@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -49,18 +51,23 @@ namespace GoogleTestAdapter.TestResults
             var testResults = new List<TestResult>();
             try
             {
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(_xmlResultFile);
-
-                XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
-                foreach (XmlNode testsuiteNode in testsuiteNodes)
+                var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+                settings.XmlResolver = null;
+                using (var reader = XmlReader.Create(_xmlResultFile, settings))
                 {
-                    XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
-                    testResults.AddRange(testcaseNodes
-                                            .AsParallel()
-                                            .Cast<XmlNode>()
-                                            .Select(TryParseTestResult)
-                                            .Where(tr => tr != null));
+                    var xmlDocument = new XmlDocument();
+                    xmlDocument.Load(reader);
+
+                    XmlNodeList testsuiteNodes = xmlDocument.DocumentElement.SelectNodes("/testsuites/testsuite");
+                    foreach (XmlNode testsuiteNode in testsuiteNodes)
+                    {
+                        XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
+                        testResults.AddRange(testcaseNodes
+                                                .AsParallel()
+                                                .Cast<XmlNode>()
+                                                .Select(TryParseTestResult)
+                                                .Where(tr => tr != null));
+                    }
                 }
             }
             catch (XmlException e)

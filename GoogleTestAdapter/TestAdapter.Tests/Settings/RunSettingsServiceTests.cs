@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -73,7 +75,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             AssertContainsSetting(xml, "NrOfTestRepetitions", "1");
             AssertContainsSetting(xml, "MaxNrOfThreads", "3");
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
-            AssertContainsSetting(xml, "TraitsRegexesBefore", "User");
+            AssertContainsSetting(xml, "TraitsRegexesBefore", "User///A,B");
 
             mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Warning), It.Is<string>(s => s.Contains("could not be parsed"))),
                 Times.Exactly(1));
@@ -369,7 +371,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             navigator.MoveToChild(Constants.RunSettingsName, "");
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
 
-            return RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());
+            return RunSettingsContainer.LoadFromXml(navigator);
         }
 
         private RunSettingsContainer SetupSettingsContainer(string solutionWorkingDir, 

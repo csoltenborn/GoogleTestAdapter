@@ -24,6 +24,7 @@ namespace GoogleTestAdapter.Tests.Common
 
         protected void ListTestsOf(string testExecutable, [CallerMemberName] string testCaseName = null)
         {
+            testExecutable = Path.GetFullPath(testExecutable);
             string arguments = GetAdapterIntegration() + @" /ListTests:""" + testExecutable + @"""";
             if (!testExecutable.Contains("_x86") && !testExecutable.Contains("_x64"))
                 arguments += " /Settings:\"\"" + TestResources.UserTestSettingsForListingTests + "\"\"";

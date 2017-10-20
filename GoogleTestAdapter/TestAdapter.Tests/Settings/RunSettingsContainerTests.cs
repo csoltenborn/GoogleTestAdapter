@@ -1,4 +1,6 @@
-﻿using System.Xml;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Xml;
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
@@ -116,7 +118,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             navigator.MoveToChild(Constants.RunSettingsName, "");
             navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
 
-            var runSettingsContainer = RunSettingsContainer.LoadFromXml(navigator.ReadSubtree());
+            var runSettingsContainer = RunSettingsContainer.LoadFromXml(navigator);
 
             runSettingsContainer.Should().NotBeNull();
             runSettingsContainer.SolutionSettings.Should().NotBeNull();
@@ -124,7 +126,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             runSettingsContainer.SolutionSettings.MaxNrOfThreads.Should().Be(3);
             runSettingsContainer.ProjectSettings[0].MaxNrOfThreads.Should().Be(4);
-            runSettingsContainer.SolutionSettings.TraitsRegexesBefore.Should().Be("User");
+            runSettingsContainer.SolutionSettings.TraitsRegexesBefore.Should().Be("User///A,B");
             runSettingsContainer.ProjectSettings[0].TraitsRegexesBefore.Should().BeNull();
         }
 

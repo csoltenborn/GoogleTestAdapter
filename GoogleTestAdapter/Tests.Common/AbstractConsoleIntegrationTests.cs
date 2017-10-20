@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -38,12 +40,12 @@ namespace GoogleTestAdapter.Tests.Common
         {
             string testDll = Assembly.GetExecutingAssembly().Location;
             Assert.IsNotNull(testDll);
-            Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\VsPackage.Tests.*\\bin\\(Debug|Release)\\GoogleTestAdapter.Tests.Common.dll$");
+            Match match = Regex.Match(testDll, @"^(.*)\\GoogleTestAdapter\\(Debug|Release)\\VsPackage.Tests.*\\GoogleTestAdapter.Tests.Common.dll$");
             match.Success.Should().BeTrue();
-            string basePath = match.Groups[1].Value;
+            string binariesPath = match.Groups[1].Value;
             string debugOrRelease = match.Groups[2].Value;
-            testAdapterDir = Path.Combine(basePath, @"GoogleTestAdapter\TestAdapter\bin", debugOrRelease);
-            testSolutionFile = Path.Combine(basePath, @"SampleTests\SampleTests.sln");
+            testAdapterDir = Path.Combine(binariesPath, "GoogleTestAdapter", debugOrRelease, "Packaging.GTA");
+            testSolutionFile = Path.Combine(binariesPath, @"..\..\SampleTests\SampleTests.sln");
         }
 
 
@@ -53,7 +55,7 @@ namespace GoogleTestAdapter.Tests.Common
         {
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().ContainEquivalentOf(@"executor://GoogleTestRunner/v1");
+            output.ToLower().Should().MatchRegex(@"executor:\/\/(testadapterforgoogletest|googletestrunner)\/v1");
         }
 
         [TestMethod]
@@ -62,7 +64,7 @@ namespace GoogleTestAdapter.Tests.Common
         {
             string arguments = CreateListExecutorsArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().Contain(@"executor://GoogleTestRunner/v1");
+            output.Should().MatchRegex(@"executor:\/\/(TestAdapterForGoogleTest|GoogleTestRunner)\/v1");
         }
 
         [TestMethod]
@@ -121,7 +123,7 @@ namespace GoogleTestAdapter.Tests.Common
             }
             else
             {
-                // workaround for build server - wtf?
+                // workaround for build server
                 coveragePattern = @"Attachments:\n.*\.coverage\n";
                 if (Regex.IsMatch(resultString, coveragePattern))
                 {

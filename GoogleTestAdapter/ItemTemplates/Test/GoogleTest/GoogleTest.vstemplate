@@ -1,0 +1,16 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <Name>Google Test</Name>
+    <Description>A Google Test based unit test.</Description>
+    <ProjectType>VC</ProjectType>
+    <TemplateID>Microsoft.VisualC.Item.GoogleTest</TemplateID>
+    <SortOrder>10</SortOrder>
+    <DefaultName>Test.cpp</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <Icon>Icon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <References />
+    <ProjectItem TargetFileName="$fileinputname$.cpp" >test.cpp</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

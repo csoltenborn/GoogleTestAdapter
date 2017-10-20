@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)..\, Common.props))\Common.props" />
+    <PropertyGroup>
+
+        <PlatformSuffix Condition="'$(Platform)' == 'Win32'" />
+        <PlatformSuffix Condition="'$(Platform)' != 'Win32'">-$(Platform)</PlatformSuffix>
+
+        <!-- All test binaries should be placed in the same directory -->
+        <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)$(PlatformSuffix)\</OutDir>
+        <OutputPath>$(OutDir)</OutputPath>
+
+    </PropertyGroup>
+</Project>

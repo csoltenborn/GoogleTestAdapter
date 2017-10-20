@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TextTemplating\Microsoft.TextTemplating.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
+  <ItemGroup>
+    <Content Include="GoogleTestAdapter\Core.Tests\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\DiaResolver.Tests\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\TestAdapter\packages.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>packages.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\TestAdapter\TestExecutorBranding.cs.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>TestExecutorBranding.cs</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\TestAdapter.Tests\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\TestAdapter.Tests\packages.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>packages.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\Tests.Common\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\VsPackage.GTA.Tests.Unit\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\VsPackage.Tests\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\VsPackage.Tests\packages.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>packages.config</OutputFileName>
+    </Content>
+    <Content Include="GoogleTestAdapter\VsPackage.Tests.Generated\app.config.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <OutputFileName>app.config</OutputFileName>
+    </Content>
+    <!-- Pass-through parameters for T4. -->
+    <T4ParameterValues Include="TestAdapterFlavor"><Value>$(TestAdapterFlavor)</Value></T4ParameterValues>
+  </ItemGroup>
+  <Target Name="Build" DependsOnTargets="TransformAll" />
+</Project>

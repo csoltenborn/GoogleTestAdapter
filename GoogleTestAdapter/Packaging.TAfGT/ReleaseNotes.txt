@@ -1,0 +1,44 @@
+The Test Adapter for Google Test is a port by Microsoft of the existing Google Test Adapter Visual Studio extension by Christian Soltenborn and Jonas Gefele. The adapter automatically discovers unit tests and enables IDE tools to run and manage the tests, see test execution results, and for Visual Studio Enterprise users, check code coverage. Full release notes of the original adapter can be found here: https://github.com/csoltenborn/GoogleTestAdapter/releases
+
+This adapter is compatible with Visual Studio 2017 only. For earlier versions of Visual Studio, please download the original adapter here: https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter
+
+=== v0.10.1.0 ===
+  - enhancement: a Visual Studio bug results in wrong behavior for Repeat Last Run (Ctrl+R, L): Visual Studio does not respect changes to the available tests since the last run. Tests which do not exist any more as well as test results for tests not known by Visual Studio are now ignored and produce a warning in debug mode. Note that Visual Studio still might run other tests than expected by the user - see issue for examples
+  - enhancement: runtime for test discovery was substantially improved
+  - bugfix: solution settings were overridden by project settings in case of NuGet and VsTestConsole execution
+  - bugfix: occasional exceptions caused by missing synchronization when performing test discovery in parallel
+  - bugfix: NuGet package had installation issue (thanks to JackGrinningCat for report, idea for fix, and testing)
+  - bugfix: test duration could not be parsed for some locales
+
+=== v0.10.0.0 ===
+  - enhancement: support for Google Test V1.8.0
+  - enhancement: file Foo.exe is recognized as test executable if a file Foo.exe.is_google_test exists (no need to configure custom regex)
+  - enhancement: test discovery is assumed to hang if it hasn't finished within n seconds; n can be configured via the Test discovery timeout option and defaults to 30s
+  - enhancement: test discovery is now performed in parallel and should thus be slightly faster for solutions with several test projects
+  - enhancement: test case information is now re-used when a selection of tests is executed, slightly speeding up the start of the tests
+  - bugfix: standard output produced by a test executable before a test's first assertion was lost
+  - bugfix: on isolated installations of Visual Studio 2017 (i.e., no parallel installation of older Visual Studio versions on the same machine), no source locations were found (thanks to Farwaykorse for report and testing)
+  - bugfix: on isolated installations of Visual Studio 2017, tests could not be debugged (thanks to ninjaCoder for report and testing)
+  - maintenance: all executables used by the automatic tests are now built from source
+  - maintenance: solution can be built with Visual Studio 2015 and Visual Studio 2017 to ease contributions
+
+=== v0.9.1.0 ===
+  - Added new project template for Google Test.
+  - Now ships with NuGet packages of the Google Test framework. To set up the framework easily, create a new Google Test project, or manually reference one of the NuGet packages. Also works with existing copies of the Google Test Framework (v1.8.0) that may already be supplied to existing Visual Studio projects.
+  - Added new item template for Google Test.
+  - Adapter now works for standalone Visual Studio 2017 instances.
+  - Other minor bug fixes.
+
+=== Earlier Versions ===
+See: https://github.com/csoltenborn/GoogleTestAdapter/releases
+
+=== Known Issues ===
+  - Adapter currently only supports Windows desktop applications.
+  - Adapter does not work in Open Folder mode (including for CMake projects).
+  - Visual Studio ships with a feature called debug:fastlink that is on by default to improve compilation times. This feature is currently unsupported with the Test Adapter for Google Test. You can disable fastlink by doing the following:
+    1. Right-click the project you want to test, choose Properties
+    2. Go to Linker > Debugging > Generate Debug Info
+    3. Change the value to /DEBUG:FULL
+  - Selecting the "Run tests after build" option does not or not always result in the tests being run after build completion. Instead, the following error message is printed to the test console: "The specified type member 'Stale' is not supported in LINQ to Entities. Only initializers, entity members, and entity navigation properties are supported."
+
+Please report any bugs or feature requests for this adapter on the issue tracker or on Visual Studio Developer Community: https://developercommunity.visualstudio.com

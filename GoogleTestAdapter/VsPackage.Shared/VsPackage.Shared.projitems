@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ac75f34e-190b-402a-8c46-91b0fa02450f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>VsPackage.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\AbstractSwitchBooleanOptionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchBreakOnFailureOptionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchCatchExceptionsOptionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchParallelExecutionOptionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchPrintTestOutputOptionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\DebuggerAttacherService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Debugging\VsDebuggerAttacher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GoogleTestExtensionOptionsPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ActivityLogLogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IGoogleTestExtensionOptionsPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\GoogleTestOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\GeneralOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\NotifyingDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\ParallelizationOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)..\Resources\Icons\Icon.ico" />
+    <Content Include="$(MSBuildThisFileDirectory)..\Resources\Icons\toolbaricons.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Screenshot.png" />
+  </ItemGroup>
+</Project>

@@ -1,13 +1,16 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Diagnostics;
-using System.IO;
-using System.Xml.XPath;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using EnvDTE;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
-using EnvDTE;
-using GoogleTestAdapter.Settings;
+using System;
+using System.ComponentModel.Composition;
+using System.Diagnostics;
+using System.IO;
+using System.Xml;
+using System.Xml.XPath;
 using Constants = Microsoft.VisualStudio.TestPlatform.ObjectModel.Constants;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
@@ -41,9 +44,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var settingsContainer = new RunSettingsContainer();
             settingsContainer.SolutionSettings = new RunSettings();
 
-            if (CopyToUnsetValues(runSettingsNavigator, settingsContainer))
+            try
             {
-                runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
+                if (CopyToUnsetValues(runSettingsNavigator, settingsContainer))
+                {
+                    runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
+                }
+            }
+            catch (InvalidRunSettingsException)
+            {
             }
 
             string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
@@ -51,16 +60,21 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             {
                 if (File.Exists(solutionRunSettingsFile))
                 {
-                    var solutionRunSettingsDocument = new XPathDocument(solutionRunSettingsFile);
-                    XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
-                    if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                    var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+                    settings.XmlResolver = null;
+                    using (var reader = XmlReader.Create(solutionRunSettingsFile, settings))
                     {
-                        CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
-                    }
-                    else
-                    {
-                        logger.Log(MessageLevel.Warning, $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
-                    }
+                        var solutionRunSettingsDocument = new XPathDocument(reader);
+                        XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
+                        if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                        {
+                            CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
+                        }
+                        else
+                        {
+                            logger.Log(MessageLevel.Warning, $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
+                        }
+		    }
                 }
             }
             catch (Exception e)
@@ -102,7 +116,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             if (sourceNavigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
             {
-                var sourceRunSettings = RunSettingsContainer.LoadFromXml(sourceNavigator.ReadSubtree());
+                var sourceRunSettings = RunSettingsContainer.LoadFromXml(sourceNavigator);
                 targetSettingsContainer.GetUnsetValuesFrom(sourceRunSettings);
                 return true;
             }
