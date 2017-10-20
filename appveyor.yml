@@ -1,6 +1,5 @@
-version: 0.11.1.{build}
+version: 0.12.0.{build}
 os: 
-- Visual Studio 2015
 - Visual Studio 2017
 configuration: Release
 platform: Any CPU
@@ -16,13 +15,12 @@ install:
         # $blockRdp = $true
         iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
-before_build: 
+before_build:
+- cmd: build_preparation
 - ps: >-
     Start-Process -WorkingDirectory GoogleTestAdapter -FilePath SetVersion.bat -ArgumentList $env:APPVEYOR_BUILD_VERSION
 
     Start-Process -WorkingDirectory GoogleTestAdapter\TestAdapter.Tests -FilePath IgnoreTests.bat -ArgumentList TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
-
-    nuget restore GoogleTestAdapter\GoogleTestAdapter.sln
 build:
   project: GoogleTestAdapter\GoogleTestAdapter.sln
   parallel: true
@@ -31,13 +29,13 @@ after_build:
 - ps: >-
     $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
 
-    $sourceFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\bin\" + $env:CONFIGURATION + "\GoogleTestAdapter.VsPackage.vsix")).ToString()
+    $sourceFile = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA\Packaging.GTA.vsix")).ToString()
 
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
 
     Copy-Item -Path $sourceFile -Destination $targetFile
 
-    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\Resources\ReleaseNotes\" + $version + ".md")).ToString()
+    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage.GTA\Resources\ReleaseNotes\" + $version + ".md")).ToString()
 
     $releaseNotes = ([IO.File]::ReadAllLines($releaseNotesFile) -join '\n')
 
@@ -46,32 +44,32 @@ after_build:
     [IO.File]::WriteAllText("C:\\GTAReleaseNotes.txt", $releaseNotes)
 test_script:
 - ps: >-
-    $opencover = (Resolve-Path "GoogleTestAdapter/packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+    $opencover = (Resolve-Path "NuGetPackages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Unit`" GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Unit_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Unit`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Unit_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" GoogleTestAdapter\DiaResolver.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.DiaResolver.Tests.dll GoogleTestAdapter\Core.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.Core.Tests.dll GoogleTestAdapter\TestAdapter.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.TestAdapter.Tests.dll GoogleTestAdapter\VsPackage.Tests.Unit\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
+    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
 
     if ($LASTEXITCODE -ne 0) {
         $TestExitCode = $LASTEXITCODE
     }
 
-    & VsTest.Console GoogleTestAdapter\VsPackage.Tests\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.dll GoogleTestAdapter\VsPackage.Tests.Generated\bin\$env:CONFIGURATION\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
+    & VsTest.Console out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests\GoogleTestAdapter.VsPackage.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
 
     if ($LASTEXITCODE -ne 0) {
         $TestExitCode = $LASTEXITCODE
     }
 
-    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
-        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
+    if (Test-Path out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors) {
+        7z a TestErrors.zip out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors\*
         Push-AppveyorArtifact TestErrors.zip
     }
 
     if ($TestExitCode -ne 0) {
         $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
-        $sourceFile = (Resolve-Path ("GoogleTestAdapter\VsPackage\bin\" + $env:CONFIGURATION + "\GoogleTestAdapter.VsPackage.vsix")).ToString()
+        $sourceFile = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA\Packaging.GTA.vsix")).ToString()
         $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
         $nugetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter." + $version + ".nupkg"
         Push-AppveyorArtifact $targetFile
@@ -87,9 +85,9 @@ after_test:
 before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
-- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter-*.vsix
+- path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter-*.vsix
   name: VSIX installation package
-- path: GoogleTestAdapter\VsPackage\bin\$(configuration)\GoogleTestAdapter.*.nupkg
+- path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter.*.nupkg
   name: NuGet package
 #- path: OpenCover_Unit_CoverageData.xml
 #  name: OpenCover Unit coverage data
@@ -103,7 +101,6 @@ deploy:
   draft: true
   prerelease: true
   on:
-    appveyor_build_worker_image: Visual Studio 2017
     branch: master
     appveyor_repo_tag: true
 - provider: NuGet
@@ -111,6 +108,5 @@ deploy:
     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
   skip_symbols: true
   on:
-    appveyor_build_worker_image: Visual Studio 2017
     branch: master
     appveyor_repo_tag: true

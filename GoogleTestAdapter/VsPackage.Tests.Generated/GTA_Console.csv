@@ -1,23 +1,23 @@
-TestFile	Settings	TestCaseFilter	EnableCodeCoverage	InIsolation
-SampleTests	SolutionProject	none	true	true
-SampleTests	true	Type=Small	false	false
-SampleTests	false	*NotExisting=Foo	true	false
-SampleTests	false	DisplayName=TestMath.AddPassesWithTraits	false	true
-HardCrashingSampleTests	false	none	false	false
-SampleTests	true	DisplayName=TestMath.AddPassesWithTraits	true	false
-SampleTests	true	TestCategory=NotExisting	false	true
-SampleTests	false	Type=Small	true	true
-SampleTests	false	DisplayName=TestMath.AddPassesWithTraits|Type=Small	true	true
-SampleTests	true	TestCategory=Unit&Type=Medium	false	true
-SampleTests	false	TestCategory=Unit&Type=Medium	true	false
-SampleTests	false	TestCategory=NotExisting	true	false
-HardCrashingSampleTests	true	none	true	true
-SampleTests	true	DisplayName=TestMath.AddPassesWithTraits|Type=Small	false	false
-SampleTests	Solution	*NotExisting=Foo	false	true
-SampleTests170	true	DisplayName=TestMath.AddPassesWithTraits|Type=Small	false	false
-SampleTests170	SolutionProject	none	true	true
-SampleTests170	false	TestCategory=NotExisting	true	true
-SampleTests170	true	Type=Small	true	false
-SampleTests170	true	TestCategory=Unit&Type=Medium	false	true
-SampleTests170	Solution	*NotExisting=Foo	false	false
-SampleTests170	true	DisplayName=TestMath.AddPassesWithTraits	false	true
+TestFile	Settings	TestCaseFilter	EnableCodeCoverage	InIsolation	Ignore
+SampleTests	SolutionProject	none	true	true	false
+SampleTests	true	Type=Small	false	false	false
+SampleTests	false	*NotExisting=Foo	true	false	false
+SampleTests	false	DisplayName=TestMath.AddPassesWithTraits	false	true	false
+HardCrashingSampleTests	false	none	false	false	false
+SampleTests	true	DisplayName=TestMath.AddPassesWithTraits	true	false	false
+SampleTests	true	TestCategory=NotExisting	false	true	false
+SampleTests	false	Type=Small	true	true	false
+SampleTests	false	DisplayName=TestMath.AddPassesWithTraits|Type=Small	true	true	false
+SampleTests	true	TestCategory=Unit&Type=Medium	false	true	false
+SampleTests	false	TestCategory=Unit&Type=Medium	true	false	false
+SampleTests	false	TestCategory=NotExisting	true	false	false
+HardCrashingSampleTests	true	none	true	true	false
+SampleTests	true	DisplayName=TestMath.AddPassesWithTraits|Type=Small	false	false	false
+SampleTests	Solution	*NotExisting=Foo	false	true	false
+SampleTests170	true	DisplayName=TestMath.AddPassesWithTraits|Type=Small	false	false	false
+SampleTests170	SolutionProject	none	true	true	false
+SampleTests170	false	TestCategory=NotExisting	true	true	false
+SampleTests170	true	Type=Small	true	false	false
+SampleTests170	true	TestCategory=Unit&Type=Medium	false	true	false
+SampleTests170	Solution	*NotExisting=Foo	false	false	false
+SampleTests170	true	DisplayName=TestMath.AddPassesWithTraits	false	true	false

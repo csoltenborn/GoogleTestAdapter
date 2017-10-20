@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.Composition;
-using System.Xml;
+﻿// This file has been modified by Microsoft on 6/2017.
+
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
+using System.ComponentModel.Composition;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
@@ -15,7 +18,17 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         public void Load(XmlReader reader)
         {
-            SettingsContainer = RunSettingsContainer.LoadFromXml(reader);
+            var document = new XPathDocument(reader);
+            var navigator = document.CreateNavigator();
+            RunSettingsContainer container = null;
+            try
+            {
+                if (navigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
+                    container = RunSettingsContainer.LoadFromXml(navigator);
+            }
+            catch (InvalidRunSettingsException)
+            { }
+            SettingsContainer = container ?? new RunSettingsContainer();
         }
 
     }

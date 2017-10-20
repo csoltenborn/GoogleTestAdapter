@@ -14,6 +14,7 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
+out/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -92,8 +93,7 @@ publish/
 *.Publish.xml
 
 # NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-#packages/
+NuGetPackages/
 
 # Windows Azure Build Output
 csx

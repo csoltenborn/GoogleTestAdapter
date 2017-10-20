@@ -1,7 +1,10 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
@@ -44,7 +47,7 @@ namespace GoogleTestAdapter
                 {
                     _settings.ExecuteWithSettingsForExecutable(executable, () =>
                     {
-                        if (IsGoogleTestExecutable(executable, _settings.TestDiscoveryRegex, _logger))
+                        if (VerifyExecutableTrust(executable, _logger) && IsGoogleTestExecutable(executable, _settings.TestDiscoveryRegex, _logger))
                         {
                             IList<TestCase> testCases = GetTestsFromExecutable(executable);
                             reporter.ReportTestsFound(testCases);
@@ -58,7 +61,7 @@ namespace GoogleTestAdapter
         {
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
-                if (!IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
+                if (!VerifyExecutableTrust(executable, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
                     return;
 
                 int nrOfTestCases = 0;
@@ -135,6 +138,17 @@ namespace GoogleTestAdapter
                 logger.LogError($"Regex '{regex}' timed out: {e.Message}");
             }
             return matches;
+        }
+
+        public static bool VerifyExecutableTrust(string executable, ILogger logger)
+        {
+            var zone = Zone.CreateFromUrl(executable);
+            if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
+            {
+                logger.LogError("Executable " + executable + " came from another computer and was blocked to help protect this computer.");
+                return false;
+            }
+            return true;
         }
 
     }

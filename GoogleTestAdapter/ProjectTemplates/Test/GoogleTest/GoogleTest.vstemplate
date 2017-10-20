@@ -1,0 +1,32 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>Google Test</Name>
+    <Description>A Google Test based unit testing project.</Description>
+    <ProjectType>VC</ProjectType>
+    <TemplateID>Microsoft.VisualC.Project.GoogleTest</TemplateID>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <CreateInPlace>true</CreateInPlace>
+    <DefaultName>Sample-Test</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>Icon.ico</Icon>
+  </TemplateData>
+  <TemplateContent PreferedSolutionConfiguration="Debug|Win32">
+    <Project TargetFileName="$projectname$.vcxproj" File="GoogleTest.vcxproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="test.cpp" OpenInEditor="true">test.cpp</ProjectItem>
+      <ProjectItem TargetFileName="pch.cpp">pch.cpp</ProjectItem>
+      <ProjectItem TargetFileName="pch.h">pch.h</ProjectItem>
+    </Project>
+  </TemplateContent>
+  <WizardExtension>
+    <Assembly>NewProjectWizard, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1924acebdd4c8a75</Assembly>
+    <FullClassName>Microsoft.NewProjectWizard.WizardImplementation</FullClassName>
+  </WizardExtension>
+  <WizardData>
+    <packages repository="extension" repositoryId="GoogleTestAdapterVSIX.8486b54e-5768-482b-b224-7d069ca509d8">
+      <package id="$nugetpackage$" version="1.8.0" />
+    </packages>
+  </WizardData>
+</VSTemplate>

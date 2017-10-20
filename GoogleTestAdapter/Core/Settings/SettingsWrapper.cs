@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -129,7 +131,7 @@ namespace GoogleTestAdapter.Settings
 
             if (_currentThread != Thread.CurrentThread)
                 throw new InvalidOperationException(
-                    $"SettingsWrapper is already running with settings for an executable withing thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
+                    $"SettingsWrapper is already running with settings for an executable on thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
 
             if (executable != _currentExecutable)
                 throw new InvalidOperationException(
@@ -195,8 +197,6 @@ namespace GoogleTestAdapter.Settings
                 .Replace(ExecutablePlaceholder, executable);
         }
 
-
-        public const string OptionsCategoryName = "Google Test Adapter";
 
         public const string CategoryTestExecutionName = "Test execution";
         public const string CategoryTraitsName = "Regexes for trait assignment";
@@ -500,7 +500,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
         public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
-        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<n<"
+        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<=n<="
                                                            + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
                                                            + ": The given seed is used. See note of option '"
                                                            + OptionShuffleTests

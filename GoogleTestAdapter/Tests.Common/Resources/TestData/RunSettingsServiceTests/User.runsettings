@@ -6,7 +6,7 @@
         <ShuffleTests>true</ShuffleTests>
         <MaxNrOfThreads>3</MaxNrOfThreads>
         <ShuffleTestsSeed>3</ShuffleTestsSeed>
-        <TraitsRegexesBefore>User</TraitsRegexesBefore>
+        <TraitsRegexesBefore>User///A,B</TraitsRegexesBefore>
       </Settings>
     </SolutionSettings>
     <ProjectSettings>

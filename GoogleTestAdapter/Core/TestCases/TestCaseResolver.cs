@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,10 +26,9 @@ namespace GoogleTestAdapter.TestCases
             _logger = logger;
         }
 
-        internal List<TestCaseLocation> ResolveAllTestCases(string executable, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+        internal Dictionary<string, TestCaseLocation> ResolveAllTestCases(string executable, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            List<TestCaseLocation> testCaseLocationsFound =
-                FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension).ToList();
+            var testCaseLocationsFound = FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension);
 
             if (testCaseLocationsFound.Count == 0)
             {
@@ -41,7 +42,10 @@ namespace GoogleTestAdapter.TestCases
                     string importedBinary = Path.Combine(moduleDirectory, import);
                     if (File.Exists(importedBinary))
                     {
-                        testCaseLocationsFound.AddRange(FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension));
+                        foreach (var testCaseLocation in FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension))
+                        {
+                            testCaseLocationsFound.Add(testCaseLocation.Key, testCaseLocation.Value);
+                        }
                     }
                 }
             }
@@ -49,8 +53,8 @@ namespace GoogleTestAdapter.TestCases
         }
 
 
-        private IEnumerable<TestCaseLocation> FindTestCaseLocationsInBinary(
-            string binary, List<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+        private Dictionary<string, TestCaseLocation> FindTestCaseLocationsInBinary(
+            string binary, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
             using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _logger))
             {
@@ -61,14 +65,14 @@ namespace GoogleTestAdapter.TestCases
                     _logger.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
                     return allTestMethodSymbols
-                        .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, tms))) // Contains() instead of == because nsfl might contain namespace
+                        .Where(nsfl => testMethodSignatures.Contains(TestCaseFactory.StripTestSymbolNamespace(nsfl.Symbol)))
                         .Select(nsfl => ToTestCaseLocation(nsfl, allTraitSymbols))
-                        .ToList(); // we need to force immediate query execution, otherwise our session object will already be released
+                        .ToDictionary(nsfl => TestCaseFactory.StripTestSymbolNamespace(nsfl.Symbol));
                 }
                 catch (Exception e)
                 {
                     _logger.DebugError($"Exception while resolving test locations and traits in {binary}\n{e}");
-                    return new TestCaseLocation[0];
+                    return new Dictionary<string, TestCaseLocation>();
                 }
             }
         }

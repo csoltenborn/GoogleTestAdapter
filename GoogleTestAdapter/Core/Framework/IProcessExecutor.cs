@@ -1,4 +1,7 @@
+// This file has been modified by Microsoft on 6/2017.
+
 using System;
+using System.IO;
 
 namespace GoogleTestAdapter.Framework
 {
@@ -14,7 +17,13 @@ namespace GoogleTestAdapter.Framework
     {
         public static int ExecuteBatchFileBlocking(this IProcessExecutor executor, string batchFile, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
         {
-            return executor.ExecuteCommandBlocking($"cmd.exe /C {batchFile}", parameters, workingDir, pathExtension,
+            if (!File.Exists(batchFile))
+            {
+                throw new FileNotFoundException("File not found", batchFile);
+            }
+
+            string command = Path.Combine(Environment.SystemDirectory, "cmd.exe");
+            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, pathExtension,
                 reportOutputLine);
         }
     }

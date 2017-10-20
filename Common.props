@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildThisFileDirectory)\TestAdapterFlavor.props" />
+    <PropertyGroup>
+        <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
+        <NuGetPackages>$(EnlistmentRoot)NuGetPackages\</NuGetPackages>
+
+        <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+        <OutputPath>$(OutDir)</OutputPath>
+
+        <IntDir>$(EnlistmentRoot)out\intermediate\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+        <IntermediateOutputPath>$(IntDir)</IntermediateOutputPath>
+        <BaseIntermediateOutputPath>$(IntDir)</BaseIntermediateOutputPath>
+    </PropertyGroup>
+
+    <!-- Commonly used test adapter-flavored properties. -->
+    <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'GTA'">
+        <FlavoredTargetFrameworkVersion>v4.5</FlavoredTargetFrameworkVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'TAfGT'">
+        <FlavoredTargetFrameworkVersion>v4.6</FlavoredTargetFrameworkVersion>
+    </PropertyGroup>
+</Project>

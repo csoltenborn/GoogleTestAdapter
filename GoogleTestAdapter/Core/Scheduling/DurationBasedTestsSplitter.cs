@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
@@ -38,7 +40,7 @@ namespace GoogleTestAdapter.Scheduling
                     sortedTestcases.RemoveAt(0);
                     currentList.Add(testcase);
                     currentDuration += _testcaseDurations[testcase];
-                } while (sortedTestcases.Count > 0 && currentDuration + _testcaseDurations[sortedTestcases[0]] <= targetDuration);
+                } while (sortedTestcases.Count > 0 && currentDuration <= targetDuration - _testcaseDurations[sortedTestcases[0]]);
 
                 splitTestcases.Add(currentList);
                 currentList = new List<TestCase>();

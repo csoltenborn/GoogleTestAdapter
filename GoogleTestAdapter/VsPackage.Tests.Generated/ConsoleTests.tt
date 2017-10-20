@@ -1,6 +1,6 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(SolutionDir)Tests.Common\bin\$(ConfigurationName)\GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="GoogleTestAdapter.Tests.Common.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
@@ -23,11 +23,15 @@ namespace GoogleTestAdapter.VsPackage
 	{
 		<#
 		List<Line> lines = reader.GetObjects();
-		IDictionary<string, string> executables = new Dictionary<string, string>();
+		IDictionary<string, Executable> executables = new Dictionary<string, Executable>();
 		foreach (Line line in lines)
 		{
 			if (!executables.ContainsKey(line.TestFile))
-				executables.Add(line.TestFile, line.ActualTestFile);
+				executables.Add(line.TestFile, new Executable
+                {
+                    ActualTestFile = line.ActualTestFile,
+                    Ignore = line.Ignore
+                });
 		#>
 
 		[TestMethod]
@@ -41,11 +45,11 @@ namespace GoogleTestAdapter.VsPackage
 		<# } #>
 		<# foreach (string executable in executables.Keys) { #>
 
-		[TestMethod]
+		[TestMethod <#= executables[executable].Ignore ? ", Ignore" : "" #>]
         [TestCategory(EndToEnd)]
 		public void List_TestsOf_<#= executable #>()
 		{
-			ListTestsOf(@"<#= executables[executable] #>");
+			ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
 		}
 		<# } #>
 
@@ -64,6 +68,7 @@ namespace GoogleTestAdapter.VsPackage
 		internal string TestCaseFilter;
 		internal bool EnableCodeCoverage;
 		internal bool InIsolation;
+		internal bool Ignore;
 
 		internal string MethodName
 		{
@@ -110,7 +115,13 @@ namespace GoogleTestAdapter.VsPackage
 			}
 		}
     }
-	
+
+    struct Executable
+    {
+        internal string ActualTestFile;
+        internal bool Ignore;
+    }
+
     class TestcaseCsvReader : CsvReader<Line>
     {
         internal TestcaseCsvReader(string csvFile) : base(csvFile, '\t', true) { }
@@ -125,7 +136,8 @@ namespace GoogleTestAdapter.VsPackage
                 ActualSettingsFile = GetActualSettingsFile(columns[1]),
                 TestCaseFilter = columns[2],
                 EnableCodeCoverage = bool.Parse(columns[3]),
-                InIsolation = bool.Parse(columns[4])
+                InIsolation = bool.Parse(columns[4]),
+                Ignore = bool.Parse(columns[5])
             };
         }
 

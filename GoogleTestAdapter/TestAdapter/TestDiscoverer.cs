@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 7/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
@@ -44,7 +46,7 @@ namespace GoogleTestAdapter.TestAdapter
                 return;
             CommonFunctions.LogVisualStudioVersion(_logger);
 
-            _logger.LogInfo("Google Test Adapter: Test discovery starting...");
+            _logger.LogInfo(Strings.Instance.TestDiscoveryStarting);
             _logger.DebugInfo($"Solution settings: {_settings}");
 
             try
@@ -69,10 +71,10 @@ namespace GoogleTestAdapter.TestAdapter
             switch (version)
             {
                 case VsVersion.Unknown:
-                    _logger.LogWarning("Could not identify Visual Studio version. Google Test Adapter requires at least VS 2012 update 1 and is tested up to VS 2017.");
+                    _logger.LogWarning($"Could not identify Visual Studio version. {Strings.Instance.ExtensionName} requires at least Visual Studio 2012 Update 1.");
                     return true;
                 case VsVersion.VS2012:
-                    _logger.LogError("Google Test Adapter requires at least VS 2012 update 1 - please update your Visual Studio installation.");
+                    _logger.LogError($"{Strings.Instance.ExtensionName} requires at least Visual Studio 2012 Update 1 - please update your Visual Studio installation.");
                     return false;
                 default:
                     return true;

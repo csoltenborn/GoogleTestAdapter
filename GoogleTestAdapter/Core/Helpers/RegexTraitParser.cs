@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 6/2017.
+
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
+using System;
+using System.Collections.Generic;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -14,7 +16,7 @@ namespace GoogleTestAdapter.Helpers
             _logger = logger;
         }
 
-        public List<RegexTraitPair> ParseTraitsRegexesString(string option)
+        public List<RegexTraitPair> ParseTraitsRegexesString(string option, bool ignoreErrors = true)
         {
             var result = new List<RegexTraitPair>();
 
@@ -29,8 +31,11 @@ namespace GoogleTestAdapter.Helpers
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(
-                        "Could not parse pair '" + pair + "', exception message: " + e.Message);
+                    string message = "Could not parse pair '" + pair + "', exception message: " + e.Message;
+                    if (ignoreErrors)
+                        _logger?.LogError(message);
+                    else
+                        throw new Exception(message, e);
                 }
             }
 
@@ -44,6 +49,7 @@ namespace GoogleTestAdapter.Helpers
             string[] trait = values[1].Split(
                 new[] { SettingsWrapper.TraitsRegexesTraitSeparator }, StringSplitOptions.None);
             string regex = values[0];
+            Utils.ValidateRegex(regex);
             string traitName = trait[0];
             string traitValue = trait[1];
             return new RegexTraitPair(regex, traitName, traitValue);

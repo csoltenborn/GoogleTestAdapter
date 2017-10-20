@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 6/2017.
+
+using System;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
@@ -98,28 +100,6 @@ namespace GoogleTestAdapter.Settings
         // internal
         public string DebuggingNamedPipeId { get; set; }
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
-
-        
-        public static RunSettings LoadFromXml(XmlReader reader)
-        {
-            Debug.Assert(reader != null, $"{nameof(reader)} must not be null");
-
-            var runSettings = new RunSettings();
-            if (reader.Read() && reader.Name.Equals(GoogleTestConstants.SettingsName))
-            {
-                try
-                {
-                    var serializer = new XmlSerializer(typeof(RunSettings));
-                    runSettings = serializer.Deserialize(reader) as RunSettings;
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e.ToString());
-                }
-            }
-
-            return runSettings;
-        }
 
     }
 

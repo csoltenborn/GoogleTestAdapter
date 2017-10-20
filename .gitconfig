@@ -1,0 +1,6 @@
+# This .gitconfig file should be included in your local .gitconfig by running
+# the following in the repo root (this folder):
+#   git config --local include.path ../.gitconfig
+
+[merge "ours"]
+	driver = true

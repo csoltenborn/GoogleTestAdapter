@@ -1,0 +1,353 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="14.0" Name="GoogleTestAdapter">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False" />
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-US" />
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DoNotSearchPlatformDirectories>False</DoNotSearchPlatformDirectories>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+ </ProjectOptions>
+ <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>$(ProjectDir)/../NuGetPackagesFlattened/</Directory>
+   <Directory>%ProgramFiles(x86)%/Microsoft SDKs/NuGetPackages/System.Collections.Specialized/4.0.1/ref/net46/</Directory>
+   <Directory>%ProgramFiles(x86)%/Reference Assemblies/Microsoft/Framework/.NETFramework/v4.6/Facades/</Directory>
+   <Directory>%VSPATH%/Common7/IDE/</Directory>
+   <Directory>%VSPATH%/Common7/IDE/CommonExtensions/Microsoft/Editor/</Directory>
+   <Directory>%VSPATH%/Common7/IDE/CommonExtensions/Microsoft/TestWindow/</Directory>
+   <Directory>%VSPATH%/Common7/IDE/PrivateAssemblies/</Directory>
+   <Directory>%VSPATH%/Common7/IDE/PublicAssemblies/</Directory>
+   <Directory>%VSPATH%/VisualStudioIntegration/Common/Assemblies/v4.0/</Directory>
+   <Directory>%windir%/Microsoft.NET/Framework/v4.0.30319/</Directory>
+  </AssemblyReferenceDirectories>
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/GoogleTestAdapter.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/GoogleTestAdapter.Common.Dynamic.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/GoogleTestAdapter.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/GoogleTestAdapter.DiaResolver.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/GoogleTestAdapter.TestAdapter.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/GoogleTestAdapter.VsPackage.TAfGT.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/../out/vsix/Packaging.TAfGT/NewProjectWizard.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\MSInternalRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityCryptographyRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityTransparencyRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityWebConfigurationRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityWebDataflowRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityXmlRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="14.0">
+  <Namespaces>
+   <Namespace Name="GoogleTestAdapter">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Common">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Common</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.DiaResolver">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.DiaResolver</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Framework">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Framework</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Helpers">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Helpers</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Model">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Model</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Runners">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Runners</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Scheduling">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Scheduling</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.Settings">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.Settings</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.TestAdapter">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.TestAdapter</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.TestAdapter.Framework">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.TestAdapter.Framework</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.TestAdapter.Helpers">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.TestAdapter.Helpers</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.TestAdapter.Settings">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.TestAdapter.Settings</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.TestCases">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.TestCases</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.TestResults">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.TestResults</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.VsPackage">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.VsPackage</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.VsPackage.Debugging">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.VsPackage.Debugging</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.VsPackage.Helpers">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.VsPackage.Helpers</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="GoogleTestAdapter.VsPackage.OptionsPages">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>GoogleTestAdapter.VsPackage.OptionsPages</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="0" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="VSLangProj">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
+      <Issue>
+       <Item>VSLangProj</Item>
+      </Issue>
+      <Notes>
+       <User Name="lukaszme">
+        <Note Id="1" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+  </Namespaces>
+  <Notes>
+   <User Name="lukaszme">
+    <Note Id="0" Modified="2017-07-27 19:03:14Z">This occurrence is in the part of the project coming from open source, so Microsoft namespace would be inappropriate.</Note>
+    <Note Id="1" Modified="2017-07-27 19:05:06Z">This occurrence is from an assembly not controlled by this project (%VSPATH%\Common7\IDE\PublicAssemblies\VSLangProj.dll).</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904">
+    <Resolution Name="Default">Redefine the types in namespace '{0}' in the Microsoft or System namespace. Public types that will never ship externally can be defined in the MS namespace. Consider disabling this rule when analyzing code that does not ship externally.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

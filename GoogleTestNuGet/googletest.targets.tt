@@ -1,0 +1,64 @@
+<#@ template language="c#" hostspecific="true" #>
+<#@ output extension=".targets" #>
+<#@ parameter type="System.String" name="PackageName" #>
+<#@ parameter type="System.String" name="PackageNameDashes" #>
+<#@ parameter type="System.String" name="PathToBinaries" #>
+<#@ parameter type="System.String" name="ConfigurationType" #>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Force-Enable-<#= PackageNameDashes #>)' == '' And (('$(PlatformToolset)' != 'v141' And '$(PlatformToolset)' != 'v140') Or '$(ApplicationType)' != '')">
+    <Disable-<#= PackageNameDashes #>>true</Disable-<#= PackageNameDashes #>>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Force-Disable-<#= PackageNameDashes #>)' != ''">
+    <Disable-<#= PackageNameDashes #>>true</Disable-<#= PackageNameDashes #>>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Disable-<#= PackageNameDashes #>)' == ''">
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\\<#= PackageName #>.propertiesui.xml" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Disable-<#= PackageNameDashes #>)' == ''">
+    <Link>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } #>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest.pdb" />
+    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.pdb" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } #>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.pdb" />
+    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.pdb" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } #>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest.pdb" />
+    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_main.pdb" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } #>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.pdb" />
+    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.pdb" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,144 @@
+﻿<vsui:DialogWindow
+    x:Uid="SinglePageWizardDialog"
+    x:Class="Microsoft.NewProjectWizard.SinglePageWizardDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+    xmlns:vsimaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+    xmlns:vsimagecatalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog" 
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Height="350"
+    MinHeight="350"
+    Width="500"
+    MinWidth="500"
+    WindowStartupLocation="CenterOwner"
+    ShowInTaskbar="False"
+    Name="SinglePageWizardDialogName">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ThemedDialogResources.xaml"/>
+                <ResourceDictionary Source="ControlResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid
+        x:Name="GridWizardDialog"
+        x:Uid="GridWizardDialog">
+        <Grid.RowDefinitions>
+            <!-- Fake Title Bar -->
+            <RowDefinition x:Uid="RowDefinition_1" Height="36" />
+
+            <!-- Title-->
+            <RowDefinition x:Uid="RowDefinition_2" Height="Auto" />
+
+            <!-- Contents -->
+            <RowDefinition x:Uid="RowDefinition_3" Height="*" />
+
+            <!--Action Buttons -->
+            <RowDefinition x:Uid="RowDefinition_4" Height="60" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Uid="TitleBar"
+            x:Name="TitleBar"
+            Grid.Row="0"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Uid="ColumnDefinition_1" Width="*"/>
+                <ColumnDefinition x:Uid="ColumnDefinition_2" Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!-- Dummy label to allow window dragging-->
+            <Label
+                x:Uid="LabelFrame"
+                Grid.Column="0"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"/>
+            <Button
+                x:Uid="CloseButton"
+                x:Name="CloseButton"
+                Grid.Column="1"
+                Style="{StaticResource CloseButtonStyle}"
+                Click="ClickClose">
+                <vsimaging:CrispImage
+                    x:Uid="Image_Close"
+                    Name="Image_Close"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Width="12"
+                    Height="12"
+                    Moniker="{x:Static vsimagecatalog:KnownMonikers.Close}"/>
+            </Button>
+        </Grid>
+        <StackPanel
+            x:Uid="StackPanel_1"
+            Grid.Row="1"
+            Orientation="Horizontal"
+            Margin="24,8,24,24">
+            <StackPanel
+                x:Uid="StackPanel_2" Orientation ="Vertical">
+                <Label
+                    x:Uid="Label_DialogTitle" x:Name="Label_DialogTitle"
+                    Style="{StaticResource TitleStyle}"
+                    Padding="0,0,0,0"
+                    Content="Title"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid
+            x:Name="GridActionButtons"
+            x:Uid="Grid_14"
+            Grid.Row="3"
+            Style="{StaticResource FooterStyle}">
+            <StackPanel
+                x:Name="StackPanelActionButtons"
+                x:Uid="StackPanelActionButtons"
+                Margin="0,0,20,20"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom">
+                <StackPanel.Resources>
+                    <Style x:Uid="Style_2" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}" />
+                </StackPanel.Resources>
+                <Button
+                    x:Uid="Button_Finish" x:Name="Button_Ok"
+                    Content="OK"
+                    IsDefault="True"
+                    Click="Button_Ok_Click"/>
+                <Button
+                    x:Uid="Button_Cancel" x:Name="Button_Cancel"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Click="Button_Cancel_Click"/>
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Row="2" Margin="24,0,24,12">
+            <Grid x:Name="projectGrid" Grid.Row="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="projectToTestLabel" x:Uid="projectToTestLabel"  Grid.Column="0" Content="Select project to test (Optional):" Target="{Binding ElementName=projectComboBox}"/>
+                <ComboBox x:Name="projectComboBox" Grid.Column="1" Width="160" Height="23" AutomationProperties.AutomationId="projectComboBox" AutomationProperties.LabeledBy="{Binding ElementName=projectToTestLabel}"/>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,12,0,0">
+                    <Label x:Name="consumeGTestAsLabel" x:Uid="consumeGTestAsLabel" Content="Consume Google Test as:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <StackPanel Margin="12,0,0,0">
+                        <RadioButton x:Name="staticLibRadioButton" x:Uid="staticLibRadioButton" Content="Static Library (.lib)" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="dynamicLibRadioButton" x:Uid="dynamicLibRadioButton" Content="Dynamic Library (.dll)" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="24,12,0,0">
+                    <Label x:Name="runtimeLibrariesLabel" x:Uid="runtimeLibrariesLabel" Content="C++ runtime libraries:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <StackPanel Margin="12,0,0,0">
+                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" Content="Link dynamically (Recommended)" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Width="203" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" Content="Link statically" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</vsui:DialogWindow>
