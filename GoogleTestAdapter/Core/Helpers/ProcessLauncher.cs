@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -70,13 +72,12 @@ namespace GoogleTestAdapter.Helpers
                 var waiter = new ProcessWaiter(process);
                 if (printTestOutput)
                 {
-                    _logger.LogInfo(
-                        ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
+                    _logger.LogInfo(String.Format(Resources.OutputOfCommandMessage, "", command, param));
                 }
                 ReadTheStream(process, output, printTestOutput, throwIfError);
                 if (printTestOutput)
                 {
-                    _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
+                    _logger.LogInfo(String.Format(Resources.EndOfOutputMessage, ""));
                 }
                 return waiter.WaitForExit();
             }
@@ -100,7 +101,7 @@ namespace GoogleTestAdapter.Helpers
             }
             if (throwIfError && process.ExitCode != 0)
             {
-                throw new Exception("Process exited with return code " + process.ExitCode);
+                throw new Exception(String.Format(Resources.ProcessExitCode, process.ExitCode));
             }
         }
 

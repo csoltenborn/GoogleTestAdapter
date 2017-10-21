@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
 using System.Text.RegularExpressions;
 
 namespace GoogleTestAdapter.TestCases
@@ -31,7 +33,7 @@ namespace GoogleTestAdapter.TestCases
         public void ReportLine(string line)
         {
             string trimmedLine = line.Trim('.', '\n', '\r');
-            if (trimmedLine.StartsWith("  "))
+            if (trimmedLine.StartsWith("  ", StringComparison.Ordinal))
             {
                 TestCaseDescriptor descriptor = CreateDescriptor(_currentSuite, trimmedLine.Substring(2));
                 TestCaseDescriptorCreated?.Invoke(this,
@@ -87,7 +89,7 @@ namespace GoogleTestAdapter.TestCases
 
         private static string GetEnclosedTypeParam(string typeParam)
         {
-            if (typeParam.EndsWith(">"))
+            if (typeParam.EndsWith(">", StringComparison.Ordinal))
             {
                 typeParam += " ";
             }

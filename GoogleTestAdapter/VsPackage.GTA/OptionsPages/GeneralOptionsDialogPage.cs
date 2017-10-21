@@ -1,16 +1,15 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.Settings;
-using System.ComponentModel;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     public partial class GeneralOptionsDialogPage : NotifyingDialogPage
     {
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionShowReleaseNotes)]
-        [Description(SettingsWrapper.OptionShowReleaseNotesDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionShowReleaseNotes")]
+        [LocalizedDescription("OptionShowReleaseNotesDescription")]
         public bool ShowReleaseNotes
         {
             get { return _showReleaseNotes; }

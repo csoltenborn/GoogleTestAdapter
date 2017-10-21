@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace GoogleTestAdapter.TestResults
         public const string Failed = "[  FAILED  ]";
         public const string Passed = "[       OK ]";
 
-        public const string CrashText = "!! This test has probably CRASHED !!";
+        public static readonly string CrashText = Resources.CrashText;
 
         /// <summary>
         /// Google Test reports test duration in complete ms. In case of 0ms,
@@ -64,7 +66,7 @@ namespace GoogleTestAdapter.TestResults
             TestCase testCase = FindTestcase(qualifiedTestname);
             if (testCase == null)
             {
-                _logger.DebugWarning($"No known test case for test result of line '{line}' - are you repeating a test run, but tests have changed in the meantime?");
+                _logger.DebugWarning(String.Format(Resources.NoKnownTestCaseMessage, line));
                 return null;
             }
 
@@ -139,7 +141,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception)
             {
-                logger.LogWarning("Could not parse duration in line '" + line + "'");
+                logger.LogWarning(String.Format(Resources.ParseDurationMessage, line));
             }
 
             return NormalizeDuration(TimeSpan.FromMilliseconds(durationInMs));
@@ -202,17 +204,17 @@ namespace GoogleTestAdapter.TestResults
 
         public static bool IsRunLine(string line)
         {
-            return line.StartsWith(Run);
+            return line.StartsWith(Run, StringComparison.Ordinal);
         }
 
         public static bool IsPassedLine(string line)
         {
-            return line.StartsWith(Passed);
+            return line.StartsWith(Passed, StringComparison.Ordinal);
         }
 
         public static bool IsFailedLine(string line)
         {
-            return line.StartsWith(Failed);
+            return line.StartsWith(Failed, StringComparison.Ordinal);
         }
 
         public static string RemovePrefix(string line)

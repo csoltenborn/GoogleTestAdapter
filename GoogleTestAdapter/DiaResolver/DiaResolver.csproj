@@ -43,10 +43,17 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.DiaResolver.dll">
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.DiaResolver.dll.lcl</TranslationFile> 
+    </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.DiaResolver.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning"> 
+      <!-- Do not have this show up in Solution Explorer in VS --> 
+      <InProject>false</InProject> 
+    </SignFilesDependsOn>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="dia2">
@@ -66,6 +73,11 @@
     <Compile Include="PeParser.cs" />
     <Compile Include="DiaResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SourceFileLocation.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +96,13 @@
     <Content Include="x86\msdia140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -106,4 +125,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'"> 
+    <ItemGroup> 
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll"> 
+        <Authenticode>Microsoft</Authenticode> 
+        <StrongName>StrongName</StrongName> 
+      </FilesToSign> 
+    </ItemGroup> 
+  </Target>
 </Project>

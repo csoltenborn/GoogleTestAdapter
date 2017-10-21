@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,6 +44,15 @@ namespace GoogleTestAdapter.DiaResolver
         {
             string pdb = PeParser.ExtractPdbPath(TestResources.LoadTests_ReleaseX86, MockLogger.Object);
             string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb"));
+            pdb.Should().Be(expectedPdb);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void PeParser_X86UnicodeName_FindsEmbeddedPdbPath()
+        {
+            string pdb = PeParser.ExtractPdbPath(TestResources.UnicodeNameExe, MockLogger.Object);
+            string expectedPdb = Path.GetFullPath(Path.ChangeExtension(TestResources.UnicodeNameExe, ".pdb"));
             pdb.Should().Be(expectedPdb);
         }
 

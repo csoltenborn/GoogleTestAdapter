@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
@@ -117,8 +119,7 @@ namespace GoogleTestAdapter.Runners
             string nextTest = testCases[0].FullyQualifiedName;
             if (nextTest.Length > maxLength)
             {
-                throw new Exception("CommandLineGenerator: I can not deal with this case :-( - maxLength=" + maxLength +
-                    ", includedTestCases.Count=" + includedTestCases.Count + ", nextTest.Length=" + nextTest.Length);
+                throw new Exception(String.Format(Resources.CommandLineGeneratorError, maxLength, includedTestCases.Count, nextTest.Length));
             }
 
             while (result.Length + nextTest.Length <= maxLength && testCases.Count > 0)

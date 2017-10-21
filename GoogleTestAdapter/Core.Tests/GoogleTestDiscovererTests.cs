@@ -191,7 +191,7 @@ namespace GoogleTestAdapter
                 IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
 
                 testCases.Count.Should().Be(0);
-                MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases of executable"))));
+                MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases for executable"))));
             }
             finally
             {

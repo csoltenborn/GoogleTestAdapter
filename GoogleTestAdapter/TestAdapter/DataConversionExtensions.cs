@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Linq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
@@ -113,7 +115,7 @@ namespace GoogleTestAdapter.TestAdapter
                 case TestMessageLevel.Error:
                     return Severity.Error;
                 default:
-                    throw new InvalidOperationException($"Unknown enum literal: {level}");
+                    throw new InvalidOperationException(String.Format(Resources.UnknownEnum, level));
             }
         }
 

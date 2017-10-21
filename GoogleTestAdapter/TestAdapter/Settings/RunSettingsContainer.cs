@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
@@ -106,7 +106,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 }
                 catch (InvalidOperationException e) when (e.InnerException is XmlSchemaValidationException)
                 {
-                    throw new InvalidRunSettingsException($"Invalid {GoogleTestConstants.SettingsName}", e.InnerException);
+                    throw new InvalidRunSettingsException(String.Format(Resources.Invalid, GoogleTestConstants.SettingsName), e.InnerException);
                 }
                 catch (Exception e)
                 {

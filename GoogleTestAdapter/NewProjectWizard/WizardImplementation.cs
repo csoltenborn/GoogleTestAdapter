@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TemplateWizard;
 using NewProjectWizard.Properties;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -129,7 +130,7 @@ namespace Microsoft.NewProjectWizard
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show(Resources.NuGetInteropNotFound);
+                    ShowRtlAwareMessageBox(Resources.NuGetInteropNotFound);
                     throw;
                 }
 
@@ -152,30 +153,41 @@ namespace Microsoft.NewProjectWizard
 
                     if (latestSdk == null)
                     {
+                        ShowRtlAwareMessageBox(Resources.WinSDKNotFound);
                         throw new WizardCancelledException(Resources.WinSDKNotFound);
                     }
 
-                    List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
-                        .Select(moniker => TryParsePlatformVersion(moniker))
-                        .Where(name => name != null)
-                        .OrderByDescending(p => p.Version).ToList();
-                    Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
+                    string versionString;
 
-                    if (latestPlatform == null)
+                    if (latestSdk.TargetPlatformVersion.Major >= 10)
                     {
-                        throw new WizardCancelledException(Resources.WinSDKNotFound);
-                    }
+                        List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
+                            .Select(moniker => TryParsePlatformVersion(moniker))
+                            .Where(name => name != null)
+                            .OrderByDescending(p => p.Version).ToList();
+                        Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
 
-                    string versionString = latestPlatform.Version.ToString();
+                        if (latestPlatform == null)
+                        {
+                            ShowRtlAwareMessageBox(Resources.WinSDKNotFound);
+                            throw new WizardCancelledException(Resources.WinSDKNotFound);
+                        }
+
+                        versionString = latestPlatform.Version.ToString();
+                    }
+                    else
+                    {
+                        versionString = latestSdk.TargetPlatformVersion.ToString();
+                    }
 
                     replacementsDictionary[TargetPlatformVersion] = versionString;
                 }
 
-                Telemetry.LogProjectCreated(nugetPackage);
+                //Telemetry.LogProjectCreated(nugetPackage);
             }
             catch (WizardCancelledException ex)
             {
-                Telemetry.LogProjectCancelled(ex.Message);
+                //Telemetry.LogProjectCancelled(ex.Message);
                 throw;
             }
         }
@@ -187,6 +199,22 @@ namespace Microsoft.NewProjectWizard
             return true;
         }
 #endregion
+
+        private void ShowRtlAwareMessageBox(string text)
+        {
+            MessageBoxOptions options = 0;
+            if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+            {
+                options |= MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign;
+            }
+            MessageBox.Show(
+                text,
+                Resources.WizardTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error,
+                MessageBoxDefaultButton.Button1,
+                options);
+        }
 
         private static IEnumerable<TargetPlatformSDK> GetAllPlatformSdks()
         {

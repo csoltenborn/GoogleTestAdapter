@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -149,12 +149,11 @@ namespace GoogleTestAdapter.TestCases
 
                     string dir = Path.GetDirectoryName(_executable);
                     string file = Path.GetFileName(_executable);
-                    string cdToWorkingDir = $@"cd ""{dir}""";
-                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption}";
+                    string command = $@"cd ""{dir}""{Environment.NewLine}{file} {GoogleTestConstants.ListTestsOption}";
 
-                    _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
-                    _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
-
+                    _logger.LogError(String.Format(Resources.TestDiscoveryCancelled, _settings.TestDiscoveryTimeoutInSeconds, _executable));
+                    _logger.DebugError(String.Format(Resources.TestCommandCanBeRun, Environment.NewLine, command));
+                    
                     return new List<TestCase>();
                 }
 
@@ -183,14 +182,12 @@ namespace GoogleTestAdapter.TestCases
         {
             if (processExitCode != 0)
             {
-                string messsage =
-                    $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
-                messsage +=
-                    $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption}', working directory: '{Path.GetDirectoryName(_executable)}'";
+                string messsage = String.Format(Resources.CouldNotListTestCases, _executable, processExitCode);
+                messsage += Environment.NewLine + String.Format(Resources.CommandExecuted, _executable, GoogleTestConstants.ListTestsOption, Path.GetDirectoryName(_executable));
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
+                    messsage += Environment.NewLine + Resources.OutputOfCommand + Environment.NewLine + string.Join(Environment.NewLine, standardOutput);
                 else
-                    messsage += "\nCommand produced no output";
+                    messsage += Environment.NewLine + Resources.NoOutput;
 
                 _logger.LogError(messsage);
                 return false;
@@ -244,7 +241,7 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
+            _logger.LogWarning(String.Format(Resources.LocationNotFoundError, descriptor.FullyQualifiedName));
             return new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
         }
@@ -252,7 +249,7 @@ namespace GoogleTestAdapter.TestCases
         internal static string StripTestSymbolNamespace(string symbol)
         {
             var suffixLength = GoogleTestConstants.TestBodySignature.Length;
-            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1);
+            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1, StringComparison.Ordinal);
             var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
             return symbol.Substring(nameStart);
         }

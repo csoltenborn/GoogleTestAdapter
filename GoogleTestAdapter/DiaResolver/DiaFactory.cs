@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.DiaResolver
             string path = Path.Combine(GetAssemblyBaseDir(), Is32Bit() ? "x86" : "x64", DiaDll);
             var ptrDll = LoadLibrary(path);
             if (ptrDll == IntPtr.Zero)
-                throw new Exception($"Cannot load {path}.");
+                throw new Exception(String.Format(Resources.LoadError, path));
         }
 
         public static IDiaDataSource CreateInstance()
@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.DiaResolver
             return IntPtr.Size == 4;
         }
 
-        [DllImport("Kernel32.dll")]
+        [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern IntPtr LoadLibrary(string path);
 
         [DllImport(DiaDll, ExactSpelling = true, PreserveSig = false)]

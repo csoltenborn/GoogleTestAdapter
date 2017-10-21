@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Collections.Generic;
@@ -46,8 +46,8 @@ namespace GoogleTestAdapter.TestAdapter
                 return;
             CommonFunctions.LogVisualStudioVersion(_logger);
 
-            _logger.LogInfo(Strings.Instance.TestDiscoveryStarting);
-            _logger.DebugInfo($"Solution settings: {_settings}");
+            _logger.LogInfo(Common.Resources.TestDiscoveryStarting);
+            _logger.DebugInfo(String.Format(Resources.Settings, _settings));
 
             try
             {
@@ -55,14 +55,14 @@ namespace GoogleTestAdapter.TestAdapter
                 _discoverer.DiscoverTests(executables, reporter);
 
                 stopwatch.Stop();
-                _logger.LogInfo($"Test discovery completed, overall duration: {stopwatch.Elapsed}");
+                _logger.LogInfo(String.Format(Resources.TestDiscoveryCompleted, stopwatch.Elapsed));
             }
             catch (Exception e)
             {
-                _logger.LogError($"Exception while discovering tests: {e}");
+                _logger.LogError(String.Format(Resources.TestDiscoveryExceptionError, e));
             }
 
-            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.DebugMode);
+            CommonFunctions.ReportErrors(_logger, TestPhase.TestDiscovery, _settings.DebugMode);
         }
 
         private bool IsSupportedVisualStudioVersion()
@@ -71,10 +71,10 @@ namespace GoogleTestAdapter.TestAdapter
             switch (version)
             {
                 case VsVersion.Unknown:
-                    _logger.LogWarning($"Could not identify Visual Studio version. {Strings.Instance.ExtensionName} requires at least Visual Studio 2012 Update 1.");
+                    _logger.LogWarning(String.Format(Resources.IdentifyVSError, Common.Resources.ExtensionName));
                     return true;
                 case VsVersion.VS2012:
-                    _logger.LogError($"{Strings.Instance.ExtensionName} requires at least Visual Studio 2012 Update 1 - please update your Visual Studio installation.");
+                    _logger.LogError(String.Format(Resources.VS2012Error, Common.Resources.ExtensionName));
                     return false;
                 default:
                     return true;

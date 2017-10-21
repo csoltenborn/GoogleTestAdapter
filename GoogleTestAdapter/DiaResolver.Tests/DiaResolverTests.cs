@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
@@ -100,7 +102,7 @@ namespace GoogleTestAdapter.DiaResolver
                 .Contain(msg => msg.Contains("Couldn't find the .pdb file"));
             fakeLogger.Infos
                 .Should()
-                .Contain(msg => msg.Contains("Attempts to find pdb:"));
+                .Contain(msg => msg.Contains("Attempts to find PDB"));
         }
 
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)

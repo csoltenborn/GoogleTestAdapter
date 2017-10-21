@@ -1,9 +1,8 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using System;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
@@ -14,9 +13,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
     {
         #region Test execution
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionTestDiscoveryRegex)]
-        [Description(SettingsWrapper.OptionTestDiscoveryRegexDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionTestDiscoveryRegex")]
+        [LocalizedDescription("OptionTestDiscoveryRegexDescription")]
         public string TestDiscoveryRegex
         {
             get { return _testDiscoveryRegex; }
@@ -28,9 +27,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionTestDiscoveryTimeoutInSeconds)]
-        [Description(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionTestDiscoveryTimeoutInSeconds")]
+        [LocalizedDescription("OptionTestDiscoveryTimeoutInSecondsDescription")]
         public int TestDiscoveryTimeoutInSeconds
         {
             get { return _testDiscoveryTimeoutInSeconds; }
@@ -43,9 +42,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private int _testDiscoveryTimeoutInSeconds = SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionWorkingDir)]
-        [Description(SettingsWrapper.OptionWorkingDirDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionWorkingDir")]
+        [LocalizedDescription("OptionWorkingDirDescription")]
         public string WorkingDir
         {
             get { return _workingDirectory; }
@@ -53,9 +52,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _workingDirectory = SettingsWrapper.OptionWorkingDirDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionPathExtension)]
-        [Description(SettingsWrapper.OptionPathExtensionDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionPathExtension")]
+        [LocalizedDescription("OptionPathExtensionDescription")]
         public string PathExtension
         {
             get { return _pathExtension; }
@@ -63,9 +62,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]
-        [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionAdditionalTestExecutionParams")]
+        [LocalizedDescription("OptionAdditionalTestExecutionParamsDescription")]
         public string AdditionalTestExecutionParams
         {
             get { return _additionalTestExecutionParams; }
@@ -73,9 +72,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _additionalTestExecutionParams = SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionBatchForTestSetup)]
-        [Description(SettingsWrapper.OptionBatchForTestSetupDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionBatchForTestSetup")]
+        [LocalizedDescription("OptionBatchForTestSetupDescription")]
         public string BatchForTestSetup
         {
             get { return _batchForTestSetup; }
@@ -83,9 +82,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _batchForTestSetup = SettingsWrapper.OptionBatchForTestSetupDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionBatchForTestTeardown)]
-        [Description(SettingsWrapper.OptionBatchForTestTeardownDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionBatchForTestTeardown")]
+        [LocalizedDescription("OptionBatchForTestTeardownDescription")]
         public string BatchForTestTeardown
         {
             get { return _batchForTestTeardown; }
@@ -93,9 +92,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTestExecutionName)]
-        [DisplayName(SettingsWrapper.OptionKillProcessesOnCancel)]
-        [Description(SettingsWrapper.OptionKillProcessesOnCancelDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionKillProcessesOnCancel")]
+        [LocalizedDescription("OptionKillProcessesOnCancelDescription")]
         public bool KillProcessesOnCancel
         {
             get { return _killProcessesOnCancel; }
@@ -107,9 +106,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Traits
 
-        [Category(SettingsWrapper.CategoryTraitsName)]
-        [DisplayName(SettingsWrapper.OptionTraitsRegexesBefore)]
-        [Description(SettingsWrapper.OptionTraitsDescription)]
+        [LocalizedCategory("CategoryTraitsName")]
+        [LocalizedDisplayName("OptionTraitsRegexesBefore")]
+        [LocalizedDescription("OptionTraitsDescription")]
         public string TraitsRegexesBefore
         {
             get { return _traitsRegexesBefore; }
@@ -121,9 +120,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTraitsName)]
-        [DisplayName(SettingsWrapper.OptionTraitsRegexesAfter)]
-        [Description(SettingsWrapper.OptionTraitsDescription)]
+        [LocalizedCategory("CategoryTraitsName")]
+        [LocalizedDisplayName("OptionTraitsRegexesAfter")]
+        [LocalizedDescription("OptionTraitsDescription")]
         public string TraitsRegexesAfter
         {
             get { return _traitsRegexesAfter; }
@@ -139,9 +138,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Misc
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionUseNewTestExecutionFramework)]
-        [Description(SettingsWrapper.OptionUseNewTestExecutionFrameworkDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionUseNewTestExecutionFramework")]
+        [LocalizedDescription("OptionUseNewTestExecutionFrameworkDescription")]
         public bool UseNewTestExecutionFramework2
         {
             get { return _useNewTestExecutionFramework; }
@@ -149,9 +148,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _useNewTestExecutionFramework = SettingsWrapper.OptionUseNewTestExecutionFrameworkDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionPrintTestOutput)]
-        [Description(SettingsWrapper.OptionPrintTestOutputDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionPrintTestOutput")]
+        [LocalizedDescription("OptionPrintTestOutputDescription")]
         public bool PrintTestOutput
         {
             get { return _printTestOutput; }
@@ -159,9 +158,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionTestNameSeparator)]
-        [Description(SettingsWrapper.OptionTestNameSeparatorDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionTestNameSeparator")]
+        [LocalizedDescription("OptionTestNameSeparatorDescription")]
         public string TestNameSeparator
         {
             get { return _testNameSeparator; }
@@ -174,9 +173,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _testNameSeparator = SettingsWrapper.OptionTestNameSeparatorDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionParseSymbolInformation)]
-        [Description(SettingsWrapper.OptionParseSymbolInformationDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionParseSymbolInformation")]
+        [LocalizedDescription("OptionParseSymbolInformationDescription")]
         public bool ParseSymbolInformation
         {
             get { return _parseSymbolInformation; }
@@ -184,9 +183,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionDebugMode)]
-        [Description(SettingsWrapper.OptionDebugModeDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionDebugMode")]
+        [LocalizedDescription("OptionDebugModeDescription")]
         public bool DebugMode
         {
             get { return _debugMode; }
@@ -194,9 +193,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionTimestampOutput)]
-        [Description(SettingsWrapper.OptionTimestampOutputDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionTimestampOutput")]
+        [LocalizedDescription("OptionTimestampOutputDescription")]
         public bool TimestampOutput
         {
             get { return _timestampOutput; }

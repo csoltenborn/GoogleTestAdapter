@@ -44,6 +44,7 @@
  </Targets>
  <Rules>
   <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\MSInternalRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\SecurityCryptographyRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
@@ -323,6 +324,15 @@
      </Message>
     </Messages>
    </Namespace>
+   <Namespace Name="NewProjectWizard.Properties">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Created="2017-09-15 23:25:59Z">
+      <Issue>
+       <Item>NewProjectWizard.Properties</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
    <Namespace Name="VSLangProj">
     <Messages>
      <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Status="Excluded" Created="2017-07-27 19:02:02Z">
@@ -337,6 +347,15 @@
      </Message>
     </Messages>
    </Namespace>
+   <Namespace Name="XamlGeneratedNamespace">
+    <Messages>
+     <Message TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904" Created="2017-09-15 23:25:59Z">
+      <Issue>
+       <Item>XamlGeneratedNamespace</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
   </Namespaces>
   <Notes>
    <User Name="lukaszme">
@@ -345,8 +364,19 @@
    </User>
   </Notes>
   <Rules>
+   <Rule TypeName="AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies" Category="Microsoft.MSInternal" CheckId="CA908">
+    <Resolution Name="Method">Replace the generic method {0} called in {1} with a generic method that does not require JIT compilation at runtime for precompiled assemblies. If this is not an precompiled assembly this message should be suppressed or this rule should be disabled.</Resolution>
+   </Rule>
    <Rule TypeName="DeclareTypesInMicrosoftOrSystemNamespace" Category="Microsoft.MSInternal" CheckId="CA904">
     <Resolution Name="Default">Redefine the types in namespace '{0}' in the Microsoft or System namespace. Public types that will never ship externally can be defined in the MS namespace. Consider disabling this rule when analyzing code that does not ship externally.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="IFormatProviderAlternate">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be based on input from the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will based on input stored and accessed by software, such as when it is loaded from disk or from a database, specify {4}.</Resolution>
+    <Resolution Name="IFormatProviderAlternateString">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify {4}.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyMarshalingForPInvokeStringArguments" Category="Microsoft.Globalization" CheckId="CA2101">
+    <Resolution Name="FieldImplicitAnsi">To reduce security risk, marshal field {0} as Unicode, by setting StructLayout.CharSet on {1} to CharSet.Unicode, or by explicitly marshaling the field as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, specify MarshalAs explicitly, use the BestFitMapping attribute to turn best-fit mapping off, and for added security, to turn ThrowOnUnmappableChar on.</Resolution>
+    <Resolution Name="Parameter">To reduce security risk, marshal parameter {0} as Unicode, by setting DllImport.CharSet to CharSet.Unicode, or by explicitly marshaling the parameter as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, set BestFitMapping=false; for added security, also set ThrowOnUnmappableChar=true.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

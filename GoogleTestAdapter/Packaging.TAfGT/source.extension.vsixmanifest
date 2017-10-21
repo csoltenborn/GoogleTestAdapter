@@ -4,6 +4,7 @@
     <Identity Id="GoogleTestAdapterVSIX.8486b54e-5768-482b-b224-7d069ca509d8" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn, Jonas Gefele" />
     <DisplayName>Test Adapter for Google Test</DisplayName>
     <Description xml:space="preserve">Enables Visual Studio's testing tools with unit tests written for Google Test.</Description>
+    <PackageId>Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest</PackageId>
     <MoreInfo>https://go.microsoft.com/fwlink/?linkid=848768</MoreInfo>
     <License>use.txt</License>
     <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>

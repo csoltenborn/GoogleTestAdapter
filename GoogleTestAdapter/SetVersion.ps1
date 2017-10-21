@@ -2,6 +2,9 @@ Param([parameter(Mandatory=$true)] [string] $version)
 
 $common_assembly_info = "Common\Properties\AssemblyInfo.cs"
 
+$common_dynamic_gta_assembly_info = "Common.Dynamic.GTA\Properties\AssemblyInfo.cs"
+$common_dynamic_tafgt_assembly_info = "Common.Dynamic.TAfGT\Properties\AssemblyInfo.cs"
+
 $core_assembly_info = "Core\Properties\AssemblyInfo.cs"
 $coretests_assembly_info = "Core.Tests\Properties\AssemblyInfo.cs"
 
@@ -27,6 +30,9 @@ $vsix_manifest_tafgt = "Packaging.TAfGT\source.extension.vsixmanifest"
 $wizard_assembly_info = "NewProjectWizard\Properties\AssemblyInfo.cs"
 
 (Get-Content $common_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $common_assembly_info
+
+(Get-Content $common_dynamic_gta_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $common_dynamic_gta_assembly_info
+(Get-Content $common_dynamic_tafgt_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $common_dynamic_tafgt_assembly_info
 
 (Get-Content $core_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $core_assembly_info
 (Get-Content $coretests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $coretests_assembly_info

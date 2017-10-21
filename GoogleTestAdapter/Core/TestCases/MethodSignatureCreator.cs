@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
 
@@ -19,7 +21,7 @@ namespace GoogleTestAdapter.TestCases
                 case TestCaseDescriptor.TestTypes.Simple:
                     return GetTestMethodSignature(descriptor.Suite, descriptor.Name).Yield();
                 default:
-                    throw new InvalidOperationException($"Unknown literal {descriptor.TestType}");
+                    throw new InvalidOperationException(String.Format(Resources.UnknownLiteral, descriptor.TestType));
             }
         }
 
