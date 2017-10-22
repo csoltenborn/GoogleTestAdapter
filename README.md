@@ -10,7 +10,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 **Update:** We proudly announce the [collaboration with Microsoft](https://blogs.msdn.microsoft.com/vcblog/2017/05/10/unit-testing-and-the-future-announcing-the-test-adapter-for-google-test/) with the aim of further improving the Google Test experience in Visual Studio! More details of our collaboration can be found at our [wiki pages](https://github.com/csoltenborn/GoogleTestAdapter/wiki) (soon).
 
-![Screenshot of Test Explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/Screenshot.png "Screenshot of Test Explorer")
+![Screenshot of Test Explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage.Shared/Resources/Screenshot.png "Screenshot of Test Explorer")
 
 #### Features
 
