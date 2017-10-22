@@ -1,4 +1,6 @@
 @echo off
+setlocal
+
  
 set VS_LOCATION=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community
 set DIA_SDK="%VS_LOCATION%\DIA SDK\bin"
@@ -8,8 +10,6 @@ set MS_BUILD="%VS_LOCATION%\MSBuild\15.0\Bin\MSBuild.exe"
 
 if defined APPVEYOR goto Build
 
-
-setlocal
 
 echo:
 echo ======================================================================
