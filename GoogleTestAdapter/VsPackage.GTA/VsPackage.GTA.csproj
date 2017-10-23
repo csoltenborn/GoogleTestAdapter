@@ -67,6 +67,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <DeployExtension>False</DeployExtension>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GoogleTestExtensionOptionsPage.cs" />
