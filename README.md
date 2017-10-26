@@ -4,11 +4,11 @@
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter) 
 
 
-### Test Adapter for Google Test
+### Google Test Adapter / Test Adapter for Google Test
 
-This README details the ‘Test Adapter for Google Test’ [TAfGT](https://github.com/Microsoft/TestAdapterForGoogleTest), and the ‘Google Test Adapter’ [GTA](https://github.com/csoltenborn/GoogleTestAdapter). These test adapters are Visual Studio extensions that provide test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. 
+This README details the ‘Google Test Adapter’ [GTA](https://github.com/csoltenborn/GoogleTestAdapter) and the ‘Test Adapter for Google Test’ [TAfGT](https://github.com/Microsoft/TestAdapterForGoogleTest), and . These test adapters are Visual Studio extensions that provide test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework. 
 
-Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.com/vcblog/2017/05/10/unit-testing-and-the-future-announcing-the-test-adapter-for-google-test/) to fork their project and create ‘Test Adapter for Google Test’. These test adapters share many of the same features and any differences will be explicitly labeled with [TAfGT] or [GTA] in this document. All updates to TAfGT go through Microsoft’s software development cycle.
+Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.com/vcblog/2017/05/10/unit-testing-and-the-future-announcing-the-test-adapter-for-google-test/) to fork their project and create ‘Test Adapter for Google Test’. These test adapters share many of the same features and any differences will be explicitly labeled with [TAfGT] or [GTA] in this document. GTA may contain more experimental features, whereas all updates to TAfGT must go through Microsoft’s software development cycle.
 
 ![Screenshot of Test Explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage/Resources/Screenshot.png "Screenshot of Test Explorer")
 
@@ -33,7 +33,8 @@ Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.c
 
 #### History
 
-* See [releases](https://github.com/Microsoft/TestAdapterForGoogleTest/blob/dev15/GoogleTestAdapter/Packaging.TAfGT/ReleaseNotes.txt)
+* See [TAFGT releases](https://github.com/Microsoft/TestAdapterForGoogleTest/blob/dev15/GoogleTestAdapter/Packaging.TAfGT/ReleaseNotes.txt)
+* See [GTA releases](https://github.com/csoltenborn/GoogleTestAdapter/releases).
 
 
 ### Usage
@@ -44,7 +45,7 @@ Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.c
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download at GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
-The Test Adapter for Google Test can be installed in several ways:
+The adapters can be installed in several ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Test Adapter for Google Test* or *Google Test Adapter*.
 * Download and launch the VSIX installer from either the Visual Studio Marketplace ([TAfGT](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest), [GTA](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.10.1/GoogleTestAdapter-0.10.1.vsix)
@@ -145,7 +146,7 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
      * [TAfGT] *Print debug info* at *Tools/Options/Test Adapter for Google Test/General*
      * [GTA] *Print debug info* at *Tools/Options/Google Test Adapter/General*
 
-* This will show on the test console whether your test executables are found by GTA. If they are not, you have two options:
+* This will show on the test console whether your test executables are found by the adapter. If they are not, you have two options:
      * Configure a *Regex for test discovery* at the same place. 
      * If your test executable is `..\FooTests.exe`, make sure that a file `..\FooTests.exe.is_google_test` exists.
 * Your test executable can not run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
