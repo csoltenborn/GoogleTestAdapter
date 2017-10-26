@@ -98,7 +98,7 @@
   </VisibilityConstraints>
 
   <Symbols>
-    <GuidSymbol name="guidGoogleTestExtensionOptionsPage" value="{1db31773-234b-424b-a887-b451fb1ba837}" />
+    <GuidSymbol name="guidGoogleTestExtensionOptionsPage" value="{6fac3232-df1d-400a-95ac-7daeaaee74ac}" />
 
     <GuidSymbol name="guidGoogleTestExtensionOptionsPageCmdSet" value="{e0d9835f-9c16-4d27-a9ad-4df7568650f7}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
