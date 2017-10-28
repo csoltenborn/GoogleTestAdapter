@@ -14,7 +14,7 @@
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" />
   
   <ItemGroup>
-    <MergeManifest Include="$(OutputPath)\Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest.json" />
+    <MergeManifest Include="$(OutputPath)\..\Packaging.TAfGT\Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest.json" />
   </ItemGroup>
 
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" /> 
