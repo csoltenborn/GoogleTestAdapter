@@ -143,7 +143,7 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 * <a name="test_discovery_regex"></a>The *Debug mode* will show on the test console whether your test executables are recognized by GTA. If they are not, you have two options:
   * If your test executable is `..\FooTests.exe`, make sure that a file `..\FooTests.exe.is_google_test` exists.
   * Configure a *Test discovery regex*. In case of GTA installation via NuGet, do not forget to add the regex to the solution config file (which might be a good idea anyways). 
-* Your test executable can not run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
+* Your test executable can not be run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 * By default, test discovery for an executable is canceled after 30s. If in need, change this with option *Test discovery timeout in s*. Also consider moving expensive initialization code to the appropriate gtest setup facilities (e.g. [global](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#global-set-up-and-tear-down), [per test case](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#sharing-resources-between-tests-in-the-same-test-case), or [per test](https://github.com/google/googletest/blob/master/googletest/docs/Primer.md#test-fixtures-using-the-same-data-configuration-for-multiple-tests)).
 * For security reasons, Visual Studio's test discovery process runs with rather limited permissions. This might cause problems if your code needs those permissions already during test discovery (e.g. if your code [tries to open a file in write mode](https://github.com/csoltenborn/GoogleTestAdapter/issues/168#issuecomment-331725168)). Make sure that such code is executed at the appropriate gtest setup facilities (see above).
@@ -164,10 +164,10 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 You might consider using GTA's project settings to switch off symbol parsing and binary scanning for problematic test executables only, thus compromising between speed of test discovery and build maintainability.
 
 ##### The Test Explorer window can not be opened after installing GTA
-* Your MEF cache might have been corrupted. Please refer to #172 for help.
+* Your MEF cache might have been corrupted. Please refer to [issue #172](https://github.com/csoltenborn/GoogleTestAdapter/issues/172) for help.
 
 ##### The Google Test Adapter extension is disabled when I start Visual Studio
-* Your MEF cache might have been corrupted. Please refer to #98 for help.
+* Your MEF cache might have been corrupted. Please refer to [issue #98](https://github.com/csoltenborn/GoogleTestAdapter/issues/98) for help.
 
 
 ### Development of Google Test Adapter
