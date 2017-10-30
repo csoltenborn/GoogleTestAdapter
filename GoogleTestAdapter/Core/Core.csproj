@@ -41,10 +41,17 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.Core.dll">
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Core.dll.lcl</TranslationFile> 
+    </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.Core.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning"> 
+      <!-- Do not have this show up in Solution Explorer in VS --> 
+      <InProject>false</InProject> 
+    </SignFilesDependsOn>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,10 +70,16 @@
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Framework\IDebuggerAttacher.cs" />
+    <Compile Include="Helpers\ByteUtils.cs" />
     <Compile Include="Helpers\ProcessExecutor.cs" />
     <Compile Include="Helpers\ProcessLauncher.cs" />
     <Compile Include="Helpers\TestProcessLauncher.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Model\TestCaseMetaDataProperty.cs" />
     <Compile Include="Model\TestProperty.cs" />
     <Compile Include="Runners\TestResultCollector.cs" />
@@ -108,6 +121,11 @@
       <SubType>Designer</SubType>
       <LogicalName>GtaTestDurations.xsd</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -142,4 +160,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'"> 
+    <ItemGroup> 
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll"> 
+        <Authenticode>Microsoft</Authenticode> 
+        <StrongName>StrongName</StrongName> 
+      </FilesToSign> 
+    </ItemGroup> 
+  </Target>
 </Project>

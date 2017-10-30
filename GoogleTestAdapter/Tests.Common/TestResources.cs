@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -28,11 +28,15 @@ namespace GoogleTestAdapter.Tests.Common
         public const string TenSecondsWaiter = GoogleTestAdapterBuildDir + @"TenSecondsWaiter\TenSecondsWaiter.exe";
         public const string AlwaysCrashingExe = GoogleTestAdapterBuildDir + @"CrashingExe\CrashingExe.exe";
         public const string AlwaysFailingExe = GoogleTestAdapterBuildDir + @"FailingExe\FailingExe.exe";
+        public const string FakeGtestDllExe = GoogleTestAdapterBuildDir + @"FakeGtestDllApplication\FakeGtestDllApplication.exe";
+        public const string FakeGtestDllExeX64 = GoogleTestAdapterBuildDir + @"FakeGtestDllApplication-x64\FakeGtestDllApplication-x64.exe";
         public const string SemaphoreExe = GoogleTestAdapterBuildDir + @"SemaphoreExe\SemaphoreExe.exe";
+        public const string UnicodeNameExe = GoogleTestAdapterBuildDir + @"UnicodeNameExe\㐀㕵ExtAxCP936丂狛狜.exe";
 
         public const string Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Tests_gta.exe";
         public const string Tests_ReleaseX86 = SampleTestsBuildDir + @"Release\Tests_gta.exe";
         public const string Tests_DebugX86_Gtest170 = SampleTestsBuildDir + @"Debug\Tests_1.7.0_gta.exe";
+        public const string Tests_DebugX64 = SampleTestsBuildDir + @"Debug-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64_Output = TestdataDir + @"Tests_gta_exe_output.txt";
         public const int NrOfTests = 94;

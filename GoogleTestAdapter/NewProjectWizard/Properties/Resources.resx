@@ -117,8 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConsumeAs" xml:space="preserve">
+    <value>Consume Google Test as:</value>
+    <comment>Followed by radio buttons to select a static or dynamic library</comment>
+  </data>
+  <data name="DynamicLib" xml:space="preserve">
+    <value>Dynamic Library (.dll)</value>
+  </data>
+  <data name="LinkDynamic" xml:space="preserve">
+    <value>Link dynamically (Recommended)</value>
+  </data>
+  <data name="LinkStatic" xml:space="preserve">
+    <value>Link statically</value>
+  </data>
+  <data name="NoProject" xml:space="preserve">
+    <value>&lt;No project&gt;</value>
+    <comment>Default selection in a project selection dropdown</comment>
+  </data>
   <data name="NuGetInteropNotFound" xml:space="preserve">
     <value>Cannot find NuGet.VisualStudio.Interop.dll. Wizard cannot continue.</value>
+  </data>
+  <data name="RuntimeLibs" xml:space="preserve">
+    <value>C++ runtime libraries:</value>
+    <comment>Followed by radio buttons to "link statically" or "link dynamically"</comment>
+  </data>
+  <data name="SelectProject" xml:space="preserve">
+    <value>Select project to test (Optional):</value>
+  </data>
+  <data name="StaticLib" xml:space="preserve">
+    <value>Static Library (.lib)</value>
   </data>
   <data name="WinSDKNotFound" xml:space="preserve">
     <value>Windows SDK not found.</value>

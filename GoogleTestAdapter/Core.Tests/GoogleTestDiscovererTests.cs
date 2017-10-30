@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -25,27 +27,6 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void IsGoogleTestExecutable_MatchingExamples_AreMatched()
-        {
-            AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
-            AssertIsGoogleTestExecutable("MyGoogleTests.exe", true);
-            AssertIsGoogleTestExecutable("MyGoogleTest.exe", true);
-            AssertIsGoogleTestExecutable("mygoogletests.exe", true);
-            AssertIsGoogleTestExecutable("mygoogletest.exe", true);
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
-        public void IsGoogleTestExecutable_NotMatchingExamples_AreNotMatched()
-        {
-            AssertIsGoogleTestExecutable("MyGoogleTes.exe", false);
-            AssertIsGoogleTestExecutable("TotallyWrong.exe", false);
-            AssertIsGoogleTestExecutable("TestStuff.exe", false);
-            AssertIsGoogleTestExecutable("TestLibrary.exe", false);
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithRegexFromOptions_MatchesCorrectly()
         {
             AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
@@ -57,7 +38,7 @@ namespace GoogleTestAdapter
         [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithUnparsableRegexFromOptions_ProducesErrorMessage()
         {
-            bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).IsGoogleTestExecutable("my.exe", "d[ddd[");
+            bool result = GoogleTestDiscoverer.IsGoogleTestExecutable("my.exe", "d[ddd[", TestEnvironment.Logger);
 
             result.Should().BeFalse();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("'d[ddd['"))), Times.Exactly(1));
@@ -70,8 +51,8 @@ namespace GoogleTestAdapter
             string testExecutable = SetupIndicatorFileTest(true);
             try
             {
-                bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
-                    .IsGoogleTestExecutable(testExecutable);
+                bool result = GoogleTestDiscoverer
+                    .IsGoogleTestExecutable(testExecutable, "", TestEnvironment.Logger);
 
                 result.Should().BeTrue();
             }
@@ -84,21 +65,41 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void IsGoogleTestExecutable_WithoutIndicatorFile_IsNotRecognizedAsTestExecutable()
+        public void IsGoogleTestExecutable_WithoutIndicatorFile_IsRecognizedAsTestExecutable()
         {
             string testExecutable = SetupIndicatorFileTest(false);
             try
             {
-                bool result = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
-                    .IsGoogleTestExecutable(testExecutable);
+                bool result = GoogleTestDiscoverer
+                    .IsGoogleTestExecutable(testExecutable, "", TestEnvironment.Logger);
 
-                result.Should().BeFalse();
+                result.Should().BeTrue();
             }
             finally
             {
                 string errorMessage;
                 Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out errorMessage).Should().BeTrue();
             }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_DependingOnGtestDll_IsRecognizedAsTestExecutable()
+        {
+            bool result = GoogleTestDiscoverer
+                .IsGoogleTestExecutable(TestResources.FakeGtestDllExe, "", TestEnvironment.Logger);
+
+            result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_DependingOnGtestDllX64_IsRecognizedAsTestExecutable()
+        {
+            bool result = GoogleTestDiscoverer
+                .IsGoogleTestExecutable(TestResources.FakeGtestDllExeX64, "", TestEnvironment.Logger);
+
+            result.Should().BeTrue();
         }
 
         [TestMethod]
@@ -163,7 +164,7 @@ namespace GoogleTestAdapter
                 IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
 
                 testCases.Count.Should().Be(0);
-                MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases of executable"))));
+                MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases for executable"))));
             }
             finally
             {
@@ -318,7 +319,7 @@ namespace GoogleTestAdapter
 
         private void AssertIsGoogleTestExecutable(string executable, bool isGoogleTestExecutable, string regex = "")
         {
-            new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).IsGoogleTestExecutable(executable, regex)
+            GoogleTestDiscoverer.IsGoogleTestExecutable(executable, regex, TestEnvironment.Logger)
                 .Should()
                 .Be(isGoogleTestExecutable);
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -68,7 +70,7 @@ namespace GoogleTestAdapter.TestResults
 
             if (_outputBeforeFirstFailure != "")
             {
-                if (!_outputBeforeFirstFailure.EndsWith("\n") && !_outputBeforeFirstFailure.EndsWith("\r\n"))
+                if (!_outputBeforeFirstFailure.EndsWith("\n", StringComparison.Ordinal) && !_outputBeforeFirstFailure.EndsWith("\r\n", StringComparison.Ordinal))
                     _outputBeforeFirstFailure += "\n";
                 ErrorMessage = $"{_outputBeforeFirstFailure}{ErrorMessage}";
             }

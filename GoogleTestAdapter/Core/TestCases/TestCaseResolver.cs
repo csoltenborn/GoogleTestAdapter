@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestCases
                 {
                     IList<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
                     IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
-                    _logger.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
+                    _logger.DebugInfo(String.Format(Resources.FoundTestMethod, allTestMethodSymbols.Count, allTraitSymbols.Count, binary));
 
                     return allTestMethodSymbols
                         .Where(nsfl => testMethodSignatures.Contains(TestCaseFactory.StripTestSymbolNamespace(nsfl.Symbol)))
@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.TestCases
                 }
                 catch (Exception e)
                 {
-                    _logger.DebugError($"Exception while resolving test locations and traits in {binary}\n{e}");
+                    _logger.DebugError(String.Format(Resources.ExceptionResolving, binary, e));
                     return new Dictionary<string, TestCaseLocation>();
                 }
             }

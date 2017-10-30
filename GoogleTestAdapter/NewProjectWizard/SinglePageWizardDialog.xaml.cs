@@ -8,6 +8,7 @@ using System.Windows.Input;
 using EnvDTE;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Imaging;
+using Resx = NewProjectWizard.Properties.Resources;
 
 namespace Microsoft.NewProjectWizard
 {
@@ -34,7 +35,7 @@ namespace Microsoft.NewProjectWizard
             }
             else
             {
-                projectComboBox.Items.Add("<No project>");
+                projectComboBox.Items.Add(Resx.NoProject);
                 foreach (string project in data.Projects)
                 {
                     projectComboBox.Items.Add(project);

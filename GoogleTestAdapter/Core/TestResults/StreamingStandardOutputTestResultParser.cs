@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -111,7 +113,7 @@ namespace GoogleTestAdapter.TestResults
             TestCase testCase = StandardOutputTestResultParser.FindTestcase(qualifiedTestname, _testCasesRun);
             if (testCase == null)
             {
-                _logger.DebugWarning($"No known test case for test result of line '{line}'' - are you repeating a test run, but tests have changed in the meantime?");
+                _logger.DebugWarning(String.Format(Resources.NoKnownTestCaseMessage, line));
                 return null;
             }
 
@@ -156,7 +158,7 @@ namespace GoogleTestAdapter.TestResults
 
             CrashedTestCase = testCase;
             string message = StandardOutputTestResultParser.CrashText;
-            message += errorMsg == "" ? "" : $"\nTest output:\n\n{errorMsg}";
+            message += errorMsg == "" ? "" : ("\n" + Resources.TestOutput + $"\n\n{errorMsg}");
             TestResult result = StandardOutputTestResultParser.CreateFailedTestResult(
                 testCase,
                 TimeSpan.FromMilliseconds(0),

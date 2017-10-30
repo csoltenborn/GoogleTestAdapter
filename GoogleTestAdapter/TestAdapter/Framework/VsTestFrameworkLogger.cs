@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -27,13 +29,13 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     LogSafe(TestMessageLevel.Informational, message);
                     break;
                 case Severity.Warning:
-                    LogSafe(TestMessageLevel.Warning, $"Warning: {message}");
+                    LogSafe(TestMessageLevel.Warning, String.Format(Resources.WarningMessage, message));
                     break;
                 case Severity.Error:
-                    LogSafe(TestMessageLevel.Error, $"ERROR: {message}");
+                    LogSafe(TestMessageLevel.Error, String.Format(Resources.ErrorMessage, message));
                     break;
                 default:
-                    throw new Exception($"Unknown enum literal: {severity}");
+                    throw new Exception(String.Format(Resources.UnknownLiteral, severity));
             }
         }
 

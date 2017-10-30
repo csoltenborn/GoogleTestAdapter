@@ -149,6 +149,7 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 * This will show on the test console whether your test executables are found by the adapter. If they are not, you have two options:
      * Configure a *Regex for test discovery* at the same place. 
      * If your test executable is `..\FooTests.exe`, make sure that a file `..\FooTests.exe.is_google_test` exists.
+
 * Your test executable can not run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 * If your project happens to be a makefile project, there's a pitfall which will prevent the adapter from discovering your tests: It appears that when importing a makefile project into VS, the *Output* setting of the project is populated from the makefile's content. However, if the makefile is edited later on such that the location of the generated test executable changes, VS does not find the test executable any more. One symptom of this is that your project can not be launched any more with `F5`. Make sure that the *Output* setting of the project is consistent with its makefile to avoid this problem. 
@@ -164,7 +165,7 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 * Your MEF cache might have been corrupted. Please refer to [this issue](https://github.com/csoltenborn/GoogleTestAdapter/issues/98) for help.
 
 
-### Development of Google Test Adapter
+### Development of Google Test Adapter [GTA]
 
 Please refer to our [wiki](https://github.com/csoltenborn/GoogleTestAdapter/wiki/Development-Knowledge-Base).
 
@@ -179,4 +180,16 @@ The original *Google Test Adapter* is written and maintained by [Christian Solte
 
 The first version of GTA was a slightly enhanced C# port of the F# [Google Test Runner](https://github.com/markusl/GoogleTestRunner), written by [Markus Lindqvist](https://github.com/markusl). We have also learned a lot from the JavaScript test runner [Chutzpah](https://github.com/mmanela/chutzpah), written by [Matthew Manela](https://github.com/mmanela).
 
+ 
+#### Tools: Thanks from [GTA]
 GTA has benefited from all kinds of contributions, be it feature requests, bug reports, code snippets, testing of new features and bugfixes, or even pull requests. Most (hopefully all) contributors are mentioned in the according [release notes](https://github.com/csoltenborn/GoogleTestAdapter/releases).
+* [ReSharper](https://www.jetbrains.com/resharper/) - awesome VS extension for .NET development, including refactoring, static analysis etc. 
+* thanks to [JetBrains](https://www.jetbrains.com/) for providing free licenses for our developers! 
+* note that JetBrains' [Resharper C++](https://www.jetbrains.com/resharper-cpp/) can also run tests written using Google Test 
+* [AppVeyor](http://www.appveyor.com/) - awesome .NET CI build services 
+* thanks for providing free services and great support for open source projects!
+* [Codecov](https://codecov.io/) - code coverage visualization facilities 
+* thanks for providing free services for open source projects! 
+* [CommonMark.NET](https://github.com/Knagis/CommonMark.NET) - open source Markdown to HTML converter 
+* [OpenCover](https://github.com/OpenCover/opencover) - open source .NET code coverage 
+

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -60,7 +62,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             {
                 if (_testPropertiesMap.Keys.Contains(traitName))
                 {
-                    _logger.LogWarning($"Trait has same name as base test property and will thus be ignored for test case filtering: {traitName}");
+                    _logger.LogWarning(String.Format(Resources.TraitIgnoreMessage, traitName));
                     continue;
                 }
 
@@ -105,15 +107,15 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 ITestCaseFilterExpression filterExpression = _runContext.GetTestCaseFilter(_allPropertyNames, PropertyProvider);
 
                 string message = filterExpression == null
-                        ? "No test case filter provided"
-                        : $"Test case filter: {filterExpression.TestCaseFilterValue}";
+                        ? Resources.NoTestCaseFilter
+                        : String.Format(Resources.TestCaseFilter, filterExpression.TestCaseFilterValue);
                 _logger.DebugInfo(message);
 
                 return filterExpression;
             }
             catch (TestPlatformFormatException e)
             {
-                _logger.LogError($"Test case filter is invalid: {e.Message}");
+                _logger.LogError(String.Format(Resources.FilterInvalid, e.Message));
                 return null;
             }
         }
@@ -137,8 +139,8 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 filterExpression.MatchTestCase(testCase, propertyName => PropertyValueProvider(testCase, propertyName));
 
             string message = matches
-                ? $"{testCase.DisplayName} matches {filterExpression.TestCaseFilterValue}"
-                : $"{testCase.DisplayName} does not match {filterExpression.TestCaseFilterValue}";
+                ? String.Format(Resources.Matches, testCase.DisplayName, filterExpression.TestCaseFilterValue)
+                : String.Format(Resources.DoesntMatch, testCase.DisplayName, filterExpression.TestCaseFilterValue);
             _logger.DebugInfo(message);
 
             return matches;
