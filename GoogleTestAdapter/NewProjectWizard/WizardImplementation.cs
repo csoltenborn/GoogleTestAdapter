@@ -24,6 +24,7 @@ namespace Microsoft.NewProjectWizard
         private const string WizardData = "$wizarddata$";
         private const string RuntimeDebug = "$rtdebug$";
         private const string RuntimeRelease = "$rtrelease$";
+        private const string RunSilent = "$runsilent$";
         private List<Project> projects = new List<Project>();
         private int selectedProjectIndex;
         private IWizard nugetWizard;
@@ -90,7 +91,19 @@ namespace Microsoft.NewProjectWizard
                 ConfigurationData configurationData = new ConfigurationData(dte, projectNames.ToArray());
 
                 SinglePageWizardDialog wiz = new SinglePageWizardDialog(Resources.WizardTitle, configurationData);
-                bool? success = wiz.ShowModal();
+
+                bool? success = false;
+
+                // If RunSilent is true, we're in automated testing
+                if (replacementsDictionary[RunSilent] == "True")
+                {
+                    success = true;
+                    SetDefaultData(ref configurationData);
+                }
+                else
+                {
+                    success = wiz.ShowModal();
+                }
 
                 if (success == false)
                 {
@@ -261,6 +274,13 @@ namespace Microsoft.NewProjectWizard
 
             result = null;
             return false;
+        }
+
+        private void SetDefaultData(ref ConfigurationData configurationData)
+        {
+            configurationData.ProjectIndex = -1;
+            configurationData.IsGTestStatic = true;
+            configurationData.IsRuntimeStatic = false;
         }
     }
 
