@@ -1,0 +1,10 @@
+﻿This project has been created with the project template of Google Test Adapter (GTA). It provides a couple of tests written with the Google Test framework (as well as the necessary framework code).
+
+To write tests against your production code, add a reference to the project to be tested, add the necessary includes to your test file, and start writing tests.
+
+Note, however, that this sample project's main purpose is to get a first impression of Google Test and its integration into Visual Studio, and to show one way to setup a Visual Studio project for Google Test. This setup has the main drawback that the Google Test framework code has to be compiled for each test executable (increasing build time), and will be contained in each test executable (increasing the size of the executables). Therefore, consider consuming Google Test via NuGet (or build it yourself within a dedicated project which is then to be consumed by your test projects). There are several NuGet packages available; here's a query to packages provided by Microsoft:
+https://www.nuget.org/packages?q=Microsoft.googletest
+
+Finally, you will likely want to use more sophisticated Google Test features than the ones used within this sample project. Here are some resources you may find useful:
+- For an overview of the official Google Test documentation, refer to https://raw.githubusercontent.com/google/googletest/master/googletest/docs/Documentation.md
+- GTA's "Google Test example code" item template creates a test file containing tests demonstrating the most important functionality of Google Test, ready to be compiled and executed; right-click this Google Test project, select Add -> New item... -> Visual C++ -> Test -> Google Test example code

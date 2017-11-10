@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <ProjectType>VC</ProjectType>
+    <TemplateID>4ec0e35e-ba1e-4b1d-82ff-f5e09cc26de4</TemplateID>
+    <Name>Google Test project</Name>
+    <Description>A project containing a sample test class, ready to be compiled against Google Test and executed</Description>
+    <Icon>gtest-logo.ico</Icon>
+    <SortOrder>1000</SortOrder>
+    <DefaultName>SampleTests</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="ProjectTemplate.vcxproj" TargetFileName="$safeprojectname$.vcxproj" ReplaceParameters="true" >
+      <ProjectItem TargetFileName="$safeprojectname$.vcxproj.filters" ReplaceParameters="true">ProjectTemplate.vcxproj.filters</ProjectItem>
+
+      <ProjectItem OpenInEditor="true">READ_ME</ProjectItem>
+
+      <ProjectItem>gtest-1.8.0\LICENSE</ProjectItem>
+      <ProjectItem>gtest-1.8.0\gtest\gtest.h</ProjectItem>
+      <ProjectItem>gtest-1.8.0\gtest\gtest-all.cc</ProjectItem>
+
+      <ProjectItem>GTA_Traits_1.8.0.h</ProjectItem>
+
+      <ProjectItem>main.cpp</ProjectItem>
+      <ProjectItem>sample_tests.cpp</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>
