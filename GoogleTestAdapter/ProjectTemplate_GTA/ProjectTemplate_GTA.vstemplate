@@ -25,4 +25,8 @@
       <ProjectItem>sample_tests.cpp</ProjectItem>
     </Project>
   </TemplateContent>
+  <WizardExtension>
+    <Assembly>NewProjectWizard.GTA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=028d073f99e04687</Assembly>
+    <FullClassName>NewProjectWizard.GTA.WizardImplementation</FullClassName>
+  </WizardExtension>
 </VSTemplate>
