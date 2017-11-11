@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 11/2017.
 
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
 using Microsoft.VisualStudio.Shell;
@@ -59,6 +59,12 @@ namespace GoogleTestAdapter.VsPackage
         private bool ShowReleaseNotes
         {
             get { return _generalOptions.ShowReleaseNotes; }
+        }
+
+        // No New Project wizard for GTA
+        private bool ReportNewProjectTelemetry
+        {
+            get { return false; }
         }
     }
 }

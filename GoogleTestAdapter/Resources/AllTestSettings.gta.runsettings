@@ -28,6 +28,7 @@
         <ParseSymbolInformation>true</ParseSymbolInformation>
         <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
         <KillProcessesOnCancel>false</KillProcessesOnCancel>
+        <ReportNewProjectTelemtry>true</ReportNewProjectTelemtry>
       </Settings>
     </SolutionSettings>
     <ProjectSettings/>

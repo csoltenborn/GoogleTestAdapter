@@ -2,8 +2,12 @@
 // Licensed under the MIT license.
 
 using EnvDTE;
+using GoogleTestAdapter.VsPackage;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,26 +18,41 @@ namespace Microsoft.NewProjectWizard
     public static class Telemetry
     {
         private static TelemetryClient wizardClient = null;
+        private static GoogleTestExtensionOptionsPage options = null;
 
         static Telemetry()
         {
             TelemetryConfiguration config = CreateTelemetryConfig();
             wizardClient = new TelemetryClient(config);
             PopulateContext(wizardClient, "GoogleTestAdapter");
+            IVsShell shell = (IVsShell)Package.GetGlobalService(typeof(SVsShell));
+            Guid guid = new Guid("6fac3232-df1d-400a-95ac-7daeaaee74ac");
+            IVsPackage vsPackageTAfGT;
+            // TAfGT Package containing options
+            if (ErrorHandler.Failed(shell.IsPackageLoaded(guid, out vsPackageTAfGT)))
+                ErrorHandler.ThrowOnFailure(shell.LoadPackage(guid, out vsPackageTAfGT));
+
+            options = (GoogleTestExtensionOptionsPage)vsPackageTAfGT;
         }
 
         public static void LogProjectCreated(string nugetPackage)
         {
-            Dictionary<string, string> projectCreatedProperties = new Dictionary<string, string>();
-            projectCreatedProperties.Add("NuGetUsed", nugetPackage);
-            wizardClient.TrackEvent("GTestProjectCreated", projectCreatedProperties, null);
+            if (options.ReportNewProjectTelemetry)
+            {
+                Dictionary<string, string> projectCreatedProperties = new Dictionary<string, string>();
+                projectCreatedProperties.Add("NuGetUsed", nugetPackage);
+                wizardClient.TrackEvent("GTestProjectCreated", projectCreatedProperties, null);
+            }
         }
 
         public static void LogProjectCancelled(string exception)
         {
-            Dictionary<string, string> projectCreatedProperties = new Dictionary<string, string>();
-            projectCreatedProperties.Add("Exception", exception);
-            wizardClient.TrackEvent("GTestProjectCancelled", projectCreatedProperties, null);
+            if (options.ReportNewProjectTelemetry)
+            {
+                Dictionary<string, string> projectCreatedProperties = new Dictionary<string, string>();
+                projectCreatedProperties.Add("Exception", exception);
+                wizardClient.TrackEvent("GTestProjectCancelled", projectCreatedProperties, null);
+            }
         }
 
         private static TelemetryConfiguration CreateTelemetryConfig()

@@ -196,11 +196,11 @@ namespace Microsoft.NewProjectWizard
                     replacementsDictionary[TargetPlatformVersion] = versionString;
                 }
 
-                //Telemetry.LogProjectCreated(nugetPackage);
+                Telemetry.LogProjectCreated(nugetPackage);
             }
             catch (WizardCancelledException ex)
             {
-                //Telemetry.LogProjectCancelled(ex.Message);
+                Telemetry.LogProjectCancelled(ex.Message);
                 throw;
             }
         }

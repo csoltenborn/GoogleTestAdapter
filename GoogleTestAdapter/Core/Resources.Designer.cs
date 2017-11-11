@@ -797,6 +797,24 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Report Telemetry.
+        /// </summary>
+        internal static string OptionReportNewProjectTelemetry {
+            get {
+                return ResourceManager.GetString("OptionReportNewProjectTelemetry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report telemetry to Visual Studio when using the New Project wizard for Google Test.
+        /// </summary>
+        internal static string OptionReportNewProjectTelemetryDescription {
+            get {
+                return ResourceManager.GetString("OptionReportNewProjectTelemetryDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Also run disabled tests.
         /// </summary>
         internal static string OptionRunDisabledTests {

@@ -26,5 +26,10 @@ namespace GoogleTestAdapter.VsPackage
         {
             get { return false; }
         }
+
+        public bool ReportNewProjectTelemetry
+        {
+            get { return _generalOptions.ReportNewProjectTelemetry; }
+        }
     }
 }

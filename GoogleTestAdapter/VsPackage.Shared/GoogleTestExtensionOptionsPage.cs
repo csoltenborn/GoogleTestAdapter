@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 11/2017.
 
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -188,6 +188,7 @@ namespace GoogleTestAdapter.VsPackage
                 BatchForTestSetup = _generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
                 KillProcessesOnCancel = _generalOptions.KillProcessesOnCancel,
+                ReportNewProjectTelemetry = ReportNewProjectTelemetry,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,
                 BreakOnFailure = _googleTestOptions.BreakOnFailure,

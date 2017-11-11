@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 11/2017.
 
 using System;
 using System.Diagnostics;
@@ -92,6 +92,8 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? KillProcessesOnCancel { get; set; }
         public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
 
+        public virtual bool? ReportNewProjectTelemetry { get; set; }
+        public bool ShouldSerializeReportNewProjectTelemetry() { return ReportNewProjectTelemetry != null; }
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
