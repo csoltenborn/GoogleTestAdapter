@@ -1,5 +1,6 @@
 *.pkgdef
 ProjectTemplates/Test/ProjectTemplate_GTA.zip
+ProjectTemplates/Test/ProjectTemplate.GTA.GoogleTest.zip
 ItemTemplates/Test/GTestExamples.zip
 ItemTemplates/Test/GTest.zip
 ItemTemplates/Test/GTest_Traits.zip

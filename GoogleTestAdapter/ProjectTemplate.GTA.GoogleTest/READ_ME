@@ -1,0 +1,4 @@
+﻿This project has been created with a project template of the Google Test Adapter (GTA). It compiles Google Test into a DLL to be consumed by other test projects.
+
+You might also consider consuming Google Test via NuGet. There are several packages available; here's a query to packages provided by Microsoft:
+https://www.nuget.org/packages?q=Microsoft.googletest
