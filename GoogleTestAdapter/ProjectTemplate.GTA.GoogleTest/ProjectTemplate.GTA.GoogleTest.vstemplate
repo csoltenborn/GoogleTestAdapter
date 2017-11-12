@@ -7,7 +7,7 @@
     <Description>C++ project containing Google Test to be compiled into a DLL, which can then be consumed by test projects.</Description>
     <Icon>gtest-logo.ico</Icon>
     <SortOrder>1000</SortOrder>
-    <DefaultName>gtest</DefaultName>
+    <DefaultName>name will be ignored</DefaultName>
   </TemplateData>
   <TemplateContent>
     <Project File="ProjectTemplate.vcxproj" TargetFileName="gtest.vcxproj" ReplaceParameters="true" >

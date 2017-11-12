@@ -167,5 +167,6 @@ powershell Compress-Archive -Path '$(ProjectDir)ItemTemplates\Test\GTest_Traits\
     <Delete Files="ItemTemplates\Test\GTest_Traits.zip" ContinueOnError="true" />
     <Delete Files="ItemTemplates\Test\GTestExamples.zip" ContinueOnError="true" />
     <Delete Files="ProjectTemplates\Test\ProjectTemplate_GTA.zip" ContinueOnError="true" />
+    <Delete Files="ProjectTemplates\Test\ProjectTemplate.GTA.GoogleTest.zip" ContinueOnError="true" />
   </Target>
 </Project>

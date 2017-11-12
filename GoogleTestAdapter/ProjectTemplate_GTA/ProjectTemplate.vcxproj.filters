@@ -21,19 +21,8 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gtest-1.8.0\gtest\gtest-all.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="READ_ME" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="gtest-1.8.0\gtest\gtest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GTA_Traits_1.8.0.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

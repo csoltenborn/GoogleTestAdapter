@@ -1,4 +1,3 @@
-#include "gtest\gtest.h"
 #include "GTA_Traits_1.8.0.h"
 
 /*

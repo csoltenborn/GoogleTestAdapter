@@ -11,14 +11,34 @@ namespace NewProjectWizard.GTA
 {
     public class WizardImplementation : IWizard
     {
+        private const string GtestIncludePlaceholder = "$gtestinclude$";
+        private const string LinkGtestAsDllPlaceholder = "$link_gtest_as_dll$";
+        private const string GtestInclude = "$(SolutionDir)gtest\\include;";
+        private const string LinkGtestAsDll = "GTEST_LINKED_AS_SHARED_LIBRARY;";
+
         private readonly List<Project> _projectsUnderTest = new List<Project>();
+        private Project _gtestProject;
 
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, 
             WizardRunKind runKind, object[] customParams)
         {
             DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
 
-            var cppProjects = dte.Solution.Projects.Cast<Project>().Where(p => p.IsCppProject());
+            var cppProjects = dte.Solution.Projects.Cast<Project>().Where(p => p.IsCppProject()).ToList();
+
+            _gtestProject = FindGtestProject(cppProjects);
+            if (_gtestProject != null)
+            {
+                cppProjects.Remove(_gtestProject);
+            }
+            else if (!ContinueWithoutGtestProject())
+            {
+                throw new WizardCancelledException();
+            }
+
+            replacementsDictionary.Add(GtestIncludePlaceholder, GetGtestInclude());
+            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GetLinkGtestAsDll());
+
             using (var wizard = new SinglePageWizard(cppProjects))
             {
                 var result = wizard.ShowDialog();
@@ -36,6 +56,10 @@ namespace NewProjectWizard.GTA
             try
             {
                 VSProject vsProj = project.Object as VSProject;
+                if (_gtestProject != null)
+                {
+                    vsProj?.References.AddProject(_gtestProject);
+                }
                 foreach (Project referencedProject in _projectsUnderTest)
                 {
                     vsProj?.References.AddProject(referencedProject);
@@ -55,6 +79,32 @@ namespace NewProjectWizard.GTA
 
         public void RunFinished()
         {
+        }
+
+        private Project FindGtestProject(IEnumerable<Project> cppProjects)
+        {
+            return cppProjects.FirstOrDefault(p => p.Name.ToLower() == "gtest");
+        }
+
+        private bool ContinueWithoutGtestProject()
+        {
+            string message = "No 'gtest' project has been found, and thus this project will need some extra steps before being compilable (e.g., add Google Test dependency via NuGet). "
+                             + "Note that you can create a proper Google Test project by first executing project template 'Google Test DLL'. "
+                             + Environment.NewLine
+                             + Environment.NewLine
+                             + "Continue anyways?";
+            string title = "No 'gtest' project found";
+            return MessageBox.Show(message, title, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK;
+        }
+
+        private string GetGtestInclude()
+        {
+            return _gtestProject != null ? GtestInclude : "";
+        }
+
+        private string GetLinkGtestAsDll()
+        {
+            return _gtestProject != null ? LinkGtestAsDll : "";
         }
 
         #region project item specific

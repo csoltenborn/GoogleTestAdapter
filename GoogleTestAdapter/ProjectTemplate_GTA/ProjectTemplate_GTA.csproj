@@ -54,8 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="gtest-1.8.0\LICENSE" />
-    <None Include="ProjectTemplate.vcxproj" />
+    <None Include="ProjectTemplate.vcxproj">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="ProjectTemplate_GTA.vstemplate">
@@ -63,12 +64,9 @@
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GTA_Traits_1.8.0.h" />
     <Content Include="gtest-logo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="gtest-1.8.0\gtest\gtest-all.cc" />
-    <Content Include="gtest-1.8.0\gtest\gtest.h" />
     <Content Include="main.cpp" />
     <None Include="READ_ME" />
     <Content Include="sample_tests.cpp" />

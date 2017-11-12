@@ -15,12 +15,6 @@
 
       <ProjectItem OpenInEditor="true">READ_ME</ProjectItem>
 
-      <ProjectItem>gtest-1.8.0\LICENSE</ProjectItem>
-      <ProjectItem>gtest-1.8.0\gtest\gtest.h</ProjectItem>
-      <ProjectItem>gtest-1.8.0\gtest\gtest-all.cc</ProjectItem>
-
-      <ProjectItem>GTA_Traits_1.8.0.h</ProjectItem>
-
       <ProjectItem>main.cpp</ProjectItem>
       <ProjectItem>sample_tests.cpp</ProjectItem>
     </Project>
