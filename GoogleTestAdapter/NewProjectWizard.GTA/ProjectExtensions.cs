@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -9,14 +8,6 @@ namespace NewProjectWizard.GTA
     public static class ProjectExtensions
     {
         private const string CppKindGuid = "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942";
-
-        private static readonly string[] GoogleTestProjectNames = { "gtest" , "GoogleTest" };
-
-        public static bool IsGtestProject(this Project project)
-        {
-            string normalizedName = project.Name.ToLower();
-            return GoogleTestProjectNames.Any(n => n == normalizedName);
-        }
 
         public static bool IsCppProject(this Project project)
         {
@@ -28,9 +19,8 @@ namespace NewProjectWizard.GTA
         {
             string projectTypeGuids = "";
 
-            var service = GetService(project.DTE, typeof(IVsSolution));
-            var solution = (IVsSolution)service;
-
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            IVsSolution solution = (IVsSolution)GetService((IServiceProvider)project.DTE, typeof(IVsSolution));
             var result = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
             if (result == 0)
             {
@@ -41,18 +31,12 @@ namespace NewProjectWizard.GTA
             return projectTypeGuids;
         }
 
-        private static object GetService(object serviceProvider, Type type)
-        {
-            return GetService(serviceProvider, type.GUID);
-        }
-
-        private static object GetService(object serviceProviderObject, Guid guid)
+        private static object GetService(IServiceProvider serviceProvider, Type type)
         {
             object service = null;
 
-            Guid sidGuid = guid;
+            Guid sidGuid = type.GUID;
             Guid iidGuid = sidGuid;
-            var serviceProvider = (IServiceProvider)serviceProviderObject;
 
             var hr = serviceProvider.QueryService(ref sidGuid, iidGuid, out IntPtr serviceIntPtr);
             if (hr != 0)
