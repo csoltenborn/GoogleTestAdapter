@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.DiaResolver
@@ -102,6 +101,9 @@ namespace GoogleTestAdapter.DiaResolver
     {
         private static class NativeMethods
         {
+            // ReSharper disable once InconsistentNaming
+            public const ushort IMAGE_DIRECTORY_ENTRY_IMPORT = 1;
+
             [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
             public static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
 
@@ -138,7 +140,14 @@ namespace GoogleTestAdapter.DiaResolver
             {
                 bool shouldContinue = true;
                 uint size = 0u;
-                var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 1, &size);
+
+                var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, NativeMethods.IMAGE_DIRECTORY_ENTRY_IMPORT, &size);
+                if (directoryEntry == null)
+                {
+                    logger.DebugWarning($"Error while parsing imports of {executable}: {Win32Utils.GetLastWin32Error()}");
+                    return;
+                }
+
                 while (shouldContinue && directoryEntry->OriginalFirstThunk != 0u)
                 {
                     shouldContinue = predicate(GetString(image, directoryEntry->Name));
