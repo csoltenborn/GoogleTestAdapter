@@ -22,4 +22,8 @@
       <ProjectItem>include\GTA_Traits_1.8.0.h</ProjectItem>
     </Project>
   </TemplateContent>
+  <WizardExtension>
+    <Assembly>NewProjectWizard.GTA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=028d073f99e04687</Assembly>
+    <FullClassName>NewProjectWizard.GTA.GtestDllProjectWizard</FullClassName>
+  </WizardExtension>
 </VSTemplate>

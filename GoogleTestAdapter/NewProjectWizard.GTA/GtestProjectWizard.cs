@@ -9,12 +9,10 @@ using VSLangProj;
 
 namespace NewProjectWizard.GTA
 {
-    public class WizardImplementation : IWizard
+    public class GtestProjectWizard : IWizard
     {
         private const string GtestIncludePlaceholder = "$gtestinclude$";
         private const string LinkGtestAsDllPlaceholder = "$link_gtest_as_dll$";
-        private const string GtestInclude = "$(SolutionDir)gtest\\include;";
-        private const string LinkGtestAsDll = "GTEST_LINKED_AS_SHARED_LIBRARY;";
 
         private readonly List<Project> _projectsUnderTest = new List<Project>();
         private Project _gtestProject;
@@ -26,7 +24,7 @@ namespace NewProjectWizard.GTA
 
             var cppProjects = dte.Solution.Projects.Cast<Project>().Where(p => p.IsCppProject()).ToList();
 
-            _gtestProject = FindGtestProject(cppProjects);
+            _gtestProject = GtestHelper.FindGtestProject(cppProjects);
             if (_gtestProject != null)
             {
                 cppProjects.Remove(_gtestProject);
@@ -36,8 +34,8 @@ namespace NewProjectWizard.GTA
                 throw new WizardCancelledException();
             }
 
-            replacementsDictionary.Add(GtestIncludePlaceholder, GetGtestInclude());
-            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GetLinkGtestAsDll());
+            replacementsDictionary.Add(GtestIncludePlaceholder, GtestHelper.GetGtestInclude(_gtestProject));
+            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GtestHelper.GetLinkGtestAsDll(_gtestProject));
 
             using (var wizard = new SinglePageWizard(cppProjects))
             {
@@ -81,11 +79,6 @@ namespace NewProjectWizard.GTA
         {
         }
 
-        private Project FindGtestProject(IEnumerable<Project> cppProjects)
-        {
-            return cppProjects.FirstOrDefault(p => p.Name.ToLower() == "gtest");
-        }
-
         private bool ContinueWithoutGtestProject()
         {
             string message = "No 'gtest' project has been found, and thus this project will need some extra steps before being compilable (e.g., add Google Test dependency via NuGet). "
@@ -95,16 +88,6 @@ namespace NewProjectWizard.GTA
                              + "Continue anyways?";
             string title = "No 'gtest' project found";
             return MessageBox.Show(message, title, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK;
-        }
-
-        private string GetGtestInclude()
-        {
-            return _gtestProject != null ? GtestInclude : "";
-        }
-
-        private string GetLinkGtestAsDll()
-        {
-            return _gtestProject != null ? LinkGtestAsDll : "";
         }
 
         #region project item specific
