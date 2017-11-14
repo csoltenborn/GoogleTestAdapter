@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 11/2017.
+﻿// This file has been modified by Microsoft on 6/2017.
 
 namespace GoogleTestAdapter.Settings
 {
@@ -43,7 +43,6 @@ namespace GoogleTestAdapter.Settings
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
-        bool? ReportNewProjectTelemetry { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
 
@@ -79,7 +78,6 @@ namespace GoogleTestAdapter.Settings
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
-            self.ReportNewProjectTelemetry = self.ReportNewProjectTelemetry ?? other.ReportNewProjectTelemetry;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 

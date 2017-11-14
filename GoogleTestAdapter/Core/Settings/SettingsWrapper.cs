@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 11/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -381,13 +381,6 @@ namespace GoogleTestAdapter.Settings
         public static readonly string OptionKillProcessesOnCancelDescription = Resources.OptionKillProcessesOnCancelDescription;
 
         public virtual bool KillProcessesOnCancel => _currentSettings.KillProcessesOnCancel ?? OptionKillProcessesOnCancelDefaultValue;
-
-
-        public static readonly string OptionReportNewProjectTelemetry = Resources.OptionReportNewProjectTelemetry;
-        public const bool OptionReportNewProjectTelemetryDefaultValue = true;
-        public static readonly string OptionReportNewProjectTelemetryDescription = Resources.OptionReportNewProjectTelemetryDescription;
-
-        public virtual bool ReportNewProjectTelemetry => _currentSettings.ReportNewProjectTelemetry ?? OptionReportNewProjectTelemetryDefaultValue;
 
         #endregion
 

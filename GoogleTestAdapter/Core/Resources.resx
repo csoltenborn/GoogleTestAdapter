@@ -421,12 +421,6 @@ Placeholders:</value>
   <data name="OptionPrintTestOutputDescription" xml:space="preserve">
     <value>Print the output of the Google Test executable(s) to the Tests Output window.</value>
   </data>
-  <data name="OptionReportNewProjectTelemetry" xml:space="preserve">
-    <value>Report Telemetry</value>
-  </data>
-  <data name="OptionReportNewProjectTelemetryDescription" xml:space="preserve">
-    <value>Report telemetry to Visual Studio when using the New Project wizard for Google Test</value>
-  </data>
   <data name="OptionRunDisabledTests" xml:space="preserve">
     <value>Also run disabled tests</value>
   </data>
