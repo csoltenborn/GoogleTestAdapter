@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
 [![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
-[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-47k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-49k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter) 
 
 
@@ -41,14 +41,14 @@ Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.c
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.12.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.12.1-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download at GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
 The adapters can be installed in several ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Test Adapter for Google Test* or *Google Test Adapter*.
-* Download and launch the VSIX installer from either the Visual Studio Marketplace ([TAfGT](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest), [GTA](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.12.0/GoogleTestAdapter-0.12.0.vsix)
+* Download and launch the VSIX installer from either the Visual Studio Marketplace ([TAfGT](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest), [GTA](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.12.1/GoogleTestAdapter-0.12.1.vsix)
 * [GTA only] Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [troubleshooting section](#trouble_shooting).

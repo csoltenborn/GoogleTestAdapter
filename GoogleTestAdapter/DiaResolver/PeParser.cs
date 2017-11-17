@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+// ReSharper disable InconsistentNaming
 
 namespace GoogleTestAdapter.DiaResolver
 {
     [StructLayout(LayoutKind.Explicit)]
-    // ReSharper disable once InconsistentNaming
     struct IMAGE_DEBUG_DIRECTORY
     {
         [FieldOffset(0)]
@@ -63,7 +63,6 @@ namespace GoogleTestAdapter.DiaResolver
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    // ReSharper disable once InconsistentNaming
     struct IMAGE_IMPORT_DESCRIPTOR
     {
         [FieldOffset(0)]
@@ -118,10 +117,12 @@ namespace GoogleTestAdapter.DiaResolver
     {
         private static class NativeMethods
         {
+            public const ushort IMAGE_DIRECTORY_ENTRY_IMPORT = 1;
+
             public const ushort IMAGE_DOS_SIGNATURE = 0x5A4D;
             public const ushort IMAGE_NT_SIGNATURE = 0x00004550;
 
-            public const uint GENERIC_READ = unchecked(0x80000000);
+            public const uint GENERIC_READ = 0x80000000;
             public const uint FILE_MAP_READ = 0x0004;
             public const uint FILE_SHARE_READ = 0x00000001;
             public const uint OPEN_EXISTING = 3;
@@ -181,42 +182,39 @@ namespace GoogleTestAdapter.DiaResolver
                 }
             }
 
-            unsafe
+            if (fileSize < Marshal.SizeOf(typeof(IMAGE_DOS_HEADER)))
+                return false;
+
+            var dosHeader = (IMAGE_DOS_HEADER*)mapAddr;
+            IMAGE_NT_HEADERS* rawFileHeader;
+            if (dosHeader->e_magic == NativeMethods.IMAGE_DOS_SIGNATURE)
             {
-                if (fileSize < Marshal.SizeOf(typeof(IMAGE_DOS_HEADER)))
-                    return false;
-
-                var dosHeader = (IMAGE_DOS_HEADER*)mapAddr;
-                IMAGE_NT_HEADERS* rawFileHeader;
-                if (dosHeader->e_magic == NativeMethods.IMAGE_DOS_SIGNATURE)
-                {
-                    if (dosHeader->e_lfanew <= 0
-                        || fileSize < dosHeader->e_lfanew + Marshal.SizeOf(typeof(IMAGE_NT_HEADERS)))
-                    {
-                        return false;
-                    }
-
-                    rawFileHeader = (IMAGE_NT_HEADERS*)((byte*)mapAddr + dosHeader->e_lfanew);
-                }
-                else if (dosHeader->e_magic == NativeMethods.IMAGE_NT_SIGNATURE)
-                {
-                    if (fileSize < Marshal.SizeOf(typeof(IMAGE_NT_HEADERS)))
-                        return false;
-
-                    rawFileHeader = (IMAGE_NT_HEADERS*)mapAddr;
-                }
-                else
+                if (dosHeader->e_lfanew <= 0
+                    || fileSize < dosHeader->e_lfanew + Marshal.SizeOf(typeof(IMAGE_NT_HEADERS)))
                 {
                     return false;
                 }
 
-                if (rawFileHeader->Signature != NativeMethods.IMAGE_NT_SIGNATURE)
-                    return false;
-
-                loadedImage.MappedAddress = mapAddr;
-                loadedImage.FileHeader = (IntPtr)rawFileHeader;
-                return true;
+                rawFileHeader = (IMAGE_NT_HEADERS*)((byte*)mapAddr + dosHeader->e_lfanew);
             }
+            else if (dosHeader->e_magic == NativeMethods.IMAGE_NT_SIGNATURE)
+            {
+                if (fileSize < Marshal.SizeOf(typeof(IMAGE_NT_HEADERS)))
+                    return false;
+
+                rawFileHeader = (IMAGE_NT_HEADERS*)mapAddr;
+            }
+            else
+            {
+                return false;
+            }
+
+            if (rawFileHeader->Signature != NativeMethods.IMAGE_NT_SIGNATURE)
+                return false;
+
+            loadedImage.MappedAddress = mapAddr;
+            loadedImage.FileHeader = (IntPtr)rawFileHeader;
+            return true;
         }
 
         private static bool UnMapAndLoad(ref LoadedImage loadedImage)
@@ -252,7 +250,14 @@ namespace GoogleTestAdapter.DiaResolver
             {
                 bool shouldContinue = true;
                 uint size = 0u;
-                var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 1, &size);
+
+                var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, NativeMethods.IMAGE_DIRECTORY_ENTRY_IMPORT, &size);
+                if (directoryEntry == null)
+                {
+                    logger.DebugWarning($"Error while parsing imports of {executable}: {Win32Utils.GetLastWin32Error()}");
+                    return;
+                }
+
                 while (shouldContinue && directoryEntry->OriginalFirstThunk != 0u)
                 {
                     shouldContinue = predicate(GetString(image, directoryEntry->Name));

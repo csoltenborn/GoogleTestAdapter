@@ -51,7 +51,8 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
                 { new Version(0, 10, 2), new DateTime(2017, 8, 27) },
                 { new Version(0, 11, 0), new DateTime(2017, 9, 24) },
                 { new Version(0, 11, 1), new DateTime(2017, 9, 29) },
-                { new Version(0, 12, 0), new DateTime(2017, 10, 20) }
+                { new Version(0, 12, 0), new DateTime(2017, 10, 20) },
+                { new Version(0, 12, 1), new DateTime(2017, 11, 16) }
             };
         }
 
