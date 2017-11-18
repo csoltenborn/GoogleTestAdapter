@@ -44,6 +44,7 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
             mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
 
+            mockOptions.Setup(o => o.AdditionalPdbs).Returns(SettingsWrapper.OptionAdditionalPdbsDefaultValue);
             mockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds)
                 .Returns(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue);
             mockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());

@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            var testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
+            var testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable), _settings.GetAdditionalPdbs(_executable));
 
             IList<TestCase> testCases = new List<TestCase>();
             IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
@@ -93,6 +93,7 @@ namespace GoogleTestAdapter.TestCases
             var resolver = new NewTestCaseResolver(
                 _executable,
                 _settings.GetPathExtension(_executable),
+                _settings.GetAdditionalPdbs(_executable),
                 _diaResolverFactory,
                 _settings.ParseSymbolInformation,
                 _logger);
@@ -198,7 +199,7 @@ namespace GoogleTestAdapter.TestCases
             return true;
         }
 
-        private Dictionary<string, TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension)
+        private Dictionary<string, TestCaseLocation> GetTestCaseLocations(IList<TestCaseDescriptor> testCaseDescriptors, string pathExtension, IEnumerable<string> additionalPdbs)
         {
             var testMethodSignatures = new HashSet<string>();
             foreach (var descriptor in testCaseDescriptors)
@@ -211,7 +212,7 @@ namespace GoogleTestAdapter.TestCases
 
             string filterString = "*" + GoogleTestConstants.TestBodySignature;
             var resolver = new TestCaseResolver(_diaResolverFactory, _logger);
-            return resolver.ResolveAllTestCases(_executable, testMethodSignatures, filterString, pathExtension);
+            return resolver.ResolveAllTestCases(_executable, testMethodSignatures, filterString, pathExtension, additionalPdbs);
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor)

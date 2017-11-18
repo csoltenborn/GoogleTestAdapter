@@ -177,6 +177,7 @@ namespace GoogleTestAdapter.VsPackage
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
                 TestDiscoveryRegex = _generalOptions.TestDiscoveryRegex,
+                AdditionalPdbs = _generalOptions.AdditionalPdbs,
                 TestDiscoveryTimeoutInSeconds = _generalOptions.TestDiscoveryTimeoutInSeconds,
                 WorkingDir = _generalOptions.WorkingDir,
                 PathExtension = _generalOptions.PathExtension,

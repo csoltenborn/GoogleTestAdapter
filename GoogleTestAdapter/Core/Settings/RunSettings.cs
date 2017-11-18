@@ -1,8 +1,5 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
-using System;
-using System.Diagnostics;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace GoogleTestAdapter.Settings
@@ -25,6 +22,9 @@ namespace GoogleTestAdapter.Settings
 
         public virtual string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
+
+        public virtual string AdditionalPdbs { get; set; }
+        public bool ShouldSerializeAdditionalPdbs() { return AdditionalPdbs != null; }
 
         public virtual int? TestDiscoveryTimeoutInSeconds { get; set; }
         public bool ShouldSerializeTestDiscoveryTimeoutInSeconds() { return TestDiscoveryTimeoutInSeconds != null; }

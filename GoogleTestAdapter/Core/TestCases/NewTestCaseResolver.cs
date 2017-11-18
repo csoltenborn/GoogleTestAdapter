@@ -18,6 +18,7 @@ namespace GoogleTestAdapter.TestCases
 
         private readonly string _executable;
         private readonly string _pathExtension;
+        private readonly IEnumerable<string> _additionalPdbs;
         private readonly IDiaResolverFactory _diaResolverFactory;
         private readonly ILogger _logger;
 
@@ -26,10 +27,11 @@ namespace GoogleTestAdapter.TestCases
 
         private bool _loadedSymbolsFromImports;
 
-        internal NewTestCaseResolver(string executable, string pathExtension, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
+        internal NewTestCaseResolver(string executable, string pathExtension, IEnumerable<string> additionalPdbs, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
         {
             _executable = executable;
             _pathExtension = pathExtension;
+            _additionalPdbs = additionalPdbs;
             _diaResolverFactory = diaResolverFactory;
             _logger = logger;
 
@@ -44,11 +46,26 @@ namespace GoogleTestAdapter.TestCases
             TestCaseLocation result = DoFindTestCaseLocation(testMethodSignatures);
             if (result == null && !_loadedSymbolsFromImports)
             {
+                LoadSymbolsFromAdditionalPdbs();
                 LoadSymbolsFromImports();
                 _loadedSymbolsFromImports = true;
                 result = DoFindTestCaseLocation(testMethodSignatures);
             }
             return result;
+        }
+
+        private void LoadSymbolsFromAdditionalPdbs()
+        {
+            foreach (var pdb in _additionalPdbs)
+            {
+                if (!File.Exists(pdb))
+                {
+                    _logger.LogWarning($"Configured .pdb file '{pdb}' does not exist");
+                    continue;
+                }
+                
+                AddSymbolsFromBinary(_executable, pdb);
+            }
         }
 
         private void LoadSymbolsFromImports()
@@ -66,14 +83,26 @@ namespace GoogleTestAdapter.TestCases
 
         private void AddSymbolsFromBinary(string binary)
         {
-            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, _pathExtension, _logger))
+            string pdb = PdbLocator.FindPdbFile(binary, _pathExtension, _logger);
+            if (pdb == null)
+            {
+                _logger.DebugWarning($"No .pdb file found for '{binary}'");
+                return;
+            }
+
+            AddSymbolsFromBinary(binary, pdb);
+        }
+
+        private void AddSymbolsFromBinary(string binary, string pdb)
+        {
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pdb, _logger))
             {
                 try
                 {
                     _allTestMethodSymbols.AddRange(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     _allTraitSymbols.AddRange(diaResolver.GetFunctions("*" + TraitAppendix));
 
-                    _logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}");
+                    _logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}, pdb {pdb}");
                 }
                 catch (Exception e)
                 {

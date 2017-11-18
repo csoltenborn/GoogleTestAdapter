@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
@@ -26,43 +25,80 @@ namespace GoogleTestAdapter.TestCases
             _logger = logger;
         }
 
-        internal Dictionary<string, TestCaseLocation> ResolveAllTestCases(string executable, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension)
+        internal Dictionary<string, TestCaseLocation> ResolveAllTestCases(string executable, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension, IEnumerable<string> additionalPdbs)
         {
             var testCaseLocationsFound = FindTestCaseLocationsInBinary(executable, testMethodSignatures, symbolFilterString, pathExtension);
-
             if (testCaseLocationsFound.Count == 0)
             {
-                List<string> imports = PeParser.ParseImports(executable, _logger);
-
-                string moduleDirectory = Path.GetDirectoryName(executable);
-
-                foreach (string import in imports)
-                {
-                    // ReSharper disable once AssignNullToNotNullAttribute
-                    string importedBinary = Path.Combine(moduleDirectory, import);
-                    if (File.Exists(importedBinary))
-                    {
-                        foreach (var testCaseLocation in FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures, symbolFilterString, pathExtension))
-                        {
-                            testCaseLocationsFound.Add(testCaseLocation.Key, testCaseLocation.Value);
-                        }
-                    }
-                }
+                ResolveTestCasesFromAdditionalPdbs(testCaseLocationsFound, executable, additionalPdbs, testMethodSignatures, symbolFilterString);
+                ResolveTestCasesFromImports(testCaseLocationsFound, executable, pathExtension, testMethodSignatures, symbolFilterString);
             }
             return testCaseLocationsFound;
         }
 
-
         private Dictionary<string, TestCaseLocation> FindTestCaseLocationsInBinary(
             string binary, HashSet<string> testMethodSignatures, string symbolFilterString, string pathExtension)
         {
-            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pathExtension, _logger))
+            string pdb = PdbLocator.FindPdbFile(binary, pathExtension, _logger);
+            if (pdb == null)
+            {
+                _logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You might not get source locations for some or all of your tests.");
+                return new Dictionary<string, TestCaseLocation>();
+            }
+
+            return FindTestCaseLocations(binary, pdb, testMethodSignatures, symbolFilterString);
+        }
+
+        private void ResolveTestCasesFromAdditionalPdbs(Dictionary<string, TestCaseLocation> testCaseLocationsFound, string executable,
+            IEnumerable<string> additionalPdbs, HashSet<string> testMethodSignatures, string symbolFilterString)
+        {
+            foreach (string pdb in additionalPdbs)
+            {
+                if (!File.Exists(pdb))
+                {
+                    _logger.LogWarning($"Configured additional PDB file '{pdb}' does not exist");
+                    continue;
+                }
+                foreach (var keyValuePair in FindTestCaseLocations(executable, pdb, testMethodSignatures, symbolFilterString))
+                {
+                    testCaseLocationsFound.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+        }
+
+        private void ResolveTestCasesFromImports(Dictionary<string, TestCaseLocation> testCaseLocationsFound, string executable, string pathExtension,
+            HashSet<string> testMethodSignatures, string symbolFilterString)
+        {
+            List<string> imports = PeParser.ParseImports(executable, _logger);
+
+            string moduleDirectory = Path.GetDirectoryName(executable);
+
+            foreach (string import in imports)
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute
+                string importedBinary = Path.Combine(moduleDirectory, import);
+                if (File.Exists(importedBinary))
+                {
+                    foreach (var testCaseLocation in FindTestCaseLocationsInBinary(importedBinary, testMethodSignatures,
+                        symbolFilterString, pathExtension))
+                    {
+                        testCaseLocationsFound.Add(testCaseLocation.Key, testCaseLocation.Value);
+                    }
+                }
+            }
+        }
+
+        private Dictionary<string, TestCaseLocation> FindTestCaseLocations(string binary, string pdb, HashSet<string> testMethodSignatures,
+            string symbolFilterString)
+        {
+            using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pdb, _logger))
             {
                 try
                 {
                     IList<SourceFileLocation> allTestMethodSymbols = diaResolver.GetFunctions(symbolFilterString);
                     IList<SourceFileLocation> allTraitSymbols = diaResolver.GetFunctions("*" + TraitAppendix);
-                    _logger.DebugInfo($"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
+                    _logger.DebugInfo(
+                        $"Found {allTestMethodSymbols.Count} test method symbols and {allTraitSymbols.Count} trait symbols in binary {binary}");
 
                     return allTestMethodSymbols
                         .Where(nsfl => testMethodSignatures.Contains(TestCaseFactory.StripTestSymbolNamespace(nsfl.Symbol)))
