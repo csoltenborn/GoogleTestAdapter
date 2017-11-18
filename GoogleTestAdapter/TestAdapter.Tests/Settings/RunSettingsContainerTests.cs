@@ -1,5 +1,6 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using System;
 using System.Xml;
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
@@ -130,6 +131,31 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             runSettingsContainer.ProjectSettings[0].TraitsRegexesBefore.Should().BeNull();
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void LoadFromXml_SolutionSettingsWithSkipOriginCheck_AreNotLoaded()
+        {
+            Action action = () => LoadSettings(TestResources.SkipOriginCheckSolutionTestSettings);
+            action.ShouldThrow<InvalidRunSettingsException>();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void LoadFromXml_ProjectSettingsWithSkipOriginCheck_AreNotLoaded()
+        {
+            Action action = () => LoadSettings(TestResources.SkipOriginCheckProjectTestSettings);
+            action.ShouldThrow<InvalidRunSettingsException>();
+        }
+
+        private static void LoadSettings(string settingsFile)
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(settingsFile);
+            var navigator = xmlDocument.CreateNavigator();
+            navigator.MoveToChild(Constants.RunSettingsName, "");
+            navigator.MoveToChild(GoogleTestConstants.SettingsName, "");
+            RunSettingsContainer.LoadFromXml(navigator);
+        }
     }
 
 }

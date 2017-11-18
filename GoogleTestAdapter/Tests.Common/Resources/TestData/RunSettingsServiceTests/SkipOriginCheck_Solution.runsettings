@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <GoogleTestAdapterSettings>
+    <SolutionSettings>
+      <Settings>
+        <SkipOriginCheck>true</SkipOriginCheck>
+      </Settings>
+    </SolutionSettings>
+    <ProjectSettings/>
+  </GoogleTestAdapterSettings>
+</RunSettings>

@@ -1,6 +1,5 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
-using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -9,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32.SafeHandles;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -74,43 +74,72 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public void DiscoverTests_UntrustedExecutableWithSkipOriginCheck_IsRun()
+        {
+            var semPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            // ReSharper disable once AssignNullToNotNullAttribute
+            var temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
+
+            // Verify untrusted exe is run
+            MockOptions.Setup(o => o.SkipOriginCheck).Returns(true);
+            try
+            {
+                File.Copy(TestResources.SemaphoreExe, temp2Exe);
+                MarkUntrusted(temp2Exe);
+                semPath.AsFileInfo().Should().NotExist();
+                RunExecutableAndCheckLogging(temp2Exe,
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
+                        Times.Once));
+                semPath.AsFileInfo().Should().Exist("exe should have been run");
+            }
+            finally
+            {
+                File.Delete(semPath);
+                File.Delete(temp2Exe);
+            }
+        }
+
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DiscoverTests_UntrustedExecutable_IsNotRun()
         {
-            var SemPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
-            var Temp1Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe"));
-            var Temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
+            var semPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            var temp1Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe"));
+            var temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
 
             // Verify baseline
             try
             {
-                File.Copy(TestResources.SemaphoreExe, Temp1Exe);
-                SemPath.AsFileInfo().Should().NotExist();
-                RunExecutableAndCheckLogging(Temp1Exe,
+                File.Copy(TestResources.SemaphoreExe, temp1Exe);
+                semPath.AsFileInfo().Should().NotExist();
+                RunExecutableAndCheckLogging(temp1Exe,
                     () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
                         Times.Once));
-                SemPath.AsFileInfo().Should().Exist("exe should have been run");
+                semPath.AsFileInfo().Should().Exist("exe should have been run");
             }
             finally
             {
-                File.Delete(SemPath);
-                File.Delete(Temp1Exe);
+                File.Delete(semPath);
+                File.Delete(temp1Exe);
             }
 
             // Verify untrusted exe is not run
             try
             {
-                File.Copy(TestResources.SemaphoreExe, Temp2Exe);
-                MarkUntrusted(Temp2Exe);
-                SemPath.AsFileInfo().Should().NotExist();
-                RunExecutableAndCheckLogging(Temp2Exe,
+                File.Copy(TestResources.SemaphoreExe, temp2Exe);
+                MarkUntrusted(temp2Exe);
+                semPath.AsFileInfo().Should().NotExist();
+                RunExecutableAndCheckLogging(temp2Exe,
                     () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("was blocked to help protect"))),
                         Times.Once));
-                SemPath.AsFileInfo().Should().NotExist("exe should not have been run");
+                semPath.AsFileInfo().Should().NotExist("exe should not have been run");
             }
             finally
             {
-                File.Delete(SemPath);
-                File.Delete(Temp2Exe);
+                File.Delete(semPath);
+                File.Delete(temp2Exe);
             }
         }
 
@@ -154,6 +183,7 @@ namespace GoogleTestAdapter.TestAdapter
 
     }
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     static class NativeMethods
     {
         public const int GENERIC_WRITE = 1073741824;

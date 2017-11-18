@@ -48,7 +48,7 @@ namespace GoogleTestAdapter
         {
             executable = Path.GetFullPath(executable);
             executable.AsFileInfo().Should().Exist();
-            GoogleTestDiscoverer.VerifyExecutableTrust(executable, MockLogger.Object)
+            GoogleTestDiscoverer.VerifyExecutableTrust(executable, MockOptions.Object, MockLogger.Object)
                 .Should().BeTrue($"'{executable}' is built by us");
         }
 

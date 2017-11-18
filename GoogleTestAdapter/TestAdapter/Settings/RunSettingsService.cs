@@ -51,8 +51,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
                 }
             }
-            catch (InvalidRunSettingsException)
+            catch (InvalidRunSettingsException e)
             {
+                logger.Log(MessageLevel.Error, $"Invalid run settings: {e.Message}");
             }
 
             string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
