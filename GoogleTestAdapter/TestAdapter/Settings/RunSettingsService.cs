@@ -100,7 +100,11 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         private void GetValuesFromGlobalSettings(RunSettings settings)
         {
+            // these settings must not be provided through runsettings files. If they still
+            // are, the following makes sure that they are ignored
             settings.DebuggingNamedPipeId = null;
+            settings.SkipOriginCheck = null;
+
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }
 

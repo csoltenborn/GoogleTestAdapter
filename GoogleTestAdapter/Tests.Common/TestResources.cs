@@ -69,8 +69,6 @@ namespace GoogleTestAdapter.Tests.Common
 
         public const string SolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\Solution.gta.runsettings";
         public const string UserTestSettings = TestdataDir + @"RunSettingsServiceTests\User.runsettings";
-        public const string SkipOriginCheckSolutionTestSettings = TestdataDir + @"RunSettingsServiceTests\SkipOriginCheck_Solution.runsettings";
-        public const string SkipOriginCheckProjectTestSettings = TestdataDir + @"RunSettingsServiceTests\SkipOriginCheck_Project.runsettings";
         public const string UserTestSettingsWithoutRunSettingsNode = TestdataDir + @"RunSettingsServiceTests\User_WithoutRunSettingsNode.runsettings";
         public const string UserTestSettingsForGeneratedTests_Project = TestdataDir + "Project.runsettings";
         public const string UserTestSettingsForGeneratedTests_Solution = TestdataDir + "Solution.runsettings";
