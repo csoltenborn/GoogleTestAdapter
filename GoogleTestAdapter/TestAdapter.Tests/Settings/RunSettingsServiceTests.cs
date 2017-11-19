@@ -97,6 +97,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").Should().NotBeNull();
             resultingContainer.GetSettingsForExecutable("project3").Should().NotBeNull();
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -111,6 +113,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -125,6 +129,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -139,6 +145,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(GlobalWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -153,6 +161,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -167,6 +177,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -181,6 +193,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(SolutionSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -195,6 +209,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -209,6 +225,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -223,6 +241,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -237,6 +257,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -251,6 +273,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -265,6 +289,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserProject3WorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -279,6 +305,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").Should().BeNull();
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(GlobalWorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         [TestMethod]
@@ -293,6 +321,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             resultingContainer.GetSettingsForExecutable("project2").WorkingDir.Should().Be(SolutionProject2WorkingDir);
             resultingContainer.GetSettingsForExecutable("project3").WorkingDir.Should().Be(UserSolutionWorkingDir);
             resultingContainer.GetSettingsForExecutable("not_matched").Should().BeNull();
+
+            CheckSkipOriginCheck(resultingContainer);
         }
 
         private RunSettingsService SetupRunSettingsService(string solutionRunSettingsFile)
@@ -302,7 +332,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 AdditionalTestExecutionParam = "Global",
                 NrOfTestRepetitions = 1,
                 MaxNrOfThreads = 1,
-                TraitsRegexesBefore = "Global"
+                TraitsRegexesBefore = "Global",
+                SkipOriginCheck = false
             };
 
             var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
@@ -344,7 +375,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             string solutionSolutionWorkingDir, string solutionProject1WorkingDir, string solutionProject2WorkingDir, 
             string userSolutionWorkingDir, string userProject1WorkingDir, string userProject3WorkingDir)
         {
-            var globalSettings = new RunSettings { ProjectRegex = null, WorkingDir = GlobalWorkingDir };
+            var globalSettings = new RunSettings { ProjectRegex = null, WorkingDir = GlobalWorkingDir, SkipOriginCheck = false};
             var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
             mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalSettings);
 
@@ -382,7 +413,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 SolutionSettings = new RunSettings
                 {
                     ProjectRegex = null,
-                    WorkingDir = solutionWorkingDir
+                    WorkingDir = solutionWorkingDir,
+                    SkipOriginCheck = true
                 },
                 ProjectSettings = new List<RunSettings>()
             };
@@ -402,7 +434,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             settingsContainer.ProjectSettings.Add(new RunSettings
             {
                 ProjectRegex = project,
-                WorkingDir = workingDir == "" ? null : workingDir
+                WorkingDir = workingDir == "" ? null : workingDir,
+                SkipOriginCheck = true
             });
         }
 
@@ -433,6 +466,19 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             document.Save(settingsFile);
 
             return settingsFile;
+        }
+
+        private void CheckSkipOriginCheck(RunSettingsContainer runSettingsContainer)
+        {
+            runSettingsContainer.SolutionSettings.SkipOriginCheck.Should().BeFalse();
+            foreach (RunSettings projectSettings in runSettingsContainer.ProjectSettings)
+            {
+                projectSettings.SkipOriginCheck.Should().BeFalse();
+            }
+            runSettingsContainer.GetSettingsForExecutable("project1")?.SkipOriginCheck.Should().BeFalse();
+            runSettingsContainer.GetSettingsForExecutable("project2")?.SkipOriginCheck.Should().BeFalse();
+            runSettingsContainer.GetSettingsForExecutable("project3")?.SkipOriginCheck.Should().BeFalse();
+            runSettingsContainer.GetSettingsForExecutable("not_matched")?.SkipOriginCheck.Should().BeFalse();
         }
 
     }
