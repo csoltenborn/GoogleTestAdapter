@@ -142,7 +142,7 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
               __VA_ARGS__)
 
 
-# define TYPED_TEST_TRAITS(CaseName, TestName, ...) \
+#define TYPED_TEST_TRAITS(CaseName, TestName, ...) \
   template <typename gtest_TypeParam_> \
   class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \
       : public CaseName<gtest_TypeParam_> { \
@@ -168,7 +168,7 @@ void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
   void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
 
 
-# define TYPED_TEST_P_TRAITS(CaseName, TestName, ...) \
+#define TYPED_TEST_P_TRAITS(CaseName, TestName, ...) \
   namespace GTEST_CASE_NAMESPACE_(CaseName) { \
   template <typename gtest_TypeParam_> \
   class TestName : public CaseName<gtest_TypeParam_> { \

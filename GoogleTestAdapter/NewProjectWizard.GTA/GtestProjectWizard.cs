@@ -21,18 +21,15 @@ namespace NewProjectWizard.GTA
             WizardRunKind runKind, object[] customParams)
         {
             DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
-
             var cppProjects = dte.Solution.Projects.Cast<Project>().Where(p => p.IsCppProject()).ToList();
 
-            _gtestProject = GtestHelper.FindGtestProject(cppProjects);
-            if (_gtestProject != null)
-            {
-                cppProjects.Remove(_gtestProject);
-            }
-            else if (!ContinueWithoutGtestProject())
+            var gtestProjects = GtestHelper.FindGtestProjects(cppProjects).ToList();
+            _gtestProject = gtestProjects.FirstOrDefault();
+            if (_gtestProject == null && !ContinueWithoutGtestProject())
             {
                 throw new WizardCancelledException();
             }
+            cppProjects.RemoveAll(p => gtestProjects.Contains(p));
 
             replacementsDictionary.Add(GtestIncludePlaceholder, GtestHelper.GetGtestInclude(_gtestProject));
             replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GtestHelper.GetLinkGtestAsDll(_gtestProject));
@@ -51,23 +48,13 @@ namespace NewProjectWizard.GTA
 
         public void ProjectFinishedGenerating(Project project)
         {
-            try
+            if (_gtestProject != null)
             {
-                VSProject vsProj = project.Object as VSProject;
-                if (_gtestProject != null)
-                {
-                    vsProj?.References.AddProject(_gtestProject);
-                }
-                foreach (Project referencedProject in _projectsUnderTest)
-                {
-                    vsProj?.References.AddProject(referencedProject);
-                }
+                SafeAddProjectReference(project, _gtestProject);
             }
-            catch (Exception ex)
+            foreach (Project projectUnderTest in _projectsUnderTest)
             {
-                // Known issue, remove when fixed
-                if (!ex.Message.Equals("Error HRESULT E_FAIL has been returned from a call to a COM component."))
-                    throw;
+                SafeAddProjectReference(project, projectUnderTest);
             }
         }
 
@@ -81,13 +68,28 @@ namespace NewProjectWizard.GTA
 
         private bool ContinueWithoutGtestProject()
         {
-            string message = "No 'gtest' project has been found, and thus this project will need some extra steps before being compilable (e.g., add Google Test dependency via NuGet). "
+            string message = "No gtest project has been found, and thus this project will need some extra steps before being compilable (e.g., add Google Test dependency via NuGet). "
                              + "Note that you can create a proper Google Test project by first executing project template 'Google Test DLL'. "
                              + Environment.NewLine
                              + Environment.NewLine
                              + "Continue anyways?";
-            string title = "No 'gtest' project found";
+            string title = "No gtest project found";
             return MessageBox.Show(message, title, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK;
+        }
+
+        private void SafeAddProjectReference(Project project, Project referencedProject)
+        {
+            try
+            {
+                VSProject vsProj = project.Object as VSProject;
+                vsProj?.References.AddProject(referencedProject);
+            }
+            catch (Exception ex)
+            {
+                // Known issue, remove when fixed
+                if (!ex.Message.Equals("Error HRESULT E_FAIL has been returned from a call to a COM component."))
+                    throw;
+            }
         }
 
         #region project item specific

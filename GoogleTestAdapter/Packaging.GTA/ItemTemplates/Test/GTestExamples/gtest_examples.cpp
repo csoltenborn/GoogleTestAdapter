@@ -44,7 +44,7 @@ void AssertThrowsForZero(IFibonacci* fibonacci)
    ASSERT_THROW(fibonacci->Fib(0), std::invalid_argument);
 }
 
-void AssertComputesCorrectValue(IFibonacci* fibonacci)
+void AssertComputesCorrectValues(IFibonacci* fibonacci)
 {
    EXPECT_EQ(1, fibonacci->Fib(1));
    EXPECT_EQ(1, fibonacci->Fib(2));
@@ -66,7 +66,7 @@ TEST(SimpleTests, ThrowsForZero)
 TEST_TRAITS(SimpleTests, ComputesCorrectValue, Type, Complex)
 {
    IFibonacci* fibonacci = new IterativeFibonacci();
-   AssertComputesCorrectValue(fibonacci);
+   AssertComputesCorrectValues(fibonacci);
    delete fibonacci;
 }
 
@@ -108,7 +108,7 @@ TEST_F(FixtureTests, ThrowsForZero)
 
 TEST_F_TRAITS(FixtureTests, ComputesCorrectValue, Type, Complex)
 {
-   AssertComputesCorrectValue(_fibonacci);
+   AssertComputesCorrectValues(_fibonacci);
 }
 
 
@@ -124,7 +124,7 @@ TEST_P(ParameterizedTests, ThrowsForZero)
 
 TEST_P_TRAITS(ParameterizedTests, ComputesCorrectValue, Type, Complex)
 {
-   AssertComputesCorrectValue(GetParam());
+   AssertComputesCorrectValues(GetParam());
 }
 
 IterativeFibonacci iterativeFibonacci;
@@ -162,7 +162,7 @@ TYPED_TEST(TypedTests, ThrowsForZero) {
 }
 
 TYPED_TEST_TRAITS(TypedTests, ComputesCorrectValue, Type, Complex) {
-   AssertComputesCorrectValue(_fibonacci);
+   AssertComputesCorrectValues(_fibonacci);
 }
 
 
@@ -190,7 +190,7 @@ TYPED_TEST_P(TypeParameterizedTests, ThrowsForZero) {
 }
 
 TYPED_TEST_P_TRAITS(TypeParameterizedTests, ComputesCorrectValue, Type, Complex) {
-   AssertComputesCorrectValue(_fibonacci);
+   AssertComputesCorrectValues(_fibonacci);
 }
 
 REGISTER_TYPED_TEST_CASE_P(TypeParameterizedTests, ThrowsForZero, ComputesCorrectValue);

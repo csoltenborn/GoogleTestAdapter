@@ -7,11 +7,11 @@
     <Description>C++ project containing Google Test to be compiled into a DLL, which can then be consumed by test projects.</Description>
     <Icon>gtest-logo.ico</Icon>
     <SortOrder>1000</SortOrder>
-    <DefaultName>name will be ignored</DefaultName>
+    <DefaultName>gtest</DefaultName>
   </TemplateData>
   <TemplateContent>
-    <Project File="ProjectTemplate.vcxproj" TargetFileName="gtest.vcxproj" ReplaceParameters="true" >
-      <ProjectItem TargetFileName="gtest.vcxproj.filters" ReplaceParameters="true">ProjectTemplate.vcxproj.filters</ProjectItem>
+    <Project File="ProjectTemplate.vcxproj" TargetFileName="$safeprojectname$.vcxproj" ReplaceParameters="true" >
+      <ProjectItem TargetFileName="$safeprojectname$.vcxproj.filters" ReplaceParameters="true">ProjectTemplate.vcxproj.filters</ProjectItem>
 
       <ProjectItem OpenInEditor="true">READ_ME</ProjectItem>
       <ProjectItem>LICENSE</ProjectItem>
@@ -22,8 +22,4 @@
       <ProjectItem>include\GTA_Traits_1.8.0.h</ProjectItem>
     </Project>
   </TemplateContent>
-  <WizardExtension>
-    <Assembly>NewProjectWizard.GTA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=028d073f99e04687</Assembly>
-    <FullClassName>NewProjectWizard.GTA.GtestDllProjectWizard</FullClassName>
-  </WizardExtension>
 </VSTemplate>
