@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TemplateWizard;
+using NewProjectWizard.GTA.Helpers;
 using VSLangProj;
 
 namespace NewProjectWizard.GTA
 {
     public class GtestProjectWizard : IWizard
     {
+        private const string ToolsetPlaceholder = "$gta_toolset$";
+        private const string GenerateDebugInformationPlaceholder = "$gta_generate_debug_information$";
+        private const string VariadicMaxPlaceholder = "$gta_variadic_max$";
         private const string GtestIncludePlaceholder = "$gtestinclude$";
         private const string LinkGtestAsDllPlaceholder = "$link_gtest_as_dll$";
 
@@ -31,9 +36,6 @@ namespace NewProjectWizard.GTA
             }
             cppProjects.RemoveAll(p => gtestProjects.Contains(p));
 
-            replacementsDictionary.Add(GtestIncludePlaceholder, GtestHelper.GetGtestInclude(_gtestProject));
-            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GtestHelper.GetLinkGtestAsDll(_gtestProject));
-
             using (var wizard = new SinglePageWizard(cppProjects))
             {
                 var result = wizard.ShowDialog();
@@ -44,6 +46,12 @@ namespace NewProjectWizard.GTA
 
                 _projectsUnderTest.AddRange(wizard.SelectedProjects);
             }
+
+            replacementsDictionary.Add(ToolsetPlaceholder, GetPlatformToolset(_projectsUnderTest));
+            replacementsDictionary.Add(GenerateDebugInformationPlaceholder, VisualStudioHelper.GetGenerateDebugInformationFromVisualStudioVersion());
+            replacementsDictionary.Add(VariadicMaxPlaceholder, VisualStudioHelper.GetVariadicMaxFromVisualStudioVersion());
+            replacementsDictionary.Add(GtestIncludePlaceholder, GtestHelper.GetGtestInclude(_gtestProject));
+            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GtestHelper.GetLinkGtestAsDll(_gtestProject));
         }
 
         public void ProjectFinishedGenerating(Project project)
@@ -89,6 +97,84 @@ namespace NewProjectWizard.GTA
                 // Known issue, remove when fixed
                 if (!ex.Message.Equals("Error HRESULT E_FAIL has been returned from a call to a COM component."))
                     throw;
+            }
+        }
+
+        private string GetPlatformToolset(IEnumerable<Project> projectsUnderTest)
+        {
+            try
+            {
+                var platformToolset = GetPlatformToolsetFromProjects(projectsUnderTest);
+                if (platformToolset != null)
+                {
+                    return platformToolset;
+                }
+            }
+            catch
+            {
+                // fallback to toolset by VS version
+            }
+
+            return VisualStudioHelper.GetPlatformToolsetFromVisualStudioVersion();
+        }
+
+        private string GetPlatformToolsetFromProjects(IEnumerable<Project> projectsUnderTest)
+        {
+            var toolsetsInUse = new HashSet<string>();
+            foreach (Project project in projectsUnderTest)
+            {
+                XmlDocument projectFile = new XmlDocument();
+                projectFile.Load(project.FullName);
+                var nodes = projectFile.GetElementsByTagName("PlatformToolset");
+                foreach (XmlNode node in nodes)
+                {
+                    toolsetsInUse.Add(node.InnerText);
+                }
+            }
+
+            if (toolsetsInUse.Count > 0)
+            {
+                var comparer = new ToolsetComparer();
+                string toolset = toolsetsInUse.OrderByDescending(ts => ts, comparer).First();
+                if (comparer.IsKnownToolset(toolset))
+                {
+                    return toolset;
+                }
+            }
+
+            return null;
+        }
+
+        private class ToolsetComparer : IComparer<string>
+        {
+            private const int UnknownToolset = -1;
+
+            public int Compare(string x, string y)
+            {
+                return GetToolsetIndex(x).CompareTo(GetToolsetIndex(y));
+            }
+
+            public bool IsKnownToolset(string toolset)
+            {
+                return GetToolsetIndex(toolset) != UnknownToolset;
+            }
+
+            private int GetToolsetIndex(string toolset)
+            {
+                switch (toolset)
+                {
+                    case "v100": return 100;
+                    case "v100_xp": return 200;
+                    case "v110": return 300;
+                    case "v110_xp": return 400;
+                    case "v120": return 500;
+                    case "v120_xp": return 600;
+                    case "v140": return 700;
+                    case "v140_xp": return 800;
+                    case "v141": return 900;
+                    case "v141_xp": return 1000;
+                    default: return UnknownToolset;
+                }
             }
         }
 

@@ -85,6 +85,9 @@
     <PreBuildEvent>if exist "$(SolutionDir)Keys\Key_Release.snk" (
     echo Changing PublicKeyToken for release build
     powershell "(Get-Content $(ProjectDir)ProjectTemplate_GTA.vstemplate) -replace 'PublicKeyToken=[0-9a-zA-Z]+', 'PublicKeyToken=8d7bc984b03f1caf' | Out-File $(ProjectDir)ProjectTemplate_GTA.vstemplate" -encoding "UTF8"
+) else (
+    echo Changing PublicKeyToken for debug build
+    powershell "(Get-Content $(ProjectDir)ProjectTemplate_GTA.vstemplate) -replace 'PublicKeyToken=[0-9a-zA-Z]+', 'PublicKeyToken=028d073f99e04687' | Out-File $(ProjectDir)ProjectTemplate_GTA.vstemplate" -encoding "UTF8"
 )</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

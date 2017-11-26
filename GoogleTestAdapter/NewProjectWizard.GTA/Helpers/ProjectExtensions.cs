@@ -3,7 +3,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace NewProjectWizard.GTA
+namespace NewProjectWizard.GTA.Helpers
 {
     public static class ProjectExtensions
     {
@@ -24,8 +24,8 @@ namespace NewProjectWizard.GTA
             var result = solution.GetProjectOfUniqueName(project.UniqueName, out var hierarchy);
             if (result == 0)
             {
-                var aggregatableProject = (IVsAggregatableProject)hierarchy;
-                aggregatableProject.GetAggregateProjectTypeGuids(out projectTypeGuids);
+                var aggregatableProject = hierarchy as IVsAggregatableProject;
+                aggregatableProject?.GetAggregateProjectTypeGuids(out projectTypeGuids);
             }
 
             return projectTypeGuids;

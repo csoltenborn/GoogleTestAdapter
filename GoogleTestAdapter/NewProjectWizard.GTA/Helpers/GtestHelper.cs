@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using EnvDTE;
 
-namespace NewProjectWizard.GTA
+namespace NewProjectWizard.GTA.Helpers
 {
     public static class GtestHelper
     {
@@ -36,8 +36,8 @@ namespace NewProjectWizard.GTA
 
             string solutionDir = Path.GetDirectoryName(gtestProject.DTE.Solution.FullName);
             string projectDir = Path.GetDirectoryName(gtestProject.FullName);
-            string relativeProjectDir = GetRelativePath($@"{solutionDir}\", $@"{projectDir}\");
-            return Path.Combine($"$(SolutionDir){relativeProjectDir}", "include");
+            string relativeProjectDir = GetRelativePath($@"{solutionDir}\", $@"{projectDir}\").Replace('/', Path.DirectorySeparatorChar);
+            return $@"$(SolutionDir){relativeProjectDir}include;";
         }
 
         public static string GetLinkGtestAsDll(Project gtestProject)

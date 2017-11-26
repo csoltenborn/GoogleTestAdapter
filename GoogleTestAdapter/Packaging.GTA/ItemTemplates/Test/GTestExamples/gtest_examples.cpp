@@ -1,4 +1,6 @@
+#pragma warning( disable : 4251 4275 )
 #include "GTA_Traits_1.8.0.h"
+#pragma warning( default : 4251 4275 )
 
 
 // code under test
