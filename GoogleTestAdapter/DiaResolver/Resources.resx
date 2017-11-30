@@ -149,4 +149,7 @@
     <value>Cannot load {0}.</value>
     <comment>{0} represents unlocalized file path (e.g c:\test\foo.pdb)</comment>
   </data>
+  <data name="ImageDirectoryEntryToData" xml:space="preserve">
+    <value>ImageDirectoryEntryToData failed!</value>
+  </data>
 </root>

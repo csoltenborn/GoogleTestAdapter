@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 11/2017.
 
 using GoogleTestAdapter.Common;
 using Microsoft.Win32.SafeHandles;
@@ -253,6 +253,11 @@ namespace GoogleTestAdapter.DiaResolver
                 bool shouldContinue = true;
                 uint size = 0u;
                 var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 1, &size);
+                if (directoryEntry == null)
+                {
+                    logger.LogError(Resources.ImageDirectoryEntryToData);
+                    return;
+                }
                 while (shouldContinue && directoryEntry->OriginalFirstThunk != 0u)
                 {
                     shouldContinue = predicate(GetString(image, directoryEntry->Name));
@@ -318,7 +323,11 @@ namespace GoogleTestAdapter.DiaResolver
             {
                 uint size = 0u;
                 var dbgDir = (IMAGE_DEBUG_DIRECTORY*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 6, &size);
-                if (dbgDir->SizeOfData > 0)
+                if (dbgDir == null)
+                {
+                    logger.LogError(Resources.ImageDirectoryEntryToData);
+                }
+                else if (dbgDir->SizeOfData > 0)
                 {
                     var pdbInfo = (PdbInfo*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, dbgDir->AddressOfRawData, IntPtr.Zero);
                     pdbPath = PtrToStringUtf8(new IntPtr(&pdbInfo->PdbFileName));

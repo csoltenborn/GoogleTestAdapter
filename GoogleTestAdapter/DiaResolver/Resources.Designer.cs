@@ -79,6 +79,15 @@ namespace GoogleTestAdapter.DiaResolver {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ImageDirectoryEntryToData failed!.
+        /// </summary>
+        internal static string ImageDirectoryEntryToData {
+            get {
+                return ResourceManager.GetString("ImageDirectoryEntryToData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to locate line number for {0}.
         /// </summary>
         internal static string LineNumberError {
