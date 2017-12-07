@@ -162,7 +162,14 @@ namespace GoogleTestAdapter.TestAdapter
 
             var discoveryActions = executables
                 .OrderBy(e => e)
-                .Select(executable => (Action) (() => AddTestCasesOfExecutable(allTestCasesInExecutables, executable, _settings.Clone(), _logger, () => _canceled)))
+                .Select(executable => (Action) (() =>
+                {
+                    var testCases = GetTestCasesOfExecutable(executable, _settings.Clone(), _logger, () => _canceled);
+                    lock (allTestCasesInExecutables)
+                    {
+                        allTestCasesInExecutables.AddRange(testCases);
+                    }
+                }))
                 .ToArray();
             Utils.SpawnAndWait(discoveryActions);
 
@@ -172,16 +179,20 @@ namespace GoogleTestAdapter.TestAdapter
             return allTestCasesInExecutables;
         }
 
-        private static void AddTestCasesOfExecutable(List<TestCase> allTestCasesInExecutables, string executable, SettingsWrapper settings, ILogger logger, Func<bool> testrunIsCanceled)
+        private static IList<TestCase> GetTestCasesOfExecutable(string executable, SettingsWrapper settings, ILogger logger, Func<bool> testrunIsCanceled)
         {
+            IList<TestCase> testCases = new List<TestCase>();
+
             if (testrunIsCanceled())
-                return;
+                return testCases;
 
             var discoverer = new GoogleTestDiscoverer(logger, settings);
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
-                allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
+                testCases = discoverer.GetTestsFromExecutable(executable);
             }, logger);
+
+            return testCases;
         }
 
         private ISet<string> GetAllTraitNames(IEnumerable<TestCase> testCases)
