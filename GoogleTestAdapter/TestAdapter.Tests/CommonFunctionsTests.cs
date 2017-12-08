@@ -1,6 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
-
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
