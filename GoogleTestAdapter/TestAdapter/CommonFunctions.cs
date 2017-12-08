@@ -36,9 +36,18 @@ namespace GoogleTestAdapter.TestAdapter
 
         public static void CreateEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, out ILogger logger, out SettingsWrapper settings)
         {
-            var settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
-            RunSettingsContainer ourRunSettings = settingsProvider != null ? settingsProvider.SettingsContainer : new RunSettingsContainer();
+            RunSettingsProvider settingsProvider;
+            try
+            {
+                settingsProvider = runSettings.GetSettings(GoogleTestConstants.SettingsName) as RunSettingsProvider;
+            }
+            catch (Exception e)
+            {
+                settingsProvider = null;
+                messageLogger.SendMessage(TestMessageLevel.Error, $"ERROR: Could not get settings; using default settings. Error message: {e.Message}");
+            }
 
+            RunSettingsContainer ourRunSettings = settingsProvider?.SettingsContainer ?? new RunSettingsContainer();
             foreach (RunSettings projectSettings in ourRunSettings.ProjectSettings)
             {
                 projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
