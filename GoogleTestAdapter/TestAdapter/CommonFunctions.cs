@@ -44,7 +44,7 @@ namespace GoogleTestAdapter.TestAdapter
             catch (Exception e)
             {
                 settingsProvider = null;
-                messageLogger.SendMessage(TestMessageLevel.Error, $"ERROR: Could not get settings; using default settings. Error message: {e.Message}");
+                messageLogger.SendMessage(TestMessageLevel.Error, $"ERROR: Visual Studio test framework failed to provide settings; using default settings. Error message: {e.Message}");
             }
 
             RunSettingsContainer ourRunSettings = settingsProvider?.SettingsContainer ?? new RunSettingsContainer();
