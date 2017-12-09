@@ -48,6 +48,8 @@ namespace GoogleTestAdapter.TestAdapter
 
             _logger.LogInfo(Common.Resources.TestDiscoveryStarting);
             _logger.DebugInfo(String.Format(Resources.Settings, _settings));
+            if (_settings.SkipOriginCheck)
+                _logger.LogWarning($"Option '{SettingsWrapper.OptionSkipOriginCheck}' is true - this might impose a security risk to your system");
 
             try
             {

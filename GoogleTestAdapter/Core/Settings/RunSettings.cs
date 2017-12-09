@@ -92,6 +92,9 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? KillProcessesOnCancel { get; set; }
         public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
 
+        public bool? SkipOriginCheck { get; set; }
+        public bool ShouldSerializeSkipOriginCheck() { return SkipOriginCheck != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }

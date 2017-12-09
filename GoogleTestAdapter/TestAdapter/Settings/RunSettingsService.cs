@@ -51,8 +51,9 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
                 }
             }
-            catch (InvalidRunSettingsException)
+            catch (InvalidRunSettingsException e)
             {
+                logger.Log(MessageLevel.Error, $"Invalid run settings: {e.Message}");
             }
 
             string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
@@ -99,7 +100,11 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         private void GetValuesFromGlobalSettings(RunSettings settings)
         {
+            // these settings must not be provided through runsettings files. If they still
+            // are, the following makes sure that they are ignored
             settings.DebuggingNamedPipeId = null;
+            settings.SkipOriginCheck = null;
+
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }
 
