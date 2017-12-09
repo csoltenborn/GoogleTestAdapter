@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="Settings\RunSettingsContainerTests.cs" />
     <Compile Include="Helpers\RunSettingsServiceUnderTest.cs" />
+    <Compile Include="CommonFunctionsTests.cs" />
     <Compile Include="TestExecutorTestsBase.cs" />
     <Compile Include="TestAdapterTestsBase.cs" />
     <Compile Include="Framework\DebuggedProcessLauncherTests.cs" />
