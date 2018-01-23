@@ -186,6 +186,7 @@ function Build-Binaries {
         $CMakeArgs += "-A", $Platform
         $CMakeArgs += "-D", "BUILD_SHARED_LIBS=$(Convert-BooleanToOnOff $DynamicLibraryLinkage)"
         $CMakeArgs += "-D", "gtest_force_shared_crt=$(Convert-BooleanToOnOff $DynamicCRTLinkage)"
+        $CMakeArgs += "-D", "CMAKE_CXX_FLAGS=/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING"
         $CMakeArgs += $CMakeDir
         Invoke-Executable cmake $CMakeArgs
 
