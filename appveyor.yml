@@ -56,11 +56,11 @@ test_script:
         $TestExitCode = $LASTEXITCODE
     }
 
-    & VsTest.Console out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests\GoogleTestAdapter.VsPackage.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
+#    & VsTest.Console out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests\GoogleTestAdapter.VsPackage.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
 
-    if ($LASTEXITCODE -ne 0) {
-        $TestExitCode = $LASTEXITCODE
-    }
+#     if ($LASTEXITCODE -ne 0) {
+#        $TestExitCode = $LASTEXITCODE
+#    }
 
     if (Test-Path out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors) {
         7z a TestErrors.zip out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors\*
