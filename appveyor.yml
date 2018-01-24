@@ -62,10 +62,10 @@ test_script:
 #        $TestExitCode = $LASTEXITCODE
 #    }
 
-    if (Test-Path out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors) {
-        7z a TestErrors.zip out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors\*
-        Push-AppveyorArtifact TestErrors.zip
-    }
+#    if (Test-Path out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors) {
+#        7z a TestErrors.zip out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors\*
+#        Push-AppveyorArtifact TestErrors.zip
+#    }
 
     if ($TestExitCode -ne 0) {
         $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
