@@ -309,6 +309,27 @@ namespace GoogleTestAdapter.Runners
             splittedTestsAsSet.Should().BeEquivalentTo(testsAsSet);
         }
 
+    [TestMethod]
+    [TestCategory(Unit)]
+    public void GetCommandLines_HugeNumberOfSuitesToBeExecutedFully_WontBreakCommandLineCreation()
+    {
+      var range = Enumerable.Range(0, 400);
+
+      var allTests = range.Select(idx => "MyTestSuiteWithSomeWhatLongNameIsStillHandledCorrectly" + idx + ".Test")
+             .Concat(range.Select(idx => "MyTestSuiteWithSomeWhatLongNameIsStillHandledCorrectly" + idx + ".Test2"))
+             .Concat(range.Take(20).Select(idx => "MyTestSuiteWithSomeWhatLongNameIsStillHandledCorrectly" + idx + ".Test3"))
+             .ToList();
+
+      var testsToExecute = allTests.Where((testcase, idx) => idx < 700 || idx % 17 == 0).ToList();
+
+      IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCasesFull(testsToExecute.ToArray(), allTests.ToArray());
+
+      List<CommandLineGenerator.Args> commands = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
+          .GetCommandLines().ToList();
+
+      commands.Count.Should().Be(4);
+      commands.First().TestCases.Count(testCase => testCase.DisplayName.EndsWith("Test3")).Should().Be(1);
     }
+  }
 
 }

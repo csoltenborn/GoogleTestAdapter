@@ -71,12 +71,20 @@ namespace GoogleTestAdapter.Runners
 
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
             int suiteLengthAggregate = 0;
+            int groupIdxCounter = 0;
             int maxSuiteLength = MaxCommandLength - _lengthOfExecutableString - userParam.Length - 1;
 
             var suiteGroups = suitesRunningAllTests
-                .Select(suite => { suiteLengthAggregate += suite.Length + 3; return new { groupIdx = suiteLengthAggregate / maxSuiteLength, suiteName = suite }; })
-                .GroupBy(pair => pair.groupIdx, pair => pair.suiteName)
-                .ToList();
+                              .Select(suite =>
+                                { suiteLengthAggregate += suite.Length + 3;
+                                  if (suiteLengthAggregate > maxSuiteLength) {
+                                      ++groupIdxCounter;
+                                      suiteLengthAggregate = suite.Length + 3;
+                                  }
+                                  return new { groupIdx = groupIdxCounter, suiteName = suite };                              
+                                })
+                              .GroupBy(pair => pair.groupIdx, pair => pair.suiteName)
+                              .ToList();
 
             if (!suiteGroups.Any()) suiteGroups = Enumerable.Range(-1, 1).GroupBy(dummy => dummy, dummy => string.Empty).ToList();
 
