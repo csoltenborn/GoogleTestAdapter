@@ -43,10 +43,30 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
-                var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                int processExitCode;
-                standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption,
-                    false, false, out processExitCode);
+                int processExitCode = 0;
+                ProcessLauncher launcher = null;
+                var listTestsTask = new Task(() =>
+                {
+                    launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
+                    standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption,
+                        false, false, out processExitCode);
+                }, TaskCreationOptions.AttachedToParent);
+                listTestsTask.Start();
+
+                if (!listTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
+                {
+                    launcher?.Cancel();
+
+                    string dir = Path.GetDirectoryName(_executable);
+                    string file = Path.GetFileName(_executable);
+                    string cdToWorkingDir = $@"cd ""{dir}""";
+                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption}";
+
+                    _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
+                    _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
+
+                    return new List<TestCase>();
+                }
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
                     return new List<TestCase>();
@@ -59,7 +79,9 @@ namespace GoogleTestAdapter.TestCases
             }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            var testCaseLocations = GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable));
+            Dictionary<string, TestCaseLocation> testCaseLocations = _settings.ParseSymbolInformation
+                ? GetTestCaseLocations(testCaseDescriptors, _settings.GetPathExtension(_executable))
+                : null;
 
             IList<TestCase> testCases = new List<TestCase>();
             IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
