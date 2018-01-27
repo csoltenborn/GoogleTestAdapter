@@ -10,7 +10,7 @@ using GoogleTestAdapter.Model;
 namespace GoogleTestAdapter.TestCases
 {
 
-    internal class NewTestCaseResolver
+    internal class TestCaseResolver
     {
         // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.TestCases
 
         private bool _loadedSymbolsFromImports;
 
-        internal NewTestCaseResolver(string executable, string pathExtension, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
+        internal TestCaseResolver(string executable, string pathExtension, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
         {
             _executable = executable;
             _pathExtension = pathExtension;

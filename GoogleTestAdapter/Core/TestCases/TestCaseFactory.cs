@@ -79,7 +79,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            var resolver = new NewTestCaseResolver(_executable, _settings.GetPathExtension(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
+            var resolver = new TestCaseResolver(_executable, _settings.GetPathExtension(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
 
             IList<TestCase> testCases = new List<TestCase>();
             IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
@@ -118,7 +118,7 @@ namespace GoogleTestAdapter.TestCases
         {
             var testCases = new List<TestCase>();
 
-            var resolver = new NewTestCaseResolver(
+            var resolver = new TestCaseResolver(
                 _executable,
                 _settings.GetPathExtension(_executable),
                 _diaResolverFactory,
@@ -234,7 +234,7 @@ namespace GoogleTestAdapter.TestCases
             return testCase;
         }
 
-        private TestCase CreateTestCase(TestCaseDescriptor descriptor, NewTestCaseResolver resolver)
+        private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseResolver resolver)
         {
             TestCaseLocation location =
                 resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(descriptor).ToList());
