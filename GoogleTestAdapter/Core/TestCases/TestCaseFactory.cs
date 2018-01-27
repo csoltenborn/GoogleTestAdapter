@@ -103,6 +103,14 @@ namespace GoogleTestAdapter.TestCases
                 }
             }
 
+            if (reportTestCase != null)
+            {
+                foreach (var testCase in testCases)
+                {
+                    reportTestCase(testCase);
+                }
+            }
+
             return testCases;
         }
 
