@@ -97,7 +97,6 @@
     <Compile Include="Scheduling\NumberBasedTestsSplitter.cs" />
     <Compile Include="Scheduling\TestDurationSerializer.cs" />
     <Compile Include="TestCases\TestCaseLocation.cs" />
-    <Compile Include="TestCases\NewTestCaseResolver.cs" />
     <Compile Include="TestCases\TestCaseResolver.cs" />
     <Compile Include="TestResults\ErrorMessageParser.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
