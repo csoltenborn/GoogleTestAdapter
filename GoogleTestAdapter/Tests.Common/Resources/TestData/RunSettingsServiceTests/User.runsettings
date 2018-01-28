@@ -7,11 +7,13 @@
         <MaxNrOfThreads>3</MaxNrOfThreads>
         <ShuffleTestsSeed>3</ShuffleTestsSeed>
         <TraitsRegexesBefore>User///A,B</TraitsRegexesBefore>
+        <SkipOriginCheck>true</SkipOriginCheck> <!-- ignored in settings files - only for testing -->
       </Settings>
     </SolutionSettings>
     <ProjectSettings>
       <Settings ProjectRegex="LoadTests_gta\.exe|CrashingTests_gta\.exe">
         <MaxNrOfThreads>4</MaxNrOfThreads>
+        <SkipOriginCheck>true</SkipOriginCheck> <!-- ignored in settings files - only for testing -->
       </Settings>
     </ProjectSettings>
   </GoogleTestAdapterSettings>

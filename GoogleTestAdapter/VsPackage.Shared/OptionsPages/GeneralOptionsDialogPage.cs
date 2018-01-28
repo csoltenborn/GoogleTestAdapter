@@ -218,6 +218,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
 
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionSkipOriginCheck)]
+        [Description(SettingsWrapper.OptionSkipOriginCheckDescription)]
+        public bool SkipOriginCheck
+        {
+            get { return _skipOriginCheck; }
+            set { SetAndNotify(ref _skipOriginCheck, value); }
+        }
+        private bool _skipOriginCheck = SettingsWrapper.OptionSkipOriginCheckDefaultValue;
+
         #endregion
     }
 

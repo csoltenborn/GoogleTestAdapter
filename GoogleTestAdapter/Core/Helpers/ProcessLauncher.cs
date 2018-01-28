@@ -12,6 +12,8 @@ namespace GoogleTestAdapter.Helpers
         private readonly ILogger _logger;
         private readonly string _pathExtension;
         private readonly Action<int> _reportProcessId;
+        
+        private Process _process;
 
         public ProcessLauncher(ILogger logger) : this(logger, "", null)
         {
@@ -45,6 +47,14 @@ namespace GoogleTestAdapter.Helpers
             return output;
         }
 
+        public void Cancel()
+        {
+            if (_process != null)
+            {
+                TestProcessLauncher.KillProcess(_process.Id, _logger);
+            }
+        }
+
 
         private int LaunchProcess(string workingDirectory, string command, string param, bool printTestOutput,
             bool throwIfError, List<string> output)
@@ -62,18 +72,18 @@ namespace GoogleTestAdapter.Helpers
             if (!string.IsNullOrEmpty(_pathExtension))
                 processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(_pathExtension);
 
-            Process process = Process.Start(processStartInfo);
-            if (process != null)
-                _reportProcessId?.Invoke(process.Id);
+            _process = Process.Start(processStartInfo);
+            if (_process != null)
+                _reportProcessId?.Invoke(_process.Id);
             try
             {
-                var waiter = new ProcessWaiter(process);
+                var waiter = new ProcessWaiter(_process);
                 if (printTestOutput)
                 {
                     _logger.LogInfo(
                         ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
                 }
-                ReadTheStream(process, output, printTestOutput, throwIfError);
+                ReadTheStream(_process, output, printTestOutput, throwIfError);
                 if (printTestOutput)
                 {
                     _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
@@ -82,7 +92,7 @@ namespace GoogleTestAdapter.Helpers
             }
             finally
             {
-                process?.Dispose();
+                _process?.Dispose();
             }
         }
 

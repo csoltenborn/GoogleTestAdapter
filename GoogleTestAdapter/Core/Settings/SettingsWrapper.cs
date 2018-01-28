@@ -420,6 +420,14 @@ namespace GoogleTestAdapter.Settings
 
         public virtual bool KillProcessesOnCancel => _currentSettings.KillProcessesOnCancel ?? OptionKillProcessesOnCancelDefaultValue;
 
+
+        public const string OptionSkipOriginCheck = "Skip check of file origin";
+        public const bool OptionSkipOriginCheckDefaultValue = false;
+        public const string OptionSkipOriginCheckDescription =
+            "If true, it will not be checked whether executables originate from this computer. Note that this might impose security risks, e.g. when building downloaded solutions. This setting can only be changed via VS Options.";
+
+        public virtual bool SkipOriginCheck => _currentSettings.SkipOriginCheck ?? OptionSkipOriginCheckDefaultValue;
+
         #endregion
 
         #region ParallelizationOptionsPage

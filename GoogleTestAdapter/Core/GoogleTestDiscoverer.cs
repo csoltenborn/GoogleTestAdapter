@@ -34,34 +34,17 @@ namespace GoogleTestAdapter
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                var discoveryActions = executables
-                    .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
-                    .ToArray();
-                Utils.SpawnAndWait(discoveryActions);
-            }
-            else
-            {
-                foreach (string executable in executables)
-                {
-                    _settings.ExecuteWithSettingsForExecutable(executable, () =>
-                    {
-                        if (VerifyExecutableTrust(executable, _logger) && IsGoogleTestExecutable(executable, _settings.TestDiscoveryRegex, _logger))
-                        {
-                            IList<TestCase> testCases = GetTestsFromExecutable(executable);
-                            reporter.ReportTestsFound(testCases);
-                        }
-                    }, _logger);
-                }
-            }
+            var discoveryActions = executables
+                .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
+                .ToArray();
+            Utils.SpawnAndWait(discoveryActions);
         }
 
         private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory)
         {
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
-                if (!VerifyExecutableTrust(executable, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
+                if (!VerifyExecutableTrust(executable, settings, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
                     return;
 
                 int nrOfTestCases = 0;
@@ -140,8 +123,11 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        public static bool VerifyExecutableTrust(string executable, ILogger logger)
+        public static bool VerifyExecutableTrust(string executable, SettingsWrapper settings, ILogger logger)
         {
+            if (settings.SkipOriginCheck)
+                return true;
+
             var zone = Zone.CreateFromUrl(executable);
             if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
             {

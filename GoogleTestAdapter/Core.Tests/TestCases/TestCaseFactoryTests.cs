@@ -76,11 +76,8 @@ namespace GoogleTestAdapter.TestCases
                 var factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory);
                 var returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
 
-                if (MockOptions.Object.UseNewTestExecutionFramework)
-                    reportedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
-                else
-                    reportedTestCases.Should().BeEmpty();
                 returnedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
+                reportedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
 
                 reportedTestCases.Clear();
                 MockOptions.Setup(o => o.AdditionalPdbs).Returns(renamedPdb);
@@ -88,10 +85,7 @@ namespace GoogleTestAdapter.TestCases
                 factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory);
                 returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
 
-                if (MockOptions.Object.UseNewTestExecutionFramework)
-                    reportedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
-                else
-                    reportedTestCases.Should().BeEmpty();
+                reportedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
                 returnedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
             }
             finally

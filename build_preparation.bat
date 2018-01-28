@@ -12,7 +12,7 @@ if defined APPVEYOR goto Build
 setlocal
 
 echo:
-echo ======================================================================
+echo ===========================================================================
 echo You have to accept the following licenses before executing this batch file:
 echo:
 echo Microsoft DIA SDK: Visual Studio End-User License Agreement (https://www.visualstudio.com/license-terms/mlt687465)
@@ -36,32 +36,34 @@ echo Removing TAfGT projects (for now)
 powershell -ExecutionPolicy Bypass .\Tools\RemoveProjects.ps1 -flavor GTA
 
 echo Restoring NuGet packages
-cd GoogleTestAdapter
+pushd GoogleTestAdapter
 nuget restore
 
 echo Setting up VS Developer Prompt environment
+pushd .
 call %VC_VARS_BAT%
+popd
 
 echo Copying DIA dlls
-cd DiaResolver
+pushd DiaResolver
 copy %DIA_SDK%\msdia140.dll x86
 copy %DIA_SDK%\amd64\msdia140.dll x64
 
 echo Generating dia2.dll
-cd dia2
+pushd dia2
 powershell -ExecutionPolicy Bypass .\compile_typelib.ps1
 
+popd
+popd
+popd
+
 echo NOT building Google Test NuGet packages
-cd ..\..\..
 rem echo Building Google Test NuGet packages
-rem cd ..\..
-rem nuget.exe restore GoogleTestAdapter.sln
-rem cd ..
 rem git submodule init
 rem git submodule update
-rem cd GoogleTestNuGet
+rem pushd GoogleTestNuGet
 rem powershell .\Build.ps1 -Verbose
-rem cd ..
+rem popd
 
 
 :End
