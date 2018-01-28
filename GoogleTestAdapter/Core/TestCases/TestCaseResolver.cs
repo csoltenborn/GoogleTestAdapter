@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestCases
@@ -56,15 +57,12 @@ namespace GoogleTestAdapter.TestCases
 
         private void LoadSymbolsFromAdditionalPdbs()
         {
-            foreach (var pdb in _additionalPdbs)
+            foreach (var pdbPattern in _additionalPdbs)
             {
-                if (!File.Exists(pdb))
+                foreach (string pdbCandidate in Utils.GetMatchingFiles(pdbPattern, _logger))
                 {
-                    _logger.LogWarning($"Configured .pdb file '{pdb}' does not exist");
-                    continue;
+                    AddSymbolsFromBinary(_executable, pdbCandidate);
                 }
-                
-                AddSymbolsFromBinary(_executable, pdb);
             }
         }
 
@@ -133,6 +131,7 @@ namespace GoogleTestAdapter.TestCases
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (SourceFileLocation nativeTraitSymbol in allTraitSymbols)
             {
+                // TODO bring down to logarithmic complexity (binary search for finding a symbol, collect all matching symbols after and before)
                 if (nativeSymbol.Symbol.StartsWith(nativeTraitSymbol.TestClassSignature))
                 {
                     int lengthOfSerializedTrait = nativeTraitSymbol.Symbol.Length - nativeTraitSymbol.IndexOfSerializedTrait - TraitAppendix.Length;

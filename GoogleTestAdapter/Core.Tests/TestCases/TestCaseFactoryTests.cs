@@ -80,7 +80,7 @@ namespace GoogleTestAdapter.TestCases
                 reportedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
 
                 reportedTestCases.Clear();
-                MockOptions.Setup(o => o.AdditionalPdbs).Returns(renamedPdb);
+                MockOptions.Setup(o => o.AdditionalPdbs).Returns("$(ExecutableDir)\\*.pdb.bak");
                 MockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds).Returns(10000);
                 factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory);
                 returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
