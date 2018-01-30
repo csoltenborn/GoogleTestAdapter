@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.DiaResolver
             DoResolveTest(
                 TestResources.LoadTests_ReleaseX86, 
                 "*", 
-                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 642 : 728, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 630 : 728, 
                 108);
         }
 
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.DiaResolver
             DoResolveTest(
                 TestResources.DllTests_ReleaseX64, 
                 "*", 
-                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 1220 : 1250, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 1201 : 1250, 
                 TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 687 : 686, 
                 false);
         }
