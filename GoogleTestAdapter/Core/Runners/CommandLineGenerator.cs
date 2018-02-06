@@ -24,7 +24,7 @@ namespace GoogleTestAdapter.Runners
 
         // TODO change to new MaxCommandLength asa only ProcessExecutor is used (32768, see https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396)
         public const int MaxCommandLength = 8191;
-
+        private const string _suiteDelimiter = ".*:";
         private readonly int _lengthOfExecutableString;
         private readonly IList<TestCase> _testCasesToRun;
         private readonly string _resultXmlFile;
@@ -59,6 +59,8 @@ namespace GoogleTestAdapter.Runners
             return commandLines;
         }
 
+        Func<A, R> GetFuncWithAnonReturnType<A, R>(Func<A, R> f) { return f; }
+
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
             var commandLines = new List<Args>();
@@ -70,59 +72,82 @@ namespace GoogleTestAdapter.Runners
             }
 
             List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
-            int suiteLengthAggregate = 0;
-            int groupIdxCounter = 0;
             int maxSuiteLength = MaxCommandLength - _lengthOfExecutableString - userParam.Length - 1;
 
-            var suiteGroups = suitesRunningAllTests
-                              .Select(suite =>
-                                { suiteLengthAggregate += suite.Length + 3;
-                                  if (suiteLengthAggregate > maxSuiteLength) {
-                                      ++groupIdxCounter;
-                                      suiteLengthAggregate = suite.Length + 3;
-                                  }
-                                  return new { groupIdx = groupIdxCounter, suiteName = suite };                              
-                                })
-                              .GroupBy(pair => pair.groupIdx, pair => pair.suiteName)
-                              .ToList();
+            List<List<string>> suiteLists = GetSuiteListsForCommandLines(suitesRunningAllTests, maxSuiteLength);
 
-            if (!suiteGroups.Any()) suiteGroups = Enumerable.Range(-1, 1).GroupBy(dummy => dummy, dummy => string.Empty).ToList();
-
-            foreach (var suiteGroup in suiteGroups)
+            // lambda to return the base commandline string (including suite filters) and the list of testcases to execute
+            var getFilterAndTestCasesForSuites = GetFuncWithAnonReturnType((List<string> suites) =>
             {
-              List<string> suites = suiteGroup.Key >= 0 ? suiteGroup.ToList() : Enumerable.Empty<string>().ToList();
-              string suiteNamesFilter = GetFilterForSuitesRunningAllTests(suites);
-              System.Diagnostics.Debug.Assert(suiteNamesFilter.Length < maxSuiteLength);
+                string suiteNamesFilter = GetFilterForSuitesRunningAllTests(suites);
+                System.Diagnostics.Debug.Assert(suiteNamesFilter.Length < maxSuiteLength);
 
-              string baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption + suiteNamesFilter;
-              List<TestCase> testCasesOfSuiteGroup = suites.Select(GetTestCasesRunBySuite).SelectMany(testCase => testCase).ToList();
+                string baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption + suiteNamesFilter;
+                List<TestCase> testCases = suites.Select(GetTestCasesRunBySuite).SelectMany(testCase => testCase).ToList();
+                return new { baseCommandLineWithFilter, testCases };
+            });
 
-              if (suiteGroup != suiteGroups.Last()) {
-                commandLines.Add(new Args(testCasesOfSuiteGroup, baseCommandLineWithFilter + userParam));
-              }
-              else {
-                List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
-                List<TestCase> includedTestCases;
-                int remainingLength = MaxCommandLength
-                    - baseCommandLineWithFilter.Length - _lengthOfExecutableString - userParam.Length - 1;
-                string commandLine = baseCommandLineWithFilter +
-                    JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
-                includedTestCases.AddRange(testCasesOfSuiteGroup);
+            // process all but the last suites-list
+            suiteLists.Take(suiteLists.Count - 1)
+                      .Select(getFilterAndTestCasesForSuites).ToList()
+                      .ForEach(suitesFilterAndTests
+                               => commandLines.Add(new Args(suitesFilterAndTests.testCases, suitesFilterAndTests.baseCommandLineWithFilter + userParam)));
+
+            // process the last suite-list and all test-cases which belong to test-suites that are not fully executed
+            var filterAndTestsForLastSuites = getFilterAndTestCasesForSuites(suiteLists.Last());
+            string baseCommandLineForLastSuites = filterAndTestsForLastSuites.baseCommandLineWithFilter;
+
+            List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
+            List<TestCase> includedTestCases;
+
+            int remainingLength = MaxCommandLength - baseCommandLineForLastSuites.Length - _lengthOfExecutableString - userParam.Length - 1;
+            string commandLine = baseCommandLineForLastSuites + JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
+            includedTestCases.AddRange(filterAndTestsForLastSuites.testCases);
+
+            // a single command line holding both suite- and single-tests-filters
+            commandLines.Add(new Args(includedTestCases, commandLine + userParam));
+
+            // command lines holding only single-test- but no suite-filters
+            string baseCommandLineWithoutSuites = baseCommandLine + GoogleTestConstants.FilterOption;
+            while (testCasesNotRunBySuite.Count > 0)
+            {
+                remainingLength = MaxCommandLength - baseCommandLineWithoutSuites.Length - _lengthOfExecutableString - userParam.Length - 1;
+                commandLine = baseCommandLineWithoutSuites + JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
                 commandLines.Add(new Args(includedTestCases, commandLine + userParam));
-
-                // only add suites to first command line
-                baseCommandLineWithFilter = baseCommandLine + GoogleTestConstants.FilterOption;
-
-                while (testCasesNotRunBySuite.Count > 0) {
-                  remainingLength = MaxCommandLength
-                      - baseCommandLineWithFilter.Length - _lengthOfExecutableString - userParam.Length - 1;
-                  commandLine = baseCommandLineWithFilter +
-                                JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
-                  commandLines.Add(new Args(includedTestCases, commandLine + userParam));
-                }
-              }
             }
+
             return commandLines;
+        }
+
+        /// <summary>
+        /// Returns a list of test-suite-name-lists, each of which shall fit as filter on a single command-line.
+        /// </summary>
+        /// <param name="suitesRunningAllTests">list of test-suites, each of which is to be executed fully (i.e. all test-cases of the suite are executed)</param>
+        /// <param name="maxSuiteLength">the maximum length of all suite-filters allowed for a single command line</param>
+        /// <returns>List of test-suite-name-lists, each to which to be executed by a single command-line</returns>
+        private static List<List<string>> GetSuiteListsForCommandLines(List<string> suitesRunningAllTests, int maxSuiteLength)
+        {
+            int suiteLengthAggregate = 0;
+            int groupIdxCounter = 0;
+            int suiteDelimLen = _suiteDelimiter.Length;
+
+            var suiteGroups = suitesRunningAllTests
+                    .Select(suite =>
+                    {
+                        suiteLengthAggregate += suite.Length + suiteDelimLen;
+                        if (suiteLengthAggregate > maxSuiteLength)
+                        {
+                            ++groupIdxCounter;
+                            suiteLengthAggregate = suite.Length + suiteDelimLen;
+                        }
+                        return new { groupIdx = groupIdxCounter, suiteName = suite };
+                    })
+                    .GroupBy(pair => pair.groupIdx, pair => pair.suiteName)
+                    .ToList();
+
+            var suiteLists = suiteGroups.Select(group => group.ToList()).ToList();
+            if (!suiteLists.Any()) suiteLists.Add(new List<string>());
+            return suiteLists;
         }
 
         private string JoinTestsUpToMaxLength(List<TestCase> testCases, int maxLength, out List<TestCase> includedTestCases)
@@ -211,7 +236,7 @@ namespace GoogleTestAdapter.Runners
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)
         {
-            return string.Join(".*:", suitesRunningAllTests).AppendIfNotEmpty(".*:");
+            return string.Join(_suiteDelimiter, suitesRunningAllTests).AppendIfNotEmpty(_suiteDelimiter);
         }
 
         private bool AllTestCasesOfExecutableAreRun()
@@ -231,26 +256,15 @@ namespace GoogleTestAdapter.Runners
         private List<TestCase> GetTestCasesNotRunBySuite(List<string> suitesRunningAllTests)
         {
             return _testCasesToRun.Where(t => !suitesRunningAllTests.Contains(GetTestsuiteName(t))).ToList();
-            //var testCasesNotRunBySuite = new List<TestCase>();
-            //// ReSharper disable once LoopCanBeConvertedToQuery
-            //foreach (TestCase testCase in _testCasesToRun)
-            //{
-            //    bool isRunBySuite = suitesRunningAllTests.Any(s => s == GetTestsuiteName(testCase));
-            //    if (!isRunBySuite)
-            //    {
-            //        testCasesNotRunBySuite.Add(testCase);
-            //    }
-            //}
-            //return testCasesNotRunBySuite;
         }
 
-    private List<TestCase> GetTestCasesRunBySuite(string suite)
-    {
-      return _testCasesToRun.Where(t => GetTestsuiteName(t) == suite).ToList();
-    }
+        private List<TestCase> GetTestCasesRunBySuite(string suite)
+        {
+            return _testCasesToRun.Where(t => GetTestsuiteName(t) == suite).ToList();
+        }
 
 
-    private List<string> GetSuitesRunningAllTests()
+        private List<string> GetSuitesRunningAllTests()
         {
             var suitesRunningAllTests = new List<string>();
             // ReSharper disable once LoopCanBeConvertedToQuery
@@ -285,5 +299,4 @@ namespace GoogleTestAdapter.Runners
         }
 
     }
-
 }
