@@ -313,15 +313,16 @@ namespace GoogleTestAdapter.Runners
         [TestCategory(Unit)]
         public void GetCommandLines_HugeNumberOfSuitesToBeExecutedFully_WontBreakCommandLineCreation()
         {
+            // we create 400 testsuites, with 380 of them holding 2 test-cases, 20 of them ("MyTestSuite..."[0-19]) holding three test-cases (named Test,Test2,Test3)
             var range = Enumerable.Range(0, 400);
-
             const string baseSuiteName = "MyTestSuiteWithSomeWhatLongNameIsStillHandledCorrectly";
             var allTests = range.Select(idx => baseSuiteName + idx + ".Test")
                    .Concat(range.Select(idx => baseSuiteName + idx + ".Test2"))
                    .Concat(range.Take(20).Select(idx => baseSuiteName + idx + ".Test3"))
                    .ToList();
 
-            var testsToExecute = allTests.Where((testcase, idx) => idx < 700 || idx % 17 == 0).ToList();
+            // 305 of the 380 2-test-suites will be executed fully (i.e. all test-cases are executed), only one 3-test-suite is executed fully (which holds also the only Test3-case to be execute)
+            var testsToExecute = allTests.Where((testcase, idx) => idx < 700 || (idx+5) % 20 == 0).ToList();
 
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCasesFull(testsToExecute.ToArray(), allTests.ToArray());
 
@@ -330,9 +331,14 @@ namespace GoogleTestAdapter.Runners
 
             int longestSuiteName = baseSuiteName.Length + 6; // 6 = 3 for suiteIndex + 3 for suite-filter-delimiter
             int minimumLineLength = CommandLineGenerator.MaxCommandLength - longestSuiteName;
-            commands.Should().HaveCount(4);
-            commands.First().TestCases.Count(testCase => testCase.DisplayName.EndsWith("Test3")).Should().Be(1);
-            commands.Take(3).Select(cmd => cmd.CommandLine.Length).Should().OnlyContain(length => length >= minimumLineLength);
+
+            CommandLineGenerator.MaxCommandLength.Should().Be(8191, "if the maximum command line length changes, we may need to adapt the following expectations");
+            commands.Should().HaveCount(4, "based on given test-cases and maximum command line length we expect 4 command-lines to be created");
+            commands.First().CommandLine.Should().NotMatchRegex(baseSuiteName + @"(\d|1[^5])\.", "none fo the 3-test-suites (0-19) expect suite 15 must be part of a command line");
+            commands.First().TestCases.Count(testCase => testCase.DisplayName.EndsWith("Test3")).Should().Be(1,"the single fully executed 3-test-suite has to be part of the first command line"); 
+            commands.Skip(1).Select(cmd => cmd.TestCases.Count(testCase => testCase.DisplayName.EndsWith("Test3"))).Sum().Should().Be(0, "only a single Test3 must be executed on the first command line");
+            commands.Take(3).Select(cmd => cmd.CommandLine.Length).Should().OnlyContain(length => length >= minimumLineLength, "all command lines expect the last need to have a minimum length, so no superfluous command-lines are executed");
+            commands.Select(cmd => cmd.TestCases.Count).Sum().Should().Be(testsToExecute.Count(), "the number of test to be executed must be identical to those on the command lines");
         }
     }
 }

@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.Runners
             return commandLines;
         }
 
-        Func<A, R> GetFuncWithAnonReturnType<A, R>(Func<A, R> f) { return f; }
+        private Func<A, R> GetFuncWithAnonymousReturnType<A, R>(Func<A, R> f) { return f; }
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
@@ -77,7 +77,7 @@ namespace GoogleTestAdapter.Runners
             List<List<string>> suiteLists = GetSuiteListsForCommandLines(suitesRunningAllTests, maxSuiteLength);
 
             // lambda to return the base commandline string (including suite filters) and the list of testcases to execute
-            var getFilterAndTestCasesForSuites = GetFuncWithAnonReturnType((List<string> suites) =>
+            var getFilterAndTestCasesForSuites = GetFuncWithAnonymousReturnType((List<string> suites) =>
             {
                 string suiteNamesFilter = GetFilterForSuitesRunningAllTests(suites);
                 System.Diagnostics.Debug.Assert(suiteNamesFilter.Length < maxSuiteLength);
