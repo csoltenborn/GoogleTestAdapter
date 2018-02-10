@@ -26,6 +26,7 @@ namespace GoogleTestAdapter.TestCases
         private readonly List<SourceFileLocation> _allTestMethodSymbols = new List<SourceFileLocation>();
         private readonly List<SourceFileLocation> _allTraitSymbols = new List<SourceFileLocation>();
 
+        private bool _loadedSymbolsFromAdditionalPdbs;
         private bool _loadedSymbolsFromImports;
 
         internal TestCaseResolver(string executable, string pathExtension, IEnumerable<string> additionalPdbs, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
@@ -37,17 +38,27 @@ namespace GoogleTestAdapter.TestCases
             _logger = logger;
 
             if (parseSymbolInformation)
+            {
                 AddSymbolsFromBinary(executable);
+            }
             else
+            {
+                _loadedSymbolsFromAdditionalPdbs = true;
                 _loadedSymbolsFromImports = true;
+            }
         }
 
         internal TestCaseLocation FindTestCaseLocation(List<string> testMethodSignatures)
         {
             TestCaseLocation result = DoFindTestCaseLocation(testMethodSignatures);
-            if (result == null && !_loadedSymbolsFromImports)
+            if (result == null && !_loadedSymbolsFromAdditionalPdbs)
             {
                 LoadSymbolsFromAdditionalPdbs();
+                _loadedSymbolsFromAdditionalPdbs = true;
+                result = DoFindTestCaseLocation(testMethodSignatures);
+            }
+            if (result == null && !_loadedSymbolsFromImports)
+            {
                 LoadSymbolsFromImports();
                 _loadedSymbolsFromImports = true;
                 result = DoFindTestCaseLocation(testMethodSignatures);
