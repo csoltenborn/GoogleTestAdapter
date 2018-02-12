@@ -70,9 +70,18 @@ namespace GoogleTestAdapter.TestCases
         {
             foreach (var pdbPattern in _additionalPdbs)
             {
-                foreach (string pdbCandidate in Utils.GetMatchingFiles(pdbPattern, _logger))
+                var matchingFiles = Utils.GetMatchingFiles(pdbPattern, _logger);
+                if (matchingFiles.Length == 0)
                 {
-                    AddSymbolsFromBinary(_executable, pdbCandidate);
+                    _logger.LogWarning($"Additional PDB pattern '{pdbPattern}' does not match any files");
+                }
+                else
+                {
+                    _logger.DebugInfo($"Additional PDB pattern '{pdbPattern}' matches {matchingFiles.Length} files");
+                    foreach (string pdbCandidate in matchingFiles)
+                    {
+                        AddSymbolsFromBinary(_executable, pdbCandidate);
+                    }
                 }
             }
         }

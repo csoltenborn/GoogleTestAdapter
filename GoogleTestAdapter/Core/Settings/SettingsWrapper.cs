@@ -263,9 +263,12 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionAdditionalPdbs = "Additional PDBs";
         public const string OptionAdditionalPdbsDefaultValue = "";
+
         public const string OptionAdditionalPdbsDescription =
-            "The provided files (separated by ;) are scanned for additional source locations. This can be useful if the PDBs containing the necessary information can not be found by scanning the executables.\nPlaceholders:\n"
-            + DescriptionOfExecutableDirPlaceHolder;
+            "Files matching the provided file patterns are scanned for additional source locations. This can be useful if the PDBs containing the necessary information can not be found by scanning the executables.\n" +
+            "File part of each pattern may contain '*' and '?'; patterns are separated by ';'. Example: $(" + ExecutableDirPlaceholder + ")\\pdbs\\*.pdb\n" +
+            "Placeholders:\n" + 
+            DescriptionOfExecutableDirPlaceHolder;
 
         public virtual string AdditionalPdbs => _currentSettings.AdditionalPdbs ?? OptionAdditionalPdbsDefaultValue;
 
