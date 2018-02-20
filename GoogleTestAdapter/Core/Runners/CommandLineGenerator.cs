@@ -4,6 +4,7 @@ using System.Linq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Runners
 {
@@ -59,8 +60,6 @@ namespace GoogleTestAdapter.Runners
             return commandLines;
         }
 
-        private Func<A, R> GetFuncWithAnonymousReturnType<A, R>(Func<A, R> f) { return f; }
-
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
             var commandLines = new List<Args>();
@@ -75,9 +74,9 @@ namespace GoogleTestAdapter.Runners
             int maxSuiteLength = MaxCommandLength - _lengthOfExecutableString - userParam.Length - 1;
 
             List<List<string>> suiteLists = GetSuiteListsForCommandLines(suitesRunningAllTests, maxSuiteLength);
-
+            
             // lambda to return the base commandline string (including suite filters) and the list of testcases to execute
-            var getFilterAndTestCasesForSuites = GetFuncWithAnonymousReturnType((List<string> suites) =>
+            var getFilterAndTestCasesForSuites = Functional.ToFunc((List<string> suites) =>
             {
                 string suiteNamesFilter = GetFilterForSuitesRunningAllTests(suites);
                 System.Diagnostics.Debug.Assert(suiteNamesFilter.Length < maxSuiteLength);
