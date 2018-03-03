@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebuggerAttacherServiceConfiguration.cs" />
+    <Compile Include="Functional.cs" />
     <Compile Include="IDebuggerAttacherService.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IStrings.cs" />
