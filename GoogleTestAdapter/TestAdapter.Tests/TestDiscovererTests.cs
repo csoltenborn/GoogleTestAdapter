@@ -105,7 +105,7 @@ namespace GoogleTestAdapter.TestAdapter
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DiscoverTests_UntrustedExecutable_IsNotRun()
         {
-            var semPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            var semPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "SemaphoreExe.sem"));
             var temp1Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe"));
             var temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
 
