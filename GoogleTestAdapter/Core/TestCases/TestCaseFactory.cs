@@ -44,11 +44,12 @@ namespace GoogleTestAdapter.TestCases
             try
             {
                 int processExitCode = 0;
+                string workingDir = new FileInfo(_executable).DirectoryName;
                 ProcessLauncher launcher = null;
                 var listTestsTask = new Task(() =>
                 {
                     launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                    standardOutput = launcher.GetOutputOfCommand("", _executable, GoogleTestConstants.ListTestsOption,
+                    standardOutput = launcher.GetOutputOfCommand(workingDir, _executable, GoogleTestConstants.ListTestsOption,
                         false, false, out processExitCode);
                 }, TaskCreationOptions.AttachedToParent);
                 listTestsTask.Start();
@@ -57,9 +58,8 @@ namespace GoogleTestAdapter.TestCases
                 {
                     launcher?.Cancel();
 
-                    string dir = Path.GetDirectoryName(_executable);
                     string file = Path.GetFileName(_executable);
-                    string cdToWorkingDir = $@"cd ""{dir}""";
+                    string cdToWorkingDir = $@"cd ""{workingDir}""";
                     string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption}";
 
                     _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
@@ -157,6 +157,7 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
+                string workingDir = new FileInfo(_executable).DirectoryName;
                 int processExitCode = ProcessExecutor.ExecutionFailed;
                 ProcessExecutor executor = null;
                 var listAndParseTestsTask = new Task(() =>
@@ -165,7 +166,7 @@ namespace GoogleTestAdapter.TestCases
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
                         GoogleTestConstants.ListTestsOption,
-                        "",
+                        workingDir,
                         _settings.GetPathExtension(_executable),
                         lineAction);
                 }, TaskCreationOptions.AttachedToParent);

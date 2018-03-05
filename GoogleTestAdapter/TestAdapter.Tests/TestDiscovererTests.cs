@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_UntrustedExecutable_IsNotRun()
         {
-            var SemPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            var SemPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "SemaphoreExe.sem"));
             var Temp1Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe"));
             var Temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
 
