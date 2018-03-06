@@ -45,18 +45,16 @@ namespace GoogleTestAdapter.DiaResolver
             }
         }
 
-        internal DiaResolver(string binary, string pathExtension, ILogger logger)
+        internal DiaResolver(string binary, string pdb, ILogger logger)
         {
             _binary = binary;
             _logger = logger;
 
-            string pdb = FindPdbFile(binary, pathExtension);
-            if (pdb == null)
+            if (!File.Exists(pdb))
             {
-                _logger.LogWarning($"Couldn't find the .pdb file of file '{binary}'. You will not get any source locations for your tests.");
+                _logger.LogError($"PDB file '{pdb}' does not exist");
                 return;
             }
-
             if (!TryCreateDiaInstance())
             {
                 _logger.LogError("Couldn't find the msdia.dll to parse *.pdb files. You will not get any source locations for your tests.");
@@ -85,44 +83,6 @@ namespace GoogleTestAdapter.DiaResolver
             if (diaSymbols == null)
                 return new SourceFileLocation[0];
             return GetSymbolNamesAndAddresses(diaSymbols).Select(ToSourceFileLocation).ToList();
-        }
-
-        private string FindPdbFile(string binary, string pathExtension)
-        {
-            IList<string> attempts = new List<string>();
-            string pdb = PeParser.ExtractPdbPath(binary, _logger);
-            if (pdb != null && File.Exists(pdb))
-                return pdb;
-            attempts.Add("parsing from executable");
-
-            pdb = Path.ChangeExtension(binary, ".pdb");
-            if (File.Exists(pdb))
-                return pdb;
-            attempts.Add($"\"{pdb}\"");
-
-            pdb = Path.GetFileName(pdb);
-            if (pdb == null || File.Exists(pdb))
-                return pdb;
-            attempts.Add($"\"{pdb}\"");
-
-            string path = Environment.GetEnvironmentVariable("PATH");
-            if (!string.IsNullOrEmpty(pathExtension))
-                path = $"{pathExtension};{path}";
-            var pathElements = path?.Split(';');
-            if (path != null)
-            {
-                foreach (string pathElement in pathElements)
-                {
-                    string file = Path.Combine(pathElement, pdb);
-                    if (File.Exists(file))
-                        return file;
-                    attempts.Add($"\"{file}\"");
-                }
-            }
-
-            _logger.DebugInfo("Attempts to find pdb: " + string.Join("::", attempts));
-
-            return null;
         }
 
         /// From given symbol enumeration, extract name, section, offset and length

@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -92,6 +93,34 @@ namespace GoogleTestAdapter.Helpers
             byte[] file = File.ReadAllBytes(executable);
             return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
         }
+
+        public static string[] GetMatchingFiles(string pattern, ILogger logger)
+        {
+            string filePattern = Path.GetFileName(pattern);
+            if (filePattern == null)
+            {
+                logger.LogError($"Additional PDB pattern '{pattern}' is invalid: file pattern part can not be found");
+                return new string[]{};
+            }
+
+            string path = Path.GetDirectoryName(pattern);
+            if (path == null)
+            {
+                logger.LogError($"Additional PDB pattern '{pattern}' is invalid: path part can not be found");
+                return new string[] { };
+            }
+
+            try
+            {
+                return Directory.GetFiles(path, filePattern);
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Error while evaluating additional PDB pattern '{pattern}': {e.Message}");
+                return new string[] { };
+            }
+        }
+        
     }
 
 }
