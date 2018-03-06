@@ -159,8 +159,8 @@ namespace GoogleTestAdapter.Settings
         public string GetPathExtension(string executable)
             => ReplacePlaceholders(PathExtension, executable);
 
-        public IEnumerable<string> GetAdditionalPdbs(string executable) 
-            => ReplacePlaceholders(AdditionalPdbs, executable).Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries);
+        public IEnumerable<string> GetAdditionalPdbs(string executable)
+            => AdditionalPdbs.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries).Select(p => ReplacePlaceholders(p, executable));
 
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
@@ -189,6 +189,7 @@ namespace GoogleTestAdapter.Settings
             string result = theString.Replace(TestDirPlaceholder, testDirectory);
             result = result.Replace(ThreadIdPlaceholder, threadId.ToString());
             result = result.Replace(SolutionDirPlaceholder, solutionDirectory);
+            result = Environment.ExpandEnvironmentVariables(result);
             return result;
         }
 
@@ -199,9 +200,11 @@ namespace GoogleTestAdapter.Settings
 
             // ReSharper disable once PossibleNullReferenceException
             string executableDir = new FileInfo(executable).Directory.FullName;
-            return userParameters
+            string result = userParameters
                 .Replace(ExecutableDirPlaceholder, executableDir)
                 .Replace(ExecutablePlaceholder, executable);
+            result = Environment.ExpandEnvironmentVariables(result);
+            return result;
         }
 
 
@@ -237,6 +240,8 @@ namespace GoogleTestAdapter.Settings
             ExecutablePlaceholder + " - executable containing the tests\n" +
             DescriptionOfExecutableDirPlaceHolder;
 
+        private const string DescriptionOfEnvVarPlaceholders = "Environment variables are also possible, e.g. %PATH%";
+
         #region GeneralOptionsPage
 
         public virtual string DebuggingNamedPipeId => _currentSettings.DebuggingNamedPipeId;
@@ -270,9 +275,9 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionAdditionalPdbsDescription =
             "Files matching the provided file patterns are scanned for additional source locations. This can be useful if the PDBs containing the necessary information can not be found by scanning the executables.\n" +
-            "File part of each pattern may contain '*' and '?'; patterns are separated by ';'. Example: $(" + ExecutableDirPlaceholder + ")\\pdbs\\*.pdb\n" +
+            "File part of each pattern may contain '*' and '?'; patterns are separated by ';'. Example: " + ExecutableDirPlaceholder + "\\pdbs\\*.pdb\n" +
             "Placeholders:\n" + 
-            DescriptionOfExecutableDirPlaceHolder;
+            DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string AdditionalPdbs => _currentSettings.AdditionalPdbs ?? OptionAdditionalPdbsDefaultValue;
 
@@ -298,7 +303,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionWorkingDirDefaultValue = ExecutableDirPlaceholder;
         public const string OptionWorkingDirDescription =
             "If non-empty, will set the working directory for running the tests (default: " + DescriptionOfExecutableDirPlaceHolder + ").\nExample: " + SolutionDirPlaceholder + "\\MyTestDir\nPlaceholders:\n"
-            + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfSolutionDirPlaceHolder;
+            + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfSolutionDirPlaceHolder + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string WorkingDir => _currentSettings.WorkingDir ?? OptionWorkingDirDefaultValue;
 
@@ -307,7 +312,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionPathExtensionDefaultValue = "";
         public const string OptionPathExtensionDescription =
             "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + ExecutableDirPlaceholder + "\\MyOtherBins;\nPlaceholders:\n"
-            + DescriptionOfExecutableDirPlaceHolder;
+            + DescriptionOfExecutableDirPlaceHolder + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string PathExtension => _currentSettings.PathExtension ?? OptionPathExtensionDefaultValue;
 
@@ -397,7 +402,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable. Placeholders:\n"
-            + DescriptionOfPlaceholdersForExecutables;
+            + DescriptionOfPlaceholdersForExecutables + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
@@ -406,7 +411,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionBatchForTestSetupDefaultValue = "";
         public const string OptionBatchForTestSetupDescription =
             "Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
-            + DescriptionOfPlaceholdersForBatches;
+            + DescriptionOfPlaceholdersForBatches + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string BatchForTestSetup => _currentSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
@@ -415,7 +420,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionBatchForTestTeardownDefaultValue = "";
         public const string OptionBatchForTestTeardownDescription =
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:\n"
-            + DescriptionOfPlaceholdersForBatches;
+            + DescriptionOfPlaceholdersForBatches + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string BatchForTestTeardown => _currentSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
