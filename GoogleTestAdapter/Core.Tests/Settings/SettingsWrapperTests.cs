@@ -365,9 +365,14 @@ namespace GoogleTestAdapter.Settings
             {
                 var name = (string)variable.Key;
                 string value = (string)variable.Value;
-                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name}%;Bar");
-                string result = TheOptions.GetUserParameters("SolutionDir", "TestDirectory", 4711);
 
+                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToLower()}%;Bar");
+                string result = TheOptions.GetUserParameters("SolutionDir", "TestDirectory", 4711);
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+
+                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToUpper()}%;Bar");
+                result = TheOptions.GetUserParameters("SolutionDir", "TestDirectory", 4711);
                 // ReSharper disable once PossibleNullReferenceException
                 result.Should().Be($"Foo;{value};Bar");
             }
