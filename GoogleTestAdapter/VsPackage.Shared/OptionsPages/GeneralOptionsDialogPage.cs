@@ -36,7 +36,10 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             get { return _additionalPdbs; }
             set
             {
-                Utils.ValidateRegex(value);
+                if (!Utils.ValidatePattern(value, out string errorMessage))
+                {
+                    throw new Exception(errorMessage);
+                }
                 SetAndNotify(ref _additionalPdbs, value);
             }
         }
