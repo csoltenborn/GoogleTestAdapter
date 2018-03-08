@@ -103,8 +103,27 @@ namespace GoogleTestAdapter.Helpers
         {
             errorMessage = "";
 
-            filePattern = Path.GetFileName(pattern);
-            directory = Path.GetDirectoryName(pattern);
+            try
+            {
+                filePattern = Path.GetFileName(pattern);
+                if (string.IsNullOrWhiteSpace(filePattern))
+                {
+                    filePattern = null;
+                }
+            }
+            catch (Exception)
+            {
+                filePattern = null;
+            }
+
+            try
+            {
+                directory = Path.GetDirectoryName(pattern);
+            }
+            catch (Exception)
+            {
+                directory = null;
+            }
 
             if (filePattern == null || directory == null)
             {
