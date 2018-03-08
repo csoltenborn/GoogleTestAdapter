@@ -3,8 +3,10 @@
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -36,10 +38,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             get { return _additionalPdbs; }
             set
             {
-                if (!Utils.ValidatePattern(value, out string errorMessage))
+                var patterns = value.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                var errorMessages = new List<string>();
+                foreach (string pattern in patterns)
                 {
-                    throw new Exception(errorMessage);
+                    if (!Utils.ValidatePattern(pattern, out string errorMessage))
+                    {
+                        errorMessages.Add(errorMessage);
+                    }
                 }
+                if (errorMessages.Any())
+                {
+                    throw new Exception(string.Join(Environment.NewLine, errorMessages));
+                }
+
                 SetAndNotify(ref _additionalPdbs, value);
             }
         }
