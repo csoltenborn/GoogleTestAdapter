@@ -25,6 +25,7 @@
     <xsd:all>
       <xsd:element name="PrintTestOutput"              minOccurs="0" type="xsd:boolean" />
       <xsd:element name="TestDiscoveryRegex"           minOccurs="0" type="xsd:string"  />
+      <xsd:element name="AdditionalPdbs"               minOccurs="0" type="xsd:string"  />
       <xsd:element name="TestDiscoveryTimeoutInSeconds" minOccurs="0">
         <xsd:simpleType>
           <xsd:restriction base="xsd:int">

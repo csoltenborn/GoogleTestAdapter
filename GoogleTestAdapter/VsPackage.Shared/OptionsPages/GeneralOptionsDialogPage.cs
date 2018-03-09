@@ -29,6 +29,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionAdditionalPdbs)]
+        [Description(SettingsWrapper.OptionAdditionalPdbsDescription)]
+        public string AdditionalPdbs
+        {
+            get { return _additionalPdbs; }
+            set
+            {
+                Utils.ValidateRegex(value);
+                SetAndNotify(ref _additionalPdbs, value);
+            }
+        }
+        private string _additionalPdbs = SettingsWrapper.OptionAdditionalPdbsDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionTestDiscoveryTimeoutInSeconds)]
         [Description(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDescription)]
         public int TestDiscoveryTimeoutInSeconds

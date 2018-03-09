@@ -159,6 +159,9 @@ namespace GoogleTestAdapter.Settings
         public string GetPathExtension(string executable)
             => ReplacePlaceholders(PathExtension, executable);
 
+        public IEnumerable<string> GetAdditionalPdbs(string executable) 
+            => ReplacePlaceholders(AdditionalPdbs, executable).Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries);
+
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
 
@@ -169,7 +172,11 @@ namespace GoogleTestAdapter.Settings
             => ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
 
         public string GetWorkingDir(string solutionDirectory, string testDirectory, int threadId)
-            => ReplacePlaceholders(WorkingDir, solutionDirectory, testDirectory, threadId);
+        {
+            return string.IsNullOrWhiteSpace(WorkingDir) 
+                ? OptionWorkingDirDefaultValue 
+                : ReplacePlaceholders(WorkingDir, solutionDirectory, testDirectory, threadId);
+        }
 
 
         private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
@@ -256,6 +263,18 @@ namespace GoogleTestAdapter.Settings
             "If non-empty, this regex will be used to identify the Google Test executables containing your tests, and the executable itself will not be scanned.";
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
+
+
+        public const string OptionAdditionalPdbs = "Additional PDBs";
+        public const string OptionAdditionalPdbsDefaultValue = "";
+
+        public const string OptionAdditionalPdbsDescription =
+            "Files matching the provided file patterns are scanned for additional source locations. This can be useful if the PDBs containing the necessary information can not be found by scanning the executables.\n" +
+            "File part of each pattern may contain '*' and '?'; patterns are separated by ';'. Example: $(" + ExecutableDirPlaceholder + ")\\pdbs\\*.pdb\n" +
+            "Placeholders:\n" + 
+            DescriptionOfExecutableDirPlaceHolder;
+
+        public virtual string AdditionalPdbs => _currentSettings.AdditionalPdbs ?? OptionAdditionalPdbsDefaultValue;
 
 
         public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
