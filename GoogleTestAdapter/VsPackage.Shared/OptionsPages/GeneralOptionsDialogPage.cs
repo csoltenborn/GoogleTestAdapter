@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             get { return _additionalPdbs; }
             set
             {
-                var patterns = value.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                var patterns = Utils.SplitAdditionalPdbs(_additionalPdbs);
                 var errorMessages = new List<string>();
                 foreach (string pattern in patterns)
                 {

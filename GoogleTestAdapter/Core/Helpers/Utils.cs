@@ -73,6 +73,7 @@ namespace GoogleTestAdapter.Helpers
         {
             try
             {
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 Regex.Match(string.Empty, pattern);
             }
             catch (ArgumentException e)
@@ -92,6 +93,11 @@ namespace GoogleTestAdapter.Helpers
         {
             byte[] file = File.ReadAllBytes(executable);
             return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
+        }
+
+        public static string[] SplitAdditionalPdbs(string additionalPdbs)
+        {
+            return additionalPdbs.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static bool ValidatePattern(string pattern, out string errorMessage)

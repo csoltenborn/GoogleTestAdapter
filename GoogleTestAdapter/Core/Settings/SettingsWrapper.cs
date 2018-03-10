@@ -160,7 +160,7 @@ namespace GoogleTestAdapter.Settings
             => ReplacePlaceholders(PathExtension, executable);
 
         public IEnumerable<string> GetAdditionalPdbs(string executable)
-            => AdditionalPdbs.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries).Select(p => ReplacePlaceholders(p, executable));
+            => Utils.SplitAdditionalPdbs(AdditionalPdbs).Select(p => ReplacePlaceholders(p.Trim(), executable));
 
         public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
