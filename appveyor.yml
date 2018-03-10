@@ -82,6 +82,8 @@ after_test:
 - pip install codecov
 - codecov -f "OpenCover_Unit_CoverageData.xml" -F Unit
 - codecov -f "OpenCover_Integration_CoverageData.xml" -F Integration
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
