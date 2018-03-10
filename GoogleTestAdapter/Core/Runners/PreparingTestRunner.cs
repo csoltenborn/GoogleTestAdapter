@@ -56,13 +56,11 @@ namespace GoogleTestAdapter.Runners
                 userParameters = _settings.GetUserParameters(_solutionDirectory, testDirectory, _threadId);
 
                 string batch = _settings.GetBatchForTestSetup(_solutionDirectory, testDirectory, _threadId);
-                batch = batch == "" ? "" : _solutionDirectory + batch;
                 SafeRunBatch(TestSetup, _solutionDirectory, batch, isBeingDebugged);
 
                 _innerTestRunner.RunTests(testCasesToRun, baseDir, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
 
                 batch = _settings.GetBatchForTestTeardown(_solutionDirectory, testDirectory, _threadId);
-                batch = batch == "" ? "" : _solutionDirectory + batch;
                 SafeRunBatch(TestTeardown, _solutionDirectory, batch, isBeingDebugged);
 
                 stopwatch.Stop();

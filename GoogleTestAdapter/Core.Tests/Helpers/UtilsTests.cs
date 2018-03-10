@@ -41,8 +41,8 @@ namespace GoogleTestAdapter.Helpers
             string dir = Utils.GetTempDirectory();
             Directory.Exists(dir).Should().BeTrue();
 
-            string errorMessage;
-            Utils.DeleteDirectory(dir, out errorMessage).Should().BeTrue();
+            // ReSharper disable once UnusedVariable
+            Utils.DeleteDirectory(dir, out string errorMessage).Should().BeTrue();
         }
 
         [TestMethod]
@@ -148,6 +148,49 @@ namespace GoogleTestAdapter.Helpers
             hasFinishedTasks.Should().BeFalse();
             stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(timeoutInMs - TestMetadata.ToleranceInMs);
             stopWatch.ElapsedMilliseconds.Should().BeLessThan(taskDurationInMs);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ValidatePattern_EmptyPattern_BothPartsReported()
+        {
+            bool result = Utils.ValidatePattern("", out string errorMessage);
+
+            result.Should().BeFalse();
+            errorMessage.Should().Contain("file pattern part");
+            errorMessage.Should().Contain("path part");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ValidatePattern_TempDir_FilePartReported()
+        {
+            bool result = Utils.ValidatePattern(Path.GetTempPath(), out string errorMessage);
+
+            result.Should().BeFalse();
+            errorMessage.Should().Contain("file pattern part");
+            errorMessage.Should().NotContain("path part");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ValidatePattern_LocalFile_PathPartReported()
+        {
+            bool result = Utils.ValidatePattern(@"InvalidPath::\Foo.exe", out string errorMessage);
+
+            result.Should().BeFalse();
+            errorMessage.Should().NotContain("file pattern part");
+            errorMessage.Should().Contain("path part");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ValidatePattern_ValidInput_ValidationSuceeds()
+        {
+            bool result = Utils.ValidatePattern(@"C:\foo\Bar.exe", out string errorMessage);
+
+            result.Should().BeTrue();
+            errorMessage.Should().BeNullOrEmpty();
         }
 
         private void SetReadonlyFlag(string dir)

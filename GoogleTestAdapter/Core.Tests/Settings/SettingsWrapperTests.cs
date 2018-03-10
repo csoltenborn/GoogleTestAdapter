@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
@@ -267,6 +269,22 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetPathExtension__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.PathExtension).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetPathExtension(TestResources.Tests_DebugX86);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);
@@ -280,6 +298,22 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void BatchForTestTeardown__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetBatchForTestTeardown("SolutionDir", "TestDirectory", 4711);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestSetup__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns((string)null);
@@ -289,6 +323,78 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns("FooBar");
             result = TheOptions.BatchForTestSetup;
             result.Should().Be("FooBar");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void BatchForTestSetup__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetBatchForTestSetup("SolutionDir", "TestDirectory", 4711);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDir__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.WorkingDir).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetWorkingDir("SolutionDir", "TestDirectory", 4711);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetUserParams__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+
+                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToLower()}%;Bar");
+                string result = TheOptions.GetUserParameters("SolutionDir", "TestDirectory", 4711);
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+
+                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToUpper()}%;Bar");
+                result = TheOptions.GetUserParameters("SolutionDir", "TestDirectory", 4711);
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetAdditionalPdbs__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+ 
+                MockXmlOptions.Setup(o => o.AdditionalPdbs).Returns($"Foo%{name}%;Bar");
+                var result = TheOptions.GetAdditionalPdbs(TestResources.Tests_DebugX86).ToList();
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Count.Should().Be(2);
+                result[0].Should().Be($"Foo{value}");
+                result[1].Should().Be("Bar");
+            }
         }
 
         [TestMethod]
