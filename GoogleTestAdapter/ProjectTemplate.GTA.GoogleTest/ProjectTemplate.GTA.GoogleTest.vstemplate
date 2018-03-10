@@ -17,7 +17,8 @@
       <ProjectItem>LICENSE</ProjectItem>
 
       <ProjectItem>include\gtest\gtest.h</ProjectItem>
-      <ProjectItem>gtest-all.cc</ProjectItem>
+      <ProjectItem>include\gmock\gmock.h</ProjectItem>
+      <ProjectItem>gmock-gtest-all.cc</ProjectItem>
 
       <ProjectItem>include\GTA_Traits_1.8.0.h</ProjectItem>
     </Project>

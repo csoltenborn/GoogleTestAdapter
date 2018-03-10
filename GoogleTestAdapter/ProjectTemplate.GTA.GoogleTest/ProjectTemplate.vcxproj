@@ -77,7 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="gtest-all.cc" />
+    <ClCompile Include="gmock-gtest-all.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LCENSE" />
@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\gtest\gtest.h" />
+    <ClInclude Include="include\gmock\gmock.h" />
     <ClInclude Include="include\GTA_Traits_1.8.0.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

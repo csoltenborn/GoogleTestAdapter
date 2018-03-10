@@ -11,18 +11,15 @@ using VSLangProj;
 
 namespace NewProjectWizard.GTA
 {
-    public class GtestProjectWizard : IWizard
+    public class GtestProjectWizard : ProjectWizardBase
     {
-        private const string ToolsetPlaceholder = "$gta_toolset$";
-        private const string GenerateDebugInformationPlaceholder = "$gta_generate_debug_information$";
-        private const string VariadicMaxPlaceholder = "$gta_variadic_max$";
         private const string GtestIncludePlaceholder = "$gtestinclude$";
         private const string LinkGtestAsDllPlaceholder = "$link_gtest_as_dll$";
 
         private readonly List<Project> _projectsUnderTest = new List<Project>();
         private Project _gtestProject;
 
-        public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, 
+        public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, 
             WizardRunKind runKind, object[] customParams)
         {
             DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
@@ -48,13 +45,12 @@ namespace NewProjectWizard.GTA
             }
 
             replacementsDictionary.Add(ToolsetPlaceholder, GetPlatformToolset(_projectsUnderTest));
-            replacementsDictionary.Add(GenerateDebugInformationPlaceholder, VisualStudioHelper.GetGenerateDebugInformationFromVisualStudioVersion());
-            replacementsDictionary.Add(VariadicMaxPlaceholder, VisualStudioHelper.GetVariadicMaxFromVisualStudioVersion());
             replacementsDictionary.Add(GtestIncludePlaceholder, GtestHelper.GetGtestInclude(_gtestProject));
             replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GtestHelper.GetLinkGtestAsDll(_gtestProject));
+            FillReplacementDirectory(replacementsDictionary);
         }
 
-        public void ProjectFinishedGenerating(Project project)
+        public override void ProjectFinishedGenerating(Project project)
         {
             if (_gtestProject != null)
             {
@@ -64,14 +60,6 @@ namespace NewProjectWizard.GTA
             {
                 SafeAddProjectReference(project, projectUnderTest);
             }
-        }
-
-        public void BeforeOpeningFile(ProjectItem projectItem)
-        {
-        }
-
-        public void RunFinished()
-        {
         }
 
         private bool ContinueWithoutGtestProject()
@@ -132,17 +120,10 @@ namespace NewProjectWizard.GTA
                 }
             }
 
-            if (toolsetsInUse.Count > 0)
-            {
-                var comparer = new ToolsetComparer();
-                string toolset = toolsetsInUse.OrderByDescending(ts => ts, comparer).First();
-                if (comparer.IsKnownToolset(toolset))
-                {
-                    return toolset;
-                }
-            }
-
-            return null;
+            var comparer = new ToolsetComparer();
+            return toolsetsInUse
+                .OrderByDescending(ts => ts, comparer)
+                .FirstOrDefault(comparer.IsKnownToolset);
         }
 
         private class ToolsetComparer : IComparer<string>
@@ -177,17 +158,6 @@ namespace NewProjectWizard.GTA
                 }
             }
         }
-
-        #region project item specific
-        public bool ShouldAddProjectItem(string filePath)
-        {
-            return true;
-        }
-
-        public void ProjectItemFinishedGenerating(ProjectItem projectItem)
-        {
-        }
-        #endregion
 
     }
 

@@ -39,7 +39,5 @@ namespace NewProjectWizard.GTA.Helpers
                     return "";
             }
         }
-
-
     }
 }

@@ -17,7 +17,7 @@ namespace NewProjectWizard.GTA.Helpers
             {
                 string projectDir = Path.GetDirectoryName(project.FullName);
                 // ReSharper disable once AssignNullToNotNullAttribute
-                string gtest_all_cc = Path.Combine(projectDir, "gtest-all.cc");
+                string gtest_all_cc = Path.Combine(projectDir, "gmock-gtest-all.cc");
                 string gtest_h = Path.Combine(projectDir, "include", "gtest", "gtest.h");
 
                 if (File.Exists(gtest_h) && File.Exists(gtest_all_cc))

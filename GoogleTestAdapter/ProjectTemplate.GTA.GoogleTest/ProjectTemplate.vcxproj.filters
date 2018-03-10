@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gtest-all.cc">
+    <ClCompile Include="gmock-gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -25,6 +25,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\gtest\gtest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gmock\gmock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\GTA_Traits_1.8.0.h">

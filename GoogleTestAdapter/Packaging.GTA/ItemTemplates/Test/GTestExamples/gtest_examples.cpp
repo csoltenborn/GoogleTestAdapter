@@ -140,14 +140,14 @@ INSTANTIATE_TEST_CASE_P(
 
 
 // typed tests
-template < typename T >
+template < typename TTypeUnderTest >
 class TypedTests : public ::testing::Test {
 protected:
-   typename T* _fibonacci;
+   typename TTypeUnderTest* _fibonacci;
 
    void SetUp() override
    {
-      _fibonacci = new T;
+      _fibonacci = new TTypeUnderTest;
    }
 
    void TearDown() override
@@ -169,14 +169,14 @@ TYPED_TEST_TRAITS(TypedTests, ComputesCorrectValue, Type, Complex) {
 
 
 // type-parameterized tests
-template < typename T >
+template < typename TTypeUnderTest >
 class TypeParameterizedTests : public ::testing::Test {
 protected:
-   typename T* _fibonacci;
+   typename TTypeUnderTest* _fibonacci;
 
    void SetUp() override
    {
-      _fibonacci = new T;
+      _fibonacci = new TTypeUnderTest;
    }
 
    void TearDown() override

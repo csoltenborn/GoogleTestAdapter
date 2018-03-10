@@ -67,10 +67,11 @@
     </VSTemplate>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="gtest-all.cc" />
+    <Content Include="gmock-gtest-all.cc" />
     <Content Include="gtest-logo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="include\gmock\gmock.h" />
     <Content Include="include\GTA_Traits_1.8.0.h" />
     <Content Include="include\gtest\gtest.h" />
     <Content Include="ProjectTemplate.vcxproj.filters" />

@@ -156,6 +156,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectWizardBase.cs" />
     <Compile Include="Helpers\GtestHelper.cs" />
     <Compile Include="GtestDllProjectWizard.cs" />
     <Compile Include="Helpers\ProjectExtensions.cs" />
