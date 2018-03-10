@@ -152,7 +152,9 @@ $(NuGetPackages)NuGet.CommandLine.3.5.0\tools\nuget pack VsPackage.nuspec -NonIn
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)ProjectTemplate.GTA.GoogleTest\bin\$(ConfigurationName)\ProjectTemplates\VC\1033\ProjectTemplate.GTA.GoogleTest.zip" "$(ProjectDir)ProjectTemplates\Test\ProjectTemplate.GTA.GoogleTest.zip"
+    <PreBuildEvent>mkdir "$(ProjectDir)ProjectTemplates\Test"
+
+copy "$(SolutionDir)ProjectTemplate.GTA.GoogleTest\bin\$(ConfigurationName)\ProjectTemplates\VC\1033\ProjectTemplate.GTA.GoogleTest.zip" "$(ProjectDir)ProjectTemplates\Test\ProjectTemplate.GTA.GoogleTest.zip"
 
 copy "$(SolutionDir)ProjectTemplate_GTA\bin\$(ConfigurationName)\ProjectTemplates\VC\1033\ProjectTemplate_GTA.zip" "$(ProjectDir)ProjectTemplates\Test\ProjectTemplate_GTA.zip"
 
