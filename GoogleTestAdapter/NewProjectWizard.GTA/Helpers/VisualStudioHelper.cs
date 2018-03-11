@@ -6,6 +6,12 @@ namespace NewProjectWizard.GTA.Helpers
 {
     public static class VisualStudioHelper
     {
+        public static string GetVisualStudioVersionString()
+        {
+            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
+            return dte.Version;
+        }
+
         public static string GetPlatformToolsetFromVisualStudioVersion()
         {
             DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));

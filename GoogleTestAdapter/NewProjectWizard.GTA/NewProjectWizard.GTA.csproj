@@ -156,6 +156,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\TestWindowLogger.cs" />
     <Compile Include="ProjectWizardBase.cs" />
     <Compile Include="Helpers\GtestHelper.cs" />
     <Compile Include="GtestDllProjectWizard.cs" />
@@ -178,6 +179,12 @@
     <EmbeddedResource Include="SinglePageWizard.resx">
       <DependentUpon>SinglePageWizard.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{bc05d210-68cd-47d0-ae8c-0f3168d1be73}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

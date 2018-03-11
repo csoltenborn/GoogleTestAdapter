@@ -29,13 +29,14 @@ namespace NewProjectWizard.GTA
         private readonly ToolTip _toolTip = new ToolTip();
         private int _currentToolTipIndex = -1;
 
-        public IEnumerable<Project> SelectedProjects
+        public IList<Project> SelectedProjects
         {
             get
             {
                 return selectedProjectsCheckedListBox.CheckedItems
                     .Cast<Item>()
-                    .Select(i => i.Project);
+                    .Select(i => i.Project)
+                    .ToList();
             }
         }
 

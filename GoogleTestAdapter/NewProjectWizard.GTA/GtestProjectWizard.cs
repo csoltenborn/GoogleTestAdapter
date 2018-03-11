@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TemplateWizard;
 using NewProjectWizard.GTA.Helpers;
 using VSLangProj;
@@ -22,11 +21,16 @@ namespace NewProjectWizard.GTA
         public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, 
             WizardRunKind runKind, object[] customParams)
         {
-            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
+            _DTE dte = (_DTE) automationObject;
+
             var cppProjects = dte.Solution.Projects.Cast<Project>().Where(p => p.IsCppProject()).ToList();
 
-            var gtestProjects = GtestHelper.FindGtestProjects(cppProjects).ToList();
+            var gtestProjects = GtestHelper.FindGtestProjects(cppProjects, Logger).ToList();
             _gtestProject = gtestProjects.FirstOrDefault();
+            Logger.DebugInfo(_gtestProject != null
+                ? $"gtest project found at '{_gtestProject.FullName}'"
+                : "no gtest project found");
+
             if (_gtestProject == null && !ContinueWithoutGtestProject())
             {
                 throw new WizardCancelledException();
@@ -35,18 +39,27 @@ namespace NewProjectWizard.GTA
 
             using (var wizard = new SinglePageWizard(cppProjects))
             {
-                var result = wizard.ShowDialog();
-                if (result != DialogResult.OK)
+                if (wizard.ShowDialog() != DialogResult.OK)
                 {
                     throw new WizardCancelledException();
                 }
 
                 _projectsUnderTest.AddRange(wizard.SelectedProjects);
+                Logger.DebugInfo($"Projects under test: {string.Join(", ", _projectsUnderTest.Select(p => p.Name))}");
             }
 
-            replacementsDictionary.Add(ToolsetPlaceholder, GetPlatformToolset(_projectsUnderTest));
-            replacementsDictionary.Add(GtestIncludePlaceholder, GtestHelper.GetGtestInclude(_gtestProject));
-            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, GtestHelper.GetLinkGtestAsDll(_gtestProject));
+            string value = GetPlatformToolset(_projectsUnderTest);
+            replacementsDictionary.Add(ToolsetPlaceholder, value);
+            Logger.DebugInfo($"Platform toolset: '{value}'");
+
+            value = GtestHelper.GetLinkGtestAsDll(_gtestProject);
+            replacementsDictionary.Add(LinkGtestAsDllPlaceholder, value);
+            Logger.DebugInfo($"Link gtest as DLL: '{value}'");
+
+            value = GtestHelper.GetGtestInclude(_gtestProject);
+            replacementsDictionary.Add(GtestIncludePlaceholder, value);
+            Logger.DebugInfo($"Includes folder: '{value}'");
+            
             FillReplacementDirectory(replacementsDictionary);
         }
 
@@ -79,16 +92,20 @@ namespace NewProjectWizard.GTA
             {
                 VSProject vsProj = project.Object as VSProject;
                 vsProj?.References.AddProject(referencedProject);
+                Logger.DebugInfo($"Project {project.Name}: Added reference to project {referencedProject.Name}");
             }
             catch (Exception ex)
             {
                 // Known issue, remove when fixed
                 if (!ex.Message.Equals("Error HRESULT E_FAIL has been returned from a call to a COM component."))
+                {
+                    Logger.LogWarning($"Exception while adding project {referencedProject.Name} as reference to project {project.Name}. Exception message: {ex.Message}");
                     throw;
+                }
             }
         }
 
-        private string GetPlatformToolset(IEnumerable<Project> projectsUnderTest)
+        private string GetPlatformToolset(ICollection<Project> projectsUnderTest)
         {
             try
             {
@@ -103,10 +120,12 @@ namespace NewProjectWizard.GTA
                 // fallback to toolset by VS version
             }
 
-            return VisualStudioHelper.GetPlatformToolsetFromVisualStudioVersion();
+            string result = VisualStudioHelper.GetPlatformToolsetFromVisualStudioVersion();
+            Logger.DebugInfo($"Toolset from VS version: '{result}'");
+            return result;
         }
 
-        private string GetPlatformToolsetFromProjects(IEnumerable<Project> projectsUnderTest)
+        private string GetPlatformToolsetFromProjects(ICollection<Project> projectsUnderTest)
         {
             var toolsetsInUse = new HashSet<string>();
             foreach (Project project in projectsUnderTest)
@@ -121,9 +140,16 @@ namespace NewProjectWizard.GTA
             }
 
             var comparer = new ToolsetComparer();
-            return toolsetsInUse
-                .OrderByDescending(ts => ts, comparer)
-                .FirstOrDefault(comparer.IsKnownToolset);
+            var orderedToolsetsInUse = toolsetsInUse.OrderByDescending(ts => ts, comparer).ToList();
+
+            Logger.DebugInfo($"Projects considered when searching Toolsets: {string.Join(", ", projectsUnderTest.Select(p => p.Name))}");
+            Logger.DebugInfo($"Toolsets found (known to GTA): {string.Join(", ", orderedToolsetsInUse.Select(ts => $"{ts}({comparer.IsKnownToolset(ts)})"))}");
+
+            var result = orderedToolsetsInUse.FirstOrDefault(comparer.IsKnownToolset);
+            Logger.DebugInfo(result != null 
+                ? $"Toolset selected: '{result}'" 
+                : "No toolset found in projects");
+            return result;
         }
 
         private class ToolsetComparer : IComparer<string>
