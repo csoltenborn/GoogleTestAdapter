@@ -9,7 +9,10 @@ namespace NewProjectWizard.GTA
         public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, 
             WizardRunKind runKind, object[] customParams)
         {
-            replacementsDictionary.Add(ToolsetPlaceholder, VisualStudioHelper.GetPlatformToolsetFromVisualStudioVersion());
+            string value = VisualStudioHelper.GetPlatformToolsetFromVisualStudioVersion();
+            replacementsDictionary.Add(ToolsetPlaceholder, value);
+            Logger.DebugInfo($"Toolset: '{value}'");
+
             FillReplacementDirectory(replacementsDictionary);
         }
     }

@@ -14,28 +14,26 @@ namespace NewProjectWizard.GTA.Helpers
 
         public static string GetPlatformToolsetFromVisualStudioVersion()
         {
-            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
-            switch (dte.Version)
+            string version = GetVisualStudioVersionString();
+            switch (version)
             {
                 case "10.0": return "v100";
                 case "11.0": return "v110";
                 case "12.0": return "v120";
                 case "14.0": return "v140";
                 case "15.0": return "v141";
-                default: throw new InvalidOperationException($"'{dte.Version}' is not a valid version for GTA");
+                default: throw new InvalidOperationException($"'{version}' is not a valid version for GTA");
             }
         }
 
         public static string GetGenerateDebugInformationFromVisualStudioVersion()
         {
-            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
-            return dte.Version == "15.0" ? "DebugFull" : "true";
+            return GetVisualStudioVersionString() == "15.0" ? "DebugFull" : "true";
         }
 
         public static string GetVariadicMaxFromVisualStudioVersion()
         {
-            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
-            switch (dte.Version)
+            switch (GetVisualStudioVersionString())
             {
                 case "10.0":
                 case "11.0":

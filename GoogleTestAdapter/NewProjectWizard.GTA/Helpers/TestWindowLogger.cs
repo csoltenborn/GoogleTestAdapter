@@ -2,6 +2,7 @@
 using EnvDTE;
 using EnvDTE80;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -9,10 +10,12 @@ namespace NewProjectWizard.GTA.Helpers
 {
     public class TestWindowLogger : LoggerBase
     {
+        private readonly Func<bool> _isTimeStampingEnabled;
         private const string TestOutputWindowGuid = "{B85579AA-8BE0-4C4F-A850-90902B317581}";
 
-        public TestWindowLogger() : base(() => true)
+        public TestWindowLogger(Func<bool> isDebugModeEnabled, Func<bool> isTimeStampingEnabled) : base(isDebugModeEnabled)
         {
+            _isTimeStampingEnabled = isTimeStampingEnabled;
         }
 
         public override void Log(Severity severity, string message)
@@ -35,8 +38,8 @@ namespace NewProjectWizard.GTA.Helpers
 
         private void LogSafe(Severity level, string message)
         {
-            //if (_timeStampOutput())
-            //    Utils.TimestampMessage(ref message);
+            if (_isTimeStampingEnabled())
+                Utils.TimestampMessage(ref message);
 
             if (string.IsNullOrWhiteSpace(message))
             {

@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using EnvDTE;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.Settings;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TemplateWizard;
 using NewProjectWizard.GTA.Helpers;
 
@@ -13,10 +18,15 @@ namespace NewProjectWizard.GTA
         protected const string VariadicMaxPlaceholder = "$gta_variadic_max$";
 
         protected ILogger Logger { get; }
+        protected SettingsWrapper Settings { get; }
 
         protected ProjectWizardBase()
         {
-            Logger = new TestWindowLogger();
+            Logger = new TestWindowLogger(
+                () => Settings?.DebugMode ?? SettingsWrapper.OptionDebugModeDefaultValue, 
+                () => Settings?.TimestampOutput ?? SettingsWrapper.OptionTimestampOutputDefaultValue);
+            Settings = CreateSettings(Logger);
+
             Logger.DebugInfo($"VS version: '{VisualStudioHelper.GetVisualStudioVersionString()}'");
         }
 
@@ -32,6 +42,22 @@ namespace NewProjectWizard.GTA
             value = VisualStudioHelper.GetVariadicMaxFromVisualStudioVersion();
             replacementsDictionary.Add(VariadicMaxPlaceholder, value);
             Logger.DebugInfo($"VariadixMax: '{value}'");
+        }
+
+        private static SettingsWrapper CreateSettings(ILogger logger)
+        {
+            var componentModel = (IComponentModel) Package.GetGlobalService(typeof(SComponentModel));
+            var settings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+            var settingsContainer = new RunSettingsContainer
+            {
+                SolutionSettings = settings.RunSettings
+            };
+
+            return new SettingsWrapper(settingsContainer)
+            {
+                RegexTraitParser = new RegexTraitParser(logger)
+            };
         }
 
         public virtual void ProjectFinishedGenerating(Project project)

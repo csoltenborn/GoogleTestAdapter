@@ -99,7 +99,7 @@ namespace NewProjectWizard.GTA
                 // Known issue, remove when fixed
                 if (!ex.Message.Equals("Error HRESULT E_FAIL has been returned from a call to a COM component."))
                 {
-                    Logger.LogWarning($"Exception while adding project {referencedProject.Name} as reference to project {project.Name}. Exception message: {ex.Message}");
+                    Logger.LogError($"Exception while adding project {referencedProject.Name} as reference to project {project.Name}. Exception message: {ex.Message}");
                     throw;
                 }
             }
