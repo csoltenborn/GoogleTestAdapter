@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 using EnvDTE;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
@@ -22,10 +24,11 @@ namespace NewProjectWizard.GTA
 
         protected ProjectWizardBase()
         {
-            Logger = new TestWindowLogger(
-                () => Settings?.DebugMode ?? SettingsWrapper.OptionDebugModeDefaultValue, 
-                () => Settings?.TimestampOutput ?? SettingsWrapper.OptionTimestampOutputDefaultValue);
-            Settings = CreateSettings(Logger);
+            var componentModel = (IComponentModel) Package.GetGlobalService(typeof(SComponentModel));
+            var runSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+            Settings = new SettingsWrapper(new RunSettingsContainer {SolutionSettings = runSettings.RunSettings});
+            Logger = new TestWindowLogger(() => Settings.DebugMode, () => Settings.TimestampOutput);
+            Settings.RegexTraitParser = new RegexTraitParser(Logger);
 
             Logger.DebugInfo($"VS version: '{VisualStudioHelper.GetVisualStudioVersionString()}'");
         }
@@ -44,20 +47,84 @@ namespace NewProjectWizard.GTA
             Logger.DebugInfo($"VariadixMax: '{value}'");
         }
 
-        private static SettingsWrapper CreateSettings(ILogger logger)
+        protected string GetPlatformToolset(ICollection<Project> projects)
         {
-            var componentModel = (IComponentModel) Package.GetGlobalService(typeof(SComponentModel));
-            var settings = componentModel.GetService<IGlobalRunSettingsInternal>();
-
-            var settingsContainer = new RunSettingsContainer
+            try
             {
-                SolutionSettings = settings.RunSettings
-            };
-
-            return new SettingsWrapper(settingsContainer)
+                var platformToolset = GetPlatformToolsetFromProjects(projects);
+                if (platformToolset != null)
+                {
+                    return platformToolset;
+                }
+            }
+            catch
             {
-                RegexTraitParser = new RegexTraitParser(logger)
-            };
+                // fallback to toolset by VS version
+            }
+
+            string result = VisualStudioHelper.GetPlatformToolsetFromVisualStudioVersion();
+            Logger.DebugInfo($"Toolset from VS version: '{result}'");
+            return result;
+        }
+
+        private string GetPlatformToolsetFromProjects(ICollection<Project> projects)
+        {
+            var toolsetsInUse = new HashSet<string>();
+            foreach (Project project in projects)
+            {
+                XmlDocument projectFile = new XmlDocument();
+                projectFile.Load(project.FullName);
+                var nodes = projectFile.GetElementsByTagName("PlatformToolset");
+                foreach (XmlNode node in nodes)
+                {
+                    toolsetsInUse.Add(node.InnerText);
+                }
+            }
+
+            var comparer = new ToolsetComparer();
+            var orderedToolsetsInUse = toolsetsInUse.OrderByDescending(ts => ts, comparer).ToList();
+
+            Logger.DebugInfo($"Projects considered when searching Toolsets: {string.Join(", ", projects.Select(p => p.Name))}");
+            Logger.DebugInfo($"Toolsets found (known to GTA): {string.Join(", ", orderedToolsetsInUse.Select(ts => $"{ts}({comparer.IsKnownToolset(ts)})"))}");
+
+            var result = orderedToolsetsInUse.FirstOrDefault(comparer.IsKnownToolset);
+            Logger.DebugInfo(result != null 
+                ? $"Toolset selected: '{result}'" 
+                : "No toolset found in projects");
+            return result;
+        }
+
+        private class ToolsetComparer : IComparer<string>
+        {
+            private const int UnknownToolset = -1;
+
+            public int Compare(string x, string y)
+            {
+                return GetToolsetIndex(x).CompareTo(GetToolsetIndex(y));
+            }
+
+            public bool IsKnownToolset(string toolset)
+            {
+                return GetToolsetIndex(toolset) != UnknownToolset;
+            }
+
+            private int GetToolsetIndex(string toolset)
+            {
+                switch (toolset)
+                {
+                    case "v100": return 100;
+                    case "v100_xp": return 200;
+                    case "v110": return 300;
+                    case "v110_xp": return 400;
+                    case "v120": return 500;
+                    case "v120_xp": return 600;
+                    case "v140": return 700;
+                    case "v140_xp": return 800;
+                    case "v141": return 900;
+                    case "v141_xp": return 1000;
+                    default: return UnknownToolset;
+                }
+            }
         }
 
         public virtual void ProjectFinishedGenerating(Project project)
