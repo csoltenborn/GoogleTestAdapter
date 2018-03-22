@@ -37,6 +37,53 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     throw new InvalidOperationException();
             }
         }
+
+        public static VsVersion? FromYear(int year)
+        {
+            switch (year)
+            {
+                case 2012:
+                    return VsVersion.VS2012_1;
+                case 2013:
+                    return VsVersion.VS2013;
+                case 2015:
+                    return VsVersion.VS2015;
+                case 2017:
+                    return VsVersion.VS2017;
+                default:
+                    return null;
+            }
+        }
+
+        public static VsVersion? FromVersionNumber(int versionNumber)
+        {
+            switch (versionNumber)
+            {
+                case 11:
+                    return VsVersion.VS2012_1;
+                case 12:
+                    return VsVersion.VS2013;
+                case 14:
+                    return VsVersion.VS2015;
+                case 15:
+                    return VsVersion.VS2017;
+                default:
+                    return null;
+            }
+        }
+
+        public static VsVersion? TryParseVersion(string versionText)
+        {
+            VsVersion version;
+            if (Enum.TryParse(versionText, true, out version))
+                return version;
+
+            int number;
+            if (int.TryParse(versionText, out number))
+                return FromYear(number) ?? FromVersionNumber(number);
+
+            return null;
+        }
     }
 
     public static class VsVersionUtils
@@ -59,6 +106,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
                 try
                 {
+                    _version = TryGetVsVersionFromEnvironment(logger);
+
+                    if (_version.HasValue)
+                        return _version.Value;
+
                     _version = GetVsVersionFromProcess();
                 }
                 catch (Exception e)
@@ -68,6 +120,30 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 }
                 return _version.Value;
             }
+        }
+
+        private static VsVersion? TryGetVsVersionFromEnvironment(ILogger logger)
+        {
+            const string VsVersionEnvironmentVariable = "GOOGLETESTADAPTER_VSVERSION";
+
+            try
+            {
+                string versionText = Environment.GetEnvironmentVariable(VsVersionEnvironmentVariable);
+
+                if (!string.IsNullOrWhiteSpace(versionText))
+                    return VsVersionExtensions.TryParseVersion(versionText);
+            }
+            catch (System.Security.SecurityException)
+            {
+                //ignore security exceptions
+            }
+            catch (Exception e)
+            {
+                logger?.LogError($"Unexpected error during environment check for VsVersion: {e.Message}");
+            }
+
+            //either no environment variable or exception occured
+            return null;
         }
 
         // after http://stackoverflow.com/questions/11082436/detect-the-visual-studio-version-inside-a-vspackage
