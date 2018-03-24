@@ -1,6 +1,6 @@
 ﻿namespace NewProjectWizard.GTA
 {
-    partial class SinglePageWizard
+    partial class CreateProjectDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,14 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SinglePageWizard));
             this.rootTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.selectedProjectsCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.descriptionLabel = new System.Windows.Forms.Label();
+            this.selectGtestProjectTitleLabel = new System.Windows.Forms.Label();
+            this.gtestProjectComboBox = new System.Windows.Forms.ComboBox();
+            this.selectProjectsUnderTestTitleLabel = new System.Windows.Forms.Label();
+            this.projectsUnderTestCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.buttonsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
-            this.titleLabel = new System.Windows.Forms.Label();
-            this.descriptionLabel = new System.Windows.Forms.Label();
             this.rootTableLayoutPanel.SuspendLayout();
             this.buttonsFlowLayoutPanel.SuspendLayout();
             this.SuspendLayout();
@@ -45,16 +46,19 @@
             this.rootTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rootTableLayoutPanel.ColumnCount = 2;
-            this.rootTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.rootTableLayoutPanel.ColumnCount = 1;
             this.rootTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.rootTableLayoutPanel.Controls.Add(this.selectedProjectsCheckedListBox, 0, 2);
-            this.rootTableLayoutPanel.Controls.Add(this.buttonsFlowLayoutPanel, 0, 3);
-            this.rootTableLayoutPanel.Controls.Add(this.titleLabel, 0, 0);
-            this.rootTableLayoutPanel.Controls.Add(this.descriptionLabel, 0, 1);
+            this.rootTableLayoutPanel.Controls.Add(this.descriptionLabel, 0, 0);
+            this.rootTableLayoutPanel.Controls.Add(this.selectGtestProjectTitleLabel, 0, 1);
+            this.rootTableLayoutPanel.Controls.Add(this.gtestProjectComboBox, 0, 2);
+            this.rootTableLayoutPanel.Controls.Add(this.selectProjectsUnderTestTitleLabel, 0, 3);
+            this.rootTableLayoutPanel.Controls.Add(this.projectsUnderTestCheckedListBox, 0, 4);
+            this.rootTableLayoutPanel.Controls.Add(this.buttonsFlowLayoutPanel, 0, 5);
             this.rootTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.rootTableLayoutPanel.Name = "rootTableLayoutPanel";
-            this.rootTableLayoutPanel.RowCount = 4;
+            this.rootTableLayoutPanel.RowCount = 6;
+            this.rootTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.rootTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.rootTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.rootTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.rootTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -62,20 +66,64 @@
             this.rootTableLayoutPanel.Size = new System.Drawing.Size(334, 361);
             this.rootTableLayoutPanel.TabIndex = 0;
             // 
-            // selectedProjectsCheckedListBox
+            // descriptionLabel
             // 
-            this.selectedProjectsCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.descriptionLabel.AutoSize = true;
+            this.descriptionLabel.Location = new System.Drawing.Point(3, 3);
+            this.descriptionLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.descriptionLabel.Name = "descriptionLabel";
+            this.descriptionLabel.Size = new System.Drawing.Size(328, 26);
+            this.descriptionLabel.TabIndex = 3;
+            this.descriptionLabel.Text = "The selected projects will be added to the created Google Test project as referen" +
+    "ces.";
+            // 
+            // selectGtestProjectTitleLabel
+            // 
+            this.selectGtestProjectTitleLabel.AutoSize = true;
+            this.selectGtestProjectTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectGtestProjectTitleLabel.Location = new System.Drawing.Point(3, 48);
+            this.selectGtestProjectTitleLabel.Margin = new System.Windows.Forms.Padding(3, 16, 3, 0);
+            this.selectGtestProjectTitleLabel.Name = "selectGtestProjectTitleLabel";
+            this.selectGtestProjectTitleLabel.Size = new System.Drawing.Size(215, 13);
+            this.selectGtestProjectTitleLabel.TabIndex = 6;
+            this.selectGtestProjectTitleLabel.Text = "Select project providing Google Test";
+            // 
+            // gtestProjectComboBox
+            // 
+            this.gtestProjectComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gtestProjectComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.gtestProjectComboBox.FormattingEnabled = true;
+            this.gtestProjectComboBox.Location = new System.Drawing.Point(3, 64);
+            this.gtestProjectComboBox.Name = "gtestProjectComboBox";
+            this.gtestProjectComboBox.Size = new System.Drawing.Size(328, 21);
+            this.gtestProjectComboBox.TabIndex = 0;
+            // 
+            // selectProjectsUnderTestTitleLabel
+            // 
+            this.selectProjectsUnderTestTitleLabel.AutoSize = true;
+            this.selectProjectsUnderTestTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectProjectsUnderTestTitleLabel.Location = new System.Drawing.Point(3, 104);
+            this.selectProjectsUnderTestTitleLabel.Margin = new System.Windows.Forms.Padding(3, 16, 3, 0);
+            this.selectProjectsUnderTestTitleLabel.Name = "selectProjectsUnderTestTitleLabel";
+            this.selectProjectsUnderTestTitleLabel.Size = new System.Drawing.Size(172, 13);
+            this.selectProjectsUnderTestTitleLabel.TabIndex = 7;
+            this.selectProjectsUnderTestTitleLabel.Text = "Select project(s) to be tested";
+            // 
+            // projectsUnderTestCheckedListBox
+            // 
+            this.projectsUnderTestCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rootTableLayoutPanel.SetColumnSpan(this.selectedProjectsCheckedListBox, 2);
-            this.selectedProjectsCheckedListBox.FormattingEnabled = true;
-            this.selectedProjectsCheckedListBox.Location = new System.Drawing.Point(3, 54);
-            this.selectedProjectsCheckedListBox.MinimumSize = new System.Drawing.Size(4, 100);
-            this.selectedProjectsCheckedListBox.Name = "selectedProjectsCheckedListBox";
-            this.selectedProjectsCheckedListBox.Size = new System.Drawing.Size(328, 259);
-            this.selectedProjectsCheckedListBox.Sorted = true;
-            this.selectedProjectsCheckedListBox.TabIndex = 1;
-            this.selectedProjectsCheckedListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.selectedProjectsCheckedListBox_MouseMove);
+            this.projectsUnderTestCheckedListBox.FormattingEnabled = true;
+            this.projectsUnderTestCheckedListBox.Location = new System.Drawing.Point(3, 120);
+            this.projectsUnderTestCheckedListBox.MinimumSize = new System.Drawing.Size(4, 100);
+            this.projectsUnderTestCheckedListBox.Name = "projectsUnderTestCheckedListBox";
+            this.projectsUnderTestCheckedListBox.Size = new System.Drawing.Size(328, 199);
+            this.projectsUnderTestCheckedListBox.Sorted = true;
+            this.projectsUnderTestCheckedListBox.TabIndex = 1;
             // 
             // buttonsFlowLayoutPanel
             // 
@@ -83,7 +131,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonsFlowLayoutPanel.AutoSize = true;
-            this.rootTableLayoutPanel.SetColumnSpan(this.buttonsFlowLayoutPanel, 2);
             this.buttonsFlowLayoutPanel.Controls.Add(this.cancelButton);
             this.buttonsFlowLayoutPanel.Controls.Add(this.okButton);
             this.buttonsFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
@@ -116,38 +163,7 @@
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // titleLabel
-            // 
-            this.titleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.titleLabel.AutoSize = true;
-            this.rootTableLayoutPanel.SetColumnSpan(this.titleLabel, 2);
-            this.titleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.titleLabel.Location = new System.Drawing.Point(3, 3);
-            this.titleLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(328, 13);
-            this.titleLabel.TabIndex = 0;
-            this.titleLabel.Text = "Select project(s) under test";
-            this.titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // descriptionLabel
-            // 
-            this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.descriptionLabel.AutoSize = true;
-            this.rootTableLayoutPanel.SetColumnSpan(this.descriptionLabel, 2);
-            this.descriptionLabel.Location = new System.Drawing.Point(3, 22);
-            this.descriptionLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(328, 26);
-            this.descriptionLabel.TabIndex = 3;
-            this.descriptionLabel.Text = "The selected projects will be added to the created Google Test project as referen" +
-    "ces.";
-            // 
-            // SinglePageWizard
+            // CreateProjectDialog
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,12 +171,10 @@
             this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(334, 361);
             this.Controls.Add(this.rootTableLayoutPanel);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(231, 231);
-            this.Name = "SinglePageWizard";
+            this.Name = "CreateProjectDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create Google Test project";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SinglePageWizard_FormClosed);
             this.rootTableLayoutPanel.ResumeLayout(false);
             this.rootTableLayoutPanel.PerformLayout();
             this.buttonsFlowLayoutPanel.ResumeLayout(false);
@@ -171,11 +185,13 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel rootTableLayoutPanel;
-        private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.FlowLayoutPanel buttonsFlowLayoutPanel;
-        private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.CheckedListBox selectedProjectsCheckedListBox;
+        private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Label selectGtestProjectTitleLabel;
+        private System.Windows.Forms.ComboBox gtestProjectComboBox;
+        private System.Windows.Forms.CheckedListBox projectsUnderTestCheckedListBox;
+        private System.Windows.Forms.Label selectProjectsUnderTestTitleLabel;
         private System.Windows.Forms.Label descriptionLabel;
     }
 }

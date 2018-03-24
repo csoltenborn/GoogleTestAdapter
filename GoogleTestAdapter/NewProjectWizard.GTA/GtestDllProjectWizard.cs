@@ -1,24 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EnvDTE;
-using Microsoft.VisualStudio.TemplateWizard;
-using NewProjectWizard.GTA.Helpers;
-
-namespace NewProjectWizard.GTA
+﻿namespace NewProjectWizard.GTA
 {
     public class GtestDllProjectWizard : ProjectWizardBase
     {
-        public override void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, 
-            WizardRunKind runKind, object[] customParams)
+        protected override void RunStarted()
         {
-            _DTE dte = (_DTE) automationObject;
-            var cppProjects = dte.Solution.Projects.Cast<Project>().Where(p => p.IsCppProject()).ToList();
-
-            string value = GetPlatformToolset(cppProjects);
-            replacementsDictionary.Add(ToolsetPlaceholder, value);
-            Logger.DebugInfo($"Toolset: '{value}'");
-
-            FillReplacementDirectory(replacementsDictionary);
+            string value = GetPlatformToolset(CppProjects);
+            ReplacementsDictionary.Add(ToolsetPlaceholder, value);
+            Logger.DebugInfo($"Platform toolset: '{value}'");
         }
     }
 }

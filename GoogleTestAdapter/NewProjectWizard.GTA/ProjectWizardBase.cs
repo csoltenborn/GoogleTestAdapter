@@ -16,11 +16,13 @@ namespace NewProjectWizard.GTA
     public abstract class ProjectWizardBase : IWizard
     {
         protected const string ToolsetPlaceholder = "$gta_toolset$";
-        protected const string GenerateDebugInformationPlaceholder = "$gta_generate_debug_information$";
-        protected const string VariadicMaxPlaceholder = "$gta_variadic_max$";
+        private const string GenerateDebugInformationPlaceholder = "$gta_generate_debug_information$";
+        private const string VariadicMaxPlaceholder = "$gta_variadic_max$";
 
         protected ILogger Logger { get; }
         protected SettingsWrapper Settings { get; }
+        protected IList<Project> CppProjects { get; private set; }
+        protected IDictionary<string, string> ReplacementsDictionary { get; private set; }
 
         protected ProjectWizardBase()
         {
@@ -33,19 +35,31 @@ namespace NewProjectWizard.GTA
             Logger.DebugInfo($"VS version: '{VisualStudioHelper.GetVisualStudioVersionString()}'");
         }
 
-        public abstract void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind,
-            object[] customParams);
+        public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary,
+            WizardRunKind runKind, object[] customParams)
+        {
+            CppProjects = ((_DTE) automationObject).Solution.Projects
+                .Cast<Project>()
+                .Where(p => p.IsCppProject())
+                .ToList();
+            ReplacementsDictionary = replacementsDictionary;
 
-        protected void FillReplacementDirectory(Dictionary<string, string> replacementsDictionary)
+            FillReplacementsDictionary();
+            RunStarted();
+        }
+
+        private void FillReplacementsDictionary()
         {
             string value = VisualStudioHelper.GetGenerateDebugInformationFromVisualStudioVersion();
-            replacementsDictionary.Add(GenerateDebugInformationPlaceholder, value);
+            ReplacementsDictionary.Add(GenerateDebugInformationPlaceholder, value);
             Logger.DebugInfo($"GenerateDebugInfo: '{value}'");
 
             value = VisualStudioHelper.GetVariadicMaxFromVisualStudioVersion();
-            replacementsDictionary.Add(VariadicMaxPlaceholder, value);
+            ReplacementsDictionary.Add(VariadicMaxPlaceholder, value);
             Logger.DebugInfo($"VariadixMax: '{value}'");
         }
+
+        protected abstract void RunStarted();
 
         protected string GetPlatformToolset(ICollection<Project> projects)
         {
