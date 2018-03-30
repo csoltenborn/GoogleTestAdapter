@@ -328,6 +328,21 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_Tests_TestNamesBeingPrefixesAreFoundWithCorrectSourceLocation()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.Tests_ReleaseX86);
+
+            var abcdTest = testCases.Single(tc => tc.DisplayName == "abcd.t");
+            abcdTest.LineNumber.Should().Be(156);
+            var bbcdTest = testCases.Single(tc => tc.DisplayName == "bbcd.t");
+            bbcdTest.LineNumber.Should().Be(161);
+            var bcdTest = testCases.Single(tc => tc.DisplayName == "bcd.t");
+            bcdTest.LineNumber.Should().Be(166);
+        }
+
+        [TestMethod]
         [TestCategory(Load)]
         public void GetTestsFromExecutable_LoadTests_AreFoundInReasonableTime()
         {

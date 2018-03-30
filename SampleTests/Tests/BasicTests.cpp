@@ -152,3 +152,17 @@ TEST(OutputHandling, OneLine)
 	std::cout << "after test";
 }
 
+TEST(abcd, t)
+{
+	EXPECT_EQ(1, 1);
+}
+
+TEST(bbcd, t)
+{
+   	EXPECT_EQ(1, 1);
+}
+
+TEST(bcd, t)
+{
+   	EXPECT_EQ(1, 1);
+}

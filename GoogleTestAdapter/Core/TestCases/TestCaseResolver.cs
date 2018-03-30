@@ -132,7 +132,7 @@ namespace GoogleTestAdapter.TestCases
         private TestCaseLocation DoFindTestCaseLocation(List<string> testMethodSignatures)
         {
             return _allTestMethodSymbols
-                .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, tms))) // Contains() instead of == because nsfl might contain namespace
+                .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, $"^{tms}"))) // Regex instead of == because nsfl might contain namespace
                 .Select(nsfl => ToTestCaseLocation(nsfl, _allTraitSymbols))
                 .FirstOrDefault(); // we need to force immediate query execution, otherwise our session object will already be released
         }
