@@ -42,8 +42,8 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
     public static class VsVersionUtils
     {
-        private const string parentProcessPattern = @"(^vstest\..*\.exe$)|(^devenv\.exe$)";
-        private static readonly Regex parentProcessRegex = new Regex(parentProcessPattern, RegexOptions.IgnoreCase);
+        private const string ParentProcessPattern = @"(^vstest\.((discoveryengine)|(executionengine)|(console)).*\.exe$)|(^devenv\.exe$)";
+        private static readonly Regex ParentProcessRegex = new Regex(ParentProcessPattern, RegexOptions.IgnoreCase);
 
         private static readonly Version LastUnsupportedVersion = new Version(11, 0, 50727, 1); // VS2012 without updates
 
@@ -100,7 +100,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             var process = Process.GetCurrentProcess();
             string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToLower();
-            while (executable != null && !parentProcessRegex.IsMatch(executable))
+            while (executable != null && !ParentProcessRegex.IsMatch(executable))
             {
                 process = ParentProcessUtils.GetParentProcess(process.Id);
                 executable = process != null 
