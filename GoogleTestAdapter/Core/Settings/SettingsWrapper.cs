@@ -174,7 +174,7 @@ namespace GoogleTestAdapter.Settings
             }
 
             return string.IsNullOrWhiteSpace(SolutionDir) 
-                ? theString 
+                ? theString.Replace(SolutionDirPlaceholder, "")
                 : theString.Replace(SolutionDirPlaceholder, SolutionDir);
         }
 

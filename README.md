@@ -51,6 +51,38 @@ Google Test Adapter can be installed in three ways:
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
+#### <a name="gta_feature_support"></a>Feature availability
+
+GTA runs in three different environments:
+* Within Visual Studio and installed via VSIX (i.e., through *Extensions and updates* or by downloading and executing the VSIX file)
+* Within Visual Studio and installed via NuGet (i.e., pulled via a project's NuGet dependencies)
+* Within `VsTestConsole.exe` (making use of the `/UseVsixExtensions:true` or the `/TestAdapterPath:<dir>` options)
+
+For technical reasons, not all features are available in all environments; refer to the table below for details.
+
+| Feature | VS/VSIX | VS/NuGet | VsTest.Console
+|--- |:---:|:---:|:---:
+| Test discovery | yes | yes | yes
+| Test execution | yes | yes | yes
+| Test debugging | yes | no | -
+| Configuration via | | |
+| - VS Options | yes | no | -
+| - VS Toolbar | yes | no | -
+| - Solution test config file | yes | no | no
+| - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
+| Placeholders | | |
+| - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
+| - `$(ExecutableDir)` | yes | yes | yes
+| - `$(Executable)` | yes | yes | yes
+| - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
+| - `$(ThreadId)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
+| - Environment variables | yes | yes | yes
+
+<a name="vs_settings">1</a>: Via *Test/Test Settings/Select Test Settings File*<br>
+<a name="test_settings">2</a>: Via `/Settings` option<br>
+<a name="only_test_execution">3</a>: Only during test execution; placeholders are removed in discovery mode
+
+
 #### <a name="gta_configuration"></a>Configuration
 
 GTA provides different ways of configuration:
@@ -144,11 +176,15 @@ If you need to perform some setup or teardown tasks in addition to the setup/tea
 * <a name="test_discovery_regex"></a>The *Debug mode* will show on the test console whether your test executables are recognized by GTA. If they are not, you have two options:
   * If your test executable is `..\FooTests.exe`, make sure that a file `..\FooTests.exe.is_google_test` exists.
   * Configure a *Test discovery regex*. In case of GTA installation via NuGet, do not forget to add the regex to the solution config file (which might be a good idea anyways). 
-* Your test executable can not be run with command line option `--gtest_list_tests`, e.g. because it crashes. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable.
+* Your test executable can not run with command line option `--gtest_list_tests`. Make sure that your tests can be listed via command line; if they do not, debug your test executable, e.g. by making the according test project the startup project of your solution, and placing a breakpoint at the main method of your test executable. Here are some reasons why your tests might not be listed:
+  * The test executable crashes.
+  * Encoding issues prevent Google Test from properly reading the command line arguments (see e.g. [issue #149](https://github.com/csoltenborn/GoogleTestAdapter/issues/149)).
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
 * By default, test discovery for an executable is canceled after 30s. If in need, change this with option *Test discovery timeout in s*. Also consider moving expensive initialization code to the appropriate gtest setup facilities (e.g. [global](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#global-set-up-and-tear-down), [per test case](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#sharing-resources-between-tests-in-the-same-test-case), or [per test](https://github.com/google/googletest/blob/master/googletest/docs/Primer.md#test-fixtures-using-the-same-data-configuration-for-multiple-tests)).
 * For security reasons, Visual Studio's test discovery process runs with rather limited permissions. This might cause problems if your code needs those permissions already during test discovery (e.g. if your code [tries to open a file in write mode](https://github.com/csoltenborn/GoogleTestAdapter/issues/168#issuecomment-331725168)). Make sure that such code is executed at the appropriate gtest setup facilities (see above).
 * If your project happens to be a makefile project, there's a pitfall which will prevent GTA from discovering your tests: It appears that when importing a makefile project into VS, the *Output* setting of the project is populated from the makefile's content. However, if the makefile is edited later on such that the location of the generated test executable changes, VS does not find the test executable any more. One symptom of this is that your project can not be launched any more with `F5`. Make sure that the *Output* setting of the project is consistent with its makefile to avoid this problem. 
+
+In general, you can identify issues with your test executables by debugging them within VS: make the according test project the startup project of your solution, add command line arguments as desired, place breakpoints at points of interest and launch your test executable with *F5*.
 
 ##### No source locations and traits are found for my tests
 * The test adapter is not able to find the pdb of your test executable, e.g. because it has been deleted or moved (and indicates that with a warning in the test output window). Rebuilding your solution should regenerate the pdb at an appropriate location.
