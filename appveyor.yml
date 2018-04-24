@@ -1,4 +1,4 @@
-version: 0.12.3.{build}
+version: 0.13.0.{build}
 os: 
 - Visual Studio 2017
 configuration: Release
