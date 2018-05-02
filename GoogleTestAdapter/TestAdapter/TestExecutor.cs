@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Linq;
@@ -177,7 +177,11 @@ namespace GoogleTestAdapter.TestAdapter
             if (testrunIsCanceled())
                 return;
 
+            if (!GoogleTestDiscoverer.IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
+                return;
+
             var discoverer = new GoogleTestDiscoverer(logger, settings);
+
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
                 allTestCasesInExecutables.AddRange(discoverer.GetTestsFromExecutable(executable));
@@ -204,6 +208,9 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void DoRunTests(ICollection<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            if (testCasesToRun.Count == 0)
+                return;
+
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);
