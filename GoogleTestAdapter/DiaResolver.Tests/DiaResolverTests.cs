@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.DiaResolver
             DoResolveTest(
                 TestResources.LoadTests_ReleaseX86, 
                 "*", 
-                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 630 : 728, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 628 : 728, 
                 108);
         }
 

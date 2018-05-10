@@ -4,18 +4,17 @@
     <SolutionSettings>
       <Settings>
         <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
-        <BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
-        <BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
+        <BatchForTestSetup>$(SolutionDir)Tests\Returns0.bat</BatchForTestSetup>
+        <BatchForTestTeardown>$(SolutionDir)Tests\Returns1.bat</BatchForTestTeardown>
         <WorkingDir>$(SolutionDir)</WorkingDir>
       </Settings>
     </SolutionSettings>
     <ProjectSettings>
       <Settings ProjectRegex="LoadTests_gta\.exe|CrashingTests_gta\.exe">
-        <BatchForTestSetup>Tests\Returns1.bat</BatchForTestSetup>
         <TestDiscoveryRegex>.*Tests.*_gta.exe</TestDiscoveryRegex>
       </Settings>
       <Settings ProjectRegex=".*\\Tests_gta\.exe">
-        <BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
+        <TestDiscoveryTimeoutInSeconds>60</TestDiscoveryTimeoutInSeconds>
       </Settings>
     </ProjectSettings>
   </GoogleTestAdapterSettings>
