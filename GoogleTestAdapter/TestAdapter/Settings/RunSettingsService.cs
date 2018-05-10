@@ -9,7 +9,6 @@ using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
-using System.Xml;
 using System.Xml.XPath;
 using Constants = Microsoft.VisualStudio.TestPlatform.ObjectModel.Constants;
 
@@ -46,7 +45,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             try
             {
-                if (CopyToUnsetValues(runSettingsNavigator, settingsContainer))
+                if (settingsContainer.GetUnsetValuesFrom(runSettingsNavigator))
                 {
                     runSettingsNavigator.DeleteSelf(); // this node is to be replaced by the final run settings
                 }
@@ -56,33 +55,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 logger.Log(MessageLevel.Error, $"Invalid run settings: {e.Message}");
             }
 
-            string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
-            try
-            {
-                if (File.Exists(solutionRunSettingsFile))
-                {
-                    var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
-                    settings.XmlResolver = null;
-                    using (var reader = XmlReader.Create(solutionRunSettingsFile, settings))
-                    {
-                        var solutionRunSettingsDocument = new XPathDocument(reader);
-                        XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
-                        if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
-                        {
-                            CopyToUnsetValues(solutionRunSettingsNavigator, settingsContainer);
-                        }
-                        else
-                        {
-                            logger.Log(MessageLevel.Warning, $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
-                        }
-		    }
-                }
-            }
-            catch (Exception e)
-            {
-                logger.Log(MessageLevel.Warning,
-                    $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
-            }
+            GetValuesFromSolutionSettingsFile(settingsContainer, logger);
 
             foreach (var projectSettings in settingsContainer.ProjectSettings)
             {
@@ -98,14 +71,25 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             return runSettingsNavigator;
         }
 
-        private void GetValuesFromGlobalSettings(RunSettings settings)
+        private void GetValuesFromSolutionSettingsFile(RunSettingsContainer settingsContainer, ILogger logger)
         {
-            // these settings must not be provided through runsettings files. If they still
-            // are, the following makes sure that they are ignored
-            settings.DebuggingNamedPipeId = null;
-            settings.SkipOriginCheck = null;
-
-            settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
+            string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
+            try
+            {
+                if (File.Exists(solutionRunSettingsFile))
+                {
+                    if (!settingsContainer.GetUnsetValuesFrom(solutionRunSettingsFile))
+                    {
+                        logger.Log(MessageLevel.Warning,
+                            $"Solution test settings file found at '{solutionRunSettingsFile}', but does not contain {Constants.RunSettingsName} node");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(MessageLevel.Warning,
+                    $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
+            }
         }
 
         private void GetValuesFromGlobalSettings(RunSettingsContainer settingsContainer)
@@ -117,16 +101,14 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
         }
 
-        private bool CopyToUnsetValues(XPathNavigator sourceNavigator, RunSettingsContainer targetSettingsContainer)
+        private void GetValuesFromGlobalSettings(RunSettings settings)
         {
-            if (sourceNavigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
-            {
-                var sourceRunSettings = RunSettingsContainer.LoadFromXml(sourceNavigator);
-                targetSettingsContainer.GetUnsetValuesFrom(sourceRunSettings);
-                return true;
-            }
+            // these settings must not be provided through runsettings files. If they still
+            // are, the following makes sure that they are ignored
+            settings.DebuggingNamedPipeId = null;
+            settings.SkipOriginCheck = null;
 
-            return false;
+            settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }
 
         // protected for testing
