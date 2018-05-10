@@ -138,6 +138,35 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
         }
 
+        public bool GetUnsetValuesFrom(string settingsFile)
+        {
+            var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+            settings.XmlResolver = null;
+            using (var reader = XmlReader.Create(settingsFile, settings))
+            {
+                var solutionRunSettingsDocument = new XPathDocument(reader);
+                XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
+                if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                {
+                    return GetUnsetValuesFrom(solutionRunSettingsNavigator);
+                }
+
+                return false;
+            }
+        }
+
+        public bool GetUnsetValuesFrom(XPathNavigator sourceNavigator)
+        {
+            if (sourceNavigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
+            {
+                var sourceRunSettings = LoadFromXml(sourceNavigator);
+                GetUnsetValuesFrom(sourceRunSettings);
+                return true;
+            }
+
+            return false;
+        }
+
         private static void ValidateOne<T>(string name, T value, Action<T> validator)
         {
             try

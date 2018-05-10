@@ -4,8 +4,8 @@
     <SolutionSettings>
       <Settings>
         <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
-        <BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
-        <BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
+        <BatchForTestSetup>$(SolutionDir)Tests\Returns0.bat</BatchForTestSetup>
+        <BatchForTestTeardown>$(SolutionDir)Tests\Returns1.bat</BatchForTestTeardown>
         <BreakOnFailure>false</BreakOnFailure>
         <CatchExceptions>true</CatchExceptions>
         <DebugMode>false</DebugMode>
