@@ -215,6 +215,11 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void DoRunTests(ICollection<TestCase> testCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            if (testCasesToRun.Count == 0)
+            {
+                return;
+            }
+
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
             var launcher = new DebuggedProcessLauncher(frameworkHandle);

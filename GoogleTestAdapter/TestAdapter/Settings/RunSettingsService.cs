@@ -41,7 +41,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
 
             var settingsContainer = new RunSettingsContainer();
-            settingsContainer.SolutionSettings = new RunSettings();
 
             try
             {

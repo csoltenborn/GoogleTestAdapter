@@ -1,7 +1,6 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
@@ -408,16 +407,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         private RunSettingsContainer SetupSettingsContainer(string solutionWorkingDir, 
             string project1WorkingDir, string project2WorkingDir, string project3WorkingDir)
         {
-            var settingsContainer = new RunSettingsContainer
+            var settingsContainer = new RunSettingsContainer(new RunSettings
             {
-                SolutionSettings = new RunSettings
-                {
-                    ProjectRegex = null,
-                    WorkingDir = solutionWorkingDir,
-                    SkipOriginCheck = true
-                },
-                ProjectSettings = new List<RunSettings>()
-            };
+                ProjectRegex = null,
+                WorkingDir = solutionWorkingDir,
+                SkipOriginCheck = true
+            });
 
             AddProjectSettings(settingsContainer, "project1", project1WorkingDir);
             AddProjectSettings(settingsContainer, "project2", project2WorkingDir);
