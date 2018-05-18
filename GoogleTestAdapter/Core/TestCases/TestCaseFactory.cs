@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.TestCases
                     return new List<TestCase>();
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput))
+                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
                     return new List<TestCase>();
             }
             catch (Exception e)
@@ -186,7 +186,7 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput))
+                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
                     return new List<TestCase>();
             }
             catch (Exception e)
@@ -222,14 +222,14 @@ namespace GoogleTestAdapter.TestCases
                 $"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
         }
 
-        private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput)
+        private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput, string workingDir, string parameters)
         {
             if (processExitCode != 0)
             {
                 string messsage =
                     $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
                 messsage +=
-                    $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption}', working directory: '{Path.GetDirectoryName(_executable)}'";
+                    $"\nCommand executed: '{_executable} {parameters}', working directory: '{workingDir}'";
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
                     messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
                 else

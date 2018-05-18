@@ -10,7 +10,7 @@ int main(int argc, char ** argv)
 	std::string justFail("-justfail");
 
    bool weShouldFail = false;
-	for (int i = 0; i < argc; i++)
+   for (int i = 0; i < argc; i++)
 	{
 		if (strncmp(argv[i], prefix.c_str(), strlen(prefix.c_str())) == 0)
 		{
@@ -18,14 +18,15 @@ int main(int argc, char ** argv)
 			testDirectory.erase(0, strlen(prefix.c_str()));
 			TEST_DIRECTORY = testDirectory;
 		}
-		if (strncmp(argv[i], justFail.c_str(), strlen(justFail.c_str())) == 0)
-		{
+      if (strncmp(argv[i], justFail.c_str(), strlen(justFail.c_str())) == 0)
+      {
          weShouldFail = true;
-		}
+      }
 	}
 
    if (weShouldFail)
    {
+      std::cout << "This test failed intentionally\n";
       return 1;
    }
 

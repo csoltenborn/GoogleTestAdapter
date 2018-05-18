@@ -8,6 +8,7 @@ using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
@@ -327,6 +328,7 @@ namespace GoogleTestAdapter
             tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
 
             tests.Should().BeEmpty();
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
         }
 
 
