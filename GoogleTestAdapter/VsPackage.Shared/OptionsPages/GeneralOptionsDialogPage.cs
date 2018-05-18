@@ -103,6 +103,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _additionalTestExecutionParams = SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionAdditionalTestDiscoveryParams)]
+        [Description(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDescription)]
+        public string AdditionalTestDiscoveryParams
+        {
+            get { return _additionalTestDiscoveryParams; }
+            set { SetAndNotify(ref _additionalTestDiscoveryParams, value); }
+        }
+        private string _additionalTestDiscoveryParams = SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionBatchForTestSetup)]
         [Description(SettingsWrapper.OptionBatchForTestSetupDescription)]
         public string BatchForTestSetup

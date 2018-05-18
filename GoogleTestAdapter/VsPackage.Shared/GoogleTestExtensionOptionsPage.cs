@@ -189,6 +189,7 @@ namespace GoogleTestAdapter.VsPackage
                 TimestampOutput = _generalOptions.TimestampOutput,
                 ShowReleaseNotes = ShowReleaseNotes,
                 AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
+                AdditionalTestDiscoveryParam = _generalOptions.AdditionalTestDiscoveryParams,
                 BatchForTestSetup = _generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
                 KillProcessesOnCancel = _generalOptions.KillProcessesOnCancel,

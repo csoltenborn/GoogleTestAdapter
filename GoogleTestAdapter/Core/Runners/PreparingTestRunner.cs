@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.Runners
 
                 string testDirectory = Utils.GetTempDirectory();
                 workingDir = _settings.GetWorkingDir(_solutionDirectory, testDirectory, _threadId);
-                userParameters = _settings.GetUserParameters(_solutionDirectory, testDirectory, _threadId);
+                userParameters = _settings.GetUserParametersForExecution(_solutionDirectory, testDirectory, _threadId);
 
                 string batch = _settings.GetBatchForTestSetup(_solutionDirectory, testDirectory, _threadId);
                 SafeRunBatch(TestSetup, _solutionDirectory, batch, isBeingDebugged);

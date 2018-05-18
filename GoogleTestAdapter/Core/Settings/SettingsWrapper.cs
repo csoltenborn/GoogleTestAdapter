@@ -162,8 +162,11 @@ namespace GoogleTestAdapter.Settings
         public IEnumerable<string> GetAdditionalPdbs(string executable)
             => Utils.SplitAdditionalPdbs(AdditionalPdbs).Select(p => ReplacePlaceholders(p.Trim(), executable));
 
-        public string GetUserParameters(string solutionDirectory, string testDirectory, int threadId)
+        public string GetUserParametersForExecution(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(AdditionalTestExecutionParam, solutionDirectory, testDirectory, threadId);
+
+        public string GetUserParametersForDiscovery(string executable)
+            => ReplacePlaceholders(AdditionalTestDiscoveryParam, executable);
 
         public string GetBatchForTestSetup(string solutionDirectory, string testDirectory, int threadId)
             => ReplacePlaceholders(BatchForTestSetup, solutionDirectory, testDirectory, threadId);
@@ -230,6 +233,9 @@ namespace GoogleTestAdapter.Settings
         private const string DescriptionOfExecutableDirPlaceHolder =
             ExecutableDirPlaceholder + " - directory containing the test executable";
 
+        private const string DescriptionOfExecutablePlaceHolder =
+            ExecutablePlaceholder + " - executable containing the tests";
+
         private const string DescriptionOfPlaceholdersForBatches =
             TestDirPlaceholder + " - path of a directory which can be used by the tests\n" +
             ThreadIdPlaceholder + " - id of thread executing the current tests\n" +
@@ -237,7 +243,7 @@ namespace GoogleTestAdapter.Settings
 
         private const string DescriptionOfPlaceholdersForExecutables =
             DescriptionOfPlaceholdersForBatches + "\n" +
-            ExecutablePlaceholder + " - executable containing the tests\n" +
+            DescriptionOfExecutablePlaceHolder + "\n" +
             DescriptionOfExecutableDirPlaceHolder;
 
         private const string DescriptionOfEnvVarPlaceholders = "Environment variables are also possible, e.g. %PATH%";
@@ -401,10 +407,21 @@ namespace GoogleTestAdapter.Settings
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamsDescription =
-            "Additional parameters for Google Test executable. Placeholders:\n"
+            "Additional parameters for Google Test executable during test execution. Placeholders:\n"
             + DescriptionOfPlaceholdersForExecutables + "\n" + DescriptionOfEnvVarPlaceholders;
 
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
+
+
+        public const string OptionAdditionalTestDiscoveryParams = "Additional test discovery parameters";
+        public const string OptionAdditionalTestDiscoveryParamsDefaultValue = "";
+        public const string OptionAdditionalTestDiscoveryParamsDescription =
+            "Additional parameters for Google Test executable during test discovery. Placeholders:\n"
+            + DescriptionOfExecutableDirPlaceHolder + "\n" 
+            + DescriptionOfExecutablePlaceHolder + "\n" 
+            + DescriptionOfEnvVarPlaceholders;
+
+        public virtual string AdditionalTestDiscoveryParam => _currentSettings.AdditionalTestDiscoveryParam ?? OptionAdditionalTestDiscoveryParamsDefaultValue;
 
 
         public const string OptionBatchForTestSetup = "Test setup batch file";

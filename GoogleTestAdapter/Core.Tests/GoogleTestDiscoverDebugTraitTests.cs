@@ -172,6 +172,12 @@ namespace GoogleTestAdapter
             base.GetTestsFromExecutable_SampleTests_FindsParameterizedTestWithUmlauts();
         }
 
+        [TestMethod]
+        public override void GetTestsFromExecutable_FailUserParamIsSet_NoTestsAreFound()
+        {
+            base.GetTestsFromExecutable_FailUserParamIsSet_NoTestsAreFound();
+        }
+
         #endregion
 
     }

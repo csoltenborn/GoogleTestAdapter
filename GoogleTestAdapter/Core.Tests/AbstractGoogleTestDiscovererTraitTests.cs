@@ -7,7 +7,6 @@ using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
-using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -311,6 +310,23 @@ namespace GoogleTestAdapter
 
             traits = new[] { new Trait("Type", "SomeNewType") };
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_FailUserParamIsSet_NoTestsAreFound()
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            var tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().NotBeEmpty();
+
+            MockOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-justfail");
+
+            discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().BeEmpty();
         }
 
 
