@@ -35,12 +35,12 @@ namespace GoogleTestAdapter.TestCases
 
         public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
         {
-            List<string> standardOutput = new List<string>();
             if (_settings.UseNewTestExecutionFramework)
             {
-                return NewCreateTestcases(reportTestCase, standardOutput);
+                return NewCreateTestcases(reportTestCase);
             }
 
+            List<string> standardOutput = new List<string>();
             try
             {
                 string workingDir = new FileInfo(_executable).DirectoryName;
@@ -109,8 +109,9 @@ namespace GoogleTestAdapter.TestCases
             return testCases;
         }
 
-        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase, List<string> standardOutput)
+        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase)
         {
+            var standardOutput = new List<string>();
             var testCases = new List<TestCase>();
 
             var resolver = new TestCaseResolver(
