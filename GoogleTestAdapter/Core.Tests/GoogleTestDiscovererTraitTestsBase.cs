@@ -315,20 +315,20 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public virtual void GetTestsFromExecutable_FailUserParamIsSet_NoTestsAreFound()
+        public virtual void GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
-            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            var tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
 
-            tests.Should().NotBeEmpty();
+            CheckEffectOfDiscoveryParam();
+        }
 
-            MockOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-justfail");
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_OldExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
+        {
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
 
-            discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
-
-            tests.Should().BeEmpty();
-            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
+            CheckEffectOfDiscoveryParam();
         }
 
 
@@ -348,6 +348,30 @@ namespace GoogleTestAdapter
                 Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
                 foundTrait.Should().NotBeNull("Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
+        }
+
+        private void CheckEffectOfDiscoveryParam()
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            var tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().NotBeEmpty();
+
+            MockOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-justfail");
+
+            discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().BeEmpty();
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
+
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+
+            discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().BeEmpty();
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
         }
 
     }

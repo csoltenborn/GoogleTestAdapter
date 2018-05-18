@@ -173,9 +173,15 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public override void GetTestsFromExecutable_FailUserParamIsSet_NoTestsAreFound()
+        public override void GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
-            base.GetTestsFromExecutable_FailUserParamIsSet_NoTestsAreFound();
+            base.GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound();
+        }
+
+        [TestMethod]
+        public override void GetTestsFromExecutable_OldExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
+        {
+            base.GetTestsFromExecutable_OldExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound();
         }
 
         #endregion
