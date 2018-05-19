@@ -357,7 +357,7 @@ namespace GoogleTestAdapter
 
             tests.Should().NotBeEmpty();
 
-            MockOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-justfail");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-justfail");
 
             discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             tests = discoverer.GetTestsFromExecutable(SampleTestToUse);

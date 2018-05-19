@@ -92,23 +92,23 @@ namespace GoogleTestAdapter.Settings
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder);
-            string result = TheOptions.GetUserParametersForExecution("", "mydir", 0);
+            string result = TheOptions.GetUserParametersForExecution("mydir", 0);
             result.Should().Be("mydir");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + " " + SettingsWrapper.TestDirPlaceholder);
-            result = TheOptions.GetUserParametersForExecution("", "mydir", 0);
+            result = TheOptions.GetUserParametersForExecution("mydir", 0);
             result.Should().Be("mydir mydir");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder.ToLower());
-            result = TheOptions.GetUserParametersForExecution("", "mydir", 0);
+            result = TheOptions.GetUserParametersForExecution("mydir", 0);
             result.Should().Be(SettingsWrapper.TestDirPlaceholder.ToLower());
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.ThreadIdPlaceholder);
-            result = TheOptions.GetUserParametersForExecution("", "mydir", 4711);
+            result = TheOptions.GetUserParametersForExecution("mydir", 4711);
             result.Should().Be("4711");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder);
-            result = TheOptions.GetUserParametersForExecution("", "mydir", 4711);
+            result = TheOptions.GetUserParametersForExecution("mydir", 4711);
             result.Should().Be("mydir, 4711");
         }
 
@@ -305,7 +305,7 @@ namespace GoogleTestAdapter.Settings
                 var name = (string)variable.Key;
                 string value = (string)variable.Value;
                 MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns($"Foo;%{name}%;Bar");
-                string result = TheOptions.GetBatchForTestTeardown("SolutionDir", "TestDirectory", 4711);
+                string result = TheOptions.GetBatchForTestTeardown("TestDirectory", 4711);
 
                 // ReSharper disable once PossibleNullReferenceException
                 result.Should().Be($"Foo;{value};Bar");
@@ -334,7 +334,7 @@ namespace GoogleTestAdapter.Settings
                 var name = (string)variable.Key;
                 string value = (string)variable.Value;
                 MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns($"Foo;%{name}%;Bar");
-                string result = TheOptions.GetBatchForTestSetup("SolutionDir", "TestDirectory", 4711);
+                string result = TheOptions.GetBatchForTestSetup("TestDirectory", 4711);
 
                 // ReSharper disable once PossibleNullReferenceException
                 result.Should().Be($"Foo;{value};Bar");
@@ -350,7 +350,7 @@ namespace GoogleTestAdapter.Settings
                 var name = (string)variable.Key;
                 string value = (string)variable.Value;
                 MockXmlOptions.Setup(o => o.WorkingDir).Returns($"Foo;%{name}%;Bar");
-                string result = TheOptions.GetWorkingDir("SolutionDir", "TestDirectory", 4711);
+                string result = TheOptions.GetWorkingDirForExecution("TestDirectory", 4711);
 
                 // ReSharper disable once PossibleNullReferenceException
                 result.Should().Be($"Foo;{value};Bar");
@@ -367,12 +367,12 @@ namespace GoogleTestAdapter.Settings
                 string value = (string)variable.Value;
 
                 MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToLower()}%;Bar");
-                string result = TheOptions.GetUserParametersForExecution("SolutionDir", "TestDirectory", 4711);
+                string result = TheOptions.GetUserParametersForExecution("TestDirectory", 4711);
                 // ReSharper disable once PossibleNullReferenceException
                 result.Should().Be($"Foo;{value};Bar");
 
                 MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToUpper()}%;Bar");
-                result = TheOptions.GetUserParametersForExecution("SolutionDir", "TestDirectory", 4711);
+                result = TheOptions.GetUserParametersForExecution("TestDirectory", 4711);
                 // ReSharper disable once PossibleNullReferenceException
                 result.Should().Be($"Foo;{value};Bar");
             }

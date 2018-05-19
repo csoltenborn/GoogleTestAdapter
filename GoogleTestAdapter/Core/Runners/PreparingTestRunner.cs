@@ -21,10 +21,9 @@ namespace GoogleTestAdapter.Runners
         private readonly ITestRunner _innerTestRunner;
         private readonly int _threadId;
         private readonly string _threadName;
-        private readonly string _solutionDirectory;
 
 
-        public PreparingTestRunner(int threadId, string solutionDirectory, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
         {
             _logger = logger;
             _settings = settings;
@@ -32,17 +31,16 @@ namespace GoogleTestAdapter.Runners
             _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
             _threadId = Math.Max(0, threadId);
             _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _logger, _settings, schedulingAnalyzer);
-            _solutionDirectory = solutionDirectory;
         }
 
-        public PreparingTestRunner(string solutionDirectory, ITestFrameworkReporter reporter,
+        public PreparingTestRunner(ITestFrameworkReporter reporter,
             ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
-            : this(-1, solutionDirectory, reporter, logger, settings, schedulingAnalyzer){
+            : this(-1, reporter, logger, settings, schedulingAnalyzer){
         }
 
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
-             string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, string workingDir, 
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
             DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
@@ -52,16 +50,16 @@ namespace GoogleTestAdapter.Runners
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 string testDirectory = Utils.GetTempDirectory();
-                workingDir = _settings.GetWorkingDir(_solutionDirectory, testDirectory, _threadId);
-                userParameters = _settings.GetUserParametersForExecution(_solutionDirectory, testDirectory, _threadId);
+                workingDir = _settings.GetWorkingDirForExecution(testDirectory, _threadId);
+                userParameters = _settings.GetUserParametersForExecution(testDirectory, _threadId);
 
-                string batch = _settings.GetBatchForTestSetup(_solutionDirectory, testDirectory, _threadId);
-                SafeRunBatch(TestSetup, _solutionDirectory, batch, isBeingDebugged);
+                string batch = _settings.GetBatchForTestSetup(testDirectory, _threadId);
+                SafeRunBatch(TestSetup, _settings.SolutionDir, batch, isBeingDebugged);
 
-                _innerTestRunner.RunTests(testCasesToRun, baseDir, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
+                _innerTestRunner.RunTests(testCasesToRun, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
 
-                batch = _settings.GetBatchForTestTeardown(_solutionDirectory, testDirectory, _threadId);
-                SafeRunBatch(TestTeardown, _solutionDirectory, batch, isBeingDebugged);
+                batch = _settings.GetBatchForTestTeardown(testDirectory, _threadId);
+                SafeRunBatch(TestTeardown, _settings.SolutionDir, batch, isBeingDebugged);
 
                 stopwatch.Stop();
                 _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");

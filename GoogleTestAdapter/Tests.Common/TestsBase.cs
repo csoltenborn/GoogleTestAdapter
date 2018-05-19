@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Settings;
@@ -25,7 +26,7 @@ namespace GoogleTestAdapter.Tests.Common
             MockLogger.Setup(l => l.GetMessages(It.IsAny<Severity[]>())).Returns(new List<string>());
 
             Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
-            MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object);
+            MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object, Path.GetFullPath(TestResources.SampleTestsSolutionDir));
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
@@ -63,8 +64,6 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.ShowReleaseNotes).Returns(SettingsWrapper.OptionShowReleaseNotesDefaultValue);
             mockOptions.Setup(o => o.AdditionalTestExecutionParam)
                 .Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
-            mockOptions.Setup(o => o.AdditionalTestDiscoveryParam)
-                .Returns(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue);
             mockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);
             mockOptions.Setup(o => o.BatchForTestTeardown).Returns(SettingsWrapper.OptionBatchForTestTeardownDefaultValue);
             mockOptions.Setup(o => o.ParallelTestExecution)
@@ -78,6 +77,7 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
 
             mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
+            mockOptions.Setup(o => o.SolutionDir).CallBase();
         }
 
         [TestCleanup]

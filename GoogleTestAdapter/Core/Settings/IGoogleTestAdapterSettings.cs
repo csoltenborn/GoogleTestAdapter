@@ -20,7 +20,6 @@ namespace GoogleTestAdapter.Settings
         string ProjectRegex { get; set; }
 
         string AdditionalTestExecutionParam { get; set; }
-        string AdditionalTestDiscoveryParam { get; set; }
         bool? CatchExceptions { get; set; }
         bool? BreakOnFailure { get; set; }
         int? MaxNrOfThreads { get; set; }
@@ -51,6 +50,7 @@ namespace GoogleTestAdapter.Settings
 
         // internal
         string DebuggingNamedPipeId { get; set; }
+        string SolutionDir { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -58,7 +58,6 @@ namespace GoogleTestAdapter.Settings
         public static void GetUnsetValuesFrom(this IGoogleTestAdapterSettings self, IGoogleTestAdapterSettings other)
         {
             self.AdditionalTestExecutionParam = self.AdditionalTestExecutionParam ?? other.AdditionalTestExecutionParam;
-            self.AdditionalTestDiscoveryParam = self.AdditionalTestDiscoveryParam ?? other.AdditionalTestDiscoveryParam;
             self.CatchExceptions = self.CatchExceptions ?? other.CatchExceptions;
             self.BreakOnFailure = self.BreakOnFailure ?? other.BreakOnFailure;
             self.MaxNrOfThreads = self.MaxNrOfThreads ?? other.MaxNrOfThreads;
@@ -88,6 +87,7 @@ namespace GoogleTestAdapter.Settings
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
+            self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
         }
     }
 

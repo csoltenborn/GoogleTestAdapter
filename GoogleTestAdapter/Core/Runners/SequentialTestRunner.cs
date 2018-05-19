@@ -38,8 +38,8 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, string workingDir, 
+            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
             DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
@@ -47,8 +47,8 @@ namespace GoogleTestAdapter.Runners
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
             foreach (string executable in groupedTestCases.Keys)
             {
-                string finalParameters = SettingsWrapper.ReplacePlaceholders(userParameters, executable);
-                string finalWorkingDir = SettingsWrapper.ReplacePlaceholders(workingDir, executable);
+                string finalParameters = SettingsWrapper.ReplaceExecutablePlaceholders(userParameters, executable);
+                string finalWorkingDir = SettingsWrapper.ReplaceExecutablePlaceholders(workingDir, executable);
 
                 if (_canceled)
                     break;

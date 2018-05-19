@@ -43,7 +43,7 @@ namespace GoogleTestAdapter.TestCases
             List<string> standardOutput = new List<string>();
             try
             {
-                string workingDir = new FileInfo(_executable).DirectoryName;
+                string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
                 string finalParams = GetDiscoveryParams();
 
                 int processExitCode = 0;
@@ -154,7 +154,7 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
-                string workingDir = new FileInfo(_executable).DirectoryName;
+                string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
                 var finalParams = GetDiscoveryParams();
 
                 int processExitCode = ProcessExecutor.ExecutionFailed;

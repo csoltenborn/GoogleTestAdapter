@@ -77,9 +77,6 @@ namespace GoogleTestAdapter.Settings
         public virtual string AdditionalTestExecutionParam { get; set; }
         public bool ShouldSerializeAdditionalTestExecutionParam() { return AdditionalTestExecutionParam != null; }
 
-        public virtual string AdditionalTestDiscoveryParam { get; set; }
-        public bool ShouldSerializeAdditionalTestDiscoveryParam() { return AdditionalTestDiscoveryParam != null; }
-
         public virtual bool? ParallelTestExecution { get; set; }
         public bool ShouldSerializeParallelTestExecution() { return ParallelTestExecution != null; }
 
@@ -106,6 +103,9 @@ namespace GoogleTestAdapter.Settings
         // internal
         public string DebuggingNamedPipeId { get; set; }
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
+
+        public string SolutionDir { get; set; }
+        public bool ShouldSerializeSolutionDir() { return DebuggingNamedPipeId != null; }
 
     }
 
