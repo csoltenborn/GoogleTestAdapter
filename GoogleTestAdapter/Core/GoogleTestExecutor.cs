@@ -42,7 +42,7 @@ namespace GoogleTestAdapter
                 ComputeTestRunner(reporter, isBeingDebugged);
             }
 
-            _runner.RunTests(testCasesToRunAsArray, null, null, isBeingDebugged, launcher, executor);
+            _runner.RunTests(testCasesToRunAsArray, isBeingDebugged, launcher, executor);
 
             if (_settings.ParallelTestExecution)
                 _schedulingAnalyzer.PrintStatisticsToDebugOutput();

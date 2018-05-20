@@ -8,8 +8,8 @@ namespace GoogleTestAdapter.Runners
     public interface ITestRunner
     {
         // TODO remove isBeingDebugged parameter (use debuggedLauncher != null)
-        void RunTests(IEnumerable<TestCase> testCasesToRun, string workingDir,
-            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor);
+        void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, 
+            IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor);
 
         void Cancel();
     }

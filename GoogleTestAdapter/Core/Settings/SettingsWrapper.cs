@@ -246,15 +246,15 @@ namespace GoogleTestAdapter.Settings
         }
 
 
+        public const string PageGeneralName = "General";
+        public const string PageParallelizationName = CategoryParallelizationName;
+        public const string PageGoogleTestName = "Google Test";
+
         public const string CategoryTestExecutionName = "Test execution";
         public const string CategoryTraitsName = "Regexes for trait assignment";
         public const string CategoryRuntimeBehaviorName = "Runtime behavior";
         public const string CategoryParallelizationName = "Parallelization";
         public const string CategoryMiscName = "Misc";
-
-        public const string PageGeneralName = "General";
-        public const string PageParallelizationName = CategoryParallelizationName;
-        public const string PageGoogleTestName = "Google Test";
 
 
         #region GeneralOptionsPage

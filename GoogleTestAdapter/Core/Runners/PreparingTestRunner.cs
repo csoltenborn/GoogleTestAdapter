@@ -21,6 +21,7 @@ namespace GoogleTestAdapter.Runners
         private readonly ITestRunner _innerTestRunner;
         private readonly int _threadId;
         private readonly string _threadName;
+        private readonly string _testDirectory;
 
 
         public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
@@ -30,7 +31,8 @@ namespace GoogleTestAdapter.Runners
             string threadName = ComputeThreadName(threadId, _settings.MaxNrOfThreads);
             _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
             _threadId = Math.Max(0, threadId);
-            _innerTestRunner = new SequentialTestRunner(_threadName, reporter, _logger, _settings, schedulingAnalyzer);
+            _testDirectory = Utils.GetTempDirectory();
+            _innerTestRunner = new SequentialTestRunner(_threadName, _threadId, _testDirectory, reporter, _logger, _settings, schedulingAnalyzer);
         }
 
         public PreparingTestRunner(ITestFrameworkReporter reporter,
@@ -39,36 +41,29 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, string workingDir, 
-            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, 
+            IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
-            DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
-            DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
-
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                string testDirectory = Utils.GetTempDirectory();
-                workingDir = _settings.GetWorkingDirForExecution(testDirectory, _threadId);
-                userParameters = _settings.GetUserParametersForExecution(testDirectory, _threadId);
-
-                string batch = _settings.GetBatchForTestSetup(testDirectory, _threadId);
+                string batch = _settings.GetBatchForTestSetup(_testDirectory, _threadId);
                 SafeRunBatch(TestSetup, _settings.SolutionDir, batch, isBeingDebugged);
 
-                _innerTestRunner.RunTests(testCasesToRun, workingDir, userParameters, isBeingDebugged, debuggedLauncher, executor);
+                _innerTestRunner.RunTests(testCasesToRun, isBeingDebugged, debuggedLauncher, executor);
 
-                batch = _settings.GetBatchForTestTeardown(testDirectory, _threadId);
+                batch = _settings.GetBatchForTestTeardown(_testDirectory, _threadId);
                 SafeRunBatch(TestTeardown, _settings.SolutionDir, batch, isBeingDebugged);
 
                 stopwatch.Stop();
                 _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
 
                 string errorMessage;
-                if (!Utils.DeleteDirectory(testDirectory, out errorMessage))
+                if (!Utils.DeleteDirectory(_testDirectory, out errorMessage))
                 {
                     _logger.DebugWarning(
-                        $"{_threadName}Could not delete test directory '" + testDirectory + "': " + errorMessage);
+                        $"{_threadName}Could not delete test directory '" + _testDirectory + "': " + errorMessage);
                 }
             }
             catch (Exception e)

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
@@ -30,15 +29,12 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, string workingDir, 
-            string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, 
+            IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
             List<Thread> threads;
             lock (this)
             {
-                DebugUtils.AssertIsNull(workingDir, nameof(workingDir));
-                DebugUtils.AssertIsNull(userParameters, nameof(userParameters));
-
                 threads = new List<Thread>();
                 RunTests(testCasesToRun, threads, isBeingDebugged, debuggedLauncher, executor);
             }
@@ -78,7 +74,7 @@ namespace GoogleTestAdapter.Runners
                 _testRunners.Add(runner);
 
                 var thread = new Thread(
-                    () => runner.RunTests(testcases, null, null, isBeingDebugged, debuggedLauncher, executor)){ Name = $"GTA Testrunner {threadId}" };
+                    () => runner.RunTests(testcases, isBeingDebugged, debuggedLauncher, executor)){ Name = $"GTA Testrunner {threadId}" };
                 threads.Add(thread);
 
                 thread.Start();
