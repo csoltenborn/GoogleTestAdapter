@@ -364,14 +364,6 @@ namespace GoogleTestAdapter
 
             tests.Should().BeEmpty();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
-
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
-
-            discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
-
-            tests.Should().BeEmpty();
-            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
         }
 
     }

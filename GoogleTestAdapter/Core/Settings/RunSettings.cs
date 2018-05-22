@@ -101,10 +101,10 @@ namespace GoogleTestAdapter.Settings
 
 
         // internal
-        public string DebuggingNamedPipeId { get; set; }
+        public virtual string DebuggingNamedPipeId { get; set; }
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
 
-        public string SolutionDir { get; set; }
+        public virtual string SolutionDir { get; set; }
         public bool ShouldSerializeSolutionDir() { return DebuggingNamedPipeId != null; }
 
     }

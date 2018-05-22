@@ -187,7 +187,7 @@ namespace GoogleTestAdapter.Settings
         private const string DescriptionOfExecutableDirPlaceHolder =
             ExecutableDirPlaceholder + " - directory containing the test executable";
 
-        public static string ReplaceExecutablePlaceholders(string theString, string executable)
+        private string ReplaceExecutablePlaceholders(string theString, string executable)
         {
             if (string.IsNullOrWhiteSpace(theString))
             {
@@ -210,7 +210,7 @@ namespace GoogleTestAdapter.Settings
         private const string DescriptionOfThreadIdPlaceholder =
             ThreadIdPlaceholder + " - id of thread executing the current tests";
 
-        private static string ReplaceTestDirAndThreadIdPlaceholders(string theString, string testDirectory, string threadId)
+        private string ReplaceTestDirAndThreadIdPlaceholders(string theString, string testDirectory, string threadId)
         {
             if (string.IsNullOrWhiteSpace(theString))
             {
@@ -222,12 +222,12 @@ namespace GoogleTestAdapter.Settings
                 .Replace(ThreadIdPlaceholder, threadId);
         }
 
-        private static string ReplaceTestDirAndThreadIdPlaceholders(string theString, string testDirectory, int threadId)
+        private string ReplaceTestDirAndThreadIdPlaceholders(string theString, string testDirectory, int threadId)
         {
             return ReplaceTestDirAndThreadIdPlaceholders(theString, testDirectory, threadId.ToString());
         }
 
-        private static string RemoveTestDirAndThreadIdPlaceholders(string theString)
+        private string RemoveTestDirAndThreadIdPlaceholders(string theString)
         {
             return ReplaceTestDirAndThreadIdPlaceholders(theString, "", "");
         }
@@ -235,7 +235,7 @@ namespace GoogleTestAdapter.Settings
 
         private const string DescriptionOfEnvVarPlaceholders = "Environment variables are also possible, e.g. %PATH%";
 
-        private static string ReplaceEnvironmentVariables(string theString)
+        private string ReplaceEnvironmentVariables(string theString)
         {
             if (string.IsNullOrWhiteSpace(theString))
             {
@@ -337,13 +337,14 @@ namespace GoogleTestAdapter.Settings
 
         public virtual string WorkingDir => _currentSettings.WorkingDir ?? OptionWorkingDirDefaultValue;
 
-        public string GetWorkingDirForExecution(string testDirectory, int threadId)
+        public string GetWorkingDirForExecution(string executable, string testDirectory, int threadId)
         {
             return string.IsNullOrWhiteSpace(WorkingDir) 
                 ? OptionWorkingDirDefaultValue 
                 : ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
-                        ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId)));
+                        ReplaceExecutablePlaceholders(
+                            ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId), executable)));
         }
 
         public string GetWorkingDirForDiscovery(string executable)
@@ -468,10 +469,11 @@ namespace GoogleTestAdapter.Settings
 
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
-        public string GetUserParametersForExecution(string testDirectory, int threadId)
+        public string GetUserParametersForExecution(string executable, string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceTestDirAndThreadIdPlaceholders(AdditionalTestExecutionParam, testDirectory, threadId)));
+                    ReplaceExecutablePlaceholders(
+                        ReplaceTestDirAndThreadIdPlaceholders(AdditionalTestExecutionParam, testDirectory, threadId), executable)));
 
         public string GetUserParametersForDiscovery(string executable)
             => ReplaceEnvironmentVariables(
