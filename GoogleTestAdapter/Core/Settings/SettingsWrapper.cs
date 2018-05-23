@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -46,6 +46,7 @@ namespace GoogleTestAdapter.Settings
             .ToArray();
 
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
+        private readonly ITestPropertySettingsContainer _testPropertySettingsContainer;
         public RegexTraitParser RegexTraitParser { private get; set; }
 
         private int _nrOfRunningExecutions;
@@ -54,14 +55,22 @@ namespace GoogleTestAdapter.Settings
         private IGoogleTestAdapterSettings _currentSettings;
 
         public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer)
+            : this(settingsContainer, null)
+        {
+        }
+
+        public ITestPropertySettingsContainer TestPropertySettingsContainer => _testPropertySettingsContainer;
+
+        public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer, ITestPropertySettingsContainer testPropertySettingsContainer)
         {
             _settingsContainer = settingsContainer;
+            _testPropertySettingsContainer = testPropertySettingsContainer;
             _currentSettings = _settingsContainer.SolutionSettings;
         }
 
         public virtual SettingsWrapper Clone()
         {
-            return new SettingsWrapper(_settingsContainer) { RegexTraitParser = RegexTraitParser };
+            return new SettingsWrapper(_settingsContainer, _testPropertySettingsContainer) { RegexTraitParser = RegexTraitParser };
         }
 
         // needed for mocking

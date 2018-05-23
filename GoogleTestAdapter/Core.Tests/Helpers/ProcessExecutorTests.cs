@@ -24,6 +24,7 @@ namespace GoogleTestAdapter.Helpers
                 Path.Combine(Environment.SystemDirectory, "ping.exe"),
                 "localhost",
                 "",
+                null,
                 null, 
                 s => output.Add(s));
                 
@@ -42,6 +43,7 @@ namespace GoogleTestAdapter.Helpers
             List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
                 TestResources.Tests_DebugX86,
+                null,
                 null,
                 null,
                 "",

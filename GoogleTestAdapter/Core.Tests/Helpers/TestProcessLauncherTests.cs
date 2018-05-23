@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.Helpers
             int processId = -4711;
             var mockLauncher = new Mock<IDebuggedProcessLauncher>();
             mockLauncher.Setup(l => 
-                l.LaunchProcessWithDebuggerAttached(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                l.LaunchProcessWithDebuggerAttached(It.IsAny<string>(), It.IsAny<string>(), null, It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(processId);
 
             new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, true)
@@ -42,6 +42,7 @@ namespace GoogleTestAdapter.Helpers
             mockLauncher.Verify(l => l.LaunchProcessWithDebuggerAttached(
                 It.Is<string>(s => s == "theCommand"),
                 It.Is<string>(s => s == "theDir"),
+                null,
                 It.Is<string>(s => s == "theParams"),
                 It.Is<string>(s => s == "")
                 ), Times.Exactly(1));

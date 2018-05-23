@@ -42,15 +42,15 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.Core.dll">
-      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Core.dll.lcl</TranslationFile> 
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Core.dll.lcl</TranslationFile>
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.Core.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
-    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning"> 
-      <!-- Do not have this show up in Solution Explorer in VS --> 
-      <InProject>false</InProject> 
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning">
+      <!-- Do not have this show up in Solution Explorer in VS -->
+      <InProject>false</InProject>
     </SignFilesDependsOn>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +85,8 @@
     <Compile Include="Runners\TestResultCollector.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />
+    <Compile Include="Settings\ITestPropertySettings.cs" />
+    <Compile Include="Settings\ITestPropertySettingsContainer.cs" />
     <Compile Include="Settings\RunSettings.cs" />
     <Compile Include="Settings\SettingsSerializationContainer.cs" />
     <Compile Include="TestCases\StreamingListTestsParser.cs" />
@@ -160,12 +162,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'"> 
-    <ItemGroup> 
-      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll"> 
-        <Authenticode>Microsoft</Authenticode> 
-        <StrongName>StrongName</StrongName> 
-      </FilesToSign> 
-    </ItemGroup> 
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'">
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">
+        <Authenticode>Microsoft</Authenticode>
+        <StrongName>StrongName</StrongName>
+      </FilesToSign>
+    </ItemGroup>
   </Target>
 </Project>

@@ -16,9 +16,30 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         public int LaunchProcessWithDebuggerAttached(string command, string workingDirectory, string param, string pathExtension)
         {
+            return LaunchProcessWithDebuggerAttached(command, workingDirectory, null, param, pathExtension);
+        }
+
+        public int LaunchProcessWithDebuggerAttached(string command, string workingDirectory, IDictionary<string, string> additionalEnvVars, string param, string pathExtension)
+        {
             IDictionary<string, string> envVariables = new Dictionary<string, string>();
+            if (additionalEnvVars != null)
+            {
+                foreach (var envVar in additionalEnvVars)
+                {
+                    envVariables[envVar.Key] = envVar.Value;
+                }
+            }
+
             if (!string.IsNullOrEmpty(pathExtension))
-                envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+            {
+                var path = Utils.GetExtendedPath(pathExtension);
+                if (envVariables.ContainsKey("PATH"))
+                {
+                    path += $";{envVariables["PATH"]}";
+                }
+                envVariables["PATH"] = path;
+            }
+
             return _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, envVariables);
         }
     }

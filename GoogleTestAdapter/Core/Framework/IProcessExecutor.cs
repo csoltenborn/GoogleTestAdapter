@@ -1,6 +1,7 @@
-// This file has been modified by Microsoft on 6/2017.
+// This file has been modified by Microsoft on 5/2018.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GoogleTestAdapter.Framework
@@ -8,7 +9,7 @@ namespace GoogleTestAdapter.Framework
 
     public interface IProcessExecutor
     {
-        int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine);
+        int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, Action<string> reportOutputLine);
         void Cancel();
     }
 
@@ -23,7 +24,7 @@ namespace GoogleTestAdapter.Framework
             }
 
             string command = Path.Combine(Environment.SystemDirectory, "cmd.exe");
-            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, pathExtension,
+            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, null, pathExtension,
                 reportOutputLine);
         }
     }

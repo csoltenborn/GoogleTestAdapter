@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections;
@@ -34,11 +34,11 @@ namespace GoogleTestAdapter.Helpers
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, Action<string> reportOutputLine)
         {
             try
             {
-                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, reportOutputLine, processId => _processId = processId);
+                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, envVars, pathExtension, _debuggerAttacher, reportOutputLine, processId => _processId = processId);
 
             }
             catch (Win32Exception ex)
@@ -96,12 +96,12 @@ namespace GoogleTestAdapter.Helpers
             private const uint INFINITE = 0xFFFFFFFF;
 
             internal static int ExecuteCommandBlocking(
-                string command, string parameters, string workingDir, string pathExtension, 
+                string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, 
                 IDebuggerAttacher debuggerAttacher, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
                 using (var pipeStream = new ProcessOutputPipeStream())
                 {
-                    var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, pipeStream._writingEnd);
+                    var processInfo = CreateProcess(command, parameters, workingDir, envVars, pathExtension, pipeStream._writingEnd);
                     reportProcessId(processInfo.dwProcessId);
                     using (var process = new SafeWaitHandle(processInfo.hProcess, true))
                     using (var thread  = new SafeWaitHandle(processInfo.hThread, true))
@@ -136,12 +136,27 @@ namespace GoogleTestAdapter.Helpers
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not set handle information");
             }
 
-            private static StringBuilder CreateEnvironment(string pathExtension)
+            private static StringBuilder CreateEnvironment(string pathExtension, IDictionary<string, string> additionalEnvVars)
             {
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
                 
+                if (additionalEnvVars != null)
+                {
+                    foreach (var entry in additionalEnvVars)
+                    {
+                        envVariables[entry.Key] = entry.Value;
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(pathExtension))
-                    envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                {
+                    var path = Utils.GetExtendedPath(pathExtension);
+                    if (envVariables.ContainsKey("PATH"))
+                    {
+                        path += $";{envVariables["PATH"]}";
+                    }
+                    envVariables["PATH"] = path;
+                }
 
                 var envVariablesList = new List<string>();
                 foreach (DictionaryEntry entry in envVariables)
@@ -159,7 +174,8 @@ namespace GoogleTestAdapter.Helpers
                 return result;
             }
 
-            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
+            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, 
+                IDictionary<string, string> envVars, string pathExtension, 
                 SafePipeHandle outputPipeWritingEnd)
             {
                 var startupinfoex = new STARTUPINFOEX
@@ -190,7 +206,7 @@ namespace GoogleTestAdapter.Helpers
                     lpThreadAttributes: null, 
                     bInheritHandles: true,
                     dwCreationFlags: CREATE_EXTENDED_STARTUPINFO_PRESENT | CREATE_SUSPENDED,
-                    lpEnvironment: CreateEnvironment(pathExtension),
+                    lpEnvironment: CreateEnvironment(pathExtension, envVars),
                     lpCurrentDirectory: workingDir,
                     lpStartupInfo: startupinfoex,
                     lpProcessInformation: out processInfo))

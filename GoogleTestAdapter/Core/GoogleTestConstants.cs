@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 
@@ -7,6 +7,7 @@ namespace GoogleTestAdapter
 
     public static class GoogleTestConstants
     {
+        public const string TestPropertySettingsName = "TestPropertySettingsForGoogleAdapter";
         public const string SettingsName = "GoogleTestAdapterSettings";
         public const string SettingsExtension = ".gta.runsettings";
         public const string DurationsExtension = ".gta.testdurations";
