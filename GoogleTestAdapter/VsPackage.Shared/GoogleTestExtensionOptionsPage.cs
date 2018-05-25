@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -15,11 +15,13 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using System.Threading;
+using Task = System.Threading.Tasks.Task;
 
 namespace GoogleTestAdapter.VsPackage
 {
 
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(AllowsBackgroundLoading = true, UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
@@ -27,7 +29,7 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, "Parallelization", 110, 502, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, "Google Test", 110, 503, true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IDisposable
+    public sealed partial class GoogleTestExtensionOptionsPage : AsyncPackage, IGoogleTestExtensionOptionsPage, IDisposable
     {
         private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
@@ -40,12 +42,14 @@ namespace GoogleTestAdapter.VsPackage
         // ReSharper disable once NotAccessedField.Local
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
 
-        protected override void Initialize()
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
+            await base.InitializeAsync(cancellationToken, progress);
 
-            var componentModel = (IComponentModel)GetGlobalService(typeof(SComponentModel));
+            var componentModel = await GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
             _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             _generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
             _parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
