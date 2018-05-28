@@ -79,7 +79,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AbstractGoogleTestDiscovererTraitTests.cs" />
+    <Compile Include="GoogleTestDiscovererTraitTestsBase.cs" />
     <Compile Include="GoogleTestDiscoverReleaseTraitTests.cs" />
     <Compile Include="GoogleTestDiscoverDebugTraitTests.cs" />
     <Compile Include="GoogleTestDiscovererTests.cs" />

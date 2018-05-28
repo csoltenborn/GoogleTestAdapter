@@ -7,8 +7,8 @@ using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
-using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter
@@ -313,6 +313,24 @@ namespace GoogleTestAdapter
             AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
+        {
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+
+            CheckEffectOfDiscoveryParam();
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_OldExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
+        {
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+
+            CheckEffectOfDiscoveryParam();
+        }
+
 
         private void AssertFindsTestWithTraits(string displayName, Trait[] traits)
         {
@@ -330,6 +348,22 @@ namespace GoogleTestAdapter
                 Trait foundTrait = testCase.Traits.FirstOrDefault(T => trait.Name == T.Name && trait.Value == T.Value);
                 foundTrait.Should().NotBeNull("Didn't find trait: (" + trait.Name + ", " + trait.Value + ")");
             }
+        }
+
+        private void CheckEffectOfDiscoveryParam()
+        {
+            GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            var tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().NotBeEmpty();
+
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-justfail");
+
+            discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            tests = discoverer.GetTestsFromExecutable(SampleTestToUse);
+
+            tests.Should().BeEmpty();
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("failed intentionally"))), Times.AtLeastOnce);
         }
 
     }

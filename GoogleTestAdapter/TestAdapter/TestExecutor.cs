@@ -129,7 +129,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle);
+            InitOrRefreshEnvironment(runContext.RunSettings, frameworkHandle, runContext);
 
             CommonFunctions.LogVisualStudioVersion(_logger);
 
@@ -139,10 +139,10 @@ namespace GoogleTestAdapter.TestAdapter
             return stopwatch;
         }
 
-        private void InitOrRefreshEnvironment(IRunSettings runSettings, IMessageLogger messageLogger)
+        private void InitOrRefreshEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, IRunContext runContext)
         {
             if (_settings == null || _settings.GetType() == typeof(SettingsWrapper)) // the latter prevents test settings and logger from being replaced 
-                CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings);
+                CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings, runContext.SolutionDirectory);
         }
 
         private bool AbleToRun(IRunContext runContext)
@@ -239,7 +239,7 @@ namespace GoogleTestAdapter.TestAdapter
                 _executor = new GoogleTestExecutor(_logger, _settings);
             }
             _executor.RunTests(testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, runContext.SolutionDirectory, processExecutor);
+                runContext.IsBeingDebugged, processExecutor);
             reporter.AllTestsFinished();
         }
 

@@ -20,6 +20,8 @@ namespace GoogleTestAdapter.Runners
         private bool _canceled;
 
         private readonly string _threadName;
+        private readonly int _threadId;
+        private readonly string _testDir;
         private readonly ITestFrameworkReporter _frameworkReporter;
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
@@ -28,9 +30,11 @@ namespace GoogleTestAdapter.Runners
         private TestProcessLauncher _processLauncher;
         private IProcessExecutor _processExecutor;
 
-        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public SequentialTestRunner(string threadName, int threadId, string testDir, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
         {
             _threadName = threadName;
+            _threadId = threadId;
+            _testDir = testDir;
             _frameworkReporter = reporter;
             _logger = logger;
             _settings = settings;
@@ -38,17 +42,13 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
-            DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
-            DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
-
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
             foreach (string executable in groupedTestCases.Keys)
             {
-                string finalParameters = SettingsWrapper.ReplacePlaceholders(userParameters, executable);
-                string finalWorkingDir = SettingsWrapper.ReplacePlaceholders(workingDir, executable);
+                string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
+                string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
 
                 if (_canceled)
                     break;
@@ -57,9 +57,9 @@ namespace GoogleTestAdapter.Runners
                 {
                     RunTestsFromExecutable(
                         executable,
-                        finalWorkingDir,
+                        workingDir,
                         groupedTestCases[executable],
-                        finalParameters,
+                        userParameters,
                         isBeingDebugged,
                         debuggedLauncher,
                         executor);

@@ -37,8 +37,13 @@ namespace GoogleTestAdapter.TestAdapter
                 logger.LogWarning(message);
         }
 
-        public static void CreateEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, out ILogger logger, out SettingsWrapper settings)
+        public static void CreateEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, out ILogger logger, out SettingsWrapper settings, string solutionDir = null)
         {
+            if (string.IsNullOrWhiteSpace(solutionDir))
+            {
+                solutionDir = null;
+            }
+
             var settingsProvider = SafeGetRunSettingsProvider(runSettings, messageLogger);
 
             var ourRunSettings = GetRunSettingsContainer(settingsProvider, messageLogger);
@@ -47,7 +52,7 @@ namespace GoogleTestAdapter.TestAdapter
                 projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
             }
 
-            var settingsWrapper = new SettingsWrapper(ourRunSettings);
+            var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
             var regexParser = new RegexTraitParser(loggerAdapter);
