@@ -47,14 +47,14 @@ namespace GoogleTestAdapter.Runners
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
             foreach (string executable in groupedTestCases.Keys)
             {
-                string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
-                string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
-
                 if (_canceled)
                     break;
 
                 _settings.ExecuteWithSettingsForExecutable(executable, () =>
                 {
+                    string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
+                    string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
+
                     RunTestsFromExecutable(
                         executable,
                         workingDir,
