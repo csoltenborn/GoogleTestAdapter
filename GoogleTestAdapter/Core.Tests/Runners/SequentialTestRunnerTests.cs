@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Scheduling;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -36,6 +38,54 @@ namespace GoogleTestAdapter.Runners
                 2000); // 2nd test should not be executed 
         }
 
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_WorkingDirNotSet_TestFails()
+        {
+            var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
+            var settings = CreateSettings(null, null);
+            var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
+            var executor = new ProcessExecutor(null, MockLogger.Object);
+
+            runner.RunTests(testCase.Yield(), false, null, executor);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockFrameworkReporter.Verify(r => r.ReportTestResults(
+                It.Is<IEnumerable<TestResult>>(tr => CheckSingleResultHasOutcome(tr, TestOutcome.Failed))), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_WorkingDirSetForSolution_TestPasses()
+        {
+            var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
+            var settings = CreateSettings(SettingsWrapper.SolutionDirPlaceholder, null);
+            var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
+            var executor = new ProcessExecutor(null, MockLogger.Object);
+
+            runner.RunTests(testCase.Yield(), false, null, executor);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockFrameworkReporter.Verify(r => r.ReportTestResults(
+                It.Is<IEnumerable<TestResult>>(tr => CheckSingleResultHasOutcome(tr, TestOutcome.Passed))), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_WorkingDirSetForProject_TestPasses()
+        {
+            TestCase testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
+            var settings = CreateSettings("foo", SettingsWrapper.SolutionDirPlaceholder);
+            var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
+            var executor = new ProcessExecutor(null, MockLogger.Object);
+
+            runner.RunTests(testCase.Yield(), false, null, executor);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockFrameworkReporter.Verify(r => r.ReportTestResults(
+                It.Is<IEnumerable<TestResult>>(tr => CheckSingleResultHasOutcome(tr, TestOutcome.Passed))), Times.Once);
+        }
+
         private void DoRunCancelingTests(bool killProcesses, int lower, int upper)
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
@@ -58,6 +108,32 @@ namespace GoogleTestAdapter.Runners
 
             stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(lower); // 1st test should be executed
             stopwatch.ElapsedMilliseconds.Should().BeLessThan(upper); // 2nd test should not be executed 
+        }
+
+        private SettingsWrapper CreateSettings(string solutionWorkingDir, string projectWorkingDir)
+        {
+            var mockContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
+
+            mockContainer
+                .Setup(c => c.SolutionSettings)
+                .Returns(new RunSettings { WorkingDir = solutionWorkingDir });
+
+            if (projectWorkingDir != null)
+            {
+                mockContainer
+                    .Setup(c => c.GetSettingsForExecutable(It.IsAny<string>()))
+                    .Returns(new RunSettings { WorkingDir = projectWorkingDir });
+            }
+
+            return new SettingsWrapper(mockContainer.Object, TestResources.SampleTestsSolutionDir)
+            {
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+            };
+        }
+
+        private bool CheckSingleResultHasOutcome(IEnumerable<TestResult> testResults, TestOutcome outcome)
+        {
+            return testResults.SingleOrDefault()?.Outcome == outcome;
         }
 
     }
