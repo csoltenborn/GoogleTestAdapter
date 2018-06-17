@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
+using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 // ReSharper disable PossibleNullReferenceException
 
@@ -31,14 +32,14 @@ namespace GoogleTestAdapter.VsPackage.Settings
         private const string UserProject3WorkingDir = "UserProject3WorkingDir";
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void Constructor__InstanceHasCorrectName()
         {
             new RunSettingsService(null).Name.Should().Be(GoogleTestConstants.SettingsName);
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_UserSettingsWithoutRunSettingsNode_Warning()
         {
             var mockLogger = new Mock<ILogger>();
@@ -56,7 +57,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_BrokenSolutionSettings_Warning()
         {
             var mockLogger = new Mock<ILogger>();
@@ -82,7 +83,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_CompleteSettings_BasicChecks()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -102,7 +103,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_CompleteSettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -118,7 +119,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_NoSettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -134,7 +135,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_EmptySettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -150,7 +151,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_CompleteSolutionSettingsNoProjectSettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -166,7 +167,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_NoSolutionSettingsCompleteProjectSettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -182,7 +183,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_CompleteSolutionSettingsEmptyProjectSettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -198,7 +199,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_EmptySolutionSettingsCompleteProjectSettings_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -214,7 +215,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings1_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -230,7 +231,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings2_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -246,7 +247,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings3_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -262,7 +263,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings4_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -278,7 +279,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings5_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -294,7 +295,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings6_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
@@ -310,7 +311,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         }
 
         [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
+        [TestCategory(Unit)]
         public void AddRunSettings_MixedSettings7_()
         {
             var resultingContainer = SetupFinalRunSettingsContainer(
