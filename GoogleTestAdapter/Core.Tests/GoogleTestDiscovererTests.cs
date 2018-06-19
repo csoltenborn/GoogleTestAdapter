@@ -381,7 +381,7 @@ namespace GoogleTestAdapter
             testCase = testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
             testCase.DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>");
             testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\typeparameterizedtests.cpp");
-            testCase.LineNumber.Should().Be(53);
+            testCase.LineNumber.Should().Be(56);
         }
 
         private void FindExternallyLinkedTests(string location)
