@@ -5,7 +5,7 @@
   </Results>
   <TestDefinitions>
     <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+      <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
   </TestDefinitions>
   <ResultSummary outcome="Completed">

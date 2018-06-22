@@ -1,3 +1,6 @@
+#if _MSC_FULL_VER >= 180021005 // TODO the code below does not compile with VS 2012
+
+
 #include "gtest/gtest.h"
 #include <array>
 #include <list>
@@ -87,3 +90,5 @@ TYPED_TEST(PrimitivelyTypedTests, CanHasBigNumbers) {
 	EXPECT_EQ(130, sum);
 }
 
+
+#endif

@@ -41,7 +41,6 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
 
             var settingsContainer = new RunSettingsContainer();
-            settingsContainer.SolutionSettings = new RunSettings();
 
             try
             {
@@ -107,6 +106,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             // are, the following makes sure that they are ignored
             settings.DebuggingNamedPipeId = null;
             settings.SkipOriginCheck = null;
+            settings.SolutionDir = null;
 
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }

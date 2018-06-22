@@ -27,6 +27,9 @@ OutputHandling.Output_OneLine
 OutputHandling.ManyLinesWithNewlines
 OutputHandling.OneLineWithNewlines
 OutputHandling.OneLine
+abcd.t
+bbcd.t
+bcd.t
 MessageParserTests.SimpleAssert
 MessageParserTests.SimpleExpect
 MessageParserTests.ExpectAndAssert

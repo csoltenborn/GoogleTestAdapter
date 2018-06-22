@@ -28,7 +28,7 @@ namespace NewProjectWizard.GTA
         {
             var componentModel = (IComponentModel) Package.GetGlobalService(typeof(SComponentModel));
             var runSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
-            Settings = new SettingsWrapper(new RunSettingsContainer {SolutionSettings = runSettings.RunSettings});
+            Settings = new SettingsWrapper(new RunSettingsContainer(runSettings.RunSettings));
             Logger = new TestWindowLogger(() => Settings.DebugMode, () => Settings.TimestampOutput);
             Settings.RegexTraitParser = new RegexTraitParser(Logger);
 

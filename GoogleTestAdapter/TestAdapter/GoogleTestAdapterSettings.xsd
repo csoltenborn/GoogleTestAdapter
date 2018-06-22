@@ -73,8 +73,22 @@
       <xsd:element name="BatchForTestTeardown"         minOccurs="0" type="xsd:string"  />
       <xsd:element name="KillProcessesOnCancel"        minOccurs="0" type="xsd:boolean" />
       <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean" />
-      <xsd:element name="SkipOriginCheck"              minOccurs="0" type="xsd:boolean" />
-      <xsd:element name="DebuggingNamedPipeId"         minOccurs="0" type="xsd:string"  />
+
+      <xsd:element name="SkipOriginCheck"              minOccurs="0" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Only for internal use</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DebuggingNamedPipeId"         minOccurs="0" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Only for internal use</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SolutionDir"                  minOccurs="0" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Only for internal use</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
     </xsd:all>
     <xsd:attribute name="ProjectRegex" type="xsd:string" />
   </xsd:complexType>

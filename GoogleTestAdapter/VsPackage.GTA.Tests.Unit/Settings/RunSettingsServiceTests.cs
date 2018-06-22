@@ -1,22 +1,23 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using FluentAssertions;
 using GoogleTestAdapter.Settings;
-using GoogleTestAdapter.TestAdapter.Helpers;
+using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
+using GoogleTestAdapter.VsPackage.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
+
 // ReSharper disable PossibleNullReferenceException
 
-namespace GoogleTestAdapter.TestAdapter.Settings
+namespace GoogleTestAdapter.VsPackage.Settings
 {
 
     [TestClass]
@@ -408,16 +409,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         private RunSettingsContainer SetupSettingsContainer(string solutionWorkingDir, 
             string project1WorkingDir, string project2WorkingDir, string project3WorkingDir)
         {
-            var settingsContainer = new RunSettingsContainer
+            var settingsContainer = new RunSettingsContainer(new RunSettings
             {
-                SolutionSettings = new RunSettings
-                {
-                    ProjectRegex = null,
-                    WorkingDir = solutionWorkingDir,
-                    SkipOriginCheck = true
-                },
-                ProjectSettings = new List<RunSettings>()
-            };
+                ProjectRegex = null,
+                WorkingDir = solutionWorkingDir,
+                SkipOriginCheck = true
+            });
 
             AddProjectSettings(settingsContainer, "project1", project1WorkingDir);
             AddProjectSettings(settingsContainer, "project2", project2WorkingDir);

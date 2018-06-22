@@ -37,8 +37,13 @@ namespace GoogleTestAdapter.TestAdapter
                 logger.LogWarning(message);
         }
 
-        public static void CreateEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, out ILogger logger, out SettingsWrapper settings)
+        public static void CreateEnvironment(IRunSettings runSettings, IMessageLogger messageLogger, out ILogger logger, out SettingsWrapper settings, string solutionDir = null)
         {
+            if (string.IsNullOrWhiteSpace(solutionDir))
+            {
+                solutionDir = null;
+            }
+
             var settingsProvider = SafeGetRunSettingsProvider(runSettings, messageLogger);
 
             var ourRunSettings = GetRunSettingsContainer(settingsProvider, messageLogger);
@@ -47,7 +52,7 @@ namespace GoogleTestAdapter.TestAdapter
                 projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
             }
 
-            var settingsWrapper = new SettingsWrapper(ourRunSettings);
+            var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
             var regexParser = new RegexTraitParser(loggerAdapter);
@@ -65,8 +70,12 @@ namespace GoogleTestAdapter.TestAdapter
             }
             catch (Exception e)
             {
-                messageLogger.SendMessage(TestMessageLevel.Error,
-                    $"ERROR: Visual Studio test framework failed to provide settings. Error message: {e.Message}");
+                string errorMessage =
+                    $"ERROR: Visual Studio test framework failed to provide settings. Error message: {e.Message}";
+                // if fallback settings are configured, we do not want to make the tests fail
+                var level = AreFallbackSettingsConfigured() ? TestMessageLevel.Informational : TestMessageLevel.Error;
+
+                messageLogger.SendMessage(level, errorMessage);
                 return null;
             }
         }
@@ -119,7 +128,7 @@ namespace GoogleTestAdapter.TestAdapter
                     return null;
                 }
 
-                var settingsContainer = new RunSettingsContainer {SolutionSettings = new RunSettings()};
+                var settingsContainer = new RunSettingsContainer();
                 if (!settingsContainer.GetUnsetValuesFrom(settingsFile))
                 {
                     messageLogger.SendMessage(TestMessageLevel.Warning,
@@ -150,6 +159,18 @@ namespace GoogleTestAdapter.TestAdapter
                 default:
                     logger.DebugInfo($"Visual Studio Version: {version}");
                     break;
+            }
+        }
+
+        private static bool AreFallbackSettingsConfigured()
+        {
+            try
+            {
+                return Environment.GetEnvironmentVariable(GtaSettingsEnvVariable) != null;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
