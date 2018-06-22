@@ -38,19 +38,19 @@ namespace GoogleTestAdapter.VsPackage
         [TestCategory(EndToEnd)]
 		public void <#= line.MethodName #>()
 		{
-			string arguments = GetAdapterIntegration();
-			arguments += @"<#= line.Arguments #>";
+			string settingsFile = @"<#= line.ActualSettingsFile #>";
+			string arguments = GetAdapterIntegration() + @"<#= line.Arguments #>";
 			try
 			{
-				if (!string.IsNullOrWhiteSpace(@"<#= line.ActualSettingsFile #>"))
+				if (!string.IsNullOrWhiteSpace(settingsFile))
 				{
-					Setup(@"<#= line.ActualSettingsFile #>");
+					Setup(settingsFile);
 				}
-	            RunTestsAndCheckOutput(GetType().Name, arguments);
+	            RunTestsAndCheckOutput(arguments);
 			}
 			finally
 			{
-				if (!string.IsNullOrWhiteSpace(@"<#= line.ActualSettingsFile #>"))
+				if (!string.IsNullOrWhiteSpace(settingsFile))
 				{
 					Teardown();
 				}

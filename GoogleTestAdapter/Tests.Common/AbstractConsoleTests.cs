@@ -37,10 +37,10 @@ namespace GoogleTestAdapter.Tests.Common
             _envVarStorage = null;
         }
 
-        protected void RunTestsAndCheckOutput(string typeName, string arguments, [CallerMemberName] string testCaseName = null)
+        protected void RunTestsAndCheckOutput(string arguments, [CallerMemberName] string testCaseName = null)
         {
             TrxResultChecker resultChecker = new TrxResultChecker(SolutionFile);
-            resultChecker.RunTestsAndCheckOutput(typeName, arguments, testCaseName);
+            resultChecker.RunTestsAndCheckOutput(GetType().Name, arguments, testCaseName);
         }
 
         protected void ListTestsOf(string testExecutable, [CallerMemberName] string testCaseName = null)
