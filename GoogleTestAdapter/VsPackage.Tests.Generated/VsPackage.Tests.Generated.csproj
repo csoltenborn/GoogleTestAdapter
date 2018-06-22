@@ -101,11 +101,11 @@
     <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_SolutionProjectSettings_Coverage_Isolation.xml" />
   </ItemGroup>
   <PropertyGroup>
-    <t4_targetdir>$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(Configuration)\VsPackage.Tests.Generated\</t4_targetdir>
+    <t4_tests_common>$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(Configuration)\Tests.Common\GoogleTestAdapter.Tests.Common.dll</t4_tests_common>
   </PropertyGroup>
   <ItemGroup>
-    <T4ParameterValues Include="t4_targetdir">
-      <Value>$(t4_targetdir)</Value>
+    <T4ParameterValues Include="t4_tests_common">
+      <Value>$(t4_tests_common)</Value>
       <Visible>False</Visible>
     </T4ParameterValues>
     <T4ReferencePath Include="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(Configuration)\Tests.Common\" />

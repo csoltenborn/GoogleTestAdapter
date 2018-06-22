@@ -1,6 +1,6 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(t4_targetdir)GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="$(t4_tests_common)" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
