@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using GoogleTestAdapter.TestAdapter;
 using GoogleTestAdapter.Tests.Common.ResultChecker;
 
 namespace GoogleTestAdapter.Tests.Common
@@ -11,9 +13,28 @@ namespace GoogleTestAdapter.Tests.Common
         protected readonly string SolutionFile;
         protected readonly string TestAdapterDir;
 
+        private string _envVarStorage;
+
         protected AbstractConsoleTests()
         {
             AbstractConsoleIntegrationTests.GetDirectories(out TestAdapterDir, out SolutionFile);
+        }
+
+        protected void Setup(string settingsFile)
+        {
+            if (_envVarStorage != null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            _envVarStorage = Environment.GetEnvironmentVariable(CommonFunctions.GtaSettingsEnvVariable);
+            Environment.SetEnvironmentVariable(CommonFunctions.GtaSettingsEnvVariable, settingsFile);
+        }
+
+        protected void Teardown()
+        {
+            Environment.SetEnvironmentVariable(CommonFunctions.GtaSettingsEnvVariable, _envVarStorage);
+            _envVarStorage = null;
         }
 
         protected void RunTestsAndCheckOutput(string typeName, string arguments, [CallerMemberName] string testCaseName = null)

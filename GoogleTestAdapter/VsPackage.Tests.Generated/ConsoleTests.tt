@@ -1,6 +1,6 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="$(t4_targetdir)GoogleTestAdapter.Tests.Common.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
@@ -40,7 +40,21 @@ namespace GoogleTestAdapter.VsPackage
 		{
 			string arguments = GetAdapterIntegration();
 			arguments += @"<#= line.Arguments #>";
-            RunTestsAndCheckOutput(GetType().Name, arguments);
+			try
+			{
+				if (!string.IsNullOrWhiteSpace(@"<#= line.ActualSettingsFile #>"))
+				{
+					Setup(@"<#= line.ActualSettingsFile #>");
+				}
+	            RunTestsAndCheckOutput(GetType().Name, arguments);
+			}
+			finally
+			{
+				if (!string.IsNullOrWhiteSpace(@"<#= line.ActualSettingsFile #>"))
+				{
+					Teardown();
+				}
+			}
 		}
 		<# } #>
 		<# foreach (string executable in executables.Keys) { #>
@@ -49,7 +63,15 @@ namespace GoogleTestAdapter.VsPackage
         [TestCategory(EndToEnd)]
 		public void List_TestsOf_<#= executable #>()
 		{
-			ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
+			try
+			{
+				Setup(TestResources.UserTestSettingsForListingTests);
+				ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
+			}
+			finally
+			{
+				Teardown();
+			}
 		}
 		<# } #>
 
@@ -99,8 +121,8 @@ namespace GoogleTestAdapter.VsPackage
 			{
 				string arguments = " \"\"" + ActualTestFile + "\"\"";
 
-				if (!string.IsNullOrWhiteSpace(ActualSettingsFile))
-					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
+//				if (!string.IsNullOrWhiteSpace(ActualSettingsFile))
+//					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
 
 				if (!"none".Equals(TestCaseFilter))
 					arguments += " /TestCaseFilter:\"\"" + TestCaseFilter + "\"\"";
