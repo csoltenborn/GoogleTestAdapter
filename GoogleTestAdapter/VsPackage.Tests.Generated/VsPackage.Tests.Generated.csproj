@@ -85,9 +85,9 @@
     <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_HardCrashingSampleTests.txt" />
     <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_SampleTests.txt" />
     <Content Include="GoldenFiles\ConsoleDllTests__List_TestsOf_SampleTests170.txt" />
-    <Content Include="GoldenFiles\ConsoleDllTests__NEG_SampleTests170_SolutionSettings_NotExisting_EQ_Foo.xml" />
-    <Content Include="GoldenFiles\ConsoleDllTests__NEG_SampleTests_Coverage_NotExisting_EQ_Foo.xml" />
-    <Content Include="GoldenFiles\ConsoleDllTests__NEG_SampleTests_SolutionSettings_Isolation_NotExisting_EQ_Foo.xml" />
+    <Content Include="GoldenFiles\_DISABLED_ConsoleDllTests__NEG_SampleTests170_SolutionSettings_NotExisting_EQ_Foo.xml" />
+    <Content Include="GoldenFiles\_DISABLED_ConsoleDllTests__NEG_SampleTests_Coverage_NotExisting_EQ_Foo.xml" />
+    <Content Include="GoldenFiles\_DISABLED_ConsoleDllTests__NEG_SampleTests_SolutionSettings_Isolation_NotExisting_EQ_Foo.xml" />
     <Content Include="GoldenFiles\ConsoleDllTests__SampleTests170_Settings_Coverage_Type_EQ_Small.xml" />
     <Content Include="GoldenFiles\ConsoleDllTests__SampleTests170_Settings_DisplayName_EQ_TestMath_AddPassesWithTraits_OR_Type_EQ_Small.xml" />
     <Content Include="GoldenFiles\ConsoleDllTests__SampleTests170_Settings_Isolation_DisplayName_EQ_TestMath_AddPassesWithTraits.xml" />
@@ -100,9 +100,16 @@
     <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_Settings_Type_EQ_Small.xml" />
     <Content Include="GoldenFiles\ConsoleDllTests__SampleTests_SolutionProjectSettings_Coverage_Isolation.xml" />
   </ItemGroup>
+  <PropertyGroup>
+    <t4_tests_common>$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(Configuration)\Tests.Common\GoogleTestAdapter.Tests.Common.dll</t4_tests_common>
+  </PropertyGroup>
   <ItemGroup>
-    <T4ReferencePath Include="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(ConfigurationName)\Tests.Common\" />
-    <T4ReferencePath Include="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(ConfigurationName)\Tests.Common.EndToEnd\" />
+    <T4ParameterValues Include="t4_tests_common">
+      <Value>$(t4_tests_common)</Value>
+      <Visible>False</Visible>
+    </T4ParameterValues>
+    <T4ReferencePath Include="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(Configuration)\Tests.Common\" />
+    <T4ReferencePath Include="$(EnlistmentRoot)\out\binaries\GoogleTestAdapter\$(Configuration)\Tests.Common.EndToEnd\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

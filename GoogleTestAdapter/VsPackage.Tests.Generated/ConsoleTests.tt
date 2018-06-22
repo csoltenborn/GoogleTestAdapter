@@ -1,6 +1,6 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="$(t4_tests_common)" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common" #>
 <#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
@@ -38,9 +38,23 @@ namespace GoogleTestAdapter.VsPackage
         [TestCategory(EndToEnd)]
 		public void <#= line.MethodName #>()
 		{
-			string arguments = GetAdapterIntegration();
-			arguments += @"<#= line.Arguments #>";
-            RunTestsAndCheckOutput(GetType().Name, arguments);
+			string settingsFile = @"<#= line.ActualSettingsFile #>";
+			string arguments = GetAdapterIntegration() + @"<#= line.Arguments #>";
+			try
+			{
+				if (!string.IsNullOrWhiteSpace(settingsFile))
+				{
+					Setup(settingsFile);
+				}
+	            RunTestsAndCheckOutput(arguments);
+			}
+			finally
+			{
+				if (!string.IsNullOrWhiteSpace(settingsFile))
+				{
+					Teardown();
+				}
+			}
 		}
 		<# } #>
 		<# foreach (string executable in executables.Keys) { #>
@@ -49,7 +63,15 @@ namespace GoogleTestAdapter.VsPackage
         [TestCategory(EndToEnd)]
 		public void List_TestsOf_<#= executable #>()
 		{
-			ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
+			try
+			{
+				Setup(TestResources.UserTestSettingsForListingTests);
+				ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
+			}
+			finally
+			{
+				Teardown();
+			}
 		}
 		<# } #>
 
@@ -99,8 +121,8 @@ namespace GoogleTestAdapter.VsPackage
 			{
 				string arguments = " \"\"" + ActualTestFile + "\"\"";
 
-				if (!string.IsNullOrWhiteSpace(ActualSettingsFile))
-					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
+//				if (!string.IsNullOrWhiteSpace(ActualSettingsFile))
+//					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
 
 				if (!"none".Equals(TestCaseFilter))
 					arguments += " /TestCaseFilter:\"\"" + TestCaseFilter + "\"\"";
