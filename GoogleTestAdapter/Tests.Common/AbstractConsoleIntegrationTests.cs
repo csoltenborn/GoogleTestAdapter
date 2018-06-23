@@ -53,8 +53,7 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListDiscoverers_DiscovererIsListed()
         {
-            // TODO until #184 is fixed...
-            Assert.Inconclusive();
+            Assert.Inconclusive("skipped until #184 is fixed...");
 
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
@@ -65,8 +64,7 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListExecutors_ExecutorIsListed()
         {
-            // TODO until #184 is fixed...
-            Assert.Inconclusive();
+            Assert.Inconclusive("skipped until #184 is fixed...");
 
             string arguments = CreateListExecutorsArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
@@ -77,8 +75,7 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
-            // TODO until #184 is fixed...
-            Assert.Inconclusive();
+            Assert.Inconclusive("skipped until #184 is fixed...");
 
             string arguments = CreateListSettingsProvidersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);

@@ -20,7 +20,51 @@ namespace GoogleTestAdapter.Tests.Common
             AbstractConsoleIntegrationTests.GetDirectories(out TestAdapterDir, out SolutionFile);
         }
 
-        protected void Setup(string settingsFile)
+        protected void RunTestsAndCheckOutput(string settingsFile, string arguments, [CallerMemberName] string testCaseName = null)
+        {
+            string finalArguments = GetAdapterIntegration() + arguments;
+
+            if (string.IsNullOrWhiteSpace(settingsFile))
+            {
+                DoRunTestsAndCheckOutput(finalArguments, testCaseName);
+                return;
+            }
+
+            Setup(settingsFile);
+            try
+            {
+                DoRunTestsAndCheckOutput(finalArguments, testCaseName);
+            }
+            finally
+            {
+                Teardown();
+            }
+        }
+
+        protected void ListTestsOf(string testExecutable, [CallerMemberName] string testCaseName = null)
+        {
+            Setup(TestResources.UserTestSettingsForListingTests);
+            try
+            {
+                DoListTestsOf(testExecutable, testCaseName);
+            }
+            finally
+            {
+                Teardown();
+            }
+        }
+
+        private string GetLogger()
+        {
+            return AbstractConsoleIntegrationTests.GetLogger();
+        }
+
+        private string GetAdapterIntegration()
+        {
+            return GetLogger() + @"/TestAdapterPath:" + TestAdapterDir;
+        }
+
+        private void Setup(string settingsFile)
         {
             if (_envVarStorage != null)
             {
@@ -31,19 +75,19 @@ namespace GoogleTestAdapter.Tests.Common
             Environment.SetEnvironmentVariable(CommonFunctions.GtaSettingsEnvVariable, settingsFile);
         }
 
-        protected void Teardown()
+        private void Teardown()
         {
             Environment.SetEnvironmentVariable(CommonFunctions.GtaSettingsEnvVariable, _envVarStorage);
             _envVarStorage = null;
         }
 
-        protected void RunTestsAndCheckOutput(string arguments, [CallerMemberName] string testCaseName = null)
+        private void DoRunTestsAndCheckOutput(string arguments, string testCaseName)
         {
             TrxResultChecker resultChecker = new TrxResultChecker(SolutionFile);
             resultChecker.RunTestsAndCheckOutput(GetType().Name, arguments, testCaseName);
         }
 
-        protected void ListTestsOf(string testExecutable, [CallerMemberName] string testCaseName = null)
+        private void DoListTestsOf(string testExecutable, string testCaseName)
         {
             testExecutable = Path.GetFullPath(testExecutable);
             string arguments = GetAdapterIntegration() + @" /ListTests:""" + testExecutable + @"""";
@@ -62,16 +106,6 @@ namespace GoogleTestAdapter.Tests.Common
             new ResultChecker.ResultChecker(Path.Combine(projectDir, "GoldenFiles"), Path.Combine(projectDir, "TestErrors"), ".txt")
                 // ReSharper disable once ExplicitCallerInfoArgument
                 .CheckResults(resultString, GetType().Name, testCaseName);
-        }
-
-        protected string GetLogger()
-        {
-            return AbstractConsoleIntegrationTests.GetLogger();
-        }
-
-        protected string GetAdapterIntegration()
-        {
-            return GetLogger() + @"/TestAdapterPath:" + TestAdapterDir;
         }
 
     }
