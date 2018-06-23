@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
 [![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
-[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-70k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-73k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter) 
 
 
@@ -50,37 +50,6 @@ Google Test Adapter can be installed in three ways:
 * Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
-
-#### <a name="gta_feature_support"></a>Feature availability
-
-GTA runs in three different environments:
-* Within Visual Studio and installed via VSIX (i.e., through *Extensions and updates* or by downloading and executing the VSIX file)
-* Within Visual Studio and installed via NuGet (i.e., pulled via a project's NuGet dependencies)
-* Within `VsTestConsole.exe` (making use of the `/UseVsixExtensions:true` or the `/TestAdapterPath:<dir>` options)
-
-For technical reasons, not all features are available in all environments; refer to the table below for details.
-
-| Feature | VS/VSIX | VS/NuGet | VsTest.Console
-|--- |:---:|:---:|:---:
-| Test discovery | yes | yes | yes
-| Test execution | yes | yes | yes
-| Test debugging | yes | no | -
-| Configuration via | | |
-| - VS Options | yes | no | -
-| - VS Toolbar | yes | no | -
-| - Solution test config file | yes | no | no
-| - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
-| Placeholders | | |
-| - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
-| - `$(ExecutableDir)` | yes | yes | yes
-| - `$(Executable)` | yes | yes | yes
-| - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
-| - `$(ThreadId)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
-| - Environment variables | yes | yes | yes
-
-<a name="vs_settings">1</a>: Via *Test/Test Settings/Select Test Settings File*<br>
-<a name="test_settings">2</a>: Via `/Settings` option<br>
-<a name="only_test_execution">3</a>: Only during test execution; placeholders are removed in discovery mode
 
 
 #### <a name="gta_configuration"></a>Configuration
@@ -158,6 +127,38 @@ Note that since VS 2015 update 1, VS allows for the parallel execution of tests 
 #### <a name="test_setup_and_teardown"></a>Test setup and teardown
 
 If you need to perform some setup or teardown tasks in addition to the setup/teardown methods of your test code, you can do so by configuring test setup/teardown batch files, to which you can pass several values such as solution directory or test directory for exclusive usage of the tests.
+
+
+### <a name="gta_feature_support"></a>Feature availability
+
+GTA runs in three different environments:
+* Within Visual Studio and installed via VSIX (i.e., through *Extensions and updates* or by downloading and executing the VSIX file)
+* Within Visual Studio and installed via NuGet (i.e., pulled via a project's NuGet dependencies)
+* Within `VsTestConsole.exe` (making use of the `/UseVsixExtensions:true` or the `/TestAdapterPath:<dir>` options)
+
+For technical reasons, not all features are available in all environments; refer to the table below for details.
+
+| Feature | VS/VSIX | VS/NuGet | VsTest.Console
+|--- |:---:|:---:|:---:
+| Test discovery | yes | yes | yes
+| Test execution | yes | yes | yes
+| Test debugging | yes | no | -
+| Configuration via | | |
+| - VS Options | yes | no | -
+| - VS Toolbar | yes | no | -
+| - Solution test config file | yes | no | no
+| - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
+| Placeholders | | |
+| - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
+| - `$(ExecutableDir)` | yes | yes | yes
+| - `$(Executable)` | yes | yes | yes
+| - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
+| - `$(ThreadId)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
+| - Environment variables | yes | yes | yes
+
+<a name="vs_settings">1</a>: Via *Test/Test Settings/Select Test Settings File*<br>
+<a name="test_settings">2</a>: Via `/Settings` option<br>
+<a name="only_test_execution">3</a>: Only during test execution; placeholders are removed in discovery mode
 
 
 ### External resources
