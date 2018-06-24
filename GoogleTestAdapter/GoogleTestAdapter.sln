@@ -152,6 +152,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FakeGtestDllApplication", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FakeGtestDllApplication-x64", "FakeGtestDll\FakeGtestDllApplication-x64.vcxproj", "{05C435E1-603C-4402-B28C-E54932F3131C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{883EFE71-6B36-4813-B1DB-80D9B972B8D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Donations", "Donations", "{58B6EF41-D226-40A9-A959-0543270D572F}"
+	ProjectSection(SolutionItems) = preProject
+		Web\Donations\thanks.html = Web\Donations\thanks.html
+		Web\Donations\thanks_anyways.html = Web\Donations\thanks_anyways.html
+		Web\Donations\thinkpad_t580.png = Web\Donations\thinkpad_t580.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		VsPackage.Shared\VsPackage.Shared.projitems*{55294b5f-a075-43f2-b0e9-2b11925e8b91}*SharedItemsImports = 4
@@ -609,6 +618,8 @@ Global
 		{8C66B902-B3B3-40C1-B178-7F5405F654B0} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
 		{C2601F9E-8B97-4901-85F4-2531102543C8} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
 		{05C435E1-603C-4402-B28C-E54932F3131C} = {475245AA-A07D-41D8-BC84-959C5E12A52C}
+		{883EFE71-6B36-4813-B1DB-80D9B972B8D5} = {1F754A4D-BD42-4368-8B90-F3C03F24A2F3}
+		{58B6EF41-D226-40A9-A959-0543270D572F} = {883EFE71-6B36-4813-B1DB-80D9B972B8D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C942DDD5-B04E-4D57-BA9F-A444392C9480}
