@@ -12,7 +12,8 @@ In the last couple of months, I noticed that my private laptop certainly has a f
 
 Therefore, if you would like to appreciate development and support of *Google Test Adapter*, **please consider to [donate!](https://github.com/csoltenborn/GoogleTestAdapter#donations)** Thanks in advance...
 <br>
-<br>";
+<br>
+";
 
         public const string Footer = @"
 <br>
