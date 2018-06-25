@@ -364,6 +364,58 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetWorkingDirForExecution_null_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns((string)null);
+
+            var result = TheOptions.GetWorkingDirForExecution(TestResources.Tests_DebugX86, "", 0);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForExecution_EmptyString_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns("");
+
+            var result = TheOptions.GetWorkingDirForExecution(TestResources.Tests_DebugX86, "", 0);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForDiscovery_null_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns((string) null);
+
+            var result = TheOptions.GetWorkingDirForDiscovery(TestResources.Tests_DebugX86);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForDiscovery_EmptyString_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns("");
+
+            var result = TheOptions.GetWorkingDirForDiscovery(TestResources.Tests_DebugX86);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void GetUserParams__EnvVarPlaceholderIsReplaced()
         {
             foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
