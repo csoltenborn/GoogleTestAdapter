@@ -26,7 +26,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * Identification of crashed tests
 * Test output can be piped to test console
 * Execution of [parameterized batch files](#test_setup_and_teardown) for test setup/teardown
-* Test discovery using a [custom regex](#test_discovery_regex) (if needed) or an indicator file
+* Automatic recognition of gtest executables (which can be overridden by using a [custom regex](#test_discovery_regex) or an indicator file)
 * Settings can be [shared via source control](#solution_settings)
 * Installable as Visual Studio extension or NuGet development dependency
 
