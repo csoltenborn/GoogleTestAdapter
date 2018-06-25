@@ -1,8 +1,5 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
-using System;
-using System.Diagnostics;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace GoogleTestAdapter.Settings
@@ -25,6 +22,9 @@ namespace GoogleTestAdapter.Settings
 
         public virtual string TestDiscoveryRegex { get; set; }
         public bool ShouldSerializeTestDiscoveryRegex() { return TestDiscoveryRegex != null; }
+
+        public virtual string AdditionalPdbs { get; set; }
+        public bool ShouldSerializeAdditionalPdbs() { return AdditionalPdbs != null; }
 
         public virtual int? TestDiscoveryTimeoutInSeconds { get; set; }
         public bool ShouldSerializeTestDiscoveryTimeoutInSeconds() { return TestDiscoveryTimeoutInSeconds != null; }
@@ -92,14 +92,20 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? KillProcessesOnCancel { get; set; }
         public bool ShouldSerializeKillProcessesOnCancel() { return KillProcessesOnCancel != null; }
 
+        public bool? SkipOriginCheck { get; set; }
+        public bool ShouldSerializeSkipOriginCheck() { return SkipOriginCheck != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
 
 
         // internal
-        public string DebuggingNamedPipeId { get; set; }
+        public virtual string DebuggingNamedPipeId { get; set; }
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
+
+        public virtual string SolutionDir { get; set; }
+        public bool ShouldSerializeSolutionDir() { return DebuggingNamedPipeId != null; }
 
     }
 

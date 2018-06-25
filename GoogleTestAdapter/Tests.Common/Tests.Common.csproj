@@ -87,6 +87,8 @@
   <ItemGroup>
     <Compile Include="AbstractConsoleIntegrationTests.cs" />
     <Compile Include="AbstractConsoleTests.cs" />
+    <Compile Include="CodeGeneration\CsvTestCase.cs" />
+    <Compile Include="CodeGeneration\CsvTestcaseReader.cs" />
     <Compile Include="Helpers\CiSupport.cs" />
     <Compile Include="Helpers\CsvReader.cs" />
     <Compile Include="Fakes\FakeFrameworkReporter.cs" />

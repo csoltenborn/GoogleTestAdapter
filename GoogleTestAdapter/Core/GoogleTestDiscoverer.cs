@@ -44,7 +44,7 @@ namespace GoogleTestAdapter
         {
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
-                if (!VerifyExecutableTrust(executable, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
+                if (!VerifyExecutableTrust(executable, settings, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
                     return;
 
                 int nrOfTestCases = 0;
@@ -123,8 +123,11 @@ namespace GoogleTestAdapter
             return matches;
         }
 
-        public static bool VerifyExecutableTrust(string executable, ILogger logger)
+        public static bool VerifyExecutableTrust(string executable, SettingsWrapper settings, ILogger logger)
         {
+            if (settings.SkipOriginCheck)
+                return true;
+
             var zone = Zone.CreateFromUrl(executable);
             if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
             {

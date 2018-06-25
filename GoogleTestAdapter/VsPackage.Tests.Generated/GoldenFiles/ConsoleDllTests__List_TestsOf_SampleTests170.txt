@@ -21,6 +21,9 @@ OutputHandling.Output_OneLine
 OutputHandling.ManyLinesWithNewlines
 OutputHandling.OneLineWithNewlines
 OutputHandling.OneLine
+abcd.t
+bbcd.t
+bcd.t
 TheFixture.AddFails
 TheFixture.AddPasses
 TheFixture.Crash

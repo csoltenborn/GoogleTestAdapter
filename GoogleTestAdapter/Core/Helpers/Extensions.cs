@@ -39,6 +39,25 @@ namespace GoogleTestAdapter.Helpers
             return string.IsNullOrWhiteSpace(theString) ? theString : theString + appendix;
         }
 
+        public static void AddRange<T1, T2>(this IDictionary<T1, T2> target, IDictionary<T1, T2> source, bool replaceExisting = false)
+        {
+            foreach (KeyValuePair<T1, T2> keyValuePair in source)
+            {
+                if (target.ContainsKey(keyValuePair.Key))
+                {
+                    if (replaceExisting)
+                    {
+                        target.Remove(keyValuePair.Key);
+                        target.Add(keyValuePair);
+                    }
+                }
+                else
+                {
+                    target.Add(keyValuePair);
+                }
+            }
+        }
+
     }
 
 }

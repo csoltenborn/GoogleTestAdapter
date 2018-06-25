@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -72,6 +73,7 @@ namespace GoogleTestAdapter.Helpers
         {
             try
             {
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 Regex.Match(string.Empty, pattern);
             }
             catch (ArgumentException e)
@@ -92,6 +94,86 @@ namespace GoogleTestAdapter.Helpers
             byte[] file = File.ReadAllBytes(executable);
             return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
         }
+
+        public static string[] SplitAdditionalPdbs(string additionalPdbs)
+        {
+            return additionalPdbs.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static bool ValidatePattern(string pattern, out string errorMessage)
+        {
+            return ValidatePattern(pattern, out string dummy1, out string dummy2, out errorMessage);
+        }
+
+        private static bool ValidatePattern(string pattern, out string directory, out string filePattern, out string errorMessage)
+        {
+            errorMessage = "";
+
+            try
+            {
+                filePattern = Path.GetFileName(pattern);
+                if (string.IsNullOrWhiteSpace(filePattern))
+                {
+                    filePattern = null;
+                }
+            }
+            catch (Exception)
+            {
+                filePattern = null;
+            }
+
+            try
+            {
+                directory = Path.GetDirectoryName(pattern);
+            }
+            catch (Exception)
+            {
+                directory = null;
+            }
+
+            if (filePattern == null || directory == null)
+            {
+                errorMessage = $"Additional PDB pattern '{pattern}' is invalid: ";
+                if (filePattern == null && directory == null)
+                {
+                    errorMessage += "path part and file pattern part can not be found";
+                }
+                else if (filePattern == null)
+                {
+                    errorMessage += "file pattern part can not be found";
+                }
+                else
+                {
+                    errorMessage += "path part can not be found";
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public static string[] GetMatchingFiles(string pattern, ILogger logger)
+        {
+            if (!ValidatePattern(pattern, out string path, out string filePattern, out string errorMessage))
+            {
+                logger.LogError(errorMessage);
+                return new string[]{};
+            }
+
+            try
+            {
+                // ReSharper disable AssignNullToNotNullAttribute
+                return Directory.GetFiles(path, filePattern);
+                // ReSharper restore AssignNullToNotNullAttribute
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"Error while evaluating additional PDB pattern '{pattern}': {e.Message}");
+                return new string[] { };
+            }
+        }
+        
     }
 
 }

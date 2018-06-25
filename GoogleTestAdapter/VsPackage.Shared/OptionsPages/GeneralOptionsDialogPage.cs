@@ -3,8 +3,10 @@
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -27,6 +29,33 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             }
         }
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
+
+        [Category(SettingsWrapper.CategoryTestExecutionName)]
+        [DisplayName(SettingsWrapper.OptionAdditionalPdbs)]
+        [Description(SettingsWrapper.OptionAdditionalPdbsDescription)]
+        public string AdditionalPdbs
+        {
+            get { return _additionalPdbs; }
+            set
+            {
+                var patterns = Utils.SplitAdditionalPdbs(_additionalPdbs);
+                var errorMessages = new List<string>();
+                foreach (string pattern in patterns)
+                {
+                    if (!Utils.ValidatePattern(pattern, out string errorMessage))
+                    {
+                        errorMessages.Add(errorMessage);
+                    }
+                }
+                if (errorMessages.Any())
+                {
+                    throw new Exception(string.Join(Environment.NewLine, errorMessages));
+                }
+
+                SetAndNotify(ref _additionalPdbs, value);
+            }
+        }
+        private string _additionalPdbs = SettingsWrapper.OptionAdditionalPdbsDefaultValue;
 
         [Category(SettingsWrapper.CategoryTestExecutionName)]
         [DisplayName(SettingsWrapper.OptionTestDiscoveryTimeoutInSeconds)]
@@ -203,6 +232,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set { SetAndNotify(ref _timestampOutput, value); }
         }
         private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
+
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionSkipOriginCheck)]
+        [Description(SettingsWrapper.OptionSkipOriginCheckDescription)]
+        public bool SkipOriginCheck
+        {
+            get { return _skipOriginCheck; }
+            set { SetAndNotify(ref _skipOriginCheck, value); }
+        }
+        private bool _skipOriginCheck = SettingsWrapper.OptionSkipOriginCheckDefaultValue;
 
         #endregion
     }

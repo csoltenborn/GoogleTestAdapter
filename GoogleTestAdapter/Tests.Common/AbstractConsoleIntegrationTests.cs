@@ -53,6 +53,8 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListDiscoverers_DiscovererIsListed()
         {
+            Assert.Inconclusive("skipped until #184 is fixed...");
+
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
             output.ToLower().Should().MatchRegex(@"executor:\/\/(testadapterforgoogletest|googletestrunner)\/v1");
@@ -62,6 +64,8 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListExecutors_ExecutorIsListed()
         {
+            Assert.Inconclusive("skipped until #184 is fixed...");
+
             string arguments = CreateListExecutorsArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
             output.Should().MatchRegex(@"executor:\/\/(TestAdapterForGoogleTest|GoogleTestRunner)\/v1");
@@ -71,6 +75,8 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
+            Assert.Inconclusive("skipped until #184 is fixed...");
+
             string arguments = CreateListSettingsProvidersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
             output.Should().Contain(@"GoogleTestAdapter");

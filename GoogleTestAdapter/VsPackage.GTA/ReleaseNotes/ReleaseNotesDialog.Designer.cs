@@ -109,6 +109,7 @@
             this.WebBrowser.Size = new System.Drawing.Size(778, 485);
             this.WebBrowser.TabIndex = 0;
             this.WebBrowser.WebBrowserShortcutsEnabled = false;
+            this.WebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.WebBrowser_Navigating);
             // 
             // OkButtonPanel
             // 

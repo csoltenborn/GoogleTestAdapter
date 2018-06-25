@@ -141,8 +141,8 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithSetupAndTeardownBatchesWhereTeardownFails_LogsWarning()
         {
-            MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.SucceedingBatch);
-            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.FailingBatch);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns($"$(SolutionDir){TestResources.SucceedingBatch}");
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns($"$(SolutionDir){TestResources.FailingBatch}");
 
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
@@ -158,8 +158,8 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_WithSetupAndTeardownBatchesWhereSetupFails_LogsWarning()
         {
-            MockOptions.Setup(o => o.BatchForTestSetup).Returns(TestResources.FailingBatch);
-            MockOptions.Setup(o => o.BatchForTestTeardown).Returns(TestResources.SucceedingBatch);
+            MockOptions.Setup(o => o.BatchForTestSetup).Returns($"$(SolutionDir){TestResources.FailingBatch}");
+            MockOptions.Setup(o => o.BatchForTestTeardown).Returns($"$(SolutionDir){TestResources.SucceedingBatch}");
 
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 

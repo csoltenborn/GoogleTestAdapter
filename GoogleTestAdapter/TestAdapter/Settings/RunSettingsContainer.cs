@@ -32,23 +32,23 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
     public class RunSettingsContainer : TestRunSettings, IGoogleTestAdapterSettingsContainer
     {
-        private RunSettings _solutionSettings;
+        public RunSettings SolutionSettings { get; }
 
-        public RunSettings SolutionSettings
+        public List<RunSettings> ProjectSettings { get; } = new List<RunSettings>();
+
+        public RunSettingsContainer(RunSettings solutionSettings)
+            : base(GoogleTestConstants.SettingsName)
         {
-            get { return _solutionSettings ?? new RunSettings(); }
-            set { _solutionSettings = value; }
+            SolutionSettings = solutionSettings ?? throw new ArgumentNullException(nameof(solutionSettings));
         }
 
-        public List<RunSettings> ProjectSettings { get; set; } = new List<RunSettings>();
-
-        public RunSettingsContainer()
-            : base(GoogleTestConstants.SettingsName)
-        { }
-
-        public RunSettingsContainer(SettingsSerializationContainer serializationContainer) :  this()
+        public RunSettingsContainer() : this(new RunSettings())
         {
-            _solutionSettings = serializationContainer.SolutionSettings.Settings;
+        }
+
+        public RunSettingsContainer(SettingsSerializationContainer serializationContainer) :  
+            this(serializationContainer.SolutionSettings.Settings)
+        {
             ProjectSettings.AddRange(serializationContainer.SettingsList);
         }
 
@@ -87,7 +87,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 settings.ValidationType = ValidationType.Schema;
                 settings.ValidationFlags = XmlSchemaValidationFlags.ReportValidationWarnings;
                 settings.XmlResolver = null;
-                settings.ValidationEventHandler += (object o, ValidationEventArgs e) => throw e.Exception;
+                settings.ValidationEventHandler += (o, e) => throw e.Exception;
                 var reader = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(rootElement.OuterXml)), settings);
 
                 try
@@ -138,6 +138,35 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
         }
 
+        public bool GetUnsetValuesFrom(string settingsFile)
+        {
+            var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+            settings.XmlResolver = null;
+            using (var reader = XmlReader.Create(settingsFile, settings))
+            {
+                var solutionRunSettingsDocument = new XPathDocument(reader);
+                XPathNavigator solutionRunSettingsNavigator = solutionRunSettingsDocument.CreateNavigator();
+                if (solutionRunSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
+                {
+                    return GetUnsetValuesFrom(solutionRunSettingsNavigator);
+                }
+
+                return false;
+            }
+        }
+
+        public bool GetUnsetValuesFrom(XPathNavigator sourceNavigator)
+        {
+            if (sourceNavigator.MoveToChild(GoogleTestConstants.SettingsName, ""))
+            {
+                var sourceRunSettings = LoadFromXml(sourceNavigator);
+                GetUnsetValuesFrom(sourceRunSettings);
+                return true;
+            }
+
+            return false;
+        }
+
         private static void ValidateOne<T>(string name, T value, Action<T> validator)
         {
             try
@@ -159,11 +188,11 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
         private static void ValidateAdditionalRunSettingsConstraints(RunSettings settings)
         {
-            ValidateOne("ProjectRegex", settings.ProjectRegex, Utils.ValidateRegex);
-            ValidateOne("TestDiscoveryRegex", settings.TestDiscoveryRegex, Utils.ValidateRegex);
-            ValidateOne("TraitsRegexesBefore", settings.TraitsRegexesBefore, Utils.ValidateTraitRegexes);
-            ValidateOne("TraitsRegexesAfter", settings.TraitsRegexesAfter, Utils.ValidateTraitRegexes);
-            ValidateOne("ShuffleTestsSeed", settings.ShuffleTestsSeed, GoogleTestConstants.ValidateShuffleTestsSeedValue);
+            ValidateOne(nameof(settings.ProjectRegex), settings.ProjectRegex, Utils.ValidateRegex);
+            ValidateOne(nameof(settings.TestDiscoveryRegex), settings.TestDiscoveryRegex, Utils.ValidateRegex);
+            ValidateOne(nameof(settings.TraitsRegexesBefore), settings.TraitsRegexesBefore, Utils.ValidateTraitRegexes);
+            ValidateOne(nameof(settings.TraitsRegexesAfter), settings.TraitsRegexesAfter, Utils.ValidateTraitRegexes);
+            ValidateOne(nameof(settings.ShuffleTestsSeed), settings.ShuffleTestsSeed, GoogleTestConstants.ValidateShuffleTestsSeedValue);
         }
 
     }

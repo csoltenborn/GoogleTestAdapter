@@ -35,21 +35,23 @@ namespace GoogleTestAdapter.TestCases
 
         public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
         {
-            List<string> standardOutput = new List<string>();
             if (_settings.UseNewTestExecutionFramework)
             {
-                return NewCreateTestcases(reportTestCase, standardOutput);
+                return NewCreateTestcases(reportTestCase);
             }
 
+            List<string> standardOutput = new List<string>();
             try
             {
+                string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
+                string finalParams = GetDiscoveryParams();
+
                 int processExitCode = 0;
-                string workingDir = new FileInfo(_executable).DirectoryName;
                 ProcessLauncher launcher = null;
                 var listTestsTask = new Task(() =>
                 {
                     launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                    standardOutput = launcher.GetOutputOfCommand(workingDir, _executable, GoogleTestConstants.ListTestsOption,
+                    standardOutput = launcher.GetOutputOfCommand(workingDir, _executable, finalParams,
                         false, false, out processExitCode);
                 }, TaskCreationOptions.AttachedToParent);
                 listTestsTask.Start();
@@ -57,18 +59,11 @@ namespace GoogleTestAdapter.TestCases
                 if (!listTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     launcher?.Cancel();
-
-                    string file = Path.GetFileName(_executable);
-                    string cdToWorkingDir = $@"cd ""{workingDir}""";
-                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption}";
-
-                    _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
-                    _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
-
+                    LogTimeoutError(workingDir, finalParams);
                     return new List<TestCase>();
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput))
+                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
                     return new List<TestCase>();
             }
             catch (Exception e)
@@ -79,7 +74,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            var resolver = new TestCaseResolver(_executable, _settings.GetPathExtension(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
+            var resolver = new TestCaseResolver(_executable, _settings.GetPathExtension(_executable), _settings.GetAdditionalPdbs(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
 
             IList<TestCase> testCases = new List<TestCase>();
             IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
@@ -114,13 +109,15 @@ namespace GoogleTestAdapter.TestCases
             return testCases;
         }
 
-        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase, List<string> standardOutput)
+        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase)
         {
+            var standardOutput = new List<string>();
             var testCases = new List<TestCase>();
 
             var resolver = new TestCaseResolver(
                 _executable,
                 _settings.GetPathExtension(_executable),
+                _settings.GetAdditionalPdbs(_executable),
                 _diaResolverFactory,
                 _settings.ParseSymbolInformation,
                 _logger);
@@ -157,7 +154,9 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
-                string workingDir = new FileInfo(_executable).DirectoryName;
+                string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
+                var finalParams = GetDiscoveryParams();
+
                 int processExitCode = ProcessExecutor.ExecutionFailed;
                 ProcessExecutor executor = null;
                 var listAndParseTestsTask = new Task(() =>
@@ -165,7 +164,7 @@ namespace GoogleTestAdapter.TestCases
                     executor = new ProcessExecutor(null, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
-                        GoogleTestConstants.ListTestsOption,
+                        finalParams,
                         workingDir,
                         _settings.GetPathExtension(_executable),
                         lineAction);
@@ -175,15 +174,7 @@ namespace GoogleTestAdapter.TestCases
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     executor?.Cancel();
-
-                    string dir = Path.GetDirectoryName(_executable);
-                    string file = Path.GetFileName(_executable);
-                    string cdToWorkingDir = $@"cd ""{dir}""";
-                    string listTestsCommand = $"{file} {GoogleTestConstants.ListTestsOption}";
-
-                    _logger.LogError($"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
-                    _logger.DebugError($"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
-
+                    LogTimeoutError(workingDir, finalParams);
                     return new List<TestCase>();
                 }
 
@@ -196,7 +187,7 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput))
+                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
                     return new List<TestCase>();
             }
             catch (Exception e)
@@ -208,14 +199,38 @@ namespace GoogleTestAdapter.TestCases
             return testCases;
         }
 
-        private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput)
+        private string GetDiscoveryParams()
+        {
+            string finalParams = GoogleTestConstants.ListTestsOption;
+            string userParams = _settings.GetUserParametersForDiscovery(_executable);
+            if (!string.IsNullOrWhiteSpace(userParams))
+            {
+                finalParams += $" {userParams}";
+            }
+
+            return finalParams;
+        }
+
+        private void LogTimeoutError(string workingDir, string finalParams)
+        {
+            string file = Path.GetFileName(_executable);
+            string cdToWorkingDir = $@"cd ""{workingDir}""";
+            string listTestsCommand = $"{file} {finalParams}";
+
+            _logger.LogError(
+                $"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
+            _logger.DebugError(
+                $"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
+        }
+
+        private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput, string workingDir, string parameters)
         {
             if (processExitCode != 0)
             {
                 string messsage =
                     $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
                 messsage +=
-                    $"\nCommand executed: '{_executable} {GoogleTestConstants.ListTestsOption}', working directory: '{Path.GetDirectoryName(_executable)}'";
+                    $"\nCommand executed: '{_executable} {parameters}', working directory: '{workingDir}'";
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
                     messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
                 else

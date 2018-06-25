@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Settings;
@@ -25,7 +26,7 @@ namespace GoogleTestAdapter.Tests.Common
             MockLogger.Setup(l => l.GetMessages(It.IsAny<Severity[]>())).Returns(new List<string>());
 
             Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
-            MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object);
+            MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object, Path.GetFullPath(TestResources.SampleTestsSolutionDir));
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
@@ -44,6 +45,7 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
             mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
 
+            mockOptions.Setup(o => o.AdditionalPdbs).Returns(SettingsWrapper.OptionAdditionalPdbsDefaultValue);
             mockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds)
                 .Returns(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue);
             mockOptions.Setup(o => o.TraitsRegexesBefore).Returns(new List<RegexTraitPair>());
@@ -70,10 +72,12 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.OptionPathExtensionDefaultValue);
             mockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
             mockOptions.Setup(o => o.KillProcessesOnCancel).Returns(SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
+            mockOptions.Setup(o => o.SkipOriginCheck).Returns(SettingsWrapper.OptionSkipOriginCheckDefaultValue);
 
             mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
 
             mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
+            mockOptions.Setup(o => o.SolutionDir).CallBase();
         }
 
         [TestCleanup]

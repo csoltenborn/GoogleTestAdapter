@@ -30,6 +30,7 @@ namespace GoogleTestAdapter.Settings
         bool? ShuffleTests { get; set; }
         int? ShuffleTestsSeed { get; set; }
         string TestDiscoveryRegex { get; set; }
+        string AdditionalPdbs { get; set; }
         int? TestDiscoveryTimeoutInSeconds { get; set; }
         string WorkingDir { get; set; }
         string PathExtension { get; set; }
@@ -43,11 +44,13 @@ namespace GoogleTestAdapter.Settings
         bool? TimestampOutput { get; set; }
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
+        bool? SkipOriginCheck { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
 
         // internal
         string DebuggingNamedPipeId { get; set; }
+        string SolutionDir { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -65,6 +68,7 @@ namespace GoogleTestAdapter.Settings
             self.ShuffleTests = self.ShuffleTests ?? other.ShuffleTests;
             self.ShuffleTestsSeed = self.ShuffleTestsSeed ?? other.ShuffleTestsSeed;
             self.TestDiscoveryRegex = self.TestDiscoveryRegex ?? other.TestDiscoveryRegex;
+            self.AdditionalPdbs = self.AdditionalPdbs ?? other.AdditionalPdbs;
             self.TestDiscoveryTimeoutInSeconds = self.TestDiscoveryTimeoutInSeconds ?? other.TestDiscoveryTimeoutInSeconds;
             self.WorkingDir = self.WorkingDir ?? other.WorkingDir;
             self.PathExtension = self.PathExtension ?? other.PathExtension;
@@ -78,10 +82,12 @@ namespace GoogleTestAdapter.Settings
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
+            self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
+            self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
         }
     }
 

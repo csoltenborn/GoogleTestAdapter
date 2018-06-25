@@ -74,6 +74,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PdbLocatorTests.cs" />
     <Compile Include="DiaResolverTests.cs" />
     <Compile Include="PeParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
