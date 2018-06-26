@@ -138,7 +138,11 @@ namespace GoogleTestAdapter.Runners
         public static void LogExecutionError(ILogger logger, string executable, string workingDir, string arguments, Exception exception, string threadName = "")
         {
             logger.LogError($"{threadName}Failed to run test executable '{executable}': {exception.Message}");
-            logger.DebugError($@"{threadName}Stacktrace:{Environment.NewLine}{exception.StackTrace}");
+            if (exception is AggregateException aggregateException)
+            {
+               exception = aggregateException.Flatten();
+            }
+            logger.DebugError($@"{threadName}Exception:{Environment.NewLine}{exception}");
             logger.LogError(
                 $"{threadName}{Strings.Instance.TroubleShootingLink}");
             logger.LogError(
