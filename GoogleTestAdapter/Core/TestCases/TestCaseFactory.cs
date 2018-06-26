@@ -40,12 +40,11 @@ namespace GoogleTestAdapter.TestCases
                 return NewCreateTestcases(reportTestCase);
             }
 
+           string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
+           string finalParams = GetDiscoveryParams();
             List<string> standardOutput = new List<string>();
             try
             {
-                string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-                string finalParams = GetDiscoveryParams();
-
                 int processExitCode = 0;
                 ProcessLauncher launcher = null;
                 var listTestsTask = new Task(() =>
@@ -68,8 +67,7 @@ namespace GoogleTestAdapter.TestCases
             }
             catch (Exception e)
             {
-                SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption, e);
+                SequentialTestRunner.LogExecutionError(_logger, _executable, workingDir, finalParams, e);
                 return new List<TestCase>();
             }
 
@@ -152,11 +150,10 @@ namespace GoogleTestAdapter.TestCases
                 parser.ReportLine(s);
             };
 
+           string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
+           var finalParams = GetDiscoveryParams();
             try
             {
-                string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-                var finalParams = GetDiscoveryParams();
-
                 int processExitCode = ProcessExecutor.ExecutionFailed;
                 ProcessExecutor executor = null;
                 var listAndParseTestsTask = new Task(() =>
@@ -192,8 +189,7 @@ namespace GoogleTestAdapter.TestCases
             }
             catch (Exception e)
             {
-                SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption, e);
+                SequentialTestRunner.LogExecutionError(_logger, _executable, workingDir, finalParams, e);
                 return new List<TestCase>();
             }
             return testCases;
