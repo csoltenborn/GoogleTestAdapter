@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
 
             pdbFound.Should().BeNull();
-            fakeLogger.Errors
+            fakeLogger.Warnings
                 .Should()
                 .Contain(msg => msg.Contains("invalid path"));
         }
