@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
@@ -58,5 +59,41 @@ namespace GoogleTestAdapter.DiaResolver
                 .Should()
                 .Contain(msg => msg.Contains("Attempts to find pdb:"));
         }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public void FindPdbFile_PATHcontainsInvalidChars_ErrorIsLogged()
+        {
+            TestResources.LoadTests_ReleaseX86.AsFileInfo().Should().Exist();
+            string pdb = Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb");
+            pdb.AsFileInfo().Should().Exist();
+            string renamedPdb = $"{pdb}.bak";
+            renamedPdb.AsFileInfo().Should().NotExist();
+
+            string pdbFound;
+            var fakeLogger = new FakeLogger(() => true);
+            var currentPath = Environment.GetEnvironmentVariable("PATH");
+            try
+            {
+                File.Move(pdb, renamedPdb);
+                pdb.AsFileInfo().Should().NotExist();
+
+                Environment.SetEnvironmentVariable("PATH", $"My<Invalid>Path;{currentPath}");
+                pdbFound = PdbLocator.FindPdbFile(TestResources.LoadTests_ReleaseX86, "", fakeLogger);
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("PATH", currentPath);
+                File.Move(renamedPdb, pdb);
+                pdb.AsFileInfo().Should().Exist();
+            }
+
+            pdbFound.Should().BeNull();
+            fakeLogger.Errors
+                .Should()
+                .Contain(msg => msg.Contains("invalid path"));
+        }
+
     }
 }
