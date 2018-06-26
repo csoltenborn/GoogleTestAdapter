@@ -33,10 +33,21 @@ namespace GoogleTestAdapter.DiaResolver
             {
                 foreach (string pathElement in pathElements)
                 {
-                    string file = Path.Combine(pathElement, pdb);
-                    if (File.Exists(file))
-                        return file;
-                    attempts.Add($"\"{file}\"");
+                    try
+                    {
+                        string file = Path.Combine(pathElement, pdb);
+                        if (File.Exists(file))
+                            return file;
+                        attempts.Add($"\"{file}\"");
+                    }
+                    catch (Exception e)
+                    {
+                        string message = $"Exception while searching for the PDB file of binary '{binary}'. ";
+                        message += "Do you have some invalid path on your system's PATH environment variable? ";
+                        message += $"The according path is '{pathElement}' and will be ignored.";
+                        logger.LogWarning(message);
+                        logger.DebugWarning($"Exception:{Environment.NewLine}{e}");
+                    }
                 }
             }
 
