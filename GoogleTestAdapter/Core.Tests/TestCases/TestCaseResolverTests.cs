@@ -65,17 +65,19 @@ namespace GoogleTestAdapter.TestCases
 
         private void AssertCorrectTestLocationIsFound(string suite, uint line)
         {
+            var descriptor = new TestCaseDescriptor(
+                suite, 
+                "Test", 
+                $"{suite}.Test", 
+                $"{suite}.Test",
+                TestCaseDescriptor.TestTypes.Simple);
+            var signatures = new MethodSignatureCreator().GetTestMethodSignatures(descriptor);
             var resolver = new TestCaseResolver(TestResources.Tests_ReleaseX64, "", "".Yield(),
                 new DefaultDiaResolverFactory(), true, _fakeLogger);
-            var signatureCreator = new MethodSignatureCreator();
-            var descriptor = new TestCaseDescriptor(suite, "Test", $"{suite}.Test", $"{suite}.Test",
-                TestCaseDescriptor.TestTypes.Simple);
-            var signatures = signatureCreator.GetTestMethodSignatures(descriptor);
 
             var testCaseLocation = resolver.FindTestCaseLocation(signatures.ToList());
 
             _fakeLogger.Errors.Should().BeEmpty();
-
             testCaseLocation.Should().NotBeNull();
             testCaseLocation.Sourcefile.Should().EndWithEquivalent(@"sampletests\tests\namespacetests.cpp");
             testCaseLocation.Line.Should().Be(line);
