@@ -30,6 +30,12 @@ OutputHandling.OneLine
 abcd.t
 bbcd.t
 bcd.t
+Namespace_Named.Test
+Namespace_Named_Named.Test
+Namespace_Named_Anon.Test
+Namespace_Anon.Test
+Namespace_Anon_Anon.Test
+Namespace_Anon_Named.Test
 MessageParserTests.SimpleAssert
 MessageParserTests.SimpleExpect
 MessageParserTests.ExpectAndAssert

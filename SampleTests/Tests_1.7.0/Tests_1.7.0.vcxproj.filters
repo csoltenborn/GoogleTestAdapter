@@ -50,5 +50,8 @@
     <ClCompile Include="..\Tests\UmlautTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Tests\NamespaceTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

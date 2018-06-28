@@ -203,7 +203,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.BatchForTestSetup).Returns("some_nonexisting_file");
 
-            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
+            RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0, checkNoErrorsLogged: false);
 
             MockLogger.Verify(l => l.LogError(
                 It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup.ToLower()))),
@@ -254,10 +254,16 @@ namespace GoogleTestAdapter.TestAdapter
             }
         }
 
-        protected void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests = 0)
+        protected void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests = 0, bool checkNoErrorsLogged = true)
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            if (checkNoErrorsLogged)
+            {
+                MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+                MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
+            }
 
             CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
         }
