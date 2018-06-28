@@ -340,8 +340,12 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             List<TestCase> tests = discoverer.GetTestsFromExecutable(SampleTestToUse).ToList();
 
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
+            tests.Should().NotBeEmpty();
+
             TestCase testCase = tests.Find(tc => tc.Traits.Count == traits.Length && tc.DisplayName.StartsWith(displayName));
-            testCase.Should().NotBeNull($"Test not found: {displayName}, {traits.Length}");
+            testCase.Should().NotBeNull($"Test should exist: {displayName}, {traits.Length}");
 
             foreach (Trait trait in traits)
             {
