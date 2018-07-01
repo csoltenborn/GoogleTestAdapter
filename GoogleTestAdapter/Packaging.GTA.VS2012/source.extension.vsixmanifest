@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="GoogleTestAdapterVSIX.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn" />
-        <DisplayName>Google Test Adapter</DisplayName>
+        <Identity Id="GoogleTestAdapterVSIX.9d53b9c1-e615-4d93-84d2-6bd33c10a537" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn" />
+        <DisplayName>Google Test Adapter (VS 2012)</DisplayName>
         <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
         <MoreInfo>https://github.com/csoltenborn/GoogleTestAdapter</MoreInfo>
         <License>LICENSE.txt</License>
@@ -11,10 +11,10 @@
         <Tags>Unit Test, C++, Google Test, GoogleTest, GTest, Test Explorer, Testing</Tags>
     </Metadata>
     <Installation InstalledByMsi="false">
-        <InstallationTarget Version="[12.0,15.0]" Id="Microsoft.VisualStudio.Pro" />
-        <InstallationTarget Version="[12.0,15.0]" Id="Microsoft.VisualStudio.Enterprise" />
-        <InstallationTarget Version="[12.0,15.0]" Id="Microsoft.VisualStudio.Ultimate" />
-        <InstallationTarget Version="[12.0,15.0]" Id="Microsoft.VisualStudio.Community" />
+        <InstallationTarget Version="11.0" Id="Microsoft.VisualStudio.Premium" />
+        <InstallationTarget Version="11.0" Id="Microsoft.VisualStudio.Pro" />
+        <InstallationTarget Version="11.0" Id="Microsoft.VisualStudio.Enterprise" />
+        <InstallationTarget Version="11.0" Id="Microsoft.VisualStudio.Ultimate" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,4.7]" />

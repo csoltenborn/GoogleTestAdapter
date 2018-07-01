@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata minClientVersion="2.8">
+    <id>GoogleTestAdapter-VS2012</id>
+    <version>0.13.1</version>
+    <title>Google Test Adapter (VS2012)</title>
+    <authors>Christian Soltenborn</authors>
+    <owners>Christian Soltenborn</owners>
+    <description>Adds capability to run and debug C++ tests written with the Google Test framework to Visual Studio. Installing this test adapter via NuGet (as compared to installation through the VS Marketplace) lacks debugging and configuration through VS Options as well as the toolbar (configuration via test settings file is supported). Main use case: build servers.</description>
+    <summary>Supports running Google Test C++ tests within Visual Studio. Limited functionality compared to installation via VS Marketplace.</summary>
+    <language>en-US</language>
+    <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
+    <iconUrl>https://github.com/csoltenborn/GoogleTestAdapter/raw/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/Resources/gtest-logo.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>true</developmentDependency>
+    <copyright>Copyright 2015-2018 Christian Soltenborn</copyright>
+    <tags>native gtest Google Test adapter C++ unit integration automated testing</tags>
+  </metadata>
+  <files>
+    <file src="GoogleTestAdapter.Common.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.Common.Dynamic.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.Core.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.DiaResolver.dll" target="build\_common\" />
+    <file src="GoogleTestAdapter.TestAdapter.dll" target="build\_common\" />
+
+    <file src="x86\msdia140.dll" target="build\_common\x86\" />
+    <file src="x64\msdia140.dll" target="build\_common\x64\" />
+
+    <file src="LICENSE.txt" target="" />
+    <file src="_.txt" target="lib\native\" />
+  </files>
+</package>
