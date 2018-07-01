@@ -2,13 +2,28 @@
 
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
+using GoogleTestAdapter.VsPackage.OptionsPages;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace GoogleTestAdapter.VsPackage
 {
-    public partial class GoogleTestExtensionOptionsPage
+    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+    [Guid(PackageGuidString)]
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
+    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageParallelizationName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
+    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
+    public sealed partial class GoogleTestExtensionOptionsPage : Package
     {
         private const string OptionsCategoryName = "Google Test Adapter";
 

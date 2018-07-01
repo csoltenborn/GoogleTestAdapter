@@ -77,9 +77,9 @@
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VsPackage.GTA\VsPackage.GTA.csproj">
-      <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
-      <Name>VsPackage.GTA</Name>
+    <ProjectReference Include="..\VsPackage.GTA.VS2012\VsPackage.GTA.VS2012.csproj">
+      <Project>{ed09d857-4d76-4a23-84b8-87d979cc23be}</Project>
+      <Name>VsPackage.GTA.VS2012</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
