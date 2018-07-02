@@ -5,10 +5,10 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.TestCases
 {
 
-    internal class MethodSignatureCreator
+    public class MethodSignatureCreator
     {
 
-        internal IEnumerable<string> GetTestMethodSignatures(TestCaseDescriptor descriptor)
+        public IEnumerable<string> GetTestMethodSignatures(TestCaseDescriptor descriptor)
         {
             switch (descriptor.TestType)
             {

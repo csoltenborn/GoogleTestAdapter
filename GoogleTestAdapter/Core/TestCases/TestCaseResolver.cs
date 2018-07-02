@@ -11,7 +11,7 @@ using GoogleTestAdapter.Model;
 namespace GoogleTestAdapter.TestCases
 {
 
-    internal class TestCaseResolver
+    public class TestCaseResolver
     {
         // see GTA_Traits.h
         private const string TraitSeparator = "__GTA__";
@@ -29,7 +29,7 @@ namespace GoogleTestAdapter.TestCases
         private bool _loadedSymbolsFromAdditionalPdbs;
         private bool _loadedSymbolsFromImports;
 
-        internal TestCaseResolver(string executable, string pathExtension, IEnumerable<string> additionalPdbs, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
+        public TestCaseResolver(string executable, string pathExtension, IEnumerable<string> additionalPdbs, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
         {
             _executable = executable;
             _pathExtension = pathExtension;
@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.TestCases
             }
         }
 
-        internal TestCaseLocation FindTestCaseLocation(List<string> testMethodSignatures)
+        public TestCaseLocation FindTestCaseLocation(List<string> testMethodSignatures)
         {
             TestCaseLocation result = DoFindTestCaseLocation(testMethodSignatures);
             if (result == null && !_loadedSymbolsFromAdditionalPdbs)
@@ -124,7 +124,7 @@ namespace GoogleTestAdapter.TestCases
                 }
                 catch (Exception e)
                 {
-                    _logger.DebugError($"Exception while resolving test locations and traits in {binary}\n{e}");
+                    _logger.DebugError($"Exception while resolving test locations and traits in '{binary}':{Environment.NewLine}{e}");
                 }
             }
         }
@@ -132,7 +132,7 @@ namespace GoogleTestAdapter.TestCases
         private TestCaseLocation DoFindTestCaseLocation(List<string> testMethodSignatures)
         {
             return _allTestMethodSymbols
-                .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, $"^{tms}"))) // Regex instead of == because nsfl might contain namespace
+                .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, $@"^(((\w+)|(`anonymous namespace'))::)*{tms}"))) // Regex instead of == because nsfl might contain namespace
                 .Select(nsfl => ToTestCaseLocation(nsfl, _allTraitSymbols))
                 .FirstOrDefault(); // we need to force immediate query execution, otherwise our session object will already be released
         }

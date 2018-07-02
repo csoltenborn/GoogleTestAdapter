@@ -11,7 +11,7 @@
         public string DisplayName { get; }
         public TestTypes TestType { get; }
 
-        internal TestCaseDescriptor(string suite, string name, string fullyQualifiedName, string displayName, TestTypes testType)
+        public TestCaseDescriptor(string suite, string name, string fullyQualifiedName, string displayName, TestTypes testType)
         {
             Suite = suite;
             Name = name;

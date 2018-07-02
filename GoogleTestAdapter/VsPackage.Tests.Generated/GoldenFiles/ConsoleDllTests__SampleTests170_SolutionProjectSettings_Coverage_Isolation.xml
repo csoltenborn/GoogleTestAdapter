@@ -266,6 +266,12 @@ at --&gt;TestMethod Outer in $(Directory)\sampletests\tests\scopedtracestests.cp
         </ErrorInfo>
       </Output>
     </UnitTestResult>
+    <UnitTestResult testName="Namespace_Anon.Test" outcome="Passed" />
+    <UnitTestResult testName="Namespace_Anon_Anon.Test" outcome="Passed" />
+    <UnitTestResult testName="Namespace_Anon_Named.Test" outcome="Passed" />
+    <UnitTestResult testName="Namespace_Named.Test" outcome="Passed" />
+    <UnitTestResult testName="Namespace_Named_Anon.Test" outcome="Passed" />
+    <UnitTestResult testName="Namespace_Named_Named.Test" outcome="Passed" />
     <UnitTestResult testName="OutputHandling.ManyLinesWithNewlines" outcome="Failed">
       <Output>
         <ErrorInfo>
@@ -707,6 +713,24 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     <UnitTest name="MessageParserTests.TwoScopedTracesInTestMethod" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
       <TestMethod name="MessageParserTests.TwoScopedTracesInTestMethod" className="MessageParserTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
+    <UnitTest name="Namespace_Anon.Test" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="Namespace_Anon.Test" className="Namespace_Anon" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
+    <UnitTest name="Namespace_Anon_Anon.Test" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="Namespace_Anon_Anon.Test" className="Namespace_Anon_Anon" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
+    <UnitTest name="Namespace_Anon_Named.Test" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="Namespace_Anon_Named.Test" className="Namespace_Anon_Named" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
+    <UnitTest name="Namespace_Named.Test" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="Namespace_Named.Test" className="Namespace_Named" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
+    <UnitTest name="Namespace_Named_Anon.Test" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="Namespace_Named_Anon.Test" className="Namespace_Named_Anon" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
+    <UnitTest name="Namespace_Named_Named.Test" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="Namespace_Named_Named.Test" className="Namespace_Named_Named" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    </UnitTest>
     <UnitTest name="OutputHandling.ManyLinesWithNewlines" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
       <TestMethod name="OutputHandling.ManyLinesWithNewlines" className="OutputHandling" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
@@ -889,7 +913,7 @@ Which is: "\xE4\xF6\xFC\xDF\xC4\xD6\xDC"</Message>
     </UnitTest>
   </TestDefinitions>
   <ResultSummary outcome="Failed">
-    <Counters total="97" executed="97" passed="44" failed="53" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="103" executed="103" passed="50" failed="53" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
     <Output />
   </ResultSummary>
 </TestRun>

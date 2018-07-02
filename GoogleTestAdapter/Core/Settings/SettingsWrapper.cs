@@ -335,13 +335,13 @@ namespace GoogleTestAdapter.Settings
             DescriptionOfThreadIdPlaceholder + DescriptionTestExecutionOnly + "\n" + 
             DescriptionOfEnvVarPlaceholders;
 
-        public virtual string WorkingDir => _currentSettings.WorkingDir ?? OptionWorkingDirDefaultValue;
+        public virtual string WorkingDir => string.IsNullOrWhiteSpace(_currentSettings.WorkingDir) 
+            ? OptionWorkingDirDefaultValue 
+            : _currentSettings.WorkingDir;
 
         public string GetWorkingDirForExecution(string executable, string testDirectory, int threadId)
         {
-            return string.IsNullOrWhiteSpace(WorkingDir) 
-                ? OptionWorkingDirDefaultValue 
-                : ReplaceEnvironmentVariables(
+            return ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
                         ReplaceExecutablePlaceholders(
                             ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId), executable)));
@@ -349,9 +349,7 @@ namespace GoogleTestAdapter.Settings
 
         public string GetWorkingDirForDiscovery(string executable)
         {
-            return string.IsNullOrWhiteSpace(WorkingDir) 
-                ? new FileInfo(executable).DirectoryName 
-                : ReplaceEnvironmentVariables(
+            return ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
                         RemoveTestDirAndThreadIdPlaceholders(
                             ReplaceExecutablePlaceholders(WorkingDir, executable))));

@@ -415,6 +415,10 @@ namespace GoogleTestAdapter
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.Tests_DebugX86);
 
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
+            tests.Should().NotBeEmpty();
+
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);
             testCase.DisplayName.Should().MatchRegex(displayNameRegex.ToString());
         }

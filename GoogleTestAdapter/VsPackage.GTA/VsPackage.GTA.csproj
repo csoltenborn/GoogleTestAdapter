@@ -74,6 +74,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReleaseNotes\Donations.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreator.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesDialog.cs">
       <SubType>Form</SubType>
@@ -194,6 +195,9 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\ReleaseNotes\0.13.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.13.1.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
