@@ -31,9 +31,15 @@ after_build:
 
     $sourceFile = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA\Packaging.GTA.vsix")).ToString()
 
+    $sourceFile2012 = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA.VS2012\Packaging.GTA.VS2012.vsix")).ToString()
+
     $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
 
+    $targetFile2012 = $([IO.FileInfo]$sourceFile2012).DirectoryName + "\GoogleTestAdapter_VS2012-" + $version + ".vsix"
+
     Copy-Item -Path $sourceFile -Destination $targetFile
+
+    Copy-Item -Path $sourceFile2012 -Destination $targetFile2012
 
     $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage.GTA\Resources\ReleaseNotes\" + $version + ".md")).ToString()
 
@@ -70,9 +76,12 @@ test_script:
     if ($TestExitCode -ne 0) {
         $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
         $sourceFile = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA\Packaging.GTA.vsix")).ToString()
+        $sourceFile2012 = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA.VS2012\Packaging.GTA.VS2012.vsix")).ToString()
         $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
+        $targetFile2012 = $([IO.FileInfo]$sourceFile2012).DirectoryName + "\GoogleTestAdapter_VS2012-" + $version + ".vsix"
         $nugetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter." + $version + ".nupkg"
         Push-AppveyorArtifact $targetFile
+        Push-AppveyorArtifact $targetFile2012
         Push-AppveyorArtifact $nugetFile
 
         exit $TestExitCode
@@ -86,7 +95,9 @@ before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
 - path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter-*.vsix
-  name: VSIX installation package
+  name: VSIX installation package (VS2013+)
+- path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA.VS2012\GoogleTestAdapter-*.vsix
+  name: VSIX installation package (VS2012 update 5)
 - path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter.*.nupkg
   name: NuGet package
 #- path: OpenCover_Unit_CoverageData.xml
