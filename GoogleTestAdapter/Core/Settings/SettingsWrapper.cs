@@ -166,6 +166,14 @@ namespace GoogleTestAdapter.Settings
         private const string DescriptionOfSolutionDirPlaceHolder =
             SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
 
+        public const string PlatformPlaceholder = "$(Platform)";
+        private const string DescriptionOfPlatformPlaceholder =
+            PlatformPlaceholder + " - the name of the solution's current platform";
+
+        public const string ConfigurationPlaceholder = "$(Configuration)";
+        private const string DescriptionOfConfigurationPlaceholder =
+            ConfigurationPlaceholder + " - the name of the solution's current configuration";
+
         private string ReplaceSolutionDirPlaceholder(string theString)
         {
             if (string.IsNullOrWhiteSpace(theString))
@@ -176,6 +184,25 @@ namespace GoogleTestAdapter.Settings
             return string.IsNullOrWhiteSpace(SolutionDir) 
                 ? theString.Replace(SolutionDirPlaceholder, "")
                 : theString.Replace(SolutionDirPlaceholder, SolutionDir);
+        }
+
+        private string ReplacePlatformAndConfigurationPlaceholders(string theString)
+        {
+            if (string.IsNullOrWhiteSpace(theString))
+            {
+                return "";
+            }
+
+            string result = theString;
+
+            result = string.IsNullOrWhiteSpace(_currentSettings.Platform) 
+                ? result.Replace(PlatformPlaceholder, "")
+                : result.Replace(PlatformPlaceholder, _currentSettings.Platform);
+            result = string.IsNullOrWhiteSpace(_currentSettings.Configuration) 
+                ? result.Replace(ConfigurationPlaceholder, "")
+                : result.Replace(ConfigurationPlaceholder, _currentSettings.Configuration);
+
+            return result;
         }
 
         
@@ -294,6 +321,8 @@ namespace GoogleTestAdapter.Settings
             "File part of each pattern may contain '*' and '?'; patterns are separated by ';'. Example: " + ExecutableDirPlaceholder + "\\pdbs\\*.pdb\n" +
             "Placeholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformPlaceholder + "\n" + 
+            DescriptionOfConfigurationPlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfEnvVarPlaceholders;
@@ -305,7 +334,8 @@ namespace GoogleTestAdapter.Settings
                 .Select(p => 
                     ReplaceEnvironmentVariables(
                         ReplaceSolutionDirPlaceholder(
-                            ReplaceExecutablePlaceholders(p.Trim(), executable))));
+                            ReplacePlatformAndConfigurationPlaceholders(
+                                ReplaceExecutablePlaceholders(p.Trim(), executable)))));
 
 
         public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
@@ -329,6 +359,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionWorkingDirDescription =
             "If non-empty, will set the working directory for running the tests (default: " + DescriptionOfExecutableDirPlaceHolder + ").\nExample: " + SolutionDirPlaceholder + "\\MyTestDir\nPlaceholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformPlaceholder + "\n" + 
+            DescriptionOfConfigurationPlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfTestDirPlaceholder + DescriptionTestExecutionOnly + "\n" + 
@@ -343,16 +375,18 @@ namespace GoogleTestAdapter.Settings
         {
             return ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
-                        ReplaceExecutablePlaceholders(
-                            ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId), executable)));
+                        ReplacePlatformAndConfigurationPlaceholders(
+                            ReplaceExecutablePlaceholders(
+                                ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId), executable))));
         }
 
         public string GetWorkingDirForDiscovery(string executable)
         {
             return ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
-                        RemoveTestDirAndThreadIdPlaceholders(
-                            ReplaceExecutablePlaceholders(WorkingDir, executable))));
+                        ReplacePlatformAndConfigurationPlaceholders(
+                            RemoveTestDirAndThreadIdPlaceholders(
+                                ReplaceExecutablePlaceholders(WorkingDir, executable)))));
         }
 
 
@@ -361,6 +395,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionPathExtensionDescription =
             "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + ExecutableDirPlaceholder + "\\MyOtherBins;\nPlaceholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformPlaceholder + "\n" + 
+            DescriptionOfConfigurationPlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfEnvVarPlaceholders;
@@ -370,7 +406,8 @@ namespace GoogleTestAdapter.Settings
         public string GetPathExtension(string executable)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceExecutablePlaceholders(PathExtension, executable)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceExecutablePlaceholders(PathExtension, executable))));
 
 
         public const string TraitsRegexesPairSeparator = "//||//";
@@ -459,6 +496,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable during test execution. Placeholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformPlaceholder + "\n" + 
+            DescriptionOfConfigurationPlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfTestDirPlaceholder + DescriptionTestExecutionOnly + "\n" + 
@@ -470,18 +509,22 @@ namespace GoogleTestAdapter.Settings
         public string GetUserParametersForExecution(string executable, string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceExecutablePlaceholders(
-                        ReplaceTestDirAndThreadIdPlaceholders(AdditionalTestExecutionParam, testDirectory, threadId), executable)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceExecutablePlaceholders(
+                            ReplaceTestDirAndThreadIdPlaceholders(AdditionalTestExecutionParam, testDirectory, threadId), executable))));
 
         public string GetUserParametersForDiscovery(string executable)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    RemoveTestDirAndThreadIdPlaceholders(
-                        ReplaceExecutablePlaceholders(AdditionalTestExecutionParam, executable))));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        RemoveTestDirAndThreadIdPlaceholders(
+                            ReplaceExecutablePlaceholders(AdditionalTestExecutionParam, executable)))));
 
 
         private const string DescriptionOfPlaceholdersForBatches =
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformPlaceholder + "\n" + 
+            DescriptionOfConfigurationPlaceholder + "\n" + 
             DescriptionOfTestDirPlaceholder + "\n" + 
             DescriptionOfThreadIdPlaceholder + "\n" + 
             DescriptionOfEnvVarPlaceholders;
@@ -498,7 +541,8 @@ namespace GoogleTestAdapter.Settings
         public string GetBatchForTestSetup(string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceTestDirAndThreadIdPlaceholders(BatchForTestSetup, testDirectory, threadId)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceTestDirAndThreadIdPlaceholders(BatchForTestSetup, testDirectory, threadId))));
 
 
         public const string OptionBatchForTestTeardown = "Test teardown batch file";
@@ -512,7 +556,8 @@ namespace GoogleTestAdapter.Settings
         public string GetBatchForTestTeardown(string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceTestDirAndThreadIdPlaceholders(BatchForTestTeardown, testDirectory, threadId)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceTestDirAndThreadIdPlaceholders(BatchForTestTeardown, testDirectory, threadId))));
 
 
         public const string OptionKillProcessesOnCancel = "Kill processes on cancel";
