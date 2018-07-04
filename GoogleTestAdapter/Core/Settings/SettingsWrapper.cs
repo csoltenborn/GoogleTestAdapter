@@ -341,7 +341,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
         public const int OptionTestDiscoveryTimeoutInSecondsDefaultValue = 30;
         public const string OptionTestDiscoveryTimeoutInSecondsDescription =
-            "Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout";
+            "Number of seconds after which test discovery of an executable will be assumed to have failed. 0: Infinite timeout";
 
         public virtual int TestDiscoveryTimeoutInSeconds {
             get
