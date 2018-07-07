@@ -22,26 +22,17 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher)
-        {
-            int dummy;
-            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, debuggedLauncher, out dummy);
-        }
-
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher, out int processExitCode)
+        public int GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
+            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher, IList<string> output)
         {
             if (_isBeingDebugged)
             {
-                var output = new List<string>();
-                processExitCode = LaunchProcessWithDebuggerAttached(workingDirectory, command, param, printTestOutput, debuggedLauncher);
-                return output;
+                return LaunchProcessWithDebuggerAttached(workingDirectory, command, param, printTestOutput, debuggedLauncher);
             }
 
             var actualLauncher = new ProcessLauncher(_logger, _settings.GetPathExtension(command), processId => _processId = processId);
             return actualLauncher.GetOutputOfCommand(workingDirectory, command, param, printTestOutput, 
-                throwIfError, out processExitCode);
+                throwIfError, output);
         }
 
         private int? _processId;

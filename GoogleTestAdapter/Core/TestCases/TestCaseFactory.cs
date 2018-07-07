@@ -49,16 +49,16 @@ namespace GoogleTestAdapter.TestCases
                 ProcessLauncher launcher = null;
                 var listTestsTask = new Task(() =>
                 {
-                    launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                    standardOutput = launcher.GetOutputOfCommand(workingDir, _executable, finalParams,
-                        false, false, out processExitCode);
+                    launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable));
+                    processExitCode = launcher.GetOutputOfCommand(workingDir, _executable, finalParams,
+                        false, false, standardOutput);
                 }, TaskCreationOptions.AttachedToParent);
                 listTestsTask.Start();
 
                 if (!listTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     launcher?.Cancel();
-                    LogTimeoutError(workingDir, finalParams);
+                    LogTimeoutError(workingDir, finalParams, standardOutput);
                     return new List<TestCase>();
                 }
 
@@ -71,11 +71,11 @@ namespace GoogleTestAdapter.TestCases
                 return new List<TestCase>();
             }
 
-            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
+            var testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
             var resolver = new TestCaseResolver(_executable, _settings.GetPathExtension(_executable), _settings.GetAdditionalPdbs(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
 
-            IList<TestCase> testCases = new List<TestCase>();
-            IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
+            var testCases = new List<TestCase>();
+            var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
             foreach (var descriptor in testCaseDescriptors)
             {
                 var testCase = _settings.ParseSymbolInformation 
@@ -171,7 +171,7 @@ namespace GoogleTestAdapter.TestCases
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     executor?.Cancel();
-                    LogTimeoutError(workingDir, finalParams);
+                    LogTimeoutError(workingDir, finalParams, standardOutput);
                     return new List<TestCase>();
                 }
 
@@ -207,16 +207,26 @@ namespace GoogleTestAdapter.TestCases
             return finalParams;
         }
 
-        private void LogTimeoutError(string workingDir, string finalParams)
+        private void LogTimeoutError(string workingDir, string finalParams, IList<string> outputSoFar)
         {
             string file = Path.GetFileName(_executable);
             string cdToWorkingDir = $@"cd ""{workingDir}""";
             string listTestsCommand = $"{file} {finalParams}";
 
-            _logger.LogError(
-                $"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
-            _logger.DebugError(
-                $"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
+            string message =
+                $"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable '{_executable}'";
+            string output = outputSoFar.Any()
+                ? $"Output of {_executable} so far:{Environment.NewLine}" + 
+                  $"{string.Join(Environment.NewLine, outputSoFar)}"
+                : $"Executable {_executable}produced no output.";
+            string hint =
+                $"Hint: test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}" + 
+                $"{cdToWorkingDir}{Environment.NewLine}" + 
+                listTestsCommand;
+
+            _logger.LogError(message);
+            _logger.DebugError(output);
+            _logger.DebugError(hint);
         }
 
         private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput, string workingDir, string parameters)

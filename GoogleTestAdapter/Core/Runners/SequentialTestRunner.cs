@@ -153,7 +153,7 @@ namespace GoogleTestAdapter.Runners
             IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
             StreamingStandardOutputTestResultParser streamingParser)
         {
-            List<string> consoleOutput;
+            var consoleOutput = new List<string>();
             if (_settings.UseNewTestExecutionFramework)
             {
                 DebugUtils.AssertIsNotNull(executor, nameof(executor));
@@ -162,10 +162,9 @@ namespace GoogleTestAdapter.Runners
             else
             {
                 _processLauncher = new TestProcessLauncher(_logger, _settings, isBeingDebugged);
-                consoleOutput =
-                    _processLauncher.GetOutputOfCommand(workingDir, executable, arguments.CommandLine,
-                            _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
-                            debuggedLauncher);
+                _processLauncher.GetOutputOfCommand(workingDir, executable, arguments.CommandLine,
+                        _settings.PrintTestOutput && !_settings.ParallelTestExecution, false,
+                        debuggedLauncher, consoleOutput);
             }
 
             var remainingTestCases =

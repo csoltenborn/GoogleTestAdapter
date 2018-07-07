@@ -15,49 +15,15 @@ namespace GoogleTestAdapter.Helpers
         
         private Process _process;
 
-        public ProcessLauncher(ILogger logger) : this(logger, "", null)
-        {
-        }
-
-        public ProcessLauncher(ILogger logger, string pathExtension, Action<int> reportProcessId)
+        public ProcessLauncher(ILogger logger, string pathExtension, Action<int> reportProcessId = null)
         {
             _logger = logger;
             _pathExtension = pathExtension;
             _reportProcessId = reportProcessId;
         }
 
-        public List<string> GetOutputOfCommand(string command)
-        {
-            int dummy;
-            return GetOutputOfCommand("", command, "", false, false, out dummy);
-        }
-
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError)
-        {
-            int dummy;
-            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, out dummy);
-        }
-
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, out int processExitCode)
-        {
-            var output = new List<string>();
-            processExitCode = LaunchProcess(workingDirectory, command, param, printTestOutput, throwIfError, output);
-            return output;
-        }
-
-        public void Cancel()
-        {
-            if (_process != null)
-            {
-                TestProcessLauncher.KillProcess(_process.Id, _logger);
-            }
-        }
-
-
-        private int LaunchProcess(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, List<string> output)
+        public int GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
+            bool throwIfError, IList<string> output)
         {
             var processStartInfo = new ProcessStartInfo(command, param)
             {
@@ -96,8 +62,17 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
+        public void Cancel()
+        {
+            if (_process != null)
+            {
+                TestProcessLauncher.KillProcess(_process.Id, _logger);
+            }
+        }
+
+
         // ReSharper disable once UnusedParameter.Local
-        private void ReadTheStream(Process process, List<string> streamContent, bool printTestOutput, bool throwIfError)
+        private void ReadTheStream(Process process, IList<string> streamContent, bool printTestOutput, bool throwIfError)
         {
             while (!process.StandardOutput.EndOfStream)
             {

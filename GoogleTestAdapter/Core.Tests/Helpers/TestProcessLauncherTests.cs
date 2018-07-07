@@ -17,9 +17,11 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void GetOutputOfCommand_WithSimpleCommand_ReturnsOutputOfCommand()
         {
-            List<string> output = new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
-                .GetOutputOfCommand(".", "cmd.exe", "/C \"echo 2\"", false, false, null);
+            var output = new List<string>();
+            int returnCode = new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
+                .GetOutputOfCommand(".", "cmd.exe", "/C \"echo 2\"", false, false, null, output);
 
+            returnCode.Should().Be(0);
             output.Count.Should().Be(1);
             output[0].Should().Be("2");
         }
@@ -35,7 +37,7 @@ namespace GoogleTestAdapter.Helpers
                 .Returns(processId);
 
             new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, true)
-                .Invoking(pl => pl.GetOutputOfCommand("theDir", "theCommand", "theParams", false, false, mockLauncher.Object))
+                .Invoking(pl => pl.GetOutputOfCommand("theDir", "theCommand", "theParams", false, false, mockLauncher.Object, new List<string>()))
                 .ShouldThrow<ArgumentException>()
                 .Where(e => e.Message.Contains(processId.ToString()));
 
@@ -52,7 +54,7 @@ namespace GoogleTestAdapter.Helpers
         public void GetOutputOfCommand_ThrowsIfProcessReturnsErrorCode_Throws()
         {
             new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
-                .Invoking(pl => pl.GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, true, null))
+                .Invoking(pl => pl.GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, true, null, new List<string>()))
                 .ShouldThrow<Exception>();
         }
 
@@ -61,7 +63,7 @@ namespace GoogleTestAdapter.Helpers
         public void GetOutputOfCommand_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()
         {
             new TestProcessLauncher(TestEnvironment.Logger, TestEnvironment.Options, false)
-                .GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, false, null);
+                .GetOutputOfCommand(".", "cmd.exe", "/C \"exit 2\"", false, false, null, new List<string>());
         }
 
     }
