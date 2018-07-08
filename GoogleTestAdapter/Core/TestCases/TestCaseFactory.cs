@@ -8,9 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
@@ -40,80 +38,6 @@ namespace GoogleTestAdapter.TestCases
         }
 
         public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
-        {
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                return NewCreateTestcases(reportTestCase);
-            }
-
-           string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-           string finalParams = GetDiscoveryParams();
-            List<string> standardOutput = new List<string>();
-            try
-            {
-                int processExitCode = 0;
-                IProcessExecutor executor = null;
-                var listTestsTask = new Task(() =>
-                {
-                    executor = _processExecutorFactory.CreateExecutor(false, _logger);
-                    processExitCode = executor.ExecuteCommandBlocking(_executable, finalParams, workingDir,
-                        _settings.GetPathExtension(_executable), s => standardOutput.Add(s));
-                }, TaskCreationOptions.AttachedToParent);
-                listTestsTask.Start();
-
-                if (!listTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
-                {
-                    executor?.Cancel();
-                    LogTimeoutError(workingDir, finalParams, standardOutput);
-                    return new List<TestCase>();
-                }
-
-                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
-                    return new List<TestCase>();
-            }
-            catch (Exception e)
-            {
-                SequentialTestRunner.LogExecutionError(_logger, _executable, workingDir, finalParams, e);
-                return new List<TestCase>();
-            }
-
-            var testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            var resolver = new TestCaseResolver(_executable, _settings.GetPathExtension(_executable), _settings.GetAdditionalPdbs(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
-
-            var testCases = new List<TestCase>();
-            var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
-            foreach (var descriptor in testCaseDescriptors)
-            {
-                var testCase = _settings.ParseSymbolInformation 
-                    ? CreateTestCase(descriptor, resolver) 
-                    : CreateTestCase(descriptor);
-                ISet<TestCase> testCasesInSuite;
-                if (!suite2TestCases.TryGetValue(descriptor.Suite, out testCasesInSuite))
-                    suite2TestCases.Add(descriptor.Suite, testCasesInSuite = new HashSet<TestCase>());
-                testCasesInSuite.Add(testCase);
-                testCases.Add(testCase);
-            }
-
-            foreach (var suiteTestCasesPair in suite2TestCases)
-            {
-                foreach (var testCase in suiteTestCasesPair.Value)
-                {
-                    testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, testCases.Count));
-                }
-            }
-
-            if (reportTestCase != null)
-            {
-                foreach (var testCase in testCases)
-                {
-                    reportTestCase(testCase);
-                }
-            }
-
-            return testCases;
-        }
-
-        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase)
         {
             var standardOutput = new List<string>();
             var testCases = new List<TestCase>();
@@ -260,13 +184,6 @@ namespace GoogleTestAdapter.TestCases
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
             testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, new List<Trait>()));
             return testCase;
-        }
-
-        private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseResolver resolver)
-        {
-            TestCaseLocation location =
-                resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(descriptor).ToList());
-            return CreateTestCase(descriptor, location);
         }
 
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseLocation location)

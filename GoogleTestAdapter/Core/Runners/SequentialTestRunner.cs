@@ -167,8 +167,10 @@ namespace GoogleTestAdapter.Runners
             StreamingStandardOutputTestResultParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);
+            bool isTestOutputAvailable = !isBeingDebugged || _settings.UseNewTestExecutionFramework;
             bool printTestOutput = _settings.PrintTestOutput &&
-                                   !_settings.ParallelTestExecution;
+                                   !_settings.ParallelTestExecution &&
+                                   isTestOutputAvailable;
 
             if (printTestOutput)
                 _logger.LogInfo(
@@ -195,7 +197,7 @@ namespace GoogleTestAdapter.Runners
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
-                reportOutputAction);
+                isTestOutputAvailable ? reportOutputAction : null);
             streamingParser.Flush();
 
             if (printTestOutput)

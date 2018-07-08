@@ -10,13 +10,11 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public class FrameworkDebuggedProcessExecutor : IDebuggedProcessExecutor
     {
-        private readonly ThreadSafeSingleShotGuard _guard = new ThreadSafeSingleShotGuard();
-
         private readonly IFrameworkHandle _frameworkHandle;
         private readonly bool _printTestOutput;
         private readonly ILogger _logger;
         
-        private int _processId;
+        private int? _processId;
 
         public FrameworkDebuggedProcessExecutor(IFrameworkHandle handle, bool printTestOutput, ILogger logger)
         {
@@ -32,7 +30,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             {
                 throw new ArgumentException(nameof(reportOutputLine));
             }
-            if (_guard.CheckAndSetFirstCall)
+            if (_processId.HasValue)
             {
                 throw new InvalidOperationException();
             }
@@ -51,7 +49,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, envVariables);
 
             ProcessWaiter waiter;
-            using (var process = Process.GetProcessById(_processId))
+            using (var process = Process.GetProcessById(_processId.Value))
             {
                 waiter = new ProcessWaiter(process);
                 waiter.WaitForExit();
@@ -62,7 +60,10 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 
         public void Cancel()
         {
-            ProcessUtils.KillProcess(_processId, _logger);
+            if (_processId.HasValue)
+            {
+                ProcessUtils.KillProcess(_processId.Value, _logger);
+            }
         }
 
     }

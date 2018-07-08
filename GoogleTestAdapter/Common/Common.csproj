@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProcessUtils.cs" />
-    <Compile Include="ThreadSafeSingleShotGuard.cs" />
     <Compile Include="DebuggerAttacherServiceConfiguration.cs" />
     <Compile Include="Functional.cs" />
     <Compile Include="IDebuggerAttacherService.cs" />

@@ -12,15 +12,13 @@ namespace GoogleTestAdapter.ProcessExecution
     {
         private readonly bool _printTestOutput;
         private readonly ILogger _logger;
-        private readonly Action<int> _reportProcessId;
         
         private Process _process;
 
-        public DotNetProcessExecutor(bool printTestOutput, ILogger logger, Action<int> reportProcessId = null)
+        public DotNetProcessExecutor(bool printTestOutput, ILogger logger)
         {
             _printTestOutput = printTestOutput;
             _logger = logger;
-            _reportProcessId = reportProcessId;
         }
 
         public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension,
@@ -40,8 +38,6 @@ namespace GoogleTestAdapter.ProcessExecution
                 processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
             _process = Process.Start(processStartInfo);
-            if (_process != null)
-                _reportProcessId?.Invoke(_process.Id);
             try
             {
                 var waiter = new ProcessWaiter(_process);

@@ -6,9 +6,9 @@ namespace GoogleTestAdapter.ProcessExecution
 {
     public class ProcessExecutorFactory : IProcessExecutorFactory
     {
-        public IProcessExecutor CreateExecutor(bool printTestOutput, ILogger logger, Action<int> reportProcessId = null)
+        public IProcessExecutor CreateExecutor(bool printTestOutput, ILogger logger)
         {
-            return new DotNetProcessExecutor(printTestOutput, logger, reportProcessId);
+            return new DotNetProcessExecutor(printTestOutput, logger);
         }
     }
 }
