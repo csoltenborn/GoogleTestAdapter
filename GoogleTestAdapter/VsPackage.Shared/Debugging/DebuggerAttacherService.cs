@@ -5,6 +5,7 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using System.ServiceModel;
 using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {

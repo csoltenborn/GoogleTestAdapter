@@ -11,7 +11,6 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
@@ -192,7 +191,7 @@ namespace GoogleTestAdapter.Runners
                 }
             };
             _processExecutor = isBeingDebugged
-                ? processExecutorFactory.CreateDebuggingExecutor(printTestOutput, _logger)
+                ? processExecutorFactory.CreateDebuggingExecutor(_settings, printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,

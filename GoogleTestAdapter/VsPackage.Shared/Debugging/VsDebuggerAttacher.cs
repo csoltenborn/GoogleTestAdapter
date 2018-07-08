@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Thread = System.Threading.Thread;

@@ -8,7 +8,7 @@ using GoogleTestAdapter.ProcessExecution.Contracts;
 namespace GoogleTestAdapter.ProcessExecution
 {
 
-    public class FrameworkProcessExecutor : IProcessExecutor
+    public class DotNetProcessExecutor : IProcessExecutor
     {
         private readonly bool _printTestOutput;
         private readonly ILogger _logger;
@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.ProcessExecution
         
         private Process _process;
 
-        public FrameworkProcessExecutor(bool printTestOutput, ILogger logger, Action<int> reportProcessId = null)
+        public DotNetProcessExecutor(bool printTestOutput, ILogger logger, Action<int> reportProcessId = null)
         {
             _printTestOutput = printTestOutput;
             _logger = logger;

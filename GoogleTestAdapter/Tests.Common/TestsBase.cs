@@ -6,7 +6,6 @@ using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
-using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -15,9 +14,9 @@ namespace GoogleTestAdapter.Tests.Common
 {
     public abstract class TestsBase
     {
-        private class TestProcessFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
+        private class DummyProcessFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
         {
-            public IDebuggedProcessExecutor CreateDebuggingExecutor(bool printTestOutput, ILogger logger)
+            public IDebuggedProcessExecutor CreateDebuggingExecutor(SettingsWrapper settings, bool printTestOutput, ILogger logger)
             {
                 throw new NotImplementedException();
             }
@@ -31,7 +30,7 @@ namespace GoogleTestAdapter.Tests.Common
 
         protected readonly TestEnvironment TestEnvironment;
 
-        protected IDebuggedProcessExecutorFactory ProcessExecutorFactory => new TestProcessFactory();
+        protected IDebuggedProcessExecutorFactory ProcessExecutorFactory => new DummyProcessFactory();
 
         protected TestsBase()
         {

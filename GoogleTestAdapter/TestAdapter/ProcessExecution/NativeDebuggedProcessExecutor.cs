@@ -12,9 +12,9 @@ using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using Microsoft.Win32.SafeHandles;
 
 namespace GoogleTestAdapter.ProcessExecution

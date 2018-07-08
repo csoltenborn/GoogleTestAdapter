@@ -58,7 +58,6 @@
     <Compile Include="ProcessExecution\Contracts\IProcessExecutor.cs" />
     <Compile Include="ProcessExecution\Contracts\IProcessExecutorFactory.cs" />
     <Compile Include="Framework\ITestFrameworkReporter.cs" />
-    <Compile Include="ProcessExecution\NativeDebuggedProcessExecutorFactory.cs" />
     <Compile Include="ProcessExecution\ProcessExecutorFactory.cs" />
     <Compile Include="Framework\TestRunCanceledException.cs" />
     <Compile Include="GoogleTestConstants.cs" />
@@ -66,10 +65,8 @@
     <Compile Include="GoogleTestExecutor.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="ProcessExecution\Contracts\IDebuggerAttacher.cs" />
     <Compile Include="Helpers\ByteUtils.cs" />
-    <Compile Include="ProcessExecution\NativeDebuggedProcessExecutor.cs" />
-    <Compile Include="ProcessExecution\FrameworkProcessExecutor.cs" />
+    <Compile Include="ProcessExecution\DotNetProcessExecutor.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Model\TestCaseMetaDataProperty.cs" />
     <Compile Include="Model\TestProperty.cs" />

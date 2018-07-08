@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.ServiceModel;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 
 namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {

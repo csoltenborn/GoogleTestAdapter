@@ -1,4 +1,4 @@
-﻿namespace GoogleTestAdapter.ProcessExecution.Contracts
+﻿namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public interface IDebuggerAttacher
     {

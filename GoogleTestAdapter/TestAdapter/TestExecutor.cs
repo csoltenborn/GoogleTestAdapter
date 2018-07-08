@@ -7,14 +7,11 @@ using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using ExtensionUriAttribute = Microsoft.VisualStudio.TestPlatform.ObjectModel.ExtensionUriAttribute;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
@@ -226,16 +223,8 @@ namespace GoogleTestAdapter.TestAdapter
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
 
-            IDebuggedProcessExecutorFactory processExecutorFactory;
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                var debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
-                processExecutorFactory = new NativeDebuggedProcessExecutorFactory(debuggerAttacher);
-            }
-            else
-            {
-                processExecutorFactory = new FrameworkDebuggedProcessExecutorFactory(frameworkHandle);
-            }
+            var debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
+            var processExecutorFactory = new DebuggedProcessExecutorFactory(frameworkHandle, debuggerAttacher);
 
             lock (_lock)
             {

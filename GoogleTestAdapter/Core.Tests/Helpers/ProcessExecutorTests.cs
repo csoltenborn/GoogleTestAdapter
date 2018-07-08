@@ -19,7 +19,7 @@ namespace GoogleTestAdapter.Helpers
         public void ExecuteProcessBlocking_PingLocalHost()
         {
             var mockLogger = new Mock<ILogger>();
-            var processCreator = new FrameworkProcessExecutor(true, mockLogger.Object);
+            var processCreator = new DotNetProcessExecutor(true, mockLogger.Object);
             List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
                 Path.Combine(Environment.SystemDirectory, "ping.exe"),
@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.Helpers
         public void ExecuteProcessBlocking_SampleTests()
         {
             var mockLogger = new Mock<ILogger>();
-            var processCreator = new FrameworkProcessExecutor(true, mockLogger.Object);
+            var processCreator = new DotNetProcessExecutor(true, mockLogger.Object);
             List<string> output = new List<string>();
             int exitCode = processCreator.ExecuteCommandBlocking(
                 TestResources.Tests_DebugX86,

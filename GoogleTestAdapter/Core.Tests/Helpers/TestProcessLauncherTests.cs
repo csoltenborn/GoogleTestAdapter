@@ -16,7 +16,7 @@ namespace GoogleTestAdapter.Helpers
         public void GetOutputOfCommand_WithSimpleCommand_ReturnsOutputOfCommand()
         {
             var output = new List<string>();
-            var executor = new FrameworkProcessExecutor(true, MockLogger.Object);
+            var executor = new DotNetProcessExecutor(true, MockLogger.Object);
             int returnCode = executor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => output.Add(line));
 
             returnCode.Should().Be(0);
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void GetOutputOfCommand_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()
         {
-            var executor = new FrameworkProcessExecutor(false, MockLogger.Object);
+            var executor = new DotNetProcessExecutor(false, MockLogger.Object);
             executor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => { });
         }
 

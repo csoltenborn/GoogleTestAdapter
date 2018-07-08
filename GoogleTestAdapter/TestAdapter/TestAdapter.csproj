@@ -180,7 +180,8 @@
     <Compile Include="DataConversionExtensions.cs" />
     <Compile Include="ProcessExecution\AttachDebuggerMessage.cs" />
     <Compile Include="ProcessExecution\FrameworkDebuggedProcessExecutor.cs" />
-    <Compile Include="ProcessExecution\FrameworkDebuggedProcessExecutorFactory.cs" />
+    <Compile Include="ProcessExecution\DebuggedProcessExecutorFactory.cs" />
+    <Compile Include="ProcessExecution\IDebuggerAttacher.cs" />
     <Compile Include="ProcessExecution\MessageBasedDebuggerAttacher.cs" />
     <Compile Include="Framework\VsTestFrameworkLogger.cs" />
     <Compile Include="Framework\VSTestFrameworkReporter.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Helpers\ParentProcessUtils.cs" />
     <Compile Include="Helpers\TestCaseFilter.cs" />
     <Compile Include="Helpers\Throttle.cs" />
+    <Compile Include="ProcessExecution\NativeDebuggedProcessExecutor.cs" />
     <Compile Include="Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="Settings\IGlobalRunSettings.cs" />
     <Compile Include="Settings\IGlobalRunSettingsInternal.cs" />

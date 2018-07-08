@@ -37,6 +37,10 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 throw new InvalidOperationException();
             }
 
+            IDictionary<string, string> envVariables = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(pathExtension))
+                envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+
             _logger.DebugInfo($"Attaching debugger to '{command}'");
             if (_printTestOutput)
             {
@@ -44,16 +48,14 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     "Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!");
             }
 
-            IDictionary<string, string> envVariables = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(pathExtension))
-                envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
-
             _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, envVariables);
 
-            var process = Process.GetProcessById(_processId);
-            var waiter = new ProcessWaiter(process);
-            waiter.WaitForExit();
-            process.Dispose();
+            ProcessWaiter waiter;
+            using (var process = Process.GetProcessById(_processId))
+            {
+                waiter = new ProcessWaiter(process);
+                waiter.WaitForExit();
+            }
 
             return waiter.ProcessExitCode;
         }
