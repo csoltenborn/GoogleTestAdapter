@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using FluentAssertions;
-using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -397,7 +396,7 @@ namespace GoogleTestAdapter.TestResults
 
         private IList<TestResult> GetTestResultsFromCompleteOutputFile()
         {
-            var testCases = new GoogleTestDiscoverer(MockLogger.Object, MockOptions.Object, new DefaultDiaResolverFactory())
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, MockOptions.Object)
                 .GetTestsFromExecutable(TestResources.Tests_ReleaseX64);
 
             var parser = new StreamingStandardOutputTestResultParser(testCases, MockLogger.Object, MockFrameworkReporter.Object);

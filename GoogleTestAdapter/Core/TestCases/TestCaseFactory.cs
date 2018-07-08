@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
+using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Runners;
@@ -22,15 +23,17 @@ namespace GoogleTestAdapter.TestCases
         private readonly SettingsWrapper _settings;
         private readonly string _executable;
         private readonly IDiaResolverFactory _diaResolverFactory;
+        private readonly IProcessExecutorFactory _processExecutorFactory;
         private readonly MethodSignatureCreator _signatureCreator = new MethodSignatureCreator();
 
         public TestCaseFactory(string executable, ILogger logger, SettingsWrapper settings,
-            IDiaResolverFactory diaResolverFactory)
+            IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
         {
             _logger = logger;
             _settings = settings;
             _executable = executable;
             _diaResolverFactory = diaResolverFactory;
+            _processExecutorFactory = processExecutorFactory;
         }
 
         public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
@@ -46,18 +49,18 @@ namespace GoogleTestAdapter.TestCases
             try
             {
                 int processExitCode = 0;
-                ProcessLauncher launcher = null;
+                IProcessExecutor executor = null;
                 var listTestsTask = new Task(() =>
                 {
-                    launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable));
-                    processExitCode = launcher.GetOutputOfCommand(workingDir, _executable, finalParams,
-                        false, false, standardOutput);
+                    executor = _processExecutorFactory.CreateExecutor(false, _logger);
+                    processExitCode = executor.ExecuteCommandBlocking(_executable, finalParams, workingDir,
+                        _settings.GetPathExtension(_executable), s => standardOutput.Add(s));
                 }, TaskCreationOptions.AttachedToParent);
                 listTestsTask.Start();
 
                 if (!listTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
-                    launcher?.Cancel();
+                    executor?.Cancel();
                     LogTimeoutError(workingDir, finalParams, standardOutput);
                     return new List<TestCase>();
                 }
@@ -155,10 +158,10 @@ namespace GoogleTestAdapter.TestCases
             try
             {
                 int processExitCode = ProcessExecutor.ExecutionFailed;
-                ProcessExecutor executor = null;
+                IProcessExecutor executor = null;
                 var listAndParseTestsTask = new Task(() =>
                 {
-                    executor = new ProcessExecutor(null, _logger);
+                    executor = _processExecutorFactory.CreateExecutor(false, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
                         finalParams,

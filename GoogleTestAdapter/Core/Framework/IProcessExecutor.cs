@@ -5,7 +5,6 @@ using System.IO;
 
 namespace GoogleTestAdapter.Framework
 {
-
     public interface IProcessExecutor
     {
         int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine);
