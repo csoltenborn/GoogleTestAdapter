@@ -1,15 +1,15 @@
-﻿using System;
-using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
+﻿using GoogleTestAdapter.Common;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
-    public class FrameworkProcessExecutorFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
+    public class FrameworkDebuggedProcessExecutorFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
     {
         private readonly IFrameworkHandle _frameworkHandle;
 
-        public FrameworkProcessExecutorFactory(IFrameworkHandle frameworkHandle)
+        public FrameworkDebuggedProcessExecutorFactory(IFrameworkHandle frameworkHandle)
         {
             _frameworkHandle = frameworkHandle;
         }

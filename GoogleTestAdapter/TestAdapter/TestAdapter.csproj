@@ -178,12 +178,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataConversionExtensions.cs" />
-    <Compile Include="Framework\AttachDebuggerMessage.cs" />
-    <Compile Include="Framework\DebuggedProcessLauncher.cs" />
-    <Compile Include="Framework\FrameworkDebuggedProcessExecutor.cs" />
-    <Compile Include="Framework\NativeProcessExecutorFactory.cs" />
-    <Compile Include="Framework\FrameworkProcessExecutorFactory.cs" />
-    <Compile Include="Framework\MessageBasedDebuggerAttacher.cs" />
+    <Compile Include="ProcessExecution\AttachDebuggerMessage.cs" />
+    <Compile Include="ProcessExecution\FrameworkDebuggedProcessExecutor.cs" />
+    <Compile Include="ProcessExecution\FrameworkDebuggedProcessExecutorFactory.cs" />
+    <Compile Include="ProcessExecution\MessageBasedDebuggerAttacher.cs" />
     <Compile Include="Framework\VsTestFrameworkLogger.cs" />
     <Compile Include="Framework\VSTestFrameworkReporter.cs" />
     <Compile Include="Framework\VsVersion.cs" />

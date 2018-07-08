@@ -1,9 +1,9 @@
 ﻿using System;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.ProcessExecution
 {
     public class ProcessExecutorFactory : IProcessExecutorFactory
     {

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using FluentAssertions;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Tests.Common;
@@ -41,11 +40,10 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
             MockOptions.Setup(o => o.SolutionDir).Returns(TestResources.SampleTestsSolutionDir);
-            var processExecutor = new ProcessExecutor(null, TestEnvironment.Logger);
 
             var collectingReporter = new FakeFrameworkReporter();
-            var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, processExecutor);
+            var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options, ProcessExecutorFactory);
+            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter,false);
 
             sampleTestsDurationsFile.AsFileInfo()
                 .Should()

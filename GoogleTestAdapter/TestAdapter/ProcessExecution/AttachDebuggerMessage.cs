@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     [Serializable]
     public class AttachDebuggerMessage

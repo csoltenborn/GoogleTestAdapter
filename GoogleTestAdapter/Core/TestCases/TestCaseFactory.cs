@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
 
@@ -19,6 +20,8 @@ namespace GoogleTestAdapter.TestCases
 
     public class TestCaseFactory
     {
+        private const int ExecutionFailed = int.MaxValue;
+
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
         private readonly string _executable;
@@ -157,7 +160,7 @@ namespace GoogleTestAdapter.TestCases
            var finalParams = GetDiscoveryParams();
             try
             {
-                int processExitCode = ProcessExecutor.ExecutionFailed;
+                int processExitCode = ExecutionFailed;
                 IProcessExecutor executor = null;
                 var listAndParseTestsTask = new Task(() =>
                 {

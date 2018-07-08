@@ -12,8 +12,9 @@ using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
-using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestCases;
 
 namespace GoogleTestAdapter

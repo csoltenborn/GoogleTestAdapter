@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public class FrameworkDebuggedProcessExecutor : IDebuggedProcessExecutor
     {
@@ -60,7 +60,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         public void Cancel()
         {
-            TestProcessLauncher.KillProcess(_processId, _logger);
+            ProcessUtils.KillProcess(_processId, _logger);
         }
 
     }

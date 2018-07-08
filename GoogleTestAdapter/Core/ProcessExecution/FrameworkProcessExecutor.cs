@@ -1,42 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.ProcessExecution
 {
 
-    public class ProcessLauncher
+    public class FrameworkProcessExecutor : IProcessExecutor
     {
+        private readonly bool _printTestOutput;
         private readonly ILogger _logger;
-        private readonly string _pathExtension;
         private readonly Action<int> _reportProcessId;
         
         private Process _process;
 
-        public ProcessLauncher(ILogger logger, string pathExtension, Action<int> reportProcessId = null)
+        public FrameworkProcessExecutor(bool printTestOutput, ILogger logger, Action<int> reportProcessId = null)
         {
+            _printTestOutput = printTestOutput;
             _logger = logger;
-            _pathExtension = pathExtension;
             _reportProcessId = reportProcessId;
         }
 
-        public int GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
-            bool throwIfError, IList<string> output)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension,
+            Action<string> reportOutputLine)
         {
-            var processStartInfo = new ProcessStartInfo(command, param)
+            var processStartInfo = new ProcessStartInfo(command, parameters)
             {
                 StandardOutputEncoding = Encoding.Default,
                 RedirectStandardOutput = true,
                 RedirectStandardError = false,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                WorkingDirectory = workingDirectory
+                WorkingDirectory = workingDir
             };
 
-            if (!string.IsNullOrEmpty(_pathExtension))
-                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(_pathExtension);
+            if (!string.IsNullOrEmpty(pathExtension))
+                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
             _process = Process.Start(processStartInfo);
             if (_process != null)
@@ -44,13 +45,13 @@ namespace GoogleTestAdapter.Helpers
             try
             {
                 var waiter = new ProcessWaiter(_process);
-                if (printTestOutput)
+                if (_printTestOutput)
                 {
                     _logger.LogInfo(
-                        ">>>>>>>>>>>>>>> Output of command '" + command + " " + param + "'");
+                        ">>>>>>>>>>>>>>> Output of command '" + command + " " + parameters + "'");
                 }
-                ReadTheStream(_process, output, printTestOutput, throwIfError);
-                if (printTestOutput)
+                ReadTheStream(_process, reportOutputLine);
+                if (_printTestOutput)
                 {
                     _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
                 }
@@ -66,26 +67,22 @@ namespace GoogleTestAdapter.Helpers
         {
             if (_process != null)
             {
-                TestProcessLauncher.KillProcess(_process.Id, _logger);
+                ProcessUtils.KillProcess(_process.Id, _logger);
             }
         }
 
 
         // ReSharper disable once UnusedParameter.Local
-        private void ReadTheStream(Process process, IList<string> streamContent, bool printTestOutput, bool throwIfError)
+        private void ReadTheStream(Process process, Action<string> reportOutputLine)
         {
             while (!process.StandardOutput.EndOfStream)
             {
                 string line = process.StandardOutput.ReadLine();
-                streamContent.Add(line);
-                if (printTestOutput)
+                reportOutputLine(line);
+                if (_printTestOutput)
                 {
                     _logger.LogInfo(line);
                 }
-            }
-            if (throwIfError && process.ExitCode != 0)
-            {
-                throw new Exception("Process exited with return code " + process.ExitCode);
             }
         }
 

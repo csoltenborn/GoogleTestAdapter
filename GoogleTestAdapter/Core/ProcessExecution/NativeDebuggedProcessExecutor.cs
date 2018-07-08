@@ -13,9 +13,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.Win32.SafeHandles;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.ProcessExecution
 {
     public class NativeDebuggedProcessExecutor : IDebuggedProcessExecutor
     {
@@ -52,7 +54,7 @@ namespace GoogleTestAdapter.Helpers
         public void Cancel()
         {
             if (_processId.HasValue)
-                TestProcessLauncher.KillProcess(_processId.Value, _logger);
+                ProcessUtils.KillProcess(_processId.Value, _logger);
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]

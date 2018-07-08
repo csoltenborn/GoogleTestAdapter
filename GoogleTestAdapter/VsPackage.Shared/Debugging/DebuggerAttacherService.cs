@@ -4,6 +4,7 @@ using System;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using System.ServiceModel;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {

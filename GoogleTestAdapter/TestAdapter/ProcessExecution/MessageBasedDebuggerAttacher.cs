@@ -1,12 +1,12 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
-using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using System;
 using System.Diagnostics;
 using System.ServiceModel;
+using GoogleTestAdapter.Common;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public class MessageBasedDebuggerAttacher : IDebuggerAttacher
     {

@@ -3,7 +3,7 @@
 using System;
 using System.IO;
 
-namespace GoogleTestAdapter.Framework
+namespace GoogleTestAdapter.ProcessExecution.Contracts
 {
     public interface IProcessExecutor
     {

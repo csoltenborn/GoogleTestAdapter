@@ -1,7 +1,7 @@
 ﻿using System;
 using GoogleTestAdapter.Common;
 
-namespace GoogleTestAdapter.Framework
+namespace GoogleTestAdapter.ProcessExecution.Contracts
 {
     public interface IProcessExecutorFactory
     {

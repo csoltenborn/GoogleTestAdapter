@@ -1,15 +1,14 @@
-﻿using System;
-using GoogleTestAdapter.Common;
+﻿using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.ProcessExecution
 {
-    public class NativeProcessExecutorFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
+    public class NativeDebuggedProcessExecutorFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
     {
         private readonly IDebuggerAttacher _debuggerAttacher;
 
-        public NativeProcessExecutorFactory(IDebuggerAttacher debuggerAttacher)
+        public NativeDebuggedProcessExecutorFactory(IDebuggerAttacher debuggerAttacher)
         {
             _debuggerAttacher = debuggerAttacher;
         }
