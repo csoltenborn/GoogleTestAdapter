@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution.Contracts;
@@ -24,11 +25,12 @@ namespace GoogleTestAdapter.ProcessExecution
         public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension,
             Action<string> reportOutputLine)
         {
+            // output reading after https://stackoverflow.com/a/7608823/1276129
             var processStartInfo = new ProcessStartInfo(command, parameters)
             {
                 StandardOutputEncoding = Encoding.Default,
                 RedirectStandardOutput = true,
-                RedirectStandardError = false,
+                RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 WorkingDirectory = workingDir
@@ -37,25 +39,54 @@ namespace GoogleTestAdapter.ProcessExecution
             if (!string.IsNullOrEmpty(pathExtension))
                 processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
-            _process = Process.Start(processStartInfo);
-            try
+            void HandleEvent(string line, AutoResetEvent autoResetEvent)
             {
-                var waiter = new ProcessWaiter(_process);
+                if (line == null)
+                {
+                    autoResetEvent.Set();
+                }
+                else
+                {
+                    reportOutputLine(line);
+                    if (_printTestOutput)
+                    {
+                        _logger.LogInfo(line);
+                    }
+                }
+            }
+
+            _process = new Process {StartInfo = processStartInfo};
+            using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
+            using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
+            using (_process)
+            {
+                // ReSharper disable AccessToDisposedClosure
+                _process.OutputDataReceived += (sender, e) => HandleEvent(e.Data, outputWaitHandle);
+                _process.ErrorDataReceived += (sender, e) => HandleEvent(e.Data, errorWaitHandle);
+                // ReSharper restore AccessToDisposedClosure
+
                 if (_printTestOutput)
                 {
                     _logger.LogInfo(
                         ">>>>>>>>>>>>>>> Output of command '" + command + " " + parameters + "'");
                 }
-                ReadTheStream(_process, reportOutputLine);
-                if (_printTestOutput)
+
+                _process.Start();
+                _process.BeginOutputReadLine();
+                _process.BeginErrorReadLine();
+
+                if (_process.WaitForExit(int.MaxValue) &&
+                    outputWaitHandle.WaitOne(int.MaxValue) &&
+                    errorWaitHandle.WaitOne(int.MaxValue))
                 {
-                    _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
+                    if (_printTestOutput)
+                    {
+                        _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
+                    }
+                    return _process.ExitCode;
                 }
-                return waiter.WaitForExit();
-            }
-            finally
-            {
-                _process?.Dispose();
+
+                return int.MaxValue;
             }
         }
 
@@ -64,21 +95,6 @@ namespace GoogleTestAdapter.ProcessExecution
             if (_process != null)
             {
                 ProcessUtils.KillProcess(_process.Id, _logger);
-            }
-        }
-
-
-        // ReSharper disable once UnusedParameter.Local
-        private void ReadTheStream(Process process, Action<string> reportOutputLine)
-        {
-            while (!process.StandardOutput.EndOfStream)
-            {
-                string line = process.StandardOutput.ReadLine();
-                reportOutputLine(line);
-                if (_printTestOutput)
-                {
-                    _logger.LogInfo(line);
-                }
             }
         }
 
