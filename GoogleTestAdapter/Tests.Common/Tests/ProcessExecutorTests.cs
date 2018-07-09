@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.Tests.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using Moq;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.Tests.Common.Tests
 {
-    [TestClass]
-    public class ProcessExecutorTests
+    public abstract class ProcessExecutorTests
     {
+        protected Mock<ILogger> MockLogger { get; } = new Mock<ILogger>();
+        protected IProcessExecutor ProcessExecutor { get; set; }
 
-        [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
-        public void ExecuteProcessBlocking_PingLocalHost()
+        public virtual void Teardown()
         {
-            var mockLogger = new Mock<ILogger>();
-            var processCreator = new DotNetProcessExecutor(true, mockLogger.Object);
+            MockLogger.Reset();
+        }
+
+        protected void Test_ExecuteProcessBlocking_PingLocalHost()
+        {
             List<string> output = new List<string>();
-            int exitCode = processCreator.ExecuteCommandBlocking(
+            int exitCode = ProcessExecutor.ExecuteCommandBlocking(
                 Path.Combine(Environment.SystemDirectory, "ping.exe"),
                 "localhost",
                 "",
@@ -34,14 +34,10 @@ namespace GoogleTestAdapter.Helpers
             output.Count.Should().BeLessOrEqualTo(12);
         }
 
-        [TestMethod]
-        [TestCategory(TestMetadata.TestCategories.Unit)]
-        public void ExecuteProcessBlocking_SampleTests()
+        protected void Test_ExecuteProcessBlocking_SampleTests()
         {
-            var mockLogger = new Mock<ILogger>();
-            var processCreator = new DotNetProcessExecutor(true, mockLogger.Object);
             List<string> output = new List<string>();
-            int exitCode = processCreator.ExecuteCommandBlocking(
+            int exitCode = ProcessExecutor.ExecuteCommandBlocking(
                 TestResources.Tests_DebugX86,
                 null,
                 null,
@@ -54,5 +50,4 @@ namespace GoogleTestAdapter.Helpers
         }
 
     }
-
 }

@@ -109,6 +109,7 @@
     <Compile Include="TestDataCreator.cs" />
     <Compile Include="TestMetadata.cs" />
     <Compile Include="TestResources.cs" />
+    <Compile Include="Tests\ProcessExecutorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

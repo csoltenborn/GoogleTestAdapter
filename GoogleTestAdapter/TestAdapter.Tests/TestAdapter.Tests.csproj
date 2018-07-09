@@ -86,6 +86,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ProcessExecution\NativeDebuggedProcessExecutorTests.cs" />
     <Compile Include="Settings\RunSettingsContainerTests.cs" />
     <Compile Include="CommonFunctionsTests.cs" />
     <Compile Include="TestExecutorTestsBase.cs" />

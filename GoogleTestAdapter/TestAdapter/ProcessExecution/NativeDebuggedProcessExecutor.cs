@@ -108,7 +108,11 @@ namespace GoogleTestAdapter.ProcessExecution
                     {
                         pipeStream.ConnectedToChildProcess();
 
-                        debuggerAttacher.AttachDebugger(processInfo.dwProcessId);
+                        logger.DebugInfo($"Attaching debugger to '{command}' via native implementation");
+                        if (!debuggerAttacher.AttachDebugger(processInfo.dwProcessId))
+                        {
+                            logger.LogError($"Could not attach debugger to process {processInfo.dwProcessId}");
+                        }
 
                         ResumeThread(thread);
 
