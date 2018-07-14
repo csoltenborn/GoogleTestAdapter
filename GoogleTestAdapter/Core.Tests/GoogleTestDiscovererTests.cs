@@ -349,11 +349,32 @@ namespace GoogleTestAdapter
         {
             var stopwatch = Stopwatch.StartNew();
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_ReleaseX86);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_Generated);
             stopwatch.Stop();
             var actualDuration = stopwatch.Elapsed;
 
-            int testParsingDurationInMs = CiSupport.GetWeightedDuration(0.5 * testCases.Count); // .5ms per test (discovery and processing)
+            testCases.Count.Should().BeGreaterThan(0);
+            int testParsingDurationInMs = CiSupport.GetWeightedDuration(testCases.Count); // .5ms per test (discovery and processing)
+            int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
+            var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);
+
+            actualDuration.Should().BeLessThan(maxDuration);
+        }
+
+        [TestMethod]
+        [TestCategory(Load)]
+        public void GetTestsFromExecutable_OldExecutionEnvironment_LoadTests_AreFoundInReasonableTime()
+        {
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+
+            var stopwatch = Stopwatch.StartNew();
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_Generated);
+            stopwatch.Stop();
+            var actualDuration = stopwatch.Elapsed;
+
+            testCases.Count.Should().BeGreaterThan(0);
+            int testParsingDurationInMs = CiSupport.GetWeightedDuration(testCases.Count); // .5ms per test (discovery and processing)
             int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
             var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);
 

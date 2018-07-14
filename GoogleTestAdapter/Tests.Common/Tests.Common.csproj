@@ -130,6 +130,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\TestData\LoadTests\GeneratedLoadTests_gta.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TestData\LoadTests\GeneratedLoadTests_gta.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\TestData\LoadTests\README.md" />
     <Content Include="Resources\TestData\SampleResult1 _Broken_InvalidStatusAttribute.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

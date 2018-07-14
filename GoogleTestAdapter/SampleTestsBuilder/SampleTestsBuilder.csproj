@@ -41,6 +41,20 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="CppLoadTests.cpp">
+      <DependentUpon>CppLoadTests.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Content>
+    <Content Include="CppLoadTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CppLoadTests.cpp</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=Win32 /m

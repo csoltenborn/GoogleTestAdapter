@@ -1,0 +1,14 @@
+﻿<#@ output extension=".cpp" #>
+
+#include "gtest/gtest.h"
+
+<#
+int nrOfTests = 2500;
+
+for (int testNr = 0; testNr < nrOfTests; testNr++) { #>
+
+TEST(GeneratedLoadTest, Test<#=testNr#>)
+{
+	EXPECT_EQ(1, <#=testNr#> % 2);
+}
+<# } #>
