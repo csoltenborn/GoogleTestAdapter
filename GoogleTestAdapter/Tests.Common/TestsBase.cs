@@ -16,7 +16,12 @@ namespace GoogleTestAdapter.Tests.Common
     {
         private class DummyProcessFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
         {
-            public IDebuggedProcessExecutor CreateDebuggingExecutor(SettingsWrapper settings, bool printTestOutput, ILogger logger)
+            public IDebuggedProcessExecutor CreateFrameworkDebuggingExecutor(bool printTestOutput, ILogger logger)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger)
             {
                 throw new NotImplementedException();
             }

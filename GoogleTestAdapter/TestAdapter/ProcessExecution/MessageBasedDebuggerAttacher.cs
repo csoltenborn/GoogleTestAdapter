@@ -15,11 +15,6 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         private readonly string _debuggingNamedPipeId;
         private readonly TimeSpan _timeout;
 
-        public static string GetPipeName(string id)
-        {
-            return $"GTA_{id}";
-        }
-
         public MessageBasedDebuggerAttacher(string debuggingNamedPipeId, TimeSpan timeout, ILogger logger)
         {
             _debuggingNamedPipeId = debuggingNamedPipeId;

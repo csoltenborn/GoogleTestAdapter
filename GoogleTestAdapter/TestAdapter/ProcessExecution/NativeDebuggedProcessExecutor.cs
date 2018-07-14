@@ -14,10 +14,9 @@ using System.Text;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution.Contracts;
-using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using Microsoft.Win32.SafeHandles;
 
-namespace GoogleTestAdapter.ProcessExecution
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public class NativeDebuggedProcessExecutor : IDebuggedProcessExecutor
     {
@@ -60,6 +59,11 @@ namespace GoogleTestAdapter.ProcessExecution
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+#pragma warning disable 169
+#pragma warning disable 414
         private static class NativeMethods
         {
             private class ProcessOutputPipeStream : PipeStream
@@ -293,5 +297,7 @@ namespace GoogleTestAdapter.ProcessExecution
                 public bool bInheritHandle;
             }
         }
+#pragma warning restore 414
+#pragma warning restore 169
     }
 }

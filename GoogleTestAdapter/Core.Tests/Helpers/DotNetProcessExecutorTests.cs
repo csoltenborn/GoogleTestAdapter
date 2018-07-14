@@ -34,6 +34,20 @@ namespace GoogleTestAdapter.Helpers
             Test_ExecuteProcessBlocking_SampleTests();
         }
 
+        [TestMethod]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
+        public void ExecuteProcessBlocking_WithSimpleCommand_ReturnsOutputOfCommand()
+        {
+            Test_WithSimpleCommand_ReturnsOutputOfCommand();
+        }
+
+        [TestMethod]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
+        public void ExecuteProcessBlocking_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()
+        {
+            Test_WithSimpleCommand_ReturnsOutputOfCommand();
+        }
+
     }
 
 }

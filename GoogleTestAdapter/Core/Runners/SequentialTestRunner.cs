@@ -193,7 +193,9 @@ namespace GoogleTestAdapter.Runners
                 }
             };
             _processExecutor = isBeingDebugged
-                ? processExecutorFactory.CreateDebuggingExecutor(_settings, printTestOutput, _logger)
+                ? _settings.UseNewTestExecutionFramework
+                    ? processExecutorFactory.CreateNativeDebuggingExecutor(printTestOutput, _logger)
+                    : processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,

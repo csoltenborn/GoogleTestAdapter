@@ -1,7 +1,6 @@
 ﻿using GoogleTestAdapter.Common;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
-using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter.TestAdapter.ProcessExecution
@@ -17,13 +16,13 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             _debuggerAttacher = debuggerAttacher;
         }
 
-        public IDebuggedProcessExecutor CreateDebuggingExecutor(SettingsWrapper settings, bool printTestOutput, ILogger logger)
+        public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger)
         {
-            if (settings.UseNewTestExecutionFramework)
-            {
-                return new NativeDebuggedProcessExecutor(_debuggerAttacher, printTestOutput, logger);
-            }
-            
+            return new NativeDebuggedProcessExecutor(_debuggerAttacher, printTestOutput, logger);
+        }
+
+        public IDebuggedProcessExecutor CreateFrameworkDebuggingExecutor(bool printTestOutput, ILogger logger)
+        {
             return new FrameworkDebuggedProcessExecutor(_frameworkHandle, printTestOutput, logger);
         }
     }

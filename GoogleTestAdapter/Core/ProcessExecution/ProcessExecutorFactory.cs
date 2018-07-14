@@ -1,5 +1,4 @@
-﻿using System;
-using GoogleTestAdapter.Common;
+﻿using GoogleTestAdapter.Common;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 
 namespace GoogleTestAdapter.ProcessExecution

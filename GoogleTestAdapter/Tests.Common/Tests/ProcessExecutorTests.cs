@@ -49,5 +49,20 @@ namespace GoogleTestAdapter.Tests.Common.Tests
             output.Count.Should().Be(563);
         }
 
+        protected void Test_WithSimpleCommand_ReturnsOutputOfCommand()
+        {
+            var output = new List<string>();
+            int returnCode = ProcessExecutor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => output.Add(line));
+
+            returnCode.Should().Be(0);
+            output.Count.Should().Be(1);
+            output[0].Should().Be("2");
+        }
+
+        protected void Test_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()
+        {
+            ProcessExecutor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => { });
+        }
+
     }
 }
