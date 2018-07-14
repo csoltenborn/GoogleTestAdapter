@@ -7,6 +7,7 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using MethodSignature = GoogleTestAdapter.TestCases.MethodSignatureCreator.MethodSignature;
 
 namespace GoogleTestAdapter.TestCases
 {
@@ -48,7 +49,7 @@ namespace GoogleTestAdapter.TestCases
             }
         }
 
-        public TestCaseLocation FindTestCaseLocation(List<string> testMethodSignatures)
+        public TestCaseLocation FindTestCaseLocation(List<MethodSignature> testMethodSignatures)
         {
             TestCaseLocation result = DoFindTestCaseLocation(testMethodSignatures);
             if (result == null && !_loadedSymbolsFromAdditionalPdbs)
@@ -129,27 +130,43 @@ namespace GoogleTestAdapter.TestCases
             }
         }
 
-        private TestCaseLocation DoFindTestCaseLocation(List<string> testMethodSignatures)
+        private TestCaseLocation DoFindTestCaseLocation(List<MethodSignature> testMethodSignatures)
         {
-            return _allTestMethodSymbols
-                .Where(nsfl => testMethodSignatures.Any(tms => Regex.IsMatch(nsfl.Symbol, $@"^(((\w+)|(`anonymous namespace'))::)*{tms}"))) // Regex instead of == because nsfl might contain namespace
-                .Select(nsfl => ToTestCaseLocation(nsfl, _allTraitSymbols))
-                .FirstOrDefault(); // we need to force immediate query execution, otherwise our session object will already be released
+            var sourceFileLocation =  _allTestMethodSymbols
+                .FirstOrDefault(nsfl => testMethodSignatures.Any(tms => IsMatch(nsfl, tms))); 
+            return sourceFileLocation != null
+                ? ToTestCaseLocation(sourceFileLocation)
+                : null;
         }
 
-        private TestCaseLocation ToTestCaseLocation(SourceFileLocation location, IEnumerable<SourceFileLocation> allTraitSymbols)
+        private bool IsMatch(SourceFileLocation sourceFileLocation, MethodSignature methodSignature)
         {
-            List<Trait> traits = GetTraits(location, allTraitSymbols);
+            string signature = methodSignature.Signature;
+
+            bool generalCheck = methodSignature.IsRegex
+                ? Regex.IsMatch(sourceFileLocation.Symbol, signature)
+                : sourceFileLocation.Symbol.Contains(signature);
+
+            return generalCheck && Regex.IsMatch(sourceFileLocation.Symbol, GetPreciseRegex(signature));
+        }
+
+        private string GetPreciseRegex(string signature)
+        {
+            return $@"^(?:(?:(?:\w+)|(?:`anonymous namespace'))::)*{signature}";
+        }
+
+        private TestCaseLocation ToTestCaseLocation(SourceFileLocation location)
+        {
             var testCaseLocation = new TestCaseLocation(location.Symbol, location.Sourcefile, location.Line);
-            testCaseLocation.Traits.AddRange(traits);
+            testCaseLocation.Traits.AddRange(GetTraits(location));
             return testCaseLocation;
         }
 
-        public static List<Trait> GetTraits(SourceFileLocation nativeSymbol, IEnumerable<SourceFileLocation> allTraitSymbols)
+        private List<Trait> GetTraits(SourceFileLocation nativeSymbol)
         {
             var traits = new List<Trait>();
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (SourceFileLocation nativeTraitSymbol in allTraitSymbols)
+            foreach (SourceFileLocation nativeTraitSymbol in _allTraitSymbols)
             {
                 // TODO bring down to logarithmic complexity (binary search for finding a symbol, collect all matching symbols after and before)
                 if (nativeSymbol.Symbol.StartsWith(nativeTraitSymbol.TestClassSignature))
