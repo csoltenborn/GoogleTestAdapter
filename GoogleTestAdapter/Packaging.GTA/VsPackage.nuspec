@@ -2,11 +2,11 @@
 <package>
   <metadata minClientVersion="2.8">
     <id>GoogleTestAdapter</id>
-    <version>0.13.1</version>
+    <version>0.13.2</version>
     <title>Google Test Adapter</title>
     <authors>Christian Soltenborn</authors>
     <owners>Christian Soltenborn</owners>
-    <description>Adds capability to run and debug C++ tests written with the Google Test framework to Visual Studio. Installing this test adapter via NuGet (as compared to installation through the VS Marketplace) lacks debugging and configuration through VS Options as well as the toolbar (configuration via test settings file is supported). Main use case: build servers.</description>
+    <description>Adds capability to run C++ tests written with the Google Test framework to Visual Studio. Installing this test adapter via NuGet (as compared to installation through the VS Marketplace) lacks debugging and configuration through VS Options as well as the toolbar (configuration via test settings file is supported). Main use case: build servers.</description>
     <summary>Supports running Google Test C++ tests within Visual Studio. Limited functionality compared to installation via VS Marketplace.</summary>
     <language>en-US</language>
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>

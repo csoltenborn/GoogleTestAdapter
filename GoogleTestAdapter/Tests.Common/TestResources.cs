@@ -44,6 +44,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const int NrOfGtest170CompatibleTests = 103;
 
         public static readonly string LoadTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LoadTests_gta.exe");
+        public const string LoadTests_Generated = TestdataDir + @"LoadTests\GeneratedLoadTests_gta.exe";
 
         public static readonly string LongRunningTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LongRunningTests_gta.exe");
 
