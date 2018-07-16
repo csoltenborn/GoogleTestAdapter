@@ -79,7 +79,28 @@ namespace GoogleTestAdapter.TestCases
         [TestCategory(Unit)]
         public void ParseListTestsOutput_TestWithTypeParam_CorrectParsing()
         {
-            //NOTE: We also test that the keywords "class" and "struct" are correctly removed, without touching type names that would contain these words.
+            var consoleOutput = new List<string>
+            {
+                "TypedTests/0.  # TypeParam = class std::vector<int,class std::allocator<int> >",
+                "  CanIterate",
+            };
+
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+                .ParseListTestsOutput(consoleOutput);
+
+            descriptors.Count.Should().Be(1);
+            descriptors[0].Suite.Should().Be("TypedTests/0");
+            descriptors[0].Name.Should().Be("CanIterate");
+            descriptors[0].FullyQualifiedName.Should().Be("TypedTests/0.CanIterate");
+            descriptors[0].DisplayName.Should().Be("TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >");
+            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.TypeParameterized);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ParseListTestsOutput_TestWithTypeParam_DoesNotModifyName()
+        {
+            // We test that the keywords "class" and "struct" are correctly removed, without touching type names that would contain these words.
             var consoleOutput = new List<string>
             {
                 "TypedTests/0.  # TypeParam = class std::tuple<struct my_struct const ,class gsl::span<class my_class const ,-1> >",
