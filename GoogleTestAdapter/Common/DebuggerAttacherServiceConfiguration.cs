@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.Common
     /// <summary>
     /// Helper class for DebuggerAttacherService.
     /// </summary>
-    public class DebuggerAttacherServiceConfiguration
+    public static class DebuggerAttacherServiceConfiguration
     {
         /// <summary>
         /// Relative address of the endpoint interface.
@@ -48,13 +48,6 @@ namespace GoogleTestAdapter.Common
             var endpointUri = new Uri(ConstructPipeUri(id), InterfaceAddress);
             var endpointAddress = new EndpointAddress(endpointUri);
             return ChannelFactory<IDebuggerAttacherService>.CreateChannel(binding, endpointAddress);
-        }
-
-        /// <summary>
-        /// Private default constructor to prevent from creating instances of this class.
-        /// </summary>
-        private DebuggerAttacherServiceConfiguration()
-        {
         }
     }
 }
