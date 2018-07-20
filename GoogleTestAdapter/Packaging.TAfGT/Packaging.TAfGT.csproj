@@ -49,14 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\ProjectTemplates\Test\GoogleTestPT.zip">
-      <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\ItemTemplates\Test\GoogleTestIT.zip">
-      <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.0.nupkg">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -94,6 +86,20 @@
     <ProjectReference Include="..\DiaResolver\DiaResolver.csproj">
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GoogleTestItemTemplate\GoogleTestItemTemplate.csproj">
+      <Project>{87A1108A-3819-4B31-99EA-217F3E11E958}</Project>
+      <Name>GoogleTestItemTemplate</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\GoogleTestProjectTemplate\GoogleTestProjectTemplate.csproj">
+      <Project>{A56C1F19-EAA6-4C99-BAC3-2B14D0CCC544}</Project>
+      <Name>GoogleTestProjectTemplate</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
@@ -177,12 +183,5 @@
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
   <Target Name="BeforeBuild">
-    <!-- TODO: Express inputs and output in more idiomatic way. -->
-    <Copy SourceFiles="..\Resources\Icons\Icon.ico" DestinationFolder="..\ProjectTemplates\Test\GoogleTest" />
-    <Exec Command="PowerShell -command Compress-Archive -Force ..\ProjectTemplates\Test\GoogleTest\* ..\ProjectTemplates\Test\GoogleTestPT.zip" />
-    <Delete Files="..\ProjectTemplates\Test\GoogleTest\Icon.ico" />
-    <Copy SourceFiles="..\Resources\Icons\Icon.ico" DestinationFolder="..\ItemTemplates\Test\GoogleTest" />
-    <Exec Command="PowerShell -command Compress-Archive -Force ..\ItemTemplates\Test\GoogleTest\* ..\ItemTemplates\Test\GoogleTestIT.zip" />
-    <Delete Files="..\ItemTemplates\Test\GoogleTest\Icon.ico" />
   </Target>
 </Project>

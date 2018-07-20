@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -31,21 +31,21 @@ namespace GoogleTestAdapter.Helpers
         public List<string> GetOutputOfCommand(string command)
         {
             int dummy;
-            return GetOutputOfCommand("", command, "", false, false, out dummy);
+            return GetOutputOfCommand("", null, command, "", false, false, out dummy);
         }
 
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
             bool throwIfError)
         {
             int dummy;
-            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, out dummy);
+            return GetOutputOfCommand(workingDirectory, null, command, param, printTestOutput, throwIfError, out dummy);
         }
 
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
+        public List<string> GetOutputOfCommand(string workingDirectory, IDictionary<string, string> envVars, string command, string param, bool printTestOutput,
             bool throwIfError, out int processExitCode)
         {
             var output = new List<string>();
-            processExitCode = LaunchProcess(workingDirectory, command, param, printTestOutput, throwIfError, output);
+            processExitCode = LaunchProcess(workingDirectory, envVars, command, param, printTestOutput, throwIfError, output);
             return output;
         }
 
@@ -58,7 +58,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        private int LaunchProcess(string workingDirectory, string command, string param, bool printTestOutput,
+        private int LaunchProcess(string workingDirectory, IDictionary<string, string> additionalEnvVars, string command, string param, bool printTestOutput,
             bool throwIfError, List<string> output)
         {
             var processStartInfo = new ProcessStartInfo(command, param)
@@ -71,8 +71,23 @@ namespace GoogleTestAdapter.Helpers
                 WorkingDirectory = workingDirectory
             };
 
+            if (additionalEnvVars != null)
+            {
+                foreach (var entry in additionalEnvVars)
+                {
+                    processStartInfo.EnvironmentVariables[entry.Key] = entry.Value;
+                }
+            }
+
             if (!string.IsNullOrEmpty(_pathExtension))
-                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(_pathExtension);
+            {
+                var path = Utils.GetExtendedPath(_pathExtension);
+                if (processStartInfo.EnvironmentVariables.ContainsKey("PATH"))
+                {
+                    path += $";{processStartInfo.EnvironmentVariables["PATH"]}";
+                }
+                processStartInfo.EnvironmentVariables["PATH"] = path;
+            }
 
             _process = Process.Start(processStartInfo);
             if (_process != null)

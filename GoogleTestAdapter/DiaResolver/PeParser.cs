@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 11/2017.
 
 using GoogleTestAdapter.Common;
 using Microsoft.Win32.SafeHandles;
@@ -255,6 +255,8 @@ namespace GoogleTestAdapter.DiaResolver
                 if (directoryEntry == null)
                 {
                     logger.DebugWarning($"Error while parsing imports of {executable}: {Win32Utils.GetLastWin32Error()}");
+                    // TODO
+                    // logger.LogError(Resources.ImageDirectoryEntryToData);
                     return;
                 }
 
@@ -323,7 +325,12 @@ namespace GoogleTestAdapter.DiaResolver
             {
                 uint size = 0u;
                 var dbgDir = (IMAGE_DEBUG_DIRECTORY*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 6, &size);
-                if (dbgDir != null && dbgDir->SizeOfData > 0)
+                if (dbgDir == null)
+                {
+                    // TODO error or warning? what's the msg?
+                    logger.LogError(Resources.ImageDirectoryEntryToData);
+                }
+                else if (dbgDir->SizeOfData > 0)
                 {
                     var pdbInfo = (PdbInfo*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, dbgDir->AddressOfRawData, IntPtr.Zero);
                     pdbPath = PtrToStringUtf8(new IntPtr(&pdbInfo->PdbFileName));

@@ -1,4 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<VsixLanguagePack Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema-lp/2010">
-  <LocalizedName>Adaptador de Teste para o Google Test</LocalizedName>
-</VsixLanguagePack>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageLanguagePackManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
+  <Metadata>
+    <DisplayName>Adaptador de Teste para o Google Test</DisplayName>
+    <Description></Description>
+  </Metadata>
+</PackageLanguagePackManifest>

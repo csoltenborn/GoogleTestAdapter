@@ -13,7 +13,7 @@ $diatests_assembly_info = "DiaResolver.Tests\Properties\AssemblyInfo.cs"
 
 $packaging_gta_assembly_info = "Packaging.GTA\Properties\AssemblyInfo.cs"
 $packaging_tafgt_assembly_info = "Packaging.TAfGT\Properties\AssemblyInfo.cs"
-$projecttemplates_vstemplate = "ProjectTemplates\Test\GoogleTest\GoogleTest.vstemplate"
+$projecttemplates_vstemplate = "GoogleTestProjectTemplate\GoogleTest.vstemplate"
 
 $testadapter_assembly_info = "TestAdapter\Properties\AssemblyInfo.cs"
 $testadaptertests_assembly_info = "TestAdapter.Tests\Properties\AssemblyInfo.cs"

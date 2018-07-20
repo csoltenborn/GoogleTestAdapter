@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -23,26 +23,31 @@ namespace GoogleTestAdapter.Helpers
             _isBeingDebugged = isBeingDebugged;
         }
 
-
         public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
             bool throwIfError, IDebuggedProcessLauncher debuggedLauncher)
         {
-            int dummy;
-            return GetOutputOfCommand(workingDirectory, command, param, printTestOutput, throwIfError, debuggedLauncher, out dummy);
+            return GetOutputOfCommand(workingDirectory, null, command, param, printTestOutput, throwIfError, debuggedLauncher);
         }
 
-        public List<string> GetOutputOfCommand(string workingDirectory, string command, string param, bool printTestOutput,
+        public List<string> GetOutputOfCommand(string workingDirectory, IDictionary<string, string> envVars, string command, string param, bool printTestOutput,
+            bool throwIfError, IDebuggedProcessLauncher debuggedLauncher)
+        {
+            int dummy;
+            return GetOutputOfCommand(workingDirectory, envVars, command, param, printTestOutput, throwIfError, debuggedLauncher, out dummy);
+        }
+
+        public List<string> GetOutputOfCommand(string workingDirectory, IDictionary<string, string> envVars, string command, string param, bool printTestOutput,
             bool throwIfError, IDebuggedProcessLauncher debuggedLauncher, out int processExitCode)
         {
             if (_isBeingDebugged)
             {
                 var output = new List<string>();
-                processExitCode = LaunchProcessWithDebuggerAttached(workingDirectory, command, param, printTestOutput, debuggedLauncher);
+                processExitCode = LaunchProcessWithDebuggerAttached(workingDirectory, envVars, command, param, printTestOutput, debuggedLauncher);
                 return output;
             }
 
             var actualLauncher = new ProcessLauncher(_logger, _settings.GetPathExtension(command), processId => _processId = processId);
-            return actualLauncher.GetOutputOfCommand(workingDirectory, command, param, printTestOutput, 
+            return actualLauncher.GetOutputOfCommand(workingDirectory, envVars, command, param, printTestOutput, 
                 throwIfError, out processExitCode);
         }
 
@@ -77,7 +82,7 @@ namespace GoogleTestAdapter.Helpers
         }
 
 
-        private int LaunchProcessWithDebuggerAttached(string workingDirectory, string command, string param, bool printTestOutput,
+        private int LaunchProcessWithDebuggerAttached(string workingDirectory, IDictionary<string, string> envVars, string command, string param, bool printTestOutput,
             IDebuggedProcessLauncher handle)
         {
             _logger.LogInfo(String.Format(Resources.AttachDebuggerMessage, command));
@@ -85,7 +90,7 @@ namespace GoogleTestAdapter.Helpers
             {
                 _logger.DebugInfo(Resources.DebuggerAttachedOutputMessage);
             }
-            _processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, param, _settings.GetPathExtension(command));
+            _processId = handle.LaunchProcessWithDebuggerAttached(command, workingDirectory, envVars, param, _settings.GetPathExtension(command));
             Process process = Process.GetProcessById(_processId.Value);
             var waiter = new ProcessWaiter(process);
             waiter.WaitForExit();

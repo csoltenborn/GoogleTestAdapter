@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Linq;
@@ -186,7 +186,11 @@ namespace GoogleTestAdapter.TestAdapter
             if (testrunIsCanceled())
                 return testCases;
 
+            if (!GoogleTestDiscoverer.IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
+                return testCases;
+
             var discoverer = new GoogleTestDiscoverer(logger, settings);
+
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
                 testCases = discoverer.GetTestsFromExecutable(executable);

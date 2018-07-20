@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -62,6 +62,11 @@ namespace GoogleTestAdapter.TestAdapter
             }
 
             var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
+
+            // TODO what is this?
+            //var testSettings = runSettings.GetSettings(GoogleTestConstants.TestPropertySettingsName) as TestPropertySettingsProvider;
+
+            //var settingsWrapper = new SettingsWrapper(ourRunSettings, testSettings?.TestPropertySettings);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
             var regexParser = new RegexTraitParser(loggerAdapter);

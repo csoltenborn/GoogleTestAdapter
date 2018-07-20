@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.TestCases
                 var listTestsTask = new Task(() =>
                 {
                     launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                    standardOutput = launcher.GetOutputOfCommand(workingDir, _executable, finalParams,
+                    standardOutput = launcher.GetOutputOfCommand(workingDir, null, _executable, finalParams,
                         false, false, out processExitCode);
                 }, TaskCreationOptions.AttachedToParent);
                 listTestsTask.Start();
@@ -163,6 +163,7 @@ namespace GoogleTestAdapter.TestCases
                         _executable,
                         finalParams,
                         workingDir,
+                        null,
                         _settings.GetPathExtension(_executable),
                         lineAction);
                 }, TaskCreationOptions.AttachedToParent);

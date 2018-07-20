@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace GoogleTestAdapter.VsPackage
 {
-    [ProvideAutoLoad(UIContextGuid)]
+    [ProvideAutoLoad(UIContextGuid, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideUIContextRule(UIContextGuid, OptionsCategoryName, "VCProject & TestExplorer",
         new string[] { "VCProject", "TestExplorer" },
         new string[] { VSConstants.UICONTEXT.VCProject_string, TestExplorerContextGuid })]

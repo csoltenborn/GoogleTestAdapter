@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.IO;
@@ -119,7 +119,7 @@ namespace GoogleTestAdapter.Runners
             else
             {
                 new TestProcessLauncher(_logger, _settings, isBeingDebugged).GetOutputOfCommand(
-                    workingDirectory, batch, "", false, false, null, out batchExitCode);
+                    workingDirectory, null, batch, "", false, false, null, out batchExitCode);
             }
 
             if (batchExitCode == 0)
