@@ -1,195 +1,49 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="GoogleTestAdapter.Tests.Common.dll" #>
+<#@ assembly name="$(t4_tests_common)" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="GoogleTestAdapter.Tests.Common" #>
-<#@ import namespace="GoogleTestAdapter.Tests.Common.Helpers" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="GoogleTestAdapter.Tests.Common.CodeGeneration" #>
 <#@ output extension=".cs" #>
-<#
-//    System.Diagnostics.Debugger.Launch();
-//    System.Diagnostics.Debugger.Break();
-	string csvFile = Host.ResolvePath("GTA_Console.csv");
-	TestcaseCsvReader reader = new TestcaseCsvReader(csvFile);
-#>
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GoogleTestAdapter.Tests.Common;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage
 {
-
 	[TestClass]
 	public class ConsoleDllTests : AbstractConsoleTests
 	{
-		<#
-		List<Line> lines = reader.GetObjects();
-		IDictionary<string, Executable> executables = new Dictionary<string, Executable>();
-		foreach (Line line in lines)
-		{
-			if (!executables.ContainsKey(line.TestFile))
-				executables.Add(line.TestFile, new Executable
-                {
-                    ActualTestFile = line.ActualTestFile,
-                    Ignore = line.Ignore
-                });
-		#>
+<#
+//	System.Diagnostics.Debugger.Launch();
 
-		[TestMethod]
-        [TestCategory(EndToEnd)]
-		public void <#= line.MethodName #>()
-		{
-			string arguments = GetAdapterIntegration();
-			arguments += @"<#= line.Arguments #>";
-            RunTestsAndCheckOutput(GetType().Name, arguments);
-		}
-		<# } #>
-		<# foreach (string executable in executables.Keys) { #>
+	var csvFile = Host.ResolvePath("GTA_Console.csv");
+	var reader = new CsvTestcaseReader(csvFile);
+	var testCases = reader.GetObjects();
 
-		[TestMethod <#= executables[executable].Ignore ? ", Ignore" : "" #>]
+	foreach (var testCase in testCases)
+	{
+#>
+
+		[TestMethod <#= testCase.Ignore ? ", Ignore" : "" #>]
         [TestCategory(EndToEnd)]
-		public void List_TestsOf_<#= executable #>()
+		public void <#= testCase.MethodName #>()
 		{
-			ListTestsOf(@"<#= executables[executable].ActualTestFile #>");
+			string settingsFile = @"<#= testCase.SettingsFile #>";
+			string arguments = @"<#= testCase.ExecutableAndArguments #>";
+
+			RunTestsAndCheckOutput(settingsFile, arguments);
 		}
-		<# } #>
+<#	} #>
+<# foreach (var executable in testCases.GroupBy(tc => tc.TestExecutable).Select(g => g.First())) { #>
+
+		[TestMethod <#= executable.Ignore ? ", Ignore" : "" #>]
+        [TestCategory(EndToEnd)]
+		public void List_TestsOf_<#= executable.TestExecutablePlaceholder #>()
+		{
+			ListTestsOf(@"<#= executable.TestExecutable #>");
+		}
+<#	} #>
 
 	}
-
 }
-
-<#+
-
-    class Line
-    {
-        internal string TestFile;
-        internal string ActualTestFile;
-        internal string SettingsFileNamePart;
-        internal string ActualSettingsFile;
-		internal string TestCaseFilter;
-		internal bool EnableCodeCoverage;
-		internal bool InIsolation;
-		internal bool Ignore;
-
-		internal string MethodName
-		{
-			get
-			{
-			    string settings = SettingsFileNamePart;
-				string codeCoverage = EnableCodeCoverage ? "_Coverage" : "";
-				string isolation = InIsolation ? "_Isolation" : "";
-				string filter = TestCaseFilter == "none" ? "" : "_" + TestCaseFilter;
-
-				string result = TestFile + settings + codeCoverage + isolation + filter;
-
-				result = result.Replace(".", "_");
-				result = result.Replace("=", "_EQ_");
-				result = result.Replace("|", "_OR_");
-				result = result.Replace("&", "_AND_");
-
-				if (result.Contains("*"))
-					result = "NEG_" + result.Replace("*", "");
-
-				return result;
-			}
-		}
-
-		internal string Arguments
-		{
-			get
-			{
-				string arguments = " \"\"" + ActualTestFile + "\"\"";
-
-				if (!string.IsNullOrWhiteSpace(ActualSettingsFile))
-					arguments += " /Settings:\"\"" + ActualSettingsFile + "\"\"";
-
-				if (!"none".Equals(TestCaseFilter))
-					arguments += " /TestCaseFilter:\"\"" + TestCaseFilter + "\"\"";
-
-				if (EnableCodeCoverage)
-					arguments += " /EnableCodeCoverage";
-
-				if (InIsolation)
-					arguments += " /InIsolation";
-
-				return arguments;
-			}
-		}
-    }
-
-    struct Executable
-    {
-        internal string ActualTestFile;
-        internal bool Ignore;
-    }
-
-    class TestcaseCsvReader : CsvReader<Line>
-    {
-        internal TestcaseCsvReader(string csvFile) : base(csvFile, '\t', true) { }
-
-        protected override Line GetObject(string[] columns)
-        {
-            return new Line
-            {
-                TestFile = columns[0],
-                ActualTestFile = GetActualFile(columns[0]),
-                SettingsFileNamePart = GetSettingsFile(columns[1]),
-                ActualSettingsFile = GetActualSettingsFile(columns[1]),
-                TestCaseFilter = columns[2],
-                EnableCodeCoverage = bool.Parse(columns[3]),
-                InIsolation = bool.Parse(columns[4]),
-                Ignore = bool.Parse(columns[5])
-            };
-        }
-
-        private string GetActualSettingsFile(string key)
-        {
-            switch (key)
-            {
-                case "false":
-                    return "";
-                case "true":
-                    return TestResources.UserTestSettingsForGeneratedTests_Project;
-                case "Solution":
-                    return TestResources.UserTestSettingsForGeneratedTests_Solution;
-                case "SolutionProject":
-                    return TestResources.UserTestSettingsForGeneratedTests_SolutionProject;
-                default:
-                    throw new Exception("Unknown key: " + key);
-            }
-        }
-
-        private string GetSettingsFile(string key)
-        {
-			switch (key)
-            {
-                case "false":
-                    return "";
-                case "true":
-                    return "_Settings";
-                default:
-                    return "_" + key + "Settings";
-            }
-        }
-
-		private string GetActualFile(string key)
-		{
-			switch(key)
-			{
-				case "SampleTests":
-					return TestResources.Tests_DebugX86;
-				case "SampleTests170":
-					return TestResources.Tests_DebugX86_Gtest170;
-				case "SampleTestsX64":
-					return TestResources.Tests_ReleaseX64;
-				case "LoadTests":
-					return TestResources.LoadTests_ReleaseX86;
-				case "HardCrashingSampleTests":
-					return TestResources.CrashingTests_DebugX86;
-				default:
-					throw new Exception("Unknown test executable key: " + key);
-			}
-		}
-
-    }
-
-#>

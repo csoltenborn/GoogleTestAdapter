@@ -75,6 +75,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReleaseNotes\Donations.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreator.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesDialog.cs">
       <SubType>Form</SubType>
@@ -84,6 +85,11 @@
     </Compile>
     <Compile Include="ReleaseNotes\VersionProvider.cs" />
     <Compile Include="ReleaseNotes\History.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
@@ -194,6 +200,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\ReleaseNotes\0.13.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.13.1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.13.2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ReleaseNotes\0.13.3.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="GoogleTestExtensionOptionsPage.vsct">
@@ -201,6 +219,11 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>

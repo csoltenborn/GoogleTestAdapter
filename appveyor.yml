@@ -1,5 +1,6 @@
-version: 0.12.3.{build}
-os: Visual Studio 2017
+version: 0.13.3.{build}
+os: 
+- Visual Studio 2017
 configuration: Release
 platform: Any CPU
 environment:
@@ -57,7 +58,7 @@ test_script:
 
     & VsTest.Console out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests\GoogleTestAdapter.VsPackage.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
 
-    if ($LASTEXITCODE -ne 0) {
+     if ($LASTEXITCODE -ne 0) {
         $TestExitCode = $LASTEXITCODE
     }
 
@@ -104,10 +105,10 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: true
-- provider: NuGet
-  api_key:
-    secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
-  skip_symbols: true
-  on:
-    branch: master
-    appveyor_repo_tag: true
+# - provider: NuGet
+#   api_key:
+#     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
+#   skip_symbols: true
+#   on:
+#     branch: master
+#     appveyor_repo_tag: true

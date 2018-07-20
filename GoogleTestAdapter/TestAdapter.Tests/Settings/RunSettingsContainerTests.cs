@@ -39,7 +39,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 AdditionalTestExecutionParam = "project2"
             };
 
-            _container = new RunSettingsContainer {SolutionSettings = _solutionSettings};
+            _container = new RunSettingsContainer(_solutionSettings);
             _container.ProjectSettings.Add(_projectSettings1);
             _container.ProjectSettings.Add(_projectSettings2);
         }
@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 BatchForTestSetup = "project2"
             };
 
-            var container = new RunSettingsContainer {SolutionSettings = solutionSettings};
+            var container = new RunSettingsContainer(solutionSettings);
             container.ProjectSettings.Add(projectSettings1);
             container.ProjectSettings.Add(projectSettings2);
 

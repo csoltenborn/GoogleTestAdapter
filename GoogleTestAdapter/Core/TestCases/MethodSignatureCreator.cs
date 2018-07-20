@@ -7,10 +7,22 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.TestCases
 {
 
-    internal class MethodSignatureCreator
+    public class MethodSignatureCreator
     {
+        public class MethodSignature
+        {
+            public string Signature { get; }
+            public bool IsRegex { get; }
 
-        internal IEnumerable<string> GetTestMethodSignatures(TestCaseDescriptor descriptor)
+            public MethodSignature(string signature, bool isRegex)
+            {
+                Signature = signature;
+                IsRegex = isRegex;
+            }
+        }
+
+
+        public IEnumerable<MethodSignature> GetTestMethodSignatures(TestCaseDescriptor descriptor)
         {
             switch (descriptor.TestType)
             {
@@ -25,9 +37,9 @@ namespace GoogleTestAdapter.TestCases
             }
         }
 
-        private IEnumerable<string> GetTypedTestMethodSignatures(TestCaseDescriptor descriptor)
+        private IEnumerable<MethodSignature> GetTypedTestMethodSignatures(TestCaseDescriptor descriptor)
         {
-            var result = new List<string>();
+            var result = new List<MethodSignature>();
 
             // remove instance number
             string suite = descriptor.Suite.Substring(0, descriptor.Suite.LastIndexOf("/", StringComparison.Ordinal));
@@ -47,12 +59,12 @@ namespace GoogleTestAdapter.TestCases
             // gtest_case_<testcase name>_::<test name><type param value>::TestBody
             string signature =
                 $"gtest_case_{suite}_::{descriptor.Name}{typeParam}{GoogleTestConstants.TestBodySignature}";
-            result.Add(signature);
+            result.Add(new MethodSignature(signature, true));
 
             return result;
         }
 
-        private string GetParameterizedTestMethodSignature(TestCaseDescriptor descriptor)
+        private MethodSignature GetParameterizedTestMethodSignature(TestCaseDescriptor descriptor)
         {
             // remove instance number
             int index = descriptor.Suite.IndexOf('/');
@@ -64,9 +76,9 @@ namespace GoogleTestAdapter.TestCases
             return GetTestMethodSignature(suite, testName);
         }
 
-        private string GetTestMethodSignature(string suite, string testCase, string typeParam = "")
+        private MethodSignature GetTestMethodSignature(string suite, string testCase, string typeParam = "")
         {
-            return suite + "_" + testCase + "_Test" + typeParam + GoogleTestConstants.TestBodySignature;
+            return new MethodSignature(suite + "_" + testCase + "_Test" + typeParam + GoogleTestConstants.TestBodySignature, !string.IsNullOrEmpty(typeParam));
         }
 
     }

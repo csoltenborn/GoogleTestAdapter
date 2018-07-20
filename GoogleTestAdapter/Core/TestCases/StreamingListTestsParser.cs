@@ -12,6 +12,7 @@ namespace GoogleTestAdapter.TestCases
         private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
         private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\w+", RegexOptions.Compiled);
         private static readonly Regex IsParamRegexPreNamedParameters = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
+        private static readonly Regex StructKeywordsRegex = new Regex(@"\b(?:class|struct) ", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;
 
@@ -49,9 +50,7 @@ namespace GoogleTestAdapter.TestCases
         {
             Match suiteMatch = SuiteRegex.Match(suiteLine);
             string suite = suiteMatch.Groups[1].Value;
-            string typeParam = suiteMatch.Groups[2].Value
-                .Replace("class ", "")
-                .Replace("struct ", "");
+            string typeParam = StructKeywordsRegex.Replace(suiteMatch.Groups[2].Value, "");
 
             Match nameMatch = NameRegex.Match(testCaseLine);
             string name = nameMatch.Groups[1].Value;

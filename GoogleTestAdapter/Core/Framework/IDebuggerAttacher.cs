@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace GoogleTestAdapter.Framework
+﻿namespace GoogleTestAdapter.Framework
 {
     public interface IDebuggerAttacher
     {

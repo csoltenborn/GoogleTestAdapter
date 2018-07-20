@@ -277,7 +277,7 @@
     <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
   </data>
   <data name="FoundTestMethod" xml:space="preserve">
-    <value>Found {0} test method symbols and {1} trait symbols in binary {2}</value>
+    <value>Found {0} test method symbols and {1} trait symbols in binary {2}, pdb {3}</value>
     <comment>{0} represents a number (e.g. 5), {1} represents a number (e.g. 5), {2} represents an unlocalized binary name (e.g notepad.exe)</comment>
   </data>
   <data name="InvalidFile" xml:space="preserve">

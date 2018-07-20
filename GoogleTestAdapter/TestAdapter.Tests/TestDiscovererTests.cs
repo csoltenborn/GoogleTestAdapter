@@ -76,7 +76,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_UntrustedExecutableWithSkipOriginCheck_IsRun()
         {
-            var semPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            var semPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "SemaphoreExe.sem"));
             // ReSharper disable once AssignNullToNotNullAttribute
             var temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
 
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.TestAdapter
                 MarkUntrusted(temp2Exe);
                 semPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(temp2Exe,
-                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("process execution failed with exit code 143"))),
                         Times.Once));
                 semPath.AsFileInfo().Should().Exist("exe should have been run");
             }
@@ -105,7 +105,7 @@ namespace GoogleTestAdapter.TestAdapter
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DiscoverTests_UntrustedExecutable_IsNotRun()
         {
-            var semPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "SemaphoreExe.sem"));
+            var semPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "SemaphoreExe.sem"));
             var temp1Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp1.exe"));
             var temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));
 

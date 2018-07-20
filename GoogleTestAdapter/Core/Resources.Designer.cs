@@ -431,7 +431,7 @@ namespace GoogleTestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found {0} test method symbols and {1} trait symbols in binary {2}.
+        ///   Looks up a localized string similar to Found {0} test method symbols and {1} trait symbols in binary {2}, pdb {3}.
         /// </summary>
         internal static string FoundTestMethod {
             get {

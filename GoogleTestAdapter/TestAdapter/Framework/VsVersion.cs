@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using Process = System.Diagnostics.Process;
@@ -44,6 +45,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
     public static class VsVersionUtils
     {
+        private const string ParentProcessPattern = @"(^vstest\.((discoveryengine)|(executionengine)|(console)).*\.exe$)|(^devenv\.exe$)";
+        private static readonly Regex ParentProcessRegex = new Regex(ParentProcessPattern, RegexOptions.IgnoreCase);
+
         private static readonly Version LastUnsupportedVersion = new Version(11, 0, 50727, 1); // VS2012 without updates
 
         public static readonly VsVersion FirstSupportedVersion = VsVersion.VS2012_1;
@@ -98,8 +102,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private static Process FindVsOrVsTestConsoleExe()
         {
             var process = Process.GetCurrentProcess();
-            string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToUpperInvariant();
-            while (executable != null && executable != "DEVENV.EXE" && executable != "VSTEST.CONSOLE.EXE")
+            string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToLower();
+            while (executable != null && !ParentProcessRegex.IsMatch(executable))
+            // TODO is this important?
+            // string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToUpperInvariant();
+            // while (executable != null && executable != "DEVENV.EXE" && executable != "VSTEST.CONSOLE.EXE")
             {
                 process = ParentProcessUtils.GetParentProcess(process.Id);
                 executable = process != null

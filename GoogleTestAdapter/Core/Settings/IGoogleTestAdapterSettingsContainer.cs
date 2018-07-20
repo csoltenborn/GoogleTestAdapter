@@ -4,8 +4,8 @@ namespace GoogleTestAdapter.Settings
 {
     public interface IGoogleTestAdapterSettingsContainer
     {
-        RunSettings SolutionSettings { get; set; }
-        List<RunSettings> ProjectSettings { get; set; }
+        RunSettings SolutionSettings { get; }
+        List<RunSettings> ProjectSettings { get; }
 
         RunSettings GetSettingsForExecutable(string executable);
     }

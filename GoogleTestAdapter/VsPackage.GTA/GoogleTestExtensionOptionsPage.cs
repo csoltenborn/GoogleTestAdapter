@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 using System.Threading;
+using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -31,12 +32,12 @@ namespace GoogleTestAdapter.VsPackage
 
             versionProvider.UpdateLastVersion();
 
-            if (!_generalOptions.ShowReleaseNotes
-                || (formerlyInstalledVersion != null && formerlyInstalledVersion >= currentVersion))
-                return;
-
-            var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion);
-            DisplayReleaseNotes(creator.CreateHtml());
+            if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&
+                (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion))
+            {
+                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion, Donations.IsPreDonationsVersion(formerlyInstalledVersion));
+                DisplayReleaseNotes(creator.CreateHtml());
+            }
         }
 
         private void DisplayReleaseNotes(string html)
@@ -47,8 +48,13 @@ namespace GoogleTestAdapter.VsPackage
 
             File.WriteAllText(htmlFile, html);
 
-            using (var dialog = new ReleaseNotesDialog { HtmlFile = new Uri($"file://{htmlFile}") })
+            using (var dialog = new ReleaseNotesDialog
             {
+                HtmlFile = new Uri($"file://{htmlFile}"),
+                ShowReleaseNotesChecked = _generalOptions.ShowReleaseNotes
+            })
+            {
+                dialog.AddExternalUri(Donations.Uri);
                 dialog.ShowReleaseNotesChanged +=
                     (sender, args) => _generalOptions.ShowReleaseNotes = args.ShowReleaseNotes;
                 dialog.Closed += (sender, args) => File.Delete(htmlFile);
@@ -56,9 +62,6 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
-        private bool ShowReleaseNotes
-        {
-            get { return _generalOptions.ShowReleaseNotes; }
-        }
+        private bool ShowReleaseNotes => _generalOptions.ShowReleaseNotes;
     }
 }

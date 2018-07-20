@@ -7,7 +7,7 @@ namespace GoogleTestAdapter.Tests.Common.Helpers
     {
 
         public static bool IsRunningOnBuildServer => Environment.GetEnvironmentVariable("APPVEYOR") != null;
-        private static double Weight => IsRunningOnBuildServer ? 2 : 1;
+        private static double Weight => IsRunningOnBuildServer ? 2.5 : 1;
 
 
         public static int GetWeightedDuration(double duration)

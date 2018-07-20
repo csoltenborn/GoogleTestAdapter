@@ -224,15 +224,6 @@ namespace GoogleTestAdapter.TestAdapter {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Solution test settings file found at &apos;{0}&apos;, but does not contain {1} node.
-        /// </summary>
-        internal static string SolutionFoundButMissingNode {
-            get {
-                return ResourceManager.GetString("SolutionFoundButMissingNode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Test case filter: {0}.
         /// </summary>
         internal static string TestCaseFilter {

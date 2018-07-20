@@ -115,7 +115,7 @@ namespace GoogleTestAdapter.DiaResolver {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t find the .pdb file of file &apos;{0}&apos;. You will not get any source locations for your tests..
+        ///   Looks up a localized string similar to PDB file &apos;{0}&apos; does not exist.
         /// </summary>
         internal static string PdbFileNotFoundError {
             get {

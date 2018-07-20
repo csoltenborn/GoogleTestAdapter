@@ -20,6 +20,8 @@ namespace GoogleTestAdapter.Runners
         private bool _canceled;
 
         private readonly string _threadName;
+        private readonly int _threadId;
+        private readonly string _testDir;
         private readonly ITestFrameworkReporter _frameworkReporter;
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
@@ -28,9 +30,11 @@ namespace GoogleTestAdapter.Runners
         private TestProcessLauncher _processLauncher;
         private IProcessExecutor _processExecutor;
 
-        public SequentialTestRunner(string threadName, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public SequentialTestRunner(string threadName, int threadId, string testDir, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
         {
             _threadName = threadName;
+            _threadId = threadId;
+            _testDir = testDir;
             _frameworkReporter = reporter;
             _logger = logger;
             _settings = settings;
@@ -38,28 +42,24 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        public void RunTests(IEnumerable<TestCase> testCasesToRun, string baseDir,
-            string workingDir, string userParameters, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        public void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
-            DebugUtils.AssertIsNotNull(userParameters, nameof(userParameters));
-            DebugUtils.AssertIsNotNull(workingDir, nameof(workingDir));
-
             IDictionary<string, List<TestCase>> groupedTestCases = testCasesToRun.GroupByExecutable();
             foreach (string executable in groupedTestCases.Keys)
             {
-                string finalParameters = SettingsWrapper.ReplacePlaceholders(userParameters, executable);
-                string finalWorkingDir = SettingsWrapper.ReplacePlaceholders(workingDir, executable);
-
                 if (_canceled)
                     break;
 
                 _settings.ExecuteWithSettingsForExecutable(executable, () =>
                 {
+                    string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
+                    string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
+
                     RunTestsFromExecutable(
                         executable,
-                        finalWorkingDir,
+                        workingDir,
                         groupedTestCases[executable],
-                        finalParameters,
+                        userParameters,
                         isBeingDebugged,
                         debuggedLauncher,
                         executor);
@@ -137,10 +137,21 @@ namespace GoogleTestAdapter.Runners
 
         public static void LogExecutionError(ILogger logger, string executable, string workingDir, string arguments, Exception exception, string threadName = "")
         {
-            logger.LogError(String.Format(Resources.RunExecutableError, threadName, executable, exception.Message));
-            logger.DebugError(String.Format(Resources.StackTrace, threadName, Environment.NewLine, exception.StackTrace));
-            logger.LogError(String.Format(Common.Resources.TroubleShootingLink, threadName));
-            logger.LogError(String.Format(Resources.ExecuteSteps, threadName, workingDir, Environment.NewLine, executable, arguments));
+            logger.LogError($"{threadName}Failed to run test executable '{executable}': {exception.Message}");
+            if (exception is AggregateException aggregateException)
+            {
+               exception = aggregateException.Flatten();
+            }
+            logger.DebugError($@"{threadName}Exception:{Environment.NewLine}{exception}");
+            logger.LogError(
+                $"{threadName}{Common.Resources.TroubleShootingLink}");
+            logger.LogError(
+                $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
+            // TODO
+            //logger.LogError(String.Format(Resources.RunExecutableError, threadName, executable, exception.Message));
+            //logger.DebugError(String.Format(Resources.StackTrace, threadName, Environment.NewLine, exception.StackTrace));
+            //logger.LogError(String.Format(Common.Resources.TroubleShootingLink, threadName));
+            //logger.LogError(String.Format(Resources.ExecuteSteps, threadName, workingDir, Environment.NewLine, executable, arguments));
         }
 
         private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, bool isBeingDebugged,

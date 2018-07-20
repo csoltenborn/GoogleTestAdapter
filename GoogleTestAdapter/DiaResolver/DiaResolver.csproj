@@ -70,6 +70,7 @@
     <Compile Include="IClassFactory.cs" />
     <Compile Include="IDiaResolver.cs" />
     <Compile Include="IDiaResolverFactory.cs" />
+    <Compile Include="PdbLocator.cs" />
     <Compile Include="PeParser.cs" />
     <Compile Include="DiaResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

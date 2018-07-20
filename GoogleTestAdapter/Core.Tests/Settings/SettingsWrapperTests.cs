@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
@@ -90,24 +92,29 @@ namespace GoogleTestAdapter.Settings
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder);
-            string result = TheOptions.GetUserParameters("", "mydir", 0);
+            string result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be("mydir");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + " " + SettingsWrapper.TestDirPlaceholder);
-            result = TheOptions.GetUserParameters("", "mydir", 0);
+            result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be("mydir mydir");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder.ToLower());
-            result = TheOptions.GetUserParameters("", "mydir", 0);
+            result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be(SettingsWrapper.TestDirPlaceholder.ToLower());
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.ThreadIdPlaceholder);
-            result = TheOptions.GetUserParameters("", "mydir", 4711);
+            result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be("4711");
 
             MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder);
-            result = TheOptions.GetUserParameters("", "mydir", 4711);
+            result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be("mydir, 4711");
+
+            MockXmlOptions.Setup(o => o.SolutionDir).Returns(@"C:\\TheSolutionDir");
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder + ", " + SettingsWrapper.SolutionDirPlaceholder + ", " + SettingsWrapper.ExecutablePlaceholder);
+            result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
+            result.Should().Be(@"mydir, 4711, C:\\TheSolutionDir, SomeExecutable.exe");
         }
 
         [TestMethod]
@@ -267,6 +274,22 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetPathExtension__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.PathExtension).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetPathExtension(TestResources.Tests_DebugX86);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);
@@ -280,6 +303,22 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void BatchForTestTeardown__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetBatchForTestTeardown("TestDirectory", 4711);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestSetup__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns((string)null);
@@ -289,6 +328,130 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns("FooBar");
             result = TheOptions.BatchForTestSetup;
             result.Should().Be("FooBar");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void BatchForTestSetup__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.BatchForTestSetup).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetBatchForTestSetup("TestDirectory", 4711);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDir__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+                MockXmlOptions.Setup(o => o.WorkingDir).Returns($"Foo;%{name}%;Bar");
+                string result = TheOptions.GetWorkingDirForExecution("SomeExecutable.exe", "TestDirectory", 4711);
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForExecution_null_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns((string)null);
+
+            var result = TheOptions.GetWorkingDirForExecution(TestResources.Tests_DebugX86, "", 0);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForExecution_EmptyString_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns("");
+
+            var result = TheOptions.GetWorkingDirForExecution(TestResources.Tests_DebugX86, "", 0);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForDiscovery_null_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns((string) null);
+
+            var result = TheOptions.GetWorkingDirForDiscovery(TestResources.Tests_DebugX86);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForDiscovery_EmptyString_ExecutableDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns("");
+
+            var result = TheOptions.GetWorkingDirForDiscovery(TestResources.Tests_DebugX86);
+
+            var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
+            result.Should().NotBeNullOrEmpty();
+            result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetUserParams__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+
+                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToLower()}%;Bar");
+                string result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "TestDirectory", 4711);
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+
+                MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns($"Foo;%{name.ToUpper()}%;Bar");
+                result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "TestDirectory", 4711);
+                // ReSharper disable once PossibleNullReferenceException
+                result.Should().Be($"Foo;{value};Bar");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetAdditionalPdbs__EnvVarPlaceholderIsReplaced()
+        {
+            foreach (DictionaryEntry variable in Environment.GetEnvironmentVariables())
+            {
+                var name = (string)variable.Key;
+                string value = (string)variable.Value;
+ 
+                MockXmlOptions.Setup(o => o.AdditionalPdbs).Returns($"Foo%{name}%;Bar");
+                var result = TheOptions.GetAdditionalPdbs(TestResources.Tests_DebugX86).ToList();
+
+                // ReSharper disable once PossibleNullReferenceException
+                result.Count.Should().Be(2);
+                result[0].Should().Be($"Foo{value}");
+                result[1].Should().Be("Bar");
+            }
         }
 
         [TestMethod]

@@ -13,8 +13,10 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
+using EnvDTE;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -174,6 +176,7 @@ namespace GoogleTestAdapter.VsPackage
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
                 TestDiscoveryRegex = _generalOptions.TestDiscoveryRegex,
+                AdditionalPdbs = _generalOptions.AdditionalPdbs,
                 TestDiscoveryTimeoutInSeconds = _generalOptions.TestDiscoveryTimeoutInSeconds,
                 WorkingDir = _generalOptions.WorkingDir,
                 PathExtension = _generalOptions.PathExtension,
@@ -202,8 +205,22 @@ namespace GoogleTestAdapter.VsPackage
 
                 UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
 
-                DebuggingNamedPipeId = _debuggingNamedPipeId
+                DebuggingNamedPipeId = _debuggingNamedPipeId,
+                SolutionDir = GetSolutionDir()
             };
+        }
+
+        private string GetSolutionDir()
+        {
+            try
+            {
+                DTE dte = GetService(typeof(DTE)) as DTE;
+                return Path.GetDirectoryName(dte.Solution.FullName);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 

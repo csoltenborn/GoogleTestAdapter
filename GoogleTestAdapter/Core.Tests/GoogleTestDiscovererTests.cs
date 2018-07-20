@@ -328,16 +328,52 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_Tests_TestNamesBeingPrefixesAreFoundWithCorrectSourceLocation()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.Tests_ReleaseX86);
+
+            var abcdTest = testCases.Single(tc => tc.DisplayName == "abcd.t");
+            abcdTest.LineNumber.Should().Be(156);
+            var bbcdTest = testCases.Single(tc => tc.DisplayName == "bbcd.t");
+            bbcdTest.LineNumber.Should().Be(161);
+            var bcdTest = testCases.Single(tc => tc.DisplayName == "bcd.t");
+            bcdTest.LineNumber.Should().Be(166);
+        }
+
+        [TestMethod]
         [TestCategory(Load)]
         public void GetTestsFromExecutable_LoadTests_AreFoundInReasonableTime()
         {
             var stopwatch = Stopwatch.StartNew();
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
-            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_ReleaseX86);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_Generated);
             stopwatch.Stop();
             var actualDuration = stopwatch.Elapsed;
 
-            int testParsingDurationInMs = CiSupport.GetWeightedDuration(0.5 * testCases.Count); // .5ms per test (discovery and processing)
+            testCases.Count.Should().BeGreaterThan(0);
+            int testParsingDurationInMs = CiSupport.GetWeightedDuration(testCases.Count); // .5ms per test (discovery and processing)
+            int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
+            var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);
+
+            actualDuration.Should().BeLessThan(maxDuration);
+        }
+
+        [TestMethod]
+        [TestCategory(Load)]
+        public void GetTestsFromExecutable_OldExecutionEnvironment_LoadTests_AreFoundInReasonableTime()
+        {
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+
+            var stopwatch = Stopwatch.StartNew();
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_Generated);
+            stopwatch.Stop();
+            var actualDuration = stopwatch.Elapsed;
+
+            testCases.Count.Should().BeGreaterThan(0);
+            int testParsingDurationInMs = CiSupport.GetWeightedDuration(testCases.Count); // .5ms per test (discovery and processing)
             int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
             var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);
 
@@ -366,7 +402,7 @@ namespace GoogleTestAdapter
             testCase = testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
             testCase.DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>");
             testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\typeparameterizedtests.cpp");
-            testCase.LineNumber.Should().Be(53);
+            testCase.LineNumber.Should().Be(56);
         }
 
         private void FindExternallyLinkedTests(string location)
@@ -399,6 +435,10 @@ namespace GoogleTestAdapter
 
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> tests = discoverer.GetTestsFromExecutable(TestResources.Tests_DebugX86);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
+            tests.Should().NotBeEmpty();
 
             TestCase testCase = tests.Single(t => t.FullyQualifiedName == fullyQualifiedName);
             testCase.DisplayName.Should().MatchRegex(displayNameRegex.ToString());

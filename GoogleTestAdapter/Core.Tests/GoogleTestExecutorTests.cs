@@ -40,11 +40,12 @@ namespace GoogleTestAdapter
 
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
+            MockOptions.Setup(o => o.SolutionDir).Returns(TestResources.SampleTestsSolutionDir);
             var processExecutor = new ProcessExecutor(null, TestEnvironment.Logger);
 
             var collectingReporter = new FakeFrameworkReporter();
             var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, TestResources.SampleTestsSolutionDir, processExecutor);
+            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, processExecutor);
 
             sampleTestsDurationsFile.AsFileInfo()
                 .Should()

@@ -30,6 +30,7 @@ namespace GoogleTestAdapter.Settings
         bool? ShuffleTests { get; set; }
         int? ShuffleTestsSeed { get; set; }
         string TestDiscoveryRegex { get; set; }
+        string AdditionalPdbs { get; set; }
         int? TestDiscoveryTimeoutInSeconds { get; set; }
         string WorkingDir { get; set; }
         string PathExtension { get; set; }
@@ -49,6 +50,7 @@ namespace GoogleTestAdapter.Settings
 
         // internal
         string DebuggingNamedPipeId { get; set; }
+        string SolutionDir { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -66,6 +68,7 @@ namespace GoogleTestAdapter.Settings
             self.ShuffleTests = self.ShuffleTests ?? other.ShuffleTests;
             self.ShuffleTestsSeed = self.ShuffleTestsSeed ?? other.ShuffleTestsSeed;
             self.TestDiscoveryRegex = self.TestDiscoveryRegex ?? other.TestDiscoveryRegex;
+            self.AdditionalPdbs = self.AdditionalPdbs ?? other.AdditionalPdbs;
             self.TestDiscoveryTimeoutInSeconds = self.TestDiscoveryTimeoutInSeconds ?? other.TestDiscoveryTimeoutInSeconds;
             self.WorkingDir = self.WorkingDir ?? other.WorkingDir;
             self.PathExtension = self.PathExtension ?? other.PathExtension;
@@ -84,6 +87,7 @@ namespace GoogleTestAdapter.Settings
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
+            self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
         }
     }
 

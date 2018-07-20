@@ -5,7 +5,7 @@
       <Settings>
         <ShuffleTests>true</ShuffleTests>
         <NrOfTestRepetitions>3</NrOfTestRepetitions>
-        <BatchForTestTeardown>Tests\Returns0.bat</BatchForTestTeardown>
+        <BatchForTestTeardown>$(SolutionDir)Tests\Returns0.bat</BatchForTestTeardown>
         <DebugMode>true</DebugMode>
       </Settings>
     </SolutionSettings>

@@ -29,12 +29,13 @@ namespace GoogleTestAdapter.DiaResolver
         
         [TestMethod]
         [TestCategory(Unit)]
+        [SuppressMessage("ReSharper", "UnreachableCode")]
         public void GetFunctions_X86_EverythingMatches_ResultSizeIsCorrect()
         {
             DoResolveTest(
                 TestResources.LoadTests_ReleaseX86, 
                 "*", 
-                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 642 : 728, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 628 : 728, 
                 108);
         }
 
@@ -47,13 +48,14 @@ namespace GoogleTestAdapter.DiaResolver
 
         [TestMethod]
         [TestCategory(Unit)]
+        [SuppressMessage("ReSharper", "UnreachableCode")]
         public void GetFunctions_X64_EverythingMatches_ResultSizeIsCorrect()
         {
             // also triggers destructor
             DoResolveTest(
                 TestResources.DllTests_ReleaseX64, 
                 "*", 
-                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 1220 : 1250, 
+                TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 1201 : 1250, 
                 TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 687 : 686, 
                 false);
         }
@@ -68,10 +70,11 @@ namespace GoogleTestAdapter.DiaResolver
         [TestMethod]
         [TestCategory(Unit)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void GetFunctions_ExeWithoutPdb_AttemptsToFindPdbAreLogged()
+        public void GetFunctions_ExeWithoutPdb_ErrorIsLogged()
         {
-            TestResources.LoadTests_ReleaseX86.AsFileInfo().Should().Exist();
-            string pdb = Path.ChangeExtension(TestResources.LoadTests_ReleaseX86, ".pdb");
+            string executable = TestResources.LoadTests_ReleaseX86;
+            executable.AsFileInfo().Should().Exist();
+            string pdb = Path.ChangeExtension(executable, ".pdb");
             pdb.AsFileInfo().Should().Exist();
             string renamedPdb = $"{pdb}.bak";
             renamedPdb.AsFileInfo().Should().NotExist();
@@ -83,9 +86,7 @@ namespace GoogleTestAdapter.DiaResolver
                 File.Move(pdb, renamedPdb);
                 pdb.AsFileInfo().Should().NotExist();
 
-                using (
-                    IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(TestResources.LoadTests_ReleaseX86, "",
-                        fakeLogger))
+                using (IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, pdb, fakeLogger))
                 {
                     locations.AddRange(resolver.GetFunctions("*"));
                 }
@@ -96,13 +97,8 @@ namespace GoogleTestAdapter.DiaResolver
                 pdb.AsFileInfo().Should().Exist();
             }
 
-            locations.Count.Should().Be(0);
-            fakeLogger.Warnings
-                .Should()
-                .Contain(msg => msg.Contains("Couldn't find the .pdb file"));
-            fakeLogger.Infos
-                .Should()
-                .Contain(msg => msg.Contains("Attempts to find PDB"));
+            locations.Should().BeEmpty();
+            fakeLogger.Warnings.Should().Contain(msg => msg.Contains("PDB file") && msg.Contains("does not exist"));
         }
 
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
@@ -110,7 +106,8 @@ namespace GoogleTestAdapter.DiaResolver
             var locations = new List<SourceFileLocation>();
             var fakeLogger = new FakeLogger(() => false);
 
-            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, "", fakeLogger);
+            string pdb = PdbLocator.FindPdbFile(executable, "", fakeLogger);
+            IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, pdb, fakeLogger);
             locations.AddRange(resolver.GetFunctions(filter));
 
             if (disposeResolver)
@@ -121,7 +118,6 @@ namespace GoogleTestAdapter.DiaResolver
             locations.Count.Should().BeGreaterOrEqualTo(expectedLocations);
             fakeLogger.GetMessages(Severity.Warning, Severity.Error).Count.Should().BeGreaterOrEqualTo(expectedErrorMessages);
         }
-
     }
 
 }
