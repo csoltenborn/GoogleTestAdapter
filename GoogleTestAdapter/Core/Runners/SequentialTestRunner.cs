@@ -55,16 +55,6 @@ namespace GoogleTestAdapter.Runners
                     string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
                     string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
 
-                    //RunTestsFromExecutable(
-                    //    executable,
-                    //    workingDir,
-                    //    groupedTestCases[executable],
-                    //    userParameters,
-                    //    isBeingDebugged,
-                    //    debuggedLauncher,
-                    //    executor);
-
-                    // TODO what is this?
                     var testsWithNoTestPropertySettings = groupedTestCases[executable];
 
                     if (_settings.TestPropertySettingsContainer != null)
@@ -80,7 +70,7 @@ namespace GoogleTestAdapter.Runners
                                     executable,
                                     workingDir,
                                     settings.Environment,
-                                    Enumerable.Repeat(testCase, 1),
+                                    Enumerable.Repeat(testCase, 1), // TODO this appears to be highly inefficient. Why not collect them and run them alltogether? If environments might differ, we should still group them accordingly.
                                     userParameters,
                                     isBeingDebugged,
                                     debuggedLauncher,
@@ -179,21 +169,14 @@ namespace GoogleTestAdapter.Runners
 
         public static void LogExecutionError(ILogger logger, string executable, string workingDir, string arguments, Exception exception, string threadName = "")
         {
-            logger.LogError($"{threadName}Failed to run test executable '{executable}': {exception.Message}");
+            logger.LogError(String.Format(Resources.RunExecutableError, threadName, executable, exception.Message));
             if (exception is AggregateException aggregateException)
             {
                exception = aggregateException.Flatten();
             }
             logger.DebugError($@"{threadName}Exception:{Environment.NewLine}{exception}");
-            logger.LogError(
-                $"{threadName}{Common.Resources.TroubleShootingLink}");
-            logger.LogError(
-                $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
-            // TODO
-            //logger.LogError(String.Format(Resources.RunExecutableError, threadName, executable, exception.Message));
-            //logger.DebugError(String.Format(Resources.StackTrace, threadName, Environment.NewLine, exception.StackTrace));
-            //logger.LogError(String.Format(Common.Resources.TroubleShootingLink, threadName));
-            //logger.LogError(String.Format(Resources.ExecuteSteps, threadName, workingDir, Environment.NewLine, executable, arguments));
+            logger.LogError(String.Format(Common.Resources.TroubleShootingLink, threadName));
+            logger.LogError(String.Format(Resources.ExecuteSteps, threadName, workingDir, Environment.NewLine, executable, arguments));
         }
 
         private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, IDictionary<string, string> envVars, bool isBeingDebugged,

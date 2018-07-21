@@ -267,7 +267,7 @@ namespace GoogleTestAdapter.TestCases
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
         }
 
-        // TODO needed?
+        // TODO replacement for more complex regex in TestCaseResolver?
         internal static string StripTestSymbolNamespace(string symbol)
         {
             var suffixLength = GoogleTestConstants.TestBodySignature.Length;

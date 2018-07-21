@@ -61,12 +61,8 @@ namespace GoogleTestAdapter.TestAdapter
                 projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
             }
 
-            var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
-
-            // TODO what is this?
-            //var testSettings = runSettings.GetSettings(GoogleTestConstants.TestPropertySettingsName) as TestPropertySettingsProvider;
-
-            //var settingsWrapper = new SettingsWrapper(ourRunSettings, testSettings?.TestPropertySettings);
+            var testSettings = runSettings.GetSettings(GoogleTestConstants.TestPropertySettingsName) as TestPropertySettingsProvider;
+            var settingsWrapper = new SettingsWrapper(ourRunSettings, testSettings?.TestPropertySettings, solutionDir);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
             var regexParser = new RegexTraitParser(loggerAdapter);

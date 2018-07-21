@@ -255,8 +255,6 @@ namespace GoogleTestAdapter.DiaResolver
                 if (directoryEntry == null)
                 {
                     logger.DebugWarning($"Error while parsing imports of {executable}: {Win32Utils.GetLastWin32Error()}");
-                    // TODO
-                    // logger.LogError(Resources.ImageDirectoryEntryToData);
                     return;
                 }
 
@@ -327,8 +325,10 @@ namespace GoogleTestAdapter.DiaResolver
                 var dbgDir = (IMAGE_DEBUG_DIRECTORY*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, 6, &size);
                 if (dbgDir == null)
                 {
-                    // TODO error or warning? what's the msg?
-                    logger.LogError(Resources.ImageDirectoryEntryToData);
+                    // TODO error or warning, Log, or Debug? We do not want to break CI builds for nothing
+                    // - changed to DebugError since it was ignored before
+                    // TODO error msg is very generic
+                    logger.DebugError(Resources.ImageDirectoryEntryToData);
                 }
                 else if (dbgDir->SizeOfData > 0)
                 {

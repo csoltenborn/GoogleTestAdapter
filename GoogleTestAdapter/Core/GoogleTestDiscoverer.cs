@@ -89,7 +89,7 @@ namespace GoogleTestAdapter
                 if (PeParser.FindImport(executable, GoogleTestConstants.GoogleTestDllMarker, StringComparison.OrdinalIgnoreCase, logger)
                     || Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
                 {
-                    logger.DebugInfo($"Google Test indicators found in executable {executable}"); // TODO localization
+                    logger.DebugInfo($"Google Test indicators found in executable {executable}");
                     return true;
                 }
             }

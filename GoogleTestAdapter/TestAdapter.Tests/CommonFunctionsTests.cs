@@ -17,6 +17,12 @@ namespace GoogleTestAdapter.TestAdapter
         private readonly Mock<IRunSettings> _mockRunSettings = new Mock<IRunSettings>(MockBehavior.Strict);
         private readonly Mock<IMessageLogger> _mockMessageLogger = new Mock<IMessageLogger>();
 
+        [TestInitialize]
+        public void SetUp()
+        {
+            _mockRunSettings.Setup(rs => rs.GetSettings(It.Is<string>(s => s == GoogleTestConstants.TestPropertySettingsName))).Returns((ISettingsProvider)null);
+        }
+
         [TestCleanup]
         public void TearDown()
         {
