@@ -130,6 +130,17 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_EmptyExe_CorrectErrorHandling()
+        {
+            bool result = GoogleTestDiscoverer
+                .IsGoogleTestExecutable(TestResources.EmptyExe, "", TestEnvironment.Logger);
+
+            result.Should().BeFalse();
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(s => s.Contains("Error while parsing imports") && s.Contains(" 0:") && s.Contains(new System.ComponentModel.Win32Exception(0).Message))));
+        }
+
+        [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTestsDebug_FindsTestsWithLocation()
         {
