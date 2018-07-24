@@ -175,7 +175,7 @@ namespace GoogleTestAdapter.VsPackage
 
         private RunSettings GetRunSettingsFromOptionPages()
         {
-            GetVisualStudioConfiguration(out string solutionDir, out string platform, out string configuration);
+            GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName);
 
             return new RunSettings
             {
@@ -212,14 +212,14 @@ namespace GoogleTestAdapter.VsPackage
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
                 SolutionDir = solutionDir,
-                Platform = platform,
-                Configuration = configuration
+                PlatformName = platformName,
+                ConfigurationName = configurationName
             };
         }
 
-        private void GetVisualStudioConfiguration(out string solutionDir, out string platform, out string configuration)
+        private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
         {
-            solutionDir = platform = configuration = null;
+            solutionDir = platformName = configurationName = null;
 
             try
             {
@@ -232,8 +232,8 @@ namespace GoogleTestAdapter.VsPackage
                         var configurationManager = dte.Solution.Projects.Item(1).ConfigurationManager;  
                         var activeConfiguration = configurationManager.ActiveConfiguration;
 
-                        platform = activeConfiguration.PlatformName;
-                        configuration = activeConfiguration.ConfigurationName;
+                        platformName = activeConfiguration.PlatformName;
+                        configurationName = activeConfiguration.ConfigurationName;
                     }
                 }
             }

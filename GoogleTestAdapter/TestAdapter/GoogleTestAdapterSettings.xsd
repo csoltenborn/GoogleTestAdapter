@@ -89,12 +89,12 @@
           <xsd:documentation>Only for internal use</xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="Platform"                     minOccurs="0" type="xsd:string">
+      <xsd:element name="PlatformName"                 minOccurs="0" type="xsd:string">
         <xsd:annotation>
           <xsd:documentation>Only for internal use</xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="Configuration"                minOccurs="0" type="xsd:string">
+      <xsd:element name="ConfigurationName"            minOccurs="0" type="xsd:string">
         <xsd:annotation>
           <xsd:documentation>Only for internal use</xsd:documentation>
         </xsd:annotation>

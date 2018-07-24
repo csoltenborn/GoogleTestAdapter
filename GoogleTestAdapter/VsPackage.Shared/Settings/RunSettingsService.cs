@@ -109,8 +109,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             // internal
             settings.DebuggingNamedPipeId = null;
             settings.SolutionDir = null;
-            settings.Platform = null;
-            settings.Configuration = null;
+            settings.PlatformName = null;
+            settings.ConfigurationName = null;
 
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }
