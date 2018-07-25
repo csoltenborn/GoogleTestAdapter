@@ -89,6 +89,16 @@
           <xsd:documentation>Only for internal use</xsd:documentation>
         </xsd:annotation>
       </xsd:element>
+      <xsd:element name="PlatformName"                 minOccurs="0" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Only for internal use</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ConfigurationName"            minOccurs="0" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Only for internal use</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
     </xsd:all>
     <xsd:attribute name="ProjectRegex" type="xsd:string" />
   </xsd:complexType>

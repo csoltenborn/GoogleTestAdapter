@@ -25,7 +25,9 @@ namespace GoogleTestAdapter.Tests.Common
             MockLogger = new Mock<ILogger>();
             MockLogger.Setup(l => l.GetMessages(It.IsAny<Severity[]>())).Returns(new List<string>());
 
-            Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
+            var mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
+            var mockRunSettings = new Mock<RunSettings>();
+            mockSettingsContainer.Setup(c => c.SolutionSettings).Returns(mockRunSettings.Object);
             MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object, Path.GetFullPath(TestResources.SampleTestsSolutionDir));
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 

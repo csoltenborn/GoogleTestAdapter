@@ -175,6 +175,8 @@ namespace GoogleTestAdapter.VsPackage
 
         private RunSettings GetRunSettingsFromOptionPages()
         {
+            GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName);
+
             return new RunSettings
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
@@ -209,20 +211,36 @@ namespace GoogleTestAdapter.VsPackage
                 UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
-                SolutionDir = GetSolutionDir()
+                SolutionDir = solutionDir,
+                PlatformName = platformName,
+                ConfigurationName = configurationName
             };
         }
 
-        private string GetSolutionDir()
+        private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
         {
+            solutionDir = platformName = configurationName = null;
+
             try
             {
-                DTE dte = GetService(typeof(DTE)) as DTE;
-                return Path.GetDirectoryName(dte.Solution.FullName);
+                if (GetService(typeof(DTE)) is DTE dte)
+                {
+                    solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+
+                    if (dte.Solution.Projects.Count > 0)
+                    {  
+                        var configurationManager = dte.Solution.Projects.Item(1).ConfigurationManager;  
+                        var activeConfiguration = configurationManager.ActiveConfiguration;
+
+                        platformName = activeConfiguration.PlatformName;
+                        configurationName = activeConfiguration.ConfigurationName;
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                new ActivityLogLogger(this, () => true)
+                    .LogError($"Exception while receiving configuration info from Visual Studio{Environment.NewLine}{e}");
             }
         }
     }
