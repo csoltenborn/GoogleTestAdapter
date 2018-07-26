@@ -262,10 +262,10 @@ namespace GoogleTestAdapter.Settings
         public virtual string DebuggingNamedPipeId => _currentSettings.DebuggingNamedPipeId;
         public virtual string SolutionDir => _solutionDir ?? _currentSettings.SolutionDir;
 
-        public const string OptionUseNewTestExecutionFramework = "Use new test execution framework (experimental)";
+        public const string OptionUseNewTestExecutionFramework = "Use native debugging";
         public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
         public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.";
+            "Make use of native debugging (in contrast to debugging provided by the VsTest framework). Advantages: test crash detection and test output printing also work in debug mode.";
 
         public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
 
