@@ -130,6 +130,26 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_WithSlowRegex_TimesOutAndProducesErrorMessage()
+        {
+            // regex from https://stackoverflow.com/questions/9687596/slow-regex-performance
+            string slowRegex = "\"(([^\\\\\"]*)(\\\\.)?)*\"";
+
+            var stopwatch = Stopwatch.StartNew();
+            bool result = GoogleTestDiscoverer.IsGoogleTestExecutable(
+                "\"This is an unterminated string and takes FOREVER to match", 
+                slowRegex, 
+                TestEnvironment.Logger);
+            stopwatch.Stop();
+
+            result.Should().BeFalse();
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains($"'{slowRegex}'") && s.Contains("timed out"))), Times.Exactly(1));
+            stopwatch.Elapsed.Should().BeGreaterOrEqualTo(GoogleTestDiscoverer.RegexTimeout);
+            stopwatch.Elapsed.Should().BeLessThan(GoogleTestDiscoverer.RegexTimeout.Add(TimeSpan.FromSeconds(1)));
+        }
+
+        [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTestsDebug_FindsTestsWithLocation()
         {

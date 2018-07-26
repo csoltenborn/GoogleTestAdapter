@@ -20,6 +20,7 @@ namespace GoogleTestAdapter
     public class GoogleTestDiscoverer
     {
         public const string GoogleTestIndicator = ".is_google_test";
+        public static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(3);
 
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
@@ -110,7 +111,7 @@ namespace GoogleTestAdapter
             bool matches = false;
             try
             {
-                matches = Regex.IsMatch(executable, regex);
+                matches = Regex.IsMatch(executable, regex, RegexOptions.None, RegexTimeout);
             }
             catch (ArgumentException e)
             {
