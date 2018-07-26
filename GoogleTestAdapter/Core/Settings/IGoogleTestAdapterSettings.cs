@@ -51,6 +51,8 @@ namespace GoogleTestAdapter.Settings
         // internal
         string DebuggingNamedPipeId { get; set; }
         string SolutionDir { get; set; }
+        string PlatformName { get; set; }
+        string ConfigurationName { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -88,6 +90,8 @@ namespace GoogleTestAdapter.Settings
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
             self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
+            self.PlatformName = self.PlatformName ?? other.PlatformName;
+            self.ConfigurationName = self.ConfigurationName ?? other.ConfigurationName;
         }
     }
 

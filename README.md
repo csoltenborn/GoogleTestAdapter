@@ -160,6 +160,8 @@ For technical reasons, not all features are available in all environments; refer
 | - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
 | Placeholders | | |
 | - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
+| - `$(Platform)` | yes | no | no
+| - `$(Configuration)` | yes | no | no
 | - `$(ExecutableDir)` | yes | yes | yes
 | - `$(Executable)` | yes | yes | yes
 | - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes

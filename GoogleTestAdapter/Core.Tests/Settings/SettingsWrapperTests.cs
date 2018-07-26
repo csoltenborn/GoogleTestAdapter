@@ -290,6 +290,20 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetPathExtension__PlatformAndConfigurationNamePlaceholdersAreReplaced()
+        {
+            MockXmlOptions.Setup(o => o.PlatformName).Returns("Debug");
+            MockXmlOptions.Setup(o => o.ConfigurationName).Returns("x86");
+            MockXmlOptions.Setup(o => o.PathExtension).Returns(
+                $"P:{SettingsWrapper.PlatformNamePlaceholder}, C:{SettingsWrapper.ConfigurationNamePlaceholder}");
+
+            string result = TheOptions.GetPathExtension(TestResources.LoadTests_ReleaseX86);
+
+            result.Should().Be("P:Debug, C:x86");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);
