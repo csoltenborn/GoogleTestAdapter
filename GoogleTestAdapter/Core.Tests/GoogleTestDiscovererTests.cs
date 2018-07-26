@@ -145,8 +145,7 @@ namespace GoogleTestAdapter
 
             result.Should().BeFalse();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains($"'{slowRegex}'") && s.Contains("timed out"))), Times.Exactly(1));
-            stopwatch.Elapsed.Should().BeGreaterOrEqualTo(GoogleTestDiscoverer.RegexTimeout);
-            stopwatch.Elapsed.Should().BeLessThan(GoogleTestDiscoverer.RegexTimeout.Add(TimeSpan.FromSeconds(1)));
+            stopwatch.Elapsed.Should().BeCloseTo(GoogleTestDiscoverer.RegexTimeout, 250);
         }
 
         [TestMethod]
