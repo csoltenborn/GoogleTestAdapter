@@ -141,6 +141,7 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestExecutable_WithSlowRegex_TimesOutAndProducesErrorMessage()
         {
             // regex from https://stackoverflow.com/questions/9687596/slow-regex-performance
