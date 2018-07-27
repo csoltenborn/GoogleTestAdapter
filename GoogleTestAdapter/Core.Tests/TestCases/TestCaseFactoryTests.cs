@@ -45,6 +45,14 @@ namespace GoogleTestAdapter.TestCases
         }
 
         [TestMethod]
+        [TestCategory(Unit)]
+        public void CreateTestCases_OldExeDiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged()
+        {
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged();
+        }
+
+        [TestMethod]
         [TestCategory(Integration)]
         public void CreateTestCases_OldExeWithAdditionalPdb_TestCasesAreFound()
         {
