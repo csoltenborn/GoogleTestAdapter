@@ -4,9 +4,11 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
+using Moq;
 
 namespace GoogleTestAdapter.Helpers
 {
@@ -43,6 +45,30 @@ namespace GoogleTestAdapter.Helpers
 
             // ReSharper disable once UnusedVariable
             Utils.DeleteDirectory(dir, out string errorMessage).Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetExtendedPath_WithExtension_ExtendsPath()
+        {
+            const string toAdd = @"c:\some\path\to\add";
+            string result = Utils.GetExtendedPath(toAdd);
+
+            string path = Environment.GetEnvironmentVariable("PATH");
+            result.Length.Should().Be(path.Length + toAdd.Length + 1);
+            result.Should().Contain(path);
+            string[] pathParts = result.Split(';');
+            pathParts.Should().Contain(s => s.Equals(toAdd));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetExtendedPath_NoExtension_ReturnsPath()
+        {
+            string result = Utils.GetExtendedPath("");
+
+            string path = Environment.GetEnvironmentVariable("PATH");
+            result.Should().Be(path);
         }
 
         [TestMethod]
@@ -163,6 +189,21 @@ namespace GoogleTestAdapter.Helpers
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void ValidatePattern_InvalidPattern_BothPartsReported()
+        {
+            char[] invalidPathChars = Path.GetInvalidPathChars();
+            if (invalidPathChars.Length < 1)
+                Assert.Inconclusive("Cannot test invalid path chars as none are reported.");
+
+            bool result = Utils.ValidatePattern(""+invalidPathChars[0], out string errorMessage);
+
+            result.Should().BeFalse();
+            errorMessage.Should().Contain("file pattern part");
+            errorMessage.Should().Contain("path part");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void ValidatePattern_TempDir_FilePartReported()
         {
             bool result = Utils.ValidatePattern(Path.GetTempPath(), out string errorMessage);
@@ -191,6 +232,40 @@ namespace GoogleTestAdapter.Helpers
 
             result.Should().BeTrue();
             errorMessage.Should().BeNullOrEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetMatchingFiles_ValidInput_ReturnsValidList()
+        {
+            Mock<ILogger> MockLogger = new Mock<ILogger>();
+            string[] result = Utils.GetMatchingFiles(Path.GetDirectoryName(TestResources.Tests_DebugX86) + @"\*.exe", MockLogger.Object);
+
+            result.Should().Contain(s => s.Equals(TestResources.Tests_DebugX86, StringComparison.CurrentCultureIgnoreCase));
+            result.Should().NotContain(s => !s.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase));
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetMatchingFiles_InvalidInput_ErrorReported()
+        {
+            Mock<ILogger> MockLogger = new Mock<ILogger>();
+            string[] result = Utils.GetMatchingFiles(null, MockLogger.Object);
+
+            result.Length.Should().Be(0);
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetMatchingFiles_NonExistingPath_ErrorReported()
+        {
+            Mock<ILogger> MockLogger = new Mock<ILogger>();
+            string[] result = Utils.GetMatchingFiles(@"some\non\exisiting\path", MockLogger.Object);
+
+            result.Length.Should().Be(0);
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Once);
         }
 
         private void SetReadonlyFlag(string dir)
