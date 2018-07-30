@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using CommonMark;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
-namespace GoogleTestAdapter.VsPackage.ReleaseNotes
+namespace GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes
 {
     public class ReleaseNotesCreator
     {

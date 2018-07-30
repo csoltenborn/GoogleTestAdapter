@@ -1,13 +1,12 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
-using GoogleTestAdapter.VsPackage.ReleaseNotes;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using GoogleTestAdapter.Settings;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
+using GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;

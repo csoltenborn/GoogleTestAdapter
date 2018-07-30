@@ -1,4 +1,4 @@
-﻿namespace GoogleTestAdapter.VsPackage.ReleaseNotes
+﻿namespace GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes
 {
     partial class ReleaseNotesDialog
     {

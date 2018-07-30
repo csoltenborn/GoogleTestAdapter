@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace GoogleTestAdapter.VsPackage.ReleaseNotes
+namespace GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes
 {
     public partial class ReleaseNotesDialog : Form
     {
-        internal class ShowReleaseNotesChangedEventArgs : EventArgs
+        public class ShowReleaseNotesChangedEventArgs : EventArgs
         {
-            internal bool ShowReleaseNotes { get; set; }
+            public bool ShowReleaseNotes { get; set; }
         }
 
-        internal event EventHandler<ShowReleaseNotesChangedEventArgs> ShowReleaseNotesChanged;
+        public event EventHandler<ShowReleaseNotesChangedEventArgs> ShowReleaseNotesChanged;
 
         private readonly ISet<Uri> _externalUris = new HashSet<Uri>();
 
@@ -32,19 +32,19 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             OkButton.Click += (sender, args) => Close();
         }
 
-        internal Uri HtmlFile
+        public Uri HtmlFile
         {
             get => WebBrowser.Url;
             set => WebBrowser.Url = value;
         }
 
-        internal bool ShowReleaseNotesChecked
+        public bool ShowReleaseNotesChecked
         {
             get => ShowReleaseNotesCheckBox.Checked;
             set => ShowReleaseNotesCheckBox.Checked = value;
         }
 
-        internal void AddExternalUri(Uri externalUri)
+        public void AddExternalUri(Uri externalUri)
         {
             _externalUris.Add(externalUri);
         }

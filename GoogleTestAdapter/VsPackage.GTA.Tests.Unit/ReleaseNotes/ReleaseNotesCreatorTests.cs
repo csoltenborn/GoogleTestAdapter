@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
+using GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 

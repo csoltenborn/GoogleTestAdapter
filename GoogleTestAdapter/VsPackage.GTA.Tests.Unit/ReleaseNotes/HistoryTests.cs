@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common.Assertions;
+using GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 

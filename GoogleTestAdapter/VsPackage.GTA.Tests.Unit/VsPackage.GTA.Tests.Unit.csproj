@@ -105,6 +105,10 @@
       <Project>{2f0e4458-6c1c-461f-a60a-b731ad97e839}</Project>
       <Name>Tests.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VsPackage.GTA.Shared\VsPackage.GTA.Shared.csproj">
+      <Project>{3c1c6df6-b81d-47e9-bf60-2a04b86852c8}</Project>
+      <Name>VsPackage.GTA.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VsPackage.GTA\VsPackage.GTA.csproj">
       <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
       <Name>VsPackage.GTA</Name>

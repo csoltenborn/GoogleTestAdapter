@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GoogleTestAdapter.VsPackage.GTA.ReleaseNotes
+namespace GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes
 {
     public static class Donations
     {

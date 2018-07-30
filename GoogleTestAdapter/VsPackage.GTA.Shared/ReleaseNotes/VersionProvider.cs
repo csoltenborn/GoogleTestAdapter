@@ -3,10 +3,10 @@ using System.Reflection;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell.Settings;
 
-namespace GoogleTestAdapter.VsPackage.ReleaseNotes
+namespace GoogleTestAdapter.VsPackage.GTA.Shared.ReleaseNotes
 {
 
-    internal class VersionProvider
+    public class VersionProvider
     {
         private const string CollectionName = "GoogleTestAdapter";
         private const string OldVersionPropertyName = "LastStartedVersion"; // TODO remove for release 1.0
@@ -14,7 +14,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private readonly WritableSettingsStore _settingsStore;
 
-        internal VersionProvider(IServiceProvider serviceProvider)
+        public VersionProvider(IServiceProvider serviceProvider)
         {
             var settingsManager = new ShellSettingsManager(serviceProvider);
             _settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
                 _settingsStore.DeleteProperty(CollectionName, OldVersionPropertyName);
         }
 
-        internal Version FormerlyInstalledVersion
+        public Version FormerlyInstalledVersion
         {
             get
             {
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             }
         }
 
-        internal Version CurrentVersion
+        public Version CurrentVersion
         {
             get
             {
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             }
         }
 
-        internal void UpdateLastVersion()
+        public void UpdateLastVersion()
         {
             _settingsStore.SetString(CollectionName, VersionPropertyName, CurrentVersion.ToString());
         }
