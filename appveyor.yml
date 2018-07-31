@@ -41,7 +41,7 @@ after_build:
 
     Copy-Item -Path $sourceFile2012 -Destination $targetFile2012
 
-    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage.GTA\Resources\ReleaseNotes\" + $version + ".md")).ToString()
+    $releaseNotesFile = (Resolve-Path ("GoogleTestAdapter\VsPackage.GTA.Shared\Resources\ReleaseNotes\" + $version + ".md")).ToString()
 
     $releaseNotes = ([IO.File]::ReadAllLines($releaseNotesFile) -join '\n')
 
