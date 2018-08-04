@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading;
 using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
+using GoogleTestAdapter.VsPackage.Helpers;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -21,6 +22,27 @@ namespace GoogleTestAdapter.VsPackage
 
         private void DisplayReleaseNotesIfNecessaryProc()
         {
+            try
+            {
+                TryDisplayReleaseNotesIfNecessary();
+            }
+            catch (Exception e)
+            {
+                string msg = $"Exception while trying to update last version and show release notes:{Environment.NewLine}{e}";
+                try
+                {
+                    new ActivityLogLogger(this, () => true).LogError(msg);
+                }
+                catch (Exception)
+                {
+                    // well...
+                    Console.Error.WriteLine(msg);
+                }
+            }
+        }
+
+        private void TryDisplayReleaseNotesIfNecessary()
+        {
             var versionProvider = new VersionProvider(this);
 
             Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
@@ -31,7 +53,8 @@ namespace GoogleTestAdapter.VsPackage
             if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&
                 (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion))
             {
-                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion, Donations.IsPreDonationsVersion(formerlyInstalledVersion));
+                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion,
+                    Donations.IsPreDonationsVersion(formerlyInstalledVersion));
                 DisplayReleaseNotes(creator.CreateHtml());
             }
         }
