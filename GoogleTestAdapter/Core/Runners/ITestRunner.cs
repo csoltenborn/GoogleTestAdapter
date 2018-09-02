@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 
 namespace GoogleTestAdapter.Runners
 {
 
     public interface ITestRunner
     {
-        // TODO remove isBeingDebugged parameter (use debuggedLauncher != null)
         void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, 
-            IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor);
+            IDebuggedProcessExecutorFactory processExecutorFactory);
 
         void Cancel();
     }

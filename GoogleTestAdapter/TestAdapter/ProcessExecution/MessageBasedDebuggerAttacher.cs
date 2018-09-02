@@ -1,12 +1,11 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
-using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using System;
 using System.Diagnostics;
 using System.ServiceModel;
+using GoogleTestAdapter.Common;
 
-namespace GoogleTestAdapter.TestAdapter.Framework
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public class MessageBasedDebuggerAttacher : IDebuggerAttacher
     {
@@ -15,11 +14,6 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private readonly ILogger _logger;
         private readonly string _debuggingNamedPipeId;
         private readonly TimeSpan _timeout;
-
-        public static string GetPipeName(string id)
-        {
-            return $"GTA_{id}";
-        }
 
         public MessageBasedDebuggerAttacher(string debuggingNamedPipeId, TimeSpan timeout, ILogger logger)
         {

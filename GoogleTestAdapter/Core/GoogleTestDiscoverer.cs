@@ -12,6 +12,8 @@ using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestCases;
 
@@ -25,23 +27,25 @@ namespace GoogleTestAdapter
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
         private readonly IDiaResolverFactory _diaResolverFactory;
+        private readonly IProcessExecutorFactory _processExecutorFactory;
 
-        public GoogleTestDiscoverer(ILogger logger, SettingsWrapper settings, IDiaResolverFactory diaResolverFactory = null)
+        public GoogleTestDiscoverer(ILogger logger, SettingsWrapper settings, IProcessExecutorFactory processExecutorFactory = null, IDiaResolverFactory diaResolverFactory = null)
         {
             _logger = logger;
             _settings = settings;
+            _processExecutorFactory = processExecutorFactory ?? new ProcessExecutorFactory();
             _diaResolverFactory = diaResolverFactory ?? DefaultDiaResolverFactory.Instance;
         }
 
         public void DiscoverTests(IEnumerable<string> executables, ITestFrameworkReporter reporter)
         {
             var discoveryActions = executables
-                .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory)))
+                .Select(e => (Action)(() => DiscoverTests(e, reporter, _settings.Clone(), _logger, _diaResolverFactory, _processExecutorFactory)))
                 .ToArray();
             Utils.SpawnAndWait(discoveryActions);
         }
 
-        private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory)
+        private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
         {
             settings.ExecuteWithSettingsForExecutable(executable, () =>
             {
@@ -55,7 +59,7 @@ namespace GoogleTestAdapter
                     logger.DebugInfo("Added testcase " + tc.DisplayName);
                     nrOfTestCases++;
                 };
-                var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory);
+                var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory, processExecutorFactory);
                 factory.CreateTestCases(reportTestCases);
                 logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
             }, logger);
@@ -63,7 +67,7 @@ namespace GoogleTestAdapter
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
         {
-            var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory);
+            var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory, _processExecutorFactory);
             IList<TestCase> testCases = factory.CreateTestCases();
 
             foreach (TestCase testCase in testCases)

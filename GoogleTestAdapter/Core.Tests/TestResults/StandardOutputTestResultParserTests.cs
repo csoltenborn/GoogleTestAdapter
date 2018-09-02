@@ -350,7 +350,7 @@ namespace GoogleTestAdapter.TestResults
 
         private IList<TestResult> GetTestResultsFromCompleteOutputFile()
         {
-            var testCases = new GoogleTestDiscoverer(MockLogger.Object, MockOptions.Object, new DefaultDiaResolverFactory())
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, MockOptions.Object)
                 .GetTestsFromExecutable(TestResources.Tests_ReleaseX64);
             return new StandardOutputTestResultParser(testCases, CompleteStandardOutput, MockLogger.Object)
                 .GetTestResults();

@@ -7,7 +7,6 @@ using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using ExtensionUriAttribute = Microsoft.VisualStudio.TestPlatform.ObjectModel.ExtensionUriAttribute;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -15,6 +14,7 @@ using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Framework;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -222,24 +222,18 @@ namespace GoogleTestAdapter.TestAdapter
 
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
-            var launcher = new DebuggedProcessLauncher(frameworkHandle);
-            ProcessExecutor processExecutor = null;
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                IDebuggerAttacher debuggerAttacher = null;
-                if (runContext.IsBeingDebugged)
-                    debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
-                processExecutor = new ProcessExecutor(debuggerAttacher, _logger);
-            }
+
+            var debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
+            var processExecutorFactory = new DebuggedProcessExecutorFactory(frameworkHandle, debuggerAttacher);
+
             lock (_lock)
             {
                 if (_canceled)
                     return;
 
-                _executor = new GoogleTestExecutor(_logger, _settings);
+                _executor = new GoogleTestExecutor(_logger, _settings, processExecutorFactory);
             }
-            _executor.RunTests(testCasesToRun, reporter, launcher,
-                runContext.IsBeingDebugged, processExecutor);
+            _executor.RunTests(testCasesToRun, reporter, runContext.IsBeingDebugged);
             reporter.AllTestsFinished();
         }
 

@@ -12,25 +12,24 @@ using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.Win32.SafeHandles;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
-    public class ProcessExecutor : IProcessExecutor
+    public class NativeDebuggedProcessExecutor : IDebuggedProcessExecutor
     {
         public const int ExecutionFailed = int.MaxValue;
 
         private readonly IDebuggerAttacher _debuggerAttacher;
+        private readonly bool _printTestOutput;
         private readonly ILogger _logger;
 
-        public ProcessExecutor(ILogger logger) : this(null, logger)
+        public NativeDebuggedProcessExecutor(IDebuggerAttacher debuggerAttacher, bool printTestOutput, ILogger logger)
         {
-        }
-
-        public ProcessExecutor(IDebuggerAttacher debuggerAttacher, ILogger logger)
-        {
-            _debuggerAttacher = debuggerAttacher;
+            _debuggerAttacher = debuggerAttacher ?? throw new ArgumentNullException(nameof(debuggerAttacher));
+            _printTestOutput = printTestOutput;
             _logger = logger;
         }
 
@@ -38,7 +37,7 @@ namespace GoogleTestAdapter.Helpers
         {
             try
             {
-                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, reportOutputLine, processId => _processId = processId);
+                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
 
             }
             catch (Win32Exception ex)
@@ -54,12 +53,17 @@ namespace GoogleTestAdapter.Helpers
         public void Cancel()
         {
             if (_processId.HasValue)
-                TestProcessLauncher.KillProcess(_processId.Value, _logger);
+                ProcessUtils.KillProcess(_processId.Value, _logger);
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+#pragma warning disable 169
+#pragma warning disable 414
         private static class NativeMethods
         {
             private class ProcessOutputPipeStream : PipeStream
@@ -97,7 +101,7 @@ namespace GoogleTestAdapter.Helpers
 
             internal static int ExecuteCommandBlocking(
                 string command, string parameters, string workingDir, string pathExtension, 
-                IDebuggerAttacher debuggerAttacher, Action<string> reportOutputLine, Action<int> reportProcessId)
+                IDebuggerAttacher debuggerAttacher, ILogger logger, bool printTestOutput, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
                 using (var pipeStream = new ProcessOutputPipeStream())
                 {
@@ -108,13 +112,26 @@ namespace GoogleTestAdapter.Helpers
                     {
                         pipeStream.ConnectedToChildProcess();
 
-                        debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
+                        logger.DebugInfo($"Attaching debugger to '{command}' via native implementation");
+                        if (!debuggerAttacher.AttachDebugger(processInfo.dwProcessId))
+                        {
+                            logger.LogError($"Could not attach debugger to process {processInfo.dwProcessId}");
+                        }
 
                         ResumeThread(thread);
 
                         using (var reader = new StreamReader(pipeStream, Encoding.Default))
+                        {
                             while (!reader.EndOfStream)
-                                reportOutputLine(reader.ReadLine());
+                            {
+                                string line = reader.ReadLine();
+                                reportOutputLine(line);
+                                if (printTestOutput)
+                                {
+                                    logger.LogInfo(line);
+                                }
+                            }
+                        }
 
                         WaitForSingleObject(process, INFINITE);
 
@@ -280,5 +297,7 @@ namespace GoogleTestAdapter.Helpers
                 public bool bInheritHandle;
             }
         }
+#pragma warning restore 414
+#pragma warning restore 169
     }
 }

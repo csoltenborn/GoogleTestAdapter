@@ -85,7 +85,7 @@
     <Compile Include="GoogleTestDiscovererTests.cs" />
     <Compile Include="GoogleTestExecutorTests.cs" />
     <Compile Include="Helpers\DebugUtilsTests.cs" />
-    <Compile Include="Helpers\ProcessExecutorTests.cs" />
+    <Compile Include="Helpers\DotNetProcessExecutorTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\ByteUtilsTests.cs" />
@@ -102,7 +102,6 @@
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
     <Compile Include="Settings\SettingsWrapperTests.cs" />
-    <Compile Include="Helpers\TestProcessLauncherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />
   </ItemGroup>

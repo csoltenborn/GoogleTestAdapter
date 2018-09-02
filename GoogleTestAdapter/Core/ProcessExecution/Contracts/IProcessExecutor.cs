@@ -3,9 +3,8 @@
 using System;
 using System.IO;
 
-namespace GoogleTestAdapter.Framework
+namespace GoogleTestAdapter.ProcessExecution.Contracts
 {
-
     public interface IProcessExecutor
     {
         int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine);

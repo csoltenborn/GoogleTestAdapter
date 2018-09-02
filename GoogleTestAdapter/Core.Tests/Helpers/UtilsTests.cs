@@ -112,11 +112,11 @@ namespace GoogleTestAdapter.Helpers
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void SpawnAndWait_TwoTasks_AreExecutedInParallel()
+        public void SpawnAndWait_SeveralTasks_AreExecutedInParallel()
         {
-            int nrOfTasks = Environment.ProcessorCount;
+            int nrOfTasks = Environment.ProcessorCount - 2;
             if (nrOfTasks < 2)
-                Assert.Inconclusive("System only has one processor, skipping test");
+                Assert.Inconclusive("System does not have enough processors, skipping test");
 
             int taskDurationInMs = 500;
 
@@ -131,7 +131,7 @@ namespace GoogleTestAdapter.Helpers
             stopWatch.Stop();
 
             stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(taskDurationInMs);
-            stopWatch.ElapsedMilliseconds.Should().BeLessThan(2 * taskDurationInMs);
+            stopWatch.ElapsedMilliseconds.Should().BeLessThan((int)(1.9 * taskDurationInMs));
         }
 
         [TestMethod]

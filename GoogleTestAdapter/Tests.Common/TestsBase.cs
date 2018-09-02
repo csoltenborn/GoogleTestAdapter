@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,6 +14,19 @@ namespace GoogleTestAdapter.Tests.Common
 {
     public abstract class TestsBase
     {
+        private class DummyProcessFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
+        {
+            public IDebuggedProcessExecutor CreateFrameworkDebuggingExecutor(bool printTestOutput, ILogger logger)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         protected readonly Mock<ILogger> MockLogger;
         protected readonly Mock<SettingsWrapper> MockOptions;
         protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter;
@@ -19,6 +34,8 @@ namespace GoogleTestAdapter.Tests.Common
         protected readonly TestDataCreator TestDataCreator;
 
         protected readonly TestEnvironment TestEnvironment;
+
+        protected IDebuggedProcessExecutorFactory ProcessExecutorFactory => new DummyProcessFactory();
 
         protected TestsBase()
         {
