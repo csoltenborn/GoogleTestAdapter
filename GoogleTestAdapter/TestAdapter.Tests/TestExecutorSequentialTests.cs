@@ -187,4 +187,15 @@ namespace GoogleTestAdapter.TestAdapter
 
     }
 
+    [TestClass]
+    public class TestExecutorSequentialTests_OldTestExecutionFramework : TestExecutorSequentialTests
+    {
+        [TestInitialize]
+        public override void SetUp()
+        {
+            base.SetUp();
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+        }
+    }
+
 }
