@@ -99,7 +99,7 @@ namespace GoogleTestAdapter.Runners
             thread.Join();
             stopwatch.Stop();
 
-            testCasesToRun.Count.Should().Be(2);
+            testCasesToRun.Should().HaveCount(2);
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
 
             stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(lower); // 1st test should be executed

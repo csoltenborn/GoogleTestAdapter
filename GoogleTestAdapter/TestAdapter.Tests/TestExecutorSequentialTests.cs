@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
             List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
-            testCasesToRun.Count.Should().Be(2);
+            testCasesToRun.Should().HaveCount(2);
 
             var stopwatch = new Stopwatch();
             var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);

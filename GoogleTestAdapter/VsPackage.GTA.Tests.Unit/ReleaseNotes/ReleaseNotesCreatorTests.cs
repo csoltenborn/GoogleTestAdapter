@@ -21,12 +21,12 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             // only in introduction
             Version version = History.Versions.First();
             MatchCollection firstVersionMatches = Regex.Matches(html, version.ToString());
-            firstVersionMatches.Count.Should().Be(1);
+            firstVersionMatches.Should().HaveCount(1);
 
             // in introduction and version list
             version = History.Versions.Last();
             MatchCollection lastVersionMatches = Regex.Matches(html, version.ToString());
-            lastVersionMatches.Count.Should().Be(2);
+            lastVersionMatches.Should().HaveCount(2);
 
             firstVersionMatches[0].Index.Should().BeLessThan(lastVersionMatches[0].Index);
 
@@ -49,12 +49,12 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             // only in version list
             Version version = History.Versions.First();
             MatchCollection firstVersionMatches = Regex.Matches(html, version.ToString());
-            firstVersionMatches.Count.Should().Be(1);
+            firstVersionMatches.Should().HaveCount(1);
 
             // in introduction and version list
             version = History.Versions.Last();
             MatchCollection lastVersionMatches = Regex.Matches(html, version.ToString());
-            lastVersionMatches.Count.Should().Be(2);
+            lastVersionMatches.Should().HaveCount(2);
 
             firstVersionMatches[0].Index.Should().BeGreaterThan(lastVersionMatches[0].Index);
 

@@ -141,7 +141,7 @@ namespace GoogleTestAdapter.TestResults
         {
             List<TestResult> results = ComputeTestResults(Complete);
 
-            results.Count.Should().Be(3);
+            results.Should().HaveCount(3);
 
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[0]);
@@ -167,7 +167,7 @@ namespace GoogleTestAdapter.TestResults
         {
             List<TestResult> results = ComputeTestResults(CrashesImmediately);
 
-            results.Count.Should().Be(2);
+            results.Should().HaveCount(2);
 
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[0]);
@@ -188,7 +188,7 @@ namespace GoogleTestAdapter.TestResults
         {
             List<TestResult> results = ComputeTestResults(CrashesAfterErrorMsg);
 
-            results.Count.Should().Be(3);
+            results.Should().HaveCount(3);
 
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             XmlTestResultParserTests.AssertTestResultIsFailure(results[0]);
@@ -214,7 +214,7 @@ namespace GoogleTestAdapter.TestResults
         {
             List<TestResult> results = ComputeTestResults(WrongDurationUnit);
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
             results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(1));
             results[0].ErrorStackTrace.Should().Contain(@"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp");
@@ -233,7 +233,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 List<TestResult> results = ComputeTestResults(ThousandsSeparatorInDuration);
 
-                results.Count.Should().Be(1);
+                results.Should().ContainSingle();
                 results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddFails");
                 results[0].Duration.Should().Be(TimeSpan.FromMilliseconds(4656));
             }
@@ -249,7 +249,7 @@ namespace GoogleTestAdapter.TestResults
         {
             List<TestResult> results = ComputeTestResults(PassingTestProducesConsoleOutput);
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             results[0].TestCase.FullyQualifiedName.Should().Be("TestMath.AddPasses");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
         }
@@ -269,7 +269,7 @@ namespace GoogleTestAdapter.TestResults
             var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger)
                 .GetTestResults();
 
-            results.Count.Should().Be(2);
+            results.Should().HaveCount(2);
             results[0].TestCase.FullyQualifiedName.Should().Be("Test.AB");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
             results[1].TestCase.FullyQualifiedName.Should().Be("Test.A");

@@ -233,7 +233,7 @@ namespace GoogleTestAdapter.Runners
             List<CommandLineGenerator.Args> commands = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().ToList();
 
-            commands.Count.Should().Be(3);
+            commands.Should().HaveCount(3);
 
             int lengthOfLongestTestname = allTests.Max(s => s.Length);
             int maxLength = CommandLineGenerator.MaxCommandLength - TestDataCreator.DummyExecutable.Length;
@@ -280,7 +280,7 @@ namespace GoogleTestAdapter.Runners
             List<CommandLineGenerator.Args> commands = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().ToList();
 
-            commands.Count.Should().Be(3);
+            commands.Should().HaveCount(3);
 
             int lengthOfLongestTestname = allTests.Max(s => s.Length);
             int maxLength = CommandLineGenerator.MaxCommandLength - TestDataCreator.DummyExecutable.Length;

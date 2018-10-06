@@ -462,7 +462,7 @@ namespace GoogleTestAdapter.Settings
                 var result = TheOptions.GetAdditionalPdbs(TestResources.Tests_DebugX86).ToList();
 
                 // ReSharper disable once PossibleNullReferenceException
-                result.Count.Should().Be(2);
+                result.Should().HaveCount(2);
                 result[0].Should().Be($"Foo{value}");
                 result[1].Should().Be("Bar");
             }
@@ -478,7 +478,7 @@ namespace GoogleTestAdapter.Settings
 
             MockXmlOptions.Setup(o => o.TraitsRegexesBefore).Returns("Foo///Bar,Baz");
             result = TheOptions.TraitsRegexesBefore;
-            result.Count.Should().Be(1);
+            result.Should().ContainSingle();
             RegexTraitPair resultPair = result[0];
             resultPair.Regex.Should().Be("Foo");
             resultPair.Trait.Name.Should().Be("Bar");
@@ -495,7 +495,7 @@ namespace GoogleTestAdapter.Settings
 
             MockXmlOptions.Setup(o => o.TraitsRegexesAfter).Returns("Foo///Bar,Baz");
             result = TheOptions.TraitsRegexesAfter;
-            result.Count.Should().Be(1);
+            result.Should().ContainSingle();
             RegexTraitPair resultPair = result[0];
             resultPair.Regex.Should().Be("Foo");
             resultPair.Trait.Name.Should().Be("Bar");

@@ -19,9 +19,9 @@ namespace GoogleTestAdapter.Scheduling
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(2);
-            result[0].Count.Should().Be(1);
-            result[1].Count.Should().Be(1);
+            result.Should().HaveCount(2);
+            result[0].Should().ContainSingle();
+            result[1].Should().ContainSingle();
         }
 
         [TestMethod]
@@ -34,9 +34,9 @@ namespace GoogleTestAdapter.Scheduling
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(2);
-            result[0].Count.Should().Be(2);
-            result[1].Count.Should().Be(1);
+            result.Should().HaveCount(2);
+            result[0].Should().HaveCount(2);
+            result[1].Should().ContainSingle();
         }
 
         [TestMethod]
@@ -53,15 +53,15 @@ namespace GoogleTestAdapter.Scheduling
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testcases, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(8);
-            result[0].Count.Should().Be(626);
-            result[1].Count.Should().Be(626);
-            result[2].Count.Should().Be(625);
-            result[3].Count.Should().Be(625);
-            result[4].Count.Should().Be(625);
-            result[5].Count.Should().Be(625);
-            result[6].Count.Should().Be(625);
-            result[7].Count.Should().Be(625);
+            result.Should().HaveCount(8);
+            result[0].Should().HaveCount(626);
+            result[1].Should().HaveCount(626);
+            result[2].Should().HaveCount(625);
+            result[3].Should().HaveCount(625);
+            result[4].Should().HaveCount(625);
+            result[5].Should().HaveCount(625);
+            result[6].Should().HaveCount(625);
+            result[7].Should().HaveCount(625);
         }
 
         [TestMethod]
@@ -74,9 +74,9 @@ namespace GoogleTestAdapter.Scheduling
             ITestsSplitter splitter = new NumberBasedTestsSplitter(testCasesWithCommonSuite, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(2);
-            result[0].Count.Should().Be(1);
-            result[1].Count.Should().Be(1);
+            result.Should().HaveCount(2);
+            result[0].Should().ContainSingle();
+            result[1].Should().ContainSingle();
         }
 
     }

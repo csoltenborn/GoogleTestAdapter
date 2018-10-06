@@ -92,7 +92,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
 
             resultingContainer.Should().NotBeNull();
             resultingContainer.SolutionSettings.Should().NotBeNull();
-            resultingContainer.ProjectSettings.Count.Should().Be(3);
+            resultingContainer.ProjectSettings.Should().HaveCount(3);
 
             resultingContainer.GetSettingsForExecutable("project1").Should().NotBeNull();
             resultingContainer.GetSettingsForExecutable("project2").Should().NotBeNull();

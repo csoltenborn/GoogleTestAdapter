@@ -210,7 +210,7 @@ namespace GoogleTestAdapter
                 var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
                 IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
 
-                testCases.Count.Should().Be(0);
+                testCases.Should().BeEmpty();
                 MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.StartsWith("Could not list test cases of executable"))));
             }
             finally
@@ -320,7 +320,7 @@ namespace GoogleTestAdapter
                 .GetTestsFromExecutable(TestResources.Tests_DebugX86);
 
             mockFactory.Verify(f => f.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ILogger>()), Times.Never);
-            testCases.Count.Should().Be(TestResources.NrOfTests);
+            testCases.Should().HaveCount(TestResources.NrOfTests);
             foreach (TestCase testCase in testCases)
             {
                 testCase.CodeFilePath.Should().Be("");
@@ -338,7 +338,7 @@ namespace GoogleTestAdapter
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.LoadTests_ReleaseX86);
 
-            testCases.Count.Should().Be(5000);
+            testCases.Should().HaveCount(5000);
             for (int i = 0; i < 5000; i++)
             {
                 string fullyQualifiedName = $"LoadTests.Test/{i}";
@@ -422,7 +422,7 @@ namespace GoogleTestAdapter
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            testCases.Count.Should().Be(expectedNrOfTestCases);
+            testCases.Should().HaveCount(expectedNrOfTestCases);
 
             TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
             testCase.DisplayName.Should().Be("TheFixture.AddFails");
@@ -440,7 +440,7 @@ namespace GoogleTestAdapter
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
 
-            testCases.Count.Should().Be(2);
+            testCases.Should().HaveCount(2);
 
             string expectedCodeFilePath = Path.GetFullPath($@"{TestResources.SampleTestsSolutionDir}dlldependentproject\dlltests.cpp").ToLower();
             testCases[0].DisplayName.Should().Be("Passing.InvokeFunction");

@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.Helpers
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("vrr<erfwe");
 
             result.Should().NotBeNull();
-            result.Count.Should().Be(0);
+            result.Should().BeEmpty();
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.Helpers
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString("");
 
             result.Should().NotBeNull();
-            result.Count.Should().Be(0);
+            result.Should().BeEmpty();
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.Helpers
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString(optionsString);
 
             result.Should().NotBeNull();
-            result.Count.Should().Be(1);
+            result.Should().ContainSingle();
             result[0].Regex.Should().Be("MyTest*");
             result[0].Trait.Name.Should().Be("Type");
             result[0].Trait.Value.Should().Be("Small");
@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.Helpers
             List<RegexTraitPair> result = Parser.ParseTraitsRegexesString(optionsString);
 
             result.Should().NotBeNull();
-            result.Count.Should().Be(2);
+            result.Should().HaveCount(2);
 
             result[0].Regex.Should().Be("MyTest*");
             result[0].Trait.Name.Should().Be("Type");
@@ -93,7 +93,7 @@ namespace GoogleTestAdapter.Helpers
             List<RegexTraitPair> results = Parser.ParseTraitsRegexesString(optionsString);
 
             results.Should().NotBeNull();
-            results.Count.Should().Be(2);
+            results.Should().HaveCount(2);
 
             results[0].Regex.Should().Be("GoodRegexOne");
             results[0].Trait.Value.Should().Be("Small");

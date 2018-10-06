@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.Tests.Common.Tests
 
             exitCode.Should().Be(1);
             output.Should().Contain(s => s.Contains("TestMath.AddPasses"));
-            output.Count.Should().Be(563);
+            output.Should().HaveCount(563);
         }
 
         protected void Test_WithSimpleCommand_ReturnsOutputOfCommand()
@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Tests.Common.Tests
             int returnCode = ProcessExecutor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => output.Add(line));
 
             returnCode.Should().Be(0);
-            output.Count.Should().Be(1);
+            output.Should().ContainSingle();
             output[0].Should().Be("2");
         }
 

@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(0);
+            results.Should().BeEmpty();
             MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(0);
+            results.Should().BeEmpty();
             MockLogger.Verify(l => l.DebugWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -53,7 +53,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             MockLogger.Verify(l => l.DebugWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(2);
+            results.Should().HaveCount(2);
             AssertTestResultIsPassed(results[0]);
             AssertTestResultIsSkipped(results[1]);
         }
@@ -91,7 +91,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             AssertTestResultIsPassed(results[0]);
         }
 
@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.TestResults
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             string ErrorMsg = @"Value of: animals.size()
   Actual: 1
 Expected: 3
@@ -122,7 +122,7 @@ Should get three animals";
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             string errorMsg = @"Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0";
             AssertTestResultIsFailure(results[0], errorMsg);
             results[0].ErrorStackTrace.Should().Contain(@"someSimpleParameterizedTest.cpp");
@@ -137,7 +137,7 @@ Should get three animals";
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile2, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             AssertTestResultIsPassed(results[0]);
         }
 
@@ -151,7 +151,7 @@ Should get three animals";
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile2, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             string ErrorMsg = @"#1 - Value of: output_filepath
   Actual: ""this/package/testdata/myoutputfile.dat""
 Expected: input_filepath

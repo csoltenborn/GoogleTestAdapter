@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
         [TestCategory(Unit)]
         public void EventsAreInOrder()
         {
-            Events.Count.Should().Be(TotalEvents);
+            Events.Should().HaveCount(TotalEvents);
             for (int i = 0; i < Events.Count; i++)
                 Events[i].Id.Should().Be(i);
         }
