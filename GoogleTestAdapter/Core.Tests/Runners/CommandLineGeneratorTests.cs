@@ -28,7 +28,7 @@ namespace GoogleTestAdapter.Runners
                     // ReSharper disable once ObjectCreationAsStatement
                     new CommandLineGenerator(new List<Model.TestCase>(), 0, null, "",
                         TestEnvironment.Options);
-            a.ShouldThrow<ArgumentNullException>();
+            a.Should().Throw<ArgumentNullException>();
         }
 
         [TestMethod]

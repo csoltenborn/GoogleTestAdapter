@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
             var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
-            parser.Invoking(p => p.GetTestResults()).ShouldNotThrow<Exception>();
+            parser.Invoking(p => p.GetTestResults()).Should().NotThrow<Exception>();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Foo"))), Times.Exactly(1));
         }
 

@@ -113,7 +113,7 @@ namespace GoogleTestAdapter.Helpers
 
             Action parse = () => Parser.ParseTraitsRegexesString(optionsString, ignoreErrors: false);
 
-            parse.ShouldThrow<Exception>();
+            parse.Should().Throw<Exception>();
         }
 
 

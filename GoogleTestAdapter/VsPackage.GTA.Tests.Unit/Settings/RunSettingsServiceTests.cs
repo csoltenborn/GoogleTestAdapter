@@ -472,10 +472,12 @@ namespace GoogleTestAdapter.VsPackage.Settings
             {
                 projectSettings.SkipOriginCheck.Should().BeFalse();
             }
+#pragma warning disable NullConditionalAssertion // Code Smell
             runSettingsContainer.GetSettingsForExecutable("project1")?.SkipOriginCheck.Should().BeFalse();
             runSettingsContainer.GetSettingsForExecutable("project2")?.SkipOriginCheck.Should().BeFalse();
             runSettingsContainer.GetSettingsForExecutable("project3")?.SkipOriginCheck.Should().BeFalse();
             runSettingsContainer.GetSettingsForExecutable("not_matched")?.SkipOriginCheck.Should().BeFalse();
+#pragma warning restore NullConditionalAssertion // Code Smell
         }
 
     }

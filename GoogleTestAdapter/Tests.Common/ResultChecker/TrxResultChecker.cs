@@ -157,7 +157,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
         {
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
             Action loadExpectationFileAction = () => XDocument.Load(file);
-            loadExpectationFileAction.ShouldNotThrow($"Could not parse file {file}");
+            loadExpectationFileAction.Should().NotThrow($"Could not parse file {file}");
         }
 
         private string ParseResultsFileFromOutput(List<string> standardOut)

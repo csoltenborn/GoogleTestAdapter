@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.Tests.Common.Assertions
         {
             private const string ReasonTag = "{reason}";
 
-            protected override string Context { get; } = "files";
+            protected override string Identifier { get; } = "files";
 
             public FileAssertions(FileInfo file)
             {
@@ -68,5 +68,4 @@ namespace GoogleTestAdapter.Tests.Common.Assertions
         }
 
     }
-
 }

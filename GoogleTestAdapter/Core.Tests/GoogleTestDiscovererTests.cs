@@ -190,7 +190,7 @@ namespace GoogleTestAdapter
                 var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
                 IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
 
-                testCases.Count.Should().Be(TestResources.NrOfDllTests);
+                testCases.Should().HaveCount(TestResources.NrOfDllTests);
             }
             finally
             {
