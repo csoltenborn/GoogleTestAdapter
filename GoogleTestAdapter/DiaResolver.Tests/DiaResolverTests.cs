@@ -113,7 +113,7 @@ namespace GoogleTestAdapter.DiaResolver
                 resolver.Dispose();
             }
 
-            locations.Count.Should().BeGreaterOrEqualTo(expectedLocations);
+            locations.Should().HaveCountGreaterOrEqualTo(expectedLocations);
             fakeLogger.GetMessages(Severity.Warning, Severity.Error).Count.Should().BeGreaterOrEqualTo(expectedErrorMessages);
         }
     }

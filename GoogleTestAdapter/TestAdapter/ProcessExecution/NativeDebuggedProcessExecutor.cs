@@ -103,8 +103,11 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 string command, string parameters, string workingDir, string pathExtension, 
                 IDebuggerAttacher debuggerAttacher, ILogger logger, bool printTestOutput, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
-                using (var pipeStream = new ProcessOutputPipeStream())
+                ProcessOutputPipeStream pipeStream = null;
+                try
                 {
+                    pipeStream = new ProcessOutputPipeStream();
+
                     var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, pipeStream._writingEnd);
                     reportProcessId(processInfo.dwProcessId);
                     using (var process = new SafeWaitHandle(processInfo.hProcess, true))
@@ -122,6 +125,8 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 
                         using (var reader = new StreamReader(pipeStream, Encoding.Default))
                         {
+                            pipeStream = null;
+
                             while (!reader.EndOfStream)
                             {
                                 string line = reader.ReadLine();
@@ -141,6 +146,10 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 
                         return exitCode;
                     }
+                }
+                finally
+                {
+                    pipeStream?.Dispose();
                 }
             }
 
@@ -222,7 +231,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 return processInfo;
             }
 
-            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, BestFitMapping = false, ThrowOnUnmappableChar = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             private static extern bool CreateProcess(
                 string lpApplicationName, string lpCommandLine, 
@@ -248,7 +257,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern int ResumeThread(SafeHandle hThread);
 
-            private static SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
+            private static readonly SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
             private class STARTUPINFOEX
@@ -258,6 +267,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+            [BestFitMapping(false, ThrowOnUnmappableChar = true)]
             private class STARTUPINFO
             {
                 public Int32 cb;

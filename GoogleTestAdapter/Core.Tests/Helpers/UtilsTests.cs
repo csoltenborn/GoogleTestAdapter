@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Helpers
             string result = Utils.GetExtendedPath(toAdd);
 
             string path = Environment.GetEnvironmentVariable("PATH");
-            result.Length.Should().Be(path.Length + toAdd.Length + 1);
+            result.Should().HaveLength(path.Length + toAdd.Length + 1);
             result.Should().Contain(path);
             string[] pathParts = result.Split(';');
             pathParts.Should().Contain(s => s.Equals(toAdd));

@@ -184,7 +184,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private static void AssertAreEqual(IEnumerable<TestCase> testCases1, IEnumerable<TestCase> testCases2)
         {
-            testCases1.Count().Should().Be(testCases2.Count());
+            testCases1.Should().HaveSameCount(testCases2);
 
             using (IEnumerator<TestCase> enumerator1 = testCases1.GetEnumerator())
             using (IEnumerator<TestCase> enumerator2 = testCases2.GetEnumerator())

@@ -176,22 +176,21 @@ namespace GoogleTestAdapter.Runners
                 _logger.LogInfo(
                     $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
 
-            Action<string> reportOutputAction = line =>
+            void OnNewOutputLine(string line)
             {
                 try
                 {
-                    if (!_canceled)
-                        streamingParser.ReportLine(line);
+                    if (!_canceled) streamingParser.ReportLine(line);
 
-                    if (printTestOutput)
-                        _logger.LogInfo(line);
+                    if (printTestOutput) _logger.LogInfo(line);
                 }
                 catch (TestRunCanceledException e)
                 {
                     _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
                     Cancel();
                 }
-            };
+            }
+
             _processExecutor = isBeingDebugged
                 ? _settings.UseNewTestExecutionFramework
                     ? processExecutorFactory.CreateNativeDebuggingExecutor(printTestOutput, _logger)
@@ -199,7 +198,7 @@ namespace GoogleTestAdapter.Runners
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
-                isTestOutputAvailable ? reportOutputAction : null);
+                isTestOutputAvailable ? (Action<string>) OnNewOutputLine : null);
             streamingParser.Flush();
 
             if (printTestOutput)

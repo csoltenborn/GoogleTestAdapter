@@ -79,6 +79,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GoogleTestDiscovererTraitTestsBase.cs" />
     <Compile Include="GoogleTestDiscoverReleaseTraitTests.cs" />
     <Compile Include="GoogleTestDiscoverDebugTraitTests.cs" />

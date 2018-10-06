@@ -377,7 +377,7 @@ namespace GoogleTestAdapter
             stopwatch.Stop();
             var actualDuration = stopwatch.Elapsed;
 
-            testCases.Count.Should().BeGreaterThan(0);
+            testCases.Count.Should().BePositive();
             int testParsingDurationInMs = CiSupport.GetWeightedDuration(testCases.Count); // .5ms per test (discovery and processing)
             int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
             var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);
@@ -402,7 +402,7 @@ namespace GoogleTestAdapter
             stopwatch.Stop();
             var actualDuration = stopwatch.Elapsed;
 
-            testCases.Count.Should().BeGreaterThan(0);
+            testCases.Count.Should().BePositive();
             int testParsingDurationInMs = CiSupport.GetWeightedDuration(testCases.Count); // .5ms per test (discovery and processing)
             int overheadInMs = CiSupport.GetWeightedDuration(1000); // pretty much arbitrary - let's see...
             var maxDuration = TimeSpan.FromMilliseconds(testParsingDurationInMs + overheadInMs);

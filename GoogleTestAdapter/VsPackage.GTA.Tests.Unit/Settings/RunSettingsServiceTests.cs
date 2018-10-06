@@ -348,7 +348,9 @@ namespace GoogleTestAdapter.VsPackage.Settings
             XmlNode solutionSettingsNode = xml.GetElementsByTagName("SolutionSettings").Item(0);
             XmlNodeList list = solutionSettingsNode.SelectNodes($"Settings/{nodeName}");
 
+#pragma warning disable CollectionShouldContainSingle // Simplify Assertion
             list.Should().HaveCount(1, $"node {nodeName} should exist only once. XML Document:{Environment.NewLine}{ToFormattedString(xml, 4)}");
+#pragma warning restore CollectionShouldContainSingle // Simplify Assertion
 
             XmlNode node = list.Item(0);
             node.Should().NotBeNull();
@@ -356,20 +358,16 @@ namespace GoogleTestAdapter.VsPackage.Settings
             node.InnerText.Should().BeEquivalentTo(value);
         }
 
-        public static string ToFormattedString(XmlDocument xml, int indentation)
+        private static string ToFormattedString(XmlDocument xml, int indentation)
         {
-            string xmlAsString;
-            using (var sw = new StringWriter())
+            StringWriter sw;
+            using (var xw = new XmlTextWriter(sw = new StringWriter()))
             {
-                using (var xw = new XmlTextWriter(sw))
-                {
-                    xw.Formatting = Formatting.Indented;
-                    xw.Indentation = indentation;
-                    xml.WriteContentTo(xw);
-                }
-                xmlAsString = sw.ToString();
+                xw.Formatting = Formatting.Indented;
+                xw.Indentation = indentation;
+                xml.WriteContentTo(xw);
+                return sw.ToString();
             }
-            return xmlAsString;
         }
 
         private RunSettingsContainer SetupFinalRunSettingsContainer(

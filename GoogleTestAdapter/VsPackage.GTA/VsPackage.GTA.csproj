@@ -94,6 +94,9 @@
       <DependentUpon>ReleaseNotesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Resources\gtest-logo.ico" />
+    <None Include="..\Packaging.GTA\source.extension.vsixmanifest">
+      <Link>source.extension.vsixmanifest</Link>
+    </None>
     <Content Include="Resources\ReleaseNotes\0.4.0.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -407,4 +410,13 @@
     <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets'))" />
   </Target>
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>if exist "$(SolutionDir)Keys\Key_Release.snk" (
+    echo Using Release key for signing assembly
+    copy "$(SolutionDir)Keys\Key_Release.snk" "$(ProjectDir)Key.snk"
+) else (
+    echo Using Debug key for signing assembly
+    copy "$(SolutionDir)Keys\Key_Debug.snk" "$(ProjectDir)Key.snk"
+)</PreBuildEvent>
+  </PropertyGroup>
 </Project>

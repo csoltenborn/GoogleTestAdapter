@@ -64,7 +64,10 @@
 "$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Debug;Platform=X64 /m
 
 "$(MSBuildToolsPath)\msbuild" "$(SolutionDir)..\SampleTests\SampleTests.sln" /t:Build /p:Configuration=Release;Platform=X64 /m
-</PreBuildEvent>
+
+if not exist "$(ProjectDir)CppLoadTests.cpp" (
+  copy NUL "$(ProjectDir)CppLoadTests.cpp"
+)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

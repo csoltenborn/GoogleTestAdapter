@@ -30,8 +30,8 @@ namespace GoogleTestAdapter.Tests.Common.Tests
                 
             exitCode.Should().Be(0);
             output.Should().Contain(s => s.Contains("Ping"));
-            output.Count.Should().BeGreaterOrEqualTo(11);
-            output.Count.Should().BeLessOrEqualTo(12);
+            output.Should().HaveCountGreaterOrEqualTo(11);
+            output.Should().HaveCountLessOrEqualTo(12);
         }
 
         protected void Test_ExecuteProcessBlocking_SampleTests()
@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.Tests.Common.Tests
 
             returnCode.Should().Be(0);
             output.Should().ContainSingle();
-            output[0].Should().Be("2");
+            output.Should().HaveElementAt(0, "2");
         }
 
         protected void Test_IgnoresIfProcessReturnsErrorCode_DoesNotThrow()

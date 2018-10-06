@@ -154,8 +154,7 @@ namespace GoogleTestAdapter.Settings
             if (value is string)
                 return $"{propertyInfo.Name}: '{value}'";
 
-            var pairs = value as IEnumerable<RegexTraitPair>;
-            if (pairs != null)
+            if (value is IEnumerable<RegexTraitPair> pairs)
                 return $"{propertyInfo.Name}: {{{string.Join(", ", pairs)}}}";
 
             return $"{propertyInfo.Name}: {value}";
