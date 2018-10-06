@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.DiaResolver;
-using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
@@ -25,7 +24,7 @@ namespace GoogleTestAdapter.TestCases
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged()
+        public void CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancellationIsLogged()
         {
             MockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds).Returns(1);
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
@@ -46,10 +45,10 @@ namespace GoogleTestAdapter.TestCases
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void CreateTestCases_OldExeDiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged()
+        public void CreateTestCases_OldExeDiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancellationIsLogged()
         {
             MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
-            CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged();
+            CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancellationIsLogged();
         }
 
         [TestMethod]

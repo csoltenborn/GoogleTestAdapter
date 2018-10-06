@@ -39,27 +39,27 @@ namespace GoogleTestAdapter.ProcessExecution
             if (!string.IsNullOrEmpty(pathExtension))
                 processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
-            void HandleEvent(string line, AutoResetEvent autoResetEvent)
-            {
-                if (line == null)
-                {
-                    autoResetEvent.Set();
-                }
-                else
-                {
-                    reportOutputLine(line);
-                    if (_printTestOutput)
-                    {
-                        _logger.LogInfo(line);
-                    }
-                }
-            }
-
             _process = new Process {StartInfo = processStartInfo};
             using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
             using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
             using (_process)
             {
+                void HandleEvent(string line, AutoResetEvent autoResetEvent)
+                {
+                    if (line == null)
+                    {
+                        autoResetEvent.Set();
+                    }
+                    else
+                    {
+                        reportOutputLine(line);
+                        if (_printTestOutput)
+                        {
+                            _logger.LogInfo(line);
+                        }
+                    }
+                }
+
                 // ReSharper disable AccessToDisposedClosure
                 _process.OutputDataReceived += (sender, e) => HandleEvent(e.Data, outputWaitHandle);
                 _process.ErrorDataReceived += (sender, e) => HandleEvent(e.Data, errorWaitHandle);

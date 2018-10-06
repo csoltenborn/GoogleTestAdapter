@@ -74,18 +74,19 @@ namespace GoogleTestAdapter.TestCases
                 testCasesOfSuite.Add(testCase);
             };
 
-            Action<string> lineAction = s =>
-            {
-                standardOutput.Add(s);
-                parser.ReportLine(s);
-            };
-
-           string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
+            string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
            var finalParams = GetDiscoveryParams();
             try
             {
                 int processExitCode = ExecutionFailed;
                 IProcessExecutor executor = null;
+
+                void OnReportOutputLine(string line)
+                {
+                    standardOutput.Add(line);
+                    parser.ReportLine(line);
+                }
+
                 var listAndParseTestsTask = new Task(() =>
                 {
                     executor = _processExecutorFactory.CreateExecutor(false, _logger);
@@ -94,7 +95,7 @@ namespace GoogleTestAdapter.TestCases
                         finalParams,
                         workingDir,
                         _settings.GetPathExtension(_executable),
-                        lineAction);
+                        OnReportOutputLine);
                 }, TaskCreationOptions.AttachedToParent);
                 listAndParseTestsTask.Start();
 
@@ -148,9 +149,9 @@ namespace GoogleTestAdapter.TestCases
             string output = outputSoFar.Any()
                 ? $"Output of {_executable} so far:{Environment.NewLine}" + 
                   $"{string.Join(Environment.NewLine, outputSoFar)}"
-                : $"Executable {_executable}produced no output.";
+                : $"Executable {_executable} produced no output.";
             string hint =
-                $"Hint: test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}" + 
+                $"Hint: test whether the following commands can be executed successfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}" + 
                 $"{cdToWorkingDir}{Environment.NewLine}" + 
                 listTestsCommand;
 
@@ -163,16 +164,16 @@ namespace GoogleTestAdapter.TestCases
         {
             if (processExitCode != 0)
             {
-                string messsage =
+                string message =
                     $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
-                messsage +=
+                message +=
                     $"\nCommand executed: '{_executable} {parameters}', working directory: '{workingDir}'";
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
+                    message += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
                 else
-                    messsage += "\nCommand produced no output";
+                    message += "\nCommand produced no output";
 
-                _logger.LogError(messsage);
+                _logger.LogError(message);
                 return false;
             }
             return true;
@@ -197,8 +198,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
-            return new TestCase(
-                descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
+            return CreateTestCase(descriptor);
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)

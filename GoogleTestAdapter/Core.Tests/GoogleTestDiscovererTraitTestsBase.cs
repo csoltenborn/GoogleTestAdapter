@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
@@ -315,6 +316,32 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded()
+        {
+            string pdb = Path.ChangeExtension(SampleTestToUse, "pdb");
+            pdb.AsFileInfo().Should().Exist();
+            string tempFile = Path.ChangeExtension(pdb, "gtatmpext");
+            tempFile.AsFileInfo().Should().NotExist();
+
+            try
+            {
+                File.Move(pdb, tempFile);
+                pdb.AsFileInfo().Should().NotExist();
+
+                MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "SomeNewType").Yield().ToList());
+
+                var traits = new[] { new Trait("Type", "SomeNewType") };
+                AssertFindsTestWithTraits("TestMath.AddPasses", traits);
+            }
+            finally
+            {
+                File.Move(tempFile, pdb);
+                pdb.AsFileInfo().Should().Exist();
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
             MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
@@ -345,7 +372,7 @@ namespace GoogleTestAdapter
             tests.Should().NotBeEmpty();
 
             TestCase testCase = tests.Find(tc => tc.Traits.Count == traits.Length && tc.DisplayName.StartsWith(displayName));
-            testCase.Should().NotBeNull($"Test should exist: {displayName}, {traits.Length}");
+            testCase.Should().NotBeNull($"Test should exist: {displayName}, {traits.Length} trait(s)");
 
             foreach (Trait trait in traits)
             {
