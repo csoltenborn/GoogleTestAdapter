@@ -27,10 +27,10 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             string releaseNotes = "";
 
-            if (_showMainDonationNote)
-            {
-                releaseNotes += Donations.Note;
-            }
+            //if (_showMainDonationNote)
+            //{
+            releaseNotes += Donations.Note;
+            //}
 
             releaseNotes += CreateHeader();
 
@@ -41,10 +41,10 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
                 releaseNotes += CreateEntry(Versions[i]);
             }
 
-            if (!_showMainDonationNote)
-            {
-                releaseNotes += Donations.Footer;
-            }
+            //if (!_showMainDonationNote)
+            //{
+            releaseNotes += Donations.Footer;
+            //}
 
             return releaseNotes;
         }

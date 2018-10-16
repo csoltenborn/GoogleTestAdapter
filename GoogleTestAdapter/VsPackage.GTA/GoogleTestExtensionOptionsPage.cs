@@ -50,8 +50,9 @@ namespace GoogleTestAdapter.VsPackage
 
             versionProvider.UpdateLastVersion();
 
-            if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&
-                (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion))
+            //if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&
+            //    (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion))
+            if (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion)
             {
                 var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion,
                     Donations.IsPreDonationsVersion(formerlyInstalledVersion));

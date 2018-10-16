@@ -152,7 +152,7 @@ namespace GoogleTestAdapter.Runners
             StreamingStandardOutputTestResultParser streamingParser)
         {
             var consoleOutput = 
-                RunTestExecutableWithNewFramework(executable, workingDir, arguments,isBeingDebugged, processExecutorFactory, streamingParser);
+                RunTestExecutable(executable, workingDir, arguments,isBeingDebugged, processExecutorFactory, streamingParser);
 
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
@@ -163,7 +163,7 @@ namespace GoogleTestAdapter.Runners
             return testResults;
         }
 
-        private List<string> RunTestExecutableWithNewFramework(string executable, string workingDir, CommandLineGenerator.Args arguments, bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory,
+        private List<string> RunTestExecutable(string executable, string workingDir, CommandLineGenerator.Args arguments, bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory,
             StreamingStandardOutputTestResultParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);

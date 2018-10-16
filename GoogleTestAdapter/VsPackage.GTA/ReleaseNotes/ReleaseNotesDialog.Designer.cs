@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReleaseNotesDialog));
             this.RootPanel = new System.Windows.Forms.TableLayoutPanel();
             this.NavigationPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -37,6 +38,7 @@
             this.OkButtonPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ShowReleaseNotesCheckBox = new System.Windows.Forms.CheckBox();
             this.OkButton = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.RootPanel.SuspendLayout();
             this.NavigationPanel.SuspendLayout();
             this.OkButtonPanel.SuspendLayout();
@@ -139,6 +141,7 @@
             this.ShowReleaseNotesCheckBox.Size = new System.Drawing.Size(179, 17);
             this.ShowReleaseNotesCheckBox.TabIndex = 1;
             this.ShowReleaseNotesCheckBox.Text = "Show release notes after update";
+            this.toolTip.SetToolTip(this.ShowReleaseNotesCheckBox, "Ignored until donation goals are achieved (sorry to donators)");
             this.ShowReleaseNotesCheckBox.UseVisualStyleBackColor = true;
             // 
             // OkButton
@@ -185,5 +188,6 @@
         private System.Windows.Forms.Button BackButton;
         private System.Windows.Forms.Button ForwardButton;
         private System.Windows.Forms.TableLayoutPanel OkButtonPanel;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
