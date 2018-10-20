@@ -23,6 +23,8 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
         private readonly string _goldenFilesDir;
         private readonly string _diffFilesDir;
 
+        private string _completeOutput;
+
         public TrxResultChecker(string solutionFile)
         {
             // ReSharper disable once AssignNullToNotNullAttribute
@@ -47,7 +49,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             string resultsFile = RunExecutableAndGetResultsFile(arguments);
             if (resultsFile == null)
             {
-                goldenFile.AsFileInfo().Should().NotExist("Test run did not produce result trx file, therefore no golden file should exist");
+                goldenFile.AsFileInfo().Should().NotExist($"Test run did not produce result trx file, therefore no golden file should exist. {_completeOutput}");
                 return;
             }
 
@@ -82,7 +84,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
                     Assert.Inconclusive($"Updated golden file file:///{goldenFile}, test should now pass");
                 }
 
-                Assert.Fail($@"Files differ, see file:///{htmlDiffFile}");
+                Assert.Fail($@"Files differ, see file:///{htmlDiffFile}{Environment.NewLine}{_completeOutput}");
             }
         }
 #pragma warning restore 162
@@ -95,8 +97,9 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             string workingDir = "";
 
             var launcher = new TestProcessLauncher();
-            List<string> standardOut, standardErr;
-            launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out standardErr);
+            List<string> standardOut, allOutput;
+            launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out _, out allOutput);
+            _completeOutput = $"Console output:{Environment.NewLine}{string.Join(Environment.NewLine, allOutput)}";
 
             return ParseResultsFileFromOutput(standardOut);
         }
@@ -157,7 +160,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
         {
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
             Action loadExpectationFileAction = () => XDocument.Load(file);
-            loadExpectationFileAction.Should().NotThrow($"Could not parse file {file}");
+            loadExpectationFileAction.Should().NotThrow($"Could not parse file {file}. {_completeOutput}");
         }
 
         private string ParseResultsFileFromOutput(List<string> standardOut)
