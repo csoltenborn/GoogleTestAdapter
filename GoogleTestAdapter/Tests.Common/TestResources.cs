@@ -3,6 +3,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.TestAdapter.Framework;
 
@@ -19,6 +20,7 @@ namespace GoogleTestAdapter.Tests.Common
 #endif
 
         public const string RootDir = @"..\..\..\..\..\";
+        public const string GtaSolutionDir = RootDir + @"GoogleTestAdapter\";
         public const string SampleTestsSolutionDir = RootDir + @"SampleTests\";
         public const string GoogleTestAdapterBuildDir = RootDir + @"out\binaries\GoogleTestAdapter\" + BuildConfig + @"\";
         public const string SampleTestsBuildDir = RootDir + @"out\binaries\SampleTests\";
@@ -76,6 +78,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string UserTestSettingsForGeneratedTests_SolutionProject = TestdataDir + "SolutionProject.runsettings";
         public const string UserTestSettingsForListingTests = TestdataDir + "ListTests.runsettings";
         public const string ProviderDeliveredTestSettings = TestdataDir + @"RunSettingsServiceTests\Provider_delivered.runsettings";
+        private const string CodeCoverageShimDll = "Microsoft.VisualStudio.CodeCoverage.Shim.dll";
 
         private static string GetPathIfExists(string path)
         {
@@ -99,17 +102,10 @@ namespace GoogleTestAdapter.Tests.Common
 
         public static string GetVsTestConsolePath(VsVersion version)
         {
-            switch (version)
-            {
-                case VsVersion.VS2012_1:
-                case VsVersion.VS2013:
-                case VsVersion.VS2015:
-                    return $@"C:\Program Files (x86)\Microsoft Visual Studio {version:d}.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
-                case VsVersion.VS2017:
-                    return Path.Combine(VS2017Location.Value, @"Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe");
-                default:
-                    throw new InvalidOperationException();
-            }
+            // TODO select packages versions by VsVersion
+            string nugetDir = Path.Combine(GtaSolutionDir, "Tests.Common", "VsTestConsole");
+            return Directory.GetFiles(nugetDir, "vstest.console.exe", SearchOption.AllDirectories)
+                .Single();
         }
 
         public static string NormalizePointerInfo(string text)

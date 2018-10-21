@@ -207,8 +207,17 @@
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>set VSTEST_VERSION=15.8.0
+
+set NUGET="$(ProjectDir)nuget.exe"
+if not exist %25NUGET%25 (
+  bitsadmin.exe /transfer "Download nuget.exe" https://dist.nuget.org/win-x86-commandline/v4.7.1/nuget.exe %25NUGET%25
+)
+set VSTEST_DIR=$(ProjectDir)VsTestConsole
+
+%25NUGET%25 install Microsoft.TestPlatform -Version %25VSTEST_VERSION%25 -ExcludeVersion -OutputDirectory "%25VSTEST_DIR%25"
+%25NUGET%25 install Microsoft.CodeCoverage -Version %25VSTEST_VERSION%25 -ExcludeVersion -OutputDirectory "%25VSTEST_DIR%25"
+copy "%25VSTEST_DIR%25\Microsoft.CodeCoverage\lib\net45\Microsoft.VisualStudio.CodeCoverage.Shim.dll" "%25VSTEST_DIR%25\Microsoft.TestPlatform\tools\net451\Common7\IDE\Extensions\TestPlatform"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -217,4 +226,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="Clean">
+    <RemoveDir Directories="VsTestConsole" />
+    <Delete Files="nuget.exe" />
+  </Target>
 </Project>
