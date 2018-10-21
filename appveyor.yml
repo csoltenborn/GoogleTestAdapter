@@ -62,8 +62,8 @@ test_script:
         $TestExitCode = $LASTEXITCODE
     }
 
-    if (Test-Path out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors) {
-        7z a TestErrors.zip out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors\*
+    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
+        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
         Push-AppveyorArtifact TestErrors.zip
     }
 
