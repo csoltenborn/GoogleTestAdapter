@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.DiaResolver
                 TestResources.LoadTests_ReleaseX86, 
                 "*", 
                 TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 628 : 728, 
-                108);
+                90);
         }
 
         [TestMethod]

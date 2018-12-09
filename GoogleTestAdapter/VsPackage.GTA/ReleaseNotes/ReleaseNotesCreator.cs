@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             if (_formerlyInstalledVersion == _currentVersion)
                 return "";
 
-            string releaseNotes = "";
+            string releaseNotes = Donations.Header;
 
             //if (_showMainDonationNote)
             //{
