@@ -14,7 +14,7 @@
     <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>true</developmentDependency>
-    <copyright>Copyright 2015-2018 Christian Soltenborn</copyright>
+    <copyright>Copyright 2015-2019 Christian Soltenborn</copyright>
     <tags>native gtest Google Test adapter C++ unit integration automated testing</tags>
   </metadata>
   <files>
