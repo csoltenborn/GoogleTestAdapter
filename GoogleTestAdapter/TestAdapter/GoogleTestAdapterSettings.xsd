@@ -72,7 +72,11 @@
       <xsd:element name="BatchForTestSetup"            minOccurs="0" type="xsd:string"  />
       <xsd:element name="BatchForTestTeardown"         minOccurs="0" type="xsd:string"  />
       <xsd:element name="KillProcessesOnCancel"        minOccurs="0" type="xsd:boolean" />
-      <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="UseNewTestExecutionFramework" minOccurs="0" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>Corresponds to option 'Use native debugging'</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
 
       <xsd:element name="SkipOriginCheck"              minOccurs="0" type="xsd:boolean">
         <xsd:annotation>
