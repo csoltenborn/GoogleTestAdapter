@@ -17,10 +17,13 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
+using Microsoft.VisualStudio.AsyncPackageHelpers;
 
 namespace GoogleTestAdapter.VsPackage
 {
 
+    [AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
@@ -28,9 +31,9 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageParallelizationName, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
-    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
+    [Microsoft.VisualStudio.Shell.ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IDisposable
+    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IAsyncLoadablePackageInitialize, IDisposable
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
 
@@ -45,30 +48,74 @@ namespace GoogleTestAdapter.VsPackage
         // ReSharper disable once NotAccessedField.Local
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
 
+        private bool _isAsyncLoadSupported;
+
         protected override void Initialize()
         {
             base.Initialize();
 
-            var componentModel = (IComponentModel)GetGlobalService(typeof(SComponentModel));
-            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+            _isAsyncLoadSupported = this.IsAsyncPackageSupported();
+            if (!_isAsyncLoadSupported)
+            {
+                var componentModel = (IComponentModel) GetGlobalService(typeof(SComponentModel));
+                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+                DoInitialize();
+            }
+        }
 
-            _generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
-            _parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
-            _googleTestOptions = (GoogleTestOptionsDialogPage)GetDialogPage(typeof(GoogleTestOptionsDialogPage));
+        IVsTask IAsyncLoadablePackageInitialize.Initialize(IAsyncServiceProvider serviceProvider, IProfferAsyncService profferService,
+            IAsyncProgressCallback progressCallback)
+        {
+            if (!_isAsyncLoadSupported)
+            {
+                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
+            }
+
+            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
+            {
+                var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
+                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                
+                DoInitialize();
+
+                return null;
+            }).AsVsTask();
+        }
+
+        private void DoInitialize()
+        {
+            InitializeOptions();
+            InitializeCommands();
+            InitializeDebuggerAttacherService();
+            DisplayReleaseNotesIfNecessary();
+        }
+
+        private void InitializeOptions()
+        {
+            _generalOptions = (GeneralOptionsDialogPage) GetDialogPage(typeof(GeneralOptionsDialogPage));
+            _parallelizationOptions =
+                (ParallelizationOptionsDialogPage) GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
             _generalOptions.PropertyChanged += OptionsChanged;
             _parallelizationOptions.PropertyChanged += OptionsChanged;
             _googleTestOptions.PropertyChanged += OptionsChanged;
+        }
 
+        private void InitializeCommands()
+        {
             SwitchCatchExceptionsOptionCommand.Initialize(this);
             SwitchBreakOnFailureOptionCommand.Initialize(this);
             SwitchParallelExecutionOptionCommand.Initialize(this);
             SwitchPrintTestOutputOptionCommand.Initialize(this);
+        }
 
-            DisplayReleaseNotesIfNecessary();
-
+        private void InitializeDebuggerAttacherService()
+        {
             var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
             var debuggerAttacher = new VsDebuggerAttacher(this);
             _debuggerAttacherServiceHost = new DebuggerAttacherServiceHost(_debuggingNamedPipeId, debuggerAttacher, logger);
@@ -104,15 +151,11 @@ namespace GoogleTestAdapter.VsPackage
 
                 try
                 {
-                    // Cannot simply do ".?" because Code Analysis does not understand that.
-                    if (_debuggerAttacherServiceHost != null)
-                    {
-                        _debuggerAttacherServiceHost.Close();
-                    }
+                    _debuggerAttacherServiceHost?.Close();
                 }
                 catch (CommunicationException)
                 {
-                    _debuggerAttacherServiceHost.Abort();
+                    _debuggerAttacherServiceHost?.Abort();
                 }
             }
             base.Dispose(disposing);
