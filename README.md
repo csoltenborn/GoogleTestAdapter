@@ -177,7 +177,7 @@ For technical reasons, not all features are available in all environments; refer
 
 ### External resources
 
-* [Basic tutorial](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/) for using Google Test with GTA in Visual Studio
+* [Basic tutorial](https://computingonplains.wordpress.com/google-test-and-visual-studio/) for using Google Test with GTA in Visual Studio
 
 
 ### <a name="trouble_shooting"></a>Trouble shooting
