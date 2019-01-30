@@ -16,13 +16,13 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 * Sequential and [parallel](#parallelization) test execution
 * [Traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of [custom C++ macros](#trait_macros) and/or [trait assignment by regexes](#trait_regexes)
-* Support for [value-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#value-parameterized-tests), [typed](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#typed-tests), and [type-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#type-parameterized-tests) tests
-* Google Test's runtime behavior ([handling of exceptions](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#disabling-catching-test-thrown-exceptions), [break on assertion failure](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#turning-assertion-failures-into-break-points)) can be controlled via [VS options](#global_settings)
+* Support for [value-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#value-parameterized-tests), [typed](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#typed-tests), and [type-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#type-parameterized-tests) tests
+* Google Test's runtime behavior ([handling of exceptions](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#disabling-catching-test-thrown-exceptions), [break on assertion failure](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#turning-assertion-failures-into-break-points)) can be controlled via [VS options](#global_settings)
 * Most important runtime options can be controlled via [toolbar](#toolbar) without entering VS's options
-* Support for all Google Test command line options, including [test shuffling](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#shuffling-the-tests) and [test repetition](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#repeating-the-tests)
+* Support for all Google Test command line options, including [test shuffling](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#shuffling-the-tests) and [test repetition](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#repeating-the-tests)
 * [TFS support](#vstest_console) by means of [`VSTest.Console.exe`](https://msdn.microsoft.com/en-us/library/jj155800.aspx)
 * [Support](#test_case_filters) for [test case filters](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx)
-* Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#adding-traces-to-assertions)s are linked to their source locations
+* Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#adding-traces-to-assertions)s are linked to their source locations
 * Identification of crashed tests
 * Test output can be piped to test console
 * Execution of [parameterized batch files](#test_setup_and_teardown) for test setup/teardown
@@ -177,7 +177,7 @@ For technical reasons, not all features are available in all environments; refer
 
 ### External resources
 
-* [Basic tutorial](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/) for using Google Test with GTA in Visual Studio
+* [Basic tutorial](https://computingonplains.wordpress.com/google-test-and-visual-studio/) for using Google Test with GTA in Visual Studio
 
 
 ### <a name="trouble_shooting"></a>Trouble shooting
@@ -195,7 +195,7 @@ For technical reasons, not all features are available in all environments; refer
   * The test executable crashes.
   * Encoding issues prevent Google Test from properly reading the command line arguments (see e.g. [issue #149](https://github.com/csoltenborn/GoogleTestAdapter/issues/149)).
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
-* By default, test discovery for an executable is canceled after 30s. If in need, change this with option *Test discovery timeout in s*. Also consider moving expensive initialization code to the appropriate gtest setup facilities (e.g. [global](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#global-set-up-and-tear-down), [per test case](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#sharing-resources-between-tests-in-the-same-test-case), or [per test](https://github.com/google/googletest/blob/master/googletest/docs/Primer.md#test-fixtures-using-the-same-data-configuration-for-multiple-tests)).
+* By default, test discovery for an executable is canceled after 30s. If in need, change this with option *Test discovery timeout in s*. Also consider moving expensive initialization code to the appropriate gtest setup facilities (e.g. [global](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#global-set-up-and-tear-down), [per test suite](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#sharing-resources-between-tests-in-the-same-test-suite), or [per test](https://github.com/google/googletest/blob/master/googletest/docs/primer.md#test-fixtures-using-the-same-data-configuration-for-multiple-tests).).
 * For security reasons, Visual Studio's test discovery process runs with rather limited permissions. This might cause problems if your code needs those permissions already during test discovery (e.g. if your code [tries to open a file in write mode](https://github.com/csoltenborn/GoogleTestAdapter/issues/168#issuecomment-331725168)). Make sure that such code is executed at the appropriate gtest setup facilities (see above).
 * If your project happens to be a makefile project, there's a pitfall which will prevent GTA from discovering your tests: It appears that when importing a makefile project into VS, the *Output* setting of the project is populated from the makefile's content. However, if the makefile is edited later on such that the location of the generated test executable changes, VS does not find the test executable any more. One symptom of this is that your project can not be launched any more with `F5`. Make sure that the *Output* setting of the project is consistent with its makefile to avoid this problem. 
 
