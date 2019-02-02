@@ -171,7 +171,7 @@ Something's wrong :(";
             testResult.ErrorMessage.Should().BeNull();
         }
 
-        private void AssertTestResultIsSkipped(Model.TestResult testResult)
+        public static void AssertTestResultIsSkipped(Model.TestResult testResult)
         {
             testResult.Outcome.Should().Be(Model.TestOutcome.Skipped);
             testResult.ErrorMessage.Should().BeNull();

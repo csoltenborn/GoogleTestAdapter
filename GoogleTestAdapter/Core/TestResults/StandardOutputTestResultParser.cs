@@ -13,6 +13,7 @@ namespace GoogleTestAdapter.TestResults
         private const string Run = "[ RUN      ]";
         public const string Failed = "[  FAILED  ]";
         public const string Passed = "[       OK ]";
+        public const string Skipped = "[  SKIPPED ]";
 
         public const string CrashText = "!! This test has probably CRASHED !!";
 
@@ -80,7 +81,7 @@ namespace GoogleTestAdapter.TestResults
 
 
             string errorMsg = "";
-            while (!(IsFailedLine(line) || IsPassedLine(line)) && currentLineIndex <= _consoleOutput.Count)
+            while (!(IsFailedLine(line) || IsPassedLine(line) || IsSkippedLine(line)) && currentLineIndex <= _consoleOutput.Count)
             {
                 errorMsg += line + "\n";
                 line = currentLineIndex < _consoleOutput.Count ? _consoleOutput[currentLineIndex] : "";
@@ -96,6 +97,10 @@ namespace GoogleTestAdapter.TestResults
             if (IsPassedLine(line))
             {
                 return CreatePassedTestResult(testCase, ParseDuration(line));
+            }
+            if (IsSkippedLine(line))
+            {
+                return CreateSkippedTestResult(testCase, ParseDuration(line));
             }
 
             CrashedTestCase = testCase;
@@ -163,6 +168,17 @@ namespace GoogleTestAdapter.TestResults
             };
         }
 
+        public static TestResult CreateSkippedTestResult(TestCase testCase, TimeSpan duration)
+        {
+            return new TestResult(testCase)
+            {
+                ComputerName = Environment.MachineName,
+                DisplayName = testCase.DisplayName,
+                Outcome = TestOutcome.Skipped,
+                Duration = duration
+            };
+        }
+
         public static TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, string errorMessage, string errorStackTrace)
         {
             return new TestResult(testCase)
@@ -213,6 +229,11 @@ namespace GoogleTestAdapter.TestResults
         public static bool IsFailedLine(string line)
         {
             return line.StartsWith(Failed);
+        }
+
+        public static bool IsSkippedLine(string line)
+        {
+            return line.StartsWith(Skipped);
         }
 
         public static string RemovePrefix(string line)

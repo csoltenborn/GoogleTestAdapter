@@ -113,6 +113,34 @@ namespace GoogleTestAdapter.TestResults
             @"[  PASSED  ] 2 test.",
         };
 
+        /// <summary>
+        /// <see cref="https://github.com/csoltenborn/GoogleTestAdapter/issues/260"/>
+        /// </summary>
+        private string[] ConsoleOutputWithSkippedTest { get; } = @"[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from Test
+[ RUN      ] Test.Succeed
+[       OK ] Test.Succeed (0 ms)
+[ RUN      ] Test.Skip
+[  SKIPPED ] Test.Skip (1 ms)
+[ RUN      ] Test.Fail
+C:\...\test.cpp(14): error: Value of: false
+  Actual: false
+Expected: true
+[  FAILED  ] Test.Fail (0 ms)
+[----------] 3 tests from Test (3 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (6 ms total)
+[  PASSED  ] 1 test.
+[  SKIPPED ] 1 test, listed below:
+[  SKIPPED ] Test.Skip
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Test.Fail
+
+ 1 FAILED TEST
+".Split('\n');
+
 
         private List<string> CrashesImmediately { get; set; }
         private List<string> CrashesAfterErrorMsg { get; set; }
@@ -312,14 +340,47 @@ namespace GoogleTestAdapter.TestResults
                     @"c:\users\chris\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1tests\source.cpp")
             };
 
-            var results = new StandardOutputTestResultParser(cases, ConsoleOutputWithPrefixingTest, TestEnvironment.Logger)
-                .GetTestResults();
+            var parser = new StreamingStandardOutputTestResultParser(cases, TestEnvironment.Logger, MockFrameworkReporter.Object);
+            ConsoleOutputWithPrefixingTest.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+            var results = parser.TestResults;
 
             results.Should().HaveCount(2);
             results[0].TestCase.FullyQualifiedName.Should().Be("Test.AB");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[0]);
             results[1].TestCase.FullyQualifiedName.Should().Be("Test.A");
             XmlTestResultParserTests.AssertTestResultIsPassed(results[1]);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithSkippedTest_AllResultsAreFound()
+        {
+            var cases = new List<TestCase>
+            {
+                TestDataCreator.ToTestCase("Test.Succeed", TestDataCreator.DummyExecutable, @"c:\somepath\source.cpp"),
+                TestDataCreator.ToTestCase("Test.Skip", TestDataCreator.DummyExecutable, @"c:\somepath\source.cpp"),
+                TestDataCreator.ToTestCase("Test.Fail", TestDataCreator.DummyExecutable, @"c:\somepath\source.cpp"),
+            };
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, TestEnvironment.Logger, MockFrameworkReporter.Object);
+            ConsoleOutputWithSkippedTest.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+            var results = parser.TestResults;
+
+            results.Should().HaveCount(3);
+
+            var result = results[0];
+            result.TestCase.FullyQualifiedName.Should().Be("Test.Succeed");
+            XmlTestResultParserTests.AssertTestResultIsPassed(result);
+
+            result = results[1];
+            result.TestCase.FullyQualifiedName.Should().Be("Test.Skip");
+            XmlTestResultParserTests.AssertTestResultIsSkipped(result);
+
+            result = results[2];
+            result.TestCase.FullyQualifiedName.Should().Be("Test.Fail");
+            XmlTestResultParserTests.AssertTestResultIsFailure(result);
         }
 
         [TestMethod]
