@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.Runners
 
         private void CollectResultsFromConsoleOutput(StandardOutputTestResultParser consoleParser, List<TestResult> testResults)
         {
-            List<TestResult> consoleResults = consoleParser.GetTestResults();
+            var consoleResults = consoleParser.GetTestResults();
             int nrOfCollectedTestResults = 0;
             foreach (TestResult testResult in consoleResults.Where(
                 tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))

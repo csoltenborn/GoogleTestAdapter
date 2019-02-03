@@ -97,7 +97,6 @@
     <Compile Include="TestCases\TestCaseFactoryTests.cs" />
     <Compile Include="TestCases\ListTestsParserTests.cs" />
     <Compile Include="TestResults\StreamingStandardOutputTestResultParserTests.cs" />
-    <Compile Include="TestResults\StandardOutputTestResultParserTests.cs" />
     <Compile Include="TestResults\ErrorMessageParserTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
