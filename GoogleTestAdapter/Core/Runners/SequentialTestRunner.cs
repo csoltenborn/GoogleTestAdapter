@@ -157,7 +157,7 @@ namespace GoogleTestAdapter.Runners
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
             var testResults = new TestResultCollector(_logger, _threadName)
-                .CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
+                .CollectTestResults(remainingTestCases, executable, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 
             return testResults;

@@ -41,23 +41,23 @@
   </PropertyGroup>
   <Choose>
     <When Condition="'$(TestAdapterFlavor)' == 'GTA'">
-	  <ItemGroup>
-		<Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-		  <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-		  <Private>True</Private>
-		</Reference>
-	  </ItemGroup>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+      </ItemGroup>
     </When>
     <Otherwise>
-	  <ItemGroup>
-		<Reference Include="Microsoft.TestPlatform.CoreUtilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-		  <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.1\lib\net46\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-		  <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.1\lib\net46\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-		  <Private>True</Private>
-		</Reference>
-	  </ItemGroup>
+      <ItemGroup>
+        <Reference Include="Microsoft.TestPlatform.CoreUtilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.1\lib\net46\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.1\lib\net46\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+      </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
@@ -99,6 +99,7 @@
     <Compile Include="ProcessExecution\NativeDebuggedProcessExecutorTests.cs" />
     <Compile Include="Settings\RunSettingsContainerTests.cs" />
     <Compile Include="CommonFunctionsTests.cs" />
+    <Compile Include="TestExecutorSequentialTests_FrameworkDebugging.cs" />
     <Compile Include="TestExecutorTestsBase.cs" />
     <Compile Include="TestAdapterTestsBase.cs" />
     <Compile Include="Framework\VsTestFrameworkReporterTests.cs" />

@@ -37,6 +37,10 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Exactly(nrOfUnexecutedTests));
         }
 
+        protected virtual void SetUpMockFrameworkHandle()
+        {
+        }
+
         [TestInitialize]
         public override void SetUp()
         {
@@ -67,6 +71,7 @@ namespace GoogleTestAdapter.TestAdapter
             RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
 
             MockFrameworkHandle.Reset();
+            SetUpMockFrameworkHandle();
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + SettingsWrapper.TestDirPlaceholder + "\"");
 
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
@@ -82,7 +87,9 @@ namespace GoogleTestAdapter.TestAdapter
             RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
 
             MockFrameworkHandle.Reset();
+            SetUpMockFrameworkHandle();
             MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.SolutionDirPlaceholder);
+
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
 
