@@ -66,6 +66,7 @@ namespace GoogleTestAdapter.Tests.Common
 
         public const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         public const string XmlFile2 = TestdataDir + @"SampleResult2.xml";
+        public const string XmlUmlauts = TestdataDir + @"Umlauts.xml";
         public const string XmlFileBroken = TestdataDir + @"SampleResult1_Broken.xml";
         // ReSharper disable once InconsistentNaming
         public const string XmlFileBroken_InvalidStatusAttibute = TestdataDir + @"SampleResult1 _Broken_InvalidStatusAttribute.xml";
