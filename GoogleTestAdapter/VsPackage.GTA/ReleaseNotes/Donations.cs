@@ -13,11 +13,14 @@ In the last couple of months, I noticed that my private laptop certainly has a f
 Therefore, if you would like to appreciate development and support of <i>Google Test Adapter</i>, <b>please consider to [donate!](https://github.com/csoltenborn/GoogleTestAdapter#donations)</b> Thanks in advance...
 <br>
 <br>
+<b>Update (2/5/2019):</b> I have again received some (and quite generous) donations - thanks a lot to Treb and Sebastian! Still not at my donation goal, though... If you happen to work with GTA in a professional manner (e.g. in a company which uses GTA to execute the C++ tests, be it within Visual Studio or on the build server), may I ask you to reconsider donating? If you need some more motivation, note that my birthday was just a couple of days ago ;-)
+<br>
+<br>
+<b>Update (2/5/2019):</b> Welcome again to my donation weekly soap :-) Responds to my last request for donations were quite a bit better and included some rather generous ones, but still a way to go until my donation goals are met. Thanks a lot to Yehuda, Walter, Thomas, Lewis, Greg, and my colleague Benedikt! I loved to hear that GTA just works for you and is indeed quite helpful.
+<br>
+<br>
 <b>Update (12/09/2018):</b> Given the fact that I have a couple of thousands users, I must admit that I have been unpleasantly surprised by the amount of donations I received (thanks, Tim and
 Arne! I appreciate it more than you might imagine). Thus, I have decided to disable the <i>Do not show release notes</i> option until I have reached my donation goals (sorry for this, Tim and Arne). Please consider to [donate](https://github.com/csoltenborn/GoogleTestAdapter#donations) - and note that Christmas is pretty close ;-)
-<br>
-<br>
-<b>Update (12/16/2018):</b> Welcome again to my donation weekly soap :-) Responds to my last request for donations were quite a bit better and included some rather generous ones, but still a way to go until my donation goals are met. Thanks a lot to Yehuda, Walter, Thomas, Lewis, Greg, and my colleague Benedikt! I loved to hear that GTA just works for you and is indeed quite helpful.
 <br>
 <br>
 ";
