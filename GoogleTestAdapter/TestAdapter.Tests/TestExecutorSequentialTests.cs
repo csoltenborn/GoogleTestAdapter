@@ -46,14 +46,14 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CancelingExecutor_StopsTestExecution()
+        public virtual void RunTests_CancelingExecutor_StopsTestExecution()
         {
             DoRunCancelingTests(false, DurationOfEachLongRunningTestInMs);  // (only) 1st test should be executed
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
+        public virtual void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
         {
             DoRunCancelingTests(true, WaitBeforeCancelInMs);  // 1st test should be actively canceled
         }
@@ -123,14 +123,14 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CrashingX64Tests_CorrectTestResults()
+        public virtual void RunTests_CrashingX64Tests_CorrectTestResults()
         {
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 1, 2, 0, 3);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CrashingX86Tests_CorrectTestResults()
+        public virtual void RunTests_CrashingX86Tests_CorrectTestResults()
         {
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 1, 2, 0, 3);
         }
@@ -186,16 +186,4 @@ namespace GoogleTestAdapter.TestAdapter
         #endregion
 
     }
-
-    [TestClass]
-    public class TestExecutorSequentialTests_OldTestExecutionFramework : TestExecutorSequentialTests
-    {
-        [TestInitialize]
-        public override void SetUp()
-        {
-            base.SetUp();
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
-        }
-    }
-
 }

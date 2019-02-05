@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
 
-            var parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", "somefile", TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().BeEmpty();
@@ -35,7 +35,7 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().BeEmpty();
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().ContainSingle();
@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().HaveCount(2);
@@ -77,7 +77,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             parser.Invoking(p => p.GetTestResults()).Should().NotThrow<Exception>();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Foo"))), Times.Exactly(1));
         }
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().ContainSingle();
@@ -101,7 +101,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("AnimalsTest.testGetEnoughAnimals", TestDataCreator.DummyExecutable, @"x:\prod\company\util\util.cpp").Yield();
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().ContainSingle();
@@ -119,7 +119,7 @@ Should get three animals";
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("ParameterizedTestsTest1/AllEnabledTest.TestInstance/11", TestDataCreator.DummyExecutable, @"someSimpleParameterizedTest.cpp").Yield();
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().ContainSingle();
@@ -134,7 +134,7 @@ Should get three animals";
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("FooTest.DoesXyz");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile2, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile2, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().ContainSingle();
@@ -148,7 +148,7 @@ Should get three animals";
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("FooTest.MethodBarDoesAbc", TestDataCreator.DummyExecutable,
                 @"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp").Yield();
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile2, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile2, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
             results.Should().ContainSingle();
@@ -171,7 +171,7 @@ Something's wrong :(";
             testResult.ErrorMessage.Should().BeNull();
         }
 
-        private void AssertTestResultIsSkipped(Model.TestResult testResult)
+        public static void AssertTestResultIsSkipped(Model.TestResult testResult)
         {
             testResult.Outcome.Should().Be(Model.TestOutcome.Skipped);
             testResult.ErrorMessage.Should().BeNull();
