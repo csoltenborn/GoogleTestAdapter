@@ -12,6 +12,7 @@
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
     <iconUrl>https://github.com/csoltenborn/GoogleTestAdapter/raw/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/Resources/gtest-logo.png</iconUrl>
     <licenseUrl>https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/LICENSE.txt</licenseUrl>
+    <license type="file">LICENSE.txt</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>true</developmentDependency>
     <copyright>Copyright 2015-2019 Christian Soltenborn</copyright>
