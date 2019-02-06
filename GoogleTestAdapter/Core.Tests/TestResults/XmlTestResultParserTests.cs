@@ -115,7 +115,7 @@ Should get three animals";
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_Sample1_FindsParamterizedFailureResult()
+        public void GetTestResults_Sample1_FindsParameterizedFailureResult()
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("ParameterizedTestsTest1/AllEnabledTest.TestInstance/11", TestDataCreator.DummyExecutable, @"someSimpleParameterizedTest.cpp").Yield();
 
@@ -162,6 +162,20 @@ Expected: 12312
 Something's wrong :(";
             AssertTestResultIsFailure(results[0], ErrorMsg);
             results[0].ErrorStackTrace.Should().Contain(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_Umlauts_FindsOneResultAndWarns()
+        {
+            IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("TheClass.Täst1", "TheClass.Töst1", "TheClass.Täst2");
+
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlUmlauts, TestEnvironment.Logger);
+            List<Model.TestResult> results = parser.GetTestResults();
+
+            results.Should().ContainSingle();
+            AssertTestResultIsPassed(results[0]);
+            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Once);
         }
 
 
