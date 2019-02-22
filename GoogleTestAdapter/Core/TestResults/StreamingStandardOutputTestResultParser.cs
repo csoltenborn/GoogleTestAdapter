@@ -17,6 +17,9 @@ namespace GoogleTestAdapter.TestResults
         private const string Passed = "[       OK ]";
         private const string Skipped = "[  SKIPPED ]";
 
+        public const string GtaResultCodeOutputBegin = "GTA_RESULT_CODE_OUTPUT_BEGIN";
+        public const string GtaResultCodeOutputEnd = "GTA_RESULT_CODE_OUTPUT_END";
+
         public const string CrashText = "!! This test has probably CRASHED !!";
 
         /// <summary>
@@ -31,12 +34,14 @@ namespace GoogleTestAdapter.TestResults
 
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
+        public IList<string> ResultCodeOutput { get; } = new List<string>();
 
         private readonly List<TestCase> _testCasesRun;
         private readonly ILogger _logger;
         private readonly ITestFrameworkReporter _reporter;
 
         private readonly List<string> _consoleOutput = new List<string>();
+        private bool _isParsingResultCodeOutput;
 
         static StreamingStandardOutputTestResultParser()
         {
@@ -73,15 +78,33 @@ namespace GoogleTestAdapter.TestResults
 
         private void DoReportLine(string line)
         {
-            if (IsRunLine(line))
+            if (IsRunLine(line) || line.StartsWith(GtaResultCodeOutputBegin))
             {
                 if (_consoleOutput.Count > 0)
                 {
                     ReportTestResult();
                     _consoleOutput.Clear();
                 }
-                ReportTestStart(line);
+
+                if (IsRunLine(line))
+                {
+                    ReportTestStart(line);
+                }
+                else
+                {
+                    _isParsingResultCodeOutput = true;
+                    return;
+                }
             }
+
+            if (line.StartsWith(GtaResultCodeOutputEnd))
+            {
+                _consoleOutput.ForEach(l => ResultCodeOutput.Add(l));
+                _consoleOutput.Clear();
+                _isParsingResultCodeOutput = false;
+                return;
+            }
+
             _consoleOutput.Add(line);
         }
 
@@ -89,7 +112,16 @@ namespace GoogleTestAdapter.TestResults
         {
             if (_consoleOutput.Count > 0)
             {
-                ReportTestResult();
+                if (_isParsingResultCodeOutput)
+                {
+                    _consoleOutput.ForEach(l => ResultCodeOutput.Add(l));
+                    _isParsingResultCodeOutput = false;
+                }
+                else
+                {
+                    ReportTestResult();
+                }
+
                 _consoleOutput.Clear();
             }
         }
@@ -208,7 +240,7 @@ namespace GoogleTestAdapter.TestResults
                 : duration;
         }
 
-        private TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
+        public static TestResult CreatePassedTestResult(TestCase testCase, TimeSpan duration)
         {
             return new TestResult(testCase)
             {
@@ -230,7 +262,7 @@ namespace GoogleTestAdapter.TestResults
             };
         }
 
-        private TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, string errorMessage, string errorStackTrace)
+        public static TestResult CreateFailedTestResult(TestCase testCase, TimeSpan duration, string errorMessage, string errorStackTrace)
         {
             return new TestResult(testCase)
             {

@@ -186,6 +186,18 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_CancelingExecutor_StopsTestExecution();
         }
 
+        [TestMethod]
+        public override void RunTests_ResultCodeTest_PassingTestResultIsProduced()
+        {
+            base.RunTests_ResultCodeTest_PassingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void RunTests_ResultCodeTest_FailingTestResultIsProduced()
+        {
+            base.RunTests_ResultCodeTest_FailingTestResultIsProduced();
+        }
+
         #endregion
     }
 }

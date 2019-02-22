@@ -74,6 +74,8 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
+        public IList<ExecutableResult> ExecutableResults => _innerTestRunner.ExecutableResults;
+
         public void Cancel()
         {
             _innerTestRunner.Cancel();

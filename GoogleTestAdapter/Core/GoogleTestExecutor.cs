@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestCases;
+using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter
 {
@@ -47,6 +50,52 @@ namespace GoogleTestAdapter
             }
 
             _runner.RunTests(testCasesToRunAsArray, isBeingDebugged, _processExecutorFactory);
+
+            if (!string.IsNullOrWhiteSpace(_settings.ReturnCodeTestCase))
+            {
+                bool printWarning = false;
+                foreach (ExecutableResult executableResult in _runner.ExecutableResults)
+                {
+                    var resultCodeTestCase = TestCaseFactory.CreateResultCodeTestCase(_settings.ReturnCodeTestCase, executableResult.Executable);
+                    reporter.ReportTestsStarted(resultCodeTestCase.Yield());
+
+                    int resultCode = executableResult.ResultCode;
+                    if (resultCode == 0)
+                    {
+                        var testResult =
+                            StreamingStandardOutputTestResultParser.CreatePassedTestResult(resultCodeTestCase,
+                                TimeSpan.Zero);
+                        if (executableResult.ResultCodeOutput.Any())
+                        {
+                            string message = $"{Environment.NewLine}{Environment.NewLine}Output:{Environment.NewLine}";
+                            message += string.Join(Environment.NewLine, executableResult.ResultCodeOutput);
+                            testResult.ErrorMessage = message;
+                        }
+
+                        reporter.ReportTestResults(testResult.Yield());
+                    }
+                    else
+                    {
+                        string message = $"Exit code: {resultCode}";
+                        if (executableResult.ResultCodeOutput.Any())
+                        {
+                            message += $"{Environment.NewLine}{Environment.NewLine}Output:{Environment.NewLine}";
+                            message += string.Join(Environment.NewLine, executableResult.ResultCodeOutput);
+                        } 
+                        else if (isBeingDebugged && !_settings.UseNewTestExecutionFramework)
+                        {
+                            printWarning = true;
+                        }
+
+                        reporter.ReportTestResults(StreamingStandardOutputTestResultParser.CreateFailedTestResult(resultCodeTestCase, TimeSpan.Zero, message, "").Yield());
+                    }
+                }
+
+                if (printWarning)
+                {
+                    _logger.LogWarning($"Result code output can not be collected while debugging if option '{SettingsWrapper.OptionUseNewTestExecutionFramework}' is false");
+                }
+            }
 
             if (_settings.ParallelTestExecution)
                 _schedulingAnalyzer.PrintStatisticsToDebugOutput();

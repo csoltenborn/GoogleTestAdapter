@@ -95,6 +95,9 @@ namespace GoogleTestAdapter.Settings
         public bool? SkipOriginCheck { get; set; }
         public bool ShouldSerializeSkipOriginCheck() { return SkipOriginCheck != null; }
 
+        public string ReturnCodeTestCase { get; set; }
+        public bool ShouldSerializeReturnCodeTestCase() { return ReturnCodeTestCase != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }

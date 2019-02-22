@@ -29,6 +29,8 @@
         <ParseSymbolInformation>true</ParseSymbolInformation>
         <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
         <KillProcessesOnCancel>false</KillProcessesOnCancel>
+        <ReturnCodeTestCase/>
+
       </Settings>
     </SolutionSettings>
     <ProjectSettings/>

@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DllTests", "DllDependentPro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DllProject", "DllProject\DllProject.vcxproj", "{BAB53542-85AA-4780-9F48-2984C036189A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LeakCheckTests", "LeakCheckTests\LeakCheckTests.vcxproj", "{41791F46-44CF-459B-9F77-049CE1C9D203}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,8 +123,21 @@ Global
 		{BAB53542-85AA-4780-9F48-2984C036189A}.Release|Win32.Build.0 = Release|Win32
 		{BAB53542-85AA-4780-9F48-2984C036189A}.Release|x64.ActiveCfg = Release|x64
 		{BAB53542-85AA-4780-9F48-2984C036189A}.Release|x64.Build.0 = Release|x64
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Debug|Win32.ActiveCfg = Debug|Win32
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Debug|Win32.Build.0 = Debug|Win32
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Debug|x64.ActiveCfg = Debug|x64
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Debug|x64.Build.0 = Debug|x64
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|Any CPU.ActiveCfg = Release|Win32
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|Win32.ActiveCfg = Release|Win32
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|Win32.Build.0 = Release|Win32
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|x64.ActiveCfg = Release|x64
+		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3435815-4855-4F5B-8ADE-F889A4CDE65B}
 	EndGlobalSection
 EndGlobal

@@ -160,6 +160,18 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithoutPathExtension_ExecutionFails();
         }
 
+        [TestMethod]
+        public override void RunTests_ResultCodeTest_PassingTestResultIsProduced()
+        {
+            base.RunTests_ResultCodeTest_PassingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void RunTests_ResultCodeTest_FailingTestResultIsProduced()
+        {
+            base.RunTests_ResultCodeTest_FailingTestResultIsProduced();
+        }
+
         #endregion
 
     }

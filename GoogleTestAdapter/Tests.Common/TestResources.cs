@@ -61,6 +61,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string DllTestsDll_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\DllProject.dll";
         public const int NrOfDllTests = 2;
 
+        public const string LeakCheckTests_DebugX86 = SampleTestsBuildDir + @"Debug\LeakCheckTests_gta.exe";
+        public const string LeakCheckTests_ReleaseX86 = SampleTestsBuildDir + @"Release\LeakCheckTests_gta.exe";
+
         public const string SucceedingBatch = @"Tests\Returns0.bat";
         public const string FailingBatch = @"Tests\Returns1.bat";
 

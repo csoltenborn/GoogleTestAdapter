@@ -170,7 +170,7 @@ at #2 - scopedtracestests.cpp:34 in $(Directory)\sampletests\tests\scopedtracest
   0
   i
     Which is: 1</Message>
-          <StackTrace>at main.cpp:39 in $(Directory)\sampletests\tests\main.cpp:line 39</StackTrace>
+          <StackTrace>at main.cpp:46 in $(Directory)\sampletests\tests\main.cpp:line 46</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -201,7 +201,7 @@ at #2 - scopedtracestests.cpp:34 in $(Directory)\sampletests\tests\scopedtracest
     Which is: 1</Message>
           <StackTrace>at #1 - scopedtracestests.cpp:49 in $(Directory)\sampletests\tests\scopedtracestests.cpp:line 49
 at #2 - scopedtracestests.cpp:12 in $(Directory)\sampletests\tests\scopedtracestests.cpp:line 12
-at #3 - main.cpp:39 in $(Directory)\sampletests\tests\main.cpp:line 39</StackTrace>
+at #3 - main.cpp:46 in $(Directory)\sampletests\tests\main.cpp:line 46</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>

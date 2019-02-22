@@ -574,6 +574,14 @@ namespace GoogleTestAdapter.Settings
 
         public virtual bool SkipOriginCheck => _currentSettings.SkipOriginCheck ?? OptionSkipOriginCheckDefaultValue;
 
+
+        public const string OptionReturnCodeTestCase = "Exit code test case";
+        public const string OptionReturnCodeTestCaseDefaultValue = "";
+        public const string OptionReturnCodeTestCaseDescription =
+            "If non-empty, an additional test case will be generated per test executable that passes if and only if the test executable returns exit code 0.";
+
+        public virtual string ReturnCodeTestCase => _currentSettings.ReturnCodeTestCase ?? OptionReturnCodeTestCaseDefaultValue;
+
         #endregion
 
         #region ParallelizationOptionsPage

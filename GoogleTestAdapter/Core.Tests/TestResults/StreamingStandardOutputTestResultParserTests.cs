@@ -333,6 +333,186 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetTestResults_OutputWithEmptyResultCode_NoResultCodeOutputIsParsed()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 1 tests from 1 test case.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 1 tests from TestMath",
+                @"[ RUN      ] TestMath.AddPasses",
+                @"Some output produced by the exe",
+                @"[       OK ] TestMath.AddPasses(0 ms)",
+                @"[----------] 1 tests from TestMath(26 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+            };
+            var cases = GetTestCases();
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+
+            parser.ResultCodeOutput.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithResultCode_ResultCodeOutputIsParsed()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 1 tests from 1 test case.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 1 tests from TestMath",
+                @"[ RUN      ] TestMath.AddPasses",
+                @"Some output produced by the exe",
+                @"[       OK ] TestMath.AddPasses(0 ms)",
+                @"[----------] 1 tests from TestMath(26 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                @"Some test output",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+            };
+            var cases = GetTestCases();
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+
+            parser.ResultCodeOutput.Should().BeEquivalentTo("Some test output");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithTwoLinesResultCode_ResultCodeOutputIsParsed()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 1 tests from 1 test case.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 1 tests from TestMath",
+                @"[ RUN      ] TestMath.AddPasses",
+                @"Some output produced by the exe",
+                @"[       OK ] TestMath.AddPasses(0 ms)",
+                @"[----------] 1 tests from TestMath(26 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                "Output 1",
+                "Output 2",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+            };
+            var cases = GetTestCases();
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+
+            parser.ResultCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithTwoLinesResultCodeAndAdditionalOutput_ResultCodeOutputIsParsed()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 1 tests from 1 test case.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 1 tests from TestMath",
+                @"[ RUN      ] TestMath.AddPasses",
+                @"Some output produced by the exe",
+                @"[       OK ] TestMath.AddPasses(0 ms)",
+                @"[----------] 1 tests from TestMath(26 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                "Output 1",
+                "Output 2",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+                "Some more output"
+            };
+            var cases = GetTestCases();
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+
+            parser.ResultCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithNoLinesResultCodeAndNoEnd_NoResultCodeOutputIsParsed()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 1 tests from 1 test case.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 1 tests from TestMath",
+                @"[ RUN      ] TestMath.AddPasses",
+                @"Some output produced by the exe",
+                @"[       OK ] TestMath.AddPasses(0 ms)",
+                @"[----------] 1 tests from TestMath(26 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin
+            };
+            var cases = GetTestCases();
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+
+            parser.ResultCodeOutput.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_OutputWithTwoLinesResultCodeAndNoEnd_ResultCodeOutputIsParsed()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 1 tests from 1 test case.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 1 tests from TestMath",
+                @"[ RUN      ] TestMath.AddPasses",
+                @"Some output produced by the exe",
+                @"[       OK ] TestMath.AddPasses(0 ms)",
+                @"[----------] 1 tests from TestMath(26 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 1 test case ran. (36 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"",
+                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                "Output 1",
+                "Output 2",
+            };
+            var cases = GetTestCases();
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+
+            parser.ResultCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithPrefixingTest_BothTestsAreFound()
         {
             string[] consoleOutput =

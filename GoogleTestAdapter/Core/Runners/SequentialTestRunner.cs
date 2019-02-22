@@ -67,6 +67,8 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
+        public IList<ExecutableResult> ExecutableResults { get; } = new List<ExecutableResult>();
+
         public void Cancel()
         {
             _canceled = true;
@@ -196,13 +198,20 @@ namespace GoogleTestAdapter.Runners
                     ? processExecutorFactory.CreateNativeDebuggingExecutor(printTestOutput, _logger)
                     : processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
-            _processExecutor.ExecuteCommandBlocking(
+            int resultCode = _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 isTestOutputAvailable ? (Action<string>) OnNewOutputLine : null);
             streamingParser.Flush();
 
             if (printTestOutput)
                 _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
+
+            ExecutableResults.Add(new ExecutableResult
+            {
+                Executable = executable,
+                ResultCode = resultCode,
+                ResultCodeOutput = streamingParser.ResultCodeOutput
+            });
 
             var consoleOutput = new List<string>();
             new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);
@@ -211,7 +220,7 @@ namespace GoogleTestAdapter.Runners
             foreach (TestResult result in streamingParser.TestResults)
             {
                 if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
-                    _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
+                    _logger.DebugWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
             }
             return consoleOutput;
         }

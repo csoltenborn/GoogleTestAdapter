@@ -75,7 +75,7 @@ namespace GoogleTestAdapter.TestCases
             };
 
             string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-           var finalParams = GetDiscoveryParams();
+            var finalParams = GetDiscoveryParams();
             try
             {
                 int processExitCode = ExecutionFailed;
@@ -115,8 +115,18 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                if (!string.IsNullOrWhiteSpace(_settings.ReturnCodeTestCase))
+                {
+                    var resultCodeTestCase = CreateResultCodeTestCase();
+                    resultCodeTestCase.Properties.Add(new TestCaseMetaDataProperty(1, 1));
+                    testCases.Add(resultCodeTestCase);
+                    reportTestCase?.Invoke(resultCodeTestCase);
+                    _logger.DebugInfo($"Exit code of test executable is ignored because option '{SettingsWrapper.OptionReturnCodeTestCase}' is set");
+                }
+                else if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                {
                     return new List<TestCase>();
+                }
             }
             catch (Exception e)
             {
@@ -124,6 +134,17 @@ namespace GoogleTestAdapter.TestCases
                 return new List<TestCase>();
             }
             return testCases;
+        }
+
+        private TestCase CreateResultCodeTestCase()
+        {
+            return CreateResultCodeTestCase(_settings.ReturnCodeTestCase, _executable);
+        }
+
+        public static TestCase CreateResultCodeTestCase(string name, string executable)
+        {
+            string testCaseName = $"{Path.GetFileName(executable).Replace(".", "_")}.{name}";
+            return new TestCase(testCaseName, executable, testCaseName, "", 0);
         }
 
         private string GetDiscoveryParams()

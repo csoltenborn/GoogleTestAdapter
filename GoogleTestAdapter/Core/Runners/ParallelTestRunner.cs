@@ -1,5 +1,6 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,7 +8,6 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
@@ -45,7 +45,27 @@ namespace GoogleTestAdapter.Runners
             {
                 thread.Join();
             }
+
+            foreach (IGrouping<string, ExecutableResult> results in _testRunners.SelectMany(r => r.ExecutableResults).GroupBy(r => r.Executable))
+            {
+                var completeOutput = new List<string>();
+                foreach (ExecutableResult result in results)
+                {
+                    completeOutput.Add(Environment.NewLine);
+                    completeOutput.AddRange(result.ResultCodeOutput);
+                }
+                completeOutput.RemoveAt(0);
+
+                ExecutableResults.Add(new ExecutableResult
+                {
+                    Executable = results.Key,
+                    ResultCode = results.Max(r => r.ResultCode),
+                    ResultCodeOutput = completeOutput
+                });
+            }
         }
+
+        public IList<ExecutableResult> ExecutableResults { get; } = new List<ExecutableResult>();
 
         public void Cancel()
         {
