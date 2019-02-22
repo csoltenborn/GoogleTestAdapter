@@ -198,6 +198,30 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_ResultCodeTest_FailingTestResultIsProduced();
         }
 
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaks_CorrectResult();
+        }
+
         #endregion
     }
 }

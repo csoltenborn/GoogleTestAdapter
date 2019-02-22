@@ -295,7 +295,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        public virtual void MemoryLeakTests_PassingWithLeaks_CorrectResult()
         {
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
@@ -306,7 +306,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        public virtual void MemoryLeakTests_FailingWithLeaks_CorrectResult()
         {
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
@@ -317,7 +317,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        public virtual void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
         {
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.passing", VsTestOutcome.Passed, VsTestOutcome.Passed,
                 msg => msg == null);
@@ -325,7 +325,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        public virtual void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
         {
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
@@ -395,7 +395,7 @@ namespace GoogleTestAdapter.TestAdapter
                             && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin)
                             && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd)
                             && !result.ErrorMessage.Contains("Some more output")
-                : (Func<VsTestResult, bool>) (result => result.ErrorMessage == null);
+                : (Func<VsTestResult, bool>) (result => result.ErrorMessage == null || result.ErrorMessage.Contains("The result code output"));
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
                     result.TestCase.FullyQualifiedName == finalName
                     && result.Outcome == outcome
