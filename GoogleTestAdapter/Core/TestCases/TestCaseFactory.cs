@@ -118,7 +118,6 @@ namespace GoogleTestAdapter.TestCases
                 if (!string.IsNullOrWhiteSpace(_settings.ReturnCodeTestCase))
                 {
                     var resultCodeTestCase = CreateResultCodeTestCase();
-                    resultCodeTestCase.Properties.Add(new TestCaseMetaDataProperty(1, 1));
                     testCases.Add(resultCodeTestCase);
                     reportTestCase?.Invoke(resultCodeTestCase);
                     _logger.DebugInfo($"Exit code of test executable is ignored because option '{SettingsWrapper.OptionReturnCodeTestCase}' is set");
@@ -138,12 +137,12 @@ namespace GoogleTestAdapter.TestCases
 
         private TestCase CreateResultCodeTestCase()
         {
-            return CreateResultCodeTestCase(_settings.ReturnCodeTestCase, _executable);
+            return CreateResultCodeTestCase(_settings, _executable);
         }
 
-        public static TestCase CreateResultCodeTestCase(string name, string executable)
+        public static TestCase CreateResultCodeTestCase(SettingsWrapper settings, string executable)
         {
-            string testCaseName = $"{Path.GetFileName(executable).Replace(".", "_")}.{name}";
+            string testCaseName = $"{Path.GetFileName(executable).Replace(".", "_")}.{settings.ReturnCodeTestCase}";
             return new TestCase(testCaseName, executable, testCaseName, "", 0);
         }
 
