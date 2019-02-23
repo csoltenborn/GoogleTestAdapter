@@ -206,13 +206,8 @@ namespace GoogleTestAdapter.Runners
             if (printTestOutput)
                 _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
 
-            ExecutableResults.Add(new ExecutableResult
-            {
-                Executable = executable,
-                ResultCode = resultCode,
-                ResultCodeOutput = streamingParser.ResultCodeOutput,
-                ResultCodeSkip = streamingParser.ResultCodeSkip
-            });
+            ExecutableResults.Add(new ExecutableResult(executable, resultCode, streamingParser.ResultCodeOutput,
+                streamingParser.ResultCodeSkip));
 
             var consoleOutput = new List<string>();
             new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);

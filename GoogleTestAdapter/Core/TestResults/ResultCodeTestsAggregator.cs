@@ -12,13 +12,11 @@ namespace GoogleTestAdapter.TestResults
         {
             return allResults
                 .GroupBy(r => r.Executable)
-                .Select(results => new ExecutableResult
-                {
-                    Executable = results.Key,
-                    ResultCode = ComputeAggregatedResultCode(results),
-                    ResultCodeOutput = ComputeAggregatedOutput(results),
-                    ResultCodeSkip = results.All(r => r.ResultCodeSkip)
-                });
+                .Select(results => new ExecutableResult(
+                    executable: results.Key, 
+                    resultCode: ComputeAggregatedResultCode(results),
+                    resultCodeOutput: ComputeAggregatedOutput(results), 
+                    resultCodeSkip: results.All(r => r.ResultCodeSkip)));
         }
 
         private List<string> ComputeAggregatedOutput(IEnumerable<ExecutableResult> results)
@@ -26,11 +24,18 @@ namespace GoogleTestAdapter.TestResults
             var completeOutput = new List<string>();
             foreach (ExecutableResult result in results)
             {
-                completeOutput.Add(Environment.NewLine);
-                completeOutput.AddRange(result.ResultCodeOutput);
+                if (result.ResultCodeOutput != null && result.ResultCodeOutput.Any(line => !string.IsNullOrWhiteSpace(line)))
+                {
+                    completeOutput.Add(Environment.NewLine);
+                    completeOutput.AddRange(result.ResultCodeOutput);
+                }
             }
 
-            completeOutput.RemoveAt(0);
+            if (completeOutput.Any())
+            {
+                completeOutput.RemoveAt(0);
+            }
+
             return completeOutput;
         }
 

@@ -45,7 +45,8 @@ namespace GoogleTestAdapter.TestResults
                 {
                     if (!string.IsNullOrWhiteSpace(_settings.ReturnCodeTestCase))
                     {
-                        printWarning |= ReportResultCodeTestResult(executableResult, isBeingDebugged);
+                        ReportResultCodeTestResult(executableResult);
+                        printWarning |= isBeingDebugged && !_settings.UseNewTestExecutionFramework;
                     }
                 });
             }
@@ -57,13 +58,12 @@ namespace GoogleTestAdapter.TestResults
             }
         }
 
-        private bool ReportResultCodeTestResult(ExecutableResult executableResult, bool isBeingDebugged)
+        private void ReportResultCodeTestResult(ExecutableResult executableResult)
         {
             var resultCodeTestCase = CreateResultCodeTestCase(_settings, executableResult.Executable);
             _reporter.ReportTestsStarted(resultCodeTestCase.Yield());
 
             TestResult testResult;
-            bool printWarning = false;
             if (executableResult.ResultCode == 0)
             {
                 testResult = CreatePassingResultCodeTestResult(resultCodeTestCase, executableResult);
@@ -74,12 +74,10 @@ namespace GoogleTestAdapter.TestResults
             }
             else
             {
-                testResult = CreateFailingResultCodeTestResult(resultCodeTestCase, executableResult, executableResult.ResultCode,
-                    isBeingDebugged, out printWarning);
+                testResult = CreateFailingResultCodeTestResult(resultCodeTestCase, executableResult, executableResult.ResultCode);
             }
 
             _reporter.ReportTestResults(testResult.Yield());
-            return printWarning;
         }
 
         private TestResult CreatePassingResultCodeTestResult(TestCase resultCodeTestCase,
@@ -97,19 +95,13 @@ namespace GoogleTestAdapter.TestResults
         }
 
         private TestResult CreateFailingResultCodeTestResult(TestCase resultCodeTestCase, ExecutableResult executableResult,
-            int resultCode, bool isBeingDebugged, out bool printWarning)
+            int resultCode)
         {
-            printWarning = false;
-
             string message = $"Exit code: {resultCode}";
             if (executableResult.ResultCodeOutput.Any())
             {
                 message += $"{Environment.NewLine}{Environment.NewLine}";
                 message += string.Join(Environment.NewLine, executableResult.ResultCodeOutput);
-            }
-            else if (isBeingDebugged && !_settings.UseNewTestExecutionFramework)
-            {
-                printWarning = true;
             }
 
             return StreamingStandardOutputTestResultParser
