@@ -551,10 +551,10 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
             {
                 settings.WorkingDir.Should().Be("foo_dir");
-            }, MockLogger.Object);
+            });
         }
 
         [TestMethod]
@@ -563,7 +563,7 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () => {}, MockLogger.Object);
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () => {});
 
             settings.WorkingDir.Should().Be("solution_dir");
         }
@@ -574,10 +574,10 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("bar", () =>
+            settings.ExecuteWithSettingsForExecutable("bar", MockLogger.Object, () =>
             {
                 settings.WorkingDir.Should().Be("solution_dir");
-            }, MockLogger.Object);
+            });
         }
 
         [TestMethod]
@@ -586,14 +586,14 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
             {
-                settings.ExecuteWithSettingsForExecutable("foo", () =>
+                settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
                 {
                     settings.WorkingDir.Should().Be("foo_dir");
-                }, MockLogger.Object);
+                });
                 
-            }, MockLogger.Object);
+            });
         }
 
         [TestMethod]
@@ -603,10 +603,10 @@ namespace GoogleTestAdapter.Settings
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
             settings
-                .Invoking(s => s.ExecuteWithSettingsForExecutable("foo", () =>
+                .Invoking(s => s.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
                 {
-                    s.ExecuteWithSettingsForExecutable("bar", () => { }, MockLogger.Object);
-                }, MockLogger.Object))
+                    s.ExecuteWithSettingsForExecutable("bar", MockLogger.Object, () => { });
+                }))
                 .Should().Throw<InvalidOperationException>();
         }
 
@@ -616,16 +616,16 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo", "bar");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
             {
                 var settingsClone = settings.Clone();
                 settingsClone.WorkingDir.Should().Be("solution_dir");
-                settingsClone.ExecuteWithSettingsForExecutable("bar", () =>
+                settingsClone.ExecuteWithSettingsForExecutable("bar", MockLogger.Object, () =>
                 {
                     settings.WorkingDir.Should().Be("foo_dir");
                     settingsClone.WorkingDir.Should().Be("bar_dir");
-                }, MockLogger.Object);
-            }, MockLogger.Object);
+                });
+            });
         }
 
         private SettingsWrapper CreateSettingsWrapper(string solutionWorkdir, params string[] projects)

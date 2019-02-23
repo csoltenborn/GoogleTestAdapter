@@ -116,7 +116,6 @@ int main(int argc, char** argv)
 
    for (int i = 0; i < argc; i++)
 	{
-      std::cout << argv[i] << "\n";
 		if (strncmp(argv[i], prefix.c_str(), strlen(prefix.c_str())) == 0)
 		{
          is_run_by_gta = true;
@@ -130,6 +129,7 @@ int main(int argc, char** argv)
    #ifndef _DEBUG
    if (is_run_by_gta)
    {
+      std::cout << "GTA_RESULT_CODE_SKIP\n";
       std::cout << "GTA_RESULT_CODE_OUTPUT_BEGIN\n";
       std::cout << "Memory leak detection is only performed if compiled with Debug configuration.\n";
    }

@@ -10,6 +10,7 @@ namespace GoogleTestAdapter.Runners
         public string Executable { get; set; }
         public int ResultCode { get; set; }
         public IList<string> ResultCodeOutput { get; set; }
+        public bool ResultCodeSkip { get; set; }
     }
 
     public interface ITestRunner

@@ -19,6 +19,7 @@ namespace GoogleTestAdapter.TestResults
 
         public const string GtaResultCodeOutputBegin = "GTA_RESULT_CODE_OUTPUT_BEGIN";
         public const string GtaResultCodeOutputEnd = "GTA_RESULT_CODE_OUTPUT_END";
+        public const string GtaResultCodeSkip = "GTA_RESULT_CODE_SKIP";
 
         public const string CrashText = "!! This test has probably CRASHED !!";
 
@@ -35,6 +36,7 @@ namespace GoogleTestAdapter.TestResults
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
         public IList<string> ResultCodeOutput { get; } = new List<string>();
+        public bool ResultCodeSkip { get; private set; } = false;
 
         private readonly List<TestCase> _testCasesRun;
         private readonly ILogger _logger;
@@ -102,6 +104,12 @@ namespace GoogleTestAdapter.TestResults
                 _consoleOutput.ForEach(l => ResultCodeOutput.Add(l));
                 _consoleOutput.Clear();
                 _isParsingResultCodeOutput = false;
+                return;
+            }
+
+            if (line.StartsWith(GtaResultCodeSkip))
+            {
+                ResultCodeSkip = true;
                 return;
             }
 

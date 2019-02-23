@@ -50,7 +50,7 @@ namespace GoogleTestAdapter.Runners
                 if (_canceled)
                     break;
 
-                _settings.ExecuteWithSettingsForExecutable(executable, () =>
+                _settings.ExecuteWithSettingsForExecutable(executable, _logger, () =>
                 {
                     string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
                     string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter.Runners
                         userParameters,
                         isBeingDebugged,
                         processExecutorFactory);
-                }, _logger);
+                });
 
             }
         }
@@ -210,7 +210,8 @@ namespace GoogleTestAdapter.Runners
             {
                 Executable = executable,
                 ResultCode = resultCode,
-                ResultCodeOutput = streamingParser.ResultCodeOutput
+                ResultCodeOutput = streamingParser.ResultCodeOutput,
+                ResultCodeSkip = streamingParser.ResultCodeSkip
             });
 
             var consoleOutput = new List<string>();

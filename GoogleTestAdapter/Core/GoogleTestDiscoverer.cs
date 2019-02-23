@@ -47,7 +47,7 @@ namespace GoogleTestAdapter
 
         private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
         {
-            settings.ExecuteWithSettingsForExecutable(executable, () =>
+            settings.ExecuteWithSettingsForExecutable(executable, logger, () =>
             {
                 if (!VerifyExecutableTrust(executable, settings, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
                     return;
@@ -62,7 +62,7 @@ namespace GoogleTestAdapter
                 var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory, processExecutorFactory);
                 factory.CreateTestCases(reportTestCases);
                 logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-            }, logger);
+            });
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)

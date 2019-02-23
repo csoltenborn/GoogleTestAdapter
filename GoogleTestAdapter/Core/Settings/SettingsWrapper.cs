@@ -73,7 +73,7 @@ namespace GoogleTestAdapter.Settings
         // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
-        public void ExecuteWithSettingsForExecutable(string executable, Action action, ILogger logger)
+        public void ExecuteWithSettingsForExecutable(string executable, ILogger logger, Action action)
         {
             lock (_lock)
             {

@@ -12,6 +12,7 @@ using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.TestCases
 {
@@ -117,10 +118,10 @@ namespace GoogleTestAdapter.TestCases
 
                 if (!string.IsNullOrWhiteSpace(_settings.ReturnCodeTestCase))
                 {
-                    var resultCodeTestCase = CreateResultCodeTestCase();
+                    var resultCodeTestCase = ResultCodeTestsReporter.CreateResultCodeTestCase(_settings, _executable);
                     testCases.Add(resultCodeTestCase);
                     reportTestCase?.Invoke(resultCodeTestCase);
-                    _logger.DebugInfo($"Exit code of test executable is ignored because option '{SettingsWrapper.OptionReturnCodeTestCase}' is set");
+                    _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionReturnCodeTestCase}' is set");
                 }
                 else if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
                 {
@@ -133,17 +134,6 @@ namespace GoogleTestAdapter.TestCases
                 return new List<TestCase>();
             }
             return testCases;
-        }
-
-        private TestCase CreateResultCodeTestCase()
-        {
-            return CreateResultCodeTestCase(_settings, _executable);
-        }
-
-        public static TestCase CreateResultCodeTestCase(SettingsWrapper settings, string executable)
-        {
-            string testCaseName = $"{Path.GetFileName(executable).Replace(".", "_")}.{settings.ReturnCodeTestCase}";
-            return new TestCase(testCaseName, executable, testCaseName, "", 0);
         }
 
         private string GetDiscoveryParams()

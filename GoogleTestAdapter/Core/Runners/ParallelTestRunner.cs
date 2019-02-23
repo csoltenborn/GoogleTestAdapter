@@ -1,6 +1,5 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -46,22 +45,10 @@ namespace GoogleTestAdapter.Runners
                 thread.Join();
             }
 
-            foreach (IGrouping<string, ExecutableResult> results in _testRunners.SelectMany(r => r.ExecutableResults).GroupBy(r => r.Executable))
+            // ReSharper disable once InconsistentlySynchronizedField
+            foreach (var result in _testRunners.SelectMany(r => r.ExecutableResults))
             {
-                var completeOutput = new List<string>();
-                foreach (ExecutableResult result in results)
-                {
-                    completeOutput.Add(Environment.NewLine);
-                    completeOutput.AddRange(result.ResultCodeOutput);
-                }
-                completeOutput.RemoveAt(0);
-
-                ExecutableResults.Add(new ExecutableResult
-                {
-                    Executable = results.Key,
-                    ResultCode = results.Max(r => r.ResultCode),
-                    ResultCodeOutput = completeOutput
-                });
+                ExecutableResults.Add(result);
             }
         }
 

@@ -329,7 +329,8 @@ namespace GoogleTestAdapter.TestAdapter
         {
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
-            RunMemoryLeakTest(TestResources.LeakCheckTests_ReleaseX86, "memory_leaks.passing_and_leaking", VsTestOutcome.Passed, VsTestOutcome.Passed,
+            RunMemoryLeakTest(TestResources.LeakCheckTests_ReleaseX86, "memory_leaks.passing_and_leaking", VsTestOutcome.Passed, 
+                outputAvailable ? VsTestOutcome.Skipped : VsTestOutcome.Passed,
                 msg => !outputAvailable || msg.Contains("Memory leak detection is only performed if compiled with Debug configuration."));
         }
 
