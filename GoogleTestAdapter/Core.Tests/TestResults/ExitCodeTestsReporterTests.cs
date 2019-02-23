@@ -11,36 +11,36 @@ using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
-    public class ResultCodeTestsReporterTests : TestsBase
+    public class ExitCodeTestsReporterTests : TestsBase
     {
-        private readonly Mock<IResultCodeTestsAggregator> _mockAggregator = new Mock<IResultCodeTestsAggregator>();
-        private ResultCodeTestsReporter _reporter;
+        private readonly Mock<IExitCodeTestsAggregator> _mockAggregator = new Mock<IExitCodeTestsAggregator>();
+        private ExitCodeTestsReporter _reporter;
 
-        private const string ResultCodeTestCaseName = nameof(ResultCodeTestCaseName);
+        private const string ExitCodeTestCaseName = nameof(ExitCodeTestCaseName);
 
         [TestInitialize]
         public override void SetUp()
         {
             base.SetUp();
 
-            MockOptions.Setup(o => o.ReturnCodeTestCase).Returns(ResultCodeTestCaseName);
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(ExitCodeTestCaseName);
 
             _mockAggregator.Reset();
-            _reporter = new ResultCodeTestsReporter(MockFrameworkReporter.Object, _mockAggregator.Object, MockOptions.Object, MockLogger.Object);
+            _reporter = new ExitCodeTestsReporter(MockFrameworkReporter.Object, _mockAggregator.Object, MockOptions.Object, MockLogger.Object);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_EmptyInput_EmptyResult()
+        public void ReportExitCodeTestCases_EmptyInput_EmptyResult()
         {
-            MockOptions.Setup(o => o.ReturnCodeTestCase).Returns("");
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns("");
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
                     new ExecutableResult("Foo")
                 });
 
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
             
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.IsAny<IEnumerable<TestResult>>()), Times.Never);
@@ -48,14 +48,14 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_Pass_CorrectResult()
+        public void ReportExitCodeTestCases_Pass_CorrectResult()
         {
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
                     new ExecutableResult("Foo")
                 });
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
@@ -65,14 +65,14 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_PassWithOutput_CorrectResult()
+        public void ReportExitCodeTestCases_PassWithOutput_CorrectResult()
         {
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
-                    new ExecutableResult("Foo", resultCodeOutput: new List<string> {"Output 1", "", "Output 2"})
+                    new ExecutableResult("Foo", exitCodeOutput: new List<string> {"Output 1", "", "Output 2"})
                 });
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
@@ -82,14 +82,14 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_Fail_CorrectResult()
+        public void ReportExitCodeTestCases_Fail_CorrectResult()
         {
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
                     new ExecutableResult("Foo", 1)
                 });
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
@@ -99,14 +99,14 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_FailWithOutput_CorrectResult()
+        public void ReportExitCodeTestCases_FailWithOutput_CorrectResult()
         {
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
-                    new ExecutableResult("Foo", 1, resultCodeOutput: new List<string> {"Output 1", "", "Output 2"})
+                    new ExecutableResult("Foo", 1, exitCodeOutput: new List<string> {"Output 1", "", "Output 2"})
                 });
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
@@ -116,15 +116,15 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_PassAndSkip_CorrectResult()
+        public void ReportExitCodeTestCases_PassAndSkip_CorrectResult()
         {
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
-                    new ExecutableResult("Foo", resultCodeSkip: true)
+                    new ExecutableResult("Foo", exitCodeSkip: true)
                 });
 
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
@@ -134,15 +134,15 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_FailAndSkip_CorrectResult()
+        public void ReportExitCodeTestCases_FailAndSkip_CorrectResult()
         {
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
-                    new ExecutableResult("Foo", 1, resultCodeSkip: true)
+                    new ExecutableResult("Foo", 1, exitCodeSkip: true)
                 });
 
-            _reporter.ReportResultCodeTestCases(null, false);
+            _reporter.ReportExitCodeTestCases(null, false);
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
@@ -152,7 +152,7 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_PassButNoOutput_WarningIsLogged()
+        public void ReportExitCodeTestCases_PassButNoOutput_WarningIsLogged()
         {
             MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
@@ -161,14 +161,14 @@ namespace GoogleTestAdapter.TestResults
                     new ExecutableResult("Foo")
                 });
 
-            _reporter.ReportResultCodeTestCases(null, true);
+            _reporter.ReportExitCodeTestCases(null, true);
 
             MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("collected") && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ReportResultCodeTestCases_FailButNoOutput_WarningIsLogged()
+        public void ReportExitCodeTestCases_FailButNoOutput_WarningIsLogged()
         {
             MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
@@ -177,7 +177,7 @@ namespace GoogleTestAdapter.TestResults
                     new ExecutableResult("Foo", 1)
                 });
 
-            _reporter.ReportResultCodeTestCases(null, true);
+            _reporter.ReportExitCodeTestCases(null, true);
 
             MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("collected") && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
         }
@@ -186,8 +186,8 @@ namespace GoogleTestAdapter.TestResults
         {
             return
                 result.TestCase.Source == executable &&
-                result.DisplayName == $"{executable}.{ResultCodeTestCaseName}" &&
-                result.TestCase.FullyQualifiedName == $"{executable}.{ResultCodeTestCaseName}" &&
+                result.DisplayName == $"{executable}.{ExitCodeTestCaseName}" &&
+                result.TestCase.FullyQualifiedName == $"{executable}.{ExitCodeTestCaseName}" &&
                 result.Outcome == outcome &&
                 errorMessageParts.All(p => result.ErrorMessage.Contains(p));
         }

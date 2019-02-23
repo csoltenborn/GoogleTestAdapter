@@ -10,7 +10,7 @@ using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 namespace GoogleTestAdapter.TestResults
 {
     [TestClass]
-    public class ResultCodeTestsAggregatorTests
+    public class ExitCodeTestsAggregatorTests
     {
         [TestMethod]
         [TestCategory(Unit)]
@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void ComputeAggregatedResults_TwoInputsWithSameExecutable_ResultCodeIsAggregatedCorrectly()
+        public void ComputeAggregatedResults_TwoInputsWithSameExecutable_ExitCodeIsAggregatedCorrectly()
         {
             var allResults = new List<ExecutableResult>
             {
@@ -52,12 +52,12 @@ namespace GoogleTestAdapter.TestResults
         {
             var allResults = new List<ExecutableResult>
             {
-                new ExecutableResult("Foo", resultCodeSkip: true),
-                new ExecutableResult("Foo", resultCodeSkip: true)
+                new ExecutableResult("Foo", exitCodeSkip: true),
+                new ExecutableResult("Foo", exitCodeSkip: true)
             };
             var results = GetAggregatedResults(allResults).ToList();
 
-            results.Single().Should().BeEquivalentTo(new ExecutableResult("Foo", resultCodeSkip: true));
+            results.Single().Should().BeEquivalentTo(new ExecutableResult("Foo", exitCodeSkip: true));
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.TestResults
         {
             var allResults = new List<ExecutableResult>
             {
-                new ExecutableResult("Foo", resultCodeSkip: true),
+                new ExecutableResult("Foo", exitCodeSkip: true),
                 new ExecutableResult("Foo")
             };
             var results = GetAggregatedResults(allResults).ToList();
@@ -80,12 +80,12 @@ namespace GoogleTestAdapter.TestResults
         {
             var allResults = new List<ExecutableResult>
             {
-                new ExecutableResult("Foo", resultCodeOutput: new List<string> {"Some output"}),
+                new ExecutableResult("Foo", exitCodeOutput: new List<string> {"Some output"}),
                 new ExecutableResult("Foo")
             };
             var results = GetAggregatedResults(allResults).ToList();
 
-            results.Single().Should().BeEquivalentTo(new ExecutableResult("Foo", resultCodeOutput: new List<string> {"Some output"}));
+            results.Single().Should().BeEquivalentTo(new ExecutableResult("Foo", exitCodeOutput: new List<string> {"Some output"}));
         }
 
         [TestMethod]
@@ -121,7 +121,7 @@ namespace GoogleTestAdapter.TestResults
 
         private IEnumerable<ExecutableResult> GetAggregatedResults(IEnumerable<ExecutableResult> allResults)
         {
-            var aggregator = new ResultCodeTestsAggregator();
+            var aggregator = new ExitCodeTestsAggregator();
             return aggregator.ComputeAggregatedResults(allResults);
         }
     }

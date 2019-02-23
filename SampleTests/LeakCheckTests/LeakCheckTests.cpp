@@ -80,7 +80,7 @@ namespace
          if (::wcsncmp(message, szStartDumpString, LENGTHOF(szStartDumpString) - 1) == 0)
          {
             if (is_run_by_gta)
-               std::cout << "GTA_RESULT_CODE_OUTPUT_BEGIN\n";
+               std::cout << "GTA_EXIT_CODE_OUTPUT_BEGIN\n";
 
             std::wcout << std::wstring(message) << "\n";
 
@@ -132,8 +132,8 @@ int main(int argc, char** argv)
 #ifndef _DEBUG
    if (is_run_by_gta)
    {
-      std::cout << "GTA_RESULT_CODE_SKIP\n";
-      std::cout << "GTA_RESULT_CODE_OUTPUT_BEGIN\n";
+      std::cout << "GTA_EXIT_CODE_SKIP\n";
+      std::cout << "GTA_EXIT_CODE_OUTPUT_BEGIN\n";
       std::cout << "Memory leak detection is only performed if compiled with Debug configuration.\n";
    }
 #endif

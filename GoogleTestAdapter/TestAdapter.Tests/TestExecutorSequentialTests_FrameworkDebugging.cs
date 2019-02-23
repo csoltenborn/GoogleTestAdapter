@@ -187,15 +187,15 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         [TestMethod]
-        public override void RunTests_ResultCodeTest_PassingTestResultIsProduced()
+        public override void RunTests_ExitCodeTest_PassingTestResultIsProduced()
         {
-            base.RunTests_ResultCodeTest_PassingTestResultIsProduced();
+            base.RunTests_ExitCodeTest_PassingTestResultIsProduced();
         }
 
         [TestMethod]
-        public override void RunTests_ResultCodeTest_FailingTestResultIsProduced()
+        public override void RunTests_ExitCodeTest_FailingTestResultIsProduced()
         {
-            base.RunTests_ResultCodeTest_FailingTestResultIsProduced();
+            base.RunTests_ExitCodeTest_FailingTestResultIsProduced();
         }
 
         [TestMethod]

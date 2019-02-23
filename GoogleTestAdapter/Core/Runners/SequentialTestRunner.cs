@@ -198,7 +198,7 @@ namespace GoogleTestAdapter.Runners
                     ? processExecutorFactory.CreateNativeDebuggingExecutor(printTestOutput, _logger)
                     : processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
-            int resultCode = _processExecutor.ExecuteCommandBlocking(
+            int exitCode = _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 isTestOutputAvailable ? (Action<string>) OnNewOutputLine : null);
             streamingParser.Flush();
@@ -206,8 +206,8 @@ namespace GoogleTestAdapter.Runners
             if (printTestOutput)
                 _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
 
-            ExecutableResults.Add(new ExecutableResult(executable, resultCode, streamingParser.ResultCodeOutput,
-                streamingParser.ResultCodeSkip));
+            ExecutableResults.Add(new ExecutableResult(executable, exitCode, streamingParser.ExitCodeOutput,
+                streamingParser.ExitCodeSkip));
 
             var consoleOutput = new List<string>();
             new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);

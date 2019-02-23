@@ -158,19 +158,19 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void GetTestsFromExecutable_SampleTestsDebugWithResultCodeTest_FindsTestsWithLocationAndResultCodeTest()
+        public void GetTestsFromExecutable_SampleTestsDebugWithExitCodeTest_FindsTestsWithLocationAndExitCodeTest()
         {
-            string testCaseName = "ResultCode";
-            MockOptions.Setup(o => o.ReturnCodeTestCase).Returns(testCaseName);
+            string testCaseName = "ExitCode";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(testCaseName);
 
             var testCases = FindTests(TestResources.Tests_DebugX86, TestResources.NrOfTests + 1);
 
             string finalName = Path.GetFileName(TestResources.Tests_DebugX86).Replace(".", "_") + "." + testCaseName;
-            var resultCodeTestCase = testCases.Single(tc => tc.FullyQualifiedName == finalName);
-            resultCodeTestCase.DisplayName.Should().Be(finalName);
-            resultCodeTestCase.Source.Should().Be(TestResources.Tests_DebugX86);
-            resultCodeTestCase.CodeFilePath.Should().BeEmpty();
-            resultCodeTestCase.LineNumber.Should().Be(0);
+            var exitCodeTestCase = testCases.Single(tc => tc.FullyQualifiedName == finalName);
+            exitCodeTestCase.DisplayName.Should().Be(finalName);
+            exitCodeTestCase.Source.Should().Be(TestResources.Tests_DebugX86);
+            exitCodeTestCase.CodeFilePath.Should().BeEmpty();
+            exitCodeTestCase.LineNumber.Should().Be(0);
 
             MockLogger.Verify(l => l.DebugInfo(It.Is<string>(msg => msg.Contains("Exit code") && msg.Contains("ignored"))), Times.Once);
         }

@@ -77,7 +77,7 @@
           <xsd:documentation>Corresponds to option 'Use native debugging'</xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="ReturnCodeTestCase" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="ExitCodeTestCase" minOccurs="0" type="xsd:string"/>
       <xsd:element name="SkipOriginCheck"              minOccurs="0" type="xsd:boolean">
         <xsd:annotation>
           <xsd:documentation>Only for internal use</xsd:documentation>

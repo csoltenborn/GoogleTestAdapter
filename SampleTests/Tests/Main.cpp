@@ -33,9 +33,9 @@ int main(int argc, char ** argv)
 	::testing::InitGoogleTest(&argc, argv);
    int result = RUN_ALL_TESTS();
 
-   std::cout << "GTA_RESULT_CODE_OUTPUT_BEGIN\n";
+   std::cout << "GTA_EXIT_CODE_OUTPUT_BEGIN\n";
    std::cout << "The result code output\n";
-   std::cout << "GTA_RESULT_CODE_OUTPUT_END\n";
+   std::cout << "GTA_EXIT_CODE_OUTPUT_END\n";
    std::cout << "Some more output\n";
 
    return result;

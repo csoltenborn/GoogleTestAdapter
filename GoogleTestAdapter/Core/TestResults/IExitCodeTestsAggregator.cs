@@ -3,7 +3,7 @@ using GoogleTestAdapter.Runners;
 
 namespace GoogleTestAdapter.TestResults
 {
-    public interface IResultCodeTestsAggregator
+    public interface IExitCodeTestsAggregator
     {
         IEnumerable<ExecutableResult> ComputeAggregatedResults(IEnumerable<ExecutableResult> allResults);
     }

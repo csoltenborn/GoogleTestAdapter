@@ -29,7 +29,7 @@
         <ParseSymbolInformation>true</ParseSymbolInformation>
         <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
         <KillProcessesOnCancel>false</KillProcessesOnCancel>
-        <ReturnCodeTestCase/>
+        <ExitCodeTestCase/>
 
       </Settings>
     </SolutionSettings>

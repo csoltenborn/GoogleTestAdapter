@@ -17,9 +17,9 @@ namespace GoogleTestAdapter.TestResults
         private const string Passed = "[       OK ]";
         private const string Skipped = "[  SKIPPED ]";
 
-        public const string GtaResultCodeOutputBegin = "GTA_RESULT_CODE_OUTPUT_BEGIN";
-        public const string GtaResultCodeOutputEnd = "GTA_RESULT_CODE_OUTPUT_END";
-        public const string GtaResultCodeSkip = "GTA_RESULT_CODE_SKIP";
+        public const string GtaExitCodeOutputBegin = "GTA_EXIT_CODE_OUTPUT_BEGIN";
+        public const string GtaExitCodeOutputEnd = "GTA_EXIT_CODE_OUTPUT_END";
+        public const string GtaExitCodeSkip = "GTA_EXIT_CODE_SKIP";
 
         public const string CrashText = "!! This test has probably CRASHED !!";
 
@@ -35,15 +35,15 @@ namespace GoogleTestAdapter.TestResults
 
         public TestCase CrashedTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
-        public IList<string> ResultCodeOutput { get; } = new List<string>();
-        public bool ResultCodeSkip { get; private set; } = false;
+        public IList<string> ExitCodeOutput { get; } = new List<string>();
+        public bool ExitCodeSkip { get; private set; } = false;
 
         private readonly List<TestCase> _testCasesRun;
         private readonly ILogger _logger;
         private readonly ITestFrameworkReporter _reporter;
 
         private readonly List<string> _consoleOutput = new List<string>();
-        private bool _isParsingResultCodeOutput;
+        private bool _isParsingExitCodeOutput;
 
         static StreamingStandardOutputTestResultParser()
         {
@@ -80,7 +80,7 @@ namespace GoogleTestAdapter.TestResults
 
         private void DoReportLine(string line)
         {
-            if (IsRunLine(line) || line.StartsWith(GtaResultCodeOutputBegin))
+            if (IsRunLine(line) || line.StartsWith(GtaExitCodeOutputBegin))
             {
                 if (_consoleOutput.Count > 0)
                 {
@@ -94,22 +94,22 @@ namespace GoogleTestAdapter.TestResults
                 }
                 else
                 {
-                    _isParsingResultCodeOutput = true;
+                    _isParsingExitCodeOutput = true;
                     return;
                 }
             }
 
-            if (line.StartsWith(GtaResultCodeOutputEnd))
+            if (line.StartsWith(GtaExitCodeOutputEnd))
             {
-                _consoleOutput.ForEach(l => ResultCodeOutput.Add(l));
+                _consoleOutput.ForEach(l => ExitCodeOutput.Add(l));
                 _consoleOutput.Clear();
-                _isParsingResultCodeOutput = false;
+                _isParsingExitCodeOutput = false;
                 return;
             }
 
-            if (line.StartsWith(GtaResultCodeSkip))
+            if (line.StartsWith(GtaExitCodeSkip))
             {
-                ResultCodeSkip = true;
+                ExitCodeSkip = true;
                 return;
             }
 
@@ -120,10 +120,10 @@ namespace GoogleTestAdapter.TestResults
         {
             if (_consoleOutput.Count > 0)
             {
-                if (_isParsingResultCodeOutput)
+                if (_isParsingExitCodeOutput)
                 {
-                    _consoleOutput.ForEach(l => ResultCodeOutput.Add(l));
-                    _isParsingResultCodeOutput = false;
+                    _consoleOutput.ForEach(l => ExitCodeOutput.Add(l));
+                    _isParsingExitCodeOutput = false;
                 }
                 else
                 {

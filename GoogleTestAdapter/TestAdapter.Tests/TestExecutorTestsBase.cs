@@ -99,16 +99,16 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public virtual void RunTests_ResultCodeTest_FailingTestResultIsProduced()
+        public virtual void RunTests_ExitCodeTest_FailingTestResultIsProduced()
         {
-            RunResultCodeTest("TestMath.AddFails", VsTestOutcome.Failed);
+            RunExitCodeTest("TestMath.AddFails", VsTestOutcome.Failed);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public virtual void RunTests_ResultCodeTest_PassingTestResultIsProduced()
+        public virtual void RunTests_ExitCodeTest_PassingTestResultIsProduced()
         {
-            RunResultCodeTest("TestMath.AddPasses", VsTestOutcome.Passed);
+            RunExitCodeTest("TestMath.AddPasses", VsTestOutcome.Passed);
         }
 
         [TestMethod]
@@ -352,8 +352,8 @@ namespace GoogleTestAdapter.TestAdapter
 
         private void RunMemoryLeakTest(string executable, string testCaseName, VsTestOutcome testOutcome, VsTestOutcome leakCheckOutcome, Func<string, bool> errorMessagePredicate)
         {
-            string resultCodeTestName = "MemoryLeakTest";
-            MockOptions.Setup(o => o.ReturnCodeTestCase).Returns(resultCodeTestName);
+            string exitCodeTestName = "MemoryLeakTest";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
             MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-is_run_by_gta");
 
             var testCases = new GoogleTestDiscoverer(MockLogger.Object, TestEnvironment.Options, 
@@ -372,17 +372,17 @@ namespace GoogleTestAdapter.TestAdapter
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
                     result.TestCase.FullyQualifiedName.EndsWith("MemoryLeakTest")
                     && result.Outcome == leakCheckOutcome
-                    && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin))
-                    && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd))
+                    && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin))
+                    && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd))
                     && errorMessagePredicate(result.ErrorMessage)
                 )),
                 Times.Once);
         }
 
-        private void RunResultCodeTest(string testCaseName, VsTestOutcome outcome)
+        private void RunExitCodeTest(string testCaseName, VsTestOutcome outcome)
         {
-            string resultCodeTestName = "ResultCode";
-            MockOptions.Setup(o => o.ReturnCodeTestCase).Returns(resultCodeTestName);
+            string exitCodeTestName = "ExitCode";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
 
             TestCase testCase = TestDataCreator.GetTestCases(testCaseName).First();
 
@@ -396,14 +396,14 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Once);
 
             // ReSharper disable once PossibleNullReferenceException
-            string finalName = Path.GetFileName(testCase.Source).Replace(".", "_") + "." + resultCodeTestName;
+            string finalName = Path.GetFileName(testCase.Source).Replace(".", "_") + "." + exitCodeTestName;
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             Func<VsTestResult, bool> errorMessagePredicate = outcome == VsTestOutcome.Failed
                 ? result => result.ErrorMessage.Contains("Exit code: 1")
                             && (!outputAvailable || result.ErrorMessage.Contains("The result code output"))
-                            && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin)
-                            && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd)
+                            && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin)
+                            && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd)
                             && !result.ErrorMessage.Contains("Some more output")
                 : (Func<VsTestResult, bool>) (result => result.ErrorMessage == null || result.ErrorMessage.Contains("The result code output"));
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>

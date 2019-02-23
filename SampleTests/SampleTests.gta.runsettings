@@ -17,7 +17,7 @@
         <TestDiscoveryTimeoutInSeconds>60</TestDiscoveryTimeoutInSeconds>
       </Settings>
       <Settings ProjectRegex=".*\\LeakCheckTests_gta\.exe">
-        <ReturnCodeTestCase>MemoryLeakTest</ReturnCodeTestCase>
+        <ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>
         <AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>
       </Settings>
     </ProjectSettings>

@@ -6,7 +6,7 @@ using GoogleTestAdapter.Runners;
 
 namespace GoogleTestAdapter.TestResults
 {
-    public class ResultCodeTestsAggregator : IResultCodeTestsAggregator
+    public class ExitCodeTestsAggregator : IExitCodeTestsAggregator
     {
         public IEnumerable<ExecutableResult> ComputeAggregatedResults(IEnumerable<ExecutableResult> allResults)
         {
@@ -14,9 +14,9 @@ namespace GoogleTestAdapter.TestResults
                 .GroupBy(r => r.Executable)
                 .Select(results => new ExecutableResult(
                     executable: results.Key, 
-                    resultCode: ComputeAggregatedResultCode(results),
-                    resultCodeOutput: ComputeAggregatedOutput(results), 
-                    resultCodeSkip: results.All(r => r.ResultCodeSkip)));
+                    exitCode: ComputeAggregatedExitCode(results),
+                    exitCodeOutput: ComputeAggregatedOutput(results), 
+                    exitCodeSkip: results.All(r => r.ExitCodeSkip)));
         }
 
         private List<string> ComputeAggregatedOutput(IEnumerable<ExecutableResult> results)
@@ -24,10 +24,10 @@ namespace GoogleTestAdapter.TestResults
             var completeOutput = new List<string>();
             foreach (ExecutableResult result in results)
             {
-                if (result.ResultCodeOutput != null && result.ResultCodeOutput.Any(line => !string.IsNullOrWhiteSpace(line)))
+                if (result.ExitCodeOutput != null && result.ExitCodeOutput.Any(line => !string.IsNullOrWhiteSpace(line)))
                 {
                     completeOutput.Add(Environment.NewLine);
-                    completeOutput.AddRange(result.ResultCodeOutput);
+                    completeOutput.AddRange(result.ExitCodeOutput);
                 }
             }
 
@@ -40,13 +40,13 @@ namespace GoogleTestAdapter.TestResults
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        private int ComputeAggregatedResultCode(IEnumerable<ExecutableResult> results)
+        private int ComputeAggregatedExitCode(IEnumerable<ExecutableResult> results)
         {
-            int minResultCode = results.Min(r => r.ResultCode);
-            int maxResultCode = results.Max(r => r.ResultCode);
-            return Math.Abs(maxResultCode) > Math.Abs(minResultCode)
-                ? maxResultCode
-                : minResultCode;
+            int minExitCode = results.Min(r => r.ExitCode);
+            int maxExitCode = results.Max(r => r.ExitCode);
+            return Math.Abs(maxExitCode) > Math.Abs(minExitCode)
+                ? maxExitCode
+                : minExitCode;
         }
     }
 }

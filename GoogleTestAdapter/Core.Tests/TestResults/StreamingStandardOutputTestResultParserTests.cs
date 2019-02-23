@@ -333,7 +333,7 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_OutputWithEmptyResultCode_NoResultCodeOutputIsParsed()
+        public void GetTestResults_OutputWithEmptyExitCode_NoExitCodeOutputIsParsed()
         {
             string[] consoleOutput = {
                 @"[==========] Running 1 tests from 1 test case.",
@@ -348,8 +348,8 @@ namespace GoogleTestAdapter.TestResults
                 @"[==========] 3 tests from 1 test case ran. (36 ms total)",
                 @"[  PASSED  ] 1 test.",
                 @"",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd,
             };
             var cases = GetTestCases();
 
@@ -357,12 +357,12 @@ namespace GoogleTestAdapter.TestResults
             consoleOutput.ToList().ForEach(parser.ReportLine);
             parser.Flush();
 
-            parser.ResultCodeOutput.Should().BeEmpty();
+            parser.ExitCodeOutput.Should().BeEmpty();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_OutputWithResultCode_ResultCodeOutputIsParsed()
+        public void GetTestResults_OutputWithExitCode_ExitCodeOutputIsParsed()
         {
             string[] consoleOutput = {
                 @"[==========] Running 1 tests from 1 test case.",
@@ -377,9 +377,9 @@ namespace GoogleTestAdapter.TestResults
                 @"[==========] 3 tests from 1 test case ran. (36 ms total)",
                 @"[  PASSED  ] 1 test.",
                 @"",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin,
                 @"Some test output",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd,
             };
             var cases = GetTestCases();
 
@@ -387,12 +387,12 @@ namespace GoogleTestAdapter.TestResults
             consoleOutput.ToList().ForEach(parser.ReportLine);
             parser.Flush();
 
-            parser.ResultCodeOutput.Should().BeEquivalentTo("Some test output");
+            parser.ExitCodeOutput.Should().BeEquivalentTo("Some test output");
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_OutputWithTwoLinesResultCode_ResultCodeOutputIsParsed()
+        public void GetTestResults_OutputWithTwoLinesExitCode_ExitCodeOutputIsParsed()
         {
             string[] consoleOutput = {
                 @"[==========] Running 1 tests from 1 test case.",
@@ -407,10 +407,10 @@ namespace GoogleTestAdapter.TestResults
                 @"[==========] 3 tests from 1 test case ran. (36 ms total)",
                 @"[  PASSED  ] 1 test.",
                 @"",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin,
                 "Output 1",
                 "Output 2",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd,
             };
             var cases = GetTestCases();
 
@@ -418,12 +418,12 @@ namespace GoogleTestAdapter.TestResults
             consoleOutput.ToList().ForEach(parser.ReportLine);
             parser.Flush();
 
-            parser.ResultCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
+            parser.ExitCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_OutputWithTwoLinesResultCodeAndAdditionalOutput_ResultCodeOutputIsParsed()
+        public void GetTestResults_OutputWithTwoLinesExitCodeAndAdditionalOutput_ExitCodeOutputIsParsed()
         {
             string[] consoleOutput = {
                 @"[==========] Running 1 tests from 1 test case.",
@@ -438,10 +438,10 @@ namespace GoogleTestAdapter.TestResults
                 @"[==========] 3 tests from 1 test case ran. (36 ms total)",
                 @"[  PASSED  ] 1 test.",
                 @"",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin,
                 "Output 1",
                 "Output 2",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputEnd,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd,
                 "Some more output"
             };
             var cases = GetTestCases();
@@ -450,12 +450,12 @@ namespace GoogleTestAdapter.TestResults
             consoleOutput.ToList().ForEach(parser.ReportLine);
             parser.Flush();
 
-            parser.ResultCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
+            parser.ExitCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_OutputWithNoLinesResultCodeAndNoEnd_NoResultCodeOutputIsParsed()
+        public void GetTestResults_OutputWithNoLinesExitCodeAndNoEnd_NoExitCodeOutputIsParsed()
         {
             string[] consoleOutput = {
                 @"[==========] Running 1 tests from 1 test case.",
@@ -470,7 +470,7 @@ namespace GoogleTestAdapter.TestResults
                 @"[==========] 3 tests from 1 test case ran. (36 ms total)",
                 @"[  PASSED  ] 1 test.",
                 @"",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin
             };
             var cases = GetTestCases();
 
@@ -478,12 +478,12 @@ namespace GoogleTestAdapter.TestResults
             consoleOutput.ToList().ForEach(parser.ReportLine);
             parser.Flush();
 
-            parser.ResultCodeOutput.Should().BeEmpty();
+            parser.ExitCodeOutput.Should().BeEmpty();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_OutputWithTwoLinesResultCodeAndNoEnd_ResultCodeOutputIsParsed()
+        public void GetTestResults_OutputWithTwoLinesExitCodeAndNoEnd_ExitCodeOutputIsParsed()
         {
             string[] consoleOutput = {
                 @"[==========] Running 1 tests from 1 test case.",
@@ -498,7 +498,7 @@ namespace GoogleTestAdapter.TestResults
                 @"[==========] 3 tests from 1 test case ran. (36 ms total)",
                 @"[  PASSED  ] 1 test.",
                 @"",
-                StreamingStandardOutputTestResultParser.GtaResultCodeOutputBegin,
+                StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin,
                 "Output 1",
                 "Output 2",
             };
@@ -508,7 +508,7 @@ namespace GoogleTestAdapter.TestResults
             consoleOutput.ToList().ForEach(parser.ReportLine);
             parser.Flush();
 
-            parser.ResultCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
+            parser.ExitCodeOutput.Should().BeEquivalentTo("Output 1", "Output 2");
         }
 
         [TestMethod]

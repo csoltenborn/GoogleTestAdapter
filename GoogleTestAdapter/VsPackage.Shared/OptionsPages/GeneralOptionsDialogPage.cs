@@ -244,14 +244,14 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private bool _skipOriginCheck = SettingsWrapper.OptionSkipOriginCheckDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionReturnCodeTestCase)]
-        [Description(SettingsWrapper.OptionReturnCodeTestCaseDescription)]
-        public string ReturnCodeTestCase
+        [DisplayName(SettingsWrapper.OptionExitCodeTestCase)]
+        [Description(SettingsWrapper.OptionExitCodeTestCaseDescription)]
+        public string ExitCodeTestCase
         {
-            get { return _returnCodeTestCase; }
-            set { SetAndNotify(ref _returnCodeTestCase, value); }
+            get { return _exitCodeTestCase; }
+            set { SetAndNotify(ref _exitCodeTestCase, value); }
         }
-        private string _returnCodeTestCase = SettingsWrapper.OptionReturnCodeTestCaseDefaultValue;
+        private string _exitCodeTestCase = SettingsWrapper.OptionExitCodeTestCaseDefaultValue;
 
         #endregion
     }

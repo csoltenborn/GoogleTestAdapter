@@ -116,12 +116,12 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(_settings.ReturnCodeTestCase))
+                if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
                 {
-                    var resultCodeTestCase = ResultCodeTestsReporter.CreateResultCodeTestCase(_settings, _executable);
-                    testCases.Add(resultCodeTestCase);
-                    reportTestCase?.Invoke(resultCodeTestCase);
-                    _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionReturnCodeTestCase}' is set");
+                    var exitCodeTestCase = ExitCodeTestsReporter.CreateExitCodeTestCase(_settings, _executable);
+                    testCases.Add(exitCodeTestCase);
+                    reportTestCase?.Invoke(exitCodeTestCase);
+                    _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionExitCodeTestCase}' is set");
                 }
                 else if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
                 {

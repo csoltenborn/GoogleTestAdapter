@@ -18,18 +18,18 @@ namespace GoogleTestAdapter
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
         private readonly IDebuggedProcessExecutorFactory _processExecutorFactory;
-        private readonly IResultCodeTestsReporter _resultCodeTestsReporter;
+        private readonly IExitCodeTestsReporter _exitCodeTestsReporter;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
 
         private ITestRunner _runner;
         private bool _canceled;
 
-        public GoogleTestExecutor(ILogger logger, SettingsWrapper settings, IDebuggedProcessExecutorFactory processExecutorFactory, IResultCodeTestsReporter resultCodeTestsReporter)
+        public GoogleTestExecutor(ILogger logger, SettingsWrapper settings, IDebuggedProcessExecutorFactory processExecutorFactory, IExitCodeTestsReporter exitCodeTestsReporter)
         {
             _logger = logger;
             _settings = settings;
             _processExecutorFactory = processExecutorFactory;
-            _resultCodeTestsReporter = resultCodeTestsReporter;
+            _exitCodeTestsReporter = exitCodeTestsReporter;
             _schedulingAnalyzer = new SchedulingAnalyzer(logger);
         }
 
@@ -50,7 +50,7 @@ namespace GoogleTestAdapter
 
             _runner.RunTests(testCasesToRunAsArray, isBeingDebugged, _processExecutorFactory);
 
-            _resultCodeTestsReporter.ReportResultCodeTestCases(_runner.ExecutableResults, isBeingDebugged);
+            _exitCodeTestsReporter.ReportExitCodeTestCases(_runner.ExecutableResults, isBeingDebugged);
 
             if (_settings.ParallelTestExecution)
                 _schedulingAnalyzer.PrintStatisticsToDebugOutput();

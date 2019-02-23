@@ -43,9 +43,9 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.SolutionDir).Returns(TestResources.SampleTestsSolutionDir);
 
             var collectingReporter = new FakeFrameworkReporter();
-            var resultCodeTestsAggregator = new ResultCodeTestsAggregator();
-            var resultCodeTestsReporter = new ResultCodeTestsReporter(MockFrameworkReporter.Object, resultCodeTestsAggregator, MockOptions.Object, MockLogger.Object);
-            var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options, ProcessExecutorFactory, resultCodeTestsReporter);
+            var exitCodeTestsAggregator = new ExitCodeTestsAggregator();
+            var exitCodeTestsReporter = new ExitCodeTestsReporter(MockFrameworkReporter.Object, exitCodeTestsAggregator, MockOptions.Object, MockLogger.Object);
+            var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options, ProcessExecutorFactory, exitCodeTestsReporter);
             testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter,false);
 
             sampleTestsDurationsFile.AsFileInfo()

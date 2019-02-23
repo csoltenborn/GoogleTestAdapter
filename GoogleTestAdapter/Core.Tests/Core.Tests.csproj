@@ -96,10 +96,10 @@
     <Compile Include="TestCases\TestCaseResolverTests.cs" />
     <Compile Include="TestCases\TestCaseFactoryTests.cs" />
     <Compile Include="TestCases\ListTestsParserTests.cs" />
-    <Compile Include="TestResults\ResultCodeTestsReporterTests.cs" />
+    <Compile Include="TestResults\ExitCodeTestsReporterTests.cs" />
     <Compile Include="TestResults\StreamingStandardOutputTestResultParserTests.cs" />
     <Compile Include="TestResults\ErrorMessageParserTests.cs" />
-    <Compile Include="TestResults\ResultCodeTestsAggregatorTests.cs" />
+    <Compile Include="TestResults\ExitCodeTestsAggregatorTests.cs" />
     <Compile Include="TestResults\XmlTestResultParserTests.cs" />
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
