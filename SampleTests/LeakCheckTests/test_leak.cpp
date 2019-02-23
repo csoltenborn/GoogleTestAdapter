@@ -6,11 +6,11 @@ TEST(memory_leaks, passing)
    ASSERT_TRUE(true);
 }
 
-// causes memory leak!?
-//TEST(memory_leaks, failing)
-//{
-//   ASSERT_TRUE(false);
-//}
+TEST(memory_leaks, failing)
+{
+   std::cout << "This test does not leak, but a leak is reported due to the failed assertion...\n";
+   ASSERT_TRUE(false);
+}
 
 TEST(memory_leaks, passing_and_leaking)
 {

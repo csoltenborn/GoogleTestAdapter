@@ -325,6 +325,22 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
+        {
+            try
+            {
+                RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing", VsTestOutcome.Failed, VsTestOutcome.Passed,
+                    msg => msg == null);
+            }
+            catch (MockException)
+            {
+                Assert.Inconclusive("skipped until gtest's 'memory leaks' are fixed...");
+            }
+            Assert.Fail("Memory leak problem has been fixed :-) - enable test!");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
         {
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
@@ -333,13 +349,6 @@ namespace GoogleTestAdapter.TestAdapter
                 outputAvailable ? VsTestOutcome.Skipped : VsTestOutcome.Passed,
                 msg => !outputAvailable || msg.Contains("Memory leak detection is only performed if compiled with Debug configuration."));
         }
-
-        //[TestMethod]
-        //[TestCategory(Integration)]
-        //public void FooTest4()
-        //{
-        //    RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing", VsTestOutcome.Passed, VsTestOutcome.Passed);
-        //}
 
         private void RunMemoryLeakTest(string executable, string testCaseName, VsTestOutcome testOutcome, VsTestOutcome leakCheckOutcome, Func<string, bool> errorMessagePredicate)
         {
