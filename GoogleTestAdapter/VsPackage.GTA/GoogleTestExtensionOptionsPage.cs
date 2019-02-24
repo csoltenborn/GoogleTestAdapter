@@ -48,6 +48,9 @@ namespace GoogleTestAdapter.VsPackage
             Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
             Version currentVersion = versionProvider.CurrentVersion;
 
+            formerlyInstalledVersion = new Version(0, 14, 0);
+            currentVersion = new Version(0, 14, 4);
+
             versionProvider.UpdateLastVersion();
 
             //if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&

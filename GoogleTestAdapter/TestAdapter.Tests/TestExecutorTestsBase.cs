@@ -10,6 +10,7 @@ using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Tests.Common;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
@@ -21,6 +22,8 @@ namespace GoogleTestAdapter.TestAdapter
 {
     public abstract class TestExecutorTestsBase : TestAdapterTestsBase
     {
+        protected readonly Mock<IDebuggerAttacher> MockDebuggerAttacher = new Mock<IDebuggerAttacher>();
+
         private readonly bool _parallelTestExecution;
 
         private readonly int _maxNrOfThreads;
@@ -52,11 +55,14 @@ namespace GoogleTestAdapter.TestAdapter
 
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(_parallelTestExecution);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(_maxNrOfThreads);
+
+            MockDebuggerAttacher.Reset();
+            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
         }
 
         private void RunAndVerifySingleTest(TestCase testCase, VsTestOutcome expectedOutcome)
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             foreach (VsTestOutcome outcome in Enum.GetValues(typeof(VsTestOutcome)))
@@ -154,9 +160,29 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
+        {
+            MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
+            MockOptions.Setup(o => o.DebugMode).Returns(false);
+
+            RunAndVerifyTests(TestResources.Tests_ReleaseX64, TestResources.NrOfPassingTests, TestResources.NrOfFailingTests, 0);
+
+            bool isTestOutputAvailable =
+                !MockOptions.Object.ParallelTestExecution &&
+                (MockOptions.Object.UseNewTestExecutionFramework || !MockRunContext.Object.IsBeingDebugged);
+            int nrOfExpectedLines = isTestOutputAvailable ? 1 : 0;
+            
+            MockLogger.Verify(l => l.LogInfo(It.Is<string>(line => line == "[----------] Global test environment set-up.")), Times.Exactly(nrOfExpectedLines));
+
+            MockLogger.Verify(l => l.LogInfo(It.Is<string>(line => line.StartsWith(">>>>>>>>>>>>>>> Output of command"))), Times.Exactly(nrOfExpectedLines));
+            MockLogger.Verify(l => l.LogInfo(It.Is<string>(line => line.StartsWith("<<<<<<<<<<<<<<< End of Output"))), Times.Exactly(nrOfExpectedLines));
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             CheckMockInvocations(1, 2, 0, 3);
@@ -245,7 +271,7 @@ namespace GoogleTestAdapter.TestAdapter
                 string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
                 MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\dll");
 
-                var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+                var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
                 executor.RunTests(targetExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
                 MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.Passed)), Times.Once);
@@ -267,7 +293,7 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
 
-                var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+                var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
                 executor.RunTests(targetExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
                 MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Never);
@@ -281,7 +307,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         protected void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests = 0, bool checkNoErrorsLogged = true)
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             if (checkNoErrorsLogged)
@@ -360,7 +386,7 @@ namespace GoogleTestAdapter.TestAdapter
                 new ProcessExecutorFactory(), new DefaultDiaResolverFactory()).GetTestsFromExecutable(executable);
             var testCase = testCases.Single(tc => tc.DisplayName == testCaseName);
 
-            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(testCase.Yield().Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
@@ -386,7 +412,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             TestCase testCase = TestDataCreator.GetTestCases(testCaseName).First();
 
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>

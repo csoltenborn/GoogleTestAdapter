@@ -174,17 +174,11 @@ namespace GoogleTestAdapter.Runners
                                    !_settings.ParallelTestExecution &&
                                    isTestOutputAvailable;
 
-            if (printTestOutput)
-                _logger.LogInfo(
-                    $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
-
             void OnNewOutputLine(string line)
             {
                 try
                 {
                     if (!_canceled) streamingParser.ReportLine(line);
-
-                    if (printTestOutput) _logger.LogInfo(line);
                 }
                 catch (TestRunCanceledException e)
                 {
@@ -202,9 +196,6 @@ namespace GoogleTestAdapter.Runners
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 isTestOutputAvailable ? (Action<string>) OnNewOutputLine : null);
             streamingParser.Flush();
-
-            if (printTestOutput)
-                _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
 
             ExecutableResults.Add(new ExecutableResult(executable, exitCode, streamingParser.ExitCodeOutput,
                 streamingParser.ExitCodeSkip));

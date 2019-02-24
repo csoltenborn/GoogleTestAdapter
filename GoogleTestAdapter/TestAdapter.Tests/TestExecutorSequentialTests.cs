@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.TestAdapter
             testCasesToRun.Should().HaveCount(2);
 
             var stopwatch = new Stopwatch();
-            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
 
             var canceller = new Thread(() =>
             {
@@ -119,6 +119,12 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
             base.RunTests_StaticallyLinkedX64Tests_CorrectTestResults();
+        }        
+        
+        [TestMethod]
+        public override void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
+        {
+            base.RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce();
         }
 
         [TestMethod]

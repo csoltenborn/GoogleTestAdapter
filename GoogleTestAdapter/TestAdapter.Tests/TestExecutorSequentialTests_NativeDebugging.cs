@@ -9,13 +9,13 @@ using Moq;
 namespace GoogleTestAdapter.TestAdapter
 {
     [TestClass]
-    public class TestExecutorSequentialTests_FrameworkDebugging : TestExecutorSequentialTests
+    public class TestExecutorSequentialTests_NativeDebugging : TestExecutorSequentialTests
     {
         [TestInitialize]
         public override void SetUp()
         {
             base.SetUp();
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
 
             MockRunContext.Setup(c => c.IsBeingDebugged).Returns(true);
             SetUpMockFrameworkHandle();
@@ -56,27 +56,21 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(TestMetadata.TestCategories.Integration)]
         public override void RunTests_CrashingX64Tests_CorrectTestResults()
         {
-            // test crashes, no info available if debugged via framework 
-            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 0, 0, 0);
+            base.RunTests_CrashingX64Tests_CorrectTestResults();
         }
 
         [TestMethod]
         [TestCategory(TestMetadata.TestCategories.Integration)]
         public override void RunTests_CrashingX86Tests_CorrectTestResults()
         {
-            // test crashes, no info available if debugged via framework 
-            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 0, 0, 0);
+            base.RunTests_CrashingX86Tests_CorrectTestResults();
         }
 
         [TestMethod]
         [TestCategory(TestMetadata.TestCategories.Integration)]
         public override void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
-            executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
-
-            // test crashes, no info available if debugged via framework 
-            CheckMockInvocations(0, 0, 0, 0);
+            base.RunTests_HardCrashingX86Tests_CorrectTestResults();
         }
 
         #region Method stubs for code coverage
@@ -190,48 +184,6 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_CancelingExecutor_StopsTestExecution()
         {
             base.RunTests_CancelingExecutor_StopsTestExecution();
-        }
-
-        [TestMethod]
-        public override void RunTests_ExitCodeTest_PassingTestResultIsProduced()
-        {
-            base.RunTests_ExitCodeTest_PassingTestResultIsProduced();
-        }
-
-        [TestMethod]
-        public override void RunTests_ExitCodeTest_FailingTestResultIsProduced()
-        {
-            base.RunTests_ExitCodeTest_FailingTestResultIsProduced();
-        }
-
-        [TestMethod]
-        public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
-        {
-            base.MemoryLeakTests_FailingWithLeaks_CorrectResult();
-        }
-
-        [TestMethod]
-        public override void MemoryLeakTests_PassingWithLeaks_CorrectResult()
-        {
-            base.MemoryLeakTests_PassingWithLeaks_CorrectResult();
-        }
-
-        [TestMethod]
-        public override void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
-        {
-            base.MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult();
-        }
-
-        [TestMethod]
-        public override void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
-        {
-            base.MemoryLeakTests_PassingWithoutLeaks_CorrectResult();
-        }
-
-        [TestMethod]
-        public override void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
-        {
-            base.MemoryLeakTests_FailingWithoutLeaks_CorrectResult();
         }
 
         #endregion
