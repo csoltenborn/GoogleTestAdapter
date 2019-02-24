@@ -28,17 +28,19 @@ namespace GoogleTestAdapter.TestAdapter
 
         private ILogger _logger;
         private SettingsWrapper _settings;
+        private readonly IDebuggerAttacher _debuggerAttacher;
         private GoogleTestExecutor _executor;
 
         private bool _canceled;
 
         // ReSharper disable once UnusedMember.Global
-        public TestExecutor() : this(null, null) { }
+        public TestExecutor() : this(null, null, null) { }
 
-        public TestExecutor(ILogger logger, SettingsWrapper settings)
+        public TestExecutor(ILogger logger, SettingsWrapper settings, IDebuggerAttacher debuggerAttacher)
         {
             _logger = logger;
             _settings = settings;
+            _debuggerAttacher = debuggerAttacher;
         }
 
 
@@ -223,7 +225,7 @@ namespace GoogleTestAdapter.TestAdapter
             bool isRunningInsideVisualStudio = !string.IsNullOrEmpty(runContext.SolutionDirectory);
             var reporter = new VsTestFrameworkReporter(frameworkHandle, isRunningInsideVisualStudio, _logger);
 
-            var debuggerAttacher = new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
+            var debuggerAttacher = _debuggerAttacher ?? new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
             var processExecutorFactory = new DebuggedProcessExecutorFactory(frameworkHandle, debuggerAttacher);
 
             lock (_lock)

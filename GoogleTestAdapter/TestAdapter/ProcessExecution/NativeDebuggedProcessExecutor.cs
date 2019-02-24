@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.Win32.SafeHandles;
 
@@ -121,6 +122,11 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                             logger.LogError($"Could not attach debugger to process {processInfo.dwProcessId}");
                         }
 
+                        if (printTestOutput)
+                        {
+                            DotNetProcessExecutor.LogStartOfOutput(logger, command, parameters);
+                        }
+
                         ResumeThread(thread);
 
                         using (var reader = new StreamReader(pipeStream, Encoding.Default))
@@ -140,8 +146,13 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 
                         WaitForSingleObject(process, INFINITE);
 
+                        if (printTestOutput)
+                        {
+                            DotNetProcessExecutor.LogEndOfOutput(logger);
+                        }
+
                         int exitCode;
-                        if(!GetExitCodeProcess(process, out exitCode))
+                        if (!GetExitCodeProcess(process, out exitCode))
                             throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get exit code of process");
 
                         return exitCode;

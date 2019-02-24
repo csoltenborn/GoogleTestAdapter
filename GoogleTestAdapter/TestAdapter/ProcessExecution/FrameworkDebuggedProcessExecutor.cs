@@ -4,6 +4,7 @@ using System.Diagnostics;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
 namespace GoogleTestAdapter.TestAdapter.ProcessExecution
@@ -43,7 +44,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             if (_printTestOutput)
             {
                 _logger.DebugInfo(
-                    "Note that due to restrictions of the VsTest framework, the test executable's output can not be displayed in the test console when debugging tests!");
+                    $"Note that due to restrictions of the VsTest framework, the test executable's output can not be displayed in the test console when debugging tests. Use '{SettingsWrapper.OptionUseNewTestExecutionFramework}' option to overcome this problem.'");
             }
 
             _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, envVariables);

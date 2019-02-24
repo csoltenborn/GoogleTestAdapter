@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(false);
 
             Stopwatch stopwatch = new Stopwatch();
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             IEnumerable<string> testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(true);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
-            executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
@@ -110,6 +110,12 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
             base.RunTests_StaticallyLinkedX64Tests_CorrectTestResults();
+        }
+
+        [TestMethod]
+        public override void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
+        {
+            base.RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce();
         }
 
         [TestMethod]
