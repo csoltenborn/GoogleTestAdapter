@@ -197,7 +197,7 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
+            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
             return CreateTestCase(descriptor);
         }
 
