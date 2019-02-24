@@ -95,7 +95,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         private bool TestReportingNeedsToBeThrottled()
         {
-            return VsVersionUtils.GetVisualStudioVersion(_logger) != VsVersion.VS2017;
+            return VsVersionUtils.GetVisualStudioVersion(_logger).NeedsToBeThrottled();
         }
 
         private void ReportTestResult(TestResult testResult)
