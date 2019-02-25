@@ -45,8 +45,9 @@ namespace GoogleTestAdapter.TestResults
                 {
                     if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
                     {
-                        ReportExitCodeTestResult(executableResult);
+                        var testResult = ReportExitCodeTestResult(executableResult);
                         printWarning |= isBeingDebugged && !_settings.UseNewTestExecutionFramework;
+                        _logger.DebugInfo($"Reported exit code test {testResult.DisplayName} for executable {executableResult.Executable}");
                     }
                 });
             }
@@ -58,7 +59,7 @@ namespace GoogleTestAdapter.TestResults
             }
         }
 
-        private void ReportExitCodeTestResult(ExecutableResult executableResult)
+        private TestResult ReportExitCodeTestResult(ExecutableResult executableResult)
         {
             var exitCodeTestCase = CreateExitCodeTestCase(_settings, executableResult.Executable);
             _reporter.ReportTestsStarted(exitCodeTestCase.Yield());
@@ -78,6 +79,7 @@ namespace GoogleTestAdapter.TestResults
             }
 
             _reporter.ReportTestResults(testResult.Yield());
+            return testResult;
         }
 
         private TestResult CreatePassingExitCodeTestResult(TestCase exitCodeTestCase,
