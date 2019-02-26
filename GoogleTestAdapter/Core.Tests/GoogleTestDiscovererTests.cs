@@ -165,7 +165,7 @@ namespace GoogleTestAdapter
 
             var testCases = FindTests(TestResources.Tests_DebugX86, TestResources.NrOfTests + 1);
 
-            string finalName = Path.GetFileName(TestResources.Tests_DebugX86).Replace(".", "_") + "." + testCaseName;
+            string finalName = testCaseName + "." + Path.GetFileName(TestResources.Tests_DebugX86).Replace(".", "_");
             var exitCodeTestCase = testCases.Single(tc => tc.FullyQualifiedName == finalName);
             exitCodeTestCase.DisplayName.Should().Be(finalName);
             exitCodeTestCase.Source.Should().Be(TestResources.Tests_DebugX86);

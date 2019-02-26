@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.TestResults
         public static TestCase CreateExitCodeTestCase(SettingsWrapper settings, string executable)
         {
             string filename = Path.GetFileName(executable) ?? throw new InvalidOperationException($"Can't get filename from executable '{executable}'");
-            string testCaseName = $"{filename.Replace(".", "_")}.{settings.ExitCodeTestCase}";
+            string testCaseName = $"{settings.ExitCodeTestCase}.{filename.Replace(".", "_")}";
             return new TestCase(testCaseName, executable, testCaseName, "", 0);
         }
 

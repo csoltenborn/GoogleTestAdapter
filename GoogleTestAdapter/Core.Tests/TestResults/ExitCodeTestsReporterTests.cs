@@ -186,8 +186,8 @@ namespace GoogleTestAdapter.TestResults
         {
             return
                 result.TestCase.Source == executable &&
-                result.DisplayName == $"{executable}.{ExitCodeTestCaseName}" &&
-                result.TestCase.FullyQualifiedName == $"{executable}.{ExitCodeTestCaseName}" &&
+                result.DisplayName == $"{ExitCodeTestCaseName}.{executable}" &&
+                result.TestCase.FullyQualifiedName == $"{ExitCodeTestCaseName}.{executable}" &&
                 result.Outcome == outcome &&
                 errorMessageParts.All(p => result.ErrorMessage.Contains(p));
         }

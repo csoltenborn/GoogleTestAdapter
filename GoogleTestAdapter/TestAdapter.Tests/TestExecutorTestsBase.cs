@@ -396,7 +396,7 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Once);           
             
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
-                    result.TestCase.FullyQualifiedName.EndsWith("MemoryLeakTest")
+                    result.TestCase.FullyQualifiedName.StartsWith("MemoryLeakTest")
                     && result.Outcome == leakCheckOutcome
                     && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin))
                     && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd))
@@ -422,7 +422,7 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Once);
 
             // ReSharper disable once PossibleNullReferenceException
-            string finalName = Path.GetFileName(testCase.Source).Replace(".", "_") + "." + exitCodeTestName;
+            string finalName = exitCodeTestName + "." + Path.GetFileName(testCase.Source).Replace(".", "_");
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             Func<VsTestResult, bool> errorMessagePredicate = outcome == VsTestOutcome.Failed
