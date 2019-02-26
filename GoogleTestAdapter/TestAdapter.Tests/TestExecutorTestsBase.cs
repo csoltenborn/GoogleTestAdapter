@@ -403,6 +403,8 @@ namespace GoogleTestAdapter.TestAdapter
                     && errorMessagePredicate(result.ErrorMessage)
                 )),
                 Times.Once);
+
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("main method") && msg.Contains("exit code"))), Times.Never);
         }
 
         private void RunExitCodeTest(string testCaseName, VsTestOutcome outcome)
@@ -446,6 +448,8 @@ namespace GoogleTestAdapter.TestAdapter
                 MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("Result code") 
                                                                            && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
             }
+
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("main method") && msg.Contains("exit code"))), Times.Never);
         }
 
     }

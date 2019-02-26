@@ -72,8 +72,8 @@ namespace GoogleTestAdapter.TestCases
                 $"{suite}.Test",
                 TestCaseDescriptor.TestTypes.Simple);
             var signatures = new MethodSignatureCreator().GetTestMethodSignatures(descriptor);
-            var resolver = new TestCaseResolver(TestResources.Tests_ReleaseX64, "", "".Yield(),
-                new DefaultDiaResolverFactory(), true, _fakeLogger);
+            var resolver = new TestCaseResolver(TestResources.Tests_ReleaseX64, 
+                new DefaultDiaResolverFactory(), MockOptions.Object, _fakeLogger);
 
             var testCaseLocation = resolver.FindTestCaseLocation(signatures.ToList());
 

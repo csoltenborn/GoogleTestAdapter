@@ -8,6 +8,7 @@ using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestCases;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -27,11 +28,14 @@ namespace GoogleTestAdapter.TestResults
             _logger = logger;
         }
 
-        public static TestCase CreateExitCodeTestCase(SettingsWrapper settings, string executable)
+        public static TestCase CreateExitCodeTestCase(SettingsWrapper settings, string executable, TestCaseLocation mainMethodLocation = null)
         {
             string filename = Path.GetFileName(executable) ?? throw new InvalidOperationException($"Can't get filename from executable '{executable}'");
             string testCaseName = $"{settings.ExitCodeTestCase}.{filename.Replace(".", "_")}";
-            return new TestCase(testCaseName, executable, testCaseName, "", 0);
+            string sourceFile = mainMethodLocation?.Sourcefile ?? "";
+            int line = (int) (mainMethodLocation?.Line ?? 0);
+
+            return new TestCase(testCaseName, executable, testCaseName, sourceFile, line);
         }
 
         public void ReportExitCodeTestCases(IEnumerable<ExecutableResult> allResults, bool isBeingDebugged)

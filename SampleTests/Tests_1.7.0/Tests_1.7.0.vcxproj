@@ -168,6 +168,7 @@
     <ClCompile Include="..\Tests\BasicTests.cpp" />
     <ClCompile Include="..\Tests\FixtureTests.cpp" />
     <ClCompile Include="..\Tests\Main.cpp" />
+    <ClCompile Include="..\Tests\MainMethodTest.cpp" />
     <ClCompile Include="..\Tests\NamespaceTests.cpp" />
     <ClCompile Include="..\Tests\ParameterizedTests.cpp" />
     <ClCompile Include="..\Tests\ScopedTracesTests.cpp" />

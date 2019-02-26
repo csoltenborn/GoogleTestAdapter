@@ -169,8 +169,8 @@ namespace GoogleTestAdapter
             var exitCodeTestCase = testCases.Single(tc => tc.FullyQualifiedName == finalName);
             exitCodeTestCase.DisplayName.Should().Be(finalName);
             exitCodeTestCase.Source.Should().Be(TestResources.Tests_DebugX86);
-            exitCodeTestCase.CodeFilePath.Should().BeEmpty();
-            exitCodeTestCase.LineNumber.Should().Be(0);
+            exitCodeTestCase.CodeFilePath.Should().Contain(@"sampletests\tests\main.cpp");
+            exitCodeTestCase.LineNumber.Should().Be(8);
 
             MockLogger.Verify(l => l.DebugInfo(It.Is<string>(msg => msg.Contains("Exit code") && msg.Contains("ignored"))), Times.Once);
         }
