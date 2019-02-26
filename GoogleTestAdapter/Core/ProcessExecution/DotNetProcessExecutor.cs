@@ -93,9 +93,12 @@ namespace GoogleTestAdapter.ProcessExecution
                     {
                         LogEndOfOutput(_logger);
                     }
+
+                    _logger.DebugInfo($"Executable {command} returned with exit code {_process.ExitCode}");
                     return _process.ExitCode;
                 }
 
+                _logger.DebugInfo($"Executable {command} did not return properly, using return code {int.MaxValue}");
                 return int.MaxValue;
             }
         }
