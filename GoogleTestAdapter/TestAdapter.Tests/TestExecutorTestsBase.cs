@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -346,7 +348,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
         {
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.passing", VsTestOutcome.Passed, VsTestOutcome.Passed,
-                msg => msg == null);
+                msg => msg == "");
         }
 
         [TestMethod]
@@ -356,7 +358,7 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing", VsTestOutcome.Failed, VsTestOutcome.Passed,
-                    msg => msg == null);
+                    msg => msg == "");
             }
             catch (MockException)
             {
@@ -388,6 +390,12 @@ namespace GoogleTestAdapter.TestAdapter
 
             var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(testCase.Yield().Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            var invocations = new List<IInvocation>();
+            foreach (var invocation in MockFrameworkHandle.Invocations)
+            {
+                invocations.Add(invocation);    
+            }
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
                     result.TestCase.FullyQualifiedName == testCaseName
@@ -433,7 +441,7 @@ namespace GoogleTestAdapter.TestAdapter
                             && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin)
                             && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd)
                             && !result.ErrorMessage.Contains("Some more output")
-                : (Func<VsTestResult, bool>) (result => result.ErrorMessage == null || result.ErrorMessage.Contains("The result code output"));
+                : (Func<VsTestResult, bool>) (result => string.IsNullOrEmpty(result.ErrorMessage) || result.ErrorMessage.Contains("The result code output"));
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
                     result.TestCase.FullyQualifiedName == finalName
                     && result.Outcome == outcome

@@ -146,7 +146,7 @@ namespace GoogleTestAdapter.TestResults
 
             MockFrameworkReporter
                 .Verify(r => r.ReportTestResults(It.Is<IEnumerable<TestResult>>(
-                        results => CheckResult(results.Single(), "Foo", TestOutcome.Failed))), 
+                        results => CheckResult(results.Single(), "Foo", TestOutcome.Skipped))), 
                     Times.Once);
         }
 

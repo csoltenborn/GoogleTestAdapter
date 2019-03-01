@@ -68,50 +68,40 @@ namespace GoogleTestAdapter.TestResults
             var exitCodeTestCase = CreateExitCodeTestCase(_settings, executableResult.Executable);
             _reporter.ReportTestsStarted(exitCodeTestCase.Yield());
 
-            TestResult testResult;
-            if (executableResult.ExitCode == 0)
-            {
-                testResult = CreatePassingExitCodeTestResult(exitCodeTestCase, executableResult);
-                if (executableResult.ExitCodeSkip)
-                {
-                    testResult.Outcome = TestOutcome.Skipped;
-                }
-            }
-            else
-            {
-                testResult = CreateFailingExitCodeTestResult(exitCodeTestCase, executableResult, executableResult.ExitCode);
-            }
+            var testResult = CreateExitCodeTestResult(exitCodeTestCase, executableResult);
 
             _reporter.ReportTestResults(testResult.Yield());
             return testResult;
         }
 
-        private TestResult CreatePassingExitCodeTestResult(TestCase exitCodeTestCase,
-            ExecutableResult executableResult)
+        private TestResult CreateExitCodeTestResult(TestCase exitCodeTestCase, ExecutableResult executableResult)
         {
-            var testResult =
-                StreamingStandardOutputTestResultParser.CreatePassedTestResult(exitCodeTestCase,
-                    TimeSpan.Zero);
-            if (executableResult.ExitCodeOutput.Any())
+            string message = "";
+            
+            if (executableResult.ExitCode != 0)
             {
-                testResult.ErrorMessage = string.Join(Environment.NewLine, executableResult.ExitCodeOutput);
+                message += $"Exit code: {executableResult.ExitCode}";
             }
 
-            return testResult;
-        }
-
-        private TestResult CreateFailingExitCodeTestResult(TestCase exitCodeTestCase, ExecutableResult executableResult,
-            int exitCode)
-        {
-            string message = $"Exit code: {exitCode}";
             if (executableResult.ExitCodeOutput.Any())
             {
-                message += $"{Environment.NewLine}{Environment.NewLine}";
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    message += $"{Environment.NewLine}{Environment.NewLine}";
+                }
                 message += string.Join(Environment.NewLine, executableResult.ExitCodeOutput);
             }
 
-            return StreamingStandardOutputTestResultParser
+            var result = StreamingStandardOutputTestResultParser
                 .CreateFailedTestResult(exitCodeTestCase, TimeSpan.Zero, message, "");
+
+            result.Outcome = executableResult.ExitCodeSkip
+                ? TestOutcome.Skipped
+                : executableResult.ExitCode == 0
+                    ? TestOutcome.Passed
+                    : TestOutcome.Failed;
+
+            return result;
         }
     }
 }

@@ -113,7 +113,7 @@ If option *Exit code test case* is non-empty, an additional test case will be ge
 To increase usefulness of the additional tests, a couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
 * `GTA_EXIT_CODE_OUTPUT_BEGIN`: This token will make GTA capture the following output and add it to the additional test case as error message.
 * `GTA_EXIT_CODE_OUTPUT_END`: This token will stop GTA from adding the following output to the error message. If it is not provided, GTA will capture the complete remaining output as error message of the additional test.
-* `GTA_EXIT_CODE_SKIP`: This token will make the additional test case have outcome *Skipped* if the test executable returns with exit code 0. This can e.g. be useful if a particular check is only perfomed in Debug mode.
+* `GTA_EXIT_CODE_SKIP`: This token will make the additional test case have outcome *Skipped*. This can e.g. be useful if a particular check is only perfomed in Debug mode, or to provide a general warning that something has gone wrong.
 
 Note that when running tests in parallel, a test executable might be run more than once by GTA. In this case, the exit codes and respective outputs of a test exectutable are aggregated as follows:
 * The exit code reported will be the one with the greatest absolute value; e.g., if the exit codes have been -2, 0, and 1, the reported exit code will be -2.
