@@ -75,20 +75,38 @@ namespace
          int  *returnValue
       )
       {
-         // Detect when the memory leak dump is starting, and flag for special processing of leak reports.
-         const wchar_t szStartDumpString[] = L"Detected memory leaks!";	//CRT is hard coded to say "Detected memory leaks!\n" in the memory leak report
-         if (::wcsncmp(message, szStartDumpString, LENGTHOF(szStartDumpString) - 1) == 0)
-         {
-            if (is_run_by_gta)
-               std::cout << "GTA_EXIT_CODE_OUTPUT_BEGIN\n";
+		  static bool reportingLeaks_ = false;
 
-            std::wcout << std::wstring(message) << "\n";
+		  // Detect when the memory leak dump is starting, and flag for special processing of leak reports.
+		  const wchar_t szStartDumpString[] = L"Detected memory leaks!";	//CRT is hard coded to say "Detected memory leaks!\n" in the memory leak report
+		  if (::wcsncmp(message, szStartDumpString, LENGTHOF(szStartDumpString) - 1) == 0)
+		  {
+			  if (is_run_by_gta)
+				  std::cout << "GTA_EXIT_CODE_OUTPUT_BEGIN\n";
 
-            if (is_run_by_gta)
-               std::cout << "Note that due to some weaknesses of Google Test and the used memory leak detection technology, the leak detection results are only reliable if at least one real test is executed, and if all executed tests have passed.\n";
+			  std::wcout << std::wstring(message);
 
-            exit(1);
-         }
+			  reportingLeaks_ = true;
+			  return 0;
+		  }
+
+		  // Detect when the memory leak dump is done, and then exit the process with an error code. 
+		  const wchar_t szDoneDumpString[] = L"Object dump complete.";	//CRT is hard coded to say "Object dump complete.\n" in the memory leak report
+		  if (::wcsncmp(message, szDoneDumpString, LENGTHOF(szDoneDumpString) - 1) == 0)
+		  {
+			  std::wcout << std::wstring(szDoneDumpString);
+
+			  if (is_run_by_gta)
+				  std::cout << "\n\nNote that due to some weaknesses of Google Test and the used memory leak detection technology, the leak detection results are only reliable if at least one real test is executed, and if all executed tests have passed.\n";
+
+			  exit(1);
+		  }
+
+		  // decide if we want to print the message or not...
+		  if (reportingLeaks_)
+		  {
+			  std::wcout << std::wstring(message);
+		  }
 
          return 0;
       }
