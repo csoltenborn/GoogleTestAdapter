@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageParallelizationName, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
-    [Microsoft.VisualStudio.Shell.ProvideAutoLoad(UIContextGuids.SolutionExists)]
+//    [Microsoft.VisualStudio.Shell.ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IAsyncLoadablePackageInitialize, IDisposable
     {
