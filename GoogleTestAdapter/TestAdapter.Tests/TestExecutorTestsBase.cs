@@ -338,7 +338,7 @@ namespace GoogleTestAdapter.TestAdapter
         {
             bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
-            RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing_and_leaking", VsTestOutcome.Failed, VsTestOutcome.Failed,
+            RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing_and_leaking", VsTestOutcome.Failed, VsTestOutcome.Skipped,
                 msg => msg.Contains("Exit code: 1")
                           && (!outputAvailable || msg.Contains("Detected memory leaks!")));
         }
@@ -348,7 +348,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
         {
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.passing", VsTestOutcome.Passed, VsTestOutcome.Passed,
-                msg => msg == "");
+                msg => msg.Contains("No memory leaks have been found."));
         }
 
         [TestMethod]
@@ -378,7 +378,7 @@ namespace GoogleTestAdapter.TestAdapter
                 msg => !outputAvailable || msg.Contains("Memory leak detection is only performed if compiled with Debug configuration."));
         }
 
-        private void RunMemoryLeakTest(string executable, string testCaseName, VsTestOutcome testOutcome, VsTestOutcome leakCheckOutcome, Func<string, bool> errorMessagePredicate)
+        protected void RunMemoryLeakTest(string executable, string testCaseName, VsTestOutcome testOutcome, VsTestOutcome leakCheckOutcome, Func<string, bool> errorMessagePredicate)
         {
             string exitCodeTestName = "MemoryLeakTest";
             MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
