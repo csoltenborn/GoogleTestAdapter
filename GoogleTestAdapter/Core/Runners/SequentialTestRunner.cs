@@ -87,7 +87,7 @@ namespace GoogleTestAdapter.Runners
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(testCasesToRun.Where(tc => tc.Properties.Any(p => p is TestCaseMetaDataProperty)), executable.Length, userParameters, resultXmlFile, _settings);
+            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)
@@ -157,7 +157,9 @@ namespace GoogleTestAdapter.Runners
                 RunTestExecutable(executable, workingDir, arguments,isBeingDebugged, processExecutorFactory, streamingParser);
 
             var remainingTestCases =
-                arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
+                arguments.TestCases
+                    .Except(streamingParser.TestResults.Select(tr => tr.TestCase))
+                    .Where(tc => !tc.IsExitCodeTestCase);
             var testResults = new TestResultCollector(_logger, _threadName)
                 .CollectTestResults(remainingTestCases, executable, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();

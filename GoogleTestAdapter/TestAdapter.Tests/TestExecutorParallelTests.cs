@@ -208,6 +208,12 @@ namespace GoogleTestAdapter.TestAdapter
             base.MemoryLeakTests_FailingWithoutLeaks_CorrectResult();
         }
 
+        [TestMethod]
+        public override void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            base.MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings();
+        }
+
         #endregion
 
     }

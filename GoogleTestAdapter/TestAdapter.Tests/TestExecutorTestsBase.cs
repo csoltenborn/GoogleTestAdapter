@@ -340,7 +340,33 @@ namespace GoogleTestAdapter.TestAdapter
                                    !MockRunContext.Object.IsBeingDebugged;
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing_and_leaking", VsTestOutcome.Failed, VsTestOutcome.Skipped,
                 msg => msg.Contains("Exit code: 1")
-                          && (!outputAvailable || msg.Contains("Detected memory leaks!")));
+                       && (!outputAvailable || msg.Contains("Detected memory leaks!")));
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            string exitCodeTestName = "MemoryLeakTest";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-is_run_by_gta");
+
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, TestEnvironment.Options, 
+                new ProcessExecutorFactory(), new DefaultDiaResolverFactory()).GetTestsFromExecutable(TestResources.LeakCheckTests_DebugX86);
+            var testCase = testCases.Single(tc => tc.DisplayName.StartsWith(exitCodeTestName));
+
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCase.Yield().Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
+                    result.TestCase.FullyQualifiedName.StartsWith("MemoryLeakTest")
+                    && result.Outcome == VsTestOutcome.Passed
+                )),
+                Times.Once);
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Once);
+
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg1 => msg1.Contains("main method") && msg1.Contains("exit code"))), Times.Never);
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("test cases seem to not have been run"))), Times.Never);
         }
 
         [TestMethod]

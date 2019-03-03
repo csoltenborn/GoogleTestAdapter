@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GoogleTestAdapter.Model
 {
@@ -22,6 +23,11 @@ namespace GoogleTestAdapter.Model
             DisplayName = displayName;
             CodeFilePath = codeFilePath;
             LineNumber = lineNumber;
+        }
+
+        public bool IsExitCodeTestCase
+        {
+            get { return !Properties.Any(p => p is TestCaseMetaDataProperty); }
         }
 
         public override bool Equals(object obj)
