@@ -108,23 +108,32 @@ More precisely, traits are assigned to tests in three phases:
 Note that traits are assigned in an additive manner within each phase, and in an overriding manner between phases. For instance, if a test is assigned the traits *(Author,Foo)* and *(Author,Bar)* in phase 1, the test will have both traits. If the test is also assigned the trait *(Author,Baz)* in phases 2 or 3, it will only have that trait. See [test code](https://github.com/csoltenborn/GoogleTestAdapter/blob/master/GoogleTestAdapter/Core.Tests/AbstractGoogleTestDiscovererTraitTests.cs) for examples.
 
 #### <a name="evaluating_exit_code"></a>Evaluating the test executable's exit code
-If option *Exit code test case* is non-empty, an additional test case will be generated per text executable, and that test case will pass if and only if the test executable's exit code is 0. This allows to reflect some additional result as a test case; for instance, the test executable might be built such that it performs memory leak detection at shutdown; the result of that check can then be seen within VS as the result of the according additional test.
+If option *Exit code test case* is non-empty, an additional test case will be generated per text executable (referred to as *exit code test* in the following), and that exit code test will pass if the test executable's exit code is 0. This allows to reflect some additional result as a test case; for instance, the test executable might be built such that it performs memory leak detection at shutdown (see below for [example](#evaluating_exit_code_leak_example)); the result of that check can then be seen within VS as the result of the according additional test.
 
-To increase usefulness of the additional tests, a couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
-* `GTA_EXIT_CODE_OUTPUT_BEGIN`: This token will make GTA capture the following output and add it to the additional test case as error message.
-* `GTA_EXIT_CODE_OUTPUT_END`: This token will stop GTA from adding the following output to the error message. If it is not provided, GTA will capture the complete remaining output as error message of the additional test.
-* `GTA_EXIT_CODE_SKIP`: This token will make the additional test case have outcome *Skipped*. This can e.g. be useful if a particular check is only perfomed in Debug mode, or to provide a general warning that something has gone wrong.
+A couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
+* `GTA_EXIT_CODE_OUTPUT_BEGIN`: This token will make GTA capture the following output and add it to the exit code test as error message.
+* `GTA_EXIT_CODE_OUTPUT_END`: This token will stop GTA from adding the following output to the error message. If it is not provided, GTA will capture the complete remaining output as error message of the exit code test.
+* `GTA_EXIT_CODE_SKIP`: This token will make the exit code test have outcome *Skipped*. This can e.g. be useful if a particular check is only perfomed in Debug mode, or to provide a general warning that something has gone wrong without making the exit code test fail.
 
-Note that when running tests in parallel, a test executable might be run more than once by GTA. In this case, the exit codes and respective outputs of a test exectutable are aggregated as follows:
+Note that a test executable might be run more than once by GTA (e.g., if tests are run in parallel, or if the selection of tests to be run results in command lines too long for a single test run). In this case, the exit codes and respective outputs of a test exectutable are aggregated as follows:
+* The exit code test will be reported as 
+  * skipped if all runs of that executable have been reported as skipped,
+  * failed if at least one test run has been reported as failed, and
+  * passed otherwise.
 * The exit code reported will be the one with the greatest absolute value; e.g., if the exit codes have been -2, 0, and 1, the reported exit code will be -2.
-* Captured outputs will all go into the test's error message.
-* The test will be reported as skipped if all runs of that executable have been reported as skipped.
+* Captured outputs will all go into the single exit code test's error message.
 
-An example usage of the *Exit code test case* can be found as part of the SampleTests solution: [Project *MemoryLeakTests*](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/MemoryLeakTests) makes use of MS' memory leak detection facilities and reports the results to VS via the described mechanism. Things to be noted:
-* The mechanism is enabled for the project by means of GTA's [solution settings](https://github.com/csoltenborn/GoogleTestAdapter/blob/master/SampleTests/SampleTests.gta.runsettings).
-* To make sure that the test executable behaves as a normal gtest executable when not run via GTA, a command line parameter `-is_run_by_gta` is passed to it via the *Additional test execution parameters* option (again provided via the solution settings). This allows the test executable to just return the result of gtests' `RUN_ALL_TESTS()` macro if run outside GTA, and to return the result of leak detetion otherwise (i.e., return 0 if and only if no leaks have been found). In case of the provided implementation for leak detection, this means to always return with exit code 0 in the `main()` method, since the leak detection code will actively call `exit(1)` if leaks are found.
-* Since leak detection is only perfomed when the executable is compiled with Debug configuration, the main method makes use of the `GTA_EXIT_CODE_SKIP` and `GTA_EXIT_CODE_OUTPUT_BEGIN` tokens to make sure the test is reported as skipped in that setting, and to additionally produce some meaningful output.
-* Finally, note that Google Test as of V1.8.1 [uses some memory allocation](https://github.com/google/googletest/pull/1142) which is recognized by MS' leak detection mechanism as a leak (although it isn't), in particular for failing assertions. Some of these "false positives" have been fixed with the linked issue, but there appear to be more. If you run into such problems, please report them against the [Google Test repository](https://github.com/google/googletest).
+##### <a name="evaluating_exit_code_leak_example"></a>Example usage: Memory leak detection
+
+An example usage of the *Exit code test case* can be found as part of the SampleTests solution: [Project *MemoryLeakTests*](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/MemoryLeakTests) makes use of MS' memory leak detection facilities and reports the results to VS via an exit code test. The approach can easily be re-used for other Google Test projects:
+* add files `gta_leak_detection.h` and `gta_leak_detection.cpp` to the project
+* in the project's `main` method, return the result of `gta_leak_detection::PerformLeakDetection(argc, argv, RUN_ALL_TESTS())` (instead of the result of `RUN_ALL_TESTS()`)
+* set the following GTA options (probably through the settings file):
+  * `<ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>` (enables evaluation of the executable's exit code; feel free to choose another name)
+  * `<AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>` (makes sure the test executable is aware of being run by GTA)
+
+However, note that Google Test as of V1.8.1 [uses some memory allocation](https://github.com/google/googletest/pull/1142) which is recognized by MS' leak detection mechanism as a leak (although it isn't), in particular for failing assertions. Some of these "false positives" have been fixed with the linked issue, making leak detection useful as long as all tests are green; however, and until this problem is fixed, the memory leak detection provided by GTA will result in a skipped exit code test in case `RUN_ALL_TESTS()` does not return `0`, but will report the leak in the test's error message. If you run into such problems, please report them against the [Google Test repository](https://github.com/google/googletest) if appropriate.
+
 
 #### <a name="vstest_console"></a>Running tests from command line with `VSTest.Console.exe`
 

@@ -169,8 +169,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdparty\gtest-1.8.1\fused-src\gtest\gtest-all.cc" />
-    <ClCompile Include="LeakCheckTests.cpp" />
-    <ClCompile Include="test_leak.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="gta_leak_detection.cpp" />
+    <ClCompile Include="leaking_tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gta_leak_detection.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
