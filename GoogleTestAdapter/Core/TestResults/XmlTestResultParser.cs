@@ -99,7 +99,9 @@ namespace GoogleTestAdapter.TestResults
             var testResults = new List<TestResult>();
             try
             {
+#pragma warning disable IDE0017 // Simplify object initialization
                 var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+#pragma warning restore IDE0017 // Simplify object initialization
                 settings.XmlResolver = null;
                 using (var reader = XmlReader.Create(_xmlResultFile, settings))
                 {
@@ -146,8 +148,7 @@ namespace GoogleTestAdapter.TestResults
         {
             string qualifiedName = GetQualifiedName(testcaseNode);
 
-            TestCase testCase;
-            if (!_testCasesMap.TryGetValue(qualifiedName, out testCase) &&
+            if (!_testCasesMap.TryGetValue(qualifiedName, out var testCase) &&
                 !_workaroundMapLazy.Value.TryGetValue(qualifiedName, out testCase))
             {
                 return null;

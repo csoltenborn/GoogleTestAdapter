@@ -63,8 +63,7 @@ namespace GoogleTestAdapter.TestCases
                 }
                 testCases.Add(testCase);
 
-                ISet<TestCase> testCasesOfSuite;
-                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out testCasesOfSuite))
+                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out var testCasesOfSuite))
                 {
                     suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
                 }

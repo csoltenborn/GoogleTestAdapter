@@ -45,7 +45,6 @@ namespace GoogleTestAdapter.VsPackage
         private ParallelizationOptionsDialogPage _parallelizationOptions;
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
-        // ReSharper disable once NotAccessedField.Local
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
 
         private bool _isAsyncLoadSupported;
@@ -141,6 +140,8 @@ namespace GoogleTestAdapter.VsPackage
             Dispose(true);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", 
+            MessageId = nameof(_debuggerAttacherServiceHost), Justification = "Close() includes Dispose()")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)

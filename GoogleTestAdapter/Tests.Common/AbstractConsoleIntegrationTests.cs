@@ -92,9 +92,7 @@ namespace GoogleTestAdapter.Tests.Common
             string workingDir = "";
 
             var launcher = new TestProcessLauncher();
-            List<string> standardOut;
-            List<string> standardErr;
-            launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out standardErr);
+            launcher.GetOutputStreams(workingDir, command, arguments, out List<string> standardOut, out var standardErr);
 
             string resultString = string.Join("\n", standardOut) + "\n\n" + string.Join("\n", standardErr);
             // ReSharper disable once AssignNullToNotNullAttribute

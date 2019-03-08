@@ -53,14 +53,15 @@ namespace GoogleTestAdapter
                     return;
 
                 int nrOfTestCases = 0;
-                Action<TestCase> reportTestCases = tc =>
+                void ReportTestCases(TestCase testCase)
                 {
-                    reporter.ReportTestsFound(tc.Yield());
-                    logger.DebugInfo("Added testcase " + tc.DisplayName);
+                    reporter.ReportTestsFound(testCase.Yield());
+                    logger.DebugInfo("Added testcase " + testCase.DisplayName);
                     nrOfTestCases++;
-                };
+                }
+
                 var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory, processExecutorFactory);
-                factory.CreateTestCases(reportTestCases);
+                factory.CreateTestCases(ReportTestCases);
                 logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
             });
         }

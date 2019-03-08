@@ -102,8 +102,7 @@ namespace Microsoft.VisualStudio.AsyncPackageHelpers {
                 packageKey = context.CreateKey(RegKeyName(context));
 
                 //use a friendly description if it exists.
-                DescriptionAttribute attr = TypeDescriptor.GetAttributes(t)[typeof(DescriptionAttribute)] as DescriptionAttribute;
-                if (attr != null && !String.IsNullOrEmpty(attr.Description)) {
+                if (TypeDescriptor.GetAttributes(t)[typeof(DescriptionAttribute)] is DescriptionAttribute attr && !String.IsNullOrEmpty(attr.Description)) {
                     packageKey.SetValue(string.Empty, attr.Description);
                 }
                 else {

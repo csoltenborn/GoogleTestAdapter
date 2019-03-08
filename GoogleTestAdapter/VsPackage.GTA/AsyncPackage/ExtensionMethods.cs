@@ -41,8 +41,7 @@ namespace Microsoft.VisualStudio.AsyncPackageHelpers
         /// <returns>true if async packages are supported</returns>
         public static bool IsAsyncPackageSupported(this IServiceProvider serviceProvider)
         {
-            IAsyncServiceProvider asyncServiceProvider = serviceProvider.GetService(typeof(SAsyncServiceProvider)) as IAsyncServiceProvider;
-            return asyncServiceProvider != null;
+            return serviceProvider.GetService(typeof(SAsyncServiceProvider)) is IAsyncServiceProvider;
         }
     }
 }

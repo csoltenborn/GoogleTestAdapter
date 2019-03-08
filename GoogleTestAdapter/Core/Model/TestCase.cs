@@ -32,9 +32,7 @@ namespace GoogleTestAdapter.Model
 
         public override bool Equals(object obj)
         {
-            var other = obj as TestCase;
-
-            if (other == null)
+            if (!(obj is TestCase other))
                 return false;
 
             return FullyQualifiedName == other.FullyQualifiedName && Source == other.Source;

@@ -61,8 +61,7 @@ namespace GoogleTestAdapter.Runners
                 stopwatch.Stop();
                 _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
 
-                string errorMessage;
-                if (!Utils.DeleteDirectory(_testDirectory, out errorMessage))
+                if (!Utils.DeleteDirectory(_testDirectory, out var errorMessage))
                 {
                     _logger.DebugWarning(
                         $"{_threadName}Could not delete test directory '" + _testDirectory + "': " + errorMessage);

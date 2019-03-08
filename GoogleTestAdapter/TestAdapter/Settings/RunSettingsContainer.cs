@@ -1,5 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+#pragma warning disable IDE0017 // Simplify object initialization
+
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
