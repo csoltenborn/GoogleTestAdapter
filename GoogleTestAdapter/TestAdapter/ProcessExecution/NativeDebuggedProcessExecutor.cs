@@ -38,8 +38,9 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         {
             try
             {
-                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
-
+                int exitCode = NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
+                _logger.DebugInfo($"Executable {command} returned with exit code {exitCode}");
+                return exitCode;
             }
             catch (Win32Exception ex)
             {

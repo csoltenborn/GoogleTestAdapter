@@ -30,6 +30,7 @@ TheFixture.Crash
 TheFixture.AddPassesWithTraits
 TheFixture.AddPassesWithTraits2
 TheFixture.AddPassesWithTraits3
+MainMethodTests.StupidMethod
 Namespace_Named.Test
 Namespace_Named_Named.Test
 Namespace_Named_Anon.Test

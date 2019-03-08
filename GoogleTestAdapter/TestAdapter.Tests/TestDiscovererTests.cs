@@ -76,6 +76,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public void DiscoverTests_UntrustedExecutableWithSkipOriginCheck_IsRun()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             var semPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "SemaphoreExe.sem"));
             // ReSharper disable once AssignNullToNotNullAttribute
             var temp2Exe = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(TestResources.SemaphoreExe), "Temp2.exe"));

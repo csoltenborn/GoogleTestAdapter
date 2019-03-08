@@ -45,6 +45,7 @@ namespace GoogleTestAdapter.Settings
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
+        string ExitCodeTestCase { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
 
@@ -85,6 +86,7 @@ namespace GoogleTestAdapter.Settings
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
+            self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 

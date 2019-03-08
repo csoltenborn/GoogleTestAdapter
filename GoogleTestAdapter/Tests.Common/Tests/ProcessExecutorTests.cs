@@ -46,15 +46,15 @@ namespace GoogleTestAdapter.Tests.Common.Tests
 
             exitCode.Should().Be(1);
             output.Should().Contain(s => s.Contains("TestMath.AddPasses"));
-            output.Should().HaveCount(608);
+            output.Should().HaveCount(632);
         }
 
         protected void Test_WithSimpleCommand_ReturnsOutputOfCommand()
         {
             var output = new List<string>();
-            int returnCode = ProcessExecutor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => output.Add(line));
+            int exitCode = ProcessExecutor.ExecuteCommandBlocking("cmd.exe", "/C \"echo 2\"", ".", "", line => output.Add(line));
 
-            returnCode.Should().Be(0);
+            exitCode.Should().Be(0);
             output.Should().ContainSingle();
             output.Should().HaveElementAt(0, "2");
         }

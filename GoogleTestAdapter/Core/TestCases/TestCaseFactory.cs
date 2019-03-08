@@ -12,6 +12,7 @@ using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.TestCases
 {
@@ -42,13 +43,7 @@ namespace GoogleTestAdapter.TestCases
             var standardOutput = new List<string>();
             var testCases = new List<TestCase>();
 
-            var resolver = new TestCaseResolver(
-                _executable,
-                _settings.GetPathExtension(_executable),
-                _settings.GetAdditionalPdbs(_executable),
-                _diaResolverFactory,
-                _settings.ParseSymbolInformation,
-                _logger);
+            var resolver = new TestCaseResolver(_executable, _diaResolverFactory, _settings, _logger);
 
             var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
             var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
@@ -70,12 +65,14 @@ namespace GoogleTestAdapter.TestCases
 
                 ISet<TestCase> testCasesOfSuite;
                 if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out testCasesOfSuite))
+                {
                     suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
+                }
                 testCasesOfSuite.Add(testCase);
             };
 
             string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-           var finalParams = GetDiscoveryParams();
+            var finalParams = GetDiscoveryParams();
             try
             {
                 int processExitCode = ExecutionFailed;
@@ -115,8 +112,17 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
+                {
+                    var exitCodeTestCase = ExitCodeTestsReporter.CreateExitCodeTestCase(_settings, _executable, resolver.MainMethodLocation);
+                    testCases.Add(exitCodeTestCase);
+                    reportTestCase?.Invoke(exitCodeTestCase);
+                    _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionExitCodeTestCase}' is set");
+                }
+                else if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                {
                     return new List<TestCase>();
+                }
             }
             catch (Exception e)
             {

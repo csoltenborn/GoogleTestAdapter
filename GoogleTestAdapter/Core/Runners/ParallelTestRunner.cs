@@ -7,7 +7,6 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
@@ -45,7 +44,15 @@ namespace GoogleTestAdapter.Runners
             {
                 thread.Join();
             }
+
+            // ReSharper disable once InconsistentlySynchronizedField
+            foreach (var result in _testRunners.SelectMany(r => r.ExecutableResults))
+            {
+                ExecutableResults.Add(result);
+            }
         }
+
+        public IList<ExecutableResult> ExecutableResults { get; } = new List<ExecutableResult>();
 
         public void Cancel()
         {

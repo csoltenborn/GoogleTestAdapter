@@ -240,6 +240,7 @@ namespace GoogleTestAdapter.VsPackage
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
                 KillProcessesOnCancel = _generalOptions.KillProcessesOnCancel,
                 SkipOriginCheck = _generalOptions.SkipOriginCheck,
+                ExitCodeTestCase = _generalOptions.ExitCodeTestCase,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,
                 BreakOnFailure = _googleTestOptions.BreakOnFailure,

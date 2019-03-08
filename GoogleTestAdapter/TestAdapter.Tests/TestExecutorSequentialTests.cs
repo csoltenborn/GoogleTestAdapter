@@ -189,6 +189,54 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithoutPathExtension_ExecutionFails();
         }
 
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_PassingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_PassingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_FailingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_FailingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            base.MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings();
+        }
+
         #endregion
 
     }

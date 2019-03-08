@@ -56,6 +56,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 waiter.WaitForExit();
             }
 
+            _logger.DebugInfo($"Executable {command} returned with exit code {waiter.ProcessExitCode}");
             return waiter.ProcessExitCode;
         }
 

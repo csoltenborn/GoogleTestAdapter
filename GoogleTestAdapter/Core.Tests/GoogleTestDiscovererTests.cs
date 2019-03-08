@@ -158,6 +158,25 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SampleTestsDebugWithExitCodeTest_FindsTestsWithLocationAndExitCodeTest()
+        {
+            string testCaseName = "ExitCode";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(testCaseName);
+
+            var testCases = FindTests(TestResources.Tests_DebugX86, TestResources.NrOfTests + 1);
+
+            string finalName = testCaseName + "." + Path.GetFileName(TestResources.Tests_DebugX86).Replace(".", "_");
+            var exitCodeTestCase = testCases.Single(tc => tc.FullyQualifiedName == finalName);
+            exitCodeTestCase.DisplayName.Should().Be(finalName);
+            exitCodeTestCase.Source.Should().Be(TestResources.Tests_DebugX86);
+            exitCodeTestCase.CodeFilePath.Should().Contain(@"sampletests\tests\main.cpp");
+            exitCodeTestCase.LineNumber.Should().Be(8);
+
+            MockLogger.Verify(l => l.DebugInfo(It.Is<string>(msg => msg.Contains("Exit code") && msg.Contains("ignored"))), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_SampleTestsRelease_FindsTestsWithLocation()
         {
             FindTests(TestResources.Tests_ReleaseX86);
@@ -417,7 +436,7 @@ namespace GoogleTestAdapter
                 .Be(isGoogleTestExecutable);
         }
 
-        private void FindTests(string location, int expectedNrOfTestCases = TestResources.NrOfTests)
+        private IList<TestCase> FindTests(string location, int expectedNrOfTestCases = TestResources.NrOfTests)
         {
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(location);
@@ -433,6 +452,8 @@ namespace GoogleTestAdapter
             testCase.DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>");
             testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\typeparameterizedtests.cpp");
             testCase.LineNumber.Should().Be(56);
+
+            return testCases;
         }
 
         private void FindExternallyLinkedTests(string location)

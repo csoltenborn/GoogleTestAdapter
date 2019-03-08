@@ -186,6 +186,12 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_CancelingExecutor_StopsTestExecution();
         }
 
+        [TestMethod]
+        public override void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            base.MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings();
+        }
+
         #endregion
     }
 }

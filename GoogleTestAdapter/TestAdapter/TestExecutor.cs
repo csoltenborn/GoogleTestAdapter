@@ -15,6 +15,7 @@ using GoogleTestAdapter.Model;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
+using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -189,10 +190,10 @@ namespace GoogleTestAdapter.TestAdapter
                 return testCases;
 
             var discoverer = new GoogleTestDiscoverer(logger, settings);
-            settings.ExecuteWithSettingsForExecutable(executable, () =>
+            settings.ExecuteWithSettingsForExecutable(executable, logger, () =>
             {
                 testCases = discoverer.GetTestsFromExecutable(executable);
-            }, logger);
+            });
 
             return testCases;
         }
@@ -227,13 +228,15 @@ namespace GoogleTestAdapter.TestAdapter
 
             var debuggerAttacher = _debuggerAttacher ?? new MessageBasedDebuggerAttacher(_settings.DebuggingNamedPipeId, _logger);
             var processExecutorFactory = new DebuggedProcessExecutorFactory(frameworkHandle, debuggerAttacher);
+            var exitCodeTestsAggregator = new ExitCodeTestsAggregator();
+            var exitCodeTestsReporter = new ExitCodeTestsReporter(reporter, exitCodeTestsAggregator, _settings, _logger);
 
             lock (_lock)
             {
                 if (_canceled)
                     return;
 
-                _executor = new GoogleTestExecutor(_logger, _settings, processExecutorFactory);
+                _executor = new GoogleTestExecutor(_logger, _settings, processExecutorFactory, exitCodeTestsReporter);
             }
             _executor.RunTests(testCasesToRun, reporter, runContext.IsBeingDebugged);
             reporter.AllTestsFinished();

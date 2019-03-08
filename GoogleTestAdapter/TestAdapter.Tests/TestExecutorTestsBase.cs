@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.DiaResolver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
+using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Tests.Common;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
@@ -97,6 +103,20 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.SolutionDirPlaceholder);
 
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_ExitCodeTest_FailingTestResultIsProduced()
+        {
+            RunExitCodeTest("TestMath.AddFails", VsTestOutcome.Failed);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_ExitCodeTest_PassingTestResultIsProduced()
+        {
+            RunExitCodeTest("TestMath.AddPasses", VsTestOutcome.Passed);
         }
 
         [TestMethod]
@@ -299,6 +319,171 @@ namespace GoogleTestAdapter.TestAdapter
             }
 
             CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        {
+            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+                                   !MockRunContext.Object.IsBeingDebugged;
+            RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.passing_and_leaking", VsTestOutcome.Passed, VsTestOutcome.Failed,
+                msg => msg.Contains("Exit code: 1")
+                       && (!outputAvailable || msg.Contains("Detected memory leaks!")));
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        {
+            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+                                   !MockRunContext.Object.IsBeingDebugged;
+            RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing_and_leaking", VsTestOutcome.Failed, VsTestOutcome.Skipped,
+                msg => msg.Contains("Exit code: 1")
+                       && (!outputAvailable || msg.Contains("Detected memory leaks!")));
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            string exitCodeTestName = "MemoryLeakTest";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-is_run_by_gta");
+
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, TestEnvironment.Options, 
+                new ProcessExecutorFactory(), new DefaultDiaResolverFactory()).GetTestsFromExecutable(TestResources.LeakCheckTests_DebugX86);
+            var testCase = testCases.Single(tc => tc.DisplayName.StartsWith(exitCodeTestName));
+
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCase.Yield().Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
+                    result.TestCase.FullyQualifiedName.StartsWith("MemoryLeakTest")
+                    && result.Outcome == VsTestOutcome.Passed
+                )),
+                Times.Once);
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Once);
+
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg1 => msg1.Contains("main method") && msg1.Contains("exit code"))), Times.Never);
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("test cases seem to not have been run"))), Times.Never);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        {
+            RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.passing", VsTestOutcome.Passed, VsTestOutcome.Passed,
+                msg => msg.Contains("No memory leaks have been found."));
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
+        {
+            try
+            {
+                RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing", VsTestOutcome.Failed, VsTestOutcome.Passed,
+                    msg => msg == "");
+            }
+            catch (MockException)
+            {
+                Assert.Inconclusive("skipped until gtest's 'memory leaks' are fixed...");
+            }
+            Assert.Fail("Memory leak problem has been fixed :-) - enable test!");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        {
+            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+                                   !MockRunContext.Object.IsBeingDebugged;
+            RunMemoryLeakTest(TestResources.LeakCheckTests_ReleaseX86, "memory_leaks.passing_and_leaking", VsTestOutcome.Passed, 
+                outputAvailable ? VsTestOutcome.Skipped : VsTestOutcome.Passed,
+                msg => !outputAvailable || msg.Contains("Memory leak detection is only performed if compiled with Debug configuration."));
+        }
+
+        protected void RunMemoryLeakTest(string executable, string testCaseName, VsTestOutcome testOutcome, VsTestOutcome leakCheckOutcome, Func<string, bool> errorMessagePredicate)
+        {
+            string exitCodeTestName = "MemoryLeakTest";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-is_run_by_gta");
+
+            var testCases = new GoogleTestDiscoverer(MockLogger.Object, TestEnvironment.Options, 
+                new ProcessExecutorFactory(), new DefaultDiaResolverFactory()).GetTestsFromExecutable(executable);
+            var testCase = testCases.Single(tc => tc.DisplayName == testCaseName);
+
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCase.Yield().Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            var invocations = new List<IInvocation>();
+            foreach (var invocation in MockFrameworkHandle.Invocations)
+            {
+                invocations.Add(invocation);    
+            }
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
+                    result.TestCase.FullyQualifiedName == testCaseName
+                    && result.Outcome == testOutcome
+                )),
+                Times.Once);           
+            
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
+                    result.TestCase.FullyQualifiedName.StartsWith("MemoryLeakTest")
+                    && result.Outcome == leakCheckOutcome
+                    && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin))
+                    && (result.ErrorMessage == null || !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd))
+                    && errorMessagePredicate(result.ErrorMessage)
+                )),
+                Times.Once);
+
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("main method") && msg.Contains("exit code"))), Times.Never);
+        }
+
+        private void RunExitCodeTest(string testCaseName, VsTestOutcome outcome)
+        {
+            string exitCodeTestName = "ExitCode";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
+
+            TestCase testCase = TestDataCreator.GetTestCases(testCaseName).First();
+
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCase.ToVsTestCase().Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
+                    result.TestCase.FullyQualifiedName == testCaseName
+                    && result.Outcome == outcome
+                )),
+                Times.Once);
+
+            // ReSharper disable once PossibleNullReferenceException
+            string finalName = exitCodeTestName + "." + Path.GetFileName(testCase.Source).Replace(".", "_");
+            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+                                   !MockRunContext.Object.IsBeingDebugged;
+            Func<VsTestResult, bool> errorMessagePredicate = outcome == VsTestOutcome.Failed
+                ? result => result.ErrorMessage.Contains("Exit code: 1")
+                            && (!outputAvailable || result.ErrorMessage.Contains("The result code output"))
+                            && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputBegin)
+                            && !result.ErrorMessage.Contains(StreamingStandardOutputTestResultParser.GtaExitCodeOutputEnd)
+                            && !result.ErrorMessage.Contains("Some more output")
+                : (Func<VsTestResult, bool>) (result => string.IsNullOrEmpty(result.ErrorMessage) || result.ErrorMessage.Contains("The result code output"));
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(result =>
+                    result.TestCase.FullyQualifiedName == finalName
+                    && result.Outcome == outcome
+                    && errorMessagePredicate(result)
+                )),
+                Times.Once);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.IsAny<VsTestResult>()), Times.Exactly(2));
+
+            if (!outputAvailable && outcome == VsTestOutcome.Failed)
+            {
+                MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("Result code") 
+                                                                           && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
+            }
+
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("main method") && msg.Contains("exit code"))), Times.Never);
         }
 
     }

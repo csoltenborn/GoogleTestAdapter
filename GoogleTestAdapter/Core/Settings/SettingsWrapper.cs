@@ -73,7 +73,7 @@ namespace GoogleTestAdapter.Settings
         // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
-        public void ExecuteWithSettingsForExecutable(string executable, Action action, ILogger logger)
+        public void ExecuteWithSettingsForExecutable(string executable, ILogger logger, Action action)
         {
             lock (_lock)
             {
@@ -573,6 +573,14 @@ namespace GoogleTestAdapter.Settings
             "If true, it will not be checked whether executables originate from this computer. Note that this might impose security risks, e.g. when building downloaded solutions. This setting can only be changed via VS Options.";
 
         public virtual bool SkipOriginCheck => _currentSettings.SkipOriginCheck ?? OptionSkipOriginCheckDefaultValue;
+
+
+        public const string OptionExitCodeTestCase = "Exit code test case";
+        public const string OptionExitCodeTestCaseDefaultValue = "";
+        public const string OptionExitCodeTestCaseDescription =
+            "If non-empty, an additional test case will be generated per test executable that passes if and only if the test executable returns exit code 0.";
+
+        public virtual string ExitCodeTestCase => _currentSettings.ExitCodeTestCase ?? OptionExitCodeTestCaseDefaultValue;
 
         #endregion
 

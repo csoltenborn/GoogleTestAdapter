@@ -62,6 +62,17 @@ namespace GoogleTestAdapter.Runners
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
+            var exitCodeTest =
+                _testCasesToRun.SingleOrDefault(tc => tc.IsExitCodeTestCase);
+            if (exitCodeTest != null)
+            {
+                _testCasesToRun.Remove(exitCodeTest);
+                if (!_testCasesToRun.Any())
+                {
+                    return CreateDummyCommandLineArgs(baseCommandLine, exitCodeTest).Yield();
+                }
+            }
+
             var commandLines = new List<Args>();
             string userParam = GetAdditionalUserParameter();
             if (AllTestCasesOfExecutableAreRun())
@@ -116,6 +127,15 @@ namespace GoogleTestAdapter.Runners
             }
 
             return commandLines;
+        }
+
+        private Args CreateDummyCommandLineArgs(string baseCommandLine, TestCase exitCodeTest)
+        {
+            string commandLine = baseCommandLine;
+            commandLine += $"{GoogleTestConstants.FilterOption}GTA_NOT_EXISTING_DUMMY_TEST_CASE";
+            commandLine += GetAdditionalUserParameter();
+
+            return new Args(new List<TestCase> { exitCodeTest }, commandLine);
         }
 
         /// <summary>
