@@ -151,9 +151,6 @@
       <Name>Tests.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\..\NuGetPackages\FluentAssertions.Analyzers.0.11.4\analyzers\dotnet\cs\FluentAssertions.Analyzers.dll" />
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

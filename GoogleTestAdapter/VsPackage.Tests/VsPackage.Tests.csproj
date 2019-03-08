@@ -161,9 +161,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\..\NuGetPackages\FluentAssertions.Analyzers.0.11.4\analyzers\dotnet\cs\FluentAssertions.Analyzers.dll" />
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
