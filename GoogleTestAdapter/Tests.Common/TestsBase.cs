@@ -80,7 +80,6 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.ParseSymbolInformation).Returns(SettingsWrapper.OptionParseSymbolInformationDefaultValue);
             mockOptions.Setup(o => o.DebugMode).Returns(SettingsWrapper.OptionDebugModeDefaultValue);
             mockOptions.Setup(o => o.TimestampOutput).Returns(SettingsWrapper.OptionTimestampOutputDefaultValue);
-            mockOptions.Setup(o => o.ShowReleaseNotes).Returns(SettingsWrapper.OptionShowReleaseNotesDefaultValue);
             mockOptions.Setup(o => o.AdditionalTestExecutionParam)
                 .Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
             mockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);

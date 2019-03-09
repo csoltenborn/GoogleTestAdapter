@@ -522,7 +522,6 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("ParseSymbolInformation: True");
             optionsString.Should().Contain("DebugMode: False");
             optionsString.Should().Contain("TimestampOutput: False");
-            optionsString.Should().Contain("ShowReleaseNotes: True");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");
             optionsString.Should().Contain("BatchForTestTeardown: ''");

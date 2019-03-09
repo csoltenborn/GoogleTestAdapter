@@ -482,14 +482,6 @@ namespace GoogleTestAdapter.Settings
         public virtual bool TimestampOutput => _currentSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
 
 
-        public const string OptionShowReleaseNotes = "Show release notes after update";
-        public const bool OptionShowReleaseNotesDefaultValue = true;
-        public const string OptionShowReleaseNotesDescription =
-            "If true, a dialog with release notes is shown after the extension has been updated.";
-
-        public virtual bool ShowReleaseNotes => _currentSettings.ShowReleaseNotes ?? OptionShowReleaseNotesDefaultValue;
-
-
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamsDescription =

@@ -42,7 +42,6 @@ namespace GoogleTestAdapter.Settings
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
         bool? TimestampOutput { get; set; }
-        bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
         string ExitCodeTestCase { get; set; }
@@ -83,7 +82,6 @@ namespace GoogleTestAdapter.Settings
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
-            self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
             self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;

@@ -235,7 +235,6 @@ namespace GoogleTestAdapter.VsPackage
                 ParseSymbolInformation = _generalOptions.ParseSymbolInformation,
                 DebugMode = _generalOptions.DebugMode,
                 TimestampOutput = _generalOptions.TimestampOutput,
-                ShowReleaseNotes = ShowReleaseNotes,
                 AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = _generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,

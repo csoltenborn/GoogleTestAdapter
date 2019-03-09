@@ -73,9 +73,6 @@
     <Compile Include="AsyncPackage\ExtensionMethods.cs" />
     <Compile Include="AsyncPackage\ProvideAutoLoadAttribute.cs" />
     <Compile Include="GoogleTestExtensionOptionsPage.cs" />
-    <Compile Include="OptionsPages\GeneralOptionsDialogPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReleaseNotes\Donations.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreator.cs" />

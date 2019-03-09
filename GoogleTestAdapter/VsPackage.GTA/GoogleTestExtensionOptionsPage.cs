@@ -50,12 +50,9 @@ namespace GoogleTestAdapter.VsPackage
 
             versionProvider.UpdateLastVersion();
 
-            //if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&
-            //    (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion))
             if (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion)
             {
-                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion,
-                    Donations.IsPreDonationsVersion(formerlyInstalledVersion));
+                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion);
                 DisplayReleaseNotes(creator.CreateHtml());
             }
         }
@@ -70,18 +67,13 @@ namespace GoogleTestAdapter.VsPackage
 
             using (var dialog = new ReleaseNotesDialog
             {
-                HtmlFile = new Uri($"file://{htmlFile}"),
-                ShowReleaseNotesChecked = _generalOptions.ShowReleaseNotes
+                HtmlFile = new Uri($"file://{htmlFile}")
             })
             {
                 dialog.AddExternalUri(Donations.Uri);
-                dialog.ShowReleaseNotesChanged +=
-                    (sender, args) => _generalOptions.ShowReleaseNotes = args.ShowReleaseNotes;
                 dialog.Closed += (sender, args) => File.Delete(htmlFile);
                 dialog.ShowDialog();
             }
         }
-
-        private bool ShowReleaseNotes => _generalOptions.ShowReleaseNotes;
     }
 }

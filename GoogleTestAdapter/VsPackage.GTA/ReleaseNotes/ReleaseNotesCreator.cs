@@ -11,13 +11,11 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private readonly Version _formerlyInstalledVersion;
         private readonly Version _currentVersion;
-        private readonly bool _showMainDonationNote;
 
-        public ReleaseNotesCreator(Version formerlyInstalledVersion, Version currentVersion, bool showMainDonationNote = false)
+        public ReleaseNotesCreator(Version formerlyInstalledVersion, Version currentVersion)
         {
             _formerlyInstalledVersion = formerlyInstalledVersion;
             _currentVersion = currentVersion;
-            _showMainDonationNote = showMainDonationNote;
         }
 
         private string CreateMarkdown()
@@ -27,11 +25,6 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             string releaseNotes = Donations.Header;
 
-            //if (_showMainDonationNote)
-            //{
-            releaseNotes += Donations.Note;
-            //}
-
             releaseNotes += CreateHeader();
 
             int startIndex = Array.IndexOf(Versions, _currentVersion);
@@ -40,11 +33,6 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             {
                 releaseNotes += CreateEntry(Versions[i]);
             }
-
-            //if (!_showMainDonationNote)
-            //{
-            releaseNotes += Donations.Footer;
-            //}
 
             return releaseNotes;
         }
