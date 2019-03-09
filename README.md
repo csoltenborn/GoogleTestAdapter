@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
 [![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
-[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-117k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-121k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 
 
@@ -39,6 +39,8 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 In the last couple of months, I noticed that my private laptop certainly has a finite lifetime. Thinking about the requirements a new one has to stand up to, I realized that developing and supporting *Google Test Adapter* has in the last years been one of the major use cases of that laptop. Thus, I decided to take this as reason for from now on accepting donations :-)
 
+Update: In the meantime, I have received a few donations, and some rather generous ones (thanks again to everybody - the new laptop is great :-) ), but since I'm still quite far away from my original donation goal of collecting half of the laptop's price, I will leave this section as is.
+
 Therefore, if you would like to appreciate development and support of *Google Test Adapter*, **please consider to donate!** 
 
 [![Donate to Google Test Adapter](https://www.paypalobjects.com/en_US/DE/i/btn/btn_donateCC_LG.gif "Donate to Google Test Adapter")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWJX68LZWGN5S)
@@ -50,14 +52,14 @@ Please note that I will see your donations as appreciation of my work so far and
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.14.4-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.15.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download from GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
 Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
-* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.14.4/GoogleTestAdapter-0.14.4.vsix)
+* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.15.0/GoogleTestAdapter-0.15.0.vsix)
 * Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
@@ -110,7 +112,7 @@ Note that traits are assigned in an additive manner within each phase, and in an
 #### <a name="evaluating_exit_code"></a>Evaluating the test executable's exit code
 If option *Exit code test case* is non-empty, an additional test case will be generated per text executable (referred to as *exit code test* in the following), and that exit code test will pass if the test executable's exit code is 0. This allows to reflect some additional result as a test case; for instance, the test executable might be built such that it performs memory leak detection at shutdown (see below for [example](#evaluating_exit_code_leak_example)); the result of that check can then be seen within VS as the result of the according additional test.
 
-A couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
+<a name="evaluating_exit_code_tokens"></a>A couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
 * `GTA_EXIT_CODE_OUTPUT_BEGIN`: This token will make GTA capture the following output and add it to the exit code test as error message.
 * `GTA_EXIT_CODE_OUTPUT_END`: This token will stop GTA from adding the following output to the error message. If it is not provided, GTA will capture the complete remaining output as error message of the exit code test.
 * `GTA_EXIT_CODE_SKIP`: This token will make the exit code test have outcome *Skipped*. This can e.g. be useful if a particular check is only perfomed in Debug mode, or to provide a general warning that something has gone wrong without making the exit code test fail.
@@ -126,8 +128,8 @@ Note that a test executable might be run more than once by GTA (e.g., if tests a
 ##### <a name="evaluating_exit_code_leak_example"></a>Example usage: Memory leak detection
 
 An example usage of the *Exit code test case* can be found as part of the SampleTests solution: [Project *MemoryLeakTests*](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/MemoryLeakTests) makes use of MS' memory leak detection facilities and reports the results to VS via an exit code test. The approach can easily be re-used for other Google Test projects:
-* add files `gta_leak_detection.h` and `gta_leak_detection.cpp` to the project
-* in the project's `main` method, return the result of `gta_leak_detection::PerformLeakDetection(argc, argv, RUN_ALL_TESTS())` (instead of the result of `RUN_ALL_TESTS()`)
+* add files [`gta_leak_detection.h`](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/gta_leak_detection.h) and [`gta_leak_detection.cpp`](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/gta_leak_detection.cpp) to the project
+* in the project's `main` method, return the result of `gta_leak_detection::PerformLeakDetection(argc, argv, RUN_ALL_TESTS())` (instead of the result of `RUN_ALL_TESTS()`, see [example](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/main.cpp))
 * set the following GTA options (probably through the settings file):
   * `<ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>` (enables evaluation of the executable's exit code; feel free to choose another name)
   * `<AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>` (makes sure the test executable is aware of being run by GTA)
