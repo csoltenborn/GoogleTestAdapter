@@ -13,10 +13,10 @@ See https://github.com/csoltenborn/GoogleTestAdapter#evaluating-the-test-executa
 // based on code provided by https://github.com/alfredskpoon (see https://github.com/csoltenborn/GoogleTestAdapter/issues/266)
 namespace gta_leak_detection
 {
-	bool _isRunByGta = false;
-	int _resultOfRunAllTests = -1;
+	bool is_run_by_gta = false;
+	int result_of_run_all_tests = -1;
 
-	class EnableLeakCheck
+	class EnableLeakCheck  // NOLINT(hicpp-special-member-functions, cppcoreguidelines-special-member-functions)
 	{
 	public:
 		static void Initialize()
@@ -24,7 +24,8 @@ namespace gta_leak_detection
 			static EnableLeakCheck leakReporter;
 		}
 	private:
-		EnableLeakCheck() {}
+		EnableLeakCheck() = default;
+
 		~EnableLeakCheck()  // NOLINT(bugprone-exception-escape)
 		{
 			_CrtDumpMemoryLeaks();
@@ -71,11 +72,9 @@ namespace gta_leak_detection
 				std::wcout << std::wstring(message);
 
 				// TODO remove if gtest "memory leaks" have been fixed
-				if (_resultOfRunAllTests != 0)
+				if (result_of_run_all_tests != 0 && is_run_by_gta)
 				{
-					if (_isRunByGta)
-						std::cout << "GTA_EXIT_CODE_SKIP\n";
-
+					std::cout << "GTA_EXIT_CODE_SKIP\n";
 					std::cout << "\nTest result is 'Skipped' due to some weaknesses of Google Test 1.8.1 and crtdbg.h: leak detection results are only reliable if at least one real test is executed, and if all executed tests have passed.\n\n";
 				}
 
@@ -123,20 +122,20 @@ namespace gta_leak_detection
 
 	int PerformLeakDetection(int argc, char** argv, int resultOfRunAllTests)
 	{
-		_resultOfRunAllTests = resultOfRunAllTests;
+		result_of_run_all_tests = resultOfRunAllTests;
 
 		std::string option("-is_run_by_gta");
 		for (int i = 0; i < argc; i++)
 		{
 			if (strncmp(argv[i], option.c_str(), strlen(option.c_str())) == 0)
 			{
-				_isRunByGta = true;
+				is_run_by_gta = true;
 				break;
 			}
 		}
 
 		// use the rest of the output as message of exit code test
-		if (_isRunByGta)
+		if (is_run_by_gta)
 			std::cout << "GTA_EXIT_CODE_OUTPUT_BEGIN\n";
 
 		// exit point 3
@@ -144,13 +143,13 @@ namespace gta_leak_detection
 		// this exit is thus taken only if compiled with Release configuration
 		// since test outcome is Skipped in this case, we can just return the result of RUN_ALL_TESTS()
 #ifndef _DEBUG
-		if (_isRunByGta)
+		if (is_run_by_gta)
 		{
 			std::cout << "GTA_EXIT_CODE_SKIP\n";
 			std::cout << "Memory leak detection is only performed if compiled with Debug configuration.\n";
 		}
 #endif
-		return _resultOfRunAllTests;
+		return result_of_run_all_tests;
 	}
 }
 
