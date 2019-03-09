@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 5/2018.
+﻿// This file has been modified by Microsoft on 3/2019.
 
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -7,7 +7,6 @@ using GoogleTestAdapter.VsPackage.Debugging;
 using GoogleTestAdapter.VsPackage.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -15,13 +14,10 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
-using System.Threading;
-using Task = System.Threading.Tasks.Task;
 
 namespace GoogleTestAdapter.VsPackage
 {
 
-    [PackageRegistration(AllowsBackgroundLoading = true, UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
@@ -29,7 +25,7 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, "Parallelization", 110, 502, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, "Google Test", 110, 503, true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed partial class GoogleTestExtensionOptionsPage : AsyncPackage, IGoogleTestExtensionOptionsPage, IDisposable
+    public sealed partial class GoogleTestExtensionOptionsPage : IGoogleTestExtensionOptionsPage, IDisposable
     {
         private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
@@ -42,32 +38,38 @@ namespace GoogleTestAdapter.VsPackage
         // ReSharper disable once NotAccessedField.Local
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
 
-        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+        private void DoInitialize()
         {
-            await base.InitializeAsync(cancellationToken, progress);
+            InitializeOptions();
+            InitializeCommands();
+            InitializeDebuggerAttacherService();
+            DisplayReleaseNotesIfNecessary();
+        }
 
-            var componentModel = await GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
-            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
-
-            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-
-            _generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
-            _parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
-            _googleTestOptions = (GoogleTestOptionsDialogPage)GetDialogPage(typeof(GoogleTestOptionsDialogPage));
+        private void InitializeOptions()
+        {
+            _generalOptions = (GeneralOptionsDialogPage) GetDialogPage(typeof(GeneralOptionsDialogPage));
+            _parallelizationOptions =
+                (ParallelizationOptionsDialogPage) GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
             _generalOptions.PropertyChanged += OptionsChanged;
             _parallelizationOptions.PropertyChanged += OptionsChanged;
             _googleTestOptions.PropertyChanged += OptionsChanged;
+        }
 
+        private void InitializeCommands()
+        {
             SwitchCatchExceptionsOptionCommand.Initialize(this);
             SwitchBreakOnFailureOptionCommand.Initialize(this);
             SwitchParallelExecutionOptionCommand.Initialize(this);
             SwitchPrintTestOutputOptionCommand.Initialize(this);
+        }
 
-            DisplayReleaseNotesIfNecessary();
-
+        private void InitializeDebuggerAttacherService()
+        {
             var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
             var debuggerAttacher = new VsDebuggerAttacher(this);
             _debuggerAttacherServiceHost = new DebuggerAttacherServiceHost(_debuggingNamedPipeId, debuggerAttacher, logger);
@@ -103,15 +105,11 @@ namespace GoogleTestAdapter.VsPackage
 
                 try
                 {
-                    // Cannot simply do ".?" because Code Analysis does not understand that.
-                    if (_debuggerAttacherServiceHost != null)
-                    {
-                        _debuggerAttacherServiceHost.Close();
-                    }
+                    _debuggerAttacherServiceHost?.Close();
                 }
                 catch (CommunicationException)
                 {
-                    _debuggerAttacherServiceHost.Abort();
+                    _debuggerAttacherServiceHost?.Abort();
                 }
             }
             base.Dispose(disposing);

@@ -1,34 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="GoogleTestAdapterVSIX.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn, Jonas Gefele" />
-    <DisplayName>Google Test Adapter</DisplayName>
-    <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
-    <MoreInfo>https://github.com/csoltenborn/GoogleTestAdapter</MoreInfo>
-    <License>LICENSE.txt</License>
-    <Icon>Resources\Icons\Icon.ico</Icon>
-    <PreviewImage>Resources\Preview.png</PreviewImage>
-    <Tags>Unit Test, C++, Google Test, GoogleTest, GTest, Test Explorer, Testing</Tags>
-  </Metadata>
-  <Installation InstalledByMsi="false">
-    <InstallationTarget Version="11.0" Id="Microsoft.VisualStudio.Premium" />
-    <InstallationTarget Version="[11.0,15.0]" Id="Microsoft.VisualStudio.Pro" />
-    <InstallationTarget Version="[11.0,15.0]" Id="Microsoft.VisualStudio.Enterprise" />
-    <InstallationTarget Version="[11.0,15.0]" Id="Microsoft.VisualStudio.Ultimate" />
-    <InstallationTarget Version="[12.0,15.0]" Id="Microsoft.VisualStudio.Community" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,4.6]" />
-    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
-  </Dependencies>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="TestAdapter" Path="|TestAdapter|" />
-    <Asset Type="UnitTestExtension" d:Source="Project" d:ProjectName="TestAdapter" Path="|TestAdapter|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-  </Assets>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26004.1,16.0)" DisplayName="Visual Studio core editor" />
-    <Prerequisite Id="Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core" Version="[15.0.26004.1,16.0)" DisplayName="Visual Studio C++ core features" />
-  </Prerequisites>
+    <Metadata>
+        <Identity Id="GoogleTestAdapterVSIX.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn" />
+        <DisplayName>Google Test Adapter</DisplayName>
+        <Description xml:space="preserve">Adds support for the C++ unit testing framework Google Tests.</Description>
+        <MoreInfo>https://github.com/csoltenborn/GoogleTestAdapter</MoreInfo>
+        <License>LICENSE.txt</License>
+        <Icon>Resources\Icons\Icon.ico</Icon>
+        <PreviewImage>Resources\Preview.png</PreviewImage>
+        <Tags>Unit Test, C++, Google Test, GoogleTest, GTest, Test Explorer, Testing</Tags>
+    </Metadata>
+    <Installation InstalledByMsi="false">
+        <InstallationTarget Version="[12.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
+        <InstallationTarget Version="[12.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
+        <InstallationTarget Version="[12.0,17.0)" Id="Microsoft.VisualStudio.Ultimate" />
+        <InstallationTarget Version="[12.0,17.0)" Id="Microsoft.VisualStudio.Community" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,4.7]" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="TestAdapter" Path="|TestAdapter|" />
+        <Asset Type="UnitTestExtension" d:Source="Project" d:ProjectName="TestAdapter" Path="|TestAdapter|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="VsPackage.GTA" Path="|VsPackage.GTA|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26004.1,17.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core" Version="[15.0.26004.1,17.0)" DisplayName="Visual Studio C++ core features" />
+    </Prerequisites>
 </PackageManifest>
