@@ -14,6 +14,8 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
         {
             InitializeComponent();
 
+            Load += (sender, args) => DonateButton.Select();
+
             WebBrowser.CanGoBackChanged += (sender, args) => BackButton.Enabled = WebBrowser.CanGoBack;
             BackButton.Click += (sender, args) => WebBrowser.GoBack();
 
@@ -21,7 +23,11 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             ForwardButton.Click += (sender, args) => WebBrowser.GoForward();
 
             OkButton.Click += (sender, args) => Close();
-            DonateButton.Click += (sender, args) => OpenUriInDefaultBrowser(Donations.Uri);
+            DonateButton.Click += (sender, args) =>
+            {
+                OpenUriInDefaultBrowser(Donations.Uri);
+                Close();
+            };
         }
 
         internal Uri HtmlFile

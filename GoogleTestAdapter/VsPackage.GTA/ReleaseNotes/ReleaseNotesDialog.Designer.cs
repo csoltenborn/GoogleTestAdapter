@@ -36,9 +36,9 @@
             this.ForwardButton = new System.Windows.Forms.Button();
             this.WebBrowser = new System.Windows.Forms.WebBrowser();
             this.OkButtonPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.DonateButton = new System.Windows.Forms.Button();
             this.OkButton = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.DonateButton = new System.Windows.Forms.Button();
             this.RootPanel.SuspendLayout();
             this.NavigationPanel.SuspendLayout();
             this.OkButtonPanel.SuspendLayout();
@@ -54,7 +54,7 @@
             this.RootPanel.Controls.Add(this.OkButtonPanel, 0, 2);
             this.RootPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RootPanel.Location = new System.Drawing.Point(0, 0);
-            this.RootPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.RootPanel.Margin = new System.Windows.Forms.Padding(7);
             this.RootPanel.Name = "RootPanel";
             this.RootPanel.RowCount = 3;
             this.RootPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -72,7 +72,7 @@
             this.NavigationPanel.Controls.Add(this.ForwardButton);
             this.NavigationPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NavigationPanel.Location = new System.Drawing.Point(7, 7);
-            this.NavigationPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.NavigationPanel.Margin = new System.Windows.Forms.Padding(7);
             this.NavigationPanel.Name = "NavigationPanel";
             this.NavigationPanel.Size = new System.Drawing.Size(1815, 65);
             this.NavigationPanel.TabIndex = 3;
@@ -82,10 +82,10 @@
             this.BackButton.AccessibleName = "Go back";
             this.BackButton.Enabled = false;
             this.BackButton.Location = new System.Drawing.Point(7, 7);
-            this.BackButton.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.BackButton.Margin = new System.Windows.Forms.Padding(7);
             this.BackButton.Name = "BackButton";
             this.BackButton.Size = new System.Drawing.Size(54, 51);
-            this.BackButton.TabIndex = 0;
+            this.BackButton.TabIndex = 3;
             this.BackButton.Text = "<";
             this.BackButton.UseVisualStyleBackColor = true;
             // 
@@ -94,10 +94,10 @@
             this.ForwardButton.AccessibleName = "Go forward";
             this.ForwardButton.Enabled = false;
             this.ForwardButton.Location = new System.Drawing.Point(75, 7);
-            this.ForwardButton.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.ForwardButton.Margin = new System.Windows.Forms.Padding(7);
             this.ForwardButton.Name = "ForwardButton";
             this.ForwardButton.Size = new System.Drawing.Size(54, 51);
-            this.ForwardButton.TabIndex = 1;
+            this.ForwardButton.TabIndex = 4;
             this.ForwardButton.Text = ">";
             this.ForwardButton.UseVisualStyleBackColor = true;
             // 
@@ -109,12 +109,12 @@
             this.WebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.WebBrowser.IsWebBrowserContextMenuEnabled = false;
             this.WebBrowser.Location = new System.Drawing.Point(7, 86);
-            this.WebBrowser.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.WebBrowser.Margin = new System.Windows.Forms.Padding(7);
             this.WebBrowser.MinimumSize = new System.Drawing.Size(47, 45);
             this.WebBrowser.Name = "WebBrowser";
             this.WebBrowser.ScriptErrorsSuppressed = true;
             this.WebBrowser.Size = new System.Drawing.Size(1815, 1079);
-            this.WebBrowser.TabIndex = 0;
+            this.WebBrowser.TabIndex = 2;
             this.WebBrowser.WebBrowserShortcutsEnabled = false;
             this.WebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.WebBrowser_Navigating);
             // 
@@ -129,25 +129,12 @@
             this.OkButtonPanel.Controls.Add(this.DonateButton, 0, 0);
             this.OkButtonPanel.Controls.Add(this.OkButton, 1, 0);
             this.OkButtonPanel.Location = new System.Drawing.Point(7, 1179);
-            this.OkButtonPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.OkButtonPanel.Margin = new System.Windows.Forms.Padding(7);
             this.OkButtonPanel.Name = "OkButtonPanel";
             this.OkButtonPanel.RowCount = 1;
             this.OkButtonPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.OkButtonPanel.Size = new System.Drawing.Size(1815, 65);
             this.OkButtonPanel.TabIndex = 4;
-            // 
-            // OkButton
-            // 
-            this.OkButton.AccessibleName = "Close release notes dialog";
-            this.OkButton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.OkButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.OkButton.Location = new System.Drawing.Point(1273, 7);
-            this.OkButton.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
-            this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(175, 51);
-            this.OkButton.TabIndex = 2;
-            this.OkButton.Text = "Whatever...";
-            this.OkButton.UseVisualStyleBackColor = true;
             // 
             // DonateButton
             // 
@@ -157,9 +144,22 @@
             this.DonateButton.Margin = new System.Windows.Forms.Padding(7);
             this.DonateButton.Name = "DonateButton";
             this.DonateButton.Size = new System.Drawing.Size(301, 51);
-            this.DonateButton.TabIndex = 3;
+            this.DonateButton.TabIndex = 0;
             this.DonateButton.Text = "Cool - I want to donate!";
             this.DonateButton.UseVisualStyleBackColor = true;
+            // 
+            // OkButton
+            // 
+            this.OkButton.AccessibleName = "Close release notes dialog";
+            this.OkButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.OkButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.OkButton.Location = new System.Drawing.Point(1273, 7);
+            this.OkButton.Margin = new System.Windows.Forms.Padding(7);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(175, 51);
+            this.OkButton.TabIndex = 1;
+            this.OkButton.Text = "Whatever...";
+            this.OkButton.UseVisualStyleBackColor = true;
             // 
             // ReleaseNotesDialog
             // 
@@ -172,7 +172,7 @@
             this.ClientSize = new System.Drawing.Size(1829, 1251);
             this.Controls.Add(this.RootPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.Margin = new System.Windows.Forms.Padding(7);
             this.Name = "ReleaseNotesDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Google Test Adapter: Release notes";

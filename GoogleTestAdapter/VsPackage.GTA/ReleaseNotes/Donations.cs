@@ -8,7 +8,6 @@ namespace GoogleTestAdapter.VsPackage.GTA.ReleaseNotes
 
         public static readonly string Header = $@"<center><small>Please consider to <b><a href=""{Uri}"">donate!</a></b></small></center>
 <br>
-<br>
 ";
     }
 }

@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             string releaseNotes = Donations.Header;
 
-            releaseNotes += CreateHeader();
+            releaseNotes += Environment.NewLine + CreateHeader();
 
             int startIndex = Array.IndexOf(Versions, _currentVersion);
             int endIndex = _formerlyInstalledVersion == null ? -1 : Array.IndexOf(Versions, _formerlyInstalledVersion);

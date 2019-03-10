@@ -75,7 +75,7 @@ namespace gta_leak_detection
 				if (result_of_run_all_tests != 0 && is_run_by_gta)
 				{
 					std::cout << "GTA_EXIT_CODE_SKIP\n";
-					std::cout << "\nTest result is 'Skipped' due to some weaknesses of Google Test 1.8.1 and crtdbg.h: leak detection results are only reliable if at least one real test is executed, and if all executed tests have passed.\n\n";
+					std::cout << "\nTest result is 'Skipped' due to some weaknesses of Google Test 1.8.1 and crtdbg.h: leak detection results are only reliable if all executed tests have passed.\n\n";
 				}
 
 				return 0;
