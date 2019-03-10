@@ -160,18 +160,19 @@ namespace GoogleTestAdapter.Settings
             return $"{propertyInfo.Name}: {value}";
         }
 
+        private const string OnlyInsideVs = " (only available inside VS)";
 
         public const string SolutionDirPlaceholder = "$(SolutionDir)";
         private const string DescriptionOfSolutionDirPlaceHolder =
-            SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
+            SolutionDirPlaceholder + " - directory of the solution" + OnlyInsideVs;
 
         public const string PlatformNamePlaceholder = "$(PlatformName)";
         private const string DescriptionOfPlatformNamePlaceholder =
-            PlatformNamePlaceholder + " - the name of the solution's current platform";
+            PlatformNamePlaceholder + " - the name of the solution's current platform" + OnlyInsideVs;
 
         public const string ConfigurationNamePlaceholder = "$(ConfigurationName)";
         private const string DescriptionOfConfigurationNamePlaceholder =
-            ConfigurationNamePlaceholder + " - the name of the solution's current configuration";
+            ConfigurationNamePlaceholder + " - the name of the solution's current configuration" + OnlyInsideVs;
 
         private string ReplaceSolutionDirPlaceholder(string theString)
         {
