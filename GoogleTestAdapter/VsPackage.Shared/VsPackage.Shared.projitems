@@ -28,7 +28,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\NotifyingDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\ParallelizationOptionsDialogPage.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\TestDiscoveryOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\TestExecutionOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Settings\RunSettingsService.cs" />
