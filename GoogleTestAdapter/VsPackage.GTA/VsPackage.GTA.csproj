@@ -430,11 +430,6 @@
   <Target Name="AfterClean">
     <Delete Files="$(TargetDir)\GoogleTestAdapter.*.nupkg" />
   </Target>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartAction>Program</StartAction>
-    <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
-    <StartArguments>/rootsuffix Exp</StartArguments>
-  </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>copy $(OutDir)GoogleTestAdapter.VsPackage.GTA.pkgdef $(SolutionDir)Packaging.GTA</PostBuildEvent>
   </PropertyGroup>
