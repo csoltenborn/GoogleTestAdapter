@@ -136,6 +136,10 @@ An example usage of the *Exit code test case* can be found as part of the Sample
 
 However, note that Google Test as of V1.8.1 [uses some memory allocation](https://github.com/google/googletest/pull/1142) which is recognized by MS' leak detection mechanism as a leak (although it isn't), in particular for failing assertions. Some of these "false positives" have been fixed with the linked issue, making leak detection useful as long as all tests are green; however, and until this problem is fixed, the memory leak detection provided by GTA will result in a skipped exit code test in case `RUN_ALL_TESTS()` does not return `0`, but will report the leak in the test's error message. If you run into such problems, please report them against the [Google Test repository](https://github.com/google/googletest) if appropriate.
 
+##### Known issues
+
+* Visual Studio 2013: if a test project *FooTests* makes use of a `main()` method of a *BarTests* project (e.g. by referencing its `main.cpp`), the exit code test of *FooTests* will be grouped under *BarTests*' executable.
+
 
 #### <a name="vstest_console"></a>Running tests from command line with `VSTest.Console.exe`
 
