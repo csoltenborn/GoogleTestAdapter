@@ -160,28 +160,5 @@ namespace VsPackage.Shared.Settings
             return defaultValue;
         }
 
-        //private void SetTestDiscoveryTimeoutInSeconds()
-        //{
-        //    try
-        //    {
-        //        string generalOptionsKey =
-        //            @"SOFTWARE\Microsoft\VisualStudio\15.0\DialogPage\GoogleTestAdapter.VsPackage.OptionsPages.GeneralOptionsDialogPage";
-        //        var key = Registry.CurrentUser.OpenSubKey(generalOptionsKey, true);
-        //        if (key != null)
-        //        {
-        //            string value = key.GetValue(nameof(_testDiscoveryOptions.TestDiscoveryTimeoutInSeconds))?.ToString();
-        //            if (value != null)
-        //            {
-        //                _testDiscoveryOptions.TestDiscoveryTimeoutInSeconds = int.Parse(value);
-        //                key.DeleteValue(nameof(_testDiscoveryOptions.TestDiscoveryTimeoutInSeconds));
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw;
-        //    }
-        //}
-
     }
 }
