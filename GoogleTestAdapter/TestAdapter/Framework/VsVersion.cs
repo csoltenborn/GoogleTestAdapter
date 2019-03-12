@@ -39,6 +39,19 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 default:
                     throw new InvalidOperationException();
             }
+
+        }
+
+        public static string VersionString(this VsVersion version)
+        {
+            switch (version)
+            {
+                case VsVersion.Unknown:
+                case VsVersion.VS2012:
+                    return "0.0";
+                default:
+                    return $"{(int)version}.0";
+            }
         }
 
         public static bool NeedsToBeThrottled(this VsVersion version)
@@ -71,7 +84,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
 
         private static VsVersion? _version;
 
-        public static VsVersion GetVisualStudioVersion(ILogger logger)
+        public static VsVersion GetVisualStudioVersion(ILogger logger = null)
         {
             lock (Lock)
             {

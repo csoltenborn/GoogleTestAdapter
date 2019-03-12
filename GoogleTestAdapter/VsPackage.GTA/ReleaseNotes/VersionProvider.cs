@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
     internal class VersionProvider
     {
-        private const string CollectionName = "GoogleTestAdapter";
+        public const string CollectionName = "GoogleTestAdapter";
         private const string VersionPropertyName = "LastVersion";
 
         private readonly WritableSettingsStore _settingsStore;

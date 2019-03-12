@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\TestExecutionOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\OptionsUpdater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\RunSettingsService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -18,8 +18,9 @@ using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
 using Microsoft.VisualStudio.AsyncPackageHelpers;
-using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.TestDiscoveryOptionsDialogPage;
 using Microsoft.Win32;
+using VsPackage.Shared.Settings;
+using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.TestDiscoveryOptionsDialogPage;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -104,6 +105,9 @@ namespace GoogleTestAdapter.VsPackage
             _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
+
+            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, this);
+            optionsUpdater.UpdateIfNecessary();
 
             _generalOptions.PropertyChanged += OptionsChanged;
             _testDiscoveryOptions.PropertyChanged += OptionsChanged;
