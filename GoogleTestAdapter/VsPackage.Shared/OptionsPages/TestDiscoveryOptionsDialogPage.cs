@@ -4,6 +4,7 @@ using GoogleTestAdapter.Settings;
 using System;
 using System.ComponentModel;
 using GoogleTestAdapter.Helpers;
+// ReSharper disable LocalizableElement
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -17,7 +18,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTestDiscoveryRegexDescription)]
         public string TestDiscoveryRegex
         {
-            get { return _testDiscoveryRegex; }
+            get => _testDiscoveryRegex;
             set
             {
                 Utils.ValidateRegex(value);
@@ -31,11 +32,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDescription)]
         public int TestDiscoveryTimeoutInSeconds
         {
-            get { return _testDiscoveryTimeoutInSeconds; }
+            get => _testDiscoveryTimeoutInSeconds;
             set
             {
                 if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected a number greater than or equal to 0.");
+                    throw new ArgumentOutOfRangeException(nameof(TestDiscoveryTimeoutInSeconds), value, "Expected a number greater than or equal to 0.");
                 SetAndNotify(ref _testDiscoveryTimeoutInSeconds, value);
             }
         }
@@ -46,11 +47,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTestNameSeparatorDescription)]
         public string TestNameSeparator
         {
-            get { return _testNameSeparator; }
+            get => _testNameSeparator;
             set
             {
                 if (value.Length > 16)
-                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected string not longer than 16 characters.");
+                    throw new ArgumentOutOfRangeException(nameof(TestNameSeparator), value, "Expected string not longer than 16 characters.");
                 SetAndNotify(ref _testNameSeparator, value);
             }
         }
@@ -61,8 +62,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionParseSymbolInformationDescription)]
         public bool ParseSymbolInformation
         {
-            get { return _parseSymbolInformation; }
-            set { SetAndNotify(ref _parseSymbolInformation, value); }
+            get => _parseSymbolInformation;
+            set => SetAndNotify(ref _parseSymbolInformation, value);
         }
         private bool _parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
 
@@ -75,7 +76,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTraitsDescription)]
         public string TraitsRegexesBefore
         {
-            get { return _traitsRegexesBefore; }
+            get => _traitsRegexesBefore;
             set
             {
                 Utils.ValidateTraitRegexes(value);
@@ -89,7 +90,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTraitsDescription)]
         public string TraitsRegexesAfter
         {
-            get { return _traitsRegexesAfter; }
+            get => _traitsRegexesAfter;
             set
             {
                 Utils.ValidateTraitRegexes(value);

@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public partial class GeneralOptionsDialogPage : NotifyingDialogPage
+    public class GeneralOptionsDialogPage : NotifyingDialogPage
     {
         #region Output
 
@@ -17,8 +17,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionPrintTestOutputDescription)]
         public bool PrintTestOutput
         {
-            get { return _printTestOutput; }
-            set { SetAndNotify(ref _printTestOutput, value); }
+            get => _printTestOutput;
+            set => SetAndNotify(ref _printTestOutput, value);
         }
         private bool _printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
 
@@ -27,8 +27,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionDebugModeDescription)]
         public bool DebugMode
         {
-            get { return _debugMode; }
-            set { SetAndNotify(ref _debugMode, value); }
+            get => _debugMode;
+            set => SetAndNotify(ref _debugMode, value);
         }
         private bool _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
 
@@ -37,8 +37,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionTimestampOutputDescription)]
         public bool TimestampOutput
         {
-            get { return _timestampOutput; }
-            set { SetAndNotify(ref _timestampOutput, value); }
+            get => _timestampOutput;
+            set => SetAndNotify(ref _timestampOutput, value);
         }
         private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
 
@@ -51,8 +51,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionSkipOriginCheckDescription)]
         public bool SkipOriginCheck
         {
-            get { return _skipOriginCheck; }
-            set { SetAndNotify(ref _skipOriginCheck, value); }
+            get => _skipOriginCheck;
+            set => SetAndNotify(ref _skipOriginCheck, value);
         }
         private bool _skipOriginCheck = SettingsWrapper.OptionSkipOriginCheckDefaultValue;
         

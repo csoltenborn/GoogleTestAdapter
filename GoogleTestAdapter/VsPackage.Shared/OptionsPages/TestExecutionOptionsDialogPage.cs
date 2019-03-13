@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
+// ReSharper disable LocalizableElement
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -19,8 +20,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionEnableParallelTestExecutionDescription)]
         public bool EnableParallelTestExecution
         {
-            get { return _enableParallelTestExecution; }
-            set { SetAndNotify(ref _enableParallelTestExecution, value); }
+            get => _enableParallelTestExecution;
+            set => SetAndNotify(ref _enableParallelTestExecution, value);
         }
         private bool _enableParallelTestExecution = SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue;
 
@@ -29,11 +30,11 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionMaxNrOfThreadsDescription)]
         public int MaxNrOfThreads
         {
-            get { return _maxNrOfThreads; }
+            get => _maxNrOfThreads;
             set
             {
                 if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), value, "Expected a number greater than or equal to 0.");
+                    throw new ArgumentOutOfRangeException(nameof(MaxNrOfThreads), value, "Expected a number greater than or equal to 0.");
                 SetAndNotify(ref _maxNrOfThreads, value);
             }
         }
@@ -48,7 +49,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionAdditionalPdbsDescription)]
         public string AdditionalPdbs
         {
-            get { return _additionalPdbs; }
+            get => _additionalPdbs;
             set
             {
                 var patterns = Utils.SplitAdditionalPdbs(_additionalPdbs);
@@ -62,7 +63,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
                 }
                 if (errorMessages.Any())
                 {
-                    throw new Exception(string.Join(Environment.NewLine, errorMessages));
+                    throw new ArgumentException(string.Join(Environment.NewLine, errorMessages), nameof(AdditionalPdbs));
                 }
 
                 SetAndNotify(ref _additionalPdbs, value);
@@ -75,8 +76,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionWorkingDirDescription)]
         public string WorkingDir
         {
-            get { return _workingDirectory; }
-            set { SetAndNotify(ref _workingDirectory, value); }
+            get => _workingDirectory;
+            set => SetAndNotify(ref _workingDirectory, value);
         }
         private string _workingDirectory = SettingsWrapper.OptionWorkingDirDefaultValue;
 
@@ -85,8 +86,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionPathExtensionDescription)]
         public string PathExtension
         {
-            get { return _pathExtension; }
-            set { SetAndNotify(ref _pathExtension, value); }
+            get => _pathExtension;
+            set => SetAndNotify(ref _pathExtension, value);
         }
         private string _pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
@@ -95,8 +96,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams
         {
-            get { return _additionalTestExecutionParams; }
-            set { SetAndNotify(ref _additionalTestExecutionParams, value); }
+            get => _additionalTestExecutionParams;
+            set => SetAndNotify(ref _additionalTestExecutionParams, value);
         }
         private string _additionalTestExecutionParams = SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue;
 
@@ -110,8 +111,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionBatchForTestSetupDescription)]
         public string BatchForTestSetup
         {
-            get { return _batchForTestSetup; }
-            set { SetAndNotify(ref _batchForTestSetup, value); }
+            get => _batchForTestSetup;
+            set => SetAndNotify(ref _batchForTestSetup, value);
         }
         private string _batchForTestSetup = SettingsWrapper.OptionBatchForTestSetupDefaultValue;
 
@@ -120,8 +121,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionBatchForTestTeardownDescription)]
         public string BatchForTestTeardown
         {
-            get { return _batchForTestTeardown; }
-            set { SetAndNotify(ref _batchForTestTeardown, value); }
+            get => _batchForTestTeardown;
+            set => SetAndNotify(ref _batchForTestTeardown, value);
         }
         private string _batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
 
@@ -135,8 +136,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionKillProcessesOnCancelDescription)]
         public bool KillProcessesOnCancel
         {
-            get { return _killProcessesOnCancel; }
-            set { SetAndNotify(ref _killProcessesOnCancel, value); }
+            get => _killProcessesOnCancel;
+            set => SetAndNotify(ref _killProcessesOnCancel, value);
         }
         private bool _killProcessesOnCancel = SettingsWrapper.OptionKillProcessesOnCancelDefaultValue;
 
@@ -145,8 +146,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionUseNewTestExecutionFrameworkDescription)]
         public bool UseNewTestExecutionFramework2
         {
-            get { return _useNewTestExecutionFramework; }
-            set { SetAndNotify(ref _useNewTestExecutionFramework, value); }
+            get => _useNewTestExecutionFramework;
+            set => SetAndNotify(ref _useNewTestExecutionFramework, value);
         }
         private bool _useNewTestExecutionFramework = SettingsWrapper.OptionUseNewTestExecutionFrameworkDefaultValue;
 
@@ -155,8 +156,8 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Description(SettingsWrapper.OptionExitCodeTestCaseDescription)]
         public string ExitCodeTestCase
         {
-            get { return _exitCodeTestCase; }
-            set { SetAndNotify(ref _exitCodeTestCase, value); }
+            get => _exitCodeTestCase;
+            set => SetAndNotify(ref _exitCodeTestCase, value);
         }
         private string _exitCodeTestCase = SettingsWrapper.OptionExitCodeTestCaseDefaultValue;
 
