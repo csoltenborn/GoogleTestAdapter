@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.VsPackage.OptionsPages;
@@ -21,13 +22,15 @@ namespace VsPackage.Shared.Settings
 
         private readonly TestDiscoveryOptionsDialogPage _testDiscoveryOptions;
         private readonly TestExecutionOptionsDialogPage _testExecutionOptions;
+        private readonly ILogger _logger;
         private readonly WritableSettingsStore _settingsStore;
 
         public OptionsUpdater(TestDiscoveryOptionsDialogPage testDiscoveryOptions, TestExecutionOptionsDialogPage testExecutionOptions, 
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, ILogger logger)
         {
             _testDiscoveryOptions = testDiscoveryOptions;
             _testExecutionOptions = testExecutionOptions;
+            _logger = logger;
 
             var settingsManager = new ShellSettingsManager(serviceProvider);
             _settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
@@ -35,12 +38,26 @@ namespace VsPackage.Shared.Settings
 
         public void UpdateIfNecessary()
         {
+            try
+            {
+                TryUpdateIfNecessary();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error while updating options: {e}");
+            }
+        }
+
+        private void TryUpdateIfNecessary()
+        {
             if (_settingsStore.PropertyExists(VersionProvider.CollectionName, SettingsVersion))
                 return;
 
             UpdateSettings();
 
-            _settingsStore.SetString(VersionProvider.CollectionName, SettingsVersion, History.Versions.Last().ToString());
+            string versionString = History.Versions.Last().ToString();
+            _logger.DebugInfo($"versionString: {versionString}");
+            _settingsStore.SetString(VersionProvider.CollectionName, SettingsVersion, versionString);
         }
 
         private void UpdateSettings()

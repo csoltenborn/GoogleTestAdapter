@@ -18,7 +18,6 @@ using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
 using Microsoft.VisualStudio.AsyncPackageHelpers;
-using Microsoft.Win32;
 using VsPackage.Shared.Settings;
 using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.TestDiscoveryOptionsDialogPage;
 
@@ -106,7 +105,7 @@ namespace GoogleTestAdapter.VsPackage
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
-            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, this);
+            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, this, new ActivityLogLogger(this, () => true));
             optionsUpdater.UpdateIfNecessary();
 
             _generalOptions.PropertyChanged += OptionsChanged;
@@ -274,12 +273,14 @@ namespace GoogleTestAdapter.VsPackage
 
         private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
         {
-            solutionDir = platformName = configurationName = null;
+            var logger = new ActivityLogLogger(this, () => true);
 
+            solutionDir = platformName = configurationName = null;
             try
             {
                 if (GetService(typeof(DTE)) is DTE dte)
                 {
+                    logger.DebugInfo($"dte.Solution.FullName: {dte.Solution.FullName}");
                     solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
 
                     if (dte.Solution.Projects.Count > 0)
@@ -294,8 +295,7 @@ namespace GoogleTestAdapter.VsPackage
             }
             catch (Exception e)
             {
-                new ActivityLogLogger(this, () => true)
-                    .LogError($"Exception while receiving configuration info from Visual Studio{Environment.NewLine}{e}");
+                logger.LogError($"Exception while receiving configuration info from Visual Studio.{Environment.NewLine}{e}");
             }
         }
     }
