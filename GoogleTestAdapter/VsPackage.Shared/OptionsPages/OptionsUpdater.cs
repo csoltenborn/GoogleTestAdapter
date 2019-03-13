@@ -56,8 +56,14 @@ namespace VsPackage.Shared.Settings
             UpdateSettings();
 
             string versionString = History.Versions.Last().ToString();
-            _logger.DebugInfo($"versionString: {versionString}");
-            _settingsStore.SetString(VersionProvider.CollectionName, SettingsVersion, versionString);
+            try
+            {
+                _settingsStore.SetString(VersionProvider.CollectionName, SettingsVersion, versionString);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception caught while saving SettingsVersion. versionString: {versionString}. Exception:{Environment.NewLine}{e}");
+            }
         }
 
         private void UpdateSettings()

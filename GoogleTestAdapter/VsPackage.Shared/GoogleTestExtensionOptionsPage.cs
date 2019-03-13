@@ -280,8 +280,14 @@ namespace GoogleTestAdapter.VsPackage
             {
                 if (GetService(typeof(DTE)) is DTE dte)
                 {
-                    logger.DebugInfo($"dte.Solution.FullName: {dte.Solution.FullName}");
-                    solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+                    try
+                    {
+                        solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError($"Exception caught while receiving solution dir from VS instance. dte.Solution.FullName: {dte.Solution.FullName}. Exception:{Environment.NewLine}{e}");
+                    }
 
                     if (dte.Solution.Projects.Count > 0)
                     {  
