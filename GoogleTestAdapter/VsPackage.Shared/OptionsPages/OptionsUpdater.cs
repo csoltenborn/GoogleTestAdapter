@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
+using GoogleTestAdapter.VsPackage.GTA.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using GoogleTestAdapter.VsPackage.ReleaseNotes;
-using Microsoft.VisualStudio.Settings;
-using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.Win32;
 
 namespace VsPackage.Shared.Settings
@@ -23,17 +21,13 @@ namespace VsPackage.Shared.Settings
         private readonly TestDiscoveryOptionsDialogPage _testDiscoveryOptions;
         private readonly TestExecutionOptionsDialogPage _testExecutionOptions;
         private readonly ILogger _logger;
-        private readonly WritableSettingsStore _settingsStore;
 
-        public OptionsUpdater(TestDiscoveryOptionsDialogPage testDiscoveryOptions, TestExecutionOptionsDialogPage testExecutionOptions, 
-            IServiceProvider serviceProvider, ILogger logger)
+        public OptionsUpdater(TestDiscoveryOptionsDialogPage testDiscoveryOptions, 
+            TestExecutionOptionsDialogPage testExecutionOptions, ILogger logger)
         {
             _testDiscoveryOptions = testDiscoveryOptions;
             _testExecutionOptions = testExecutionOptions;
             _logger = logger;
-
-            var settingsManager = new ShellSettingsManager(serviceProvider);
-            _settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
         }
 
         public void UpdateIfNecessary()
@@ -50,15 +44,14 @@ namespace VsPackage.Shared.Settings
 
         private void TryUpdateIfNecessary()
         {
-            if (_settingsStore.PropertyExists(VersionProvider.CollectionName, SettingsVersion))
+            if (VsSettingsStorage.Instance.PropertyExists(SettingsVersion))
                 return;
-
-            UpdateSettings();
 
             string versionString = History.Versions.Last().ToString();
             try
             {
-                _settingsStore.SetString(VersionProvider.CollectionName, SettingsVersion, versionString);
+                VsSettingsStorage.Instance.SetString(SettingsVersion, versionString);
+                UpdateSettings();
             }
             catch (Exception e)
             {
@@ -68,111 +61,41 @@ namespace VsPackage.Shared.Settings
 
         private void UpdateSettings()
         {
-            _testDiscoveryOptions.TestDiscoveryTimeoutInSeconds = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestDiscoveryOptionsDialogPage.TestDiscoveryTimeoutInSeconds), 
-                int.Parse, 
-                SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue);
-            _testDiscoveryOptions.TestDiscoveryRegex = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestDiscoveryOptionsDialogPage.TestDiscoveryRegex), 
-                s => s, 
-                SettingsWrapper.OptionTestDiscoveryRegexDefaultValue);
-            _testDiscoveryOptions.ParseSymbolInformation = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestDiscoveryOptionsDialogPage.ParseSymbolInformation), 
-                bool.Parse, 
-                SettingsWrapper.OptionParseSymbolInformationDefaultValue);
-            _testDiscoveryOptions.TestNameSeparator = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestDiscoveryOptionsDialogPage.TestNameSeparator), 
-                s => s, 
-                SettingsWrapper.OptionTestNameSeparatorDefaultValue);
-            _testDiscoveryOptions.TraitsRegexesBefore = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestDiscoveryOptionsDialogPage.TraitsRegexesBefore), 
-                s => s, 
-                SettingsWrapper.OptionTraitsRegexesDefaultValue);
-            _testDiscoveryOptions.TraitsRegexesAfter = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestDiscoveryOptionsDialogPage.TraitsRegexesAfter), 
-                s => s, 
-                SettingsWrapper.OptionTraitsRegexesDefaultValue);
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestDiscoveryOptionsDialogPage.TestDiscoveryTimeoutInSeconds), int.Parse, out var testDiscoveryTimeoutInSeconds)) { _testDiscoveryOptions.TestDiscoveryTimeoutInSeconds = testDiscoveryTimeoutInSeconds; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestDiscoveryOptionsDialogPage.TestDiscoveryRegex), s => s, out var testDiscoveryRegex)) { _testDiscoveryOptions.TestDiscoveryRegex = testDiscoveryRegex; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestDiscoveryOptionsDialogPage.ParseSymbolInformation), bool.Parse, out var parseSymbolInformation)) { _testDiscoveryOptions.ParseSymbolInformation = parseSymbolInformation; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestDiscoveryOptionsDialogPage.TestNameSeparator), s => s, out var testNameSeparator)) { _testDiscoveryOptions.TestNameSeparator = testNameSeparator; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestDiscoveryOptionsDialogPage.TraitsRegexesBefore), s => s, out var traitsRegexesBefore)) { _testDiscoveryOptions.TraitsRegexesBefore = traitsRegexesBefore; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestDiscoveryOptionsDialogPage.TraitsRegexesAfter), s => s, out var traitsRegexesAfter)) { _testDiscoveryOptions.TraitsRegexesAfter = traitsRegexesAfter; }
 
-            _testExecutionOptions.EnableParallelTestExecution = GetAndDeleteValue(
-                ParallelizationOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.EnableParallelTestExecution),
-                bool.Parse,
-                SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue);
-            _testExecutionOptions.MaxNrOfThreads = GetAndDeleteValue(
-                ParallelizationOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.MaxNrOfThreads), 
-                int.Parse, 
-                SettingsWrapper.OptionMaxNrOfThreadsDefaultValue);
-            _testExecutionOptions.AdditionalPdbs = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.AdditionalPdbs), 
-                s => s, 
-                SettingsWrapper.OptionAdditionalPdbsDefaultValue);
-            _testExecutionOptions.AdditionalTestExecutionParams = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.AdditionalTestExecutionParams), 
-                s => s, 
-                SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
-            _testExecutionOptions.BatchForTestSetup = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.BatchForTestSetup), 
-                s => s, 
-                SettingsWrapper.OptionBatchForTestSetupDefaultValue);
-            _testExecutionOptions.BatchForTestTeardown = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.BatchForTestTeardown), 
-                s => s, 
-                SettingsWrapper.OptionBatchForTestTeardownDefaultValue);
-            _testExecutionOptions.ExitCodeTestCase = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.ExitCodeTestCase), 
-                s => s, 
-                SettingsWrapper.OptionExitCodeTestCaseDefaultValue);
-            _testExecutionOptions.PathExtension = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.PathExtension), 
-                s => s, 
-                SettingsWrapper.OptionPathExtensionDefaultValue);
-            _testExecutionOptions.KillProcessesOnCancel = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.KillProcessesOnCancel),
-                bool.Parse,
-                SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
-            _testExecutionOptions.UseNewTestExecutionFramework2 = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.UseNewTestExecutionFramework2),
-                bool.Parse,
-                SettingsWrapper.OptionUseNewTestExecutionFrameworkDefaultValue);
-            _testExecutionOptions.WorkingDir = GetAndDeleteValue(
-                GeneralOptionsPage,
-                nameof(TestExecutionOptionsDialogPage.WorkingDir),
-                s => s,
-                SettingsWrapper.OptionWorkingDirDefaultValue);
+            if (GetAndDeleteValue(ParallelizationOptionsPage, nameof(TestExecutionOptionsDialogPage.EnableParallelTestExecution), bool.Parse, out var enableParallelTestExecution)) { _testExecutionOptions.EnableParallelTestExecution = enableParallelTestExecution; }
+            if (GetAndDeleteValue(ParallelizationOptionsPage, nameof(TestExecutionOptionsDialogPage.MaxNrOfThreads), int.Parse, out var maxNrOfThreads)) { _testExecutionOptions.MaxNrOfThreads = maxNrOfThreads; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.AdditionalPdbs), s => s, out var additionalPdbs)) { _testExecutionOptions.AdditionalPdbs = additionalPdbs; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.AdditionalTestExecutionParams), s => s, out var additionalTestExecutionParams)) { _testExecutionOptions.AdditionalTestExecutionParams = additionalTestExecutionParams; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.BatchForTestSetup), s => s, out var batchForTestSetup)) { _testExecutionOptions.BatchForTestSetup = batchForTestSetup; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.BatchForTestTeardown), s => s, out var batchForTestTeardown)) { _testExecutionOptions.BatchForTestTeardown = batchForTestTeardown; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.ExitCodeTestCase), s => s, out var exitCodeTestCase)) { _testExecutionOptions.ExitCodeTestCase = exitCodeTestCase; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.PathExtension), s => s, out var pathExtension)) { _testExecutionOptions.PathExtension = pathExtension; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.KillProcessesOnCancel), bool.Parse, out var killProcessesOnCancel)) { _testExecutionOptions.KillProcessesOnCancel = killProcessesOnCancel; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.UseNewTestExecutionFramework2), bool.Parse, out var useNewTestExecutionFramework2)) { _testExecutionOptions.UseNewTestExecutionFramework2 = useNewTestExecutionFramework2; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.WorkingDir), s => s, out var workingDir)) { _testExecutionOptions.WorkingDir = workingDir; }
+
+            GetAndDeleteValue(GeneralOptionsPage, "ShowReleaseNotes", bool.Parse, out _);
         }
 
-        private static T GetAndDeleteValue<T>(string optionsKey, string propertyName, Func<string, T> map, T defaultValue)
+        private static bool GetAndDeleteValue<T>(string optionsKey, string propertyName, Func<string, T> map, out T value)
         {
             try
             {
-                var registryKey = Registry.CurrentUser.OpenSubKey(optionsKey, true);
-                string value = registryKey?.GetValue(propertyName)?.ToString();
-                if (value != null)
+                using (var registryKey = Registry.CurrentUser.OpenSubKey(optionsKey, true))
                 {
-                    try
+                    string valueString = registryKey?.GetValue(propertyName)?.ToString();
+                    if (valueString != null)
                     {
+                        value = map(valueString);
                         registryKey.DeleteValue(propertyName);
+                        return true;
                     }
-                    catch (Exception)
-                    {
-                        // so what...
-                    }
-                    return map(value);
                 }
             }
             catch (Exception)
@@ -180,7 +103,8 @@ namespace VsPackage.Shared.Settings
                 // too bad
             }
 
-            return defaultValue;
+            value = default(T);
+            return false;
         }
 
     }

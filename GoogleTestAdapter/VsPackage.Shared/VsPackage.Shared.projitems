@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Debugging\VsDebuggerAttacher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GoogleTestExtensionOptionsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ActivityLogLogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\VsSettingsStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGoogleTestExtensionOptionsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\GoogleTestOptionsDialogPage.cs">
       <SubType>Component</SubType>

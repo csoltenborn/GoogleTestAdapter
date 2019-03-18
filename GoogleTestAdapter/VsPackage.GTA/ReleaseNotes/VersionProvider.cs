@@ -1,35 +1,22 @@
 ﻿using System;
 using System.Reflection;
-using Microsoft.VisualStudio.Settings;
-using Microsoft.VisualStudio.Shell.Settings;
+using GoogleTestAdapter.VsPackage.GTA.Helpers;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
 
     internal class VersionProvider
     {
-        public const string CollectionName = "GoogleTestAdapter";
         private const string VersionPropertyName = "LastVersion";
-
-        private readonly WritableSettingsStore _settingsStore;
-
-        internal VersionProvider(IServiceProvider serviceProvider)
-        {
-            var settingsManager = new ShellSettingsManager(serviceProvider);
-            _settingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-
-            if (!_settingsStore.CollectionExists(CollectionName))
-                _settingsStore.CreateCollection(CollectionName);
-        }
 
         internal Version FormerlyInstalledVersion
         {
             get
             {
-                if (!_settingsStore.PropertyExists(CollectionName, VersionPropertyName))
+                if (!VsSettingsStorage.Instance.PropertyExists(VersionPropertyName))
                     return null;
 
-                string versionString = _settingsStore.GetString(CollectionName, VersionPropertyName);
+                string versionString = VsSettingsStorage.Instance.GetString(VersionPropertyName);
                 return Version.Parse(versionString);
             }
         }
@@ -45,7 +32,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         internal void UpdateLastVersion()
         {
-            _settingsStore.SetString(CollectionName, VersionPropertyName, CurrentVersion.ToString());
+            VsSettingsStorage.Instance.SetString(VersionPropertyName, CurrentVersion.ToString());
         }
 
     }

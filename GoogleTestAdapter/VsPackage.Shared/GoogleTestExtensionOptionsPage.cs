@@ -17,6 +17,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
+using GoogleTestAdapter.VsPackage.GTA.Helpers;
 using Microsoft.VisualStudio.AsyncPackageHelpers;
 using VsPackage.Shared.Settings;
 using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.TestDiscoveryOptionsDialogPage;
@@ -78,6 +79,8 @@ namespace GoogleTestAdapter.VsPackage
                 var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
                 _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
 
+                VsSettingsStorage.Init(this);
+
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 
                 DoInitialize();
@@ -103,10 +106,10 @@ namespace GoogleTestAdapter.VsPackage
                 (TestExecutionOptionsDialogPage) GetDialogPage(typeof(TestExecutionOptionsDialogPage));
             _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
-            _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
-
-            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, this, new ActivityLogLogger(this, () => true));
+            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, new ActivityLogLogger(this, () => true));
             optionsUpdater.UpdateIfNecessary();
+
+            _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
             _generalOptions.PropertyChanged += OptionsChanged;
             _testDiscoveryOptions.PropertyChanged += OptionsChanged;

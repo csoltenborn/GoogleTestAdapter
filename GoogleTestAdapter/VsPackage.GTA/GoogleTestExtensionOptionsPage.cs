@@ -43,7 +43,7 @@ namespace GoogleTestAdapter.VsPackage
 
         private void TryDisplayReleaseNotesIfNecessary()
         {
-            var versionProvider = new VersionProvider(this);
+            var versionProvider = new VersionProvider();
 
             Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
             Version currentVersion = versionProvider.CurrentVersion;
