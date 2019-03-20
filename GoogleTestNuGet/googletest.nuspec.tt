@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/Microsoft/TestAdapterForGoogleTest</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/Microsoft/TestAdapterForGoogleTest/dev15/GoogleTestNuGet/license%20(MIT).txt</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <copyright>&#169; Microsoft Corporation. All rights reserved.</copyright>
     <description>Google Test compiled for Windows.</description>
     <tags>native googletest google test gtest c++ cpp</tags>
     <iconUrl>https://raw.githubusercontent.com/Microsoft/TestAdapterForGoogleTest/dev15/GoogleTestAdapter/Resources/Icons/Icon_128.png</iconUrl>
