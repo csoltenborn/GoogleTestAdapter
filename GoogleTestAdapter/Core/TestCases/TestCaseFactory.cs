@@ -47,25 +47,24 @@ namespace GoogleTestAdapter.TestCases
 
             var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
             var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
-            parser.TestCaseDescriptorCreated += (sender, args) =>
+            parser.TestCaseCreated += (sender, args) =>
             {
                 TestCase testCase;
                 if (_settings.ParseSymbolInformation)
                 {
-                    TestCaseLocation testCaseLocation =
-                        resolver.FindTestCaseLocation(
-                            _signatureCreator.GetTestMethodSignatures(args.TestCaseDescriptor).ToList());
-                    testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation);
+                    TestCaseLocation testCaseLocation = resolver.FindTestCaseLocation( _signatureCreator.GetTestMethodSignatures(args.TestCase).ToList());
+                    testCase = FinilizeTestCase(args.TestCase, testCaseLocation);
                 }
                 else
                 {
-                    testCase = CreateTestCase(args.TestCaseDescriptor);
+                    testCase = FinilizeTestCase(args.TestCase);
                 }
+                testCase.Source = _executable;
                 testCases.Add(testCase);
 
-                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out var testCasesOfSuite))
+                if (!suite2TestCases.TryGetValue(args.TestCase.Suite, out var testCasesOfSuite))
                 {
-                    suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
+                    suite2TestCases.Add(args.TestCase.Suite, testCasesOfSuite = new HashSet<TestCase>());
                 }
                 testCasesOfSuite.Add(testCase);
             };
@@ -184,26 +183,27 @@ namespace GoogleTestAdapter.TestCases
             return true;
         }
 
-        private TestCase CreateTestCase(TestCaseDescriptor descriptor)
+        private TestCase FinilizeTestCase(TestCase testcase)
         {
-            var testCase = new TestCase(
-                descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
-            testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, new List<Trait>()));
-            return testCase;
+            testcase.Traits.AddRange(GetFinalTraits(testcase.DisplayName, new List<Trait>()));
+            return testcase;
         }
 
-        private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseLocation location)
+        private TestCase FinilizeTestCase(TestCase testcase, TestCaseLocation location)
         {
+            if (testcase.CodeFilePath != "")
+                return testcase;
+        
             if (location != null)
             {
-                var testCase = new TestCase(
-                    descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, location.Sourcefile, (int)location.Line);
-                testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, location.Traits));
-                return testCase;
+                testcase.CodeFilePath = location.Sourcefile;
+                testcase.LineNumber = (int)location.Line;
+                testcase.Traits.AddRange(GetFinalTraits(testcase.DisplayName, location.Traits));
+                return testcase;
             }
 
-            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
-            return CreateTestCase(descriptor);
+            _logger.LogWarning($"Could not find source location for test {testcase.FullyQualifiedName}, executable: {_executable}");
+            return testcase;
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)

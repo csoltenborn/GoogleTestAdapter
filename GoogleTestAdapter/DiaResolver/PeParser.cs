@@ -144,7 +144,8 @@ namespace GoogleTestAdapter.DiaResolver
                 var directoryEntry = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, NativeMethods.IMAGE_DIRECTORY_ENTRY_IMPORT, &size);
                 if (directoryEntry == null)
                 {
-                    logger.DebugWarning($"Error while parsing imports of {executable}: {Win32Utils.GetLastWin32Error()}");
+                    // .net executables does not have native debug symbols.
+                    //logger.DebugWarning($"Error while parsing imports of {executable}: {Win32Utils.GetLastWin32Error()}");
                     return;
                 }
 

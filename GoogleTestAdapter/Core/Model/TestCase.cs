@@ -5,13 +5,19 @@ namespace GoogleTestAdapter.Model
 {
     public class TestCase
     {
-        public string Source { get; }
+        public enum TestTypes { Simple, Parameterized, TypeParameterized }
+
+        public string Suite { get; }
+        public string Source;
 
         public string FullyQualifiedName { get; }
+        public string Name;
         public string DisplayName { get; }
 
-        public string CodeFilePath { get; }
-        public int LineNumber { get; }
+        public string CodeFilePath = string.Empty;
+        public int LineNumber = 0;
+
+        public TestTypes TestType;
 
         public List<Trait> Traits { get; } = new List<Trait>();
         public List<TestProperty> Properties { get; } = new List<TestProperty>();
@@ -28,6 +34,15 @@ namespace GoogleTestAdapter.Model
         public bool IsExitCodeTestCase
         {
             get { return !Properties.Any(p => p is TestCaseMetaDataProperty); }
+        }
+
+        public TestCase(string suite, string fullyQualifiedName, string source, string name, string displayName)
+        {
+            Suite = suite;
+            FullyQualifiedName = fullyQualifiedName;
+            Source = source;
+            Name = name;
+            DisplayName = displayName;
         }
 
         public override bool Equals(object obj)

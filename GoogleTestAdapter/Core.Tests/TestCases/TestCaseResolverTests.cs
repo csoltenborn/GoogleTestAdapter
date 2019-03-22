@@ -2,6 +2,7 @@
 using FluentAssertions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -65,13 +66,15 @@ namespace GoogleTestAdapter.TestCases
 
         private void AssertCorrectTestLocationIsFound(string suite, uint line)
         {
-            var descriptor = new TestCaseDescriptor(
-                suite, 
-                "Test", 
-                $"{suite}.Test", 
+            var testcase = new TestCase(
+                suite,
                 $"{suite}.Test",
-                TestCaseDescriptor.TestTypes.Simple);
-            var signatures = new MethodSignatureCreator().GetTestMethodSignatures(descriptor);
+                "",
+                "Test",
+                $"{suite}.Test")
+            { TestType = TestCase.TestTypes.Simple };
+
+            var signatures = new MethodSignatureCreator().GetTestMethodSignatures(testcase);
             var resolver = new TestCaseResolver(TestResources.Tests_ReleaseX64, 
                 new DefaultDiaResolverFactory(), MockOptions.Object, _fakeLogger);
 

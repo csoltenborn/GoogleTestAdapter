@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
+using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -21,7 +22,7 @@ namespace GoogleTestAdapter.TestCases
                 "  MyTestCase"
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -30,7 +31,7 @@ namespace GoogleTestAdapter.TestCases
 
             descriptors[0].DisplayName.Should().Be("MySuite.MyTestCase");
             descriptors[0].FullyQualifiedName.Should().Be("MySuite.MyTestCase");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Simple);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.Simple);
         }
 
         [TestMethod]
@@ -43,7 +44,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0  # GetParam() = (1,)",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -51,7 +52,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("Simple/0");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");
             descriptors[0].DisplayName.Should().Be("InstantiationName/ParameterizedTests.Simple/0 [(1,)]");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.Parameterized);
         }
 
         [TestMethod]
@@ -64,7 +65,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Name/NamedTest  # GetParam() = 0000023AD11C0C20"
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -72,7 +73,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("Name/NamedTest");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterisedTests.Name/NamedTest");
             descriptors[0].DisplayName.Should().Be("InstantiationName/ParameterisedTests.Name/NamedTest [0000023AD11C0C20]");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.Parameterized);
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -93,7 +94,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("TypedTests/0.CanIterate");
             descriptors[0].DisplayName.Should().Be("TypedTests/0.CanIterate<std::vector<int,std::allocator<int> > >");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.TypeParameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.TypeParameterized);
         }
 
         [TestMethod]
@@ -107,7 +108,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -115,7 +116,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("TypedTests/0.CanIterate");
             descriptors[0].DisplayName.Should().Be("TypedTests/0.CanIterate<std::tuple<my_struct const ,gsl::span<my_class const ,-1> > >");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.TypeParameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.TypeParameterized);
         }
 
         [TestMethod]
@@ -128,7 +129,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -136,7 +137,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("Arr/TypeParameterizedTests/1.CanIterate");
             descriptors[0].DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanIterate<MyStrangeArray>");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.TypeParameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.TypeParameterized);
         }
 
         [TestMethod]
@@ -149,7 +150,7 @@ namespace GoogleTestAdapter.TestCases
                 "  CanIterate",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -157,7 +158,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("Arr/TypeParameterizedTests/1.CanIterate");
             descriptors[0].DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanIterate");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.TypeParameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.TypeParameterized);
         }
 
         [TestMethod]
@@ -171,7 +172,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0  # GetParam() = (1,)",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -179,7 +180,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("Simple/0");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");
             descriptors[0].DisplayName.Should().Be("InstantiationName::ParameterizedTests.Simple::0 [(1,)]");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.Parameterized);
         }
 
         [TestMethod]
@@ -193,7 +194,7 @@ namespace GoogleTestAdapter.TestCases
                 "  Simple/0",
             };
 
-            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+            IList<TestCase> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
             descriptors.Should().ContainSingle();
@@ -201,7 +202,7 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].Name.Should().Be("Simple/0");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");
             descriptors[0].DisplayName.Should().Be("InstantiationName::ParameterizedTests.Simple::0");
-            descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+            descriptors[0].TestType.Should().Be(TestCase.TestTypes.Parameterized);
         }
 
     }

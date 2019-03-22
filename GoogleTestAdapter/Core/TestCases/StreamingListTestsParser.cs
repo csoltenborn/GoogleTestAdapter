@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoogleTestAdapter.Model;
+using System;
 using System.Text.RegularExpressions;
 
 namespace GoogleTestAdapter.TestCases
@@ -21,30 +22,56 @@ namespace GoogleTestAdapter.TestCases
             _testNameSeparator = testNameSeparator;
         }
 
-        public class TestCaseDescriptorCreatedEventArgs : EventArgs
+        public class TestCaseCreatedEventArgs : EventArgs
         {
-            public TestCaseDescriptor TestCaseDescriptor { get; set; }
+            public TestCase TestCase { get; set; }
         }
 
-        public event EventHandler<TestCaseDescriptorCreatedEventArgs> TestCaseDescriptorCreated;
+        public event EventHandler<TestCaseCreatedEventArgs> TestCaseCreated;
+
+        public static Regex matchLocationLine = new Regex("^ *<loc>(.*)\\((\\d+)\\)");
+
+        /// <summary>
+        /// Source code location / line position where particular test resides.
+        /// </summary>
+        String _currentSource = null;
+        int _currentLineNumber;
 
 
-        public void ReportLine(string line)
+        public void ReportLine(string _line)
         {
-            string trimmedLine = line.Trim('.', '\n', '\r');
-            if (trimmedLine.StartsWith("  "))
+            string line = _line.Trim('.', '\n', '\r');
+
+            var m = matchLocationLine.Match(line);
+            if (m.Success)
             {
-                TestCaseDescriptor descriptor = CreateDescriptor(_currentSuite, trimmedLine.Substring(2));
-                TestCaseDescriptorCreated?.Invoke(this,
-                    new TestCaseDescriptorCreatedEventArgs {TestCaseDescriptor = descriptor});
+                _currentSource = m.Groups[1].Value;
+                if (!Int32.TryParse(m.Groups[2].Value, out _currentLineNumber))
+                    _currentLineNumber = 1;
+
+                return;
+            }
+            
+            if (line.StartsWith("  ", StringComparison.Ordinal))
+            {
+                TestCase testcase = CreateTestCase(_currentSuite, line.Substring(2));
+                if (_currentSource != null)
+                {
+                    testcase.CodeFilePath = _currentSource;
+                    testcase.LineNumber = _currentLineNumber;
+                }
+
+                TestCaseCreated?.Invoke(this, new TestCaseCreatedEventArgs {TestCase = testcase});
+                _currentSource = null;
+                _currentLineNumber = 1;
             }
             else
             {
-                _currentSuite = trimmedLine;
+                _currentSuite = line;
             }
         }
 
-        private TestCaseDescriptor CreateDescriptor(string suiteLine, string testCaseLine)
+        private TestCase CreateTestCase(string suiteLine, string testCaseLine)
         {
             Match suiteMatch = SuiteRegex.Match(suiteLine);
             string suite = suiteMatch.Groups[1].Value;
@@ -60,13 +87,13 @@ namespace GoogleTestAdapter.TestCases
             if (!string.IsNullOrEmpty(_testNameSeparator))
                 displayName = displayName.Replace("/", _testNameSeparator);
 
-            TestCaseDescriptor.TestTypes testType = TestCaseDescriptor.TestTypes.Simple;
+            TestCase.TestTypes testType = TestCase.TestTypes.Simple;
             if (string.IsNullOrWhiteSpace(typeParam) ? IsParamRegexPreNamedParameters.IsMatch(suite): IsParamRegex.IsMatch(suite))
-                testType = TestCaseDescriptor.TestTypes.TypeParameterized;
+                testType = TestCase.TestTypes.TypeParameterized;
             else if (string.IsNullOrWhiteSpace(param) ? IsParamRegexPreNamedParameters.IsMatch(name) : IsParamRegex.IsMatch(name))
-                testType = TestCaseDescriptor.TestTypes.Parameterized;
+                testType = TestCase.TestTypes.Parameterized;
 
-            return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType);
+            return new TestCase(suite, fullyQualifiedName, null, name, displayName) { TestType = testType };
         }
 
         private static string GetDisplayName(string fullyQalifiedName, string typeParam, string param)

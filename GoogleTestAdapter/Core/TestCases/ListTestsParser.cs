@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Model;
 
 namespace GoogleTestAdapter.TestCases
 {
@@ -13,18 +14,18 @@ namespace GoogleTestAdapter.TestCases
             _testNameSeparator = testNameSeparator;
         }
 
-        public IList<TestCaseDescriptor> ParseListTestsOutput(IEnumerable<string> consoleOutput)
+        public IList<TestCase> ParseListTestsOutput(IEnumerable<string> consoleOutput)
         {
-            var testCaseDescriptors = new List<TestCaseDescriptor>();
+            var testCases = new List<TestCase>();
 
             var actualParser = new StreamingListTestsParser(_testNameSeparator);
-            actualParser.TestCaseDescriptorCreated += (sender, args) => testCaseDescriptors.Add(args.TestCaseDescriptor);
+            actualParser.TestCaseCreated += (sender, args) => testCases.Add(args.TestCase);
 
             foreach (string line in consoleOutput)
             {
                 actualParser.ReportLine(line);
             }
-            return testCaseDescriptors;
+            return testCases;
         }
 
     }
