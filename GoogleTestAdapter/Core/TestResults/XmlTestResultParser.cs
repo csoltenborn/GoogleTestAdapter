@@ -181,6 +181,7 @@ namespace GoogleTestAdapter.TestResults
                         testResult.ErrorStackTrace = parser.ErrorStackTrace;
                     }
                     break;
+                case "skipped":
                 case "notrun":
                     testResult.Outcome = TestOutcome.Skipped;
                     break;
