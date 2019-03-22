@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             IntPtr pDebugEngine = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(Guid)));
             try
             {
-                Marshal.StructureToPtr(VSConstants.DebugEnginesGuids.NativeOnly_guid, pDebugEngine, false);
+                Marshal.StructureToPtr(VSConstants.DebugEnginesGuids.ManagedAndNative_guid, pDebugEngine, false);
 
                 var debugTarget = new VsDebugTargetInfo4
                 {
