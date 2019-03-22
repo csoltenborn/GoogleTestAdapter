@@ -14,6 +14,7 @@ namespace GoogleTestAdapter.TestResults
         private static readonly Regex ParseRegex;
         private static readonly Regex ScopedTraceRegex;
         private static readonly Regex ScopedTraceStartRegex;
+        private static readonly Regex callStackRegex;
 
         static ErrorMessageParser()
         {
@@ -32,6 +33,8 @@ namespace GoogleTestAdapter.TestResults
             ScopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.IgnoreCase);
             ScopedTraceStartRegex
                 = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            callStackRegex = new Regex(@"^(.*)[\r\n]+call stack:\s*(.*)$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         }
 
         public string ErrorMessage { get; private set; }
@@ -136,6 +139,36 @@ namespace GoogleTestAdapter.TestResults
 
         private void CreateErrorMessageAndStacktrace(ref string errorMessage, out string stackTrace, int msgId = 0)
         {
+            //
+            // C# style reporting:
+            //
+            // <error message line 1>
+            // <error message line 2>
+            // <error message line 3>
+            // ...
+            // call stack:
+            // file(line): error message stack 1
+            // file(line): error message stack 2
+            // ...
+            Match cstackMatch = callStackRegex.Match(errorMessage);
+            if (cstackMatch.Success)
+            {
+                errorMessage = cstackMatch.Groups[1].ToString().Trim();
+                String callStackText = cstackMatch.Groups[2].ToString();
+
+                stackTrace = "";
+
+                MatchCollection matches = ScopedTraceRegex.Matches(callStackText);
+                foreach (Match traceMatch in matches)
+                {
+                    String file = traceMatch.Groups[1].Value;
+                    String line = traceMatch.Groups[2].Value;
+                    String traceMessage = traceMatch.Groups[3].Value.Trim();
+                    stackTrace += CreateStackTraceEntry(traceMessage, file, line);
+                }
+                return;
+            }
+
             Match match = ParseRegex.Match(errorMessage);
             if (!match.Success)
             {
