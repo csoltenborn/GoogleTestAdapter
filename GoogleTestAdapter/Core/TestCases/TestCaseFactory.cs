@@ -203,7 +203,7 @@ namespace GoogleTestAdapter.TestCases
             }
 
             _logger.LogWarning($"Could not find source location for test {testcase.FullyQualifiedName}, executable: {_executable}");
-            return testcase;
+            return FinilizeTestCase(testcase);
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)
