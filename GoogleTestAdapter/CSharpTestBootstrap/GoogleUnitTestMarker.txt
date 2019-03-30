@@ -1,0 +1,12 @@
+﻿This is just an embedded file with text for Google Unit test to detect this as a test.
+C# by default does not support plain ascii strings - that's why in separate file.
+-------------------------------------------------------------------------------------------
+Following data is just a dummy data for google unit test detection
+-------------------------------------------------------------------------------------------
+
+This program contains tests written using Google Test. You can use the
+For more information, please read the Google Test documentation at
+Run only the tests whose name matches one of the positive patterns but
+
+--gtest_list_tests
+
