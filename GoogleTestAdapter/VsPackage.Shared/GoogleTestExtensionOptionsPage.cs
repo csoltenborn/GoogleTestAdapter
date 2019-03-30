@@ -62,6 +62,9 @@ namespace GoogleTestAdapter.VsPackage
             {
                 var componentModel = (IComponentModel) GetGlobalService(typeof(SComponentModel));
                 _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+                VsSettingsStorage.Init(this);
+
                 DoInitialize();
             }
         }
