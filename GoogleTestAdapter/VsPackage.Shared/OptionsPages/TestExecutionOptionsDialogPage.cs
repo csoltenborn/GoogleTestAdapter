@@ -103,7 +103,6 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #endregion
 
-
         #region Setup and teardown
 
         [Category(SettingsWrapper.CategorySetupAndTeardownName)]
@@ -127,7 +126,6 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _batchForTestTeardown = SettingsWrapper.OptionBatchForTestTeardownDefaultValue;
 
         #endregion
-
 
         #region Misc
 

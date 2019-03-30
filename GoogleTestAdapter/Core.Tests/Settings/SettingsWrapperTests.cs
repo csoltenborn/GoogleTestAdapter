@@ -91,28 +91,28 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder);
             string result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be("mydir");
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + " " + SettingsWrapper.TestDirPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder + " " + PlaceholderReplacer.TestDirPlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be("mydir mydir");
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder.ToLower());
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder.ToLower());
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
-            result.Should().Be(SettingsWrapper.TestDirPlaceholder.ToLower());
+            result.Should().Be(PlaceholderReplacer.TestDirPlaceholder.ToLower());
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.ThreadIdPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.ThreadIdPlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be("4711");
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder + ", " + PlaceholderReplacer.ThreadIdPlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be("mydir, 4711");
 
             MockXmlOptions.Setup(o => o.SolutionDir).Returns(@"C:\\TheSolutionDir");
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder + ", " + SettingsWrapper.SolutionDirPlaceholder + ", " + SettingsWrapper.ExecutablePlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder + ", " + PlaceholderReplacer.ThreadIdPlaceholder + ", " + PlaceholderReplacer.SolutionDirPlaceholder + ", " + PlaceholderReplacer.ExecutablePlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be(@"mydir, 4711, C:\\TheSolutionDir, SomeExecutable.exe");
         }
@@ -264,7 +264,7 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void GetPathExtension__PlaceholderIsReplaced()
         {
-            MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + SettingsWrapper.ExecutableDirPlaceholder + ";Bar");
+            MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + PlaceholderReplacer.ExecutableDirPlaceholder + ";Bar");
             string result = TheOptions.GetPathExtension(TestResources.Tests_DebugX86);
 
             // ReSharper disable once PossibleNullReferenceException
@@ -295,7 +295,7 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(o => o.PlatformName).Returns("Debug");
             MockXmlOptions.Setup(o => o.ConfigurationName).Returns("x86");
             MockXmlOptions.Setup(o => o.PathExtension).Returns(
-                $"P:{SettingsWrapper.PlatformNamePlaceholder}, C:{SettingsWrapper.ConfigurationNamePlaceholder}");
+                $"P:{PlaceholderReplacer.PlatformNamePlaceholder}, C:{PlaceholderReplacer.ConfigurationNamePlaceholder}");
 
             string result = TheOptions.GetPathExtension(TestResources.LoadTests_ReleaseX86);
 

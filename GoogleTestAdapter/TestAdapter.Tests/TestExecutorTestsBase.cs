@@ -84,7 +84,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             MockFrameworkHandle.Reset();
             SetUpMockFrameworkHandle();
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + SettingsWrapper.TestDirPlaceholder + "\"");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + PlaceholderReplacer.TestDirPlaceholder + "\"");
 
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
@@ -95,12 +95,12 @@ namespace GoogleTestAdapter.TestAdapter
         {
             TestCase testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
 
-            MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.ExecutableDirPlaceholder);
+            MockOptions.Setup(o => o.WorkingDir).Returns(PlaceholderReplacer.ExecutableDirPlaceholder);
             RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
 
             MockFrameworkHandle.Reset();
             SetUpMockFrameworkHandle();
-            MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.SolutionDirPlaceholder);
+            MockOptions.Setup(o => o.WorkingDir).Returns(PlaceholderReplacer.SolutionDirPlaceholder);
 
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
@@ -271,7 +271,7 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
-                MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\dll");
+                MockOptions.Setup(o => o.PathExtension).Returns(PlaceholderReplacer.ExecutableDirPlaceholder + @"\..\dll");
 
                 var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
                 executor.RunTests(targetExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
