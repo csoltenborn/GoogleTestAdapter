@@ -57,8 +57,8 @@ namespace GoogleTestAdapter.TestAdapter
             var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, () => settingsWrapper.TimestampOutput);
-            var regexParser = new RegexTraitParser(loggerAdapter);
-            settingsWrapper.RegexTraitParser = regexParser;
+            settingsWrapper.RegexTraitParser = new RegexTraitParser(loggerAdapter);
+            settingsWrapper.HelperFilesCache = new HelperFilesCache(loggerAdapter);
 
             LogWarningsForDeprecatedSettings(ourRunSettings, loggerAdapter);
 

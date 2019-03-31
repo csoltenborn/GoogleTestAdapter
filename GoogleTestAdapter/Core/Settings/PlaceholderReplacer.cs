@@ -34,14 +34,16 @@ namespace GoogleTestAdapter.Settings
 
         private readonly Func<string> _getSolutionDir;
         private readonly Func<IGoogleTestAdapterSettings> _getSettings;
+        private readonly HelperFilesCache _helperFilesCache;
 
         private string SolutionDir => _getSolutionDir();
         private IGoogleTestAdapterSettings Settings => _getSettings();
 
-        public PlaceholderReplacer(Func<string> getSolutionDir, Func<IGoogleTestAdapterSettings> getSettings)
+        public PlaceholderReplacer(Func<string> getSolutionDir, Func<IGoogleTestAdapterSettings> getSettings, HelperFilesCache helperFilesCache)
         {
             _getSolutionDir = getSolutionDir;
             _getSettings = getSettings;
+            _helperFilesCache = helperFilesCache;
         }
 
 
@@ -55,10 +57,12 @@ namespace GoogleTestAdapter.Settings
 
         public string ReplaceAdditionalPdbsPlaceholders(string executable, string pdb)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        ReplaceExecutablePlaceholders(pdb.Trim(), executable))));
+            pdb = ReplaceExecutablePlaceholders(pdb.Trim(), executable);
+            pdb = ReplacePlatformAndConfigurationPlaceholders(pdb);
+            pdb = ReplaceSolutionDirPlaceholder(pdb);
+            pdb = ReplaceEnvironmentVariables(pdb);
+            pdb = ReplaceHelperFileSettings(pdb, executable);
+            return pdb;
         }
 
 
@@ -72,22 +76,23 @@ namespace GoogleTestAdapter.Settings
                                                      DescriptionOfThreadIdPlaceholder + TestExecutionOnly + "\n" + 
                                                      DescriptionOfEnvVarPlaceholders;
 
-        public string ReplaceWorkingDirPlaceholdersForDiscovery(string executable, string workingDir)
+        public string ReplaceWorkingDirPlaceholdersForDiscovery(string workingDir, string executable)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        RemoveTestDirAndThreadIdPlaceholders(
-                            ReplaceExecutablePlaceholders(workingDir, executable)))));
+            workingDir = ReplaceExecutablePlaceholders(workingDir, executable);
+            workingDir = RemoveTestDirAndThreadIdPlaceholders(workingDir);
+            workingDir = ReplacePlatformAndConfigurationPlaceholders(workingDir);
+            workingDir = ReplaceSolutionDirPlaceholder(workingDir);
+            workingDir = ReplaceEnvironmentVariables(workingDir);
+            workingDir = ReplaceHelperFileSettings(workingDir, executable);
+            return workingDir;
         }
 
-        public string ReplaceWorkingDirPlaceholdersForExecution(string executable, string workingDir, string testDirectory, int threadId)
+        public string ReplaceWorkingDirPlaceholdersForExecution(string workingDir, string executable,
+            string testDirectory, int threadId)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        ReplaceExecutablePlaceholders(
-                            ReplaceTestDirAndThreadIdPlaceholders(workingDir, testDirectory, threadId), executable))));
+            workingDir = ReplaceTestDirAndThreadIdPlaceholders(workingDir, testDirectory, threadId);
+            workingDir = ReplaceWorkingDirPlaceholdersForDiscovery(workingDir, executable);
+            return workingDir;
         }
 
 
@@ -101,10 +106,12 @@ namespace GoogleTestAdapter.Settings
 
         public string ReplacePathExtensionPlaceholders(string pathExtension, string executable)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        ReplaceExecutablePlaceholders(pathExtension, executable))));
+            pathExtension = ReplaceExecutablePlaceholders(pathExtension, executable);
+            pathExtension = ReplacePlatformAndConfigurationPlaceholders(pathExtension);
+            pathExtension = ReplaceSolutionDirPlaceholder(pathExtension);
+            pathExtension = ReplaceEnvironmentVariables(pathExtension);
+            pathExtension = ReplaceHelperFileSettings(pathExtension, executable);
+            return pathExtension;
         }
 
 
@@ -120,22 +127,23 @@ namespace GoogleTestAdapter.Settings
 
         public string ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(string additionalTestExecutionParam, string executable)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        RemoveTestDirAndThreadIdPlaceholders(
-                            ReplaceExecutablePlaceholders(additionalTestExecutionParam, executable)))));
+            additionalTestExecutionParam = ReplaceExecutablePlaceholders(additionalTestExecutionParam, executable);
+            additionalTestExecutionParam = RemoveTestDirAndThreadIdPlaceholders(additionalTestExecutionParam);
+            additionalTestExecutionParam = ReplacePlatformAndConfigurationPlaceholders(additionalTestExecutionParam);
+            additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam);
+            additionalTestExecutionParam = ReplaceEnvironmentVariables(additionalTestExecutionParam);
+            additionalTestExecutionParam = ReplaceHelperFileSettings(additionalTestExecutionParam, executable);
+            return additionalTestExecutionParam;
         }
 
         public string ReplaceAdditionalTestExecutionParamPlaceholdersForExecution(string additionalTestExecutionParam, string executable, string testDirectory, int threadId)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        ReplaceExecutablePlaceholders(
-                            ReplaceTestDirAndThreadIdPlaceholders(additionalTestExecutionParam, testDirectory, threadId), executable))));
+            additionalTestExecutionParam =
+                ReplaceTestDirAndThreadIdPlaceholders(additionalTestExecutionParam, testDirectory, threadId);
+            additionalTestExecutionParam =
+                ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(additionalTestExecutionParam, executable);
+            return additionalTestExecutionParam;
         }
-
 
 
         public const string BatchesPlaceholders = "Placeholders:\n" + 
@@ -146,20 +154,13 @@ namespace GoogleTestAdapter.Settings
                                                   DescriptionOfThreadIdPlaceholder + "\n" + 
                                                   DescriptionOfEnvVarPlaceholders;
 
-        public string ReplaceBatchForTestSetupPlaceholders(string batchForTestSetup, string testDirectory, int threadId)
+        public string ReplaceBatchPlaceholders(string batch, string testDirectory, int threadId)
         {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        ReplaceTestDirAndThreadIdPlaceholders(batchForTestSetup, testDirectory, threadId))));
-        }
-
-        public string ReplaceBatchForTestTeardownPlaceholders(string batchForTestTeardown, string testDirectory, int threadId)
-        {
-            return ReplaceEnvironmentVariables(
-                ReplaceSolutionDirPlaceholder(
-                    ReplacePlatformAndConfigurationPlaceholders(
-                        ReplaceTestDirAndThreadIdPlaceholders(batchForTestTeardown, testDirectory, threadId))));
+            batch = ReplaceTestDirAndThreadIdPlaceholders(batch, testDirectory, threadId);
+            batch = ReplacePlatformAndConfigurationPlaceholders(batch);
+            batch = ReplaceSolutionDirPlaceholder(batch);
+            batch = ReplaceEnvironmentVariables(batch);
+            return batch;
         }
 
 
@@ -238,6 +239,17 @@ namespace GoogleTestAdapter.Settings
             return theString
                 .Replace(TestDirPlaceholder, testDirectory)
                 .Replace(ThreadIdPlaceholder, threadId);
+        }
+
+        private string ReplaceHelperFileSettings(string theString, string executable)
+        {
+            var replacementMap = _helperFilesCache.GetReplacementsMap(executable);
+            foreach (var nameValuePair in replacementMap)
+            {
+                theString = theString.Replace($"$(GTA:{nameValuePair.Key})", nameValuePair.Value);
+            }
+
+            return theString;
         }
 
     }

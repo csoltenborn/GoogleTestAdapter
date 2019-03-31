@@ -13,11 +13,24 @@ namespace GoogleTestAdapter.Settings
     {
         private readonly object _lock = new object();
 
-        public RegexTraitParser RegexTraitParser { private get; set; }
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
         private readonly string _solutionDir;
-        private readonly PlaceholderReplacer _placeholderReplacer;
         private readonly SettingsPrinter _settingsPrinter;
+
+        public RegexTraitParser RegexTraitParser { private get; set; }
+
+        private HelperFilesCache _cache;
+        public HelperFilesCache HelperFilesCache
+        {
+            private get { return _cache; }
+            set
+            {
+                _cache = value;
+                _placeholderReplacer = new PlaceholderReplacer(() => SolutionDir, () => _currentSettings, HelperFilesCache);
+            }
+        }
+
+        private PlaceholderReplacer _placeholderReplacer;
 
         private int _nrOfRunningExecutions;
         private string _currentExecutable;
@@ -33,13 +46,16 @@ namespace GoogleTestAdapter.Settings
             _settingsContainer = settingsContainer;
             _solutionDir = solutionDir;
             _currentSettings = _settingsContainer.SolutionSettings;
-            _placeholderReplacer = new PlaceholderReplacer(() => SolutionDir, () => _currentSettings);
             _settingsPrinter = new SettingsPrinter(this);
         }
 
         public virtual SettingsWrapper Clone()
         {
-            return new SettingsWrapper(_settingsContainer, _solutionDir) { RegexTraitParser = RegexTraitParser };
+            return new SettingsWrapper(_settingsContainer, _solutionDir)
+            {
+                RegexTraitParser = RegexTraitParser,
+                HelperFilesCache = HelperFilesCache
+            };
         }
 
         public override string ToString()
@@ -302,12 +318,12 @@ namespace GoogleTestAdapter.Settings
 
         public string GetWorkingDirForExecution(string executable, string testDirectory, int threadId)
         {
-            return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForExecution(executable, WorkingDir, testDirectory, threadId);
+            return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForExecution(WorkingDir, executable, testDirectory, threadId);
         }
 
         public string GetWorkingDirForDiscovery(string executable)
         {
-            return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery(executable, WorkingDir);
+            return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery(WorkingDir, executable);
         }
 
         public const string OptionPathExtension = "PATH extension";
@@ -346,7 +362,7 @@ namespace GoogleTestAdapter.Settings
         public virtual string BatchForTestSetup => _currentSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
         public string GetBatchForTestSetup(string testDirectory, int threadId)
-            => _placeholderReplacer.ReplaceBatchForTestSetupPlaceholders(BatchForTestSetup, testDirectory, threadId);
+            => _placeholderReplacer.ReplaceBatchPlaceholders(BatchForTestSetup, testDirectory, threadId);
 
 
         public const string OptionBatchForTestTeardown = "Test teardown batch file";
@@ -357,7 +373,7 @@ namespace GoogleTestAdapter.Settings
         public virtual string BatchForTestTeardown => _currentSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
         public string GetBatchForTestTeardown(string testDirectory, int threadId)
-            => _placeholderReplacer.ReplaceBatchForTestTeardownPlaceholders(BatchForTestTeardown, testDirectory,
+            => _placeholderReplacer.ReplaceBatchPlaceholders(BatchForTestTeardown, testDirectory,
                 threadId);
 
 
