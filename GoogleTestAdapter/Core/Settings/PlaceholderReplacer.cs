@@ -58,8 +58,8 @@ namespace GoogleTestAdapter.Settings
         public string ReplaceAdditionalPdbsPlaceholders(string executable, string pdb)
         {
             pdb = ReplaceExecutablePlaceholders(pdb.Trim(), executable);
-            pdb = ReplacePlatformAndConfigurationPlaceholders(pdb);
-            pdb = ReplaceSolutionDirPlaceholder(pdb);
+            pdb = ReplacePlatformAndConfigurationPlaceholders(pdb, executable);
+            pdb = ReplaceSolutionDirPlaceholder(pdb, executable);
             pdb = ReplaceEnvironmentVariables(pdb);
             pdb = ReplaceHelperFileSettings(pdb, executable);
             return pdb;
@@ -80,8 +80,8 @@ namespace GoogleTestAdapter.Settings
         {
             workingDir = ReplaceExecutablePlaceholders(workingDir, executable);
             workingDir = RemoveTestDirAndThreadIdPlaceholders(workingDir);
-            workingDir = ReplacePlatformAndConfigurationPlaceholders(workingDir);
-            workingDir = ReplaceSolutionDirPlaceholder(workingDir);
+            workingDir = ReplacePlatformAndConfigurationPlaceholders(workingDir, executable);
+            workingDir = ReplaceSolutionDirPlaceholder(workingDir, executable);
             workingDir = ReplaceEnvironmentVariables(workingDir);
             workingDir = ReplaceHelperFileSettings(workingDir, executable);
             return workingDir;
@@ -107,8 +107,8 @@ namespace GoogleTestAdapter.Settings
         public string ReplacePathExtensionPlaceholders(string pathExtension, string executable)
         {
             pathExtension = ReplaceExecutablePlaceholders(pathExtension, executable);
-            pathExtension = ReplacePlatformAndConfigurationPlaceholders(pathExtension);
-            pathExtension = ReplaceSolutionDirPlaceholder(pathExtension);
+            pathExtension = ReplacePlatformAndConfigurationPlaceholders(pathExtension, executable);
+            pathExtension = ReplaceSolutionDirPlaceholder(pathExtension, executable);
             pathExtension = ReplaceEnvironmentVariables(pathExtension);
             pathExtension = ReplaceHelperFileSettings(pathExtension, executable);
             return pathExtension;
@@ -129,8 +129,8 @@ namespace GoogleTestAdapter.Settings
         {
             additionalTestExecutionParam = ReplaceExecutablePlaceholders(additionalTestExecutionParam, executable);
             additionalTestExecutionParam = RemoveTestDirAndThreadIdPlaceholders(additionalTestExecutionParam);
-            additionalTestExecutionParam = ReplacePlatformAndConfigurationPlaceholders(additionalTestExecutionParam);
-            additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam);
+            additionalTestExecutionParam = ReplacePlatformAndConfigurationPlaceholders(additionalTestExecutionParam, executable);
+            additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam, executable);
             additionalTestExecutionParam = ReplaceEnvironmentVariables(additionalTestExecutionParam);
             additionalTestExecutionParam = ReplaceHelperFileSettings(additionalTestExecutionParam, executable);
             return additionalTestExecutionParam;
@@ -164,49 +164,34 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        private string ReplaceSolutionDirPlaceholder(string theString)
+        private string ReplaceSolutionDirPlaceholder(string theString, string executable = null)
         {
-            if (string.IsNullOrWhiteSpace(theString))
-            {
-                return "";
-            }
-
-            return string.IsNullOrWhiteSpace(SolutionDir) 
-                ? theString.Replace(SolutionDirPlaceholder, "")
-                : theString.Replace(SolutionDirPlaceholder, SolutionDir);
+            return string.IsNullOrWhiteSpace(theString)
+                ? ""
+                : ReplaceValueWithHelperFile(theString, SolutionDirPlaceholder, SolutionDir,
+                    executable, nameof(IGoogleTestAdapterSettings.SolutionDir));
         }
 
-        private string ReplacePlatformAndConfigurationPlaceholders(string theString)
+        private string ReplacePlatformAndConfigurationPlaceholders(string theString, string executable = null)
         {
             if (string.IsNullOrWhiteSpace(theString))
-            {
                 return "";
-            }
 
-            string result = theString;
-
-            result = string.IsNullOrWhiteSpace(Settings.PlatformName) 
-                ? result.Replace(PlatformNamePlaceholder, "")
-                : result.Replace(PlatformNamePlaceholder, Settings.PlatformName);
-            result = string.IsNullOrWhiteSpace(Settings.ConfigurationName) 
-                ? result.Replace(ConfigurationNamePlaceholder, "")
-                : result.Replace(ConfigurationNamePlaceholder, Settings.ConfigurationName);
-
-            return result;
+            theString = ReplaceValueWithHelperFile(theString, PlatformNamePlaceholder, Settings.PlatformName, 
+                executable, nameof(IGoogleTestAdapterSettings.PlatformName));
+            theString = ReplaceValueWithHelperFile(theString, ConfigurationNamePlaceholder, Settings.ConfigurationName, 
+                executable, nameof(IGoogleTestAdapterSettings.ConfigurationName));
+            return theString;
         }
 
         private string ReplaceExecutablePlaceholders(string theString, string executable)
         {
-            if (string.IsNullOrWhiteSpace(theString))
-            {
-                return "";
-            }
-
-            // ReSharper disable once PossibleNullReferenceException
-            string executableDir = new FileInfo(executable).Directory.FullName;
-            return theString
-                .Replace(ExecutableDirPlaceholder, executableDir)
-                .Replace(ExecutablePlaceholder, executable);
+            return string.IsNullOrWhiteSpace(theString)
+                ? ""
+                : theString
+                    // ReSharper disable once PossibleNullReferenceException
+                    .Replace(ExecutableDirPlaceholder, new FileInfo(executable).Directory.FullName)
+                    .Replace(ExecutablePlaceholder, executable);
         }
 
         private string ReplaceTestDirAndThreadIdPlaceholders(string theString, string testDirectory, int threadId)
@@ -221,24 +206,18 @@ namespace GoogleTestAdapter.Settings
 
         private string ReplaceEnvironmentVariables(string theString)
         {
-            if (string.IsNullOrWhiteSpace(theString))
-            {
-                return "";
-            }
-
-            return Environment.ExpandEnvironmentVariables(theString);
+            return string.IsNullOrWhiteSpace(theString) 
+                ? "" 
+                : Environment.ExpandEnvironmentVariables(theString);
         }
 
         private string ReplaceTestDirAndThreadIdPlaceholders(string theString, string testDirectory, string threadId)
         {
-            if (string.IsNullOrWhiteSpace(theString))
-            {
-                return "";
-            }
-
-            return theString
-                .Replace(TestDirPlaceholder, testDirectory)
-                .Replace(ThreadIdPlaceholder, threadId);
+            return string.IsNullOrWhiteSpace(theString)
+                ? ""
+                : theString
+                    .Replace(TestDirPlaceholder, testDirectory)
+                    .Replace(ThreadIdPlaceholder, threadId);
         }
 
         private string ReplaceHelperFileSettings(string theString, string executable)
@@ -250,6 +229,23 @@ namespace GoogleTestAdapter.Settings
             }
 
             return theString;
+        }
+
+        private string ReplaceValueWithHelperFile(string theString, string placeholder, string value, string executable,
+            string settingName)
+        {
+            if (string.IsNullOrWhiteSpace(value) && executable != null)
+            {
+                var map = _helperFilesCache.GetReplacementsMap(executable);
+                if (map.TryGetValue(settingName, out string helperFileValue))
+                {
+                    value = helperFileValue;
+                }
+            }
+
+            return string.IsNullOrWhiteSpace(value)
+                ? theString.Replace(placeholder, "")
+                : theString.Replace(placeholder, value);
         }
 
     }

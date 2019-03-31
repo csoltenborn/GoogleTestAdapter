@@ -32,6 +32,11 @@ namespace GoogleTestAdapter.Settings
             }
         }
 
+        private string GetHelperFile(string executable)
+        {
+            return $"{executable}{HelperFileEnding}";
+        }
+
         private IDictionary<string, string> LoadReplacementsMap(string executable)
         {
             string helperFile = GetHelperFile(executable);
@@ -57,17 +62,12 @@ namespace GoogleTestAdapter.Settings
                 int index = setting.IndexOf('=');
                 if (index > 0)
                 {
-                    string name = setting.Substring(0, index);
+                    string placeholder = setting.Substring(0, index);
                     string value = setting.Substring(index + 1, setting.Length - index);
-                    replacementMap.Add(name, value);
+                    replacementMap.Add(placeholder, value);
                 }
             }
             return replacementMap;
-        }
-
-        private string GetHelperFile(string executable)
-        {
-            return $"{executable}{HelperFileEnding}";
         }
     }
 }
