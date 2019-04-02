@@ -304,7 +304,7 @@ namespace GoogleTestAdapter.Settings
         public virtual string AdditionalPdbs => _currentSettings.AdditionalPdbs ?? OptionAdditionalPdbsDefaultValue;
         public IEnumerable<string> GetAdditionalPdbs(string executable)
             => Utils.SplitAdditionalPdbs(AdditionalPdbs)
-                .Select(p => _placeholderReplacer.ReplaceAdditionalPdbsPlaceholders(executable, p));
+                .Select(p => _placeholderReplacer.ReplaceAdditionalPdbsPlaceholders(p, executable));
 
 
         public const string OptionWorkingDir = "Working directory";

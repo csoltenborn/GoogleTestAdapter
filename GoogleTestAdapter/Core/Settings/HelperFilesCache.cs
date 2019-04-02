@@ -13,6 +13,10 @@ namespace GoogleTestAdapter.Settings
         private readonly ILogger _logger;
         private readonly IDictionary<string, IDictionary<string, string>> _files2ReplacementMap = new Dictionary<string, IDictionary<string, string>>();
 
+        // public for mocking
+        // ReSharper disable once UnusedMember.Global
+        public HelperFilesCache() {}
+
         public HelperFilesCache(ILogger logger)
         {
             _logger = logger;
@@ -63,7 +67,7 @@ namespace GoogleTestAdapter.Settings
                 if (index > 0)
                 {
                     string placeholder = setting.Substring(0, index);
-                    string value = setting.Substring(index + 1, setting.Length - index);
+                    string value = setting.Substring(index + 1, setting.Length - index - 1);
                     replacementMap.Add(placeholder, value);
                 }
             }

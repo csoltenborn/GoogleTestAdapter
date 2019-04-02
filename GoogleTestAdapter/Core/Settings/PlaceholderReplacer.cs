@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Settings
                                                          DescriptionOfExecutablePlaceHolder + "\n" + 
                                                          DescriptionOfEnvVarPlaceholders;
 
-        public string ReplaceAdditionalPdbsPlaceholders(string executable, string pdb)
+        public string ReplaceAdditionalPdbsPlaceholders(string pdb, string executable)
         {
             pdb = ReplaceExecutablePlaceholders(pdb.Trim(), executable);
             pdb = ReplacePlatformAndConfigurationPlaceholders(pdb, executable);
