@@ -17,6 +17,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.VsPackage.GTA.Helpers;
 using Microsoft.VisualStudio.AsyncPackageHelpers;
 using VsPackage.Shared.Settings;
@@ -109,8 +110,13 @@ namespace GoogleTestAdapter.VsPackage
                 (TestExecutionOptionsDialogPage) GetDialogPage(typeof(TestExecutionOptionsDialogPage));
             _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
-            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, new ActivityLogLogger(this, () => true));
-            optionsUpdater.UpdateIfNecessary();
+            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, _generalOptions, new ActivityLogLogger(this, () => OutputMode.Verbose));
+            if (optionsUpdater.UpdateIfNecessary())
+            {
+                _testDiscoveryOptions.SaveSettingsToStorage();
+                _testExecutionOptions.SaveSettingsToStorage();
+                _generalOptions.SaveSettingsToStorage();
+            }
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
@@ -279,7 +285,7 @@ namespace GoogleTestAdapter.VsPackage
 
         private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
         {
-            var logger = new ActivityLogLogger(this, () => true);
+            var logger = new ActivityLogLogger(this, () => OutputMode.Verbose);
 
             solutionDir = platformName = configurationName = null;
             try

@@ -11,8 +11,8 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         private readonly IMessageLogger _logger;
         private readonly Func<bool> _timeStampOutput;
 
-        public VsTestFrameworkLogger(IMessageLogger logger, Func<bool> inDebugMode, Func<bool> timestampOutput)
-            : base(inDebugMode)
+        public VsTestFrameworkLogger(IMessageLogger logger, Func<OutputMode> outputMode, Func<bool> timestampOutput)
+            : base(outputMode)
         {
             _logger = logger;
             _timeStampOutput = timestampOutput;

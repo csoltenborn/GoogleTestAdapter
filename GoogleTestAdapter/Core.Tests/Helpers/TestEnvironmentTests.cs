@@ -1,4 +1,5 @@
-﻿using GoogleTestAdapter.Tests.Common;
+﻿using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -42,7 +43,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void DebugInfo_InDebugMode_ProducesInfoOnLogger()
         {
-            MockOptions.Setup(o => o.DebugMode).Returns(true);
+            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
             _environment.Logger.DebugInfo("bar");
             MockLogger.Verify(l => l.DebugInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
@@ -50,7 +51,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void DebugInfo_NotInDebugMode_DoesNotProduceLogging()
         {
-            MockOptions.Setup(o => o.DebugMode).Returns(false);
+            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Info);
             _environment.Logger.DebugInfo("bar");
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Never());
         }

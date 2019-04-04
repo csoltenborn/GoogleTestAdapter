@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using System.Xml.Serialization;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Settings
 {
@@ -62,14 +63,11 @@ namespace GoogleTestAdapter.Settings
         public virtual string TestNameSeparator { get; set; }
         public bool ShouldSerializeTestNameSeparator() { return TestNameSeparator != null; }
 
-        public virtual bool? DebugMode { get; set; }
+        public virtual OutputMode? DebugMode { get; set; }
         public bool ShouldSerializeDebugMode() { return DebugMode != null; }
 
         public virtual bool? TimestampOutput { get; set; }
         public bool ShouldSerializeTimestampOutput() { return TimestampOutput != null; }
-
-        public virtual bool? ShowReleaseNotes { get; set; }
-        public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
 
         public virtual bool? ParseSymbolInformation { get; set; }
         public bool ShouldSerializeParseSymbolInformation() { return ParseSymbolInformation != null; }

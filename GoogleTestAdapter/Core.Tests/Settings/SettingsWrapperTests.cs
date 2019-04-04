@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -199,13 +200,13 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void DebugMode__ReturnsValueOrDefault()
         {
-            MockXmlOptions.Setup(o => o.DebugMode).Returns((bool?)null);
-            bool result = TheOptions.DebugMode;
+            MockXmlOptions.Setup(o => o.DebugMode).Returns((OutputMode?)null);
+            OutputMode result = TheOptions.DebugMode;
             result.Should().Be(SettingsWrapper.OptionDebugModeDefaultValue);
 
-            MockXmlOptions.Setup(o => o.DebugMode).Returns(!SettingsWrapper.OptionDebugModeDefaultValue);
+            MockXmlOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
             result = TheOptions.DebugMode;
-            result.Should().Be(!SettingsWrapper.OptionDebugModeDefaultValue);
+            result.Should().Be(OutputMode.Verbose);
         }
 
         [TestMethod]
@@ -520,7 +521,7 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("TraitsRegexesAfter: {}");
             optionsString.Should().Contain("TestNameSeparator: ''");
             optionsString.Should().Contain("ParseSymbolInformation: True");
-            optionsString.Should().Contain("DebugMode: False");
+            optionsString.Should().Contain("DebugMode: Info");
             optionsString.Should().Contain("TimestampOutput: False");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");

@@ -15,14 +15,14 @@ namespace GoogleTestAdapter.TestAdapter
     {
         public const string GtaSettingsEnvVariable = "GTA_FALLBACK_SETTINGS";
 
-        public static void ReportErrors(ILogger logger, string phase, bool isDebugModeEnabled)
+        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode)
         {
             IList<string> errors = logger.GetMessages(Severity.Error, Severity.Warning);
             if (errors.Count == 0)
                 return;
 
             bool hasErrors = logger.GetMessages(Severity.Error).Count > 0;
-            string hint = isDebugModeEnabled
+            string hint = outputMode > OutputMode.Info
                 ? ""
                 : " (enable debug mode for more information)";
             string jointErrors = string.Join(Environment.NewLine, errors);

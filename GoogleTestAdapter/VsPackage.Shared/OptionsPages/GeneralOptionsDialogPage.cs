@@ -3,6 +3,7 @@
 using GoogleTestAdapter.Settings;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -25,12 +26,12 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionDebugMode)]
         [Description(SettingsWrapper.OptionDebugModeDescription)]
-        public bool DebugMode
+        public OutputMode DebugMode
         {
             get => _debugMode;
             set => SetAndNotify(ref _debugMode, value);
         }
-        private bool _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
+        private OutputMode _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
 
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionTimestampOutput)]

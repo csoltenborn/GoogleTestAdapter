@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,7 +34,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
-            MockOptions.Setup(o => o.DebugMode).Returns(true);
+            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
 
             var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
@@ -48,7 +49,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
-            MockOptions.Setup(o => o.DebugMode).Returns(true);
+            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
 
             var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();

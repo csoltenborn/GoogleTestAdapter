@@ -20,42 +20,50 @@ namespace VsPackage.Shared.Settings
 
         private readonly TestDiscoveryOptionsDialogPage _testDiscoveryOptions;
         private readonly TestExecutionOptionsDialogPage _testExecutionOptions;
+        private readonly GeneralOptionsDialogPage _generalOptions;
         private readonly ILogger _logger;
 
-        public OptionsUpdater(TestDiscoveryOptionsDialogPage testDiscoveryOptions, 
-            TestExecutionOptionsDialogPage testExecutionOptions, ILogger logger)
+        public OptionsUpdater(
+            TestDiscoveryOptionsDialogPage testDiscoveryOptions, 
+            TestExecutionOptionsDialogPage testExecutionOptions, 
+            GeneralOptionsDialogPage generalOptions, 
+            ILogger logger)
         {
             _testDiscoveryOptions = testDiscoveryOptions;
             _testExecutionOptions = testExecutionOptions;
+            _generalOptions = generalOptions;
             _logger = logger;
         }
 
-        public void UpdateIfNecessary()
+        public bool UpdateIfNecessary()
         {
             try
             {
-                TryUpdateIfNecessary();
+                return TryUpdateIfNecessary();
             }
             catch (Exception e)
             {
                 _logger.LogError($"Error while updating options: {e}");
+                return false;
             }
         }
 
-        private void TryUpdateIfNecessary()
+        private bool TryUpdateIfNecessary()
         {
             if (VsSettingsStorage.Instance.PropertyExists(SettingsVersion))
-                return;
+                return false;
 
             string versionString = History.Versions.Last().ToString();
             try
             {
                 VsSettingsStorage.Instance.SetString(SettingsVersion, versionString);
                 UpdateSettings();
+                return true;
             }
             catch (Exception e)
             {
                 _logger.LogError($"Exception caught while saving SettingsVersion. versionString: {versionString}. Exception:{Environment.NewLine}{e}");
+                return false;
             }
         }
 
@@ -79,6 +87,8 @@ namespace VsPackage.Shared.Settings
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.KillProcessesOnCancel), bool.Parse, out var killProcessesOnCancel)) { _testExecutionOptions.KillProcessesOnCancel = killProcessesOnCancel; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.UseNewTestExecutionFramework2), bool.Parse, out var useNewTestExecutionFramework2)) { _testExecutionOptions.UseNewTestExecutionFramework2 = useNewTestExecutionFramework2; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.WorkingDir), s => s, out var workingDir)) { _testExecutionOptions.WorkingDir = workingDir; }
+            
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(GeneralOptionsDialogPage.DebugMode), bool.Parse, out var debugMode)) { _generalOptions.DebugMode = debugMode ? OutputMode.Debug : OutputMode.Info; }
 
             GetAndDeleteValue(GeneralOptionsPage, "ShowReleaseNotes", bool.Parse, out _);
         }

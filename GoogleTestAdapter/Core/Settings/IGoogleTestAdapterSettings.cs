@@ -1,5 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using GoogleTestAdapter.Common;
+
 namespace GoogleTestAdapter.Settings
 {
 
@@ -40,7 +42,7 @@ namespace GoogleTestAdapter.Settings
         string TraitsRegexesBefore { get; set; }
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
-        bool? DebugMode { get; set; }
+        OutputMode? DebugMode { get; set; }
         bool? TimestampOutput { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
