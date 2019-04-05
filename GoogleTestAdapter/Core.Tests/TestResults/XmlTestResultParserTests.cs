@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
-            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
 
             var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001",
                 "GoogleTestSuiteName1.TestMethod_002");
-            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
 
             var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();

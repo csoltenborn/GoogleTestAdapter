@@ -132,7 +132,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void RunTests_ExternallyLinkedX86TestsInDebugMode_CorrectTestResults()
         {
             // for at least having the debug messaging code executed once
-            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
 
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
         }
@@ -166,7 +166,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
         {
             MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
-            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Info);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Info);
 
             RunAndVerifyTests(TestResources.Tests_ReleaseX64, TestResources.NrOfPassingTests, TestResources.NrOfFailingTests, 0);
 

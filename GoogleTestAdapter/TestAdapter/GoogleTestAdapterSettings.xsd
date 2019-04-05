@@ -56,8 +56,27 @@
           </xsd:restriction>
         </xsd:simpleType>
       </xsd:element>
-      <xsd:element name="DebugMode"                    minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="DebugMode"                    minOccurs="0" type="xsd:boolean">
+	      <xsd:annotation>
+		      <xsd:documentation>Deprecated - use OutputMode instead</xsd:documentation>
+	      </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OutputMode"                    minOccurs="0">
+		  <xsd:simpleType>
+			  <xsd:restriction base="xsd:string">
+				  <xsd:enumeration value ="None"/>
+				  <xsd:enumeration value ="Info"/>
+				  <xsd:enumeration value ="Debug"/>
+				  <xsd:enumeration value ="Verbose"/>
+			  </xsd:restriction>
+		  </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="TimestampOutput"              minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="ShowReleaseNotes"             minOccurs="0" type="xsd:boolean"><!-- used only by GTA -->
+	      <xsd:annotation>
+		      <xsd:documentation>Deprecated</xsd:documentation>
+	      </xsd:annotation>
+	  </xsd:element>
       <xsd:element name="ParseSymbolInformation"       minOccurs="0" type="xsd:boolean" />
       <xsd:element name="AdditionalTestExecutionParam" minOccurs="0" type="xsd:string"  />
       <xsd:element name="ParallelTestExecution"        minOccurs="0" type="xsd:boolean" />

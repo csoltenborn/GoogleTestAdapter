@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.VsPackage.GTA.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
@@ -88,9 +89,8 @@ namespace VsPackage.Shared.Settings
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.UseNewTestExecutionFramework2), bool.Parse, out var useNewTestExecutionFramework2)) { _testExecutionOptions.UseNewTestExecutionFramework2 = useNewTestExecutionFramework2; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.WorkingDir), s => s, out var workingDir)) { _testExecutionOptions.WorkingDir = workingDir; }
             
-            if (GetAndDeleteValue(GeneralOptionsPage, nameof(GeneralOptionsDialogPage.DebugMode), bool.Parse, out var debugMode)) { _generalOptions.DebugMode = debugMode ? OutputMode.Debug : OutputMode.Info; }
-
-            GetAndDeleteValue(GeneralOptionsPage, "ShowReleaseNotes", bool.Parse, out _);
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.DebugMode), bool.Parse, out var debugMode)) { _generalOptions.OutputMode = debugMode ? OutputMode.Debug : OutputMode.Info; }
+            GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.ShowReleaseNotes), bool.Parse, out _);
         }
 
         private static bool GetAndDeleteValue<T>(string optionsKey, string propertyName, Func<string, T> map, out T value)

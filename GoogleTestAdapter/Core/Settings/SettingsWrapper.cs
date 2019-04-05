@@ -160,17 +160,17 @@ namespace GoogleTestAdapter.Settings
         public virtual bool PrintTestOutput => _currentSettings.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
 
 
-        public const string OptionDebugMode = "Print debug info";
-        public const string OptionDebugModeDescription =
-            "If true, debug output will be printed to the test console.";
-        public const OutputMode OptionDebugModeDefaultValue = OutputMode.Info;
+        public const string OptionOutputMode = "Output mode";
+        public const string OptionOutputModeDescription =
+            "Controls the amount of output printed to the Tests Output window";
+        public const OutputMode OptionOutputModeDefaultValue = OutputMode.Info;
 
-        public virtual OutputMode DebugMode => _currentSettings.DebugMode ?? OptionDebugModeDefaultValue;
+        public virtual OutputMode OutputMode => _currentSettings.OutputMode ?? OptionOutputModeDefaultValue;
 
 
         public const string OptionTimestampOutput = "Timestamp output";
         public const string OptionTimestampOutputDescription =
-            "If true, a timestamp is added to test and debug output.";
+            "If true, a timestamp is added to the output.";
         public const bool OptionTimestampOutputDefaultValue = false;
 
         public virtual bool TimestampOutput => _currentSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;

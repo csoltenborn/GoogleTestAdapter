@@ -200,12 +200,12 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void DebugMode__ReturnsValueOrDefault()
         {
-            MockXmlOptions.Setup(o => o.DebugMode).Returns((OutputMode?)null);
-            OutputMode result = TheOptions.DebugMode;
-            result.Should().Be(SettingsWrapper.OptionDebugModeDefaultValue);
+            MockXmlOptions.Setup(o => o.OutputMode).Returns((OutputMode?)null);
+            OutputMode result = TheOptions.OutputMode;
+            result.Should().Be(SettingsWrapper.OptionOutputModeDefaultValue);
 
-            MockXmlOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
-            result = TheOptions.DebugMode;
+            MockXmlOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
+            result = TheOptions.OutputMode;
             result.Should().Be(OutputMode.Verbose);
         }
 
@@ -521,7 +521,7 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("TraitsRegexesAfter: {}");
             optionsString.Should().Contain("TestNameSeparator: ''");
             optionsString.Should().Contain("ParseSymbolInformation: True");
-            optionsString.Should().Contain("DebugMode: Info");
+            optionsString.Should().Contain("OutputMode: Info");
             optionsString.Should().Contain("TimestampOutput: False");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");

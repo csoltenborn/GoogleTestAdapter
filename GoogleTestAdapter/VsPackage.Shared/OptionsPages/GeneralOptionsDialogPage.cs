@@ -24,14 +24,14 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private bool _printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
 
         [Category(SettingsWrapper.CategoryOutputName)]
-        [DisplayName(SettingsWrapper.OptionDebugMode)]
-        [Description(SettingsWrapper.OptionDebugModeDescription)]
-        public OutputMode DebugMode
+        [DisplayName(SettingsWrapper.OptionOutputMode)]
+        [Description(SettingsWrapper.OptionOutputModeDescription)]
+        public OutputMode OutputMode
         {
-            get => _debugMode;
-            set => SetAndNotify(ref _debugMode, value);
+            get => _outputMode;
+            set => SetAndNotify(ref _outputMode, value);
         }
-        private OutputMode _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
+        private OutputMode _outputMode = SettingsWrapper.OptionOutputModeDefaultValue;
 
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionTimestampOutput)]

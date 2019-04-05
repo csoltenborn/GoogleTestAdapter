@@ -136,7 +136,7 @@ namespace GoogleTestAdapter.VsPackage
 
         private void InitializeDebuggerAttacherService()
         {
-            var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
+            var logger = new ActivityLogLogger(this, () => _generalOptions.OutputMode);
             var debuggerAttacher = new VsDebuggerAttacher(this);
             _debuggerAttacherServiceHost = new DebuggerAttacherServiceHost(_debuggingNamedPipeId, debuggerAttacher, logger);
             try
@@ -246,7 +246,7 @@ namespace GoogleTestAdapter.VsPackage
             return new RunSettings
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
-                DebugMode = _generalOptions.DebugMode,
+                OutputMode = _generalOptions.OutputMode,
                 TimestampOutput = _generalOptions.TimestampOutput,
                 SkipOriginCheck = _generalOptions.SkipOriginCheck,
 

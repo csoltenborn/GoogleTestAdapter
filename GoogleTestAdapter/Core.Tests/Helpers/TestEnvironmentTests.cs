@@ -43,7 +43,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void DebugInfo_InDebugMode_ProducesInfoOnLogger()
         {
-            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Verbose);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
             _environment.Logger.DebugInfo("bar");
             MockLogger.Verify(l => l.DebugInfo(It.Is<string>(s => s.Contains("bar"))), Times.Exactly(1));
         }
@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void DebugInfo_NotInDebugMode_DoesNotProduceLogging()
         {
-            MockOptions.Setup(o => o.DebugMode).Returns(OutputMode.Info);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Info);
             _environment.Logger.DebugInfo("bar");
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(s => s.Contains("bar"))), Times.Never());
         }

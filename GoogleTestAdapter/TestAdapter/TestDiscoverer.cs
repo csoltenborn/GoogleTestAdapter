@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.TestAdapter
                 _logger.LogError($"Exception while discovering tests: {e}");
             }
 
-            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.DebugMode);
+            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.OutputMode);
         }
 
         private bool IsSupportedVisualStudioVersion()

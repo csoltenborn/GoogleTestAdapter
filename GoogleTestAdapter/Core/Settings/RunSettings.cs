@@ -63,11 +63,17 @@ namespace GoogleTestAdapter.Settings
         public virtual string TestNameSeparator { get; set; }
         public bool ShouldSerializeTestNameSeparator() { return TestNameSeparator != null; }
 
-        public virtual OutputMode? DebugMode { get; set; }
+        public virtual bool? DebugMode { get; set; }
         public bool ShouldSerializeDebugMode() { return DebugMode != null; }
+
+        public virtual OutputMode? OutputMode { get; set; }
+        public bool ShouldSerializeOutputMode() { return OutputMode != null; }
 
         public virtual bool? TimestampOutput { get; set; }
         public bool ShouldSerializeTimestampOutput() { return TimestampOutput != null; }
+
+        public virtual bool? ShowReleaseNotes { get; set; }
+        public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
 
         public virtual bool? ParseSymbolInformation { get; set; }
         public bool ShouldSerializeParseSymbolInformation() { return ParseSymbolInformation != null; }
