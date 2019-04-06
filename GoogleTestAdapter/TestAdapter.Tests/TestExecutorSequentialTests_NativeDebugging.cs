@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -15,7 +16,7 @@ namespace GoogleTestAdapter.TestAdapter
         public override void SetUp()
         {
             base.SetUp();
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.Native);
 
             MockRunContext.Setup(c => c.IsBeingDebugged).Returns(true);
             SetUpMockFrameworkHandle();

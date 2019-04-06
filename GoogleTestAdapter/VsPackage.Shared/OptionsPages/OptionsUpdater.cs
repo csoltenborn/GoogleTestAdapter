@@ -86,9 +86,9 @@ namespace VsPackage.Shared.Settings
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.ExitCodeTestCase), s => s, out var exitCodeTestCase)) { _testExecutionOptions.ExitCodeTestCase = exitCodeTestCase; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.PathExtension), s => s, out var pathExtension)) { _testExecutionOptions.PathExtension = pathExtension; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.KillProcessesOnCancel), bool.Parse, out var killProcessesOnCancel)) { _testExecutionOptions.KillProcessesOnCancel = killProcessesOnCancel; }
-            if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.UseNewTestExecutionFramework2), bool.Parse, out var useNewTestExecutionFramework2)) { _testExecutionOptions.UseNewTestExecutionFramework2 = useNewTestExecutionFramework2; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(TestExecutionOptionsDialogPage.WorkingDir), s => s, out var workingDir)) { _testExecutionOptions.WorkingDir = workingDir; }
             
+            if (GetAndDeleteValue(GeneralOptionsPage, "UseNewTestExecutionFramework2", bool.Parse, out var useNewTestExecutionFramework2)) { _testExecutionOptions.DebuggerKind = useNewTestExecutionFramework2 ? DebuggerKind.Native : DebuggerKind.Platform; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.DebugMode), bool.Parse, out var debugMode)) { _generalOptions.OutputMode = debugMode ? OutputMode.Debug : OutputMode.Info; }
             GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.ShowReleaseNotes), bool.Parse, out _);
         }

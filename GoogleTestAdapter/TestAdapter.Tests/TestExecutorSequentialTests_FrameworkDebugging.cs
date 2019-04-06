@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -17,7 +18,7 @@ namespace GoogleTestAdapter.TestAdapter
         public override void SetUp()
         {
             base.SetUp();
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
 
             MockRunContext.Setup(c => c.IsBeingDebugged).Returns(true);
             SetUpMockFrameworkHandle();
@@ -210,7 +211,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
         {
-            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+            bool outputAvailable = MockOptions.Object.DebuggerKind > DebuggerKind.VsTestFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing_and_leaking", VsTestOutcome.Failed, VsTestOutcome.Failed,
                 msg => msg.Contains("Exit code: 1")

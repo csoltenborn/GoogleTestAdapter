@@ -344,7 +344,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.Native);
 
             CheckEffectOfDiscoveryParam();
         }
@@ -353,7 +353,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_OldExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
 
             CheckEffectOfDiscoveryParam();
         }

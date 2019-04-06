@@ -271,12 +271,14 @@ namespace GoogleTestAdapter.Settings
 
         #region TestExecutionOptionsPage
 
-        public const string OptionUseNewTestExecutionFramework = "Use native debugging";
-        public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of native debugging (in contrast to debugging provided by the VsTest framework). Advantages: test crash detection and test output printing also work in debug mode.";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
+        public const string OptionDebuggerKind = "Debugger engine";
+        public const string OptionDebuggerKindDescription =
+                "Framework: Debugger engine as provided by VsTest framework; no test crash detection, no test output printing, less interactive UI\n" +
+                "Native: Debugger engine as provided by VS native API; no restrictions (default)\n" + 
+                "ManagedAndNative: Same as Native, but allows to also debug into managed code";
+        public const DebuggerKind OptionDebuggerKindDefaultValue = DebuggerKind.Native;
 
-        public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
+        public virtual DebuggerKind DebuggerKind => _currentSettings.DebuggerKind ?? OptionDebuggerKindDefaultValue;
 
 
         public const string OptionAdditionalPdbs = "Additional PDBs";

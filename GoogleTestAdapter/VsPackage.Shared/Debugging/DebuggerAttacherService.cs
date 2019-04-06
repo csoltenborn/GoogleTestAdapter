@@ -41,7 +41,6 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
         private void ThrowFaultException(string message)
         {
-            _logger.LogError(message);
             throw new FaultException<DebuggerAttacherServiceFault>(new DebuggerAttacherServiceFault(message));
         }
     }

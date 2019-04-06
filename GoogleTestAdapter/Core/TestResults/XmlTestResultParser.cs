@@ -71,7 +71,7 @@ namespace GoogleTestAdapter.TestResults
                 string message =
                     $"Executable {_testExecutable} has test names containing characters which happen to not end up in the XML file produced by Google Test. " +
                     "This has caused ambiguities while resolving the according test results, which are thus not available. " + 
-                    $"Note that this problem does not occur if GTA option '{SettingsWrapper.OptionUseNewTestExecutionFramework}' is enabled." +
+                    $"Note that this problem can only occur if GTA option '{SettingsWrapper.OptionDebuggerKind}' is {DebuggerKind.VsTestFramework}." +
                     $"\nThe following tests are affected: {string.Join(", ", duplicateTestCases.Select(tc => tc.FullyQualifiedName).OrderBy(n => n))}";
                 _logger.LogWarning(message);
             }

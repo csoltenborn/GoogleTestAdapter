@@ -156,9 +156,17 @@ namespace GoogleTestAdapter.TestAdapter
             var debugModeProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.DebugMode));
             if (HasSetting(runSettingsContainer, debugModeProperty))
             {
-                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.DebugMode)}' is deprecated and will be ignored - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.OutputMode)}' as follows:");
-                logger.LogWarning("<DebugMode>False</DebugMode> => <OutputMode>Info</OutputMode>");
-                logger.LogWarning("<DebugMode>True</DebugMode> => <OutputMode>Verbose</OutputMode> (consider using Debug)");
+                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.DebugMode)}' does not have any effect any more - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.OutputMode)}' as follows:");
+                logger.LogWarning($"<DebugMode>False</DebugMode> => <OutputMode>{OutputMode.Info}</OutputMode>");
+                logger.LogWarning($"<DebugMode>True</DebugMode> => <OutputMode>{OutputMode.Verbose}</OutputMode> (consider using {OutputMode.Debug})");
+            }
+
+            var useNewTestExecutionEnvironmentProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.UseNewTestExecutionFramework));
+            if (HasSetting(runSettingsContainer, useNewTestExecutionEnvironmentProperty))
+            {
+                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.UseNewTestExecutionFramework)}' does not have any effect any more - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.DebuggerKind)}' as follows:");
+                logger.LogWarning($"<UseNewTestExecutionFramework>False</UseNewTestExecutionFramework> => <DebuggerKind>{DebuggerKind.VsTestFramework}</DebuggerKind>");
+                logger.LogWarning($"<UseNewTestExecutionFramework>True</UseNewTestExecutionFramework> => <DebuggerKind>{DebuggerKind.Native}</DebuggerKind>");
             }
 
             var showReleaseNotesProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.ShowReleaseNotes));

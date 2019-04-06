@@ -40,11 +40,11 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             if (!string.IsNullOrEmpty(pathExtension))
                 envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
-            _logger.DebugInfo($"Attaching debugger to '{command}' via VsTest framework API");
+            _logger.DebugInfo($"Attaching debugger to '{command}' via {DebuggerKind.VsTestFramework} engine");
             if (_printTestOutput)
             {
                 _logger.DebugInfo(
-                    $"Note that due to restrictions of the VsTest framework, the test executable's output can not be displayed in the test console when debugging tests. Use '{SettingsWrapper.OptionUseNewTestExecutionFramework}' option to overcome this problem.'");
+                    $"Note that due to restrictions of the VsTest framework, the test executable's output can not be displayed in the test console when debugging tests. Use '{SettingsWrapper.OptionDebuggerKind}' option to overcome this problem.'");
             }
 
             _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, envVariables);

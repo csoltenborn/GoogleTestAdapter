@@ -106,6 +106,9 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
 
+        public virtual DebuggerKind? DebuggerKind { get; set; }
+        public bool ShouldSerializeDebuggerKind() { return DebuggerKind != null; }
+
 
         // internal
         public virtual string DebuggingNamedPipeId { get; set; }

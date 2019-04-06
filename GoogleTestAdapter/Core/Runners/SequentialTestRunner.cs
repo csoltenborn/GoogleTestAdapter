@@ -171,7 +171,7 @@ namespace GoogleTestAdapter.Runners
             StreamingStandardOutputTestResultParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);
-            bool isTestOutputAvailable = !isBeingDebugged || _settings.UseNewTestExecutionFramework;
+            bool isTestOutputAvailable = !isBeingDebugged || _settings.DebuggerKind > DebuggerKind.VsTestFramework;
             bool printTestOutput = _settings.PrintTestOutput &&
                                    !_settings.ParallelTestExecution &&
                                    isTestOutputAvailable;
@@ -190,11 +190,11 @@ namespace GoogleTestAdapter.Runners
             }
 
             _processExecutor = isBeingDebugged
-                ? _settings.UseNewTestExecutionFramework
-                    ? processExecutorFactory.CreateNativeDebuggingExecutor(
-                        DebuggerEngine.Native, 
+                ? _settings.DebuggerKind == DebuggerKind.VsTestFramework
+                    ? processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
+                    : processExecutorFactory.CreateNativeDebuggingExecutor(
+                        _settings.DebuggerKind == DebuggerKind.Native ? DebuggerEngine.Native : DebuggerEngine.ManagedAndNative, 
                         printTestOutput, _logger)
-                    : processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             int exitCode = _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,

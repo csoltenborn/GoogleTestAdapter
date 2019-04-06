@@ -4,6 +4,7 @@ using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Settings
 {
+    public enum DebuggerKind { VsTestFramework, Native, ManagedAndNative }
 
     /*
     To add a new option, make the following changes:
@@ -51,6 +52,7 @@ namespace GoogleTestAdapter.Settings
         string ExitCodeTestCase { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
+        DebuggerKind? DebuggerKind { get; set; }
 
         // internal
         string DebuggingNamedPipeId { get; set; }
@@ -93,6 +95,7 @@ namespace GoogleTestAdapter.Settings
             self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
+            self.DebuggerKind = self.DebuggerKind ?? other.DebuggerKind;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
             self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
