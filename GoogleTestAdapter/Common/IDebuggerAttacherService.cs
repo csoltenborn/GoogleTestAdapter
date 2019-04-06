@@ -7,6 +7,12 @@ using System.ServiceModel;
 
 namespace GoogleTestAdapter.Common
 {
+    public enum DebuggerEngine
+    {
+        Native, ManagedAndNative
+    }
+
+
     /// <summary>
     /// Interface of DebuggerAttacherService.
     /// </summary>
@@ -17,9 +23,10 @@ namespace GoogleTestAdapter.Common
         /// Attaches the debugger to the specified process.
         /// </summary>
         /// <param name="processId">ID of a process to attach to</param>
+        /// <param name="debuggerEngine">Engine kind to be attached</param>
         [OperationContract]
         [FaultContract(typeof(DebuggerAttacherServiceFault))]
-        void AttachDebugger(int processId);
+        void AttachDebugger(int processId, DebuggerEngine debuggerEngine);
     }
 
     /// <summary>

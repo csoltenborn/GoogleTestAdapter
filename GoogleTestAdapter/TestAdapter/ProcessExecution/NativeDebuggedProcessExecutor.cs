@@ -24,12 +24,14 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         public const int ExecutionFailed = int.MaxValue;
 
         private readonly IDebuggerAttacher _debuggerAttacher;
+        private readonly DebuggerEngine _debuggerEngine;
         private readonly bool _printTestOutput;
         private readonly ILogger _logger;
 
-        public NativeDebuggedProcessExecutor(IDebuggerAttacher debuggerAttacher, bool printTestOutput, ILogger logger)
+        public NativeDebuggedProcessExecutor(IDebuggerAttacher debuggerAttacher, DebuggerEngine debuggerEngine, bool printTestOutput, ILogger logger)
         {
             _debuggerAttacher = debuggerAttacher ?? throw new ArgumentNullException(nameof(debuggerAttacher));
+            _debuggerEngine = debuggerEngine;
             _printTestOutput = printTestOutput;
             _logger = logger;
         }
@@ -38,7 +40,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         {
             try
             {
-                int exitCode = NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
+                int exitCode = NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _debuggerEngine, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
                 _logger.DebugInfo($"Executable {command} returned with exit code {exitCode}");
                 return exitCode;
             }
@@ -103,7 +105,8 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 
             internal static int ExecuteCommandBlocking(
                 string command, string parameters, string workingDir, string pathExtension, 
-                IDebuggerAttacher debuggerAttacher, ILogger logger, bool printTestOutput, Action<string> reportOutputLine, Action<int> reportProcessId)
+                IDebuggerAttacher debuggerAttacher, DebuggerEngine debuggerEngine, 
+                ILogger logger, bool printTestOutput, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
                 ProcessOutputPipeStream pipeStream = null;
                 try
@@ -118,7 +121,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                         pipeStream.ConnectedToChildProcess();
 
                         logger.DebugInfo($"Attaching debugger to '{command}' via native implementation");
-                        if (!debuggerAttacher.AttachDebugger(processInfo.dwProcessId))
+                        if (!debuggerAttacher.AttachDebugger(processInfo.dwProcessId, debuggerEngine))
                         {
                             logger.LogError($"Could not attach debugger to process {processInfo.dwProcessId}");
                         }

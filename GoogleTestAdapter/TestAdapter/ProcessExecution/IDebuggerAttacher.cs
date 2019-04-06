@@ -1,7 +1,9 @@
-﻿namespace GoogleTestAdapter.TestAdapter.ProcessExecution
+﻿using GoogleTestAdapter.Common;
+
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
     public interface IDebuggerAttacher
     {
-        bool AttachDebugger(int processId);
+        bool AttachDebugger(int processId, DebuggerEngine debuggerEngine);
     }
 }

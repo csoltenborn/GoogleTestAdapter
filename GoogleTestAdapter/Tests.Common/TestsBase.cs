@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.Tests.Common
                 throw new NotImplementedException();
             }
 
-            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger)
+            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(DebuggerEngine engine, bool printTestOutput, ILogger logger)
             {
                 throw new NotImplementedException();
             }

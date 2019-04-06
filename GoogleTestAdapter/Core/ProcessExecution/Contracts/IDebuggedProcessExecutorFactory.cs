@@ -6,6 +6,6 @@ namespace GoogleTestAdapter.ProcessExecution.Contracts
     {
         IDebuggedProcessExecutor CreateFrameworkDebuggingExecutor(bool printTestOutput, ILogger logger);
 
-        IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger);
+        IDebuggedProcessExecutor CreateNativeDebuggingExecutor(DebuggerEngine debuggerEngine, bool printTestOutput, ILogger logger);
     }
 }

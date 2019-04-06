@@ -60,7 +60,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(_maxNrOfThreads);
 
             MockDebuggerAttacher.Reset();
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
+            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>())).Returns(true);
         }
 
         private void RunAndVerifySingleTest(TestCase testCase, VsTestOutcome expectedOutcome)

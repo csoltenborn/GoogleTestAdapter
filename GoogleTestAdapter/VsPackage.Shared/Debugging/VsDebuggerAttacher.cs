@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -27,12 +26,15 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             _serviceProvider = serviceProvider;
         }
 
-        public bool AttachDebugger(int processId)
+        public bool AttachDebugger(int processId, DebuggerEngine debuggerEngine)
         {
             IntPtr pDebugEngine = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(Guid)));
             try
             {
-                Marshal.StructureToPtr(VSConstants.DebugEnginesGuids.NativeOnly_guid, pDebugEngine, false);
+                Guid debuggerEngineGuid = debuggerEngine == DebuggerEngine.Native
+                    ? VSConstants.DebugEnginesGuids.NativeOnly_guid
+                    : VSConstants.DebugEnginesGuids.ManagedAndNative;
+                Marshal.StructureToPtr(debuggerEngineGuid, pDebugEngine, false);
 
                 var debugTarget = new VsDebugTargetInfo4
                 {

@@ -191,7 +191,9 @@ namespace GoogleTestAdapter.Runners
 
             _processExecutor = isBeingDebugged
                 ? _settings.UseNewTestExecutionFramework
-                    ? processExecutorFactory.CreateNativeDebuggingExecutor(printTestOutput, _logger)
+                    ? processExecutorFactory.CreateNativeDebuggingExecutor(
+                        DebuggerEngine.Native, 
+                        printTestOutput, _logger)
                     : processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             int exitCode = _processExecutor.ExecuteCommandBlocking(
