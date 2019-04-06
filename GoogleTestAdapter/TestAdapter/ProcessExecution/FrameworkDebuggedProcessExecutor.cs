@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;

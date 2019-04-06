@@ -11,6 +11,7 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 

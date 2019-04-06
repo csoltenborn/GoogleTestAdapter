@@ -8,7 +8,6 @@ using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
-using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

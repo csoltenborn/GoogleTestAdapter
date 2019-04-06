@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {

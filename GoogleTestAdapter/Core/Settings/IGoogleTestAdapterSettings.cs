@@ -1,11 +1,10 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {
-    public enum DebuggerKind { VsTestFramework, Native, ManagedAndNative }
-
     /*
     To add a new option, make the following changes:
     - add (nullable!) property to GoogleTestAdapter.Settings.IGoogleTestAdapterSettings

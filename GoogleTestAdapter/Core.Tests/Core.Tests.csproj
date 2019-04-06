@@ -96,6 +96,7 @@
     <Compile Include="Helpers\ByteUtilsTests.cs" />
     <Compile Include="Helpers\UtilsTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
+    <Compile Include="Runners\DebuggerKindConverterTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
     <Compile Include="TestCases\TestCaseResolverTests.cs" />
     <Compile Include="TestCases\TestCaseFactoryTests.cs" />

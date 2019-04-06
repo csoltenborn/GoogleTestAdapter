@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
+using Microsoft.VisualStudio.Shell;
+
 // ReSharper disable LocalizableElement
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
@@ -142,6 +145,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionDebuggerKind)]
         [Description(SettingsWrapper.OptionDebuggerKindDescription)]
+        [PropertyPageTypeConverter(typeof(DebuggerKindConverter))]
         public DebuggerKind DebuggerKind
         {
             get => _debuggerKind;

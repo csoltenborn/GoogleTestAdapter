@@ -70,6 +70,8 @@
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Model\TestCaseMetaDataProperty.cs" />
     <Compile Include="Model\TestProperty.cs" />
+    <Compile Include="ProcessExecution\DebuggerKind.cs" />
+    <Compile Include="Runners\ExecutableResult.cs" />
     <Compile Include="Runners\TestResultCollector.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />

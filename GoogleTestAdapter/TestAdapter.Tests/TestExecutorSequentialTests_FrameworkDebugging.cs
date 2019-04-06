@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
