@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Threading;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 using GoogleTestAdapter.VsPackage.Helpers;
 
 namespace GoogleTestAdapter.VsPackage
@@ -71,7 +70,6 @@ namespace GoogleTestAdapter.VsPackage
                 HtmlFile = new Uri($"file://{htmlFile}")
             })
             {
-                dialog.AddExternalUri(Donations.Uri);
                 dialog.Closed += (sender, args) => File.Delete(htmlFile);
                 dialog.ShowDialog();
             }

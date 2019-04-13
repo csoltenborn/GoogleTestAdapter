@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
     public partial class ReleaseNotesDialog : Form
     {
-        private readonly ISet<Uri> _externalUris = new HashSet<Uri>();
+        private static readonly Uri DonationsUri = new Uri("https://github.com/csoltenborn/GoogleTestAdapter#donations");
 
         public ReleaseNotesDialog()
         {
             InitializeComponent();
 
-            Load += (sender, args) => DonateButton.Select();
+            Load += (sender, args) => OkButton.Select();
 
             WebBrowser.CanGoBackChanged += (sender, args) => BackButton.Enabled = WebBrowser.CanGoBack;
             BackButton.Click += (sender, args) => WebBrowser.GoBack();
@@ -25,7 +23,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             OkButton.Click += (sender, args) => Close();
             DonateButton.Click += (sender, args) =>
             {
-                OpenUriInDefaultBrowser(Donations.Uri);
+                OpenUriInDefaultBrowser(DonationsUri);
                 Close();
             };
         }
@@ -36,14 +34,9 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             set => WebBrowser.Url = value;
         }
 
-        internal void AddExternalUri(Uri externalUri)
-        {
-            _externalUris.Add(externalUri);
-        }
-
         private void WebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-            if (_externalUris.Contains(e.Url))
+            if (DonationsUri.Equals(e.Url))
             {
                 e.Cancel = true;
                 OpenUriInDefaultBrowser(e.Url);
