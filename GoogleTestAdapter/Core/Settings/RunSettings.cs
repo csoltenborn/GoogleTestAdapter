@@ -108,7 +108,7 @@ namespace GoogleTestAdapter.Settings
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
 
         public virtual string SolutionDir { get; set; }
-        public bool ShouldSerializeSolutionDir() { return DebuggingNamedPipeId != null; }
+        public bool ShouldSerializeSolutionDir() { return SolutionDir != null; }
 
         public virtual string PlatformName { get; set; }
         public bool ShouldSerializePlatformName() { return PlatformName != null; }
