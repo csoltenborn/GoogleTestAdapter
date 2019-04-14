@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.Settings
     public class HelperFilesCache
     {
         public const string HelperFileEnding = ".gta_settings_helper";
-        public const string SettingsSeparator = ":::";
+        public const string SettingsSeparator = "::GTA::";
 
         private readonly ILogger _logger;
         private readonly IDictionary<string, IDictionary<string, string>> _files2ReplacementMap = new Dictionary<string, IDictionary<string, string>>();
@@ -21,6 +21,8 @@ namespace GoogleTestAdapter.Settings
         {
             _logger = logger;
         }
+
+        public ILogger Logger => _logger;
 
         // virtual for mocking
         public virtual IDictionary<string, string> GetReplacementsMap(string executable)
@@ -36,7 +38,7 @@ namespace GoogleTestAdapter.Settings
             }
         }
 
-        private string GetHelperFile(string executable)
+        public static string GetHelperFile(string executable)
         {
             return $"{executable}{HelperFileEnding}";
         }

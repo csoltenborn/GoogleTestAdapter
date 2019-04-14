@@ -155,6 +155,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Donations", "Donations", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LeakCheckTests", "..\SampleTests\LeakCheckTests\LeakCheckTests.vcxproj", "{41791F46-44CF-459B-9F77-049CE1C9D203}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelperFileTests", "..\SampleTests\HelperFileTests\HelperFileTests.vcxproj", "{034E4479-F9C0-435B-AE6C-96109DE161AB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		VsPackage.Shared\VsPackage.Shared.projitems*{ac75f34e-190b-402a-8c46-91b0fa02450f}*SharedItemsImports = 13
@@ -539,6 +541,16 @@ Global
 		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|x64.Build.0 = Release|x64
 		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|x86.ActiveCfg = Release|Win32
 		{41791F46-44CF-459B-9F77-049CE1C9D203}.Release|x86.Build.0 = Release|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|x64.ActiveCfg = Debug|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|x64.Build.0 = Debug|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|x86.ActiveCfg = Debug|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|x86.Build.0 = Debug|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|Any CPU.ActiveCfg = Release|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|x64.ActiveCfg = Release|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|x64.Build.0 = Release|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|x86.ActiveCfg = Release|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -576,6 +588,7 @@ Global
 		{883EFE71-6B36-4813-B1DB-80D9B972B8D5} = {1F754A4D-BD42-4368-8B90-F3C03F24A2F3}
 		{58B6EF41-D226-40A9-A959-0543270D572F} = {883EFE71-6B36-4813-B1DB-80D9B972B8D5}
 		{41791F46-44CF-459B-9F77-049CE1C9D203} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
+		{034E4479-F9C0-435B-AE6C-96109DE161AB} = {1FF56AF6-0ACE-4FE8-B802-4832703EC2DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C942DDD5-B04E-4D57-BA9F-A444392C9480}

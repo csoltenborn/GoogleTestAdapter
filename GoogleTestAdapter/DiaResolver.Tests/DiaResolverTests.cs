@@ -114,7 +114,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
 
             locations.Should().HaveCountGreaterOrEqualTo(expectedLocations);
-            fakeLogger.GetMessages(Severity.Warning, Severity.Error).Count.Should().BeGreaterOrEqualTo(expectedErrorMessages);
+            fakeLogger.GetMessages(Severity.Warning, Severity.Error).Should().HaveCountGreaterOrEqualTo(expectedErrorMessages);
         }
     }
 

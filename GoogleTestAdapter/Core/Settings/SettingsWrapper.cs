@@ -25,8 +25,8 @@ namespace GoogleTestAdapter.Settings
             private get { return _cache; }
             set
             {
-                _cache = value;
-                _placeholderReplacer = new PlaceholderReplacer(() => SolutionDir, () => _currentSettings, HelperFilesCache);
+                _cache = value ?? throw new ArgumentNullException(nameof(HelperFilesCache));
+                _placeholderReplacer = new PlaceholderReplacer(() => SolutionDir, () => _currentSettings, HelperFilesCache, HelperFilesCache.Logger);
             }
         }
 
@@ -362,7 +362,7 @@ namespace GoogleTestAdapter.Settings
         public virtual string BatchForTestSetup => _currentSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
 
         public string GetBatchForTestSetup(string testDirectory, int threadId)
-            => _placeholderReplacer.ReplaceBatchPlaceholders(BatchForTestSetup, testDirectory, threadId);
+            => _placeholderReplacer.ReplaceSetupBatchPlaceholders(BatchForTestSetup, testDirectory, threadId);
 
 
         public const string OptionBatchForTestTeardown = "Test teardown batch file";
@@ -373,7 +373,7 @@ namespace GoogleTestAdapter.Settings
         public virtual string BatchForTestTeardown => _currentSettings.BatchForTestTeardown ?? OptionBatchForTestTeardownDefaultValue;
 
         public string GetBatchForTestTeardown(string testDirectory, int threadId)
-            => _placeholderReplacer.ReplaceBatchPlaceholders(BatchForTestTeardown, testDirectory,
+            => _placeholderReplacer.ReplaceTeardownBatchPlaceholders(BatchForTestTeardown, testDirectory,
                 threadId);
 
 

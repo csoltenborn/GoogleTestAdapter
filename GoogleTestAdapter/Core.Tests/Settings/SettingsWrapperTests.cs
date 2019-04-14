@@ -644,7 +644,8 @@ namespace GoogleTestAdapter.Settings
 
             return new SettingsWrapper(containerMock.Object)
             {
-                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }
 

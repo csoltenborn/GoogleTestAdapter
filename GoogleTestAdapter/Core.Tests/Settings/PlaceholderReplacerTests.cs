@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -41,7 +42,8 @@ namespace GoogleTestAdapter.Settings
             nameof(PlaceholderReplacer.ReplaceAdditionalPdbsPlaceholders),
             nameof(PlaceholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery),
             nameof(PlaceholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForExecution),
-            nameof(PlaceholderReplacer.ReplaceBatchPlaceholders),
+            nameof(PlaceholderReplacer.ReplaceSetupBatchPlaceholders),
+            nameof(PlaceholderReplacer.ReplaceTeardownBatchPlaceholders),
             nameof(PlaceholderReplacer.ReplacePathExtensionPlaceholders),
             nameof(PlaceholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery),
             nameof(PlaceholderReplacer.ReplaceWorkingDirPlaceholdersForExecution)
@@ -71,10 +73,15 @@ namespace GoogleTestAdapter.Settings
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplacePathExtensionPlaceholders), PlaceholderReplacer.ThreadIdPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery), PlaceholderReplacer.ThreadIdPlaceholder),
 
-            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceBatchPlaceholders), PlaceholderReplacer.ExecutablePlaceholder),
-            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceBatchPlaceholders), PlaceholderReplacer.ExecutableDirPlaceholder),
-            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceBatchPlaceholders), PlaceholderReplacer.ConfigurationNamePlaceholder),
-            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceBatchPlaceholders), PlaceholderReplacer.PlatformNamePlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceSetupBatchPlaceholders), PlaceholderReplacer.ExecutablePlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceSetupBatchPlaceholders), PlaceholderReplacer.ExecutableDirPlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceSetupBatchPlaceholders), PlaceholderReplacer.ConfigurationNamePlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceSetupBatchPlaceholders), PlaceholderReplacer.PlatformNamePlaceholder),
+
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceTeardownBatchPlaceholders), PlaceholderReplacer.ExecutablePlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceTeardownBatchPlaceholders), PlaceholderReplacer.ExecutableDirPlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceTeardownBatchPlaceholders), PlaceholderReplacer.ConfigurationNamePlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceTeardownBatchPlaceholders), PlaceholderReplacer.PlatformNamePlaceholder),
         };
 
 
@@ -90,10 +97,12 @@ namespace GoogleTestAdapter.Settings
                     {nameof(IGoogleTestAdapterSettings.PlatformName), "Win33"}
                 });
             Mock<IGoogleTestAdapterSettings> mockOptions = new Mock<IGoogleTestAdapterSettings>();
+            Mock<ILogger> mockLogger = new Mock<ILogger>();
             var placeholderReplacer = new PlaceholderReplacer(
                 () => TestResources.SampleTestsSolutionDir, 
                 () => mockOptions.Object,
-                mockHelperFilesCache.Object);
+                mockHelperFilesCache.Object,
+                mockLogger.Object);
 
             foreach (string methodName in MethodNames)
             {
@@ -102,28 +111,50 @@ namespace GoogleTestAdapter.Settings
                     if (!UnsupportedCombinations.Any(combination =>
                         combination.MethodName == methodName && combination.Placeholder == placeholder.Placeholder))
                     {
-                        GenericReplacementTest(placeholderReplacer, methodName, placeholder.Placeholder, placeholder.Value.ToString());
+                        var result = InvokeMethodWithStandardParameters(placeholderReplacer, methodName, placeholder.Placeholder);
+                        result.Should().Be(placeholder.Value.ToString(), $"{methodName} should replace {placeholder.Placeholder} with {(object) placeholder.Value.ToString()}");
+                        mockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Never);
                     }
                 }
             }
         }
 
-        private void GenericReplacementTest(PlaceholderReplacer placeholderReplacer, 
-            string methodName, string input, object expected)
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AllReplacementMethods_UnknownPlaceholderResultsInWarning()
+        {
+            Mock<HelperFilesCache> mockHelperFilesCache = new Mock<HelperFilesCache>();
+            mockHelperFilesCache.Setup(c => c.GetReplacementsMap(It.IsAny<string>()))
+                .Returns(new Dictionary<string, string>());
+            Mock<IGoogleTestAdapterSettings> mockOptions = new Mock<IGoogleTestAdapterSettings>();
+            Mock<ILogger> mockLogger = new Mock<ILogger>();
+            var replacer = new PlaceholderReplacer(() => "solutiondir", () => mockOptions.Object,
+                mockHelperFilesCache.Object, mockLogger.Object);
+
+            string placeholder = "$(UnknownPlaceholder)";
+            foreach (string methodName in MethodNames)
+            {
+                mockLogger.Reset();
+                string result = InvokeMethodWithStandardParameters(replacer, methodName, placeholder);
+                result.Should().Be(placeholder);
+                mockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains(placeholder))), Times.Once);
+            }
+        }
+
+        private string InvokeMethodWithStandardParameters(PlaceholderReplacer placeholderReplacer, string methodName,
+            string input)
         {
             var method = typeof(PlaceholderReplacer).GetMethod(methodName);
             // ReSharper disable once PossibleNullReferenceException
             var parameters = method.GetParameters();
 
-            var parameterValues = new List<object> { input };
+            var parameterValues = new List<object> {input};
             for (int i = 1; i < parameters.Length; i++)
             {
                 parameterValues.Add(GetValue(parameters[i]));
             }
 
-            string result = (string) method.Invoke(placeholderReplacer, parameterValues.ToArray());
-
-            result.Should().Be(expected.ToString(), $"{methodName} should replace {input} with {expected}");
+            return (string) method.Invoke(placeholderReplacer, parameterValues.ToArray());
         }
 
         private object GetValue(ParameterInfo parameter)

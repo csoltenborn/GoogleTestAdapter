@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using GoogleTestAdapter.Common;
 
 namespace GoogleTestAdapter.Settings
 {
@@ -32,18 +35,22 @@ namespace GoogleTestAdapter.Settings
         private const string DescriptionOfEnvVarPlaceholders = "Environment variables are also possible, e.g. %PATH%";
 
 
+        private static readonly Regex PlaceholdersRegex = new Regex(@"\$\(\w+\)", RegexOptions.Compiled);
+
         private readonly Func<string> _getSolutionDir;
         private readonly Func<IGoogleTestAdapterSettings> _getSettings;
         private readonly HelperFilesCache _helperFilesCache;
+        private readonly ILogger _logger;
 
         private string SolutionDir => _getSolutionDir();
         private IGoogleTestAdapterSettings Settings => _getSettings();
 
-        public PlaceholderReplacer(Func<string> getSolutionDir, Func<IGoogleTestAdapterSettings> getSettings, HelperFilesCache helperFilesCache)
+        public PlaceholderReplacer(Func<string> getSolutionDir, Func<IGoogleTestAdapterSettings> getSettings, HelperFilesCache helperFilesCache, ILogger logger)
         {
             _getSolutionDir = getSolutionDir;
             _getSettings = getSettings;
             _helperFilesCache = helperFilesCache;
+            _logger = logger;
         }
 
 
@@ -62,6 +69,9 @@ namespace GoogleTestAdapter.Settings
             pdb = ReplaceSolutionDirPlaceholder(pdb, executable);
             pdb = ReplaceEnvironmentVariables(pdb);
             pdb = ReplaceHelperFileSettings(pdb, executable);
+
+            CheckForRemainingPlaceholders(pdb, SettingsWrapper.OptionAdditionalPdbs);
+            
             return pdb;
         }
 
@@ -84,6 +94,9 @@ namespace GoogleTestAdapter.Settings
             workingDir = ReplaceSolutionDirPlaceholder(workingDir, executable);
             workingDir = ReplaceEnvironmentVariables(workingDir);
             workingDir = ReplaceHelperFileSettings(workingDir, executable);
+
+            CheckForRemainingPlaceholders(workingDir, SettingsWrapper.OptionWorkingDir);
+
             return workingDir;
         }
 
@@ -91,7 +104,14 @@ namespace GoogleTestAdapter.Settings
             string testDirectory, int threadId)
         {
             workingDir = ReplaceTestDirAndThreadIdPlaceholders(workingDir, testDirectory, threadId);
-            workingDir = ReplaceWorkingDirPlaceholdersForDiscovery(workingDir, executable);
+            workingDir = ReplaceExecutablePlaceholders(workingDir, executable);
+            workingDir = ReplacePlatformAndConfigurationPlaceholders(workingDir, executable);
+            workingDir = ReplaceSolutionDirPlaceholder(workingDir, executable);
+            workingDir = ReplaceEnvironmentVariables(workingDir);
+            workingDir = ReplaceHelperFileSettings(workingDir, executable);
+
+            CheckForRemainingPlaceholders(workingDir, SettingsWrapper.OptionWorkingDir);
+
             return workingDir;
         }
 
@@ -111,6 +131,9 @@ namespace GoogleTestAdapter.Settings
             pathExtension = ReplaceSolutionDirPlaceholder(pathExtension, executable);
             pathExtension = ReplaceEnvironmentVariables(pathExtension);
             pathExtension = ReplaceHelperFileSettings(pathExtension, executable);
+
+            CheckForRemainingPlaceholders(pathExtension, SettingsWrapper.OptionPathExtension);
+
             return pathExtension;
         }
 
@@ -133,6 +156,9 @@ namespace GoogleTestAdapter.Settings
             additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam, executable);
             additionalTestExecutionParam = ReplaceEnvironmentVariables(additionalTestExecutionParam);
             additionalTestExecutionParam = ReplaceHelperFileSettings(additionalTestExecutionParam, executable);
+
+            CheckForRemainingPlaceholders(additionalTestExecutionParam, SettingsWrapper.OptionAdditionalTestExecutionParams);
+
             return additionalTestExecutionParam;
         }
 
@@ -140,8 +166,14 @@ namespace GoogleTestAdapter.Settings
         {
             additionalTestExecutionParam =
                 ReplaceTestDirAndThreadIdPlaceholders(additionalTestExecutionParam, testDirectory, threadId);
-            additionalTestExecutionParam =
-                ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(additionalTestExecutionParam, executable);
+            additionalTestExecutionParam = ReplaceExecutablePlaceholders(additionalTestExecutionParam, executable);
+            additionalTestExecutionParam = ReplacePlatformAndConfigurationPlaceholders(additionalTestExecutionParam, executable);
+            additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam, executable);
+            additionalTestExecutionParam = ReplaceEnvironmentVariables(additionalTestExecutionParam);
+            additionalTestExecutionParam = ReplaceHelperFileSettings(additionalTestExecutionParam, executable);
+
+            CheckForRemainingPlaceholders(additionalTestExecutionParam, SettingsWrapper.OptionAdditionalTestExecutionParams);
+
             return additionalTestExecutionParam;
         }
 
@@ -154,7 +186,22 @@ namespace GoogleTestAdapter.Settings
                                                   DescriptionOfThreadIdPlaceholder + "\n" + 
                                                   DescriptionOfEnvVarPlaceholders;
 
-        public string ReplaceBatchPlaceholders(string batch, string testDirectory, int threadId)
+
+        public string ReplaceSetupBatchPlaceholders(string batch, string testDirectory, int threadId)
+        {
+            batch = ReplaceBatchPlaceholders(batch, testDirectory, threadId);
+            CheckForRemainingPlaceholders(batch, SettingsWrapper.OptionBatchForTestSetup);
+            return batch;
+        }
+
+        public string ReplaceTeardownBatchPlaceholders(string batch, string testDirectory, int threadId)
+        {
+            batch = ReplaceBatchPlaceholders(batch, testDirectory, threadId);
+            CheckForRemainingPlaceholders(batch, SettingsWrapper.OptionBatchForTestTeardown);
+            return batch;
+        }
+
+        private string ReplaceBatchPlaceholders(string batch, string testDirectory, int threadId)
         {
             batch = ReplaceTestDirAndThreadIdPlaceholders(batch, testDirectory, threadId);
             batch = ReplacePlatformAndConfigurationPlaceholders(batch);
@@ -225,7 +272,7 @@ namespace GoogleTestAdapter.Settings
             var replacementMap = _helperFilesCache.GetReplacementsMap(executable);
             foreach (var nameValuePair in replacementMap)
             {
-                theString = theString.Replace($"$(GTA:{nameValuePair.Key})", nameValuePair.Value);
+                theString = theString.Replace($"$({nameValuePair.Key})", nameValuePair.Value);
             }
 
             return theString;
@@ -246,6 +293,18 @@ namespace GoogleTestAdapter.Settings
             return string.IsNullOrWhiteSpace(value)
                 ? theString.Replace(placeholder, "")
                 : theString.Replace(placeholder, value);
+        }
+
+        private void CheckForRemainingPlaceholders(string theString, string optionName)
+        {
+            var matches = PlaceholdersRegex.Matches(theString);
+            if (matches.Count > 0)
+            {
+
+                var placeholders = matches.Cast<Match>().Select(m => m.Value).Distinct().OrderBy(s => s);
+                string message = $"Option '{optionName}': Apparently, the following placeholders could not be replaced. {string.Join(", ", placeholders)}";
+                _logger.LogWarning(message);
+            }
         }
 
     }
