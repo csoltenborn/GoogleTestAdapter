@@ -88,14 +88,15 @@ namespace GoogleTestAdapter.Settings
                     _currentSettings = projectSettings;
                     string settingsString = ToString();
                     _currentSettings = _settingsContainer.SolutionSettings;
-                    logger.DebugInfo($"Settings for test executable '{executable}': {settingsString}");
+                    logger.DebugInfo($"Test executable '{executable}': Project settings apply, regex: {projectSettings.ProjectRegex}");
+                    logger.VerboseInfo($"Settings for test executable '{executable}': {settingsString}");
 
                     _currentSettings = projectSettings;
                 }
                 else
                 {
                     logger.DebugInfo(
-                        $"No settings configured for test executable '{executable}'; running with solution settings: {this}");
+                        $"No settings configured for test executable '{executable}'; running with solution settings");
                 }
             }
 
@@ -106,7 +107,7 @@ namespace GoogleTestAdapter.Settings
                 if (_currentSettings != _settingsContainer.SolutionSettings)
                 {
                     _currentSettings = _settingsContainer.SolutionSettings;
-                    logger.DebugInfo($"Back to solution settings: {this}");
+                    logger.DebugInfo($"Back to solution settings");
                 }
             }
 

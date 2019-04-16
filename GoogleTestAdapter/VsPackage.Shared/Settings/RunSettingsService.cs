@@ -84,10 +84,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     }
                 }
             }
+            catch (InvalidRunSettingsException e) when (e.InnerException != null)
+            {
+                logger.Log(MessageLevel.Error,
+                    $"Solution test settings file could not be parsed, check file '{solutionRunSettingsFile}'. Error message: {e.InnerException.Message}");
+            }
             catch (Exception e)
             {
-                logger.Log(MessageLevel.Warning,
-                    $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
+                logger.Log(MessageLevel.Error,
+                    $"Solution test settings file could not be parsed, check file '{solutionRunSettingsFile}'. Exception:{Environment.NewLine}{e}");
             }
         }
 
