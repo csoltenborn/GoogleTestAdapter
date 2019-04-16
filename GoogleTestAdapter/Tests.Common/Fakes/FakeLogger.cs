@@ -16,8 +16,8 @@ namespace GoogleTestAdapter.Tests.Common.Fakes
 
         public IList<string> All => GetMessages(Enum.GetValues(typeof(Severity)).Cast<Severity>().ToArray());
 
-        public FakeLogger(Func<bool> inDebugMode, bool timestampLogMessages = true)
-            : base(inDebugMode)
+        public FakeLogger(Func<OutputMode> outputMode, bool timestampLogMessages = true)
+            : base(outputMode)
         {
             _timeStampLogMessages = timestampLogMessages;
         }

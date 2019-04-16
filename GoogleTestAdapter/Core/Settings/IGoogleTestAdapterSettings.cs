@@ -1,5 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using GoogleTestAdapter.Common;
+
 namespace GoogleTestAdapter.Settings
 {
 
@@ -41,7 +43,9 @@ namespace GoogleTestAdapter.Settings
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
+        OutputMode? OutputMode { get; set; }
         bool? TimestampOutput { get; set; }
+        bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
         string ExitCodeTestCase { get; set; }
@@ -81,7 +85,9 @@ namespace GoogleTestAdapter.Settings
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
+            self.OutputMode = self.OutputMode ?? other.OutputMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
+            self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
             self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;

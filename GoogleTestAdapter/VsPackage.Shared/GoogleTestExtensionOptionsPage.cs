@@ -17,7 +17,11 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
+using GoogleTestAdapter.Common;
+using GoogleTestAdapter.VsPackage.GTA.Helpers;
 using Microsoft.VisualStudio.AsyncPackageHelpers;
+using VsPackage.Shared.Settings;
+using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.TestDiscoveryOptionsDialogPage;
 
 namespace GoogleTestAdapter.VsPackage
 {
@@ -29,9 +33,9 @@ namespace GoogleTestAdapter.VsPackage
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
-    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageParallelizationName, 0, 0, true)]
+    [ProvideOptionPage(typeof(TestDiscoveryOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageTestDiscovery, 0, 0, true)]
+    [ProvideOptionPage(typeof(TestExecutionOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageTestExecution, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
-//    [Microsoft.VisualStudio.Shell.ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IAsyncLoadablePackageInitialize, IDisposable
     {
@@ -42,7 +46,8 @@ namespace GoogleTestAdapter.VsPackage
         private IGlobalRunSettingsInternal _globalRunSettings;
 
         private GeneralOptionsDialogPage _generalOptions;
-        private ParallelizationOptionsDialogPage _parallelizationOptions;
+        private TestDiscoveryOptionsDialogPage _testDiscoveryOptions;
+        private TestExecutionOptionsDialogPage _testExecutionOptions;
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
@@ -58,6 +63,9 @@ namespace GoogleTestAdapter.VsPackage
             {
                 var componentModel = (IComponentModel) GetGlobalService(typeof(SComponentModel));
                 _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+                VsSettingsStorage.Init(this);
+
                 DoInitialize();
             }
         }
@@ -74,6 +82,8 @@ namespace GoogleTestAdapter.VsPackage
             {
                 var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
                 _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+                VsSettingsStorage.Init(this);
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 
@@ -94,14 +104,25 @@ namespace GoogleTestAdapter.VsPackage
         private void InitializeOptions()
         {
             _generalOptions = (GeneralOptionsDialogPage) GetDialogPage(typeof(GeneralOptionsDialogPage));
-            _parallelizationOptions =
-                (ParallelizationOptionsDialogPage) GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            _testDiscoveryOptions =
+                (TestDiscoveryOptionsDialogPage) GetDialogPage(typeof(TestDiscoveryOptionsDialogPage));
+            _testExecutionOptions =
+                (TestExecutionOptionsDialogPage) GetDialogPage(typeof(TestExecutionOptionsDialogPage));
             _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
+
+            var optionsUpdater = new OptionsUpdater(_testDiscoveryOptions, _testExecutionOptions, _generalOptions, new ActivityLogLogger(this, () => OutputMode.Verbose));
+            if (optionsUpdater.UpdateIfNecessary())
+            {
+                _testDiscoveryOptions.SaveSettingsToStorage();
+                _testExecutionOptions.SaveSettingsToStorage();
+                _generalOptions.SaveSettingsToStorage();
+            }
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
             _generalOptions.PropertyChanged += OptionsChanged;
-            _parallelizationOptions.PropertyChanged += OptionsChanged;
+            _testDiscoveryOptions.PropertyChanged += OptionsChanged;
+            _testExecutionOptions.PropertyChanged += OptionsChanged;
             _googleTestOptions.PropertyChanged += OptionsChanged;
         }
 
@@ -115,7 +136,7 @@ namespace GoogleTestAdapter.VsPackage
 
         private void InitializeDebuggerAttacherService()
         {
-            var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
+            var logger = new ActivityLogLogger(this, () => _generalOptions.OutputMode);
             var debuggerAttacher = new VsDebuggerAttacher(this);
             _debuggerAttacherServiceHost = new DebuggerAttacherServiceHost(_debuggingNamedPipeId, debuggerAttacher, logger);
             try
@@ -147,7 +168,8 @@ namespace GoogleTestAdapter.VsPackage
             if (disposing)
             {
                 _generalOptions?.Dispose();
-                _parallelizationOptions?.Dispose();
+                _testDiscoveryOptions?.Dispose();
+                _testExecutionOptions?.Dispose();
                 _googleTestOptions?.Dispose();
 
                 try
@@ -194,10 +216,10 @@ namespace GoogleTestAdapter.VsPackage
 
         public bool ParallelTestExecution
         {
-            get { return _parallelizationOptions.EnableParallelTestExecution; }
+            get { return _testExecutionOptions.EnableParallelTestExecution; }
             set
             {
-                _parallelizationOptions.EnableParallelTestExecution = value;
+                _testExecutionOptions.EnableParallelTestExecution = value;
                 RefreshVsUi();
             }
         }
@@ -224,23 +246,9 @@ namespace GoogleTestAdapter.VsPackage
             return new RunSettings
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
-                TestDiscoveryRegex = _generalOptions.TestDiscoveryRegex,
-                AdditionalPdbs = _generalOptions.AdditionalPdbs,
-                TestDiscoveryTimeoutInSeconds = _generalOptions.TestDiscoveryTimeoutInSeconds,
-                WorkingDir = _generalOptions.WorkingDir,
-                PathExtension = _generalOptions.PathExtension,
-                TraitsRegexesBefore = _generalOptions.TraitsRegexesBefore,
-                TraitsRegexesAfter = _generalOptions.TraitsRegexesAfter,
-                TestNameSeparator = _generalOptions.TestNameSeparator,
-                ParseSymbolInformation = _generalOptions.ParseSymbolInformation,
-                DebugMode = _generalOptions.DebugMode,
+                OutputMode = _generalOptions.OutputMode,
                 TimestampOutput = _generalOptions.TimestampOutput,
-                AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
-                BatchForTestSetup = _generalOptions.BatchForTestSetup,
-                BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
-                KillProcessesOnCancel = _generalOptions.KillProcessesOnCancel,
                 SkipOriginCheck = _generalOptions.SkipOriginCheck,
-                ExitCodeTestCase = _generalOptions.ExitCodeTestCase,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,
                 BreakOnFailure = _googleTestOptions.BreakOnFailure,
@@ -249,10 +257,24 @@ namespace GoogleTestAdapter.VsPackage
                 ShuffleTests = _googleTestOptions.ShuffleTests,
                 ShuffleTestsSeed = _googleTestOptions.ShuffleTestsSeed,
 
-                ParallelTestExecution = _parallelizationOptions.EnableParallelTestExecution,
-                MaxNrOfThreads = _parallelizationOptions.MaxNrOfThreads,
+                TestDiscoveryRegex = _testDiscoveryOptions.TestDiscoveryRegex,
+                TestDiscoveryTimeoutInSeconds = _testDiscoveryOptions.TestDiscoveryTimeoutInSeconds,
+                TraitsRegexesBefore = _testDiscoveryOptions.TraitsRegexesBefore,
+                TraitsRegexesAfter = _testDiscoveryOptions.TraitsRegexesAfter,
+                TestNameSeparator = _testDiscoveryOptions.TestNameSeparator,
+                ParseSymbolInformation = _testDiscoveryOptions.ParseSymbolInformation,
 
-                UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
+                AdditionalPdbs = _testExecutionOptions.AdditionalPdbs,
+                WorkingDir = _testExecutionOptions.WorkingDir,
+                PathExtension = _testExecutionOptions.PathExtension,
+                AdditionalTestExecutionParam = _testExecutionOptions.AdditionalTestExecutionParams,
+                BatchForTestSetup = _testExecutionOptions.BatchForTestSetup,
+                BatchForTestTeardown = _testExecutionOptions.BatchForTestTeardown,
+                KillProcessesOnCancel = _testExecutionOptions.KillProcessesOnCancel,
+                ExitCodeTestCase = _testExecutionOptions.ExitCodeTestCase,
+                ParallelTestExecution = _testExecutionOptions.EnableParallelTestExecution,
+                MaxNrOfThreads = _testExecutionOptions.MaxNrOfThreads,
+                UseNewTestExecutionFramework = _testExecutionOptions.UseNewTestExecutionFramework2,
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
                 SolutionDir = solutionDir,
@@ -263,13 +285,21 @@ namespace GoogleTestAdapter.VsPackage
 
         private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
         {
-            solutionDir = platformName = configurationName = null;
+            var logger = new ActivityLogLogger(this, () => OutputMode.Verbose);
 
+            solutionDir = platformName = configurationName = null;
             try
             {
                 if (GetService(typeof(DTE)) is DTE dte)
                 {
-                    solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+                    try
+                    {
+                        solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError($"Exception caught while receiving solution dir from VS instance. dte.Solution.FullName: {dte.Solution.FullName}. Exception:{Environment.NewLine}{e}");
+                    }
 
                     if (dte.Solution.Projects.Count > 0)
                     {  
@@ -283,8 +313,7 @@ namespace GoogleTestAdapter.VsPackage
             }
             catch (Exception e)
             {
-                new ActivityLogLogger(this, () => true)
-                    .LogError($"Exception while receiving configuration info from Visual Studio{Environment.NewLine}{e}");
+                logger.LogError($"Exception while receiving configuration info from Visual Studio.{Environment.NewLine}{e}");
             }
         }
     }

@@ -4,6 +4,7 @@ using GoogleTestAdapter.VsPackage.ReleaseNotes;
 using System;
 using System.IO;
 using System.Threading;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 using GoogleTestAdapter.VsPackage.Helpers;
 
@@ -31,7 +32,7 @@ namespace GoogleTestAdapter.VsPackage
                 string msg = $"Exception while trying to update last version and show release notes:{Environment.NewLine}{e}";
                 try
                 {
-                    new ActivityLogLogger(this, () => true).LogError(msg);
+                    new ActivityLogLogger(this, () => OutputMode.Verbose).LogError(msg);
                 }
                 catch (Exception)
                 {
@@ -43,7 +44,7 @@ namespace GoogleTestAdapter.VsPackage
 
         private void TryDisplayReleaseNotesIfNecessary()
         {
-            var versionProvider = new VersionProvider(this);
+            var versionProvider = new VersionProvider();
 
             Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
             Version currentVersion = versionProvider.CurrentVersion;

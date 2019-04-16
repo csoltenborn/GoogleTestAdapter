@@ -12,7 +12,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     [SettingsName(GoogleTestConstants.SettingsName)]
     public class RunSettingsProvider : ISettingsProvider
     {
-        public RunSettingsContainer SettingsContainer { get; private set; }
+        // virtual for mocking
+        public virtual RunSettingsContainer SettingsContainer { get; private set; }
 
         public string Name { get; private set; } = GoogleTestConstants.SettingsName;
 

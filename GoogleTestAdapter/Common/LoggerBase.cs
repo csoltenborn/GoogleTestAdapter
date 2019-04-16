@@ -15,11 +15,11 @@ namespace GoogleTestAdapter.Common
 
         private readonly IList<LogEntry> _messages = new List<LogEntry>();
 
-        private readonly Func<bool> _inDebugMode;
+        private readonly Func<OutputMode> _outputMode;
 
-        protected LoggerBase(Func<bool> inDebugMode)
+        protected LoggerBase(Func<OutputMode> outputMode)
         {
-            _inDebugMode = inDebugMode;
+            _outputMode = outputMode;
         }
 
         public abstract void Log(Severity severity, string message);
@@ -45,35 +45,44 @@ namespace GoogleTestAdapter.Common
 
         public virtual void LogInfo(string message)
         {
-            Log(Severity.Info, message);
+            if (_outputMode() >= OutputMode.Info)
+                Log(Severity.Info, message);
         }
 
         public virtual void LogWarning(string message)
         {
-            Log(Severity.Warning, message);
+            if (_outputMode() >= OutputMode.Info)
+                Log(Severity.Warning, message);
         }
 
         public virtual void LogError(string message)
         {
-            Log(Severity.Error, message);
+            if (_outputMode() >= OutputMode.Info)
+                Log(Severity.Error, message);
         }
 
         public void DebugInfo(string message)
         {
-            if (_inDebugMode())
-                LogInfo(message);
+            if (_outputMode() >= OutputMode.Debug)
+                Log(Severity.Info, message);
         }
 
         public void DebugWarning(string message)
         {
-            if (_inDebugMode())
-                LogWarning(message);
+            if (_outputMode() >= OutputMode.Debug)
+                Log(Severity.Warning, message);
         }
 
         public void DebugError(string message)
         {
-            if (_inDebugMode())
-                LogError(message);
+            if (_outputMode() >= OutputMode.Debug)
+                Log(Severity.Error, message);
+        }
+
+        public void VerboseInfo(string message)
+        {
+            if (_outputMode() >= OutputMode.Verbose)
+                Log(Severity.Info, message);
         }
     }
 

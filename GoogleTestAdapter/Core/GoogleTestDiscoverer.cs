@@ -56,7 +56,7 @@ namespace GoogleTestAdapter
                 void ReportTestCases(TestCase testCase)
                 {
                     reporter.ReportTestsFound(testCase.Yield());
-                    logger.DebugInfo("Added testcase " + testCase.DisplayName);
+                    logger.VerboseInfo("Added testcase " + testCase.DisplayName);
                     nrOfTestCases++;
                 }
 
@@ -73,7 +73,7 @@ namespace GoogleTestAdapter
 
             foreach (TestCase testCase in testCases)
             {
-                _logger.DebugInfo("Added testcase " + testCase.DisplayName);
+                _logger.VerboseInfo("Added testcase " + testCase.DisplayName);
             }
             _logger.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 

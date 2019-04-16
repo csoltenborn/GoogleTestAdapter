@@ -10,7 +10,7 @@ namespace GoogleTestAdapter.VsPackage.Helpers
     {
         private readonly GoogleTestExtensionOptionsPage _package;
 
-        public ActivityLogLogger(GoogleTestExtensionOptionsPage package, Func<bool> inDebugMode) : base(inDebugMode)
+        public ActivityLogLogger(GoogleTestExtensionOptionsPage package, Func<OutputMode> outputMode) : base(outputMode)
         {
             _package = package;
         }

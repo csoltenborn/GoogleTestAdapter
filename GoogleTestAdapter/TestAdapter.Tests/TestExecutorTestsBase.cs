@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -84,7 +85,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             MockFrameworkHandle.Reset();
             SetUpMockFrameworkHandle();
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + SettingsWrapper.TestDirPlaceholder + "\"");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-testdirectory=\"" + PlaceholderReplacer.TestDirPlaceholder + "\"");
 
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
@@ -95,12 +96,12 @@ namespace GoogleTestAdapter.TestAdapter
         {
             TestCase testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
 
-            MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.ExecutableDirPlaceholder);
+            MockOptions.Setup(o => o.WorkingDir).Returns(PlaceholderReplacer.ExecutableDirPlaceholder);
             RunAndVerifySingleTest(testCase, VsTestOutcome.Failed);
 
             MockFrameworkHandle.Reset();
             SetUpMockFrameworkHandle();
-            MockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.SolutionDirPlaceholder);
+            MockOptions.Setup(o => o.WorkingDir).Returns(PlaceholderReplacer.SolutionDirPlaceholder);
 
             RunAndVerifySingleTest(testCase, VsTestOutcome.Passed);
         }
@@ -131,7 +132,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void RunTests_ExternallyLinkedX86TestsInDebugMode_CorrectTestResults()
         {
             // for at least having the debug messaging code executed once
-            MockOptions.Setup(o => o.DebugMode).Returns(true);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
 
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
         }
@@ -165,7 +166,7 @@ namespace GoogleTestAdapter.TestAdapter
         public virtual void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
         {
             MockOptions.Setup(o => o.PrintTestOutput).Returns(true);
-            MockOptions.Setup(o => o.DebugMode).Returns(false);
+            MockOptions.Setup(o => o.OutputMode).Returns(OutputMode.Info);
 
             RunAndVerifyTests(TestResources.Tests_ReleaseX64, TestResources.NrOfPassingTests, TestResources.NrOfFailingTests, 0);
 
@@ -271,7 +272,7 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 string targetExe = TestDataCreator.GetPathExtensionExecutable(baseDir);
-                MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\dll");
+                MockOptions.Setup(o => o.PathExtension).Returns(PlaceholderReplacer.ExecutableDirPlaceholder + @"\..\dll");
 
                 var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
                 executor.RunTests(targetExe.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);

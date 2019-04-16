@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -131,13 +132,68 @@ namespace GoogleTestAdapter.TestAdapter
             try
             {
                 Environment.SetEnvironmentVariable(variable, value);
-
                 action();
             }
             finally
             {
                 Environment.SetEnvironmentVariable(variable, formerValue);
             }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void CreateEnvironment_DeprecatedSettingsAreNotSet_NoWarningIsLogged()
+        {
+            SetupRunSettingsAndCheckAssertions(
+                mockGtaSettings =>
+                {
+                    mockGtaSettings.Setup(s => s.DebugMode).Returns((bool?) null);
+                    mockGtaSettings.Setup(s => s.ShowReleaseNotes).Returns((bool?) null);
+                }, 
+                () => _mockMessageLogger.Verify(l => l.SendMessage(
+                    It.Is<TestMessageLevel>(level => level > TestMessageLevel.Informational),
+                    It.IsAny<string>()), Times.Never));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void CreateEnvironment_DeprecatedSettingDebugMode_WarningIsLogged()
+        {
+            SetupRunSettingsAndCheckAssertions(
+                mockRunSettings => mockRunSettings.Setup(s => s.DebugMode).Returns(true),
+                () => _mockMessageLogger.Verify(l => l.SendMessage(
+                    It.Is<TestMessageLevel>(level => level == TestMessageLevel.Warning),
+                    It.Is<string>(s => s.Contains(nameof(RunSettings.DebugMode))))));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void CreateEnvironment_DeprecatedSettingShowReleaseNotes_WarningIsLogged()
+        {
+            SetupRunSettingsAndCheckAssertions(
+                mockRunSettings => mockRunSettings.Setup(s => s.ShowReleaseNotes).Returns(true),
+                () => _mockMessageLogger.Verify(l => l.SendMessage(
+                    It.Is<TestMessageLevel>(level => level == TestMessageLevel.Warning),
+                    It.Is<string>(s => s.Contains(nameof(RunSettings.ShowReleaseNotes))))));
+        }
+
+        private void SetupRunSettingsAndCheckAssertions(Action<Mock<RunSettings>> setup, Action assertions)
+        {
+            var mockSettingsProvider = new Mock<RunSettingsProvider>();
+            _mockRunSettings.Setup(rs => rs.GetSettings(It.Is<string>(s => s == GoogleTestConstants.SettingsName)))
+                .Returns(mockSettingsProvider.Object);
+
+            var mockRunSettingsContainer = new Mock<RunSettingsContainer>();
+            mockSettingsProvider.Setup(p => p.SettingsContainer).Returns(mockRunSettingsContainer.Object);
+
+            var mockGtaSettings = new Mock<RunSettings>();
+            mockRunSettingsContainer.Setup(c => c.SolutionSettings).Returns(mockGtaSettings.Object);
+
+            setup(mockGtaSettings);
+
+            CommonFunctions.CreateEnvironment(_mockRunSettings.Object, _mockMessageLogger.Object, out _, out _);
+
+            assertions();
         }
 
     }

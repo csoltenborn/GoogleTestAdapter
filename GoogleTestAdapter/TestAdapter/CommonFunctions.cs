@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
@@ -15,14 +17,14 @@ namespace GoogleTestAdapter.TestAdapter
     {
         public const string GtaSettingsEnvVariable = "GTA_FALLBACK_SETTINGS";
 
-        public static void ReportErrors(ILogger logger, string phase, bool isDebugModeEnabled)
+        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode)
         {
             IList<string> errors = logger.GetMessages(Severity.Error, Severity.Warning);
             if (errors.Count == 0)
                 return;
 
             bool hasErrors = logger.GetMessages(Severity.Error).Count > 0;
-            string hint = isDebugModeEnabled
+            string hint = outputMode > OutputMode.Info
                 ? ""
                 : " (enable debug mode for more information)";
             string jointErrors = string.Join(Environment.NewLine, errors);
@@ -54,9 +56,11 @@ namespace GoogleTestAdapter.TestAdapter
 
             var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
-            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.DebugMode, () => settingsWrapper.TimestampOutput);
+            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, () => settingsWrapper.TimestampOutput);
             var regexParser = new RegexTraitParser(loggerAdapter);
             settingsWrapper.RegexTraitParser = regexParser;
+
+            LogWarningsForDeprecatedSettings(ourRunSettings, loggerAdapter);
 
             settings = settingsWrapper;
             logger = loggerAdapter;
@@ -145,6 +149,29 @@ namespace GoogleTestAdapter.TestAdapter
                 messageLogger.SendMessage(TestMessageLevel.Error, $"ERROR: Settings file is provided through env variable {GtaSettingsEnvVariable}, but an exception occured while trying to read file '{settingsFile}'. Exception message: {e.Message}");
                 return null;
             }
+        }
+
+        private static void LogWarningsForDeprecatedSettings(RunSettingsContainer runSettingsContainer, ILogger logger)
+        {
+            var debugModeProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.DebugMode));
+            if (HasSetting(runSettingsContainer, debugModeProperty))
+            {
+                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.DebugMode)}' is deprecated and will be ignored - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.OutputMode)}' as follows:");
+                logger.LogWarning("<DebugMode>False</DebugMode> => <OutputMode>Info</OutputMode>");
+                logger.LogWarning("<DebugMode>True</DebugMode> => <OutputMode>Verbose</OutputMode> (consider using Debug)");
+            }
+
+            var showReleaseNotesProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.ShowReleaseNotes));
+            if (HasSetting(runSettingsContainer, showReleaseNotesProperty))
+            {
+                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.ShowReleaseNotes)}' is deprecated - check your settings files and remove any occurence.");
+            }
+        }
+
+        private static bool HasSetting(RunSettingsContainer runSettingsContainer, PropertyInfo propertyInfo)
+        {
+            return propertyInfo.GetValue(runSettingsContainer.SolutionSettings) != null || 
+                   runSettingsContainer.ProjectSettings.Any(s => propertyInfo.GetValue(s) != null);
         }
 
         public static void LogVisualStudioVersion(ILogger logger)
