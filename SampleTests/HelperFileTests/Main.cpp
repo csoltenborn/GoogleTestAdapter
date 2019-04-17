@@ -1,19 +1,20 @@
 #include "string.h"
 #include "gtest/gtest.h"
 
-std::string ARCH_DIR;
+std::string THE_TARGET;
 
 int main(int argc, char ** argv)
 {
-	std::string prefix_arch_dir("-arch_dir=");
+	std::string prefix_arch_dir("-TheTarget=");
 
 	for (int i = 0; i < argc; i++)
 	{
+		std::string s = argv[i];
 		if (strncmp(argv[i], prefix_arch_dir.c_str(), strlen(prefix_arch_dir.c_str())) == 0)
 		{
 			std::string arch_dir(argv[i]);
 			arch_dir.erase(0, strlen(prefix_arch_dir.c_str()));
-			ARCH_DIR = arch_dir;
+			THE_TARGET = arch_dir;
 		}
 	}
 

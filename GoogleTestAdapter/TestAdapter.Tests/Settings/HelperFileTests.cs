@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             RunHelperFileTestsExecutable();
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => 
-                tr.DisplayName.Contains("HelperFileTests.ArchDirIsSet") && 
+                tr.DisplayName.Contains("HelperFileTests.TheTargetIsSet") && 
                 tr.Outcome == TestOutcome.Failed)), Times.Once);
         }
 
@@ -40,12 +40,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         [TestCategory(Integration)]
         public void HelperFileTests_AdditionalParamsAreProvided_TestSucceeds()
         {
-            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("$(LocalDebuggerCommandArguments)");
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-TheTarget=$(TheTarget)");
 
             RunHelperFileTestsExecutable();
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => 
-                tr.DisplayName.Contains("HelperFileTests.ArchDirIsSet") && 
+                tr.DisplayName.Contains("HelperFileTests.TheTargetIsSet") && 
                 tr.Outcome == TestOutcome.Passed)), Times.Once);
         }
 

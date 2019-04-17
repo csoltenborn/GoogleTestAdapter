@@ -21,7 +21,7 @@
 				<AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>
 			</Settings>
 			<Settings ProjectRegex=".*\\HelperFileTests_gta\.exe">
-				<AdditionalTestExecutionParam>$(LocalDebuggerCommandArguments)</AdditionalTestExecutionParam>
+				<AdditionalTestExecutionParam>-TheTarget=$(TheTarget)</AdditionalTestExecutionParam>
 			</Settings>
 		</ProjectSettings>
 	</GoogleTestAdapterSettings>

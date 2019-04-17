@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
-extern std::string ARCH_DIR;
+extern std::string THE_TARGET;
 
-TEST(HelperFileTests, ArchDirIsSet)
+TEST(HelperFileTests, TheTargetIsSet)
 {
-	ASSERT_STRNE("", ARCH_DIR.c_str());
+	ASSERT_STREQ("HelperFileTests_gta.exe", THE_TARGET.c_str());
 }
