@@ -32,7 +32,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             try
             {
                 Guid debuggerEngineGuid = debuggerEngine == DebuggerEngine.Native
-                    ? VSConstants.DebugEnginesGuids.NativeOnly_guid
+                    ? VSConstants.DebugEnginesGuids.NativeOnly
                     : VSConstants.DebugEnginesGuids.ManagedAndNative;
                 Marshal.StructureToPtr(debuggerEngineGuid, pDebugEngine, false);
 
