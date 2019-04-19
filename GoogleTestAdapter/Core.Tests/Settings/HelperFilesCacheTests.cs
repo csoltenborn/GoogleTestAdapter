@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.Settings
         public void GetReplacementsMap_NoFile_EmptyDictionary()
         {
             string executable = TestResources.Tests_DebugX86;
-            var extraSettings = $"{executable}{HelperFilesCache.HelperFileEnding}";
+            var extraSettings = HelperFilesCache.GetHelperFile(executable);
             extraSettings.AsFileInfo().Should().NotExist();
 
             var cache = new HelperFilesCache(MockLogger.Object);
@@ -113,7 +113,7 @@ namespace GoogleTestAdapter.Settings
 
         private void DoTest(string content, Action<IDictionary<string, string>> assertions, string executable = TestResources.Tests_DebugX86)
         {
-            var extraSettings = $"{executable}{HelperFilesCache.HelperFileEnding}";
+            var extraSettings = HelperFilesCache.GetHelperFile(executable);
             try
             {
                 extraSettings.AsFileInfo().Should().NotExist();
