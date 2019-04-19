@@ -17,9 +17,9 @@ namespace GoogleTestAdapter.ProcessExecution
 
     public class DebuggerKindConverter : EnumConverter
     {
-        private const string VsTestFramework = "VsTest framework";
-        private const string Native = "Native";
-        private const string ManagedAndNative = "Managed and native";
+        public const string VsTestFramework = "VsTest framework";
+        public const string Native = "Native";
+        public const string ManagedAndNative = "Managed and native";
 
 
         public DebuggerKindConverter(Type enumType) : base(enumType) {}
