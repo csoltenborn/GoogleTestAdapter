@@ -25,7 +25,9 @@ namespace GoogleTestAdapter.Tests.Common.Fakes
         public override void Log(Severity severity, string message)
         {
             if (_timeStampLogMessages)
-                Utils.TimestampMessage(ref message);
+            {
+                message = $"{Utils.GetTimestamp()} - {message}";
+            }
 
             lock (this)
             {

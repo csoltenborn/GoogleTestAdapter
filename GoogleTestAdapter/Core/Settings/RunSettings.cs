@@ -73,6 +73,12 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? TimestampOutput { get; set; }
         public bool ShouldSerializeTimestampOutput() { return TimestampOutput != null; }
 
+        public virtual TimestampMode? TimestampMode { get; set; }
+        public bool ShouldSerializeTimestampMode() { return TimestampMode != null; }
+
+        public virtual SeverityMode? SeverityMode { get; set; }
+        public bool ShouldSerializeSeverityMode() { return SeverityMode != null; }
+
         public virtual bool? ShowReleaseNotes { get; set; }
         public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
 

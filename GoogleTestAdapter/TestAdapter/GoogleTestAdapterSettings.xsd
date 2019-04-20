@@ -71,7 +71,29 @@
 			  </xsd:restriction>
 		  </xsd:simpleType>
       </xsd:element>
-      <xsd:element name="TimestampOutput"              minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="TimestampOutput"              minOccurs="0" type="xsd:boolean" >
+	      <xsd:annotation>
+		      <xsd:documentation>Deprecated</xsd:documentation>
+	      </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TimestampMode"                minOccurs="0">
+	      <xsd:simpleType>
+		      <xsd:restriction base="xsd:string">
+			      <xsd:enumeration value ="Automatic"/>
+			      <xsd:enumeration value ="PrintTimestamp"/>
+			      <xsd:enumeration value ="DoNotPrintTimestamp"/>
+		      </xsd:restriction>
+	      </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="SeverityMode"                 minOccurs="0">
+	      <xsd:simpleType>
+		      <xsd:restriction base="xsd:string">
+			      <xsd:enumeration value ="Automatic"/>
+			      <xsd:enumeration value ="PrintSeverity"/>
+			      <xsd:enumeration value ="DoNotPrintSeverity"/>
+		      </xsd:restriction>
+	      </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="ShowReleaseNotes"             minOccurs="0" type="xsd:boolean"><!-- used only by GTA -->
 	      <xsd:annotation>
 		      <xsd:documentation>Deprecated</xsd:documentation>

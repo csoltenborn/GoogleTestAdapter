@@ -57,7 +57,8 @@ namespace GoogleTestAdapter.TestAdapter
 
             var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
-            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, () => settingsWrapper.TimestampOutput);
+            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, 
+                () => settingsWrapper.TimestampMode, () => settingsWrapper.SeverityMode);
             var regexParser = new RegexTraitParser(loggerAdapter);
             settingsWrapper.RegexTraitParser = regexParser;
 
@@ -168,6 +169,14 @@ namespace GoogleTestAdapter.TestAdapter
                 logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.UseNewTestExecutionFramework)}' does not have any effect any more - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.DebuggerKind)}' as follows:");
                 logger.LogWarning($"<UseNewTestExecutionFramework>False</UseNewTestExecutionFramework> => <DebuggerKind>{DebuggerKind.VsTestFramework}</DebuggerKind>");
                 logger.LogWarning($"<UseNewTestExecutionFramework>True</UseNewTestExecutionFramework> => <DebuggerKind>{DebuggerKind.Native}</DebuggerKind>");
+            }
+
+            var timestepOutputProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.TimestampOutput));
+            if (HasSetting(runSettingsContainer, timestepOutputProperty))
+            {
+                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.TimestampOutput)}' does not have any effect any more - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.TimestampMode)}' as follows:");
+                logger.LogWarning($"<TimestampOutput>False</TimestampOutput> => <TimestampMode>{TimestampMode.DoNotPrintTimestamp}</TimestampMode>");
+                logger.LogWarning($"<TimestampOutput>True</TimestampOutput> => <TimestampMode>{TimestampMode.PrintTimestamp}</TimestampMode>");
             }
 
             var showReleaseNotesProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.ShowReleaseNotes));

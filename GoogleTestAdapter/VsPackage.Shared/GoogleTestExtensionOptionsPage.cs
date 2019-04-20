@@ -247,7 +247,8 @@ namespace GoogleTestAdapter.VsPackage
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
                 OutputMode = _generalOptions.OutputMode,
-                TimestampOutput = _generalOptions.TimestampOutput,
+                TimestampMode = _generalOptions.TimestampMode,
+                SeverityMode = _generalOptions.SeverityMode,
                 SkipOriginCheck = _generalOptions.SkipOriginCheck,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,

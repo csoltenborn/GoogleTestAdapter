@@ -172,10 +172,24 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionTimestampOutput = "Timestamp output";
         public const string OptionTimestampOutputDescription =
-            "If true, a timestamp is added to the output.";
-        public const bool OptionTimestampOutputDefaultValue = false;
+            "Controls whether a timestamp is added to the output.\n" + 
+            TimestampModeConverter.Automatic + ": add timestamp on VS2013, VS2015\n" +
+            TimestampModeConverter.PrintTimeStamp + ": always add timestamp\n" + 
+            TimestampModeConverter.DoNotPrintTimeStamp + ": never add timestamp";
+        public const TimestampMode OptionTimestampOutputDefaultValue = TimestampMode.Automatic;
 
-        public virtual bool TimestampOutput => _currentSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
+        public virtual TimestampMode TimestampMode => _currentSettings.TimestampMode ?? OptionTimestampOutputDefaultValue;
+
+
+        public const string OptionSeverityMode = "Print severity";
+        public const string OptionSeverityModeDescription =
+            "Controls whether the messages' severity is added to the output.\n" + 
+            SeverityModeConverter.Automatic + ": print severity on VS2013, VS2015\n" +
+            SeverityModeConverter.PrintSeverity + ": always print severity\n" +
+            SeverityModeConverter.DoNotPrintSeverity + ": never print severity";
+        public const SeverityMode OptionSeverityModeDefaultValue = SeverityMode.Automatic;
+
+        public virtual SeverityMode SeverityMode => _currentSettings.SeverityMode ?? OptionSeverityModeDefaultValue;
 
 
         public const string OptionSkipOriginCheck = "Skip check of file origin";

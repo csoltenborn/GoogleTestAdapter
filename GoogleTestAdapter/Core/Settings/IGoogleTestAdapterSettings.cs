@@ -13,7 +13,7 @@ namespace GoogleTestAdapter.Settings
     - handle property serialization in class GoogleTestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
-    - update schema in GoogleTestAdapterSettings.xsd
+    - update schema in TestAdapter/GoogleTestAdapterSettings.xsd
     - add new option to Solution Items/AllTestSettings.gta.runsettings
     - add default mock configuration in method GoogleTestAdapter.Tests.Common.TestsBase.SetUp()
     */
@@ -45,6 +45,8 @@ namespace GoogleTestAdapter.Settings
         bool? DebugMode { get; set; }
         OutputMode? OutputMode { get; set; }
         bool? TimestampOutput { get; set; }
+        TimestampMode? TimestampMode { get; set; }
+        SeverityMode? SeverityMode { get; set; }
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
@@ -88,6 +90,8 @@ namespace GoogleTestAdapter.Settings
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.OutputMode = self.OutputMode ?? other.OutputMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
+            self.TimestampMode = self.TimestampMode ?? other.TimestampMode;
+            self.SeverityMode = self.SeverityMode ?? other.SeverityMode;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;

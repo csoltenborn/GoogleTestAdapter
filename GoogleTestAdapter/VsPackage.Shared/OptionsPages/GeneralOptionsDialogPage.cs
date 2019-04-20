@@ -4,6 +4,7 @@ using GoogleTestAdapter.Settings;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GoogleTestAdapter.Common;
+using Microsoft.VisualStudio.Shell;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -36,12 +37,24 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionTimestampOutput)]
         [Description(SettingsWrapper.OptionTimestampOutputDescription)]
-        public bool TimestampOutput
+        [PropertyPageTypeConverter(typeof(TimestampModeConverter))]
+        public TimestampMode TimestampMode
         {
-            get => _timestampOutput;
-            set => SetAndNotify(ref _timestampOutput, value);
+            get => _timestampMode;
+            set => SetAndNotify(ref _timestampMode, value);
         }
-        private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
+        private TimestampMode _timestampMode = SettingsWrapper.OptionTimestampOutputDefaultValue;
+
+        [Category(SettingsWrapper.CategoryOutputName)]
+        [DisplayName(SettingsWrapper.OptionSeverityMode)]
+        [Description(SettingsWrapper.OptionSeverityModeDescription)]
+        [PropertyPageTypeConverter(typeof(SeverityModeConverter))]
+        public SeverityMode SeverityMode
+        {
+            get => _severityMode;
+            set => SetAndNotify(ref _severityMode, value);
+        }
+        private SeverityMode _severityMode = SettingsWrapper.OptionSeverityModeDefaultValue;
 
         #endregion
 

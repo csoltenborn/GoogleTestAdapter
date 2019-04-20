@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <GoogleTestAdapterSettings>
-    <SolutionSettings>
-      <Settings>
-        <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
-        <BatchForTestSetup>$(SolutionDir)Tests\Returns0.bat</BatchForTestSetup>
-        <BatchForTestTeardown>$(SolutionDir)Tests\Returns1.bat</BatchForTestTeardown>
-        <BreakOnFailure>false</BreakOnFailure>
-        <CatchExceptions>true</CatchExceptions>
-        <DebugMode>false</DebugMode>
-        <TimestampOutput>false</TimestampOutput>
-        <MaxNrOfThreads>4</MaxNrOfThreads>
-        <NrOfTestRepetitions>1</NrOfTestRepetitions>
-        <ParallelTestExecution>false</ParallelTestExecution>
-        <PrintTestOutput>true</PrintTestOutput>
-        <RunDisabledTests>false</RunDisabledTests>
-        <ShuffleTests>false</ShuffleTests>
-        <ShuffleTestsSeed>0</ShuffleTestsSeed>
-        <TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
-        <AdditionalPdbs/>
-        <TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
-        <WorkingDir>${SolutionDir}</WorkingDir>
-        <PathExtension>C:\fooDir;C:\barDir</PathExtension>
-        <TraitsRegexesAfter />
-        <TraitsRegexesBefore />
-        <TestNameSeparator />
-        <ParseSymbolInformation>true</ParseSymbolInformation>
-        <UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
-        <KillProcessesOnCancel>false</KillProcessesOnCancel>
-        <ExitCodeTestCase/>
-
-      </Settings>
-    </SolutionSettings>
-    <ProjectSettings/>
-  </GoogleTestAdapterSettings>
+	<GoogleTestAdapterSettings>
+		<SolutionSettings>
+			<Settings>
+				<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
+				<BatchForTestSetup>$(SolutionDir)Tests\Returns0.bat</BatchForTestSetup>
+				<BatchForTestTeardown>$(SolutionDir)Tests\Returns1.bat</BatchForTestTeardown>
+				<BreakOnFailure>false</BreakOnFailure>
+				<CatchExceptions>true</CatchExceptions>
+				<DebugMode>false</DebugMode>
+				<TimestampMode>Automatic</TimestampMode>
+				<SeverityMode>Automatic</SeverityMode>
+				<MaxNrOfThreads>4</MaxNrOfThreads>
+				<NrOfTestRepetitions>1</NrOfTestRepetitions>
+				<ParallelTestExecution>false</ParallelTestExecution>
+				<PrintTestOutput>true</PrintTestOutput>
+				<RunDisabledTests>false</RunDisabledTests>
+				<ShuffleTests>false</ShuffleTests>
+				<ShuffleTestsSeed>0</ShuffleTestsSeed>
+				<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
+				<AdditionalPdbs/>
+				<TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
+				<WorkingDir>${SolutionDir}</WorkingDir>
+				<PathExtension>C:\fooDir;C:\barDir</PathExtension>
+				<TraitsRegexesAfter />
+				<TraitsRegexesBefore />
+				<TestNameSeparator />
+				<ParseSymbolInformation>true</ParseSymbolInformation>
+				<UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
+				<KillProcessesOnCancel>false</KillProcessesOnCancel>
+				<ExitCodeTestCase/>
+			</Settings>
+		</SolutionSettings>
+		<ProjectSettings/>
+	</GoogleTestAdapterSettings>
 </RunSettings>
