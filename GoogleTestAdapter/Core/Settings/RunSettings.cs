@@ -79,6 +79,9 @@ namespace GoogleTestAdapter.Settings
         public virtual SeverityMode? SeverityMode { get; set; }
         public bool ShouldSerializeSeverityMode() { return SeverityMode != null; }
 
+        public virtual SummaryMode? SummaryMode { get; set; }
+        public bool ShouldSerializeSummaryMode() { return SummaryMode != null; }
+
         public virtual bool? ShowReleaseNotes { get; set; }
         public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
 

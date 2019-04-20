@@ -11,6 +11,7 @@
 				<DebugMode>false</DebugMode>
 				<TimestampMode>Automatic</TimestampMode>
 				<SeverityMode>Automatic</SeverityMode>
+				<SummaryMode>Error</SummaryMode>
 				<MaxNrOfThreads>4</MaxNrOfThreads>
 				<NrOfTestRepetitions>1</NrOfTestRepetitions>
 				<ParallelTestExecution>false</ParallelTestExecution>

@@ -192,6 +192,14 @@ namespace GoogleTestAdapter.Settings
         public virtual SeverityMode SeverityMode => _currentSettings.SeverityMode ?? OptionSeverityModeDefaultValue;
 
 
+        public const string OptionSummaryMode = "Print summary";
+        public const string OptionSummaryModeDescription =
+            "Controls whether a summary of warnings and errors is printed after test discovery/execution.";
+        public const SummaryMode OptionSummaryModeDefaultValue = SummaryMode.WarningOrError;
+
+        public virtual SummaryMode SummaryMode => _currentSettings.SummaryMode ?? OptionSummaryModeDefaultValue;
+
+
         public const string OptionSkipOriginCheck = "Skip check of file origin";
         public const string OptionSkipOriginCheckDescription =
             "If true, it will not be checked whether executables originate from this computer. Note that this might impose security risks, e.g. when building downloaded solutions. This setting can only be changed via VS Options.";

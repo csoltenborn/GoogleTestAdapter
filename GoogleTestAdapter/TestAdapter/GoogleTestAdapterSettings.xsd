@@ -94,6 +94,15 @@
 		      </xsd:restriction>
 	      </xsd:simpleType>
       </xsd:element>
+      <xsd:element name="SummaryMode"                 minOccurs="0">
+	      <xsd:simpleType>
+		      <xsd:restriction base="xsd:string">
+			      <xsd:enumeration value ="Never"/>
+			      <xsd:enumeration value ="Error"/>
+			      <xsd:enumeration value ="WarningOrError"/>
+		      </xsd:restriction>
+	      </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="ShowReleaseNotes"             minOccurs="0" type="xsd:boolean"><!-- used only by GTA -->
 	      <xsd:annotation>
 		      <xsd:documentation>Deprecated</xsd:documentation>

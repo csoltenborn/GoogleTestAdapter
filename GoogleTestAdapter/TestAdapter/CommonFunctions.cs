@@ -18,20 +18,26 @@ namespace GoogleTestAdapter.TestAdapter
     {
         public const string GtaSettingsEnvVariable = "GTA_FALLBACK_SETTINGS";
 
-        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode)
+        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode, SummaryMode summaryMode)
         {
-            IList<string> errors = logger.GetMessages(Severity.Error, Severity.Warning);
-            if (errors.Count == 0)
+            if (summaryMode == SummaryMode.Never)
                 return;
 
             bool hasErrors = logger.GetMessages(Severity.Error).Count > 0;
+            if (!hasErrors && summaryMode == SummaryMode.Error)
+                return;
+
+            IList<string> errors = logger.GetMessages(Severity.Error, Severity.Warning);
+            if (!errors.Any())
+                return;
+
             string hint = outputMode > OutputMode.Info
                 ? ""
                 : " (enable debug mode for more information)";
             string jointErrors = string.Join(Environment.NewLine, errors);
 
             string message = $"{Environment.NewLine}================{Environment.NewLine}" 
-                + $"The following errors and warnings occured during {phase}{hint}:{Environment.NewLine}" 
+                + $"The following warnings and errors occured during {phase}{hint}:{Environment.NewLine}" 
                 + jointErrors;
 
             if (hasErrors)

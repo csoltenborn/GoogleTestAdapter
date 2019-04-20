@@ -249,6 +249,7 @@ namespace GoogleTestAdapter.VsPackage
                 OutputMode = _generalOptions.OutputMode,
                 TimestampMode = _generalOptions.TimestampMode,
                 SeverityMode = _generalOptions.SeverityMode,
+                SummaryMode = _generalOptions.SummaryMode,
                 SkipOriginCheck = _generalOptions.SkipOriginCheck,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,

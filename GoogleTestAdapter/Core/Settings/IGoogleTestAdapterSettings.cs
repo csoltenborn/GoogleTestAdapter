@@ -47,6 +47,7 @@ namespace GoogleTestAdapter.Settings
         bool? TimestampOutput { get; set; }
         TimestampMode? TimestampMode { get; set; }
         SeverityMode? SeverityMode { get; set; }
+        SummaryMode? SummaryMode { get; set; }
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
@@ -92,6 +93,7 @@ namespace GoogleTestAdapter.Settings
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
             self.TimestampMode = self.TimestampMode ?? other.TimestampMode;
             self.SeverityMode = self.SeverityMode ?? other.SeverityMode;
+            self.SummaryMode = self.SummaryMode ?? other.SummaryMode;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;

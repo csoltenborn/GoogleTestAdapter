@@ -56,6 +56,17 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private SeverityMode _severityMode = SettingsWrapper.OptionSeverityModeDefaultValue;
 
+        [Category(SettingsWrapper.CategoryOutputName)]
+        [DisplayName(SettingsWrapper.OptionSummaryMode)]
+        [Description(SettingsWrapper.OptionSummaryModeDescription)]
+        [PropertyPageTypeConverter(typeof(SummaryModeConverter))]
+        public SummaryMode SummaryMode
+        {
+            get => _summaryMode;
+            set => SetAndNotify(ref _summaryMode, value);
+        }
+        private SummaryMode _summaryMode = SettingsWrapper.OptionSummaryModeDefaultValue;
+
         #endregion
 
         #region Security
