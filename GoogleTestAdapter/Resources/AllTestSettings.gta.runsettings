@@ -12,6 +12,7 @@
 				<TimestampMode>Automatic</TimestampMode>
 				<SeverityMode>Automatic</SeverityMode>
 				<SummaryMode>Error</SummaryMode>
+				<PrefixOutputWithGta>true</PrefixOutputWithGta>
 				<MaxNrOfThreads>4</MaxNrOfThreads>
 				<NrOfTestRepetitions>1</NrOfTestRepetitions>
 				<ParallelTestExecution>false</ParallelTestExecution>

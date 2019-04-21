@@ -13,7 +13,7 @@ namespace VsPackage.Shared.Settings
 {
     public class OptionsUpdater
     {
-        private static readonly string OptionsBase = $@"SOFTWARE\Microsoft\VisualStudio\{VsVersionUtils.GetVisualStudioVersion().VersionString()}\DialogPage\GoogleTestAdapter.VsPackage.OptionsPages.";
+        private static readonly string OptionsBase = $@"SOFTWARE\Microsoft\VisualStudio\{VsVersionUtils.VsVersion.VersionString()}\DialogPage\GoogleTestAdapter.VsPackage.OptionsPages.";
 
         private static readonly string GeneralOptionsPage = OptionsBase + "GeneralOptionsDialogPage";
         private static readonly string ParallelizationOptionsPage = OptionsBase + "ParallelizationOptionsDialogPage";
@@ -123,11 +123,11 @@ namespace VsPackage.Shared.Settings
         {
             if (timestampOutput)
             {
-                return VsVersionUtils.GetVisualStudioVersion() < VsVersion.VS2017
+                return VsVersionUtils.VsVersion < VsVersion.VS2017
                     ? TimestampMode.Automatic
                     : TimestampMode.PrintTimestamp;
             }
-            return VsVersionUtils.GetVisualStudioVersion() < VsVersion.VS2017
+            return VsVersionUtils.VsVersion < VsVersion.VS2017
                 ? TimestampMode.DoNotPrintTimestamp
                 : TimestampMode.Automatic;
         }

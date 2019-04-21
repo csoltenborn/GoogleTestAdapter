@@ -522,7 +522,9 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("TestNameSeparator: ''");
             optionsString.Should().Contain("ParseSymbolInformation: True");
             optionsString.Should().Contain("OutputMode: Info");
-            optionsString.Should().Contain("TimestampOutput: False");
+            optionsString.Should().Contain("TimestampMode: Automatic");
+            optionsString.Should().Contain("SeverityMode: Automatic");
+            optionsString.Should().Contain("SummaryMode: WarningOrError");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");
             optionsString.Should().Contain("BatchForTestTeardown: ''");

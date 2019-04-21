@@ -82,6 +82,8 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.TimestampMode).Returns(TimestampMode.DoNotPrintTimestamp);
             mockOptions.Setup(o => o.SeverityMode).Returns(SeverityMode.PrintSeverity);
             mockOptions.Setup(o => o.SummaryMode).Returns(SettingsWrapper.OptionSummaryModeDefaultValue);
+            mockOptions.Setup(o => o.PrefixOutputWithGta)
+                .Returns(SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue);
             mockOptions.Setup(o => o.AdditionalTestExecutionParam)
                 .Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
             mockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);

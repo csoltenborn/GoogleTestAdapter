@@ -64,7 +64,7 @@ namespace GoogleTestAdapter.TestAdapter
             var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, 
-                () => settingsWrapper.TimestampMode, () => settingsWrapper.SeverityMode);
+                () => settingsWrapper.TimestampMode, () => settingsWrapper.SeverityMode, () => settingsWrapper.PrefixOutputWithGta);
             var regexParser = new RegexTraitParser(loggerAdapter);
             settingsWrapper.RegexTraitParser = regexParser;
 
@@ -200,7 +200,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         public static void LogVisualStudioVersion(ILogger logger)
         {
-            VsVersion version = VsVersionUtils.GetVisualStudioVersion(logger);
+            VsVersion version = VsVersionUtils.VsVersion;
             switch (version)
             {
                 // warning printed while checking version

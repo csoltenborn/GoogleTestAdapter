@@ -68,7 +68,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         private bool IsSupportedVisualStudioVersion()
         {
-            var version = VsVersionUtils.GetVisualStudioVersion(_logger);
+            var version = VsVersionUtils.VsVersion;
             switch (version)
             {
                 case VsVersion.Unknown:

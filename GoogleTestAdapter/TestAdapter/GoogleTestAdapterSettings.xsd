@@ -103,6 +103,7 @@
 		      </xsd:restriction>
 	      </xsd:simpleType>
       </xsd:element>
+	  <xsd:element name="PrefixOutputWithGta"          minOccurs="0" type="xsd:boolean"/>
       <xsd:element name="ShowReleaseNotes"             minOccurs="0" type="xsd:boolean"><!-- used only by GTA -->
 	      <xsd:annotation>
 		      <xsd:documentation>Deprecated</xsd:documentation>

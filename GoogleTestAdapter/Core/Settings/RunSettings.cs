@@ -82,6 +82,9 @@ namespace GoogleTestAdapter.Settings
         public virtual SummaryMode? SummaryMode { get; set; }
         public bool ShouldSerializeSummaryMode() { return SummaryMode != null; }
 
+        public virtual bool? PrefixOutputWithGta { get; set; }
+        public bool ShouldSerializePrefixOutputWithGta() { return PrefixOutputWithGta != null; }
+
         public virtual bool? ShowReleaseNotes { get; set; }
         public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
 

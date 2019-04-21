@@ -67,6 +67,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private SummaryMode _summaryMode = SettingsWrapper.OptionSummaryModeDefaultValue;
 
+        [Category(SettingsWrapper.CategoryOutputName)]
+        [DisplayName(SettingsWrapper.OptionPrefixOutputWithGta)]
+        [Description(SettingsWrapper.OptionPrefixOutputWithGtaDescription)]
+        public bool PrefixOutputWithGta
+        {
+            get => _prefixOutputWithGta;
+            set => SetAndNotify(ref _prefixOutputWithGta, value);
+        }
+        private bool _prefixOutputWithGta = SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue;
+
         #endregion
 
         #region Security

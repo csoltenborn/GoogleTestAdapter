@@ -200,6 +200,14 @@ namespace GoogleTestAdapter.Settings
         public virtual SummaryMode SummaryMode => _currentSettings.SummaryMode ?? OptionSummaryModeDefaultValue;
 
 
+        public const string OptionPrefixOutputWithGta = "Prefix output with [GTA]";
+        public const string OptionPrefixOutputWithGtaDescription =
+            "Controls whether the prefix [GTA] is added to GTA's output.";
+        public const bool OptionPrefixOutputWithGtaDefaultValue = false;
+
+        public virtual bool PrefixOutputWithGta => _currentSettings.PrefixOutputWithGta ?? OptionPrefixOutputWithGtaDefaultValue;
+
+
         public const string OptionSkipOriginCheck = "Skip check of file origin";
         public const string OptionSkipOriginCheckDescription =
             "If true, it will not be checked whether executables originate from this computer. Note that this might impose security risks, e.g. when building downloaded solutions. This setting can only be changed via VS Options.";
