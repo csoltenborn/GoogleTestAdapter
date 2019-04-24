@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, Action<string> reportOutputLine)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
         {
             try
             {
@@ -174,17 +174,9 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not set handle information");
             }
 
-            private static StringBuilder CreateEnvironment(string pathExtension, IDictionary<string, string> additionalEnvVars)
+            private static StringBuilder CreateEnvironment(string pathExtension)
             {
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
-                
-                if (additionalEnvVars != null)
-                {
-                    foreach (var entry in additionalEnvVars)
-                    {
-                        envVariables[entry.Key] = entry.Value;
-                    }
-                }
 
                 if (!string.IsNullOrEmpty(pathExtension))
                 {
@@ -212,8 +204,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 return result;
             }
 
-            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, 
-                IDictionary<string, string> envVars, string pathExtension, 
+            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
                 SafePipeHandle outputPipeWritingEnd)
             {
                 var startupinfoex = new STARTUPINFOEX
@@ -244,7 +235,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     lpThreadAttributes: null, 
                     bInheritHandles: true,
                     dwCreationFlags: CREATE_EXTENDED_STARTUPINFO_PRESENT | CREATE_SUSPENDED,
-                    lpEnvironment: CreateEnvironment(pathExtension, envVars),
+                    lpEnvironment: CreateEnvironment(pathExtension),
                     lpCurrentDirectory: workingDir,
                     lpStartupInfo: startupinfoex,
                     lpProcessInformation: out processInfo))

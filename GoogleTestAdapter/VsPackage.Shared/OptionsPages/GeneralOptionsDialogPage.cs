@@ -247,7 +247,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _skipOriginCheck = SettingsWrapper.OptionSkipOriginCheckDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
+        [LocalizedCategory("CategoryMiscName")]
         [DisplayName(SettingsWrapper.OptionExitCodeTestCase)]
         [Description(SettingsWrapper.OptionExitCodeTestCaseDescription)]
         public string ExitCodeTestCase

@@ -8,7 +8,7 @@ namespace GoogleTestAdapter.ProcessExecution.Contracts
 {
     public interface IProcessExecutor
     {
-        int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, Action<string> reportOutputLine);
+        int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine);
         void Cancel();
     }
 
@@ -23,7 +23,7 @@ namespace GoogleTestAdapter.ProcessExecution.Contracts
             }
 
             string command = Path.Combine(Environment.SystemDirectory, "cmd.exe");
-            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, null, pathExtension,
+            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, pathExtension,
                 reportOutputLine);
         }
     }

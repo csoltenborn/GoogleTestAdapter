@@ -474,13 +474,6 @@ namespace GoogleTestAdapter.Settings
         public virtual bool TimestampOutput => _currentSettings.TimestampOutput ?? OptionTimestampOutputDefaultValue;
 
 
-        public static readonly string OptionShowReleaseNotes = Resources.OptionShowReleaseNotes;
-        public const bool OptionShowReleaseNotesDefaultValue = true;
-        public static readonly string OptionShowReleaseNotesDescription = Resources.OptionShowReleaseNotesDescription;
-
-        public virtual bool ShowReleaseNotes => _currentSettings.ShowReleaseNotes ?? OptionShowReleaseNotesDefaultValue;
-
-
         public static readonly string OptionAdditionalTestExecutionParams = Resources.OptionAdditionalTestExecutionParams;
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
         public const string OptionAdditionalTestExecutionParamsDescription =

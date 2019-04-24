@@ -80,7 +80,7 @@ namespace GoogleTestAdapter.Runners
 
 
         // ReSharper disable once UnusedParameter.Local
-        private void RunTestsFromExecutable(string executable, string workingDir, IDictionary<string, string> envVars,
+        private void RunTestsFromExecutable(string executable, string workingDir,
             IEnumerable<TestCase> testCasesToRun, string userParameters,
             bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory)
         {

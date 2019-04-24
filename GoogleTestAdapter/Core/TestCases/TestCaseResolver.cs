@@ -123,7 +123,7 @@ namespace GoogleTestAdapter.TestCases
                 {
                     _allTestMethodSymbols.AddRange(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     _allTraitSymbols.AddRange(diaResolver.GetFunctions("*" + TraitAppendix));
-                    _logger.DebugInfo(String.Format(Resources.FoundTestMethod, testMethodSymbols.Count, traitSymbols.Count, binary, pdb));
+                    _logger.DebugInfo(String.Format(Resources.FoundTestMethod, _allTestMethodSymbols.Count, _allTraitSymbols.Count, binary, pdb));
 
                     if (resolveMainMethod)
                     {

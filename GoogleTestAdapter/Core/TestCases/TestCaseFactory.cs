@@ -90,7 +90,6 @@ namespace GoogleTestAdapter.TestCases
                         _executable,
                         finalParams,
                         workingDir,
-                        null,
                         _settings.GetPathExtension(_executable),
                         OnReportOutputLine);
                 }, TaskCreationOptions.AttachedToParent);
@@ -170,12 +169,12 @@ namespace GoogleTestAdapter.TestCases
         {
             if (processExitCode != 0)
             {
-                string messsage = String.Format(Resources.CouldNotListTestCases, _executable, processExitCode);
-                messsage += Environment.NewLine + String.Format(Resources.CommandExecuted, _executable, GoogleTestConstants.ListTestsOption, Path.GetDirectoryName(_executable));
+                string message = String.Format(Resources.CouldNotListTestCases, _executable, processExitCode);
+                message += Environment.NewLine + String.Format(Resources.CommandExecuted, _executable, GoogleTestConstants.ListTestsOption, Path.GetDirectoryName(_executable));
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    messsage += Environment.NewLine + Resources.OutputOfCommand + Environment.NewLine + string.Join(Environment.NewLine, standardOutput);
+                    message += Environment.NewLine + Resources.OutputOfCommand + Environment.NewLine + string.Join(Environment.NewLine, standardOutput);
                 else
-                    messsage += Environment.NewLine + Resources.NoOutput;
+                    message += Environment.NewLine + Resources.NoOutput;
 
                 _logger.LogError(message);
                 return false;

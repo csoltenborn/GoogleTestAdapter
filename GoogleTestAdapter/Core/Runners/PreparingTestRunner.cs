@@ -56,12 +56,12 @@ namespace GoogleTestAdapter.Runners
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 string batch = _settings.GetBatchForTestSetup(_testDirectory, _threadId);
-                SafeRunBatch(TestSetup, _settings.SolutionDir, batch, processExecutorFactory);
+                SafeRunBatch(BatchType.TestSetup, _settings.SolutionDir, batch, processExecutorFactory);
 
                 _innerTestRunner.RunTests(testCasesToRun, isBeingDebugged, processExecutorFactory);
 
                 batch = _settings.GetBatchForTestTeardown(_testDirectory, _threadId);
-                SafeRunBatch(TestTeardown, _settings.SolutionDir, batch, processExecutorFactory);
+                SafeRunBatch(BatchType.TestTeardown, _settings.SolutionDir, batch, processExecutorFactory);
 
                 stopwatch.Stop();
                 _logger.DebugInfo(String.Format(Resources.ExecutionTime, _threadName, stopwatch.Elapsed));
@@ -85,7 +85,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void SafeRunBatch(string batchType, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
+        private void SafeRunBatch(BatchType batchType, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
         {
             string batchTypeString = (batchType == BatchType.TestSetup) ? Resources.TestSetupBatchFile : Resources.TestTeardownBatchFile;
 
@@ -101,7 +101,7 @@ namespace GoogleTestAdapter.Runners
 
             try
             {
-                RunBatch(batchType, workingDirectory, batch, processExecutorFactory);
+                RunBatch(batchTypeString, workingDirectory, batch, processExecutorFactory);
             }
             catch (Exception e)
             {
@@ -109,7 +109,7 @@ namespace GoogleTestAdapter.Runners
             }
         }
 
-        private void RunBatch(string batchType, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
+        private void RunBatch(string batchTypeString, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
         {
             var executor = processExecutorFactory.CreateExecutor(false, _logger);
             int batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { });
