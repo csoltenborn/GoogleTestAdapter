@@ -290,6 +290,20 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetPathExtension__PlatformAndConfigurationNamePlaceholdersAreReplaced()
+        {
+            MockXmlOptions.Setup(o => o.PlatformName).Returns("Debug");
+            MockXmlOptions.Setup(o => o.ConfigurationName).Returns("x86");
+            MockXmlOptions.Setup(o => o.PathExtension).Returns(
+                $"P:{SettingsWrapper.PlatformNamePlaceholder}, C:{SettingsWrapper.ConfigurationNamePlaceholder}");
+
+            string result = TheOptions.GetPathExtension(TestResources.LoadTests_ReleaseX86);
+
+            result.Should().Be("P:Debug, C:x86");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void BatchForTestTeardown__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.BatchForTestTeardown).Returns((string)null);
@@ -448,7 +462,7 @@ namespace GoogleTestAdapter.Settings
                 var result = TheOptions.GetAdditionalPdbs(TestResources.Tests_DebugX86).ToList();
 
                 // ReSharper disable once PossibleNullReferenceException
-                result.Count.Should().Be(2);
+                result.Should().HaveCount(2);
                 result[0].Should().Be($"Foo{value}");
                 result[1].Should().Be("Bar");
             }
@@ -464,7 +478,7 @@ namespace GoogleTestAdapter.Settings
 
             MockXmlOptions.Setup(o => o.TraitsRegexesBefore).Returns("Foo///Bar,Baz");
             result = TheOptions.TraitsRegexesBefore;
-            result.Count.Should().Be(1);
+            result.Should().ContainSingle();
             RegexTraitPair resultPair = result[0];
             resultPair.Regex.Should().Be("Foo");
             resultPair.Trait.Name.Should().Be("Bar");
@@ -481,7 +495,7 @@ namespace GoogleTestAdapter.Settings
 
             MockXmlOptions.Setup(o => o.TraitsRegexesAfter).Returns("Foo///Bar,Baz");
             result = TheOptions.TraitsRegexesAfter;
-            result.Count.Should().Be(1);
+            result.Should().ContainSingle();
             RegexTraitPair resultPair = result[0];
             resultPair.Regex.Should().Be("Foo");
             resultPair.Trait.Name.Should().Be("Bar");
@@ -508,7 +522,6 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("ParseSymbolInformation: True");
             optionsString.Should().Contain("DebugMode: False");
             optionsString.Should().Contain("TimestampOutput: False");
-            optionsString.Should().Contain("ShowReleaseNotes: True");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");
             optionsString.Should().Contain("BatchForTestTeardown: ''");
@@ -537,10 +550,10 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
             {
                 settings.WorkingDir.Should().Be("foo_dir");
-            }, MockLogger.Object);
+            });
         }
 
         [TestMethod]
@@ -549,7 +562,7 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () => {}, MockLogger.Object);
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () => {});
 
             settings.WorkingDir.Should().Be("solution_dir");
         }
@@ -560,10 +573,10 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("bar", () =>
+            settings.ExecuteWithSettingsForExecutable("bar", MockLogger.Object, () =>
             {
                 settings.WorkingDir.Should().Be("solution_dir");
-            }, MockLogger.Object);
+            });
         }
 
         [TestMethod]
@@ -572,14 +585,14 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
             {
-                settings.ExecuteWithSettingsForExecutable("foo", () =>
+                settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
                 {
                     settings.WorkingDir.Should().Be("foo_dir");
-                }, MockLogger.Object);
+                });
                 
-            }, MockLogger.Object);
+            });
         }
 
         [TestMethod]
@@ -589,11 +602,11 @@ namespace GoogleTestAdapter.Settings
             var settings = CreateSettingsWrapper("solution_dir", "foo");
 
             settings
-                .Invoking(s => s.ExecuteWithSettingsForExecutable("foo", () =>
+                .Invoking(s => s.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
                 {
-                    s.ExecuteWithSettingsForExecutable("bar", () => { }, MockLogger.Object);
-                }, MockLogger.Object))
-                .ShouldThrow<InvalidOperationException>();
+                    s.ExecuteWithSettingsForExecutable("bar", MockLogger.Object, () => { });
+                }))
+                .Should().Throw<InvalidOperationException>();
         }
 
         [TestMethod]
@@ -602,16 +615,16 @@ namespace GoogleTestAdapter.Settings
         {
             var settings = CreateSettingsWrapper("solution_dir", "foo", "bar");
 
-            settings.ExecuteWithSettingsForExecutable("foo", () =>
+            settings.ExecuteWithSettingsForExecutable("foo", MockLogger.Object, () =>
             {
                 var settingsClone = settings.Clone();
                 settingsClone.WorkingDir.Should().Be("solution_dir");
-                settingsClone.ExecuteWithSettingsForExecutable("bar", () =>
+                settingsClone.ExecuteWithSettingsForExecutable("bar", MockLogger.Object, () =>
                 {
                     settings.WorkingDir.Should().Be("foo_dir");
                     settingsClone.WorkingDir.Should().Be("bar_dir");
-                }, MockLogger.Object);
-            }, MockLogger.Object);
+                });
+            });
         }
 
         private SettingsWrapper CreateSettingsWrapper(string solutionWorkdir, params string[] projects)

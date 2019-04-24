@@ -95,6 +95,9 @@ namespace GoogleTestAdapter.Settings
         public bool? SkipOriginCheck { get; set; }
         public bool ShouldSerializeSkipOriginCheck() { return SkipOriginCheck != null; }
 
+        public string ExitCodeTestCase { get; set; }
+        public bool ShouldSerializeExitCodeTestCase() { return ExitCodeTestCase != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
@@ -105,7 +108,13 @@ namespace GoogleTestAdapter.Settings
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
 
         public virtual string SolutionDir { get; set; }
-        public bool ShouldSerializeSolutionDir() { return DebuggingNamedPipeId != null; }
+        public bool ShouldSerializeSolutionDir() { return SolutionDir != null; }
+
+        public virtual string PlatformName { get; set; }
+        public bool ShouldSerializePlatformName() { return PlatformName != null; }
+
+        public virtual string ConfigurationName { get; set; }
+        public bool ShouldSerializeConfigurationName() { return ConfigurationName != null; }
 
     }
 

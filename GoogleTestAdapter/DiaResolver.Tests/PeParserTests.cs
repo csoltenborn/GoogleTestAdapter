@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.DiaResolver
         public void PeParser_X86ExternallyLinkedExe_CorrentNumberOfImports()
         {
             var imports = PeParser.ParseImports(TestResources.DllTests_ReleaseX86, MockLogger.Object);
-            imports.Count.Should().Be(14);
+            imports.Should().HaveCount(14);
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.DiaResolver
         public void PeParser_X86ExternallyLinkedDll_CorrentNumberOfImports()
         {
             var imports = PeParser.ParseImports(TestResources.DllTestsDll_ReleaseX86, MockLogger.Object);
-            imports.Count.Should().Be(3);
+            imports.Should().HaveCount(3);
         }
 
 

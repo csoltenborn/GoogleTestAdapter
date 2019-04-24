@@ -30,12 +30,12 @@ if not "%input%" == "yes" goto End
 echo Setting adapter flavor to GTA
 powershell -Command "(gc TestAdapterFlavor.props) -replace '>TAfGT<', '>GTA<' | Out-File TestAdapterFlavor.props"
 
-echo Executing T4 scripts
-set VisualStudioVersion=15.0
-%MS_BUILD% ResolveTTs.proj
+rem echo Executing T4 scripts
+rem set VisualStudioVersion=15.0
+rem %MS_BUILD% ResolveTTs.proj
 
-echo Removing TAfGT projects (for now)
-powershell -ExecutionPolicy Bypass .\Tools\RemoveProjects.ps1 -flavor GTA
+rem echo Removing TAfGT projects (for now)
+rem powershell -ExecutionPolicy Bypass .\Tools\RemoveProjects.ps1 -flavor GTA
 
 echo Restoring NuGet packages
 pushd GoogleTestAdapter

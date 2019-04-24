@@ -6,9 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -16,17 +18,63 @@ namespace GoogleTestAdapter.TestResults
     {
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
+        private static readonly Regex SpecialCharsRegex = new Regex("[äöüÄÖÜß]+", RegexOptions.Compiled);
+
 
         private readonly ILogger _logger;
         private readonly string _xmlResultFile;
+        private readonly string _testExecutable;
         private readonly IDictionary<string, TestCase> _testCasesMap;
+        private readonly Lazy<IDictionary<string, TestCase>> _workaroundMapLazy;
 
 
-        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string xmlResultFile, ILogger logger)
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string testExecutable, string xmlResultFile, ILogger logger)
         {
             _logger = logger;
+            _testExecutable = testExecutable;
             _xmlResultFile = xmlResultFile;
             _testCasesMap = testCasesRun.ToDictionary(tc => tc.FullyQualifiedName, tc => tc);
+            _workaroundMapLazy  = new Lazy<IDictionary<string, TestCase>>(CreateWorkaroundMap);
+        }
+
+        // workaround for special chars not ending up in gtest xml output file
+        private IDictionary<string, TestCase> CreateWorkaroundMap()
+        {
+            var map = new Dictionary<string, TestCase>();
+            var duplicates = new HashSet<string>();
+            var duplicateTestCases = new List<TestCase>();
+
+            foreach (var kvp in _testCasesMap)
+            {
+                string workaroundKey = SpecialCharsRegex.Replace(kvp.Key, "");
+                if (map.ContainsKey(workaroundKey))
+                {
+                    duplicates.Add(workaroundKey);
+                    duplicateTestCases.Add(kvp.Value);
+                }
+                else
+                {
+                    map[workaroundKey] = kvp.Value;
+                }
+            }
+
+            foreach (var duplicate in duplicates)
+            {
+                duplicateTestCases.Add(map[duplicate]);
+                map.Remove(duplicate);
+            }
+
+            if (duplicateTestCases.Any())
+            {
+                string message =
+                    $"Executable {_testExecutable} has test names containing characters which happen to not end up in the XML file produced by Google Test. " +
+                    "This has caused ambiguities while resolving the according test results, which are thus not available. " + 
+                    $"Note that this problem does not occur if GTA option '{SettingsWrapper.OptionUseNewTestExecutionFramework}' is enabled." +
+                    $"\nThe following tests are affected: {string.Join(", ", duplicateTestCases.Select(tc => tc.FullyQualifiedName).OrderBy(n => n))}";
+                _logger.LogWarning(message);
+            }
+
+            return map;
         }
 
 
@@ -49,7 +97,9 @@ namespace GoogleTestAdapter.TestResults
             var testResults = new List<TestResult>();
             try
             {
+#pragma warning disable IDE0017 // Simplify object initialization
                 var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
+#pragma warning restore IDE0017 // Simplify object initialization
                 settings.XmlResolver = null;
                 using (var reader = XmlReader.Create(_xmlResultFile, settings))
                 {
@@ -94,9 +144,11 @@ namespace GoogleTestAdapter.TestResults
         {
             string qualifiedName = GetQualifiedName(testcaseNode);
 
-            TestCase testCase;
-            if (!_testCasesMap.TryGetValue(qualifiedName, out testCase))
+            if (!_testCasesMap.TryGetValue(qualifiedName, out var testCase) &&
+                !_workaroundMapLazy.Value.TryGetValue(qualifiedName, out testCase))
+            {
                 return null;
+            }
 
             var testResult = new TestResult(testCase)
             {
@@ -152,7 +204,7 @@ namespace GoogleTestAdapter.TestResults
         private TimeSpan ParseDuration(string durationInSeconds)
         {
             return
-                StandardOutputTestResultParser
+                StreamingStandardOutputTestResultParser
                     .NormalizeDuration(TimeSpan.FromSeconds(double.Parse(durationInSeconds, NumberFormatInfo)));
         }
 

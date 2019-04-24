@@ -17,19 +17,23 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
 using EnvDTE;
+using Microsoft.VisualStudio.AsyncPackageHelpers;
 
 namespace GoogleTestAdapter.VsPackage
 {
 
+    [AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, "General", 110, 501, true)]
-    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, "Parallelization", 110, 502, true)]
-    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, "Google Test", 110, 503, true)]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
+    [ProvideOptionPage(typeof(ParallelizationOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageParallelizationName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
+//    [Microsoft.VisualStudio.Shell.ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IDisposable
+    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IAsyncLoadablePackageInitialize, IDisposable
     {
         private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
@@ -39,33 +43,76 @@ namespace GoogleTestAdapter.VsPackage
         private ParallelizationOptionsDialogPage _parallelizationOptions;
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
-        // ReSharper disable once NotAccessedField.Local
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
+
+        private bool _isAsyncLoadSupported;
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            var componentModel = (IComponentModel)GetGlobalService(typeof(SComponentModel));
-            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+            _isAsyncLoadSupported = this.IsAsyncPackageSupported();
+            if (!_isAsyncLoadSupported)
+            {
+                var componentModel = (IComponentModel) GetGlobalService(typeof(SComponentModel));
+                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+                DoInitialize();
+            }
+        }
 
-            _generalOptions = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
-            _parallelizationOptions = (ParallelizationOptionsDialogPage)GetDialogPage(typeof(ParallelizationOptionsDialogPage));
-            _googleTestOptions = (GoogleTestOptionsDialogPage)GetDialogPage(typeof(GoogleTestOptionsDialogPage));
+        IVsTask IAsyncLoadablePackageInitialize.Initialize(IAsyncServiceProvider serviceProvider, IProfferAsyncService profferService,
+            IAsyncProgressCallback progressCallback)
+        {
+            if (!_isAsyncLoadSupported)
+            {
+                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
+            }
+
+            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
+            {
+                var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
+                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                
+                DoInitialize();
+
+                return null;
+            }).AsVsTask();
+        }
+
+        private void DoInitialize()
+        {
+            InitializeOptions();
+            InitializeCommands();
+            InitializeDebuggerAttacherService();
+            DisplayReleaseNotesIfNecessary();
+        }
+
+        private void InitializeOptions()
+        {
+            _generalOptions = (GeneralOptionsDialogPage) GetDialogPage(typeof(GeneralOptionsDialogPage));
+            _parallelizationOptions =
+                (ParallelizationOptionsDialogPage) GetDialogPage(typeof(ParallelizationOptionsDialogPage));
+            _googleTestOptions = (GoogleTestOptionsDialogPage) GetDialogPage(typeof(GoogleTestOptionsDialogPage));
 
             _globalRunSettings.RunSettings = GetRunSettingsFromOptionPages();
 
             _generalOptions.PropertyChanged += OptionsChanged;
             _parallelizationOptions.PropertyChanged += OptionsChanged;
             _googleTestOptions.PropertyChanged += OptionsChanged;
+        }
 
+        private void InitializeCommands()
+        {
             SwitchCatchExceptionsOptionCommand.Initialize(this);
             SwitchBreakOnFailureOptionCommand.Initialize(this);
             SwitchParallelExecutionOptionCommand.Initialize(this);
             SwitchPrintTestOutputOptionCommand.Initialize(this);
+        }
 
-            DisplayReleaseNotesIfNecessary();
-
+        private void InitializeDebuggerAttacherService()
+        {
             var logger = new ActivityLogLogger(this, () => _generalOptions.DebugMode);
             var debuggerAttacher = new VsDebuggerAttacher(this);
             _debuggerAttacherServiceHost = new DebuggerAttacherServiceHost(_debuggingNamedPipeId, debuggerAttacher, logger);
@@ -91,6 +138,8 @@ namespace GoogleTestAdapter.VsPackage
             Dispose(true);
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", 
+            MessageId = nameof(_debuggerAttacherServiceHost), Justification = "Close() includes Dispose()")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -101,15 +150,11 @@ namespace GoogleTestAdapter.VsPackage
 
                 try
                 {
-                    // Cannot simply do ".?" because Code Analysis does not understand that.
-                    if (_debuggerAttacherServiceHost != null)
-                    {
-                        _debuggerAttacherServiceHost.Close();
-                    }
+                    _debuggerAttacherServiceHost?.Close();
                 }
                 catch (CommunicationException)
                 {
-                    _debuggerAttacherServiceHost.Abort();
+                    _debuggerAttacherServiceHost?.Abort();
                 }
             }
             base.Dispose(disposing);
@@ -172,6 +217,8 @@ namespace GoogleTestAdapter.VsPackage
 
         private RunSettings GetRunSettingsFromOptionPages()
         {
+            GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName);
+
             return new RunSettings
             {
                 PrintTestOutput = _generalOptions.PrintTestOutput,
@@ -186,12 +233,12 @@ namespace GoogleTestAdapter.VsPackage
                 ParseSymbolInformation = _generalOptions.ParseSymbolInformation,
                 DebugMode = _generalOptions.DebugMode,
                 TimestampOutput = _generalOptions.TimestampOutput,
-                ShowReleaseNotes = ShowReleaseNotes,
                 AdditionalTestExecutionParam = _generalOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = _generalOptions.BatchForTestSetup,
                 BatchForTestTeardown = _generalOptions.BatchForTestTeardown,
                 KillProcessesOnCancel = _generalOptions.KillProcessesOnCancel,
                 SkipOriginCheck = _generalOptions.SkipOriginCheck,
+                ExitCodeTestCase = _generalOptions.ExitCodeTestCase,
 
                 CatchExceptions = _googleTestOptions.CatchExceptions,
                 BreakOnFailure = _googleTestOptions.BreakOnFailure,
@@ -206,20 +253,36 @@ namespace GoogleTestAdapter.VsPackage
                 UseNewTestExecutionFramework = _generalOptions.UseNewTestExecutionFramework2,
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
-                SolutionDir = GetSolutionDir()
+                SolutionDir = solutionDir,
+                PlatformName = platformName,
+                ConfigurationName = configurationName
             };
         }
 
-        private string GetSolutionDir()
+        private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
         {
+            solutionDir = platformName = configurationName = null;
+
             try
             {
-                DTE dte = GetService(typeof(DTE)) as DTE;
-                return Path.GetDirectoryName(dte.Solution.FullName);
+                if (GetService(typeof(DTE)) is DTE dte)
+                {
+                    solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
+
+                    if (dte.Solution.Projects.Count > 0)
+                    {  
+                        var configurationManager = dte.Solution.Projects.Item(1).ConfigurationManager;  
+                        var activeConfiguration = configurationManager.ActiveConfiguration;
+
+                        platformName = activeConfiguration.PlatformName;
+                        configurationName = activeConfiguration.ConfigurationName;
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                new ActivityLogLogger(this, () => true)
+                    .LogError($"Exception while receiving configuration info from Visual Studio{Environment.NewLine}{e}");
             }
         }
     }

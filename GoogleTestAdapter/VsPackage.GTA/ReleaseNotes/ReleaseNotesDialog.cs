@@ -2,23 +2,19 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
     public partial class ReleaseNotesDialog : Form
     {
-        internal class ShowReleaseNotesChangedEventArgs : EventArgs
-        {
-            internal bool ShowReleaseNotes { get; set; }
-        }
-
-        internal event EventHandler<ShowReleaseNotesChangedEventArgs> ShowReleaseNotesChanged;
-
         private readonly ISet<Uri> _externalUris = new HashSet<Uri>();
 
         public ReleaseNotesDialog()
         {
             InitializeComponent();
+
+            Load += (sender, args) => DonateButton.Select();
 
             WebBrowser.CanGoBackChanged += (sender, args) => BackButton.Enabled = WebBrowser.CanGoBack;
             BackButton.Click += (sender, args) => WebBrowser.GoBack();
@@ -26,22 +22,18 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             WebBrowser.CanGoForwardChanged += (sender, args) => ForwardButton.Enabled = WebBrowser.CanGoForward;
             ForwardButton.Click += (sender, args) => WebBrowser.GoForward();
 
-            ShowReleaseNotesCheckBox.CheckedChanged += 
-                (sender, args) => ShowReleaseNotesChanged?.Invoke(this, new ShowReleaseNotesChangedEventArgs { ShowReleaseNotes = ShowReleaseNotesCheckBox.Checked });
-
             OkButton.Click += (sender, args) => Close();
+            DonateButton.Click += (sender, args) =>
+            {
+                OpenUriInDefaultBrowser(Donations.Uri);
+                Close();
+            };
         }
 
         internal Uri HtmlFile
         {
             get => WebBrowser.Url;
             set => WebBrowser.Url = value;
-        }
-
-        internal bool ShowReleaseNotesChecked
-        {
-            get => ShowReleaseNotesCheckBox.Checked;
-            set => ShowReleaseNotesCheckBox.Checked = value;
         }
 
         internal void AddExternalUri(Uri externalUri)

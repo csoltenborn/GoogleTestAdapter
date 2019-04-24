@@ -1,2 +1,2 @@
-AbstractConsoleIntegrationTests.cs
-app.config
+nuget.exe
+VsTestConsole

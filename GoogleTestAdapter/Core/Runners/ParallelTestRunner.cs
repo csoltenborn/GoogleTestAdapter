@@ -8,6 +8,7 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Runners
@@ -31,20 +32,28 @@ namespace GoogleTestAdapter.Runners
 
 
         public void RunTests(IEnumerable<TestCase> testCasesToRun, bool isBeingDebugged, 
-            IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+            IDebuggedProcessExecutorFactory processExecutorFactory)
         {
             List<Thread> threads;
             lock (this)
             {
                 threads = new List<Thread>();
-                RunTests(testCasesToRun, threads, isBeingDebugged, debuggedLauncher, executor);
+                RunTests(testCasesToRun, threads, isBeingDebugged, processExecutorFactory);
             }
 
             foreach (Thread thread in threads)
             {
                 thread.Join();
             }
+
+            // ReSharper disable once InconsistentlySynchronizedField
+            foreach (var result in _testRunners.SelectMany(r => r.ExecutableResults))
+            {
+                ExecutableResults.Add(result);
+            }
         }
+
+        public IList<ExecutableResult> ExecutableResults { get; } = new List<ExecutableResult>();
 
         public void Cancel()
         {
@@ -58,7 +67,7 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void RunTests(IEnumerable<TestCase> testCasesToRun, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
+        private void RunTests(IEnumerable<TestCase> testCasesToRun, List<Thread> threads, bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory)
         {
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
@@ -75,7 +84,7 @@ namespace GoogleTestAdapter.Runners
                 _testRunners.Add(runner);
 
                 var thread = new Thread(
-                    () => runner.RunTests(testcases, isBeingDebugged, debuggedLauncher, executor)){ Name = $"GTA Testrunner {threadId}" };
+                    () => runner.RunTests(testcases, isBeingDebugged, processExecutorFactory)){ Name = $"GTA Testrunner {threadId}" };
                 threads.Add(thread);
 
                 thread.Start();

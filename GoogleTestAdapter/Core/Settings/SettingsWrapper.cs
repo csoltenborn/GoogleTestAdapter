@@ -83,7 +83,7 @@ namespace GoogleTestAdapter.Settings
         // ReSharper disable once UnusedMember.Global
         public SettingsWrapper() { }
 
-        public void ExecuteWithSettingsForExecutable(string executable, Action action, ILogger logger)
+        public void ExecuteWithSettingsForExecutable(string executable, ILogger logger, Action action)
         {
             lock (_lock)
             {
@@ -162,17 +162,25 @@ namespace GoogleTestAdapter.Settings
             if (value is string)
                 return $"{propertyInfo.Name}: '{value}'";
 
-            var pairs = value as IEnumerable<RegexTraitPair>;
-            if (pairs != null)
+            if (value is IEnumerable<RegexTraitPair> pairs)
                 return $"{propertyInfo.Name}: {{{string.Join(", ", pairs)}}}";
 
             return $"{propertyInfo.Name}: {value}";
         }
 
+        private const string OnlyInsideVs = " (only available inside VS)";
 
         public const string SolutionDirPlaceholder = "$(SolutionDir)";
         private const string DescriptionOfSolutionDirPlaceHolder =
-            SolutionDirPlaceholder + " - directory of the solution (only available inside VS)";
+            SolutionDirPlaceholder + " - directory of the solution" + OnlyInsideVs;
+
+        public const string PlatformNamePlaceholder = "$(PlatformName)";
+        private const string DescriptionOfPlatformNamePlaceholder =
+            PlatformNamePlaceholder + " - the name of the solution's current platform" + OnlyInsideVs;
+
+        public const string ConfigurationNamePlaceholder = "$(ConfigurationName)";
+        private const string DescriptionOfConfigurationNamePlaceholder =
+            ConfigurationNamePlaceholder + " - the name of the solution's current configuration" + OnlyInsideVs;
 
         private string ReplaceSolutionDirPlaceholder(string theString)
         {
@@ -184,6 +192,25 @@ namespace GoogleTestAdapter.Settings
             return string.IsNullOrWhiteSpace(SolutionDir) 
                 ? theString.Replace(SolutionDirPlaceholder, "")
                 : theString.Replace(SolutionDirPlaceholder, SolutionDir);
+        }
+
+        private string ReplacePlatformAndConfigurationPlaceholders(string theString)
+        {
+            if (string.IsNullOrWhiteSpace(theString))
+            {
+                return "";
+            }
+
+            string result = theString;
+
+            result = string.IsNullOrWhiteSpace(_currentSettings.PlatformName) 
+                ? result.Replace(PlatformNamePlaceholder, "")
+                : result.Replace(PlatformNamePlaceholder, _currentSettings.PlatformName);
+            result = string.IsNullOrWhiteSpace(_currentSettings.ConfigurationName) 
+                ? result.Replace(ConfigurationNamePlaceholder, "")
+                : result.Replace(ConfigurationNamePlaceholder, _currentSettings.ConfigurationName);
+
+            return result;
         }
 
         
@@ -299,6 +326,8 @@ namespace GoogleTestAdapter.Settings
             "File part of each pattern may contain '*' and '?'; patterns are separated by ';'. Example: " + ExecutableDirPlaceholder + "\\pdbs\\*.pdb\n" +
             "Placeholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformNamePlaceholder + "\n" + 
+            DescriptionOfConfigurationNamePlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfEnvVarPlaceholders;
@@ -310,7 +339,8 @@ namespace GoogleTestAdapter.Settings
                 .Select(p => 
                     ReplaceEnvironmentVariables(
                         ReplaceSolutionDirPlaceholder(
-                            ReplaceExecutablePlaceholders(p.Trim(), executable))));
+                            ReplacePlatformAndConfigurationPlaceholders(
+                                ReplaceExecutablePlaceholders(p.Trim(), executable)))));
 
 
         public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
@@ -333,6 +363,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionWorkingDirDescription =
             "If non-empty, will set the working directory for running the tests (default: " + DescriptionOfExecutableDirPlaceHolder + ").\nExample: " + SolutionDirPlaceholder + "\\MyTestDir\nPlaceholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformNamePlaceholder + "\n" + 
+            DescriptionOfConfigurationNamePlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfTestDirPlaceholder + DescriptionTestExecutionOnly + "\n" + 
@@ -347,16 +379,18 @@ namespace GoogleTestAdapter.Settings
         {
             return ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
-                        ReplaceExecutablePlaceholders(
-                            ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId), executable)));
+                        ReplacePlatformAndConfigurationPlaceholders(
+                            ReplaceExecutablePlaceholders(
+                                ReplaceTestDirAndThreadIdPlaceholders(WorkingDir, testDirectory, threadId), executable))));
         }
 
         public string GetWorkingDirForDiscovery(string executable)
         {
             return ReplaceEnvironmentVariables(
                     ReplaceSolutionDirPlaceholder(
-                        RemoveTestDirAndThreadIdPlaceholders(
-                            ReplaceExecutablePlaceholders(WorkingDir, executable))));
+                        ReplacePlatformAndConfigurationPlaceholders(
+                            RemoveTestDirAndThreadIdPlaceholders(
+                                ReplaceExecutablePlaceholders(WorkingDir, executable)))));
         }
 
 
@@ -365,6 +399,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionPathExtensionDescription =
             "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + ExecutableDirPlaceholder + "\\MyOtherBins;\nPlaceholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformNamePlaceholder + "\n" + 
+            DescriptionOfConfigurationNamePlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfEnvVarPlaceholders;
@@ -374,7 +410,8 @@ namespace GoogleTestAdapter.Settings
         public string GetPathExtension(string executable)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceExecutablePlaceholders(PathExtension, executable)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceExecutablePlaceholders(PathExtension, executable))));
 
 
         public const string TraitsRegexesPairSeparator = "//||//";
@@ -449,6 +486,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable during test execution. Placeholders:\n" + 
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformNamePlaceholder + "\n" + 
+            DescriptionOfConfigurationNamePlaceholder + "\n" + 
             DescriptionOfExecutableDirPlaceHolder + "\n" + 
             DescriptionOfExecutablePlaceHolder + "\n" + 
             DescriptionOfTestDirPlaceholder + DescriptionTestExecutionOnly + "\n" + 
@@ -460,18 +499,22 @@ namespace GoogleTestAdapter.Settings
         public string GetUserParametersForExecution(string executable, string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceExecutablePlaceholders(
-                        ReplaceTestDirAndThreadIdPlaceholders(AdditionalTestExecutionParam, testDirectory, threadId), executable)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceExecutablePlaceholders(
+                            ReplaceTestDirAndThreadIdPlaceholders(AdditionalTestExecutionParam, testDirectory, threadId), executable))));
 
         public string GetUserParametersForDiscovery(string executable)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    RemoveTestDirAndThreadIdPlaceholders(
-                        ReplaceExecutablePlaceholders(AdditionalTestExecutionParam, executable))));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        RemoveTestDirAndThreadIdPlaceholders(
+                            ReplaceExecutablePlaceholders(AdditionalTestExecutionParam, executable)))));
 
 
         private const string DescriptionOfPlaceholdersForBatches =
             DescriptionOfSolutionDirPlaceHolder + "\n" + 
+            DescriptionOfPlatformNamePlaceholder + "\n" + 
+            DescriptionOfConfigurationNamePlaceholder + "\n" + 
             DescriptionOfTestDirPlaceholder + "\n" + 
             DescriptionOfThreadIdPlaceholder + "\n" + 
             DescriptionOfEnvVarPlaceholders;
@@ -488,7 +531,8 @@ namespace GoogleTestAdapter.Settings
         public string GetBatchForTestSetup(string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceTestDirAndThreadIdPlaceholders(BatchForTestSetup, testDirectory, threadId)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceTestDirAndThreadIdPlaceholders(BatchForTestSetup, testDirectory, threadId))));
 
 
         public static readonly string OptionBatchForTestTeardown = Resources.OptionBatchForTestTeardown;
@@ -502,7 +546,8 @@ namespace GoogleTestAdapter.Settings
         public string GetBatchForTestTeardown(string testDirectory, int threadId)
             => ReplaceEnvironmentVariables(
                 ReplaceSolutionDirPlaceholder(
-                    ReplaceTestDirAndThreadIdPlaceholders(BatchForTestTeardown, testDirectory, threadId)));
+                    ReplacePlatformAndConfigurationPlaceholders(
+                        ReplaceTestDirAndThreadIdPlaceholders(BatchForTestTeardown, testDirectory, threadId))));
 
 
         public static readonly string OptionKillProcessesOnCancel = Resources.OptionKillProcessesOnCancel;
@@ -518,6 +563,14 @@ namespace GoogleTestAdapter.Settings
             "If true, it will not be checked whether executables originate from this computer. Note that this might impose security risks, e.g. when building downloaded solutions. This setting can only be changed via VS Options.";
 
         public virtual bool SkipOriginCheck => _currentSettings.SkipOriginCheck ?? OptionSkipOriginCheckDefaultValue;
+
+
+        public const string OptionExitCodeTestCase = "Exit code test case";
+        public const string OptionExitCodeTestCaseDefaultValue = "";
+        public const string OptionExitCodeTestCaseDescription =
+            "If non-empty, an additional test case will be generated per test executable that passes if and only if the test executable returns exit code 0.";
+
+        public virtual string ExitCodeTestCase => _currentSettings.ExitCodeTestCase ?? OptionExitCodeTestCaseDefaultValue;
 
         #endregion
 

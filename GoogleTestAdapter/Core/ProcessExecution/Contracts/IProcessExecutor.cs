@@ -4,9 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace GoogleTestAdapter.Framework
+namespace GoogleTestAdapter.ProcessExecution.Contracts
 {
-
     public interface IProcessExecutor
     {
         int ExecuteCommandBlocking(string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, Action<string> reportOutputLine);

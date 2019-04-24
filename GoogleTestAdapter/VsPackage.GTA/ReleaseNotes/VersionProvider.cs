@@ -9,7 +9,6 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
     internal class VersionProvider
     {
         private const string CollectionName = "GoogleTestAdapter";
-        private const string OldVersionPropertyName = "LastStartedVersion"; // TODO remove for release 1.0
         private const string VersionPropertyName = "LastVersion";
 
         private readonly WritableSettingsStore _settingsStore;
@@ -21,9 +20,6 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
             if (!_settingsStore.CollectionExists(CollectionName))
                 _settingsStore.CreateCollection(CollectionName);
-
-            if (_settingsStore.PropertyExists(CollectionName, OldVersionPropertyName))
-                _settingsStore.DeleteProperty(CollectionName, OldVersionPropertyName);
         }
 
         internal Version FormerlyInstalledVersion

@@ -20,10 +20,10 @@ namespace GoogleTestAdapter.TestResults
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",
                 "FooSuite.BazTest", "BarSuite.BazTest2");
 
-            var parser = new XmlTestResultParser(testCases, "somefile", TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", "somefile", TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(0);
+            results.Should().BeEmpty();
             MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -35,10 +35,10 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(0);
+            results.Should().BeEmpty();
             MockLogger.Verify(l => l.DebugWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -50,10 +50,10 @@ namespace GoogleTestAdapter.TestResults
                 "GoogleTestSuiteName1.TestMethod_002");
             MockOptions.Setup(o => o.DebugMode).Returns(true);
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFileBroken_InvalidStatusAttibute, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             MockLogger.Verify(l => l.DebugWarning(It.IsAny<string>()), Times.Exactly(1));
         }
 
@@ -63,10 +63,10 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_001", "SimpleTest.DISABLED_TestMethodDisabled");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(2);
+            results.Should().HaveCount(2);
             AssertTestResultIsPassed(results[0]);
             AssertTestResultIsSkipped(results[1]);
         }
@@ -77,8 +77,8 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("GoogleTestSuiteName1.TestMethod_007");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
-            parser.Invoking(p => p.GetTestResults()).ShouldNotThrow<Exception>();
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
+            parser.Invoking(p => p.GetTestResults()).Should().NotThrow<Exception>();
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Foo"))), Times.Exactly(1));
         }
 
@@ -88,10 +88,10 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("ParameterizedTestsTest1/AllEnabledTest.TestInstance/7");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             AssertTestResultIsPassed(results[0]);
         }
 
@@ -101,10 +101,10 @@ namespace GoogleTestAdapter.TestResults
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("AnimalsTest.testGetEnoughAnimals", TestDataCreator.DummyExecutable, @"x:\prod\company\util\util.cpp").Yield();
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             string ErrorMsg = @"Value of: animals.size()
   Actual: 1
 Expected: 3
@@ -115,14 +115,14 @@ Should get three animals";
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void GetTestResults_Sample1_FindsParamterizedFailureResult()
+        public void GetTestResults_Sample1_FindsParameterizedFailureResult()
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("ParameterizedTestsTest1/AllEnabledTest.TestInstance/11", TestDataCreator.DummyExecutable, @"someSimpleParameterizedTest.cpp").Yield();
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile1, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile1, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             string errorMsg = @"Expected: (0) != ((pGSD->g_outputs64[(g_nOutput[ 8 ]-1)/64] & g_dnOutput[g_nOutput[ 8 ]])), actual: 0 vs 0";
             AssertTestResultIsFailure(results[0], errorMsg);
             results[0].ErrorStackTrace.Should().Contain(@"someSimpleParameterizedTest.cpp");
@@ -134,10 +134,10 @@ Should get three animals";
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("FooTest.DoesXyz");
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile2, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile2, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             AssertTestResultIsPassed(results[0]);
         }
 
@@ -148,10 +148,10 @@ Should get three animals";
             IEnumerable<Model.TestCase> testCases = TestDataCreator.ToTestCase("FooTest.MethodBarDoesAbc", TestDataCreator.DummyExecutable,
                 @"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp").Yield();
 
-            var parser = new XmlTestResultParser(testCases, TestResources.XmlFile2, TestEnvironment.Logger);
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlFile2, TestEnvironment.Logger);
             List<Model.TestResult> results = parser.GetTestResults();
 
-            results.Count.Should().Be(1);
+            results.Should().ContainSingle();
             string ErrorMsg = @"#1 - Value of: output_filepath
   Actual: ""this/package/testdata/myoutputfile.dat""
 Expected: input_filepath
@@ -164,6 +164,20 @@ Something's wrong :(";
             results[0].ErrorStackTrace.Should().Contain(@"c:\prod\gtest-1.7.0\staticallylinkedgoogletests\main.cpp");
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_Umlauts_FindsOneResultAndWarns()
+        {
+            IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("TheClass.Täst1", "TheClass.Töst1", "TheClass.Täst2");
+
+            var parser = new XmlTestResultParser(testCases, "someexecutable", TestResources.XmlUmlauts, TestEnvironment.Logger);
+            List<Model.TestResult> results = parser.GetTestResults();
+
+            results.Should().ContainSingle();
+            AssertTestResultIsPassed(results[0]);
+            MockLogger.Verify(l => l.LogWarning(It.IsAny<string>()), Times.Once);
+        }
+
 
         public static void AssertTestResultIsPassed(Model.TestResult testResult)
         {
@@ -171,7 +185,7 @@ Something's wrong :(";
             testResult.ErrorMessage.Should().BeNull();
         }
 
-        private void AssertTestResultIsSkipped(Model.TestResult testResult)
+        public static void AssertTestResultIsSkipped(Model.TestResult testResult)
         {
             testResult.Outcome.Should().Be(Model.TestOutcome.Skipped);
             testResult.ErrorMessage.Should().BeNull();

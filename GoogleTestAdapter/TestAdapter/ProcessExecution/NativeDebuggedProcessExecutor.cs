@@ -12,25 +12,25 @@ using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.Win32.SafeHandles;
 
-namespace GoogleTestAdapter.Helpers
+namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 {
-    public class ProcessExecutor : IProcessExecutor
+    public class NativeDebuggedProcessExecutor : IDebuggedProcessExecutor
     {
         public const int ExecutionFailed = int.MaxValue;
 
         private readonly IDebuggerAttacher _debuggerAttacher;
+        private readonly bool _printTestOutput;
         private readonly ILogger _logger;
 
-        public ProcessExecutor(ILogger logger) : this(null, logger)
+        public NativeDebuggedProcessExecutor(IDebuggerAttacher debuggerAttacher, bool printTestOutput, ILogger logger)
         {
-        }
-
-        public ProcessExecutor(IDebuggerAttacher debuggerAttacher, ILogger logger)
-        {
-            _debuggerAttacher = debuggerAttacher;
+            _debuggerAttacher = debuggerAttacher ?? throw new ArgumentNullException(nameof(debuggerAttacher));
+            _printTestOutput = printTestOutput;
             _logger = logger;
         }
 
@@ -38,8 +38,9 @@ namespace GoogleTestAdapter.Helpers
         {
             try
             {
-                return NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, envVars, pathExtension, _debuggerAttacher, reportOutputLine, processId => _processId = processId);
-
+                int exitCode = NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
+                _logger.DebugInfo($"Executable {command} returned with exit code {exitCode}");
+                return exitCode;
             }
             catch (Win32Exception ex)
             {
@@ -54,12 +55,17 @@ namespace GoogleTestAdapter.Helpers
         public void Cancel()
         {
             if (_processId.HasValue)
-                TestProcessLauncher.KillProcess(_processId.Value, _logger);
+                ProcessUtils.KillProcess(_processId.Value, _logger);
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+#pragma warning disable 169
+#pragma warning disable 414
         private static class NativeMethods
         {
             private class ProcessOutputPipeStream : PipeStream
@@ -96,34 +102,66 @@ namespace GoogleTestAdapter.Helpers
             private const uint INFINITE = 0xFFFFFFFF;
 
             internal static int ExecuteCommandBlocking(
-                string command, string parameters, string workingDir, IDictionary<string, string> envVars, string pathExtension, 
-                IDebuggerAttacher debuggerAttacher, Action<string> reportOutputLine, Action<int> reportProcessId)
+                string command, string parameters, string workingDir, string pathExtension, 
+                IDebuggerAttacher debuggerAttacher, ILogger logger, bool printTestOutput, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
-                using (var pipeStream = new ProcessOutputPipeStream())
+                ProcessOutputPipeStream pipeStream = null;
+                try
                 {
-                    var processInfo = CreateProcess(command, parameters, workingDir, envVars, pathExtension, pipeStream._writingEnd);
+                    pipeStream = new ProcessOutputPipeStream();
+
+                    var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, pipeStream._writingEnd);
                     reportProcessId(processInfo.dwProcessId);
                     using (var process = new SafeWaitHandle(processInfo.hProcess, true))
                     using (var thread  = new SafeWaitHandle(processInfo.hThread, true))
                     {
                         pipeStream.ConnectedToChildProcess();
 
-                        debuggerAttacher?.AttachDebugger(processInfo.dwProcessId);
+                        logger.DebugInfo($"Attaching debugger to '{command}' via native implementation");
+                        if (!debuggerAttacher.AttachDebugger(processInfo.dwProcessId))
+                        {
+                            logger.LogError($"Could not attach debugger to process {processInfo.dwProcessId}");
+                        }
+
+                        if (printTestOutput)
+                        {
+                            DotNetProcessExecutor.LogStartOfOutput(logger, command, parameters);
+                        }
 
                         ResumeThread(thread);
 
                         using (var reader = new StreamReader(pipeStream, Encoding.Default))
+                        {
+                            pipeStream = null;
+
                             while (!reader.EndOfStream)
-                                reportOutputLine(reader.ReadLine());
+                            {
+                                string line = reader.ReadLine();
+                                reportOutputLine(line);
+                                if (printTestOutput)
+                                {
+                                    logger.LogInfo(line);
+                                }
+                            }
+                        }
 
                         WaitForSingleObject(process, INFINITE);
 
+                        if (printTestOutput)
+                        {
+                            DotNetProcessExecutor.LogEndOfOutput(logger);
+                        }
+
                         int exitCode;
-                        if(!GetExitCodeProcess(process, out exitCode))
+                        if (!GetExitCodeProcess(process, out exitCode))
                             throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get exit code of process");
 
                         return exitCode;
                     }
+                }
+                finally
+                {
+                    pipeStream?.Dispose();
                 }
             }
 
@@ -221,7 +259,7 @@ namespace GoogleTestAdapter.Helpers
                 return processInfo;
             }
 
-            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, BestFitMapping = false, ThrowOnUnmappableChar = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             private static extern bool CreateProcess(
                 string lpApplicationName, string lpCommandLine, 
@@ -247,7 +285,7 @@ namespace GoogleTestAdapter.Helpers
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern int ResumeThread(SafeHandle hThread);
 
-            private static SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
+            private static readonly SafeHandle NULL_HANDLE = new SafePipeHandle(IntPtr.Zero, false);
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
             private class STARTUPINFOEX
@@ -257,6 +295,7 @@ namespace GoogleTestAdapter.Helpers
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+            [BestFitMapping(false, ThrowOnUnmappableChar = true)]
             private class STARTUPINFO
             {
                 public Int32 cb;
@@ -296,5 +335,7 @@ namespace GoogleTestAdapter.Helpers
                 public bool bInheritHandle;
             }
         }
+#pragma warning restore 414
+#pragma warning restore 169
     }
 }

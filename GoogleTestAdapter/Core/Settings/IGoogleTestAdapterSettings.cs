@@ -42,15 +42,17 @@ namespace GoogleTestAdapter.Settings
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
         bool? TimestampOutput { get; set; }
-        bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
+        string ExitCodeTestCase { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
 
         // internal
         string DebuggingNamedPipeId { get; set; }
         string SolutionDir { get; set; }
+        string PlatformName { get; set; }
+        string ConfigurationName { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -80,14 +82,16 @@ namespace GoogleTestAdapter.Settings
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
-            self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
+            self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
             self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
+            self.PlatformName = self.PlatformName ?? other.PlatformName;
+            self.ConfigurationName = self.ConfigurationName ?? other.ConfigurationName;
         }
     }
 

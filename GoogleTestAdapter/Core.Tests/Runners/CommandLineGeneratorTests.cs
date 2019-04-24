@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -28,7 +29,7 @@ namespace GoogleTestAdapter.Runners
                     // ReSharper disable once ObjectCreationAsStatement
                     new CommandLineGenerator(new List<Model.TestCase>(), 0, null, "",
                         TestEnvironment.Options);
-            a.ShouldThrow<ArgumentNullException>();
+            a.Should().Throw<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -40,6 +41,29 @@ namespace GoogleTestAdapter.Runners
             string commandLine = new CommandLineGenerator(new List<Model.TestCase>(), TestDataCreator.DummyExecutable.Length, userParameters, "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
 
             commandLine.Should().EndWith(" -testdirectory=\"MyTestDirectory\"");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_NoTestCases_NoFilter()
+        {
+            string commandLine = new CommandLineGenerator(new List<Model.TestCase>(), TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
+
+            commandLine.Should().NotContain(GoogleTestConstants.FilterOption);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_OnlyExitCodeTestCase_DummyFilter()
+        {
+            var exitCodeTestName = "ExitCodeTest";
+            MockOptions.Setup(o => o.ExitCodeTestCase).Returns(exitCodeTestName);
+
+            var exitCodeTestCase =
+                ExitCodeTestsReporter.CreateExitCodeTestCase(MockOptions.Object, TestDataCreator.DummyExecutable);
+            string commandLine = new CommandLineGenerator(new List<Model.TestCase> {exitCodeTestCase}, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().First().CommandLine;
+
+            commandLine.Should().Contain($"{GoogleTestConstants.FilterOption}GTA_NOT_EXISTING_DUMMY_TEST_CASE");
         }
 
         [TestMethod]
@@ -233,7 +257,7 @@ namespace GoogleTestAdapter.Runners
             List<CommandLineGenerator.Args> commands = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().ToList();
 
-            commands.Count.Should().Be(3);
+            commands.Should().HaveCount(3);
 
             int lengthOfLongestTestname = allTests.Max(s => s.Length);
             int maxLength = CommandLineGenerator.MaxCommandLength - TestDataCreator.DummyExecutable.Length;
@@ -280,7 +304,7 @@ namespace GoogleTestAdapter.Runners
             List<CommandLineGenerator.Args> commands = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
                 .GetCommandLines().ToList();
 
-            commands.Count.Should().Be(3);
+            commands.Should().HaveCount(3);
 
             int lengthOfLongestTestname = allTests.Max(s => s.Length);
             int maxLength = CommandLineGenerator.MaxCommandLength - TestDataCreator.DummyExecutable.Length;

@@ -96,8 +96,7 @@ namespace GoogleTestAdapter.Tests.Common
 
                 int index = qualifiedName.LastIndexOf(".", StringComparison.Ordinal);
                 string suite = qualifiedName.Substring(0, index);
-                ISet<TestCase> testCasesWithSuiteName;
-                if (!suite2TestCases.TryGetValue(suite, out testCasesWithSuiteName))
+                if (!suite2TestCases.TryGetValue(suite, out var testCasesWithSuiteName))
                     suite2TestCases.Add(suite, testCasesWithSuiteName = new HashSet<TestCase>());
                 testCasesWithSuiteName.Add(testCase);
             }

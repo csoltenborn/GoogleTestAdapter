@@ -17,6 +17,12 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
+        public override void GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded()
+        {
+            base.GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded();
+        }
+
+        [TestMethod]
         public override void GetTestsFromExecutable_BothRegexesFromOptions_BeforeTraitIsOverridenByAfterTrait()
         {
             base.GetTestsFromExecutable_BothRegexesFromOptions_BeforeTraitIsOverridenByAfterTrait();

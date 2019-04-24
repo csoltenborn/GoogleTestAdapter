@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using FluentAssertions;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Scheduling;
+using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Fakes;
@@ -41,11 +41,12 @@ namespace GoogleTestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(parallelExecution);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
             MockOptions.Setup(o => o.SolutionDir).Returns(TestResources.SampleTestsSolutionDir);
-            var processExecutor = new ProcessExecutor(null, TestEnvironment.Logger);
 
             var collectingReporter = new FakeFrameworkReporter();
-            var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
-            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter, null, false, processExecutor);
+            var exitCodeTestsAggregator = new ExitCodeTestsAggregator();
+            var exitCodeTestsReporter = new ExitCodeTestsReporter(MockFrameworkReporter.Object, exitCodeTestsAggregator, MockOptions.Object, MockLogger.Object);
+            var testExecutor = new GoogleTestExecutor(TestEnvironment.Logger, TestEnvironment.Options, ProcessExecutorFactory, exitCodeTestsReporter);
+            testExecutor.RunTests(TestDataCreator.AllTestCasesExceptLoadTests, collectingReporter,false);
 
             sampleTestsDurationsFile.AsFileInfo()
                 .Should()

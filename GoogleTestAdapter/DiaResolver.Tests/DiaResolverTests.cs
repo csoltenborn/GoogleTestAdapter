@@ -36,7 +36,7 @@ namespace GoogleTestAdapter.DiaResolver
                 TestResources.LoadTests_ReleaseX86, 
                 "*", 
                 TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 628 : 728, 
-                108);
+                90);
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace GoogleTestAdapter.DiaResolver
                 resolver.Dispose();
             }
 
-            locations.Count.Should().BeGreaterOrEqualTo(expectedLocations);
+            locations.Should().HaveCountGreaterOrEqualTo(expectedLocations);
             fakeLogger.GetMessages(Severity.Warning, Severity.Error).Count.Should().BeGreaterOrEqualTo(expectedErrorMessages);
         }
     }

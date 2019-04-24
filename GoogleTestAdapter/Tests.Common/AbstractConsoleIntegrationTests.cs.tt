@@ -60,33 +60,36 @@ namespace GoogleTestAdapter.Tests.Common
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListDiscoverers_DiscovererIsListed()
         {
-            Assert.Inconclusive("skipped until #184 is fixed...");
-
             string arguments = CreateListDiscoverersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.ToLower().Should().MatchRegex(@"executor:\/\/(testadapterforgoogletest|googletestrunner)\/v1");
+            if (output.ToLower().Contains("googletestrunner"))
+                Assert.Fail("VS test framework appears to have been fixed :-) - enable test!");
+            else
+                Assert.Inconclusive("skipped until vs test framework is fixed...");
         }
 
         [TestMethod]
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListExecutors_ExecutorIsListed()
         {
-            Assert.Inconclusive("skipped until #184 is fixed...");
-
             string arguments = CreateListExecutorsArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().MatchRegex(@"executor:\/\/(TestAdapterForGoogleTest|GoogleTestRunner)\/v1");
+            if (output.ToLower().Contains("googletestrunner"))
+                Assert.Fail("VS test framework appears to have been fixed :-) - enable test!");
+            else
+                Assert.Inconclusive("skipped until vs test framework is fixed...");
         }
 
         [TestMethod]
         [TestCategory(TestMetadata.TestCategories.EndToEnd)]
         public virtual void Console_ListSettingsProviders_SettingsProviderIsListed()
         {
-            Assert.Inconclusive("skipped until #184 is fixed...");
-
             string arguments = CreateListSettingsProvidersArguments();
             string output = RunExecutableAndGetOutput(_solutionFile, arguments);
-            output.Should().Contain(@"GoogleTestAdapter");
+            if (output.ToLower().Contains("googletestadapter"))
+                Assert.Fail("VS test framework appears to have been fixed :-) - enable test!");
+            else
+                Assert.Inconclusive("skipped until vs test framework is fixed...");
         }
 
 
@@ -96,9 +99,7 @@ namespace GoogleTestAdapter.Tests.Common
             string workingDir = "";
 
             var launcher = new TestProcessLauncher();
-            List<string> standardOut;
-            List<string> standardErr;
-            launcher.GetOutputStreams(workingDir, command, arguments, out standardOut, out standardErr);
+            launcher.GetOutputStreams(workingDir, command, arguments, out List<string> standardOut, out var standardErr);
 
             string resultString = string.Join("\n", standardOut) + "\n\n" + string.Join("\n", standardErr);
             // ReSharper disable once AssignNullToNotNullAttribute

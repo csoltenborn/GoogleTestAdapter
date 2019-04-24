@@ -9,6 +9,8 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
@@ -81,11 +83,11 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                     Action attaching = () => client.Service.AttachDebugger(debuggeeProcessId);
                     if (expectedErrorMessagePart == null)
                     {
-                        attaching.ShouldNotThrow();
+                        attaching.Should().NotThrow();
                     }
                     else
                     {
-                        attaching.ShouldThrow<FaultException<DebuggerAttacherServiceFault>>().Where(
+                        attaching.Should().Throw<FaultException<DebuggerAttacherServiceFault>>().Where(
                             (FaultException<DebuggerAttacherServiceFault> ex) => ex.Detail.Message.Contains(expectedErrorMessagePart));
                     }
                 }

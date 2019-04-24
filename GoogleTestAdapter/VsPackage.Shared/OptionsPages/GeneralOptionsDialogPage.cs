@@ -247,6 +247,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _skipOriginCheck = SettingsWrapper.OptionSkipOriginCheckDefaultValue;
 
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionExitCodeTestCase)]
+        [Description(SettingsWrapper.OptionExitCodeTestCaseDescription)]
+        public string ExitCodeTestCase
+        {
+            get { return _exitCodeTestCase; }
+            set { SetAndNotify(ref _exitCodeTestCase, value); }
+        }
+        private string _exitCodeTestCase = SettingsWrapper.OptionExitCodeTestCaseDefaultValue;
+
         #endregion
     }
 

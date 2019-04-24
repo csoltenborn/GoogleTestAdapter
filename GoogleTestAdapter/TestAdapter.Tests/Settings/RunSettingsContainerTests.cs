@@ -99,7 +99,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             _container.SolutionSettings.AdditionalTestExecutionParam.Should().Be("solution");
             _container.SolutionSettings.BatchForTestSetup.Should().Be("solution");
 
-            _container.ProjectSettings.Count.Should().Be(3);
+            _container.ProjectSettings.Should().HaveCount(3);
             _container.ProjectSettings[0].AdditionalTestExecutionParam.Should().Be("project1");
             _container.ProjectSettings[1].AdditionalTestExecutionParam.Should().Be("project2");
             _container.ProjectSettings[2].AdditionalTestExecutionParam.Should().Be("foo");
@@ -122,7 +122,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             runSettingsContainer.Should().NotBeNull();
             runSettingsContainer.SolutionSettings.Should().NotBeNull();
-            runSettingsContainer.ProjectSettings.Count.Should().Be(1);
+            runSettingsContainer.ProjectSettings.Should().ContainSingle();
 
             runSettingsContainer.SolutionSettings.MaxNrOfThreads.Should().Be(3);
             runSettingsContainer.ProjectSettings[0].MaxNrOfThreads.Should().Be(4);

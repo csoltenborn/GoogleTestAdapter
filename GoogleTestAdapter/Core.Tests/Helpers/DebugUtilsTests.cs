@@ -25,6 +25,12 @@ namespace GoogleTestAdapter.Helpers
             DebugUtils.AssertIsNull("", "foo");
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AssertIsNull_Null_DoesNotThrow()
+        {
+            DebugUtils.AssertIsNull(null, "foo");
+        }
     }
 
 }

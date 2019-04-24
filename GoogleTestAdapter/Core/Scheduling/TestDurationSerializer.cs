@@ -1,5 +1,7 @@
 ﻿// This file has been modified by Microsoft on 8/2017.
 
+#pragma warning disable IDE0017 // Simplify object initialization
+
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using System;
@@ -102,8 +104,7 @@ namespace GoogleTestAdapter.Scheduling
             IDictionary<string, TestDuration> durationsMap = container.TestDurations.ToDictionary(x => x.Test, x => x);
             foreach (TestCase testcase in testcases)
             {
-                TestDuration pair;
-                if (durationsMap.TryGetValue(testcase.FullyQualifiedName, out pair))
+                if (durationsMap.TryGetValue(testcase.FullyQualifiedName, out var pair))
                     durations.Add(testcase, pair.Duration);
             }
 

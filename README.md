@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
 [![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
-[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-85k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-121k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 
 
@@ -19,15 +19,16 @@ Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.c
 * Project and item templates for setting up unit tests based on the Google Test framework; the project template provides automatic acquisition and setup of the Google Test framework, making it easy to get started with writing unit tests
 * Sequential and [parallel](#parallelization) test execution
 * [Traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx) support by means of [custom C++ macros](#trait_macros) and/or [trait assignment by regexes](#trait_regexes)
-* Support for [value-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#value-parameterized-tests), [typed](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#typed-tests), and [type-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#type-parameterized-tests) tests
-* Google Test's runtime behavior ([handling of exceptions](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#disabling-catching-test-thrown-exceptions), [break on assertion failure](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#turning-assertion-failures-into-break-points)) can be controlled via [VS options](#global_settings)
+* Support for [value-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#value-parameterized-tests), [typed](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#typed-tests), and [type-parameterized](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#type-parameterized-tests) tests
+* Google Test's runtime behavior ([handling of exceptions](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#disabling-catching-test-thrown-exceptions), [break on assertion failure](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#turning-assertion-failures-into-break-points)) can be controlled via [VS options](#global_settings)
 * Most important runtime options can be controlled via [toolbar](#toolbar) without entering VS's options
-* Support for all Google Test command line options, including [test shuffling](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#shuffling-the-tests) and [test repetition](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#repeating-the-tests)
+* Support for all Google Test command line options, including [test shuffling](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#shuffling-the-tests) and [test repetition](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#repeating-the-tests)
 * [TFS support](#vstest_console) by means of [`VSTest.Console.exe`](https://msdn.microsoft.com/en-us/library/jj155800.aspx)
 * [Support](#test_case_filters) for [test case filters](http://blogs.msdn.com/b/vikramagrawal/archive/2012/07/23/running-selective-unit-tests-in-vs-2012-rc-using-testcasefilter.aspx)
-* Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#adding-traces-to-assertions)s are linked to their source locations
+* Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#adding-traces-to-assertions)s are linked to their source locations
 * Identification of crashed tests
 * Test output can be piped to test console
+* Exit code of test executables can be [reflected as an additional test](#evaluating_exit_code)
 * Execution of [parameterized batch files](#test_setup_and_teardown) for test setup/teardown
 * Automatic recognition of gtest executables (which can be overridden by using a [custom regex](#test_discovery_regex) or an indicator file)
 * Settings can be [shared via source control](#solution_settings)
@@ -42,6 +43,8 @@ Microsoft [collaborated with the creators of GTA](https://blogs.msdn.microsoft.c
 
 In the last couple of months, I noticed that my private laptop certainly has a finite lifetime. Thinking about the requirements a new one has to stand up to, I realized that developing and supporting *Google Test Adapter* has in the last years been one of the major use cases of that laptop. Thus, I decided to take this as reason for from now on accepting donations :-)
 
+Update: In the meantime, I have received a few donations, and some rather generous ones (thanks again to everybody - the new laptop is great :-) ), but since I'm still quite far away from my original donation goal of collecting half of the laptop's price, I will leave this section as is.
+
 Therefore, if you would like to appreciate development and support of *Google Test Adapter*, **please consider to donate!** 
 
 [![Donate to Google Test Adapter](https://www.paypalobjects.com/en_US/DE/i/btn/btn_donateCC_LG.gif "Donate to Google Test Adapter")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWJX68LZWGN5S)
@@ -53,17 +56,19 @@ Please note that I will see your donations as appreciation of my work so far and
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.13.3-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.15.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download from GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
 The adapters can be installed in several ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
-* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.13.3/GoogleTestAdapter-0.13.3.vsix)
-* [GTA only] Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
+* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.15.0/GoogleTestAdapter-0.15.0.vsix)
+* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [troubleshooting section](#trouble_shooting).
+
+Note that due to Microsoft requiring VS extensions to support [asynchronous package loading](https://blogs.msdn.microsoft.com/visualstudio/2018/05/16/improving-the-responsiveness-of-critical-scenarios-by-updating-auto-load-behavior-for-extensions/), the last version of Google Test Adapter which supports Visual Studio 2012 is [0.14.4](https://github.com/csoltenborn/GoogleTestAdapter/releases/tag/v0.14.4).
 
 
 #### <a name="gta_configuration"></a>Configuration
@@ -94,7 +99,7 @@ Overall, given a test executable `mytests.exe`, the following settings apply to 
 
 Note that due to the overriding hierarchy described above, you probably want to provide only a subset of the nodes in your configuration files. For instance, providing the node `<DebugMode>true</DebugMode>` in a shared solution settings file will make sure that all sharing developers will run the test adapter with debug output, no matter what the developer's individual settings at *Tools/Options/Test Adapter for Google Test* are (and unless the developer has selected a test settings file via VS, which would override the solution setting).
 
-For reference, see a settings file [AllTestSettings.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Resources/AllTestSettings.gta.runsettings) containing all available settings, a more realistic solution settings file [SampleTests.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/SampleTests.gta.runsettings) as delivered with the SampleTests solution, and a user settings file [NonDeterministic.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/NonDeterministic.runsettings) as used by the adapter's end-to-end tests.
+For reference, see a settings file [AllTestSettings.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Resources/AllTestSettings.gta.runsettings) containing all available settings, a more realistic solution settings file [SampleTests.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/SampleTests.gta.runsettings) as delivered with the SampleTests solution, and a user settings file [NonDeterministic.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/NonDeterministic.runsettings) as used by GTA's end-to-end tests. The syntax of the GTA settings files (excluding the `<RunSettings>` node) is specified by [this schema](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/TestAdapter/GoogleTestAdapterSettings.xsd).
 
 
 #### Assigning traits to tests
@@ -111,6 +116,38 @@ More precisely, traits are assigned to tests in three phases:
 3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `.*\[1.*\]///Size,Large` will make sure that all parameterized tests where the parameter starts with a 1 will be assigned the trait *(Size,Large)* (and override the traits assigned by phases 1 and 2).
 
 Note that traits are assigned in an additive manner within each phase, and in an overriding manner between phases. For instance, if a test is assigned the traits *(Author,Foo)* and *(Author,Bar)* in phase 1, the test will have both traits. If the test is also assigned the trait *(Author,Baz)* in phases 2 or 3, it will only have that trait. See [test code](https://github.com/csoltenborn/GoogleTestAdapter/blob/master/GoogleTestAdapter/Core.Tests/AbstractGoogleTestDiscovererTraitTests.cs) for examples.
+
+#### <a name="evaluating_exit_code"></a>Evaluating the test executable's exit code
+If option *Exit code test case* is non-empty, an additional test case will be generated per text executable (referred to as *exit code test* in the following), and that exit code test will pass if the test executable's exit code is 0. This allows to reflect some additional result as a test case; for instance, the test executable might be built such that it performs memory leak detection at shutdown (see below for [example](#evaluating_exit_code_leak_example)); the result of that check can then be seen within VS as the result of the according additional test.
+
+<a name="evaluating_exit_code_tokens"></a>A couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
+* `GTA_EXIT_CODE_OUTPUT_BEGIN`: This token will make GTA capture the following output and add it to the exit code test as error message.
+* `GTA_EXIT_CODE_OUTPUT_END`: This token will stop GTA from adding the following output to the error message. If it is not provided, GTA will capture the complete remaining output as error message of the exit code test.
+* `GTA_EXIT_CODE_SKIP`: This token will make the exit code test have outcome *Skipped*. This can e.g. be useful if a particular check is only perfomed in Debug mode, or to provide a general warning that something has gone wrong without making the exit code test fail.
+
+Note that a test executable might be run more than once by GTA (e.g., if tests are run in parallel, or if the selection of tests to be run results in command lines too long for a single test run). In this case, the exit codes and respective outputs of a test exectutable are aggregated as follows:
+* The exit code test will be reported as 
+  * skipped if all runs of that executable have been reported as skipped,
+  * failed if at least one test run has been reported as failed, and
+  * passed otherwise.
+* The exit code reported will be the one with the greatest absolute value; e.g., if the exit codes have been -2, 0, and 1, the reported exit code will be -2.
+* Captured outputs will all go into the single exit code test's error message.
+
+##### <a name="evaluating_exit_code_leak_example"></a>Example usage: Memory leak detection
+
+An example usage of the *Exit code test case* can be found as part of the SampleTests solution: [Project *MemoryLeakTests*](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests) makes use of MS' memory leak detection facilities and reports the results to VS via an exit code test. The approach can easily be re-used for other Google Test projects:
+* add files [`gta_leak_detection.h`](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/gta_leak_detection.h) and [`gta_leak_detection.cpp`](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/gta_leak_detection.cpp) to the project
+* in the project's `main` method, return the result of `gta_leak_detection::PerformLeakDetection(argc, argv, RUN_ALL_TESTS())` (instead of the result of `RUN_ALL_TESTS()`, see [example](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/main.cpp))
+* set the following GTA options (probably through the settings file):
+  * `<ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>` (enables evaluation of the executable's exit code; feel free to choose another name)
+  * `<AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>` (makes sure the test executable is aware of being run by GTA)
+
+However, note that Google Test as of V1.8.1 [uses some memory allocation](https://github.com/google/googletest/pull/1142) which is recognized by MS' leak detection mechanism as a leak (although it isn't), in particular for failing assertions. Some of these "false positives" have been fixed with the linked issue, making leak detection useful as long as all tests are green; however, and until this problem is fixed, the memory leak detection provided by GTA will result in a skipped exit code test in case `RUN_ALL_TESTS()` does not return `0`, but will report the leak in the test's error message. If you run into such problems, please report them against the [Google Test repository](https://github.com/google/googletest) if appropriate.
+
+##### Known issues
+
+* Visual Studio 2013: if a test project *FooTests* makes use of a `main()` method of a *BarTests* project (e.g. by referencing its `main.cpp`), the exit code test of *FooTests* will be grouped under *BarTests*' executable.
+
 
 #### <a name="vstest_console"></a>Running tests from command line with `VSTest.Console.exe`
 
@@ -168,6 +205,8 @@ For technical reasons, not all features are available in all environments; refer
 | - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
 | Placeholders | | |
 | - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
+| - `$(PlatformName)` | yes | no | no
+| - `$(ConfigurationName)` | yes | no | no
 | - `$(ExecutableDir)` | yes | yes | yes
 | - `$(Executable)` | yes | yes | yes
 | - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
@@ -181,8 +220,7 @@ For technical reasons, not all features are available in all environments; refer
 
 ### External resources
 
-* [Blog post](https://blogs.msdn.microsoft.com/vcblog/2017/05/10/unit-testing-and-the-future-announcing-the-test-adapter-for-google-test/) for using Google Test with TAfGT in Visual Studio
-* [Basic tutorial](https://usingcpp.wordpress.com/2016/07/23/google-test-and-visual-studio/) for using Google Test with the Google Test Adapter in Visual Studio
+* [Basic tutorial](https://computingonplains.wordpress.com/google-test-and-visual-studio/) for using Google Test with GTA in Visual Studio
 
 
 ### <a name="trouble_shooting"></a>Troubleshooting
@@ -200,7 +238,7 @@ For technical reasons, not all features are available in all environments; refer
   * The test executable crashes.
   * Encoding issues prevent Google Test from properly reading the command line arguments (see e.g. [issue #149](https://github.com/csoltenborn/GoogleTestAdapter/issues/149)).
 * If your project configuration contains references to DLLs which do not end up in the build directory (e.g. through *Project/Properties/Linker/Input/Additional Dependencies*), these DLLs will not be found when running your tests. Use option *PATH extension* to add the directories containing these DLLs to the test executables' PATH variable.
-* By default, test discovery for an executable is canceled after 30s. If in need, change this with option *Test discovery timeout in s*. Also consider moving expensive initialization code to the appropriate gtest setup facilities (e.g. [global](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#global-set-up-and-tear-down), [per test case](https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#sharing-resources-between-tests-in-the-same-test-case), or [per test](https://github.com/google/googletest/blob/master/googletest/docs/Primer.md#test-fixtures-using-the-same-data-configuration-for-multiple-tests)).
+* By default, test discovery for an executable is canceled after 30s. If in need, change this with option *Test discovery timeout in s*. Also consider moving expensive initialization code to the appropriate gtest setup facilities (e.g. [global](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#global-set-up-and-tear-down), [per test suite](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#sharing-resources-between-tests-in-the-same-test-suite), or [per test](https://github.com/google/googletest/blob/master/googletest/docs/primer.md#test-fixtures-using-the-same-data-configuration-for-multiple-tests).).
 * For security reasons, Visual Studio's test discovery process runs with rather limited permissions. This might cause problems if your code needs those permissions already during test discovery (e.g. if your code [tries to open a file in write mode](https://github.com/csoltenborn/GoogleTestAdapter/issues/168#issuecomment-331725168)). Make sure that such code is executed at the appropriate gtest setup facilities (see above).
 * If your project happens to be a makefile project, there's a pitfall which will prevent the adapter from discovering your tests: It appears that when importing a makefile project into VS, the *Output* setting of the project is populated from the makefile's content. However, if the makefile is edited later on such that the location of the generated test executable changes, VS does not find the test executable any more. One symptom of this is that your project can not be launched any more with `F5`. Make sure that the *Output* setting of the project is consistent with its makefile to avoid this problem. 
 

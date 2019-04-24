@@ -10,6 +10,8 @@ using Moq;
 using System;
 using System.ServiceModel;
 using System.Threading;
+using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage.Debugging

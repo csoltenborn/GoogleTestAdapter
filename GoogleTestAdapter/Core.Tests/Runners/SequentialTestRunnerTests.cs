@@ -45,9 +45,8 @@ namespace GoogleTestAdapter.Runners
             var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
             var settings = CreateSettings(null, null);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
 
-            runner.RunTests(testCase.Yield(), false, null, executor);
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
 
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
@@ -61,9 +60,8 @@ namespace GoogleTestAdapter.Runners
             var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
             var settings = CreateSettings(SettingsWrapper.SolutionDirPlaceholder, null);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
 
-            runner.RunTests(testCase.Yield(), false, null, executor);
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
 
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
@@ -77,9 +75,8 @@ namespace GoogleTestAdapter.Runners
             TestCase testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
             var settings = CreateSettings("foo", SettingsWrapper.SolutionDirPlaceholder);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
 
-            runner.RunTests(testCase.Yield(), false, null, executor);
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
 
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
@@ -93,8 +90,7 @@ namespace GoogleTestAdapter.Runners
 
             var stopwatch = new Stopwatch();
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, TestEnvironment.Options, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
-            var thread = new Thread(() => runner.RunTests(testCasesToRun, false, null, executor));
+            var thread = new Thread(() => runner.RunTests(testCasesToRun, false, ProcessExecutorFactory));
 
             stopwatch.Start();
             thread.Start();
@@ -103,7 +99,7 @@ namespace GoogleTestAdapter.Runners
             thread.Join();
             stopwatch.Stop();
 
-            testCasesToRun.Count.Should().Be(2);
+            testCasesToRun.Should().HaveCount(2);
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
 
             stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(lower); // 1st test should be executed

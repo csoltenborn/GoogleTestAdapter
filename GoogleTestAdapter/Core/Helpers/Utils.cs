@@ -26,8 +26,7 @@ namespace GoogleTestAdapter.Helpers
 
         public static bool DeleteDirectory(string directory)
         {
-            string dummy;
-            return DeleteDirectory(directory, out dummy);
+            return DeleteDirectory(directory, out _);
         }
 
         public static bool DeleteDirectory(string directory, out string errorMessage)

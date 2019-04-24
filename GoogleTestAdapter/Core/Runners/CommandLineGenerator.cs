@@ -38,14 +38,11 @@ namespace GoogleTestAdapter.Runners
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
             SettingsWrapper settings)
         {
-            if (userParameters == null)
-                throw new ArgumentNullException(nameof(userParameters));
-
             _lengthOfExecutableString = lengthOfExecutableString;
             _testCasesToRun = testCasesToRun.ToList();
             _resultXmlFile = resultXmlFile;
             _settings = settings;
-            _userParameters = userParameters;
+            _userParameters = userParameters ?? throw new ArgumentNullException(nameof(userParameters));
         }
 
         public IEnumerable<Args> GetCommandLines()
@@ -64,6 +61,17 @@ namespace GoogleTestAdapter.Runners
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
+            var exitCodeTest =
+                _testCasesToRun.SingleOrDefault(tc => tc.IsExitCodeTestCase);
+            if (exitCodeTest != null)
+            {
+                _testCasesToRun.Remove(exitCodeTest);
+                if (!_testCasesToRun.Any())
+                {
+                    return CreateDummyCommandLineArgs(baseCommandLine, exitCodeTest).Yield();
+                }
+            }
+
             var commandLines = new List<Args>();
             string userParam = GetAdditionalUserParameter();
             if (AllTestCasesOfExecutableAreRun())
@@ -99,10 +107,9 @@ namespace GoogleTestAdapter.Runners
             string baseCommandLineForLastSuites = filterAndTestsForLastSuites.baseCommandLineWithFilter;
 
             List<TestCase> testCasesNotRunBySuite = GetTestCasesNotRunBySuite(suitesRunningAllTests);
-            List<TestCase> includedTestCases;
 
             int remainingLength = MaxCommandLength - baseCommandLineForLastSuites.Length - _lengthOfExecutableString - userParam.Length - 1;
-            string commandLine = baseCommandLineForLastSuites + JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out includedTestCases);
+            string commandLine = baseCommandLineForLastSuites + JoinTestsUpToMaxLength(testCasesNotRunBySuite, remainingLength, out var includedTestCases);
             includedTestCases.AddRange(filterAndTestsForLastSuites.testCases);
 
             // a single command line holding both suite- and single-tests-filters
@@ -118,6 +125,15 @@ namespace GoogleTestAdapter.Runners
             }
 
             return commandLines;
+        }
+
+        private Args CreateDummyCommandLineArgs(string baseCommandLine, TestCase exitCodeTest)
+        {
+            string commandLine = baseCommandLine;
+            commandLine += $"{GoogleTestConstants.FilterOption}GTA_NOT_EXISTING_DUMMY_TEST_CASE";
+            commandLine += GetAdditionalUserParameter();
+
+            return new Args(new List<TestCase> { exitCodeTest }, commandLine);
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum VsVersion
     {
-        Unknown = -1, VS2012 = 0, VS2012_1 = 11, VS2013 = 12, VS2015 = 14, VS2017 = 15
+        Unknown = -1, VS2012 = 0, VS2012_1 = 11, VS2013 = 12, VS2015 = 14, VS2017 = 15, VS2019 = 16
     }
 
     public static class VsVersionExtensions
@@ -37,8 +37,25 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     return 2015;
                 case VsVersion.VS2017:
                     return 2017;
+                case VsVersion.VS2019:
+                    return 2019;
                 default:
                     throw new InvalidOperationException();
+            }
+        }
+
+        public static bool NeedsToBeThrottled(this VsVersion version)
+        {
+            switch (version)
+            {
+                case VsVersion.Unknown:
+                case VsVersion.VS2012:
+                case VsVersion.VS2012_1:
+                case VsVersion.VS2013:
+                case VsVersion.VS2015:
+                    return true;
+                default:
+                    return false;
             }
         }
     }
