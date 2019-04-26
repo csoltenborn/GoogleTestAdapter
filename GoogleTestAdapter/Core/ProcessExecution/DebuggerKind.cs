@@ -11,9 +11,11 @@ namespace GoogleTestAdapter.ProcessExecution
 
     public static class DebuggerKindExtensions
     {
+        private static readonly DebuggerKindConverter Converter = new DebuggerKindConverter();
+
         public static string ToReadableString(this DebuggerKind debuggerKind)
         {
-            return TypeDescriptor.GetConverter(typeof(DebuggerKind)).ConvertToString(debuggerKind);
+            return Converter.ConvertToString(debuggerKind);
         }
     }
 

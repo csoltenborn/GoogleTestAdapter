@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
@@ -17,6 +18,7 @@ namespace GoogleTestAdapter.TestAdapter
     public static class CommonFunctions
     {
         public const string GtaSettingsEnvVariable = "GTA_FALLBACK_SETTINGS";
+        private const int MinWorkerThreads = 32;
 
         public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode, SummaryMode summaryMode)
         {
@@ -72,6 +74,8 @@ namespace GoogleTestAdapter.TestAdapter
 
             settings = settingsWrapper;
             logger = loggerAdapter;
+
+            SpeedupThreadPoolHack(logger);
         }
 
         private static RunSettingsProvider SafeGetRunSettingsProvider(IRunSettings runSettings, IMessageLogger messageLogger)
@@ -225,5 +229,15 @@ namespace GoogleTestAdapter.TestAdapter
             }
         }
 
+        // after https://stackoverflow.com/questions/22036365/newly-created-threads-using-task-factory-startnew-starts-very-slowly/22074892#22074892
+        private static void SpeedupThreadPoolHack(ILogger logger)
+        {
+            int workerThreadsMin, workerThreadsMax, completionPortThreadsMin, completionPortThreadsMax;
+            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
+            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
+
+            ThreadPool.SetMinThreads(MinWorkerThreads, completionPortThreadsMin);
+            logger.VerboseInfo($"Tuned ThreadPool. MinThreads: ({workerThreadsMin}->{MinWorkerThreads}, {completionPortThreadsMin}); MaxThreads: ({workerThreadsMax}, {completionPortThreadsMax})");
+        }
     }
 }
