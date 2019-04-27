@@ -16,9 +16,9 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             _debuggerAttacher = debuggerAttacher;
         }
 
-        public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger)
+        public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(DebuggerEngine debuggerEngine, bool printTestOutput, ILogger logger)
         {
-            return new NativeDebuggedProcessExecutor(_debuggerAttacher, printTestOutput, logger);
+            return new NativeDebuggedProcessExecutor(_debuggerAttacher, debuggerEngine, printTestOutput, logger);
         }
 
         public IDebuggedProcessExecutor CreateFrameworkDebuggingExecutor(bool printTestOutput, ILogger logger)

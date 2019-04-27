@@ -274,7 +274,7 @@ namespace GoogleTestAdapter.VsPackage
                 ExitCodeTestCase = _testExecutionOptions.ExitCodeTestCase,
                 ParallelTestExecution = _testExecutionOptions.EnableParallelTestExecution,
                 MaxNrOfThreads = _testExecutionOptions.MaxNrOfThreads,
-                UseNewTestExecutionFramework = _testExecutionOptions.UseNewTestExecutionFramework2,
+                DebuggerKind = _testExecutionOptions.DebuggerKind,
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
                 SolutionDir = solutionDir,

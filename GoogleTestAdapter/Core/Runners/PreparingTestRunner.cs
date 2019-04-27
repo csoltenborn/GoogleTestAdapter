@@ -6,7 +6,6 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Settings;

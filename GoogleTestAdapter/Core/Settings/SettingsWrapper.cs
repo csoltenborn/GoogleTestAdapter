@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {
@@ -271,12 +272,14 @@ namespace GoogleTestAdapter.Settings
 
         #region TestExecutionOptionsPage
 
-        public const string OptionUseNewTestExecutionFramework = "Use native debugging";
-        public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of native debugging (in contrast to debugging provided by the VsTest framework). Advantages: test crash detection and test output printing also work in debug mode.";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
+        public const string OptionDebuggerKind = "Debugger engine";
+        public const string OptionDebuggerKindDescription =
+                DebuggerKindConverter.VsTestFramework + ": Debugger engine as provided by the VsTest framework; no test crash detection, no test output printing, less interactive UI\n" +
+                DebuggerKindConverter.Native + ": Debugger engine as provided by VS native API; no restrictions (default)\n" + 
+                DebuggerKindConverter.ManagedAndNative + ": Same as '" + DebuggerKindConverter.Native + "', but allows to also debug into managed code";
+        public const DebuggerKind OptionDebuggerKindDefaultValue = DebuggerKind.Native;
 
-        public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
+        public virtual DebuggerKind DebuggerKind => _currentSettings.DebuggerKind ?? OptionDebuggerKindDefaultValue;
 
 
         public const string OptionAdditionalPdbs = "Additional PDBs";
