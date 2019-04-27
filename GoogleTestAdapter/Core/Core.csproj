@@ -74,6 +74,7 @@
     <Compile Include="Runners\ExecutableResult.cs" />
     <Compile Include="Runners\TestResultCollector.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
+    <Compile Include="Settings\HelperFilesCache.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />
     <Compile Include="Settings\PlaceholderReplacer.cs" />
     <Compile Include="Settings\RegexTraitPair.cs" />

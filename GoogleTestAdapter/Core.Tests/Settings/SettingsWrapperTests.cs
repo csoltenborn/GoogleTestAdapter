@@ -32,7 +32,8 @@ namespace GoogleTestAdapter.Settings
             containerMock.Setup(c => c.GetSettingsForExecutable(It.IsAny<string>())).Returns(MockXmlOptions.Object);
             TheOptions = new SettingsWrapper(containerMock.Object)
             {
-                RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger)
+                RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger),
+                HelperFilesCache = new HelperFilesCache(TestEnvironment.Logger)
             };
         }
 
@@ -645,7 +646,8 @@ namespace GoogleTestAdapter.Settings
 
             return new SettingsWrapper(containerMock.Object)
             {
-                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }
 

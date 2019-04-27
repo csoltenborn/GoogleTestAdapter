@@ -46,6 +46,7 @@ namespace GoogleTestAdapter.Tests.Common
             var mockRunSettings = new Mock<RunSettings>();
             mockSettingsContainer.Setup(c => c.SolutionSettings).Returns(mockRunSettings.Object);
             MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object, Path.GetFullPath(TestResources.SampleTestsSolutionDir));
+
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
@@ -56,11 +57,13 @@ namespace GoogleTestAdapter.Tests.Common
         [TestInitialize]
         public virtual void SetUp()
         {
-            SetupOptions(MockOptions);
+            SetupOptions(MockOptions, MockLogger.Object);
         }
 
-        public static void SetupOptions(Mock<SettingsWrapper> mockOptions)
+        public static void SetupOptions(Mock<SettingsWrapper> mockOptions, ILogger logger)
         {
+            mockOptions.Object.HelperFilesCache = new HelperFilesCache(logger);
+
             mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
             mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
 
