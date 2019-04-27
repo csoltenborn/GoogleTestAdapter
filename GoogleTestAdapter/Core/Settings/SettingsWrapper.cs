@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {
@@ -254,7 +255,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionShuffleTests = "Shuffle tests per execution";
         public const string OptionShuffleTestsDescription =
-            "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.\n"
+            "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is then restricted to the according executions.\n"
             + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
         public const bool OptionShuffleTestsDefaultValue = false;
 
@@ -287,12 +288,14 @@ namespace GoogleTestAdapter.Settings
 
         #region TestExecutionOptionsPage
 
-        public const string OptionUseNewTestExecutionFramework = "Use native debugging";
-        public const string OptionUseNewTestExecutionFrameworkDescription =
-            "Make use of native debugging (in contrast to debugging provided by the VsTest framework). Advantages: test crash detection and test output printing also work in debug mode.";
-        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
+        public const string OptionDebuggerKind = "Debugger engine";
+        public const string OptionDebuggerKindDescription =
+                DebuggerKindConverter.VsTestFramework + ": Debugger engine as provided by the VsTest framework; no test crash detection, no test output printing, less interactive UI\n" +
+                DebuggerKindConverter.Native + ": Debugger engine as provided by VS native API; no restrictions (default)\n" + 
+                DebuggerKindConverter.ManagedAndNative + ": Same as '" + DebuggerKindConverter.Native + "', but allows to also debug into managed code";
+        public const DebuggerKind OptionDebuggerKindDefaultValue = DebuggerKind.Native;
 
-        public virtual bool UseNewTestExecutionFramework => _currentSettings.UseNewTestExecutionFramework ?? OptionUseNewTestExecutionFrameworkDefaultValue;
+        public virtual DebuggerKind DebuggerKind => _currentSettings.DebuggerKind ?? OptionDebuggerKindDefaultValue;
 
 
         public const string OptionAdditionalPdbs = "Additional PDBs";
@@ -328,7 +331,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionPathExtension = "PATH extension";
         public const string OptionPathExtensionDescription =
-            "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + PlaceholderReplacer.ExecutableDirPlaceholder + "\\MyOtherBins;\n" + PlaceholderReplacer.PathExtensionPlaceholders;
+            "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + PlaceholderReplacer.ExecutableDirPlaceholder + "\\MyOtherBins\n" + PlaceholderReplacer.PathExtensionPlaceholders;
         public const string OptionPathExtensionDefaultValue = "";
 
         public virtual string PathExtension => _currentSettings.PathExtension ?? OptionPathExtensionDefaultValue;
@@ -425,7 +428,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionTestDiscoveryRegex = "Regex for test discovery";
         public const string OptionTestDiscoveryRegexDescription =
-            "If non-empty, this regex will be used to identify the Google Test executables containing your tests, and the executable itself will not be scanned.";
+            "If non-empty, only executables matching this regex will be considered as Google Test executables. Note that setting this option will slightly speed up test discovery since the executables do not need to be scanned.";
         public const string OptionTestDiscoveryRegexDefaultValue = "";
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
@@ -451,7 +454,7 @@ namespace GoogleTestAdapter.Settings
         public const string TraitsRegexesPairSeparator = "//||//";
         public const string TraitsRegexesRegexSeparator = "///";
         public const string TraitsRegexesTraitSeparator = ",";
-        public const string OptionTraitsDescription = "Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the 'Traits before' option. 2nd, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the 'Traits after' option is evaluated, again in an overriding manner.\nSyntax: "
+        public const string OptionTraitsDescription = "Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the '" + OptionTraitsRegexesBefore + "' option. 2nd, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the '" + OptionTraitsRegexesAfter + "' option is evaluated, again in an overriding manner.\nSyntax: "
                                                  + TraitsRegexesRegexSeparator +
                                                  " separates the regex from the traits, the trait's name and value are separated by "
                                                  + TraitsRegexesTraitSeparator +
@@ -499,8 +502,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionParseSymbolInformation = "Parse symbol information";
         public const string OptionParseSymbolInformationDescription =
-            "Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).\n" +
-            "If this is set to false step 2 of traits discovery will be left out and only traits regexes will be effective.";
+            "Parse debug symbol information for test executables. Setting this to false will speed up test discovery, but tests will not have source location information, and traits defined via the macros in GTA_Traits.h will not be available.";
         public const bool OptionParseSymbolInformationDefaultValue = true;
 
         public virtual bool ParseSymbolInformation => _currentSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;

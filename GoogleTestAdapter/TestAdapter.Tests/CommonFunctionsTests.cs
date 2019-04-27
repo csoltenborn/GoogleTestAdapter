@@ -168,6 +168,17 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void CreateEnvironment_DeprecatedSettingUseNewTestExecutionFramework_WarningIsLogged()
+        {
+            SetupRunSettingsAndCheckAssertions(
+                mockRunSettings => mockRunSettings.Setup(s => s.UseNewTestExecutionFramework).Returns(true),
+                () => _mockMessageLogger.Verify(l => l.SendMessage(
+                    It.Is<TestMessageLevel>(level => level == TestMessageLevel.Warning),
+                    It.Is<string>(s => s.Contains(nameof(RunSettings.UseNewTestExecutionFramework))))));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void CreateEnvironment_DeprecatedSettingShowReleaseNotes_WarningIsLogged()
         {
             SetupRunSettingsAndCheckAssertions(

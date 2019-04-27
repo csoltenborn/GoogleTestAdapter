@@ -98,6 +98,7 @@
     <Compile Include="Helpers\ByteUtilsTests.cs" />
     <Compile Include="Helpers\UtilsTests.cs" />
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
+    <Compile Include="Runners\DebuggerKindConverterTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
     <Compile Include="Settings\HelperFilesCacheTests.cs" />
     <Compile Include="Settings\PlaceholderReplacerTests.cs" />

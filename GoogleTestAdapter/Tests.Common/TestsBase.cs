@@ -21,7 +21,7 @@ namespace GoogleTestAdapter.Tests.Common
                 throw new NotImplementedException();
             }
 
-            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(bool printTestOutput, ILogger logger)
+            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(DebuggerEngine engine, bool printTestOutput, ILogger logger)
             {
                 throw new NotImplementedException();
             }
@@ -96,7 +96,7 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.SkipOriginCheck).Returns(SettingsWrapper.OptionSkipOriginCheckDefaultValue);
             mockOptions.Setup(o => o.ExitCodeTestCase).Returns(SettingsWrapper.OptionExitCodeTestCaseDefaultValue);
 
-            mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+            mockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.Native);
 
             mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
             mockOptions.Setup(o => o.SolutionDir).CallBase();

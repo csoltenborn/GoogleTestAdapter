@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using GoogleTestAdapter.Helpers;
+using GoogleTestAdapter.ProcessExecution;
+using Microsoft.VisualStudio.Shell;
+
 // ReSharper disable LocalizableElement
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
@@ -140,14 +143,15 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private bool _killProcessesOnCancel = SettingsWrapper.OptionKillProcessesOnCancelDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionUseNewTestExecutionFramework)]
-        [Description(SettingsWrapper.OptionUseNewTestExecutionFrameworkDescription)]
-        public bool UseNewTestExecutionFramework2
+        [DisplayName(SettingsWrapper.OptionDebuggerKind)]
+        [Description(SettingsWrapper.OptionDebuggerKindDescription)]
+        [PropertyPageTypeConverter(typeof(DebuggerKindConverter))]
+        public DebuggerKind DebuggerKind
         {
-            get => _useNewTestExecutionFramework;
-            set => SetAndNotify(ref _useNewTestExecutionFramework, value);
+            get => _debuggerKind;
+            set => SetAndNotify(ref _debuggerKind, value);
         }
-        private bool _useNewTestExecutionFramework = SettingsWrapper.OptionUseNewTestExecutionFrameworkDefaultValue;
+        private DebuggerKind _debuggerKind = SettingsWrapper.OptionDebuggerKindDefaultValue;
 
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionExitCodeTestCase)]

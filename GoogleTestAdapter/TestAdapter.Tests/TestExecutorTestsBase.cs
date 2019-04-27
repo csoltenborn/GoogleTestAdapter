@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(_maxNrOfThreads);
 
             MockDebuggerAttacher.Reset();
-            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
+            MockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>())).Returns(true);
         }
 
         private void RunAndVerifySingleTest(TestCase testCase, VsTestOutcome expectedOutcome)
@@ -171,7 +171,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             bool isTestOutputAvailable =
                 !MockOptions.Object.ParallelTestExecution &&
-                (MockOptions.Object.UseNewTestExecutionFramework || !MockRunContext.Object.IsBeingDebugged);
+                (MockOptions.Object.DebuggerKind > DebuggerKind.VsTestFramework || !MockRunContext.Object.IsBeingDebugged);
             int nrOfExpectedLines = isTestOutputAvailable ? 1 : 0;
             
             MockLogger.Verify(l => l.LogInfo(It.Is<string>(line => line == "[----------] Global test environment set-up.")), Times.Exactly(nrOfExpectedLines));
@@ -325,7 +325,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void MemoryLeakTests_PassingWithLeaks_CorrectResult()
         {
-            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+            bool outputAvailable = MockOptions.Object.DebuggerKind > DebuggerKind.VsTestFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.passing_and_leaking", VsTestOutcome.Passed, VsTestOutcome.Failed,
                 msg => msg.Contains("Exit code: 1")
@@ -336,7 +336,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void MemoryLeakTests_FailingWithLeaks_CorrectResult()
         {
-            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+            bool outputAvailable = MockOptions.Object.DebuggerKind > DebuggerKind.VsTestFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing_and_leaking", VsTestOutcome.Failed, VsTestOutcome.Skipped,
                 msg => msg.Contains("Exit code: 1")
@@ -397,7 +397,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
         {
-            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+            bool outputAvailable = MockOptions.Object.DebuggerKind > DebuggerKind.VsTestFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             RunMemoryLeakTest(TestResources.LeakCheckTests_ReleaseX86, "memory_leaks.passing_and_leaking", VsTestOutcome.Passed, 
                 outputAvailable ? VsTestOutcome.Skipped : VsTestOutcome.Passed,
@@ -459,7 +459,7 @@ namespace GoogleTestAdapter.TestAdapter
 
             // ReSharper disable once PossibleNullReferenceException
             string finalName = exitCodeTestName + "." + Path.GetFileName(testCase.Source).Replace(".", "_");
-            bool outputAvailable = MockOptions.Object.UseNewTestExecutionFramework ||
+            bool outputAvailable = MockOptions.Object.DebuggerKind > DebuggerKind.VsTestFramework ||
                                    !MockRunContext.Object.IsBeingDebugged;
             Func<VsTestResult, bool> errorMessagePredicate = outcome == VsTestOutcome.Failed
                 ? result => result.ErrorMessage.Contains("Exit code: 1")
@@ -480,7 +480,7 @@ namespace GoogleTestAdapter.TestAdapter
             if (!outputAvailable && outcome == VsTestOutcome.Failed)
             {
                 MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("Result code") 
-                                                                           && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
+                                                                           && msg.Contains(SettingsWrapper.OptionDebuggerKind))), Times.Once);
             }
 
             MockLogger.Verify(l => l.DebugWarning(It.Is<string>(msg => msg.Contains("main method") && msg.Contains("exit code"))), Times.Never);

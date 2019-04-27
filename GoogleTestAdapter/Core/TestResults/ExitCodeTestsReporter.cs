@@ -6,6 +6,7 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestCases;
@@ -50,7 +51,7 @@ namespace GoogleTestAdapter.TestResults
                     if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
                     {
                         var testResult = ReportExitCodeTestResult(executableResult);
-                        printWarning |= isBeingDebugged && !_settings.UseNewTestExecutionFramework;
+                        printWarning |= isBeingDebugged && _settings.DebuggerKind == DebuggerKind.VsTestFramework;
                         _logger.DebugInfo($"Reported exit code test {testResult.DisplayName} for executable {executableResult.Executable}");
                     }
                 });
@@ -59,7 +60,7 @@ namespace GoogleTestAdapter.TestResults
             if (printWarning)
             {
                 _logger.LogWarning(
-                    $"Result code output can not be collected while debugging if option '{SettingsWrapper.OptionUseNewTestExecutionFramework}' is false");
+                    $"Result code output can not be collected while debugging if option '{SettingsWrapper.OptionDebuggerKind}' is '{DebuggerKind.VsTestFramework.ToReadableString()}'");
             }
         }
 
