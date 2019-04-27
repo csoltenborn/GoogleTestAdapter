@@ -39,6 +39,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClrTests", "ClrTests\ClrTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClrDotNetLibProject", "ClrDotNetLibProject\ClrDotNetLibProject.csproj", "{8EB74B67-3B52-4734-875B-F3F27EA55FC9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelperFileTests", "HelperFileTests\HelperFileTests.vcxproj", "{034E4479-F9C0-435B-AE6C-96109DE161AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,16 @@ Global
 		{8EB74B67-3B52-4734-875B-F3F27EA55FC9}.Release|Win32.Build.0 = Release|Any CPU
 		{8EB74B67-3B52-4734-875B-F3F27EA55FC9}.Release|x64.ActiveCfg = Release|Any CPU
 		{8EB74B67-3B52-4734-875B-F3F27EA55FC9}.Release|x64.Build.0 = Release|Any CPU
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|Win32.Build.0 = Debug|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|x64.ActiveCfg = Debug|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Debug|x64.Build.0 = Debug|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|Any CPU.ActiveCfg = Release|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|Win32.ActiveCfg = Release|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|Win32.Build.0 = Release|Win32
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|x64.ActiveCfg = Release|x64
+		{034E4479-F9C0-435B-AE6C-96109DE161AB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -123,7 +123,8 @@ namespace GoogleTestAdapter.Runners
 
             return new SettingsWrapper(mockContainer.Object, TestResources.SampleTestsSolutionDir)
             {
-                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }
 

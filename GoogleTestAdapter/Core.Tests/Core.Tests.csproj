@@ -18,6 +18,8 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,6 +100,8 @@
     <Compile Include="Runners\CommandLineGeneratorTests.cs" />
     <Compile Include="Runners\DebuggerKindConverterTests.cs" />
     <Compile Include="Runners\SequentialTestRunnerTests.cs" />
+    <Compile Include="Settings\HelperFilesCacheTests.cs" />
+    <Compile Include="Settings\PlaceholderReplacerTests.cs" />
     <Compile Include="TestCases\TestCaseResolverTests.cs" />
     <Compile Include="TestCases\TestCaseFactoryTests.cs" />
     <Compile Include="TestCases\ListTestsParserTests.cs" />
