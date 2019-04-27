@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
@@ -22,7 +23,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             base.SetUp();
 
             _mockDebuggerAttacher.Reset();
-            _mockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
+            _mockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>())).Returns(true);
         }
 
         [TestMethod]
