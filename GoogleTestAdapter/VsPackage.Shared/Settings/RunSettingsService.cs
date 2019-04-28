@@ -84,10 +84,15 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                     }
                 }
             }
+            catch (InvalidRunSettingsException e) when (e.InnerException != null)
+            {
+                logger.Log(MessageLevel.Error,
+                    $"Solution test settings file could not be parsed, check file '{solutionRunSettingsFile}'. Error message: {e.InnerException.Message}");
+            }
             catch (Exception e)
             {
-                logger.Log(MessageLevel.Warning,
-                    $"Solution test settings file could not be parsed, check file: {solutionRunSettingsFile}{Environment.NewLine}Exception: {e}");
+                logger.Log(MessageLevel.Error,
+                    $"Solution test settings file could not be parsed, check file '{solutionRunSettingsFile}'. Exception:{Environment.NewLine}{e}");
             }
         }
 
@@ -104,9 +109,13 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             // these settings must not be provided through runsettings files. If they still
             // are, the following makes sure that they are ignored
-            settings.DebuggingNamedPipeId = null;
             settings.SkipOriginCheck = null;
+
+            // internal
+            settings.DebuggingNamedPipeId = null;
             settings.SolutionDir = null;
+            settings.PlatformName = null;
+            settings.ConfigurationName = null;
 
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
         }

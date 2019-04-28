@@ -1,5 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+#pragma warning disable IDE0017 // Simplify object initialization
+
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
@@ -32,7 +34,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
     public class RunSettingsContainer : TestRunSettings, IGoogleTestAdapterSettingsContainer
     {
-        public RunSettings SolutionSettings { get; }
+        // virtual for mocking
+        public virtual RunSettings SolutionSettings { get; }
 
         public List<RunSettings> ProjectSettings { get; } = new List<RunSettings>();
 

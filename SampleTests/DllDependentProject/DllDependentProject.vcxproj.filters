@@ -18,10 +18,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\3rdparty\gtest-1.8.0\fused-src\gtest\gtest_main.cc">
+    <ClCompile Include="..\3rdparty\gtest-1.8.1\fused-src\gtest\gtest_main.cc">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\3rdparty\gtest-1.8.0\fused-src\gtest\gtest-all.cc">
+    <ClCompile Include="..\3rdparty\gtest-1.8.1\fused-src\gtest\gtest-all.cc">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="DllTests.cpp">

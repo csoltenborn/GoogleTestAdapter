@@ -18,13 +18,13 @@ namespace GoogleTestAdapter.Runners
             _threadName = threadName;
         }
 
-        public List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, TestCase crashedTestCase)
+        public List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string testExecutable, string resultXmlFile, List<string> consoleOutput, TestCase crashedTestCase)
         {
             var testResults = new List<TestResult>();
             TestCase[] arrTestCasesRun = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
 
             if (testResults.Count < arrTestCasesRun.Length)
-                CollectResultsFromXmlFile(arrTestCasesRun, resultXmlFile, testResults);
+                CollectResultsFromXmlFile(arrTestCasesRun, testExecutable, resultXmlFile, testResults);
 
             var consoleParser = new StandardOutputTestResultParser(arrTestCasesRun, consoleOutput, _logger);
             if (testResults.Count < arrTestCasesRun.Length)
@@ -48,9 +48,9 @@ namespace GoogleTestAdapter.Runners
             return testResults;
         }
 
-        private void CollectResultsFromXmlFile(TestCase[] testCasesRun, string resultXmlFile, List<TestResult> testResults)
+        private void CollectResultsFromXmlFile(TestCase[] testCasesRun, string testExecutable, string resultXmlFile, List<TestResult> testResults)
         {
-            var xmlParser = new XmlTestResultParser(testCasesRun, resultXmlFile, _logger);
+            var xmlParser = new XmlTestResultParser(testCasesRun, testExecutable, resultXmlFile, _logger);
             List<TestResult> xmlResults = xmlParser.GetTestResults();
             int nrOfCollectedTestResults = 0;
             foreach (TestResult testResult in xmlResults.Where(
@@ -66,7 +66,7 @@ namespace GoogleTestAdapter.Runners
 
         private void CollectResultsFromConsoleOutput(StandardOutputTestResultParser consoleParser, List<TestResult> testResults)
         {
-            List<TestResult> consoleResults = consoleParser.GetTestResults();
+            var consoleResults = consoleParser.GetTestResults();
             int nrOfCollectedTestResults = 0;
             foreach (TestResult testResult in consoleResults.Where(
                 tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))

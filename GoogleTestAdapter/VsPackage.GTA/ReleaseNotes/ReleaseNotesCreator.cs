@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using CommonMark;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
@@ -11,13 +10,11 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 
         private readonly Version _formerlyInstalledVersion;
         private readonly Version _currentVersion;
-        private readonly bool _showMainDonationNote;
 
-        public ReleaseNotesCreator(Version formerlyInstalledVersion, Version currentVersion, bool showMainDonationNote = false)
+        public ReleaseNotesCreator(Version formerlyInstalledVersion, Version currentVersion)
         {
             _formerlyInstalledVersion = formerlyInstalledVersion;
             _currentVersion = currentVersion;
-            _showMainDonationNote = showMainDonationNote;
         }
 
         private string CreateMarkdown()
@@ -25,25 +22,13 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             if (_formerlyInstalledVersion == _currentVersion)
                 return "";
 
-            string releaseNotes = "";
-
-            if (_showMainDonationNote)
-            {
-                releaseNotes += Donations.Note;
-            }
-
-            releaseNotes += CreateHeader();
+            string releaseNotes = CreateHeader();
 
             int startIndex = Array.IndexOf(Versions, _currentVersion);
             int endIndex = _formerlyInstalledVersion == null ? -1 : Array.IndexOf(Versions, _formerlyInstalledVersion);
             for (int i = startIndex; i > endIndex; i--)
             {
                 releaseNotes += CreateEntry(Versions[i]);
-            }
-
-            if (!_showMainDonationNote)
-            {
-                releaseNotes += Donations.Footer;
             }
 
             return releaseNotes;

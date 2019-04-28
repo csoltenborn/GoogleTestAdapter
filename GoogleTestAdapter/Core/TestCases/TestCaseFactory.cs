@@ -8,117 +8,42 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.TestCases
 {
 
     public class TestCaseFactory
     {
+        private const int ExecutionFailed = int.MaxValue;
+
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
         private readonly string _executable;
         private readonly IDiaResolverFactory _diaResolverFactory;
+        private readonly IProcessExecutorFactory _processExecutorFactory;
         private readonly MethodSignatureCreator _signatureCreator = new MethodSignatureCreator();
 
         public TestCaseFactory(string executable, ILogger logger, SettingsWrapper settings,
-            IDiaResolverFactory diaResolverFactory)
+            IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
         {
             _logger = logger;
             _settings = settings;
             _executable = executable;
             _diaResolverFactory = diaResolverFactory;
+            _processExecutorFactory = processExecutorFactory;
         }
 
         public IList<TestCase> CreateTestCases(Action<TestCase> reportTestCase = null)
         {
-            if (_settings.UseNewTestExecutionFramework)
-            {
-                return NewCreateTestcases(reportTestCase);
-            }
-
-           string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-           string finalParams = GetDiscoveryParams();
-            List<string> standardOutput = new List<string>();
-            try
-            {
-                int processExitCode = 0;
-                ProcessLauncher launcher = null;
-                var listTestsTask = new Task(() =>
-                {
-                    launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
-                    standardOutput = launcher.GetOutputOfCommand(workingDir, _executable, finalParams,
-                        false, false, out processExitCode);
-                }, TaskCreationOptions.AttachedToParent);
-                listTestsTask.Start();
-
-                if (!listTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
-                {
-                    launcher?.Cancel();
-                    LogTimeoutError(workingDir, finalParams);
-                    return new List<TestCase>();
-                }
-
-                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
-                    return new List<TestCase>();
-            }
-            catch (Exception e)
-            {
-                SequentialTestRunner.LogExecutionError(_logger, _executable, workingDir, finalParams, e);
-                return new List<TestCase>();
-            }
-
-            IList<TestCaseDescriptor> testCaseDescriptors = new ListTestsParser(_settings.TestNameSeparator).ParseListTestsOutput(standardOutput);
-            var resolver = new TestCaseResolver(_executable, _settings.GetPathExtension(_executable), _settings.GetAdditionalPdbs(_executable), _diaResolverFactory, _settings.ParseSymbolInformation, _logger);
-
-            IList<TestCase> testCases = new List<TestCase>();
-            IDictionary<string, ISet<TestCase>> suite2TestCases = new Dictionary<string, ISet<TestCase>>();
-            foreach (var descriptor in testCaseDescriptors)
-            {
-                var testCase = _settings.ParseSymbolInformation 
-                    ? CreateTestCase(descriptor, resolver) 
-                    : CreateTestCase(descriptor);
-                ISet<TestCase> testCasesInSuite;
-                if (!suite2TestCases.TryGetValue(descriptor.Suite, out testCasesInSuite))
-                    suite2TestCases.Add(descriptor.Suite, testCasesInSuite = new HashSet<TestCase>());
-                testCasesInSuite.Add(testCase);
-                testCases.Add(testCase);
-            }
-
-            foreach (var suiteTestCasesPair in suite2TestCases)
-            {
-                foreach (var testCase in suiteTestCasesPair.Value)
-                {
-                    testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, testCases.Count));
-                }
-            }
-
-            if (reportTestCase != null)
-            {
-                foreach (var testCase in testCases)
-                {
-                    reportTestCase(testCase);
-                }
-            }
-
-            return testCases;
-        }
-
-        private IList<TestCase> NewCreateTestcases(Action<TestCase> reportTestCase)
-        {
             var standardOutput = new List<string>();
             var testCases = new List<TestCase>();
 
-            var resolver = new TestCaseResolver(
-                _executable,
-                _settings.GetPathExtension(_executable),
-                _settings.GetAdditionalPdbs(_executable),
-                _diaResolverFactory,
-                _settings.ParseSymbolInformation,
-                _logger);
+            var resolver = new TestCaseResolver(_executable, _diaResolverFactory, _settings, _logger);
 
             var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
             var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
@@ -138,40 +63,44 @@ namespace GoogleTestAdapter.TestCases
                 }
                 testCases.Add(testCase);
 
-                ISet<TestCase> testCasesOfSuite;
-                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out testCasesOfSuite))
+                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out var testCasesOfSuite))
+                {
                     suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
+                }
                 testCasesOfSuite.Add(testCase);
             };
 
-            Action<string> lineAction = s =>
-            {
-                standardOutput.Add(s);
-                parser.ReportLine(s);
-            };
-
-           string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-           var finalParams = GetDiscoveryParams();
+            string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
+            var finalParams = GetDiscoveryParams();
             try
             {
-                int processExitCode = ProcessExecutor.ExecutionFailed;
-                ProcessExecutor executor = null;
-                var listAndParseTestsTask = new Task(() =>
+                int processExitCode = ExecutionFailed;
+                IProcessExecutor executor = null;
+
+                void OnReportOutputLine(string line)
                 {
-                    executor = new ProcessExecutor(null, _logger);
+                    standardOutput.Add(line);
+                    parser.ReportLine(line);
+                }
+
+                var listAndParseTestsTask = Task.Run(() =>
+                {
+                    _logger.VerboseInfo($"Starting test discovery for {_executable}");
+                    executor = _processExecutorFactory.CreateExecutor(false, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
                         finalParams,
                         workingDir,
                         _settings.GetPathExtension(_executable),
-                        lineAction);
-                }, TaskCreationOptions.AttachedToParent);
-                listAndParseTestsTask.Start();
+                        OnReportOutputLine);
+                    _logger.VerboseInfo($"Finished execution of {_executable}");
+                });
+                _logger.VerboseInfo($"Scheduled test discovery for {_executable}");
 
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     executor?.Cancel();
-                    LogTimeoutError(workingDir, finalParams);
+                    LogTimeoutError(workingDir, finalParams, standardOutput);
                     return new List<TestCase>();
                 }
 
@@ -184,8 +113,17 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
+                {
+                    var exitCodeTestCase = ExitCodeTestsReporter.CreateExitCodeTestCase(_settings, _executable, resolver.MainMethodLocation);
+                    testCases.Add(exitCodeTestCase);
+                    reportTestCase?.Invoke(exitCodeTestCase);
+                    _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionExitCodeTestCase}' is set");
+                }
+                else if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                {
                     return new List<TestCase>();
+                }
             }
             catch (Exception e)
             {
@@ -207,32 +145,42 @@ namespace GoogleTestAdapter.TestCases
             return finalParams;
         }
 
-        private void LogTimeoutError(string workingDir, string finalParams)
+        private void LogTimeoutError(string workingDir, string finalParams, IList<string> outputSoFar)
         {
             string file = Path.GetFileName(_executable);
             string cdToWorkingDir = $@"cd ""{workingDir}""";
             string listTestsCommand = $"{file} {finalParams}";
 
-            _logger.LogError(
-                $"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable {_executable}");
-            _logger.DebugError(
-                $"Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}{cdToWorkingDir}{Environment.NewLine}{listTestsCommand}");
+            string message =
+                $"Test discovery was cancelled after {_settings.TestDiscoveryTimeoutInSeconds}s for executable '{_executable}'";
+            string output = outputSoFar.Any()
+                ? $"Output of {_executable} so far:{Environment.NewLine}" + 
+                  $"{string.Join(Environment.NewLine, outputSoFar)}"
+                : $"Executable {_executable} produced no output.";
+            string hint =
+                $"Hint: test whether the following commands can be executed successfully on the command line (make sure all required binaries are on the PATH):{Environment.NewLine}" + 
+                $"{cdToWorkingDir}{Environment.NewLine}" + 
+                listTestsCommand;
+
+            _logger.LogError(message);
+            _logger.DebugError(output);
+            _logger.DebugError(hint);
         }
 
         private bool CheckProcessExitCode(int processExitCode, ICollection<string> standardOutput, string workingDir, string parameters)
         {
             if (processExitCode != 0)
             {
-                string messsage =
+                string message =
                     $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
-                messsage +=
+                message +=
                     $"\nCommand executed: '{_executable} {parameters}', working directory: '{workingDir}'";
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    messsage += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
+                    message += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
                 else
-                    messsage += "\nCommand produced no output";
+                    message += "\nCommand produced no output";
 
-                _logger.LogError(messsage);
+                _logger.LogError(message);
                 return false;
             }
             return true;
@@ -246,13 +194,6 @@ namespace GoogleTestAdapter.TestCases
             return testCase;
         }
 
-        private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseResolver resolver)
-        {
-            TestCaseLocation location =
-                resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(descriptor).ToList());
-            return CreateTestCase(descriptor, location);
-        }
-
         private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseLocation location)
         {
             if (location != null)
@@ -263,9 +204,8 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
-            return new TestCase(
-                descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
+            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
+            return CreateTestCase(descriptor);
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)

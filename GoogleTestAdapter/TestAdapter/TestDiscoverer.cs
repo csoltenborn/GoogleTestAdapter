@@ -27,7 +27,6 @@ namespace GoogleTestAdapter.TestAdapter
         {
             _settings = settings;
             _logger = logger;
-            _discoverer = new GoogleTestDiscoverer(_logger, _settings);
         }
 
         public void DiscoverTests(IEnumerable<string> executables, IDiscoveryContext discoveryContext,
@@ -39,8 +38,8 @@ namespace GoogleTestAdapter.TestAdapter
             {
                 CommonFunctions.CreateEnvironment(discoveryContext.RunSettings,
                    logger, out _logger, out _settings);
-                _discoverer = new GoogleTestDiscoverer(_logger, _settings);
             }
+            _discoverer = new GoogleTestDiscoverer(_logger, _settings);
 
             if (!IsSupportedVisualStudioVersion())
                 return;
@@ -64,12 +63,12 @@ namespace GoogleTestAdapter.TestAdapter
                 _logger.LogError($"Exception while discovering tests: {e}");
             }
 
-            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.DebugMode);
+            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.OutputMode, _settings.SummaryMode);
         }
 
         private bool IsSupportedVisualStudioVersion()
         {
-            var version = VsVersionUtils.GetVisualStudioVersion(_logger);
+            var version = VsVersionUtils.VsVersion;
             switch (version)
             {
                 case VsVersion.Unknown:

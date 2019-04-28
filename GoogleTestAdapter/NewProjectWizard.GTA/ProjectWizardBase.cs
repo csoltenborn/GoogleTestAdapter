@@ -29,7 +29,7 @@ namespace NewProjectWizard.GTA
             var componentModel = (IComponentModel) Package.GetGlobalService(typeof(SComponentModel));
             var runSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
             Settings = new SettingsWrapper(new RunSettingsContainer(runSettings.RunSettings));
-            Logger = new TestWindowLogger(() => Settings.DebugMode, () => Settings.TimestampOutput);
+            Logger = new TestWindowLogger(() => Settings.OutputMode, () => Settings.TimestampMode);
             Settings.RegexTraitParser = new RegexTraitParser(Logger);
 
             Logger.DebugInfo($"VS version: '{VisualStudioHelper.GetVisualStudioVersionString()}'");

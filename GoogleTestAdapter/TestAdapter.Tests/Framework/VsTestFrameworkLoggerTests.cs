@@ -16,7 +16,8 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             base.SetUp();
 
-            _logger = new VsTestFrameworkLogger(MockVsLogger.Object, () => MockOptions.Object.DebugMode, () => MockOptions.Object.TimestampOutput);
+            _logger = new VsTestFrameworkLogger(MockVsLogger.Object, () => MockOptions.Object.OutputMode, 
+                () => MockOptions.Object.TimestampMode, () => MockOptions.Object.SeverityMode, () => MockOptions.Object.PrefixOutputWithGta);
         }
 
 

@@ -33,8 +33,7 @@ namespace GoogleTestAdapter.Common
 
         private void OnExited(object sender, EventArgs e)
         {
-            var process = sender as Process;
-            if (process != null)
+            if (sender is Process process)
             {
                 lock (this)
                 {

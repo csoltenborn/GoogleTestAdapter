@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(false);
 
             Stopwatch stopwatch = new Stopwatch();
-            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             IEnumerable<string> testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Start();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.TestAdapter
             MockOptions.Setup(o => o.ParallelTestExecution).Returns(true);
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(Environment.ProcessorCount);
 
-            executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             testsToRun = TestResources.LongRunningTests_ReleaseX86.Yield();
             stopwatch.Restart();
             executor.RunTests(testsToRun, MockRunContext.Object, MockFrameworkHandle.Object);
@@ -113,6 +113,12 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
         [TestMethod]
+        public override void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
+        {
+            base.RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce();
+        }
+
+        [TestMethod]
         public override void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
             base.RunTests_HardCrashingX86Tests_CorrectTestResults();
@@ -158,6 +164,54 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_WithoutPathExtension_ExecutionFails()
         {
             base.RunTests_WithoutPathExtension_ExecutionFails();
+        }
+
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_PassingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_PassingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_FailingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_FailingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            base.MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings();
         }
 
         #endregion

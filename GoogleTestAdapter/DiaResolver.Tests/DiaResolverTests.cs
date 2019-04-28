@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.DiaResolver
                 TestResources.LoadTests_ReleaseX86, 
                 "*", 
                 TestMetadata.VersionUnderTest == VsVersion.VS2017 ? 628 : 728, 
-                108);
+                90);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.DiaResolver
             renamedPdb.AsFileInfo().Should().NotExist();
 
             var locations = new List<SourceFileLocation>();
-            var fakeLogger = new FakeLogger(() => true);
+            var fakeLogger = new FakeLogger(() => OutputMode.Verbose);
             try
             {
                 File.Move(pdb, renamedPdb);
@@ -102,7 +102,7 @@ namespace GoogleTestAdapter.DiaResolver
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)
         {
             var locations = new List<SourceFileLocation>();
-            var fakeLogger = new FakeLogger(() => false);
+            var fakeLogger = new FakeLogger(() => OutputMode.Info);
 
             string pdb = PdbLocator.FindPdbFile(executable, "", fakeLogger);
             IDiaResolver resolver = DefaultDiaResolverFactory.Instance.Create(executable, pdb, fakeLogger);
@@ -113,8 +113,8 @@ namespace GoogleTestAdapter.DiaResolver
                 resolver.Dispose();
             }
 
-            locations.Count.Should().BeGreaterOrEqualTo(expectedLocations);
-            fakeLogger.GetMessages(Severity.Warning, Severity.Error).Count.Should().BeGreaterOrEqualTo(expectedErrorMessages);
+            locations.Should().HaveCountGreaterOrEqualTo(expectedLocations);
+            fakeLogger.GetMessages(Severity.Warning, Severity.Error).Should().HaveCountGreaterOrEqualTo(expectedErrorMessages);
         }
     }
 

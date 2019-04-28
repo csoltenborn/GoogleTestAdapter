@@ -2,14 +2,13 @@
 
 using FluentAssertions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.ServiceModel;
 using System.Threading;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
@@ -35,7 +34,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void AttachDebugger_AttachingSucceeds_DebugOutputGenerated()
         {
             MockDebuggerAttacher
-                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>()))
                 .Returns(GetAttachDebuggerAction(() => true));
 
             DoTest(true);
@@ -49,7 +48,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void AttachDebugger_AttachingFails_ErrorOutputGenerated()
         {
             MockDebuggerAttacher
-                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>()))
                 .Returns(GetAttachDebuggerAction(() => false));
 
             DoTest(false);
@@ -62,7 +61,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void AttachDebugger_AttachingThrows_ErrorOutputGenerated()
         {
             MockDebuggerAttacher
-                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>()))
                 .Returns(GetAttachDebuggerAction(() => { throw new Exception("my message"); }));
 
             DoTest(false);
@@ -75,7 +74,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void AttachDebugger_NoPipeAvailable_ErrorOutputGenerated()
         {
             var client = new MessageBasedDebuggerAttacher(Guid.NewGuid().ToString(), Timeout, MockLogger.Object);
-            client.AttachDebugger(2017).Should().BeFalse();
+            client.AttachDebugger(2017, DebuggerEngine.Native).Should().BeFalse();
 
             MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("EndpointNotFoundException"))), Times.Once);
         }
@@ -93,9 +92,9 @@ namespace GoogleTestAdapter.VsPackage.Debugging
 
                 var client = new MessageBasedDebuggerAttacher(pipeId, Timeout, MockLogger.Object);
 
-                client.AttachDebugger(debuggeeProcessId).Should().Be(expectedResult);
+                client.AttachDebugger(debuggeeProcessId, DebuggerEngine.Native).Should().Be(expectedResult);
 
-                MockDebuggerAttacher.Verify(a => a.AttachDebugger(It.Is<int>(processId => processId == debuggeeProcessId)),
+                MockDebuggerAttacher.Verify(a => a.AttachDebugger(It.Is<int>(processId => processId == debuggeeProcessId), It.IsAny<DebuggerEngine>()),
                     Times.Once);
 
                 host.Close();

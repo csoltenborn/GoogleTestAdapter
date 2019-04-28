@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
             AssertContainsSetting(xml, "TraitsRegexesBefore", "User///A,B");
 
-            mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Warning), It.Is<string>(s => s.Contains("could not be parsed"))),
+            mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Error), It.Is<string>(s => s.Contains("could not be parsed"))),
                 Times.Exactly(1));
         }
 
@@ -92,7 +92,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
 
             resultingContainer.Should().NotBeNull();
             resultingContainer.SolutionSettings.Should().NotBeNull();
-            resultingContainer.ProjectSettings.Count.Should().Be(3);
+            resultingContainer.ProjectSettings.Should().HaveCount(3);
 
             resultingContainer.GetSettingsForExecutable("project1").Should().NotBeNull();
             resultingContainer.GetSettingsForExecutable("project2").Should().NotBeNull();
@@ -348,7 +348,9 @@ namespace GoogleTestAdapter.VsPackage.Settings
             XmlNode solutionSettingsNode = xml.GetElementsByTagName("SolutionSettings").Item(0);
             XmlNodeList list = solutionSettingsNode.SelectNodes($"Settings/{nodeName}");
 
+#pragma warning disable CollectionShouldContainSingle // Simplify Assertion
             list.Should().HaveCount(1, $"node {nodeName} should exist only once. XML Document:{Environment.NewLine}{ToFormattedString(xml, 4)}");
+#pragma warning restore CollectionShouldContainSingle // Simplify Assertion
 
             XmlNode node = list.Item(0);
             node.Should().NotBeNull();
@@ -356,20 +358,16 @@ namespace GoogleTestAdapter.VsPackage.Settings
             node.InnerText.Should().BeEquivalentTo(value);
         }
 
-        public static string ToFormattedString(XmlDocument xml, int indentation)
+        private static string ToFormattedString(XmlDocument xml, int indentation)
         {
-            string xmlAsString;
-            using (var sw = new StringWriter())
+            StringWriter sw;
+            using (var xw = new XmlTextWriter(sw = new StringWriter()))
             {
-                using (var xw = new XmlTextWriter(sw))
-                {
-                    xw.Formatting = Formatting.Indented;
-                    xw.Indentation = indentation;
-                    xml.WriteContentTo(xw);
-                }
-                xmlAsString = sw.ToString();
+                xw.Formatting = Formatting.Indented;
+                xw.Indentation = indentation;
+                xml.WriteContentTo(xw);
+                return sw.ToString();
             }
-            return xmlAsString;
         }
 
         private RunSettingsContainer SetupFinalRunSettingsContainer(
@@ -472,10 +470,12 @@ namespace GoogleTestAdapter.VsPackage.Settings
             {
                 projectSettings.SkipOriginCheck.Should().BeFalse();
             }
+#pragma warning disable NullConditionalAssertion // Code Smell
             runSettingsContainer.GetSettingsForExecutable("project1")?.SkipOriginCheck.Should().BeFalse();
             runSettingsContainer.GetSettingsForExecutable("project2")?.SkipOriginCheck.Should().BeFalse();
             runSettingsContainer.GetSettingsForExecutable("project3")?.SkipOriginCheck.Should().BeFalse();
             runSettingsContainer.GetSettingsForExecutable("not_matched")?.SkipOriginCheck.Should().BeFalse();
+#pragma warning restore NullConditionalAssertion // Code Smell
         }
 
     }

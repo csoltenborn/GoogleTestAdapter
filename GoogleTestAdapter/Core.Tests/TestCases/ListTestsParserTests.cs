@@ -24,7 +24,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("MySuite");
             descriptors[0].Name.Should().Be("MyTestCase");
 
@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterizedTests");
             descriptors[0].Name.Should().Be("Simple/0");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");
@@ -67,7 +67,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterisedTests");
             descriptors[0].Name.Should().Be("Name/NamedTest");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterisedTests.Name/NamedTest");
@@ -88,7 +88,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("TypedTests/0");
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("TypedTests/0.CanIterate");
@@ -110,7 +110,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("TypedTests/0");
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("TypedTests/0.CanIterate");
@@ -131,7 +131,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("Arr/TypeParameterizedTests/1");
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("Arr/TypeParameterizedTests/1.CanIterate");
@@ -152,7 +152,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("Arr/TypeParameterizedTests/1");
             descriptors[0].Name.Should().Be("CanIterate");
             descriptors[0].FullyQualifiedName.Should().Be("Arr/TypeParameterizedTests/1.CanIterate");
@@ -174,7 +174,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterizedTests");
             descriptors[0].Name.Should().Be("Simple/0");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");
@@ -196,7 +196,7 @@ namespace GoogleTestAdapter.TestCases
             IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
                 .ParseListTestsOutput(consoleOutput);
 
-            descriptors.Count.Should().Be(1);
+            descriptors.Should().ContainSingle();
             descriptors[0].Suite.Should().Be("InstantiationName/ParameterizedTests");
             descriptors[0].Name.Should().Be("Simple/0");
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");

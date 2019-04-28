@@ -12,9 +12,10 @@
     <UnitTestResult testName="Crashing.AddFailsBeforeCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>Expected: 1000
-To be equal to: Add(10, 10)
-      Which is: 20</Message>
+          <Message>Expected equality of these values:
+  1000
+  Add(10, 10)
+    Which is: 20</Message>
           <StackTrace>at crashingtests.cpp:12 in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 12</StackTrace>
         </ErrorInfo>
       </Output>

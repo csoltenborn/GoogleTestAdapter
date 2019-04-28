@@ -15,62 +15,68 @@ namespace GoogleTestAdapter.Scheduling
         [TestCategory(Unit)]
         public void SplitTestcases_SimpleCase_TestsAreDistributedCorrectly()
         {
-            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
-            durations.Add(TestDataCreator.ToTestCase("ShortTest1"), 1);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest2"), 1);
-            durations.Add(TestDataCreator.ToTestCase("LongTest"), 3);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest3"), 1);
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>
+            {
+                { TestDataCreator.ToTestCase("ShortTest1"), 1 },
+                { TestDataCreator.ToTestCase("ShortTest2"), 1 },
+                { TestDataCreator.ToTestCase("LongTest"), 3 },
+                { TestDataCreator.ToTestCase("ShortTest3"), 1 }
+            };
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(2);
-            result[0].Count.Should().Be(1);
+            result.Should().HaveCount(2);
+            result[0].Should().ContainSingle();
             result[0][0].FullyQualifiedName.Should().Be("LongTest");
-            result[1].Count.Should().Be(3);
+            result[1].Should().HaveCount(3);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void SplitTestcases_SimpleCaseWithThreeThreads_TestsAreDistributedCorrectly()
         {
-            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
-            durations.Add(TestDataCreator.ToTestCase("ShortTest1"), 1);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest2"), 1);
-            durations.Add(TestDataCreator.ToTestCase("LongTest"), 3);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest3"), 1);
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>
+            {
+                { TestDataCreator.ToTestCase("ShortTest1"), 1 },
+                { TestDataCreator.ToTestCase("ShortTest2"), 1 },
+                { TestDataCreator.ToTestCase("LongTest"), 3 },
+                { TestDataCreator.ToTestCase("ShortTest3"), 1 }
+            };
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(3);
-            result[0].Count.Should().Be(1);
+            result.Should().HaveCount(3);
+            result[0].Should().ContainSingle();
             result[0][0].FullyQualifiedName.Should().Be("LongTest");
-            result[1].Count.Should().Be(2);
-            result[2].Count.Should().Be(1);
+            result[1].Should().HaveCount(2);
+            result[2].Should().ContainSingle();
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void SplitTestcases_AsymmetricCase_TestsAreDistributedCorrectly()
         {
-            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
-            durations.Add(TestDataCreator.ToTestCase("ShortTest1"), 1);
-            durations.Add(TestDataCreator.ToTestCase("LongTest"), 5);
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>
+            {
+                { TestDataCreator.ToTestCase("ShortTest1"), 1 },
+                { TestDataCreator.ToTestCase("LongTest"), 5 }
+            };
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(2);
-            result[0].Count.Should().Be(1);
+            result.Should().HaveCount(2);
+            result[0].Should().ContainSingle();
             result[0][0].FullyQualifiedName.Should().Be("LongTest");
-            result[1].Count.Should().Be(1);
+            result[1].Should().ContainSingle();
         }
 
         [TestMethod]
@@ -92,7 +98,7 @@ namespace GoogleTestAdapter.Scheduling
             ITestsSplitter splitter = new DurationBasedTestsSplitter(durations, TestEnvironment.Options);
             List<List<Model.TestCase>> result = splitter.SplitTestcases();
 
-            result.Count.Should().Be(nrOfThreads);
+            result.Should().HaveCount(nrOfThreads);
             result.Select(l => l.Count).Sum().Should().Be(nrOfTests);
 
             int sumOfAllDurations = durations.Select(kvp => kvp.Value).Sum();
@@ -110,7 +116,7 @@ namespace GoogleTestAdapter.Scheduling
                 foundTestcases.UnionWith(testcases);
             }
 
-            foundTestcases.Count.Should().Be(nrOfTests);
+            foundTestcases.Should().HaveCount(nrOfTests);
         }
 
         private IDictionary<Model.TestCase, int> CreateRandomTestResults(int nr, int maxDuration)

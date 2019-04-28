@@ -10,12 +10,13 @@ namespace NewProjectWizard.GTA.Helpers
 {
     public class TestWindowLogger : LoggerBase
     {
-        private readonly Func<bool> _isTimeStampingEnabled;
+        private readonly Func<TimestampMode> _getTimestampMode;
         private const string TestOutputWindowGuid = "{B85579AA-8BE0-4C4F-A850-90902B317581}";
 
-        public TestWindowLogger(Func<bool> isDebugModeEnabled, Func<bool> isTimeStampingEnabled) : base(isDebugModeEnabled)
+        public TestWindowLogger(Func<OutputMode> getOutputMode, Func<TimestampMode> getTimestampMode) 
+            : base(getOutputMode)
         {
-            _isTimeStampingEnabled = isTimeStampingEnabled;
+            _getTimestampMode = getTimestampMode;
         }
 
         public override void Log(Severity severity, string message)
@@ -38,8 +39,12 @@ namespace NewProjectWizard.GTA.Helpers
 
         private void LogSafe(Severity level, string message)
         {
-            if (_isTimeStampingEnabled())
-                Utils.TimestampMessage(ref message);
+            // FIXME adjust to new logic of VsFrameworkLogger
+            var timestampMode = _getTimestampMode();
+            if (timestampMode == TimestampMode.PrintTimestamp)
+            {
+                message = $"{Utils.GetTimestamp()} {message}";
+            }
 
             if (string.IsNullOrWhiteSpace(message))
             {

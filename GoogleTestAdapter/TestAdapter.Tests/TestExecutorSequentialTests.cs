@@ -46,14 +46,14 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CancelingExecutor_StopsTestExecution()
+        public virtual void RunTests_CancelingExecutor_StopsTestExecution()
         {
             DoRunCancelingTests(false, DurationOfEachLongRunningTestInMs);  // (only) 1st test should be executed
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
+        public virtual void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
         {
             DoRunCancelingTests(true, WaitBeforeCancelInMs);  // 1st test should be actively canceled
         }
@@ -62,10 +62,10 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
             List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
-            testCasesToRun.Count.Should().Be(2);
+            testCasesToRun.Should().HaveCount(2);
 
             var stopwatch = new Stopwatch();
-            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
 
             var canceller = new Thread(() =>
             {
@@ -119,18 +119,24 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
             base.RunTests_StaticallyLinkedX64Tests_CorrectTestResults();
+        }        
+        
+        [TestMethod]
+        public override void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
+        {
+            base.RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce();
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CrashingX64Tests_CorrectTestResults()
+        public virtual void RunTests_CrashingX64Tests_CorrectTestResults()
         {
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 1, 2, 0, 3);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CrashingX86Tests_CorrectTestResults()
+        public virtual void RunTests_CrashingX86Tests_CorrectTestResults()
         {
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 1, 2, 0, 3);
         }
@@ -183,8 +189,55 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithoutPathExtension_ExecutionFails();
         }
 
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_PassingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_PassingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_FailingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_FailingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            base.MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings();
+        }
+
         #endregion
 
     }
-
 }

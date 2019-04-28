@@ -1,8 +1,10 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using GoogleTestAdapter.Common;
+using GoogleTestAdapter.ProcessExecution;
+
 namespace GoogleTestAdapter.Settings
 {
-
     /*
     To add a new option, make the following changes:
     - add (nullable!) property to GoogleTestAdapter.Settings.IGoogleTestAdapterSettings
@@ -11,7 +13,7 @@ namespace GoogleTestAdapter.Settings
     - handle property serialization in class GoogleTestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
-    - update schema in GoogleTestAdapterSettings.xsd
+    - update schema in TestAdapter/GoogleTestAdapterSettings.xsd
     - add new option to Solution Items/AllTestSettings.gta.runsettings
     - add default mock configuration in method GoogleTestAdapter.Tests.Common.TestsBase.SetUp()
     */
@@ -41,16 +43,25 @@ namespace GoogleTestAdapter.Settings
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
+        OutputMode? OutputMode { get; set; }
         bool? TimestampOutput { get; set; }
+        TimestampMode? TimestampMode { get; set; }
+        SeverityMode? SeverityMode { get; set; }
+        SummaryMode? SummaryMode { get; set; }
+        bool? PrefixOutputWithGta { get; set; }
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
+        string ExitCodeTestCase { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
+        DebuggerKind? DebuggerKind { get; set; }
 
         // internal
         string DebuggingNamedPipeId { get; set; }
         string SolutionDir { get; set; }
+        string PlatformName { get; set; }
+        string ConfigurationName { get; set; }
     }
 
     public static class GoogleTestAdapterSettingsExtensions
@@ -79,15 +90,24 @@ namespace GoogleTestAdapter.Settings
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
+            self.OutputMode = self.OutputMode ?? other.OutputMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
+            self.TimestampMode = self.TimestampMode ?? other.TimestampMode;
+            self.SeverityMode = self.SeverityMode ?? other.SeverityMode;
+            self.SummaryMode = self.SummaryMode ?? other.SummaryMode;
+            self.PrefixOutputWithGta = self.PrefixOutputWithGta ?? other.PrefixOutputWithGta;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
+            self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
+            self.DebuggerKind = self.DebuggerKind ?? other.DebuggerKind;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
             self.SolutionDir = self.SolutionDir ?? other.SolutionDir;
+            self.PlatformName = self.PlatformName ?? other.PlatformName;
+            self.ConfigurationName = self.ConfigurationName ?? other.ConfigurationName;
         }
     }
 

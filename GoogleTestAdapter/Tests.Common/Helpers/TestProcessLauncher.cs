@@ -9,14 +9,29 @@ namespace GoogleTestAdapter.Tests.Common.Helpers
     public class TestProcessLauncher
     {
 
-        public int GetOutputStreams(string workingDirectory, string command, string param, out List<string> standardOut, out List<string> standardErr)
+        public int GetOutputStreams(string workingDirectory, string command, string param, out List<string> standardOut,
+            out List<string> standardErr)
+        {
+            return GetOutputStreams(workingDirectory, command, param, out standardOut, out standardErr, out _);
+        }
+
+        public int GetOutputStreams(string workingDirectory, string command, string param, out List<string> standardOut, out List<string> standardErr, out List<string> allOutput)
         {
             Process process = CreateProcess(workingDirectory, command, param);
 
             var localStandardOut = new List<string>();
             var localStandardErr = new List<string>();
-            process.OutputDataReceived += (sender, e) => localStandardOut.Add(e.Data);
-            process.ErrorDataReceived += (sender, e) => localStandardErr.Add(e.Data);
+            var localAllOutput = new List<string>();
+            process.OutputDataReceived += (sender, e) =>
+            {
+                localStandardOut.Add(e.Data);
+                localAllOutput.Add(e.Data);
+            };
+            process.ErrorDataReceived += (sender, e) =>
+            {
+                localStandardErr.Add(e.Data);
+                localAllOutput.Add(e.Data);
+            };
 
             try
             {
@@ -29,6 +44,7 @@ namespace GoogleTestAdapter.Tests.Common.Helpers
 
                 standardOut = localStandardOut.Where(s => s != null).ToList();
                 standardErr = localStandardErr.Where(s => s != null).ToList();
+                allOutput = localAllOutput.Where(s => s != null).ToList();
                 return waiter.ProcessExitCode;
             }
             finally

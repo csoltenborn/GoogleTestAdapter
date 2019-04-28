@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,6 +14,19 @@ namespace GoogleTestAdapter.Tests.Common
 {
     public abstract class TestsBase
     {
+        private class DummyProcessFactory : ProcessExecutorFactory, IDebuggedProcessExecutorFactory
+        {
+            public IDebuggedProcessExecutor CreateFrameworkDebuggingExecutor(bool printTestOutput, ILogger logger)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDebuggedProcessExecutor CreateNativeDebuggingExecutor(DebuggerEngine engine, bool printTestOutput, ILogger logger)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         protected readonly Mock<ILogger> MockLogger;
         protected readonly Mock<SettingsWrapper> MockOptions;
         protected readonly Mock<ITestFrameworkReporter> MockFrameworkReporter;
@@ -20,13 +35,18 @@ namespace GoogleTestAdapter.Tests.Common
 
         protected readonly TestEnvironment TestEnvironment;
 
+        protected IDebuggedProcessExecutorFactory ProcessExecutorFactory => new DummyProcessFactory();
+
         protected TestsBase()
         {
             MockLogger = new Mock<ILogger>();
             MockLogger.Setup(l => l.GetMessages(It.IsAny<Severity[]>())).Returns(new List<string>());
 
-            Mock<IGoogleTestAdapterSettingsContainer> mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
+            var mockSettingsContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
+            var mockRunSettings = new Mock<RunSettings>();
+            mockSettingsContainer.Setup(c => c.SolutionSettings).Returns(mockRunSettings.Object);
             MockOptions = new Mock<SettingsWrapper>(mockSettingsContainer.Object, Path.GetFullPath(TestResources.SampleTestsSolutionDir));
+
             MockFrameworkReporter = new Mock<ITestFrameworkReporter>();
 
             TestEnvironment = new TestEnvironment(MockOptions.Object, MockLogger.Object);
@@ -37,11 +57,13 @@ namespace GoogleTestAdapter.Tests.Common
         [TestInitialize]
         public virtual void SetUp()
         {
-            SetupOptions(MockOptions);
+            SetupOptions(MockOptions, MockLogger.Object);
         }
 
-        public static void SetupOptions(Mock<SettingsWrapper> mockOptions)
+        public static void SetupOptions(Mock<SettingsWrapper> mockOptions, ILogger logger)
         {
+            mockOptions.Object.HelperFilesCache = new HelperFilesCache(logger);
+
             mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
             mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
 
@@ -59,9 +81,12 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.ShuffleTests).Returns(SettingsWrapper.OptionShuffleTestsDefaultValue);
             mockOptions.Setup(o => o.ShuffleTestsSeed).Returns(SettingsWrapper.OptionShuffleTestsSeedDefaultValue);
             mockOptions.Setup(o => o.ParseSymbolInformation).Returns(SettingsWrapper.OptionParseSymbolInformationDefaultValue);
-            mockOptions.Setup(o => o.DebugMode).Returns(SettingsWrapper.OptionDebugModeDefaultValue);
-            mockOptions.Setup(o => o.TimestampOutput).Returns(SettingsWrapper.OptionTimestampOutputDefaultValue);
-            mockOptions.Setup(o => o.ShowReleaseNotes).Returns(SettingsWrapper.OptionShowReleaseNotesDefaultValue);
+            mockOptions.Setup(o => o.OutputMode).Returns(SettingsWrapper.OptionOutputModeDefaultValue);
+            mockOptions.Setup(o => o.TimestampMode).Returns(TimestampMode.DoNotPrintTimestamp);
+            mockOptions.Setup(o => o.SeverityMode).Returns(SeverityMode.PrintSeverity);
+            mockOptions.Setup(o => o.SummaryMode).Returns(SettingsWrapper.OptionSummaryModeDefaultValue);
+            mockOptions.Setup(o => o.PrefixOutputWithGta)
+                .Returns(SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue);
             mockOptions.Setup(o => o.AdditionalTestExecutionParam)
                 .Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
             mockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);
@@ -73,8 +98,9 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
             mockOptions.Setup(o => o.KillProcessesOnCancel).Returns(SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
             mockOptions.Setup(o => o.SkipOriginCheck).Returns(SettingsWrapper.OptionSkipOriginCheckDefaultValue);
+            mockOptions.Setup(o => o.ExitCodeTestCase).Returns(SettingsWrapper.OptionExitCodeTestCaseDefaultValue);
 
-            mockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+            mockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.Native);
 
             mockOptions.Setup(o => o.DebuggingNamedPipeId).Returns(Guid.NewGuid().ToString());
             mockOptions.Setup(o => o.SolutionDir).CallBase();

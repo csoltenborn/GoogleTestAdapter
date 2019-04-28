@@ -7,6 +7,7 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 using MethodSignature = GoogleTestAdapter.TestCases.MethodSignatureCreator.MethodSignature;
 
 namespace GoogleTestAdapter.TestCases
@@ -19,9 +20,8 @@ namespace GoogleTestAdapter.TestCases
         private const string TraitAppendix = "_GTA_TRAIT";
 
         private readonly string _executable;
-        private readonly string _pathExtension;
-        private readonly IEnumerable<string> _additionalPdbs;
         private readonly IDiaResolverFactory _diaResolverFactory;
+        private readonly SettingsWrapper _settings;
         private readonly ILogger _logger;
 
         private readonly List<SourceFileLocation> _allTestMethodSymbols = new List<SourceFileLocation>();
@@ -30,17 +30,16 @@ namespace GoogleTestAdapter.TestCases
         private bool _loadedSymbolsFromAdditionalPdbs;
         private bool _loadedSymbolsFromImports;
 
-        public TestCaseResolver(string executable, string pathExtension, IEnumerable<string> additionalPdbs, IDiaResolverFactory diaResolverFactory, bool parseSymbolInformation, ILogger logger)
+        public TestCaseResolver(string executable, IDiaResolverFactory diaResolverFactory, SettingsWrapper settings, ILogger logger)
         {
             _executable = executable;
-            _pathExtension = pathExtension;
-            _additionalPdbs = additionalPdbs;
             _diaResolverFactory = diaResolverFactory;
+            _settings = settings;
             _logger = logger;
 
-            if (parseSymbolInformation)
+            if (_settings.ParseSymbolInformation)
             {
-                AddSymbolsFromBinary(executable);
+                AddSymbolsFromBinary(executable, true);
             }
             else
             {
@@ -48,6 +47,8 @@ namespace GoogleTestAdapter.TestCases
                 _loadedSymbolsFromImports = true;
             }
         }
+
+        public TestCaseLocation MainMethodLocation { get; private set; }
 
         public TestCaseLocation FindTestCaseLocation(List<MethodSignature> testMethodSignatures)
         {
@@ -69,7 +70,7 @@ namespace GoogleTestAdapter.TestCases
 
         private void LoadSymbolsFromAdditionalPdbs()
         {
-            foreach (var pdbPattern in _additionalPdbs)
+            foreach (var pdbPattern in _settings.GetAdditionalPdbs(_executable))
             {
                 var matchingFiles = Utils.GetMatchingFiles(pdbPattern, _logger);
                 if (matchingFiles.Length == 0)
@@ -100,19 +101,19 @@ namespace GoogleTestAdapter.TestCases
             }
         }
 
-        private void AddSymbolsFromBinary(string binary)
+        private void AddSymbolsFromBinary(string binary, bool resolveMainMethod = false)
         {
-            string pdb = PdbLocator.FindPdbFile(binary, _pathExtension, _logger);
+            string pdb = PdbLocator.FindPdbFile(binary, _settings.GetPathExtension(_executable), _logger);
             if (pdb == null)
             {
                 _logger.DebugWarning($"No .pdb file found for '{binary}'");
                 return;
             }
 
-            AddSymbolsFromBinary(binary, pdb);
+            AddSymbolsFromBinary(binary, pdb, resolveMainMethod);
         }
 
-        private void AddSymbolsFromBinary(string binary, string pdb)
+        private void AddSymbolsFromBinary(string binary, string pdb, bool resolveMainMethod = false)
         {
             using (IDiaResolver diaResolver = _diaResolverFactory.Create(binary, pdb, _logger))
             {
@@ -120,14 +121,41 @@ namespace GoogleTestAdapter.TestCases
                 {
                     _allTestMethodSymbols.AddRange(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     _allTraitSymbols.AddRange(diaResolver.GetFunctions("*" + TraitAppendix));
-
                     _logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}, pdb {pdb}");
+
+                    if (resolveMainMethod)
+                    {
+                        MainMethodLocation = ResolveMainMethod(diaResolver);
+                    }
                 }
                 catch (Exception e)
                 {
                     _logger.DebugError($"Exception while resolving test locations and traits in '{binary}':{Environment.NewLine}{e}");
                 }
             }
+        }
+
+        private TestCaseLocation ResolveMainMethod(IDiaResolver diaResolver)
+        {
+            var mainSymbols = new List<SourceFileLocation>();
+            mainSymbols.AddRange(diaResolver.GetFunctions("main"));
+
+            if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
+            {
+                if (mainSymbols.Count == 0)
+                {
+                    _logger.DebugWarning(
+                        $"Could not find any main method for executable {_executable} - exit code test will not have source location");
+                }
+                else if (mainSymbols.Count > 1)
+                {
+                    _logger.DebugWarning(
+                        $"Found more than one potential main method in executable {_executable} - exit code test might have wrong source location");
+                }
+            }
+
+            var location = mainSymbols.FirstOrDefault();
+            return location != null ? ToTestCaseLocation(location) : null;
         }
 
         private TestCaseLocation DoFindTestCaseLocation(List<MethodSignature> testMethodSignatures)

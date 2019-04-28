@@ -34,7 +34,7 @@ namespace GoogleTestAdapter.Scheduling
             durationsFile.AsFileInfo().Should().Exist();
 
             IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
-            durations.Count.Should().Be(1);
+            durations.Should().HaveCount(1);
             durations.Should().ContainKey(testResults[0].TestCase);
             durations[testResults[0].TestCase].Should().Be(3);
             durations.Should().NotContainKey(testResults[1].TestCase);
@@ -63,7 +63,7 @@ namespace GoogleTestAdapter.Scheduling
             durationsFile2.AsFileInfo().Should().Exist();
 
             IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
-            durations.Count.Should().Be(2);
+            durations.Should().HaveCount(2);
             durations.Should().ContainKey(testResults[0].TestCase);
             durations[testResults[0].TestCase].Should().Be(3);
             durations.Should().ContainKey(testResults[1].TestCase);
@@ -91,7 +91,7 @@ namespace GoogleTestAdapter.Scheduling
             testResults[0].Duration = TimeSpan.FromMilliseconds(4);
             serializer.UpdateTestDurations(testResults);
             durations = serializer.ReadTestDurations(testResults.Select(tr => tr.TestCase));
-            durations.Count.Should().Be(1);
+            durations.Should().HaveCount(1);
             durations.Should().ContainKey(testResults[0].TestCase);
             durations[testResults[0].TestCase].Should().Be(4);
 
@@ -108,7 +108,7 @@ namespace GoogleTestAdapter.Scheduling
             IDictionary<Model.TestCase, int> durations = serializer.ReadTestDurations(TestDataCreator.ToTestCase("TestSuite1.Test1", tempFile).Yield());
 
             durations.Should().NotBeNull();
-            durations.Count.Should().Be(0);
+            durations.Should().BeEmpty();
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@ namespace GoogleTestAdapter.Scheduling
                 new Model.TestCase("TestSuite1.Test2", tempFile, "TestSuite1.Test2", "", 0).Yield());
 
             durations.Should().NotBeNull();
-            durations.Count.Should().Be(0);
+            durations.Should().BeEmpty();
 
             File.Delete(GetDurationsFile(serializer, tempFile));
         }

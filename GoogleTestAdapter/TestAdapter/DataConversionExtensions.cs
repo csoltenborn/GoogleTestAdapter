@@ -98,7 +98,7 @@ namespace GoogleTestAdapter.TestAdapter
                 case TestOutcome.NotFound:
                     return VsTestOutcome.NotFound;
                 default:
-                    throw new Exception();
+                    throw new InvalidOperationException($"Unknown enum literal: {testOutcome}");
             }
         }
 
@@ -106,14 +106,23 @@ namespace GoogleTestAdapter.TestAdapter
         {
             switch (level)
             {
-                case TestMessageLevel.Informational:
-                    return Severity.Info;
-                case TestMessageLevel.Warning:
-                    return Severity.Warning;
-                case TestMessageLevel.Error:
-                    return Severity.Error;
+                case TestMessageLevel.Informational: return Severity.Info;
+                case TestMessageLevel.Warning: return Severity.Warning;
+                case TestMessageLevel.Error: return Severity.Error;
                 default:
                     throw new InvalidOperationException($"Unknown enum literal: {level}");
+            }
+        }
+
+        public static TestMessageLevel GetTestMessageLevel(this Severity severity)
+        {
+            switch (severity)
+            {
+                case Severity.Info: return TestMessageLevel.Informational;
+                case Severity.Warning: return TestMessageLevel.Warning;
+                case Severity.Error: return TestMessageLevel.Error;
+                default:
+                    throw new InvalidOperationException($"Unknown enum literal: {severity}");
             }
         }
 
