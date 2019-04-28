@@ -61,7 +61,7 @@ namespace GoogleTestAdapter.Helpers
             var tasks = new Task[actions.Length];
             for (int i = 0; i < actions.Length; i++)
             {
-                tasks[i] = Task.Factory.StartNew(actions[i]);
+                tasks[i] = Task.Run(actions[i]);
             }
       
             return Task.WaitAll(tasks, timeoutInMs);
