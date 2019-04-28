@@ -26,7 +26,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         {
         }
 
-        public bool AttachDebugger(int processId)
+        public bool AttachDebugger(int processId, DebuggerEngine debuggerEngine)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 var proxy = DebuggerAttacherServiceConfiguration.CreateProxy(_debuggingNamedPipeId, _timeout);
                 using (var client = new DebuggerAttacherServiceProxyWrapper(proxy))
                 {
-                    client.Service.AttachDebugger(processId);
+                    client.Service.AttachDebugger(processId, debuggerEngine);
                     stopWatch.Stop();
                     _logger.DebugInfo($"Debugger attached to process {processId}, took {stopWatch.ElapsedMilliseconds} ms");
                     return true;

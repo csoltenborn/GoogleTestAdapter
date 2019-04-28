@@ -6,7 +6,6 @@ using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Settings;
@@ -61,8 +60,7 @@ namespace GoogleTestAdapter.Runners
                 stopwatch.Stop();
                 _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
 
-                string errorMessage;
-                if (!Utils.DeleteDirectory(_testDirectory, out errorMessage))
+                if (!Utils.DeleteDirectory(_testDirectory, out var errorMessage))
                 {
                     _logger.DebugWarning(
                         $"{_threadName}Could not delete test directory '" + _testDirectory + "': " + errorMessage);
@@ -73,6 +71,8 @@ namespace GoogleTestAdapter.Runners
                 _logger.LogError($"{_threadName}Exception while running tests: " + e);
             }
         }
+
+        public IList<ExecutableResult> ExecutableResults => _innerTestRunner.ExecutableResults;
 
         public void Cancel()
         {

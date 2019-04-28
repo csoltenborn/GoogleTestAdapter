@@ -47,22 +47,23 @@ namespace GoogleTestAdapter
 
         private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
         {
-            settings.ExecuteWithSettingsForExecutable(executable, () =>
+            settings.ExecuteWithSettingsForExecutable(executable, logger, () =>
             {
                 if (!VerifyExecutableTrust(executable, settings, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
                     return;
 
                 int nrOfTestCases = 0;
-                Action<TestCase> reportTestCases = tc =>
+                void ReportTestCases(TestCase testCase)
                 {
-                    reporter.ReportTestsFound(tc.Yield());
-                    logger.DebugInfo("Added testcase " + tc.DisplayName);
+                    reporter.ReportTestsFound(testCase.Yield());
+                    logger.VerboseInfo("Added testcase " + testCase.DisplayName);
                     nrOfTestCases++;
-                };
+                }
+
                 var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory, processExecutorFactory);
-                factory.CreateTestCases(reportTestCases);
+                factory.CreateTestCases(ReportTestCases);
                 logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
-            }, logger);
+            });
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
@@ -72,7 +73,7 @@ namespace GoogleTestAdapter
 
             foreach (TestCase testCase in testCases)
             {
-                _logger.DebugInfo("Added testcase " + testCase.DisplayName);
+                _logger.VerboseInfo("Added testcase " + testCase.DisplayName);
             }
             _logger.LogInfo("Found " + testCases.Count + " tests in executable " + executable);
 

@@ -11,6 +11,7 @@ using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
@@ -50,7 +51,7 @@ namespace GoogleTestAdapter.Runners
                 if (_canceled)
                     break;
 
-                _settings.ExecuteWithSettingsForExecutable(executable, () =>
+                _settings.ExecuteWithSettingsForExecutable(executable, _logger, () =>
                 {
                     string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
                     string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
@@ -62,10 +63,12 @@ namespace GoogleTestAdapter.Runners
                         userParameters,
                         isBeingDebugged,
                         processExecutorFactory);
-                }, _logger);
+                });
 
             }
         }
+
+        public IList<ExecutableResult> ExecutableResults { get; } = new List<ExecutableResult>();
 
         public void Cancel()
         {
@@ -155,7 +158,9 @@ namespace GoogleTestAdapter.Runners
                 RunTestExecutable(executable, workingDir, arguments,isBeingDebugged, processExecutorFactory, streamingParser);
 
             var remainingTestCases =
-                arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
+                arguments.TestCases
+                    .Except(streamingParser.TestResults.Select(tr => tr.TestCase))
+                    .Where(tc => !tc.IsExitCodeTestCase);
             var testResults = new TestResultCollector(_logger, _threadName)
                 .CollectTestResults(remainingTestCases, executable, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
@@ -167,22 +172,16 @@ namespace GoogleTestAdapter.Runners
             StreamingStandardOutputTestResultParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);
-            bool isTestOutputAvailable = !isBeingDebugged || _settings.UseNewTestExecutionFramework;
+            bool isTestOutputAvailable = !isBeingDebugged || _settings.DebuggerKind > DebuggerKind.VsTestFramework;
             bool printTestOutput = _settings.PrintTestOutput &&
                                    !_settings.ParallelTestExecution &&
                                    isTestOutputAvailable;
-
-            if (printTestOutput)
-                _logger.LogInfo(
-                    $"{_threadName}>>>>>>>>>>>>>>> Output of command '" + executable + " " + arguments.CommandLine + "'");
 
             void OnNewOutputLine(string line)
             {
                 try
                 {
                     if (!_canceled) streamingParser.ReportLine(line);
-
-                    if (printTestOutput) _logger.LogInfo(line);
                 }
                 catch (TestRunCanceledException e)
                 {
@@ -192,17 +191,19 @@ namespace GoogleTestAdapter.Runners
             }
 
             _processExecutor = isBeingDebugged
-                ? _settings.UseNewTestExecutionFramework
-                    ? processExecutorFactory.CreateNativeDebuggingExecutor(printTestOutput, _logger)
-                    : processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
+                ? _settings.DebuggerKind == DebuggerKind.VsTestFramework
+                    ? processExecutorFactory.CreateFrameworkDebuggingExecutor(printTestOutput, _logger)
+                    : processExecutorFactory.CreateNativeDebuggingExecutor(
+                        _settings.DebuggerKind == DebuggerKind.Native ? DebuggerEngine.Native : DebuggerEngine.ManagedAndNative, 
+                        printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
-            _processExecutor.ExecuteCommandBlocking(
+            int exitCode = _processExecutor.ExecuteCommandBlocking(
                 executable, arguments.CommandLine, workingDir, pathExtension,
                 isTestOutputAvailable ? (Action<string>) OnNewOutputLine : null);
             streamingParser.Flush();
 
-            if (printTestOutput)
-                _logger.LogInfo($"{_threadName}<<<<<<<<<<<<<<< End of Output");
+            ExecutableResults.Add(new ExecutableResult(executable, exitCode, streamingParser.ExitCodeOutput,
+                streamingParser.ExitCodeSkip));
 
             var consoleOutput = new List<string>();
             new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);
@@ -211,7 +212,7 @@ namespace GoogleTestAdapter.Runners
             foreach (TestResult result in streamingParser.TestResults)
             {
                 if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
-                    _logger.LogWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
+                    _logger.DebugWarning($"{_threadName}TestCase already in analyzer: {result.TestCase.FullyQualifiedName}");
             }
             return consoleOutput;
         }

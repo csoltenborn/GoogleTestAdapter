@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
@@ -18,7 +19,7 @@ namespace GoogleTestAdapter.TestCases
         [TestInitialize]
         public void Setup()
         {
-            _fakeLogger = new FakeLogger(() => true, false);
+            _fakeLogger = new FakeLogger(() => OutputMode.Verbose, false);
         }
 
         [TestMethod]
@@ -72,8 +73,8 @@ namespace GoogleTestAdapter.TestCases
                 $"{suite}.Test",
                 TestCaseDescriptor.TestTypes.Simple);
             var signatures = new MethodSignatureCreator().GetTestMethodSignatures(descriptor);
-            var resolver = new TestCaseResolver(TestResources.Tests_ReleaseX64, "", "".Yield(),
-                new DefaultDiaResolverFactory(), true, _fakeLogger);
+            var resolver = new TestCaseResolver(TestResources.Tests_ReleaseX64, 
+                new DefaultDiaResolverFactory(), MockOptions.Object, _fakeLogger);
 
             var testCaseLocation = resolver.FindTestCaseLocation(signatures.ToList());
 

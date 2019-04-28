@@ -12,6 +12,7 @@ using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.TestCases
 {
@@ -42,13 +43,7 @@ namespace GoogleTestAdapter.TestCases
             var standardOutput = new List<string>();
             var testCases = new List<TestCase>();
 
-            var resolver = new TestCaseResolver(
-                _executable,
-                _settings.GetPathExtension(_executable),
-                _settings.GetAdditionalPdbs(_executable),
-                _diaResolverFactory,
-                _settings.ParseSymbolInformation,
-                _logger);
+            var resolver = new TestCaseResolver(_executable, _diaResolverFactory, _settings, _logger);
 
             var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
             var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
@@ -68,14 +63,15 @@ namespace GoogleTestAdapter.TestCases
                 }
                 testCases.Add(testCase);
 
-                ISet<TestCase> testCasesOfSuite;
-                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out testCasesOfSuite))
+                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out var testCasesOfSuite))
+                {
                     suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
+                }
                 testCasesOfSuite.Add(testCase);
             };
 
             string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-           var finalParams = GetDiscoveryParams();
+            var finalParams = GetDiscoveryParams();
             try
             {
                 int processExitCode = ExecutionFailed;
@@ -87,8 +83,9 @@ namespace GoogleTestAdapter.TestCases
                     parser.ReportLine(line);
                 }
 
-                var listAndParseTestsTask = new Task(() =>
+                var listAndParseTestsTask = Task.Run(() =>
                 {
+                    _logger.VerboseInfo($"Starting test discovery for {_executable}");
                     executor = _processExecutorFactory.CreateExecutor(false, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
@@ -96,8 +93,9 @@ namespace GoogleTestAdapter.TestCases
                         workingDir,
                         _settings.GetPathExtension(_executable),
                         OnReportOutputLine);
-                }, TaskCreationOptions.AttachedToParent);
-                listAndParseTestsTask.Start();
+                    _logger.VerboseInfo($"Finished execution of {_executable}");
+                });
+                _logger.VerboseInfo($"Scheduled test discovery for {_executable}");
 
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
@@ -115,8 +113,17 @@ namespace GoogleTestAdapter.TestCases
                     }
                 }
 
-                if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
+                {
+                    var exitCodeTestCase = ExitCodeTestsReporter.CreateExitCodeTestCase(_settings, _executable, resolver.MainMethodLocation);
+                    testCases.Add(exitCodeTestCase);
+                    reportTestCase?.Invoke(exitCodeTestCase);
+                    _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionExitCodeTestCase}' is set");
+                }
+                else if (!CheckProcessExitCode(processExitCode, standardOutput, workingDir, finalParams))
+                {
                     return new List<TestCase>();
+                }
             }
             catch (Exception e)
             {
@@ -197,7 +204,7 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}");
+            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
             return CreateTestCase(descriptor);
         }
 

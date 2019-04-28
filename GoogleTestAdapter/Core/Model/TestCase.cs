@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace GoogleTestAdapter.Model
 {
@@ -24,11 +25,14 @@ namespace GoogleTestAdapter.Model
             LineNumber = lineNumber;
         }
 
+        public bool IsExitCodeTestCase
+        {
+            get { return !Properties.Any(p => p is TestCaseMetaDataProperty); }
+        }
+
         public override bool Equals(object obj)
         {
-            var other = obj as TestCase;
-
-            if (other == null)
+            if (!(obj is TestCase other))
                 return false;
 
             return FullyQualifiedName == other.FullyQualifiedName && Source == other.Source;

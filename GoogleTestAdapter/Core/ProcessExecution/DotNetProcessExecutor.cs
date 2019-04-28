@@ -16,6 +16,17 @@ namespace GoogleTestAdapter.ProcessExecution
         
         private Process _process;
 
+        public static void LogStartOfOutput(ILogger logger, string command, string parameters)
+        {
+            logger.LogInfo(
+                ">>>>>>>>>>>>>>> Output of command '" + command + " " + parameters + "'");
+        }
+
+        public static void LogEndOfOutput(ILogger logger)
+        {
+            logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
+        }
+
         public DotNetProcessExecutor(bool printTestOutput, ILogger logger)
         {
             _printTestOutput = printTestOutput;
@@ -67,8 +78,7 @@ namespace GoogleTestAdapter.ProcessExecution
 
                 if (_printTestOutput)
                 {
-                    _logger.LogInfo(
-                        ">>>>>>>>>>>>>>> Output of command '" + command + " " + parameters + "'");
+                    LogStartOfOutput(_logger, command, parameters);
                 }
 
                 _process.Start();
@@ -81,11 +91,14 @@ namespace GoogleTestAdapter.ProcessExecution
                 {
                     if (_printTestOutput)
                     {
-                        _logger.LogInfo("<<<<<<<<<<<<<<< End of Output");
+                        LogEndOfOutput(_logger);
                     }
+
+                    _logger.DebugInfo($"Executable {command} returned with exit code {_process.ExitCode}");
                     return _process.ExitCode;
                 }
 
+                _logger.DebugInfo($"Executable {command} did not return properly, using return code {int.MaxValue}");
                 return int.MaxValue;
             }
         }

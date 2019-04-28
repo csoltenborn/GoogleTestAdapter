@@ -30,6 +30,7 @@ OutputHandling.OneLine
 abcd.t
 bbcd.t
 bcd.t
+MainMethodTests.StupidMethod
 Namespace_Named.Test
 Namespace_Named_Named.Test
 Namespace_Named_Anon.Test

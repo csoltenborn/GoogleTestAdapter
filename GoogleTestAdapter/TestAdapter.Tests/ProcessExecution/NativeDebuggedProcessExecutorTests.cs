@@ -1,4 +1,4 @@
-﻿using GoogleTestAdapter.ProcessExecution;
+﻿using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,8 +14,8 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         [TestInitialize]
         public void Setup()
         {
-            _mockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>())).Returns(true);
-            ProcessExecutor = new NativeDebuggedProcessExecutor(_mockDebuggerAttacher.Object, true, MockLogger.Object);
+            _mockDebuggerAttacher.Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>())).Returns(true);
+            ProcessExecutor = new NativeDebuggedProcessExecutor(_mockDebuggerAttacher.Object, DebuggerEngine.Native, true, MockLogger.Object);
         }
 
         [TestCleanup]

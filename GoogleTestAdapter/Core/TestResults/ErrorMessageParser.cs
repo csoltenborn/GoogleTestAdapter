@@ -110,8 +110,7 @@ namespace GoogleTestAdapter.TestResults
         private void HandleSingleFailure()
         {
             string errorMessage = ErrorMessages[0];
-            string stackTrace;
-            CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace);
+            CreateErrorMessageAndStacktrace(ref errorMessage, out var stackTrace);
 
             ErrorMessage = errorMessage;
             ErrorStackTrace = stackTrace;
@@ -125,8 +124,7 @@ namespace GoogleTestAdapter.TestResults
             {
                 string errorMessage = ErrorMessages[i];
                 int msgId = i + 1;
-                string stackTrace;
-                CreateErrorMessageAndStacktrace(ref errorMessage, out stackTrace, msgId);
+                CreateErrorMessageAndStacktrace(ref errorMessage, out var stackTrace, msgId);
 
                 finalErrorMessages.Add($"#{msgId} - {errorMessage}");
                 finalStackTraces.Add(stackTrace);

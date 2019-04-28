@@ -15,11 +15,13 @@ namespace GoogleTestAdapter.Scheduling
         [TestCategory(Unit)]
         public void SplitTestcases_SimpleCase_TestsAreDistributedCorrectly()
         {
-            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
-            durations.Add(TestDataCreator.ToTestCase("ShortTest1"), 1);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest2"), 1);
-            durations.Add(TestDataCreator.ToTestCase("LongTest"), 3);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest3"), 1);
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>
+            {
+                { TestDataCreator.ToTestCase("ShortTest1"), 1 },
+                { TestDataCreator.ToTestCase("ShortTest2"), 1 },
+                { TestDataCreator.ToTestCase("LongTest"), 3 },
+                { TestDataCreator.ToTestCase("ShortTest3"), 1 }
+            };
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(2);
 
@@ -36,11 +38,13 @@ namespace GoogleTestAdapter.Scheduling
         [TestCategory(Unit)]
         public void SplitTestcases_SimpleCaseWithThreeThreads_TestsAreDistributedCorrectly()
         {
-            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
-            durations.Add(TestDataCreator.ToTestCase("ShortTest1"), 1);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest2"), 1);
-            durations.Add(TestDataCreator.ToTestCase("LongTest"), 3);
-            durations.Add(TestDataCreator.ToTestCase("ShortTest3"), 1);
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>
+            {
+                { TestDataCreator.ToTestCase("ShortTest1"), 1 },
+                { TestDataCreator.ToTestCase("ShortTest2"), 1 },
+                { TestDataCreator.ToTestCase("LongTest"), 3 },
+                { TestDataCreator.ToTestCase("ShortTest3"), 1 }
+            };
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 
@@ -58,9 +62,11 @@ namespace GoogleTestAdapter.Scheduling
         [TestCategory(Unit)]
         public void SplitTestcases_AsymmetricCase_TestsAreDistributedCorrectly()
         {
-            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>();
-            durations.Add(TestDataCreator.ToTestCase("ShortTest1"), 1);
-            durations.Add(TestDataCreator.ToTestCase("LongTest"), 5);
+            IDictionary<Model.TestCase, int> durations = new Dictionary<Model.TestCase, int>
+            {
+                { TestDataCreator.ToTestCase("ShortTest1"), 1 },
+                { TestDataCreator.ToTestCase("LongTest"), 5 }
+            };
 
             MockOptions.Setup(o => o.MaxNrOfThreads).Returns(3);
 

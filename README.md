@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
 [![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
-[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-112k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-121k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 
 
@@ -25,6 +25,7 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 * Failed assertions and [SCOPED_TRACE](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#adding-traces-to-assertions)s are linked to their source locations
 * Identification of crashed tests
 * Test output can be piped to test console
+* Exit code of test executables can be [reflected as an additional test](#evaluating_exit_code)
 * Execution of [parameterized batch files](#test_setup_and_teardown) for test setup/teardown
 * Automatic recognition of gtest executables (which can be overridden by using a [custom regex](#test_discovery_regex) or an indicator file)
 * Settings can be [shared via source control](#solution_settings)
@@ -38,6 +39,8 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 In the last couple of months, I noticed that my private laptop certainly has a finite lifetime. Thinking about the requirements a new one has to stand up to, I realized that developing and supporting *Google Test Adapter* has in the last years been one of the major use cases of that laptop. Thus, I decided to take this as reason for from now on accepting donations :-)
 
+Update: In the meantime, I have received a few donations, and some rather generous ones (thanks again to everybody - the new laptop is great :-) ), but since I'm still quite far away from my original donation goal of collecting half of the laptop's price, I will leave this section as is.
+
 Therefore, if you would like to appreciate development and support of *Google Test Adapter*, **please consider to donate!** 
 
 [![Donate to Google Test Adapter](https://www.paypalobjects.com/en_US/DE/i/btn/btn_donateCC_LG.gif "Donate to Google Test Adapter")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWJX68LZWGN5S)
@@ -49,19 +52,19 @@ Please note that I will see your donations as appreciation of my work so far and
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.14.3-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.15.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download from GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
 Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
-* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.14.3/GoogleTestAdapter-0.14.3.vsix)
+* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.15.0/GoogleTestAdapter-0.15.0.vsix)
 * Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
-Note that due to Microsoft requiring VS extensions to support [asynchronous package loading](https://blogs.msdn.microsoft.com/visualstudio/2018/05/16/improving-the-responsiveness-of-critical-scenarios-by-updating-auto-load-behavior-for-extensions/), the last version of Google Test Adapter which supports Visual Studio 2012 is [0.14.3](https://github.com/csoltenborn/GoogleTestAdapter/releases/tag/v0.14.3).
+Note that due to Microsoft requiring VS extensions to support [asynchronous package loading](https://blogs.msdn.microsoft.com/visualstudio/2018/05/16/improving-the-responsiveness-of-critical-scenarios-by-updating-auto-load-behavior-for-extensions/), the last version of Google Test Adapter which supports Visual Studio 2012 is [0.14.4](https://github.com/csoltenborn/GoogleTestAdapter/releases/tag/v0.14.4).
 
 
 #### <a name="gta_configuration"></a>Configuration
@@ -90,6 +93,21 @@ Note that due to the overriding hierarchy described above, you probably want to 
 
 For reference, see a settings file [AllTestSettings.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Resources/AllTestSettings.gta.runsettings) containing all available settings, a more realistic solution settings file [SampleTests.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/SampleTests.gta.runsettings) as delivered with the SampleTests solution, and a user settings file [NonDeterministic.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/NonDeterministic.runsettings) as used by GTA's end-to-end tests. The syntax of the GTA settings files (excluding the `<RunSettings>` node) is specified by [this schema](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/TestAdapter/GoogleTestAdapterSettings.xsd).
 
+##### <a name="settings_helper_files"></a>Settings helper files
+GTA does not provide direct access to VS project settings such as *Project* > *Properties* > *Debugging* > *Environment*. Additionally, when run as NuGet dependency, GTA does not have access to information such as solution dir or Platform/Configuration a test executable has been build with.
+
+To overcome these problems, GTA supports so-called *settings helper files* which provide that information to GTA. Helper files are usually generated as part of the build, e.g. within a post-build event, which might look like this:
+
+```
+echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName) > $(TargetPath).gta_settings_helper
+```
+
+This command generates a file `$(TargetPath).gta_settings_helper` (where `$(TargetPath)` is the path of the final test executable) containing key/value pairs separated by `::GTA::`. At file generation time, the VS macros will be replaced by the actual values, which can then in turn be used as placeholders within the GTA settings. In particular, the helper file generated by the above command will
+* make sure that the `$(SolutionDir)`, `$(PlatformName)`, and `$(ConfigurationName)` placeholders will be available even if the runtime environment does not provide them (CI) and
+* will provide the value of the VS `$(TargetFileName)` macro to GTA, where it can be referred to as the `$(TheTarget)` placeholder
+
+Note that the settings helper files need to be located within the same folder as their corresponding test executable, and must have the test executable's name concatenated with the `.gta_settings_helper` ending (make sure to ignore these files in version control if necessary).
+
 
 #### Assigning traits to tests
 
@@ -105,6 +123,38 @@ More precisely, traits are assigned to tests in three phases:
 3. Traits are assigned to tests which match one of the regular expressions specified in the *traits after* option, overriding traits from phases 1 and 2 as described above. For instance, the expression `.*\[1.*\]///Size,Large` will make sure that all parameterized tests where the parameter starts with a 1 will be assigned the trait *(Size,Large)* (and override the traits assigned by phases 1 and 2).
 
 Note that traits are assigned in an additive manner within each phase, and in an overriding manner between phases. For instance, if a test is assigned the traits *(Author,Foo)* and *(Author,Bar)* in phase 1, the test will have both traits. If the test is also assigned the trait *(Author,Baz)* in phases 2 or 3, it will only have that trait. See [test code](https://github.com/csoltenborn/GoogleTestAdapter/blob/master/GoogleTestAdapter/Core.Tests/AbstractGoogleTestDiscovererTraitTests.cs) for examples.
+
+#### <a name="evaluating_exit_code"></a>Evaluating the test executable's exit code
+If option *Exit code test case* is non-empty, an additional test case will be generated per text executable (referred to as *exit code test* in the following), and that exit code test will pass if the test executable's exit code is 0. This allows to reflect some additional result as a test case; for instance, the test executable might be built such that it performs memory leak detection at shutdown (see below for [example](#evaluating_exit_code_leak_example)); the result of that check can then be seen within VS as the result of the according additional test.
+
+<a name="evaluating_exit_code_tokens"></a>A couple of tokens can used as part of a test executable's output; if GTA sees theses tokens, it will act accordingly:
+* `GTA_EXIT_CODE_OUTPUT_BEGIN`: This token will make GTA capture the following output and add it to the exit code test as error message.
+* `GTA_EXIT_CODE_OUTPUT_END`: This token will stop GTA from adding the following output to the error message. If it is not provided, GTA will capture the complete remaining output as error message of the exit code test.
+* `GTA_EXIT_CODE_SKIP`: This token will make the exit code test have outcome *Skipped*. This can e.g. be useful if a particular check is only perfomed in Debug mode, or to provide a general warning that something has gone wrong without making the exit code test fail.
+
+Note that a test executable might be run more than once by GTA (e.g., if tests are run in parallel, or if the selection of tests to be run results in command lines too long for a single test run). In this case, the exit codes and respective outputs of a test exectutable are aggregated as follows:
+* The exit code test will be reported as 
+  * skipped if all runs of that executable have been reported as skipped,
+  * failed if at least one test run has been reported as failed, and
+  * passed otherwise.
+* The exit code reported will be the one with the greatest absolute value; e.g., if the exit codes have been -2, 0, and 1, the reported exit code will be -2.
+* Captured outputs will all go into the single exit code test's error message.
+
+##### <a name="evaluating_exit_code_leak_example"></a>Example usage: Memory leak detection
+
+An example usage of the *Exit code test case* can be found as part of the SampleTests solution: [Project *MemoryLeakTests*](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests) makes use of MS' memory leak detection facilities and reports the results to VS via an exit code test. The approach can easily be re-used for other Google Test projects:
+* add files [`gta_leak_detection.h`](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/gta_leak_detection.h) and [`gta_leak_detection.cpp`](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/gta_leak_detection.cpp) to the project
+* in the project's `main` method, return the result of `gta_leak_detection::PerformLeakDetection(argc, argv, RUN_ALL_TESTS())` (instead of the result of `RUN_ALL_TESTS()`, see [example](https://github.com/csoltenborn/GoogleTestAdapter/tree/master/SampleTests/LeakCheckTests/main.cpp))
+* set the following GTA options (probably through the settings file):
+  * `<ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>` (enables evaluation of the executable's exit code; feel free to choose another name)
+  * `<AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>` (makes sure the test executable is aware of being run by GTA)
+
+However, note that Google Test as of V1.8.1 [uses some memory allocation](https://github.com/google/googletest/pull/1142) which is recognized by MS' leak detection mechanism as a leak (although it isn't), in particular for failing assertions. Some of these "false positives" have been fixed with the linked issue, making leak detection useful as long as all tests are green; however, and until this problem is fixed, the memory leak detection provided by GTA will result in a skipped exit code test in case `RUN_ALL_TESTS()` does not return `0`, but will report the leak in the test's error message. If you run into such problems, please report them against the [Google Test repository](https://github.com/google/googletest) if appropriate.
+
+##### Known issues
+
+* Visual Studio 2013: if a test project *FooTests* makes use of a `main()` method of a *BarTests* project (e.g. by referencing its `main.cpp`), the exit code test of *FooTests* will be grouped under *BarTests*' executable.
+
 
 #### <a name="vstest_console"></a>Running tests from command line with `VSTest.Console.exe`
 
@@ -148,7 +198,7 @@ GTA runs in three different environments:
 * Within Visual Studio and installed via NuGet (i.e., pulled via a project's NuGet dependencies)
 * Within `VsTestConsole.exe` (making use of the `/UseVsixExtensions:true` or the `/TestAdapterPath:<dir>` options)
 
-For technical reasons, not all features are available in all environments; refer to the table below for details.
+For technical reasons, not all features are available in all environments by default; refer to the table below for details.
 
 | Feature | VS/VSIX | VS/NuGet | VsTest.Console
 |--- |:---:|:---:|:---:
@@ -161,18 +211,21 @@ For technical reasons, not all features are available in all environments; refer
 | - Solution test config file | yes | no | no
 | - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
 | Placeholders | | |
-| - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
-| - `$(PlatformName)` | yes | no | no
-| - `$(ConfigurationName)` | yes | no | no
+| - `$(SolutionDir)` | yes | yes<sup>[3](#helper_files), [4](#also_test_execution)</sup> | yes<sup>[3](#helper_files)</sup>
+| - `$(PlatformName)` | yes | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup>
+| - `$(ConfigurationName)` | yes | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup>
 | - `$(ExecutableDir)` | yes | yes | yes
 | - `$(Executable)` | yes | yes | yes
-| - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
-| - `$(ThreadId)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
+| - `$(TestDir)`<sup>[5](#only_test_execution)</sup> | yes | yes | yes
+| - `$(ThreadId)`<sup>[5](#only_test_execution)</sup> | yes | yes | yes
+| - Additional placeholders | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup>
 | - Environment variables | yes | yes | yes
 
 <a name="vs_settings">1</a>: Via *Test/Test Settings/Select Test Settings File*<br>
 <a name="test_settings">2</a>: Via `/Settings` option<br>
-<a name="only_test_execution">3</a>: Only during test execution; placeholders are removed in discovery mode
+<a name="helper_files">3</a>: If [*settings helper files*](#settings_helper_files) are provided<br>
+<a name="also_test_execution">4</a>: During test execution, placeholders are available even without settings helper files<br>
+<a name="only_test_execution">5</a>: Only during test execution; placeholders are removed in discovery mode
 
 
 ### External resources

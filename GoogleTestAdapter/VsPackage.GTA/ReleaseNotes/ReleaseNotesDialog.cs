@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -7,18 +6,13 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
     public partial class ReleaseNotesDialog : Form
     {
-        internal class ShowReleaseNotesChangedEventArgs : EventArgs
-        {
-            internal bool ShowReleaseNotes { get; set; }
-        }
-
-        internal event EventHandler<ShowReleaseNotesChangedEventArgs> ShowReleaseNotesChanged;
-
-        private readonly ISet<Uri> _externalUris = new HashSet<Uri>();
+        private static readonly Uri DonationsUri = new Uri("https://github.com/csoltenborn/GoogleTestAdapter#donations");
 
         public ReleaseNotesDialog()
         {
             InitializeComponent();
+
+            Load += (sender, args) => OkButton.Select();
 
             WebBrowser.CanGoBackChanged += (sender, args) => BackButton.Enabled = WebBrowser.CanGoBack;
             BackButton.Click += (sender, args) => WebBrowser.GoBack();
@@ -26,10 +20,12 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             WebBrowser.CanGoForwardChanged += (sender, args) => ForwardButton.Enabled = WebBrowser.CanGoForward;
             ForwardButton.Click += (sender, args) => WebBrowser.GoForward();
 
-            ShowReleaseNotesCheckBox.CheckedChanged += 
-                (sender, args) => ShowReleaseNotesChanged?.Invoke(this, new ShowReleaseNotesChangedEventArgs { ShowReleaseNotes = ShowReleaseNotesCheckBox.Checked });
-
             OkButton.Click += (sender, args) => Close();
+            DonateButton.Click += (sender, args) =>
+            {
+                OpenUriInDefaultBrowser(DonationsUri);
+                Close();
+            };
         }
 
         internal Uri HtmlFile
@@ -38,20 +34,9 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             set => WebBrowser.Url = value;
         }
 
-        internal bool ShowReleaseNotesChecked
-        {
-            get => ShowReleaseNotesCheckBox.Checked;
-            set => ShowReleaseNotesCheckBox.Checked = value;
-        }
-
-        internal void AddExternalUri(Uri externalUri)
-        {
-            _externalUris.Add(externalUri);
-        }
-
         private void WebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-            if (_externalUris.Contains(e.Url))
+            if (DonationsUri.Equals(e.Url))
             {
                 e.Cancel = true;
                 OpenUriInDefaultBrowser(e.Url);

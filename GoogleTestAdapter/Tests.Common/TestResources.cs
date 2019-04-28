@@ -40,10 +40,10 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Tests_DebugX64 = SampleTestsBuildDir + @"Debug-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64_Output = TestdataDir + @"Tests_gta_exe_output.txt";
-        public const int NrOfTests = 107;
+        public const int NrOfTests = 108;
         public const int NrOfPassingTests = 53;
-        public const int NrOfFailingTests = 54;
-        public const int NrOfGtest170CompatibleTests = 103;
+        public const int NrOfFailingTests = 55;
+        public const int NrOfGtest170CompatibleTests = 104;
 
         public static readonly string LoadTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LoadTests_gta.exe");
         public const string LoadTests_Generated = TestdataDir + @"LoadTests\GeneratedLoadTests_gta.exe";
@@ -61,11 +61,18 @@ namespace GoogleTestAdapter.Tests.Common
         public const string DllTestsDll_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\DllProject.dll";
         public const int NrOfDllTests = 2;
 
+        public const string LeakCheckTests_DebugX86 = SampleTestsBuildDir + @"Debug\LeakCheckTests_gta.exe";
+        public const string LeakCheckTests_ReleaseX86 = SampleTestsBuildDir + @"Release\LeakCheckTests_gta.exe";
+
+        public const string HelperFileTests_DebugX86 = SampleTestsBuildDir + @"Debug\HelperFileTests_gta.exe";
+        public const string HelperFilesTests_ReleaseX86 = SampleTestsBuildDir + @"Release\HelperFileTests_gta.exe";
+
         public const string SucceedingBatch = @"Tests\Returns0.bat";
         public const string FailingBatch = @"Tests\Returns1.bat";
 
         public const string XmlFile1 = TestdataDir + @"SampleResult1.xml";
         public const string XmlFile2 = TestdataDir + @"SampleResult2.xml";
+        public const string XmlUmlauts = TestdataDir + @"Umlauts.xml";
         public const string XmlFileBroken = TestdataDir + @"SampleResult1_Broken.xml";
         // ReSharper disable once InconsistentNaming
         public const string XmlFileBroken_InvalidStatusAttibute = TestdataDir + @"SampleResult1 _Broken_InvalidStatusAttribute.xml";

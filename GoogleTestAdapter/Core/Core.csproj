@@ -70,10 +70,16 @@
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Model\TestCaseMetaDataProperty.cs" />
     <Compile Include="Model\TestProperty.cs" />
+    <Compile Include="ProcessExecution\DebuggerKind.cs" />
+    <Compile Include="Runners\ExecutableResult.cs" />
     <Compile Include="Runners\TestResultCollector.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />
+    <Compile Include="Settings\HelperFilesCache.cs" />
     <Compile Include="Settings\IGoogleTestAdapterSettingsContainer.cs" />
+    <Compile Include="Settings\PlaceholderReplacer.cs" />
+    <Compile Include="Settings\RegexTraitPair.cs" />
     <Compile Include="Settings\RunSettings.cs" />
+    <Compile Include="Settings\SettingsPrinter.cs" />
     <Compile Include="Settings\SettingsSerializationContainer.cs" />
     <Compile Include="TestCases\StreamingListTestsParser.cs" />
     <Compile Include="TestCases\ListTestsParser.cs" />
@@ -99,6 +105,10 @@
     <Compile Include="TestCases\TestCaseLocation.cs" />
     <Compile Include="TestCases\TestCaseResolver.cs" />
     <Compile Include="TestResults\ErrorMessageParser.cs" />
+    <Compile Include="TestResults\IExitCodeTestsAggregator.cs" />
+    <Compile Include="TestResults\IExitCodeTestsReporter.cs" />
+    <Compile Include="TestResults\ExitCodeTestsAggregator.cs" />
+    <Compile Include="TestResults\ExitCodeTestsReporter.cs" />
     <Compile Include="TestResults\StandardOutputTestResultParser.cs" />
     <Compile Include="TestResults\StreamingStandardOutputTestResultParser.cs" />
     <Compile Include="TestResults\XmlTestResultParser.cs" />

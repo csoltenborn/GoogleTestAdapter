@@ -2,14 +2,11 @@
 
 using FluentAssertions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.TestAdapter.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 
@@ -38,7 +35,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void DebuggerAttacherService_ReceivesMessage_AnswersImmediately()
         {
             MockDebuggerAttacher
-                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>()))
                 .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => true));
             DoTest(null);
         }
@@ -48,7 +45,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void DebuggerAttacherService_AttacherThrows_AnswerIncludesExceptionMessage()
         {
             MockDebuggerAttacher
-                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>()))
                 .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => { throw new Exception("my message"); }));
             DoTest("my message");
         }
@@ -58,7 +55,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
         public void DebuggerAttacherService_AttacherReturnsFalse_AnswerWithoutReason()
         {
             MockDebuggerAttacher
-                .Setup(a => a.AttachDebugger(It.IsAny<int>()))
+                .Setup(a => a.AttachDebugger(It.IsAny<int>(), It.IsAny<DebuggerEngine>()))
                 .Returns(MessageBasedDebuggerAttacherTests.GetAttachDebuggerAction(() => false));
             DoTest("unknown reasons");
         }
@@ -80,7 +77,7 @@ namespace GoogleTestAdapter.VsPackage.Debugging
                     client.Should().NotBeNull();
                     client.Service.Should().NotBeNull();
 
-                    Action attaching = () => client.Service.AttachDebugger(debuggeeProcessId);
+                    Action attaching = () => client.Service.AttachDebugger(debuggeeProcessId, DebuggerEngine.Native);
                     if (expectedErrorMessagePart == null)
                     {
                         attaching.Should().NotThrow();

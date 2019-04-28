@@ -4,7 +4,7 @@ using GoogleTestAdapter.VsPackage.ReleaseNotes;
 using System;
 using System.IO;
 using System.Threading;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.VsPackage.Helpers;
 
 namespace GoogleTestAdapter.VsPackage
@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.VsPackage
                 string msg = $"Exception while trying to update last version and show release notes:{Environment.NewLine}{e}";
                 try
                 {
-                    new ActivityLogLogger(this, () => true).LogError(msg);
+                    new ActivityLogLogger(this, () => OutputMode.Verbose).LogError(msg);
                 }
                 catch (Exception)
                 {
@@ -43,19 +43,16 @@ namespace GoogleTestAdapter.VsPackage
 
         private void TryDisplayReleaseNotesIfNecessary()
         {
-            var versionProvider = new VersionProvider(this);
+            var versionProvider = new VersionProvider();
 
             Version formerlyInstalledVersion = versionProvider.FormerlyInstalledVersion;
             Version currentVersion = versionProvider.CurrentVersion;
 
             versionProvider.UpdateLastVersion();
 
-            //if ((_generalOptions.ShowReleaseNotes || History.ForceShowReleaseNotes(formerlyInstalledVersion)) &&
-            //    (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion))
             if (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion)
             {
-                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion,
-                    Donations.IsPreDonationsVersion(formerlyInstalledVersion));
+                var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion);
                 DisplayReleaseNotes(creator.CreateHtml());
             }
         }
@@ -70,18 +67,12 @@ namespace GoogleTestAdapter.VsPackage
 
             using (var dialog = new ReleaseNotesDialog
             {
-                HtmlFile = new Uri($"file://{htmlFile}"),
-                ShowReleaseNotesChecked = _generalOptions.ShowReleaseNotes
+                HtmlFile = new Uri($"file://{htmlFile}")
             })
             {
-                dialog.AddExternalUri(Donations.Uri);
-                dialog.ShowReleaseNotesChanged +=
-                    (sender, args) => _generalOptions.ShowReleaseNotes = args.ShowReleaseNotes;
                 dialog.Closed += (sender, args) => File.Delete(htmlFile);
                 dialog.ShowDialog();
             }
         }
-
-        private bool ShowReleaseNotes => _generalOptions.ShowReleaseNotes;
     }
 }
