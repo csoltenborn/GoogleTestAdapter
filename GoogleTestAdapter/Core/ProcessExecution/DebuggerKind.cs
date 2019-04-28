@@ -1,6 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
+using GoogleTestAdapter.Common;
+
+// ReSharper disable NotResolvedInText
 
 namespace GoogleTestAdapter.ProcessExecution
 {
@@ -15,58 +17,18 @@ namespace GoogleTestAdapter.ProcessExecution
         }
     }
 
-    public class DebuggerKindConverter : EnumConverter
+    public class DebuggerKindConverter : EnumConverterBase<DebuggerKind>
     {
         public const string VsTestFramework = "VsTest framework";
         public const string Native = "Native";
         public const string ManagedAndNative = "Managed and native";
 
-
-        public DebuggerKindConverter(Type enumType) : base(enumType) {}
-
-        public DebuggerKindConverter() : this(typeof(DebuggerKind)) {}
-
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public DebuggerKindConverter() : base(new Dictionary<DebuggerKind, string>
         {
-            return destinationType == typeof(string) || 
-                   base.CanConvertTo(context, destinationType);
-        }
-
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            return sourceType == typeof(DebuggerKind) || 
-                   base.CanConvertFrom(context, sourceType);
-        }
-
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-        {
-            if (!(value is DebuggerKind debuggerKind) || destinationType != typeof(string))
-                return base.ConvertTo(context, culture, value, destinationType);
-
-            switch (debuggerKind)
-            {
-                case DebuggerKind.VsTestFramework: return VsTestFramework;
-                case DebuggerKind.Native: return Native;
-                case DebuggerKind.ManagedAndNative: return ManagedAndNative;
-                default:
-                    return base.ConvertTo(context, culture, value, destinationType);
-            }
-        }
-
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            if (!(value is string valueString)) 
-                return base.ConvertFrom(context, culture, value);
-
-            switch (valueString)
-            {
-                case VsTestFramework: return DebuggerKind.VsTestFramework;
-                case Native: return DebuggerKind.Native;
-                case ManagedAndNative: return DebuggerKind.ManagedAndNative;
-                default:
-                    return base.ConvertFrom(context, culture, value);
-            }
-        }
+            { DebuggerKind.VsTestFramework, VsTestFramework},
+            { DebuggerKind.Native, Native},
+            { DebuggerKind.ManagedAndNative, ManagedAndNative},
+        }) {}
 
     }
 

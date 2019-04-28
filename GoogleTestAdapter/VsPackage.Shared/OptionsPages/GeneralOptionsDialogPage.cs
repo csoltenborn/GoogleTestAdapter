@@ -4,6 +4,7 @@ using GoogleTestAdapter.Settings;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GoogleTestAdapter.Common;
+using Microsoft.VisualStudio.Shell;
 
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
@@ -36,12 +37,45 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionTimestampOutput)]
         [Description(SettingsWrapper.OptionTimestampOutputDescription)]
-        public bool TimestampOutput
+        [PropertyPageTypeConverter(typeof(TimestampModeConverter))]
+        public TimestampMode TimestampMode
         {
-            get => _timestampOutput;
-            set => SetAndNotify(ref _timestampOutput, value);
+            get => _timestampMode;
+            set => SetAndNotify(ref _timestampMode, value);
         }
-        private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
+        private TimestampMode _timestampMode = SettingsWrapper.OptionTimestampOutputDefaultValue;
+
+        [Category(SettingsWrapper.CategoryOutputName)]
+        [DisplayName(SettingsWrapper.OptionSeverityMode)]
+        [Description(SettingsWrapper.OptionSeverityModeDescription)]
+        [PropertyPageTypeConverter(typeof(SeverityModeConverter))]
+        public SeverityMode SeverityMode
+        {
+            get => _severityMode;
+            set => SetAndNotify(ref _severityMode, value);
+        }
+        private SeverityMode _severityMode = SettingsWrapper.OptionSeverityModeDefaultValue;
+
+        [Category(SettingsWrapper.CategoryOutputName)]
+        [DisplayName(SettingsWrapper.OptionSummaryMode)]
+        [Description(SettingsWrapper.OptionSummaryModeDescription)]
+        [PropertyPageTypeConverter(typeof(SummaryModeConverter))]
+        public SummaryMode SummaryMode
+        {
+            get => _summaryMode;
+            set => SetAndNotify(ref _summaryMode, value);
+        }
+        private SummaryMode _summaryMode = SettingsWrapper.OptionSummaryModeDefaultValue;
+
+        [Category(SettingsWrapper.CategoryOutputName)]
+        [DisplayName(SettingsWrapper.OptionPrefixOutputWithGta)]
+        [Description(SettingsWrapper.OptionPrefixOutputWithGtaDescription)]
+        public bool PrefixOutputWithGta
+        {
+            get => _prefixOutputWithGta;
+            set => SetAndNotify(ref _prefixOutputWithGta, value);
+        }
+        private bool _prefixOutputWithGta = SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue;
 
         #endregion
 

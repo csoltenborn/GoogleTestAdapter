@@ -13,7 +13,7 @@ namespace VsPackage.Shared.Settings
 {
     public class OptionsUpdater
     {
-        private static readonly string OptionsBase = $@"SOFTWARE\Microsoft\VisualStudio\{VsVersionUtils.GetVisualStudioVersion().VersionString()}\DialogPage\GoogleTestAdapter.VsPackage.OptionsPages.";
+        private static readonly string OptionsBase = $@"SOFTWARE\Microsoft\VisualStudio\{VsVersionUtils.VsVersion.VersionString()}\DialogPage\GoogleTestAdapter.VsPackage.OptionsPages.";
 
         private static readonly string GeneralOptionsPage = OptionsBase + "GeneralOptionsDialogPage";
         private static readonly string ParallelizationOptionsPage = OptionsBase + "ParallelizationOptionsDialogPage";
@@ -91,6 +91,7 @@ namespace VsPackage.Shared.Settings
             
             if (GetAndDeleteValue(GeneralOptionsPage, "UseNewTestExecutionFramework2", bool.Parse, out var useNewTestExecutionFramework2)) { _testExecutionOptions.DebuggerKind = useNewTestExecutionFramework2 ? DebuggerKind.Native : DebuggerKind.VsTestFramework; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.DebugMode), bool.Parse, out var debugMode)) { _generalOptions.OutputMode = debugMode ? OutputMode.Debug : OutputMode.Info; }
+            if (GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.TimestampOutput), bool.Parse, out bool timestampOutput)) { _generalOptions.TimestampMode = GetTimestampMode(timestampOutput); }
             GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.ShowReleaseNotes), bool.Parse, out _);
         }
 
@@ -116,6 +117,19 @@ namespace VsPackage.Shared.Settings
 
             value = default(T);
             return false;
+        }
+
+        private TimestampMode GetTimestampMode(bool timestampOutput)
+        {
+            if (timestampOutput)
+            {
+                return VsVersionUtils.VsVersion < VsVersion.VS2017
+                    ? TimestampMode.Automatic
+                    : TimestampMode.PrintTimestamp;
+            }
+            return VsVersionUtils.VsVersion < VsVersion.VS2017
+                ? TimestampMode.DoNotPrintTimestamp
+                : TimestampMode.Automatic;
         }
 
     }

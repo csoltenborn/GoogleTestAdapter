@@ -56,7 +56,7 @@ namespace GoogleTestAdapter.TestAdapter
                 _logger.LogError($"Exception while running tests: {e}");
             }
 
-            CommonFunctions.ReportErrors(_logger, "test execution", _settings.OutputMode);
+            CommonFunctions.ReportErrors(_logger, "test execution", _settings.OutputMode, _settings.SummaryMode);
         }
 
         public void RunTests(IEnumerable<VsTestCase> vsTestCasesToRun, IRunContext runContext, IFrameworkHandle frameworkHandle)
@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.TestAdapter
                 _logger.LogError("Exception while running tests: " + e);
             }
 
-            CommonFunctions.ReportErrors(_logger, "test execution", _settings.OutputMode);
+            CommonFunctions.ReportErrors(_logger, "test execution", _settings.OutputMode, _settings.SummaryMode);
         }
 
         public void Cancel()

@@ -115,29 +115,6 @@ namespace GoogleTestAdapter.Helpers
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void TimestampMessage_MessageIsNullOrEmpty_ResultIsTheSame()
-        {
-            string timestampSeparator = " - ";
-            string resultRegex = @"[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}" + timestampSeparator;
-
-            string nullMessage = null;
-            Utils.TimestampMessage(ref nullMessage);
-            nullMessage.Should().MatchRegex(resultRegex);
-            nullMessage.Should().EndWith(timestampSeparator);
-
-            string emptyMessage = "";
-            Utils.TimestampMessage(ref emptyMessage);
-            emptyMessage.Should().MatchRegex(resultRegex);
-            emptyMessage.Should().EndWith(timestampSeparator);
-
-            string fooMessage = "foo";
-            Utils.TimestampMessage(ref fooMessage);
-            fooMessage.Should().MatchRegex(resultRegex);
-            fooMessage.Should().EndWith(timestampSeparator + "foo");
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
         public void SpawnAndWait_SeveralTasks_AreExecutedInParallel()
         {
             int nrOfTasks = Environment.ProcessorCount - 2;

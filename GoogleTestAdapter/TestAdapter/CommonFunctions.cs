@@ -18,20 +18,26 @@ namespace GoogleTestAdapter.TestAdapter
     {
         public const string GtaSettingsEnvVariable = "GTA_FALLBACK_SETTINGS";
 
-        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode)
+        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode, SummaryMode summaryMode)
         {
-            IList<string> errors = logger.GetMessages(Severity.Error, Severity.Warning);
-            if (errors.Count == 0)
+            if (summaryMode == SummaryMode.Never)
                 return;
 
             bool hasErrors = logger.GetMessages(Severity.Error).Count > 0;
+            if (!hasErrors && summaryMode == SummaryMode.Error)
+                return;
+
+            IList<string> errors = logger.GetMessages(Severity.Error, Severity.Warning);
+            if (!errors.Any())
+                return;
+
             string hint = outputMode > OutputMode.Info
                 ? ""
                 : " (enable debug mode for more information)";
             string jointErrors = string.Join(Environment.NewLine, errors);
 
             string message = $"{Environment.NewLine}================{Environment.NewLine}" 
-                + $"The following errors and warnings occured during {phase}{hint}:{Environment.NewLine}" 
+                + $"The following warnings and errors occured during {phase}{hint}:{Environment.NewLine}" 
                 + jointErrors;
 
             if (hasErrors)
@@ -57,7 +63,8 @@ namespace GoogleTestAdapter.TestAdapter
 
             var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
 
-            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, () => settingsWrapper.TimestampOutput);
+            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, 
+                () => settingsWrapper.TimestampMode, () => settingsWrapper.SeverityMode, () => settingsWrapper.PrefixOutputWithGta);
             settingsWrapper.RegexTraitParser = new RegexTraitParser(loggerAdapter);
             settingsWrapper.HelperFilesCache = new HelperFilesCache(loggerAdapter);
 
@@ -170,6 +177,14 @@ namespace GoogleTestAdapter.TestAdapter
                 logger.LogWarning($"<UseNewTestExecutionFramework>True</UseNewTestExecutionFramework> => <DebuggerKind>{DebuggerKind.Native}</DebuggerKind>");
             }
 
+            var timestepOutputProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.TimestampOutput));
+            if (HasSetting(runSettingsContainer, timestepOutputProperty))
+            {
+                logger.LogWarning($"GTA option '{nameof(IGoogleTestAdapterSettings.TimestampOutput)}' does not have any effect any more - check your settings files and replace any occurence with new option '{nameof(IGoogleTestAdapterSettings.TimestampMode)}' as follows:");
+                logger.LogWarning($"<TimestampOutput>False</TimestampOutput> => <TimestampMode>{TimestampMode.DoNotPrintTimestamp}</TimestampMode>");
+                logger.LogWarning($"<TimestampOutput>True</TimestampOutput> => <TimestampMode>{TimestampMode.PrintTimestamp}</TimestampMode>");
+            }
+
             var showReleaseNotesProperty = typeof(RunSettings).GetProperty(nameof(RunSettings.ShowReleaseNotes));
             if (HasSetting(runSettingsContainer, showReleaseNotesProperty))
             {
@@ -185,7 +200,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         public static void LogVisualStudioVersion(ILogger logger)
         {
-            VsVersion version = VsVersionUtils.GetVisualStudioVersion(logger);
+            VsVersion version = VsVersionUtils.VsVersion;
             switch (version)
             {
                 // warning printed while checking version

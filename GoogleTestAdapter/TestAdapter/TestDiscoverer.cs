@@ -63,12 +63,12 @@ namespace GoogleTestAdapter.TestAdapter
                 _logger.LogError($"Exception while discovering tests: {e}");
             }
 
-            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.OutputMode);
+            CommonFunctions.ReportErrors(_logger, "test discovery", _settings.OutputMode, _settings.SummaryMode);
         }
 
         private bool IsSupportedVisualStudioVersion()
         {
-            var version = VsVersionUtils.GetVisualStudioVersion(_logger);
+            var version = VsVersionUtils.VsVersion;
             switch (version)
             {
                 case VsVersion.Unknown:
