@@ -204,7 +204,7 @@ namespace GoogleTestAdapter
             try
             {
                 string targetExe = Path.Combine(baseDir, "exe", Path.GetFileName(TestResources.DllTests_ReleaseX86));
-                MockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.ExecutableDirPlaceholder + @"\..\dll");
+                MockOptions.Setup(o => o.PathExtension).Returns(PlaceholderReplacer.ExecutableDirPlaceholder + @"\..\dll");
 
                 var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
                 IList<TestCase> testCases = discoverer.GetTestsFromExecutable(targetExe);
@@ -413,7 +413,7 @@ namespace GoogleTestAdapter
                 Assert.Inconclusive("Skipping test since it is unstable on the build server");
             }
 
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
 
             var stopwatch = Stopwatch.StartNew();
             var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);

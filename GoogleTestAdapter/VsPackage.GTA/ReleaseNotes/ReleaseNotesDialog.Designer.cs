@@ -1,11 +1,16 @@
-﻿namespace GoogleTestAdapter.VsPackage.ReleaseNotes
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
     partial class ReleaseNotesDialog
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -153,12 +158,12 @@
             this.OkButton.AccessibleName = "Close release notes dialog";
             this.OkButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.OkButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.OkButton.Location = new System.Drawing.Point(1273, 7);
+            this.OkButton.Location = new System.Drawing.Point(1231, 7);
             this.OkButton.Margin = new System.Windows.Forms.Padding(7);
             this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(175, 51);
+            this.OkButton.Size = new System.Drawing.Size(260, 51);
             this.OkButton.TabIndex = 1;
-            this.OkButton.Text = "Whatever...";
+            this.OkButton.Text = "Thanks anyways...";
             this.OkButton.UseVisualStyleBackColor = true;
             // 
             // ReleaseNotesDialog
@@ -186,14 +191,14 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel RootPanel;
-        private System.Windows.Forms.WebBrowser WebBrowser;
-        private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.FlowLayoutPanel NavigationPanel;
-        private System.Windows.Forms.Button BackButton;
-        private System.Windows.Forms.Button ForwardButton;
-        private System.Windows.Forms.TableLayoutPanel OkButtonPanel;
-        private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.Button DonateButton;
+        private TableLayoutPanel RootPanel;
+        private WebBrowser WebBrowser;
+        private Button OkButton;
+        private FlowLayoutPanel NavigationPanel;
+        private Button BackButton;
+        private Button ForwardButton;
+        private TableLayoutPanel OkButtonPanel;
+        private ToolTip toolTip;
+        private Button DonateButton;
     }
 }

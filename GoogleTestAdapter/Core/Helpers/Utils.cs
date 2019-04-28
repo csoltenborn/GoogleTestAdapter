@@ -50,10 +50,9 @@ namespace GoogleTestAdapter.Helpers
             return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
         }
 
-        public static void TimestampMessage(ref string message)
+        public static string GetTimestamp()
         {
-            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            message = $"{timestamp} - {message ?? ""}";
+            return DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
         }
 
         /// <exception cref="AggregateException">If at least one of the actions has thrown an exception</exception>
@@ -62,7 +61,7 @@ namespace GoogleTestAdapter.Helpers
             var tasks = new Task[actions.Length];
             for (int i = 0; i < actions.Length; i++)
             {
-                tasks[i] = Task.Factory.StartNew(actions[i]);
+                tasks[i] = Task.Run(actions[i]);
             }
       
             return Task.WaitAll(tasks, timeoutInMs);

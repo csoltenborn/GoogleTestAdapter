@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
@@ -316,6 +318,7 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public virtual void GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded()
         {
             string pdb = Path.ChangeExtension(SampleTestToUse, "pdb");
@@ -344,7 +347,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_NewExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.Native);
 
             CheckEffectOfDiscoveryParam();
         }
@@ -353,7 +356,7 @@ namespace GoogleTestAdapter
         [TestCategory(Integration)]
         public virtual void GetTestsFromExecutable_OldExecutionEnvironmentAndFailUserParamIsSet_NoTestsAreFound()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
 
             CheckEffectOfDiscoveryParam();
         }

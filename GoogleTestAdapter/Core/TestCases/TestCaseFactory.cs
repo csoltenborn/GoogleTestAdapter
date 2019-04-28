@@ -83,8 +83,9 @@ namespace GoogleTestAdapter.TestCases
                     parser.ReportLine(line);
                 }
 
-                var listAndParseTestsTask = new Task(() =>
+                var listAndParseTestsTask = Task.Run(() =>
                 {
+                    _logger.VerboseInfo($"Starting test discovery for {_executable}");
                     executor = _processExecutorFactory.CreateExecutor(false, _logger);
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
@@ -92,8 +93,9 @@ namespace GoogleTestAdapter.TestCases
                         workingDir,
                         _settings.GetPathExtension(_executable),
                         OnReportOutputLine);
-                }, TaskCreationOptions.AttachedToParent);
-                listAndParseTestsTask.Start();
+                    _logger.VerboseInfo($"Finished execution of {_executable}");
+                });
+                _logger.VerboseInfo($"Scheduled test discovery for {_executable}");
 
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {

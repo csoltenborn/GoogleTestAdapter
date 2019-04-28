@@ -78,7 +78,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
             AssertContainsSetting(xml, "ShuffleTestsSeed", "3");
             AssertContainsSetting(xml, "TraitsRegexesBefore", "User///A,B");
 
-            mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Warning), It.Is<string>(s => s.Contains("could not be parsed"))),
+            mockLogger.Verify(l => l.Log(It.Is<MessageLevel>(ml => ml == MessageLevel.Error), It.Is<string>(s => s.Contains("could not be parsed"))),
                 Times.Exactly(1));
         }
 

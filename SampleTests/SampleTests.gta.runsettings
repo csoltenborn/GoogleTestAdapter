@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <GoogleTestAdapterSettings>
-    <SolutionSettings>
-      <Settings>
-        <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
-        <BatchForTestSetup>$(SolutionDir)Tests\Returns0.bat</BatchForTestSetup>
-        <BatchForTestTeardown>$(SolutionDir)Tests\Returns1.bat</BatchForTestTeardown>
-        <WorkingDir>$(SolutionDir)</WorkingDir>
-      </Settings>
-    </SolutionSettings>
-    <ProjectSettings>
-      <Settings ProjectRegex="LoadTests_gta\.exe|CrashingTests_gta\.exe">
-        <TestDiscoveryRegex>.*Tests.*_gta.exe</TestDiscoveryRegex>
-      </Settings>
-      <Settings ProjectRegex=".*\\Tests_gta\.exe">
-        <TestDiscoveryTimeoutInSeconds>60</TestDiscoveryTimeoutInSeconds>
-      </Settings>
-      <Settings ProjectRegex=".*\\LeakCheckTests_gta\.exe">
-        <ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>
-        <AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>
-      </Settings>
-    </ProjectSettings>
-  </GoogleTestAdapterSettings>
+	<GoogleTestAdapterSettings>
+		<SolutionSettings>
+			<Settings>
+				<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
+				<BatchForTestSetup>$(SolutionDir)Tests\Returns0.bat</BatchForTestSetup>
+				<BatchForTestTeardown>$(SolutionDir)Tests\Returns1.bat</BatchForTestTeardown>
+				<WorkingDir>$(SolutionDir)</WorkingDir>
+			</Settings>
+		</SolutionSettings>
+		<ProjectSettings>
+			<Settings ProjectRegex="LoadTests_gta\.exe|CrashingTests_gta\.exe">
+				<TestDiscoveryRegex>.*Tests.*_gta.exe</TestDiscoveryRegex>
+			</Settings>
+			<Settings ProjectRegex=".*\\Tests_gta\.exe">
+				<TestDiscoveryTimeoutInSeconds>60</TestDiscoveryTimeoutInSeconds>
+			</Settings>
+			<Settings ProjectRegex=".*\\LeakCheckTests_gta\.exe">
+				<ExitCodeTestCase>MemoryLeakTest</ExitCodeTestCase>
+				<AdditionalTestExecutionParam>-is_run_by_gta</AdditionalTestExecutionParam>
+			</Settings>
+			<Settings ProjectRegex=".*\\HelperFileTests_gta\.exe">
+				<AdditionalTestExecutionParam>-TheTarget=$(TheTarget)</AdditionalTestExecutionParam>
+			</Settings>
+		</ProjectSettings>
+	</GoogleTestAdapterSettings>
 </RunSettings>

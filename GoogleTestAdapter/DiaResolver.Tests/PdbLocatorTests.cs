@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Fakes;
@@ -19,7 +20,7 @@ namespace GoogleTestAdapter.DiaResolver
         {
             string executable = Path.GetFullPath(TestResources.LoadTests_ReleaseX86);
             executable.AsFileInfo().Should().Exist();
-            var fakeLogger = new FakeLogger(() => true);
+            var fakeLogger = new FakeLogger(() => OutputMode.Verbose);
 
             string pdbFound = PdbLocator.FindPdbFile(executable, "", fakeLogger);
 
@@ -40,7 +41,7 @@ namespace GoogleTestAdapter.DiaResolver
             renamedPdb.AsFileInfo().Should().NotExist();
 
             string pdbFound;
-            var fakeLogger = new FakeLogger(() => true);
+            var fakeLogger = new FakeLogger(() => OutputMode.Verbose);
             try
             {
                 File.Move(pdb, renamedPdb);
@@ -72,7 +73,7 @@ namespace GoogleTestAdapter.DiaResolver
             renamedPdb.AsFileInfo().Should().NotExist();
 
             string pdbFound;
-            var fakeLogger = new FakeLogger(() => true);
+            var fakeLogger = new FakeLogger(() => OutputMode.Verbose);
             var currentPath = Environment.GetEnvironmentVariable("PATH");
             try
             {

@@ -58,7 +58,7 @@ namespace GoogleTestAdapter.Runners
         public void RunTests_WorkingDirSetForSolution_TestPasses()
         {
             var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
-            var settings = CreateSettings(SettingsWrapper.SolutionDirPlaceholder, null);
+            var settings = CreateSettings(PlaceholderReplacer.SolutionDirPlaceholder, null);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
 
             runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
@@ -73,7 +73,7 @@ namespace GoogleTestAdapter.Runners
         public void RunTests_WorkingDirSetForProject_TestPasses()
         {
             TestCase testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
-            var settings = CreateSettings("foo", SettingsWrapper.SolutionDirPlaceholder);
+            var settings = CreateSettings("foo", PlaceholderReplacer.SolutionDirPlaceholder);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
 
             runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
@@ -123,7 +123,8 @@ namespace GoogleTestAdapter.Runners
 
             return new SettingsWrapper(mockContainer.Object, TestResources.SampleTestsSolutionDir)
             {
-                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }
 

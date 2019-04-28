@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
@@ -154,7 +155,7 @@ namespace GoogleTestAdapter.TestResults
         [TestCategory(Unit)]
         public void ReportExitCodeTestCases_PassButNoOutput_WarningIsLogged()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
@@ -163,14 +164,14 @@ namespace GoogleTestAdapter.TestResults
 
             _reporter.ReportExitCodeTestCases(null, true);
 
-            MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("collected") && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
+            MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("collected") && msg.Contains(SettingsWrapper.OptionDebuggerKind))), Times.Once);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
         public void ReportExitCodeTestCases_FailButNoOutput_WarningIsLogged()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
             _mockAggregator.Setup(a => a.ComputeAggregatedResults(It.IsAny<IEnumerable<ExecutableResult>>())).Returns(
                 new List<ExecutableResult>
                 {
@@ -179,7 +180,7 @@ namespace GoogleTestAdapter.TestResults
 
             _reporter.ReportExitCodeTestCases(null, true);
 
-            MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("collected") && msg.Contains(SettingsWrapper.OptionUseNewTestExecutionFramework))), Times.Once);
+            MockLogger.Verify(l => l.LogWarning(It.Is<string>(msg => msg.Contains("collected") && msg.Contains(SettingsWrapper.OptionDebuggerKind))), Times.Once);
         }
 
         private static bool CheckResult(TestResult result, string executable, TestOutcome outcome, params string[] errorMessageParts)

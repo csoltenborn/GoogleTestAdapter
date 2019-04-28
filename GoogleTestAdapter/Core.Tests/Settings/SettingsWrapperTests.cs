@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,7 +32,8 @@ namespace GoogleTestAdapter.Settings
             containerMock.Setup(c => c.GetSettingsForExecutable(It.IsAny<string>())).Returns(MockXmlOptions.Object);
             TheOptions = new SettingsWrapper(containerMock.Object)
             {
-                RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger)
+                RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger),
+                HelperFilesCache = new HelperFilesCache(TestEnvironment.Logger)
             };
         }
 
@@ -91,28 +93,28 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void AdditionalTestExecutionParam__PlaceholdersAreTreatedCorrectly()
         {
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder);
             string result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be("mydir");
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + " " + SettingsWrapper.TestDirPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder + " " + PlaceholderReplacer.TestDirPlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
             result.Should().Be("mydir mydir");
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder.ToLower());
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder.ToLower());
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0);
-            result.Should().Be(SettingsWrapper.TestDirPlaceholder.ToLower());
+            result.Should().Be(PlaceholderReplacer.TestDirPlaceholder.ToLower());
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.ThreadIdPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.ThreadIdPlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be("4711");
 
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder + ", " + PlaceholderReplacer.ThreadIdPlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be("mydir, 4711");
 
             MockXmlOptions.Setup(o => o.SolutionDir).Returns(@"C:\\TheSolutionDir");
-            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(SettingsWrapper.TestDirPlaceholder + ", " + SettingsWrapper.ThreadIdPlaceholder + ", " + SettingsWrapper.SolutionDirPlaceholder + ", " + SettingsWrapper.ExecutablePlaceholder);
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns(PlaceholderReplacer.TestDirPlaceholder + ", " + PlaceholderReplacer.ThreadIdPlaceholder + ", " + PlaceholderReplacer.SolutionDirPlaceholder + ", " + PlaceholderReplacer.ExecutablePlaceholder);
             result = TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 4711);
             result.Should().Be(@"mydir, 4711, C:\\TheSolutionDir, SomeExecutable.exe");
         }
@@ -199,13 +201,13 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void DebugMode__ReturnsValueOrDefault()
         {
-            MockXmlOptions.Setup(o => o.DebugMode).Returns((bool?)null);
-            bool result = TheOptions.DebugMode;
-            result.Should().Be(SettingsWrapper.OptionDebugModeDefaultValue);
+            MockXmlOptions.Setup(o => o.OutputMode).Returns((OutputMode?)null);
+            OutputMode result = TheOptions.OutputMode;
+            result.Should().Be(SettingsWrapper.OptionOutputModeDefaultValue);
 
-            MockXmlOptions.Setup(o => o.DebugMode).Returns(!SettingsWrapper.OptionDebugModeDefaultValue);
-            result = TheOptions.DebugMode;
-            result.Should().Be(!SettingsWrapper.OptionDebugModeDefaultValue);
+            MockXmlOptions.Setup(o => o.OutputMode).Returns(OutputMode.Verbose);
+            result = TheOptions.OutputMode;
+            result.Should().Be(OutputMode.Verbose);
         }
 
         [TestMethod]
@@ -264,7 +266,7 @@ namespace GoogleTestAdapter.Settings
         [TestCategory(Unit)]
         public void GetPathExtension__PlaceholderIsReplaced()
         {
-            MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + SettingsWrapper.ExecutableDirPlaceholder + ";Bar");
+            MockXmlOptions.Setup(o => o.PathExtension).Returns("Foo;" + PlaceholderReplacer.ExecutableDirPlaceholder + ";Bar");
             string result = TheOptions.GetPathExtension(TestResources.Tests_DebugX86);
 
             // ReSharper disable once PossibleNullReferenceException
@@ -295,7 +297,7 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(o => o.PlatformName).Returns("Debug");
             MockXmlOptions.Setup(o => o.ConfigurationName).Returns("x86");
             MockXmlOptions.Setup(o => o.PathExtension).Returns(
-                $"P:{SettingsWrapper.PlatformNamePlaceholder}, C:{SettingsWrapper.ConfigurationNamePlaceholder}");
+                $"P:{PlaceholderReplacer.PlatformNamePlaceholder}, C:{PlaceholderReplacer.ConfigurationNamePlaceholder}");
 
             string result = TheOptions.GetPathExtension(TestResources.LoadTests_ReleaseX86);
 
@@ -511,7 +513,7 @@ namespace GoogleTestAdapter.Settings
             MockXmlOptions.Setup(s => s.MaxNrOfThreads).Returns(1);
 
             string optionsString = TheOptions.ToString();
-            optionsString.Should().Contain("UseNewTestExecutionFramework: True");
+            optionsString.Should().Contain("DebuggerKind: Native");
             optionsString.Should().Contain("PrintTestOutput: False");
             optionsString.Should().Contain("TestDiscoveryRegex: ''");
             optionsString.Should().Contain("WorkingDir: '$(ExecutableDir)'");
@@ -520,8 +522,10 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("TraitsRegexesAfter: {}");
             optionsString.Should().Contain("TestNameSeparator: ''");
             optionsString.Should().Contain("ParseSymbolInformation: True");
-            optionsString.Should().Contain("DebugMode: False");
-            optionsString.Should().Contain("TimestampOutput: False");
+            optionsString.Should().Contain("OutputMode: Info");
+            optionsString.Should().Contain("TimestampMode: Automatic");
+            optionsString.Should().Contain("SeverityMode: Automatic");
+            optionsString.Should().Contain("SummaryMode: WarningOrError");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");
             optionsString.Should().Contain("BatchForTestTeardown: ''");
@@ -642,7 +646,8 @@ namespace GoogleTestAdapter.Settings
 
             return new SettingsWrapper(containerMock.Object)
             {
-                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }
 

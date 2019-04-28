@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
@@ -18,7 +19,7 @@ namespace GoogleTestAdapter.TestCases
         [TestInitialize]
         public void Setup()
         {
-            _fakeLogger = new FakeLogger(() => true, false);
+            _fakeLogger = new FakeLogger(() => OutputMode.Verbose, false);
         }
 
         [TestMethod]

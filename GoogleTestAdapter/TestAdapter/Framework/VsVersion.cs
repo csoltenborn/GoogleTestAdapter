@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GoogleTestAdapter.Common;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using Process = System.Diagnostics.Process;
 
@@ -39,6 +38,19 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 default:
                     throw new InvalidOperationException();
             }
+
+        }
+
+        public static string VersionString(this VsVersion version)
+        {
+            switch (version)
+            {
+                case VsVersion.Unknown:
+                case VsVersion.VS2012:
+                    return "0.0";
+                default:
+                    return $"{(int)version}.0";
+            }
         }
 
         public static bool NeedsToBeThrottled(this VsVersion version)
@@ -55,6 +67,21 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                     return false;
             }
         }
+
+        public static bool PrintsTimeStampAndSeverity(this VsVersion version)
+        {
+            switch (version)
+            {
+                case VsVersion.Unknown:
+                case VsVersion.VS2012:
+                case VsVersion.VS2012_1:
+                case VsVersion.VS2013:
+                case VsVersion.VS2015:
+                    return false;
+                default:
+                    return true;
+            }
+        }
     }
 
     public static class VsVersionUtils
@@ -67,27 +94,23 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         public static readonly VsVersion FirstSupportedVersion = VsVersion.VS2012_1;
         public static readonly VsVersion LastSupportedVersion = Enum.GetValues(typeof(VsVersion)).Cast<VsVersion>().Max();
 
-        private static readonly object Lock = new object(); 
 
-        private static VsVersion? _version;
+        public static readonly VsVersion VsVersion;
 
-        public static VsVersion GetVisualStudioVersion(ILogger logger)
+        static VsVersionUtils()
         {
-            lock (Lock)
-            {
-                if (_version.HasValue)
-                    return _version.Value;
+            VsVersion = GetVisualStudioVersion();
+        }
 
-                try
-                {
-                    _version = GetVsVersionFromProcess();
-                }
-                catch (Exception e)
-                {
-                    logger?.LogError($"Could not find out VisualStudio version: {e.Message}");
-                    _version = VsVersion.Unknown;
-                }
-                return _version.Value;
+        private static VsVersion GetVisualStudioVersion()
+        {
+            try
+            {
+                return GetVsVersionFromProcess();
+            }
+            catch (Exception)
+            {
+                return VsVersion.Unknown;
             }
         }
 

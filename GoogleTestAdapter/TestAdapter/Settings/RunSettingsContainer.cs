@@ -34,7 +34,8 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
     public class RunSettingsContainer : TestRunSettings, IGoogleTestAdapterSettingsContainer
     {
-        public RunSettings SolutionSettings { get; }
+        // virtual for mocking
+        public virtual RunSettings SolutionSettings { get; }
 
         public List<RunSettings> ProjectSettings { get; } = new List<RunSettings>();
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using CommonMark;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
@@ -23,9 +22,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             if (_formerlyInstalledVersion == _currentVersion)
                 return "";
 
-            string releaseNotes = Donations.Header;
-
-            releaseNotes += Environment.NewLine + CreateHeader();
+            string releaseNotes = CreateHeader();
 
             int startIndex = Array.IndexOf(Versions, _currentVersion);
             int endIndex = _formerlyInstalledVersion == null ? -1 : Array.IndexOf(Versions, _formerlyInstalledVersion);

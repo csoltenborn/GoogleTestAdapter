@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8hdgmdy1ogqi606j/branch/master?svg=true)](https://ci.appveyor.com/project/csoltenborn/googletestadapter-u1cxh/branch/master)
 [![Code coverage](https://codecov.io/gh/csoltenborn/GoogleTestAdapter/branch/master/graph/badge.svg)](https://codecov.io/gh/csoltenborn/GoogleTestAdapter)
-[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-121k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-128k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 
 
@@ -52,14 +52,14 @@ Please note that I will see your donations as appreciation of my work so far and
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.15.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
+[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.16.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 [![Download from GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
 
 Google Test Adapter can be installed in three ways:
 
 * Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
-* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.15.0/GoogleTestAdapter-0.15.0.vsix)
+* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.16.0/GoogleTestAdapter-0.16.0.vsix)
 * Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
@@ -92,6 +92,21 @@ Overall, given a test executable `mytests.exe`, the following settings apply to 
 Note that due to the overriding hierarchy described above, you probably want to provide only a subset of the nodes in your configuration files. For instance, providing the node `<DebugMode>true</DebugMode>` in a shared solution settings file will make sure that all sharing developers will run GTA with debug output, no matter what the developer's individual settings at *Tools/Options/Google Test Adapter* are (and unless the developer has selected a test settings file via VS, which would override the solution setting).
 
 For reference, see a settings file [AllTestSettings.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Resources/AllTestSettings.gta.runsettings) containing all available settings, a more realistic solution settings file [SampleTests.gta.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/SampleTests.gta.runsettings) as delivered with the SampleTests solution, and a user settings file [NonDeterministic.runsettings](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/SampleTests/NonDeterministic.runsettings) as used by GTA's end-to-end tests. The syntax of the GTA settings files (excluding the `<RunSettings>` node) is specified by [this schema](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/TestAdapter/GoogleTestAdapterSettings.xsd).
+
+##### <a name="settings_helper_files"></a>Settings helper files
+GTA does not provide direct access to VS project settings such as *Project* > *Properties* > *Debugging* > *Environment*. Additionally, when run as NuGet dependency, GTA does not have access to information such as solution dir or Platform/Configuration a test executable has been build with.
+
+To overcome these problems, GTA supports so-called *settings helper files* which provide that information to GTA. Helper files are usually generated as part of the build, e.g. within a post-build event, which might look like this:
+
+```
+echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName) > $(TargetPath).gta_settings_helper
+```
+
+This command generates a file `$(TargetPath).gta_settings_helper` (where `$(TargetPath)` is the path of the final test executable) containing key/value pairs separated by `::GTA::`. At file generation time, the VS macros will be replaced by the actual values, which can then in turn be used as placeholders within the GTA settings. In particular, the helper file generated by the above command will
+* make sure that the `$(SolutionDir)`, `$(PlatformName)`, and `$(ConfigurationName)` placeholders will be available even if the runtime environment does not provide them (CI) and
+* will provide the value of the VS `$(TargetFileName)` macro to GTA, where it can be referred to as the `$(TheTarget)` placeholder
+
+Note that the settings helper files need to be located within the same folder as their corresponding test executable, and must have the test executable's name concatenated with the `.gta_settings_helper` ending (make sure to ignore these files in version control if necessary).
 
 
 #### Assigning traits to tests
@@ -183,7 +198,7 @@ GTA runs in three different environments:
 * Within Visual Studio and installed via NuGet (i.e., pulled via a project's NuGet dependencies)
 * Within `VsTestConsole.exe` (making use of the `/UseVsixExtensions:true` or the `/TestAdapterPath:<dir>` options)
 
-For technical reasons, not all features are available in all environments; refer to the table below for details.
+For technical reasons, not all features are available in all environments by default; refer to the table below for details.
 
 | Feature | VS/VSIX | VS/NuGet | VsTest.Console
 |--- |:---:|:---:|:---:
@@ -196,18 +211,21 @@ For technical reasons, not all features are available in all environments; refer
 | - Solution test config file | yes | no | no
 | - User test config file | yes<sup>[1](#vs_settings)</sup> | yes<sup>[1](#vs_settings)</sup> | yes<sup>[2](#test_settings)</sup>
 | Placeholders | | |
-| - `$(SolutionDir)` | yes | yes<sup>[3](#only_test_execution)</sup> | no
-| - `$(PlatformName)` | yes | no | no
-| - `$(ConfigurationName)` | yes | no | no
+| - `$(SolutionDir)` | yes | yes<sup>[3](#helper_files), [4](#also_test_execution)</sup> | yes<sup>[3](#helper_files)</sup>
+| - `$(PlatformName)` | yes | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup>
+| - `$(ConfigurationName)` | yes | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup>
 | - `$(ExecutableDir)` | yes | yes | yes
 | - `$(Executable)` | yes | yes | yes
-| - `$(TestDir)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
-| - `$(ThreadId)`<sup>[3](#only_test_execution)</sup> | yes | yes | yes
+| - `$(TestDir)`<sup>[5](#only_test_execution)</sup> | yes | yes | yes
+| - `$(ThreadId)`<sup>[5](#only_test_execution)</sup> | yes | yes | yes
+| - Additional placeholders | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup> | yes<sup>[3](#helper_files)</sup>
 | - Environment variables | yes | yes | yes
 
 <a name="vs_settings">1</a>: Via *Test/Test Settings/Select Test Settings File*<br>
 <a name="test_settings">2</a>: Via `/Settings` option<br>
-<a name="only_test_execution">3</a>: Only during test execution; placeholders are removed in discovery mode
+<a name="helper_files">3</a>: If [*settings helper files*](#settings_helper_files) are provided<br>
+<a name="also_test_execution">4</a>: During test execution, placeholders are available even without settings helper files<br>
+<a name="only_test_execution">5</a>: Only during test execution; placeholders are removed in discovery mode
 
 
 ### External resources

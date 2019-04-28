@@ -101,6 +101,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ProcessExecution\NativeDebuggedProcessExecutorTests.cs" />
+    <Compile Include="Settings\HelperFileTests.cs" />
     <Compile Include="Settings\RunSettingsContainerTests.cs" />
     <Compile Include="CommonFunctionsTests.cs" />
     <Compile Include="TestExecutorSequentialTests_NativeDebugging.cs" />
