@@ -21,6 +21,7 @@ namespace NewProjectWizard.GTA
 
         protected ILogger Logger { get; }
         protected SettingsWrapper Settings { get; }
+
         protected IList<Project> CppProjects { get; private set; }
         protected IDictionary<string, string> ReplacementsDictionary { get; private set; }
 
@@ -31,6 +32,7 @@ namespace NewProjectWizard.GTA
             Settings = new SettingsWrapper(new RunSettingsContainer(runSettings.RunSettings));
             Logger = new TestWindowLogger(() => Settings.OutputMode, () => Settings.TimestampMode);
             Settings.RegexTraitParser = new RegexTraitParser(Logger);
+            Settings.HelperFilesCache = new HelperFilesCache(Logger);
 
             Logger.DebugInfo($"VS version: '{VisualStudioHelper.GetVisualStudioVersionString()}'");
         }
@@ -136,6 +138,8 @@ namespace NewProjectWizard.GTA
                     case "v140_xp": return 800;
                     case "v141": return 900;
                     case "v141_xp": return 1000;
+                    case "v142": return 1100;
+                    case "v142_xp": return 1200;
                     default: return UnknownToolset;
                 }
             }

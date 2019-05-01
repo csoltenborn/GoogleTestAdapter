@@ -11,7 +11,7 @@ namespace NewProjectWizard.GTA.Helpers
 
         public static bool IsCppProject(this Project project)
         {
-            return GetProjectTypeGuids(project).Contains(CppKindGuid);
+            return GetProjectTypeGuids(project).ToUpper().Contains(CppKindGuid);
         }
 
         // after https://www.mztools.com/Articles/2007/MZ2007016.aspx
