@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -7,7 +8,13 @@ namespace NewProjectWizard.GTA.Helpers
 {
     public static class ProjectExtensions
     {
+        public enum ConfigurationType { Static, Dynamic}
+
         private const string CppKindGuid = "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942";
+
+        public const string ConfigurationTypeDynamic = "DynamicLibrary";
+        public const string ConfigurationTypeStatic = "StaticLibrary";
+
 
         public static bool IsCppProject(this Project project)
         {
@@ -41,17 +48,16 @@ namespace NewProjectWizard.GTA.Helpers
             var hr = serviceProvider.QueryService(ref sidGuid, iidGuid, out IntPtr serviceIntPtr);
             if (hr != 0)
             {
-                System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(hr);
+                Marshal.ThrowExceptionForHR(hr);
             }
             else if (!serviceIntPtr.Equals(IntPtr.Zero))
             {
-                service = System.Runtime.InteropServices.Marshal.GetObjectForIUnknown(serviceIntPtr);
-                System.Runtime.InteropServices.Marshal.Release(serviceIntPtr);
+                service = Marshal.GetObjectForIUnknown(serviceIntPtr);
+                Marshal.Release(serviceIntPtr);
             }
 
             return service;
         }
-
     }
     
 }

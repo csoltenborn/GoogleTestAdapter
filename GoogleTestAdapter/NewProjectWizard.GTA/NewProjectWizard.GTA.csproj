@@ -164,6 +164,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateGtestProjectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateGtestProjectDialog.Designer.cs">
+      <DependentUpon>CreateGtestProjectDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateProjectDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,6 +204,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CreateGtestProjectDialog.resx">
+      <DependentUpon>CreateGtestProjectDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CreateProjectDialog.resx">
       <DependentUpon>CreateProjectDialog.cs</DependentUpon>
     </EmbeddedResource>

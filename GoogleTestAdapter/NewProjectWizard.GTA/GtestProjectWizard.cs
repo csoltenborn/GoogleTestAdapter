@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
 using EnvDTE;
 using Microsoft.VisualStudio.TemplateWizard;
 using NewProjectWizard.GTA.Helpers;
@@ -80,7 +81,12 @@ namespace NewProjectWizard.GTA
             ReplacementsDictionary.Add(ToolsetPlaceholder, value);
             Logger.DebugInfo($"Platform toolset: '{value}'");
 
-            value = GtestHelper.GetLinkGtestAsDll(_gtestProject);
+            var configurationType = _gtestProject == null 
+                ? ProjectExtensions.ConfigurationType.Dynamic 
+                : GetLinkingKind(_gtestProject);
+            value = configurationType == ProjectExtensions.ConfigurationType.Static 
+                ? "" 
+                : GtestHelper.GetLinkGtestAsDll(_gtestProject);
             ReplacementsDictionary.Add(LinkGtestAsDllPlaceholder, value);
             Logger.DebugInfo($"Link gtest as DLL: '{value}'");
 
@@ -108,6 +114,49 @@ namespace NewProjectWizard.GTA
             }
         }
 
+        private ProjectExtensions.ConfigurationType GetLinkingKind(Project project)
+        {
+            XmlDocument projectFile = new XmlDocument();
+            projectFile.Load(project.FullName);
+            var nodes = projectFile.GetElementsByTagName("ConfigurationType");
+
+            var configurationTypes = new HashSet<string>();
+            foreach (XmlNode node in nodes)
+            {
+                configurationTypes.Add(node.InnerText);
+            }
+
+            ProjectExtensions.ConfigurationType configurationType = ProjectExtensions.ConfigurationType.Dynamic;
+            if (!configurationTypes.Any())
+            {
+                Logger.LogWarning($"Gtest project {project.Name} does not have ConfigurationType - creating DLL...");
+            }
+            else if (configurationTypes.Count > 1)
+            {
+                Logger.LogWarning($"Gtest project {project.Name} has different ConfigurationTypes - creating DLL...");
+            }
+            else
+            {
+                configurationType = ParseConfigurationType(configurationTypes.Single());
+                Logger.DebugInfo($"Gtest project {project.Name} has ConfigurationType {configurationType}");
+            }
+
+            return configurationType;
+        }
+
+        private ProjectExtensions.ConfigurationType ParseConfigurationType(string configurationType)
+        {
+            switch (configurationType)
+            {
+                case ProjectExtensions.ConfigurationTypeDynamic:
+                    return ProjectExtensions.ConfigurationType.Dynamic;
+                case ProjectExtensions.ConfigurationTypeStatic:
+                    return ProjectExtensions.ConfigurationType.Static;
+                default:
+                    Logger.LogWarning($"Unknown ConfigurationType '{configurationType}' - creating DLL...");
+                    return ProjectExtensions.ConfigurationType.Dynamic;
+            }
+        }
     }
 
 }
