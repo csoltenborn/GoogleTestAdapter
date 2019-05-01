@@ -26,12 +26,13 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This is the main header file a user should include.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_H_
@@ -83,12 +84,13 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements some commonly used actions.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_ACTIONS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_ACTIONS_H_
@@ -128,14 +130,15 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file defines some utilities useful for implementing Google
 // Mock.  They are subject to change without notice, so please DO NOT
 // USE THEM IN USER CODE.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_INTERNAL_UTILS_H_
 #define GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_INTERNAL_UTILS_H_
@@ -175,13 +178,14 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file contains template meta-programming utility classes needed
 // for implementing Google Mock.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_GENERATED_INTERNAL_UTILS_H_
 #define GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_GENERATED_INTERNAL_UTILS_H_
@@ -214,8 +218,7 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: vadimb@google.com (Vadim Berman)
+
 //
 // Low-level types and utilities for porting Google Mock to various
 // platforms.  All macros ending with _ and symbols defined in an
@@ -223,6 +226,8 @@
 // outside Google Mock MUST NOT USE THEM DIRECTLY.  Macros that don't
 // end with _ are part of Google Mock's public API and can be used by
 // code outside Google Mock.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PORT_H_
 #define GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PORT_H_
@@ -269,18 +274,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Injection point for custom user configurations.
-// The following macros can be defined:
-//
-//   Flag related macros:
-//     GMOCK_DECLARE_bool_(name)
-//     GMOCK_DECLARE_int32_(name)
-//     GMOCK_DECLARE_string_(name)
-//     GMOCK_DEFINE_bool_(name, default_val, doc)
-//     GMOCK_DEFINE_int32_(name, default_val, doc)
-//     GMOCK_DEFINE_string_(name, default_val, doc)
+// Injection point for custom user configurations. See README for details
 //
 // ** Custom implementation starts here **
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_PORT_H_
 #define GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_PORT_H_
@@ -562,6 +560,14 @@ struct Function<R(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)>
 
 namespace testing {
 namespace internal {
+
+// Silence MSVC C4100 (unreferenced formal parameter) and
+// C4805('==': unsafe mix of type 'const int' and type 'const bool')
+#ifdef _MSC_VER
+# pragma warning(push)
+# pragma warning(disable:4100)
+# pragma warning(disable:4805)
+#endif
 
 // Joins a vector of strings as if they are fields of a tuple; returns
 // the joined string.
@@ -851,7 +857,22 @@ GTEST_API_ bool LogIsVisible(LogSeverity severity);
 GTEST_API_ void Log(LogSeverity severity, const std::string& message,
                     int stack_frames_to_skip);
 
-// TODO(wan@google.com): group all type utilities together.
+// A marker class that is used to resolve parameterless expectations to the
+// correct overload. This must not be instantiable, to prevent client code from
+// accidentally resolving to the overload; for example:
+//
+//    ON_CALL(mock, Method({}, nullptr))...
+//
+class WithoutMatchers {
+ private:
+  WithoutMatchers() {}
+  friend GTEST_API_ WithoutMatchers GetWithoutMatchers();
+};
+
+// Internal use only: access the singleton instance of WithoutMatchers.
+GTEST_API_ WithoutMatchers GetWithoutMatchers();
+
+// FIXME: group all type utilities together.
 
 // Type traits.
 
@@ -1025,7 +1046,7 @@ struct BooleanConstant {};
 
 // Emit an assertion failure due to incorrect DoDefault() usage. Out-of-lined to
 // reduce code size.
-void IllegalDoDefault(const char* file, int line);
+GTEST_API_ void IllegalDoDefault(const char* file, int line);
 
 #if GTEST_LANG_CXX11
 // Helper types for Apply() below.
@@ -1054,14 +1075,21 @@ auto Apply(F&& f, Tuple&& args)
                    make_int_pack<std::tuple_size<Tuple>::value>());
 }
 #endif
+
+
+#ifdef _MSC_VER
+# pragma warning(pop)
+#endif
+
 }  // namespace internal
 }  // namespace testing
 
 #endif  // GMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_INTERNAL_UTILS_H_
 
-#if GTEST_HAS_STD_TYPE_TRAITS_  // Defined by gtest-port.h via gmock-port.h.
+#if GTEST_LANG_CXX11  // Defined by gtest-port.h via gmock-port.h.
+#include <functional>
 #include <type_traits>
-#endif
+#endif  // GTEST_LANG_CXX11
 
 namespace testing {
 
@@ -1109,7 +1137,7 @@ struct BuiltInDefaultValueGetter<T, false> {
 template <typename T>
 class BuiltInDefaultValue {
  public:
-#if GTEST_HAS_STD_TYPE_TRAITS_
+#if GTEST_LANG_CXX11
   // This function returns true iff type T has a built-in default value.
   static bool Exists() {
     return ::std::is_default_constructible<T>::value;
@@ -1120,7 +1148,7 @@ class BuiltInDefaultValue {
         T, ::std::is_default_constructible<T>::value>::Get();
   }
 
-#else  // GTEST_HAS_STD_TYPE_TRAITS_
+#else  // GTEST_LANG_CXX11
   // This function returns true iff type T has a built-in default value.
   static bool Exists() {
     return false;
@@ -1130,7 +1158,7 @@ class BuiltInDefaultValue {
     return BuiltInDefaultValueGetter<T, false>::Get();
   }
 
-#endif  // GTEST_HAS_STD_TYPE_TRAITS_
+#endif  // GTEST_LANG_CXX11
 };
 
 // This partial specialization says that we use the same built-in
@@ -1372,14 +1400,20 @@ class Action {
 
   // Constructs a null Action.  Needed for storing Action objects in
   // STL containers.
-  Action() : impl_(NULL) {}
+  Action() {}
 
-  // Constructs an Action from its implementation.  A NULL impl is
-  // used to represent the "do-default" action.
+#if GTEST_LANG_CXX11
+  // Construct an Action from a specified callable.
+  // This cannot take std::function directly, because then Action would not be
+  // directly constructible from lambda (it would require two conversions).
+  template <typename G,
+            typename = typename ::std::enable_if<
+                ::std::is_constructible<::std::function<F>, G>::value>::type>
+  Action(G&& fun) : fun_(::std::forward<G>(fun)) {}  // NOLINT
+#endif
+
+  // Constructs an Action from its implementation.
   explicit Action(ActionInterface<F>* impl) : impl_(impl) {}
-
-  // Copy constructor.
-  Action(const Action& action) : impl_(action.impl_) {}
 
   // This constructor allows us to turn an Action<Func> object into an
   // Action<F>, as long as F's arguments can be implicitly converted
@@ -1389,7 +1423,13 @@ class Action {
   explicit Action(const Action<Func>& action);
 
   // Returns true iff this is the DoDefault() action.
-  bool IsDoDefault() const { return impl_.get() == NULL; }
+  bool IsDoDefault() const {
+#if GTEST_LANG_CXX11
+    return impl_ == nullptr && fun_ == nullptr;
+#else
+    return impl_ == NULL;
+#endif
+  }
 
   // Performs the action.  Note that this method is const even though
   // the corresponding method in ActionInterface is not.  The reason
@@ -1397,14 +1437,15 @@ class Action {
   // another concrete action, not that the concrete action it binds to
   // cannot change state.  (Think of the difference between a const
   // pointer and a pointer to const.)
-  Result Perform(const ArgumentTuple& args) const {
-    internal::Assert(
-        !IsDoDefault(), __FILE__, __LINE__,
-        "You are using DoDefault() inside a composite action like "
-        "DoAll() or WithArgs().  This is not supported for technical "
-        "reasons.  Please instead spell out the default action, or "
-        "assign the default action to an Action variable and use "
-        "the variable in various places.");
+  Result Perform(ArgumentTuple args) const {
+    if (IsDoDefault()) {
+      internal::IllegalDoDefault(__FILE__, __LINE__);
+    }
+#if GTEST_LANG_CXX11
+    if (fun_ != nullptr) {
+      return internal::Apply(fun_, ::std::move(args));
+    }
+#endif
     return impl_->Perform(args);
   }
 
@@ -1412,6 +1453,18 @@ class Action {
   template <typename F1, typename F2>
   friend class internal::ActionAdaptor;
 
+  template <typename G>
+  friend class Action;
+
+  // In C++11, Action can be implemented either as a generic functor (through
+  // std::function), or legacy ActionInterface. In C++98, only ActionInterface
+  // is available. The invariants are as follows:
+  // * in C++98, impl_ is null iff this is the default action
+  // * in C++11, at most one of fun_ & impl_ may be nonnull; both are null iff
+  //   this is the default action
+#if GTEST_LANG_CXX11
+  ::std::function<F> fun_;
+#endif
   internal::linked_ptr<ActionInterface<F> > impl_;
 };
 
@@ -1542,6 +1595,9 @@ struct ByMoveWrapper {
 // need to make sure that the type conversion happens inside the EXPECT_CALL
 // statement, and conversion of the result of Return to Action<T(U)> is a
 // good place for that.
+//
+// The real life example of the above scenario happens when an invocation
+// of gtl::Container() is passed into Return.
 //
 template <typename R>
 class ReturnAction {
@@ -1762,7 +1818,7 @@ class DoDefaultAction {
   // This template type conversion operator allows DoDefault() to be
   // used in any function.
   template <typename F>
-  operator Action<F>() const { return Action<F>(NULL); }
+  operator Action<F>() const { return Action<F>(); }  // NOLINT
 };
 
 // Implements the Assign action to set a given pointer referent to a
@@ -1896,6 +1952,28 @@ class InvokeMethodWithoutArgsAction {
   const MethodPtr method_ptr_;
 
   GTEST_DISALLOW_ASSIGN_(InvokeMethodWithoutArgsAction);
+};
+
+// Implements the InvokeWithoutArgs(callback) action.
+template <typename CallbackType>
+class InvokeCallbackWithoutArgsAction {
+ public:
+  // The c'tor takes ownership of the callback.
+  explicit InvokeCallbackWithoutArgsAction(CallbackType* callback)
+      : callback_(callback) {
+    callback->CheckIsRepeatable();  // Makes sure the callback is permanent.
+  }
+
+  // This type conversion operator template allows Invoke(callback) to
+  // be used wherever the callback's return type can be implicitly
+  // converted to that of the mock function.
+  template <typename Result, typename ArgumentTuple>
+  Result Perform(const ArgumentTuple&) const { return callback_->Run(); }
+
+ private:
+  const internal::linked_ptr<CallbackType> callback_;
+
+  GTEST_DISALLOW_ASSIGN_(InvokeCallbackWithoutArgsAction);
 };
 
 // Implements the IgnoreResult(action) action.
@@ -2065,7 +2143,13 @@ typedef internal::IgnoredValue Unused;
 template <typename To>
 template <typename From>
 Action<To>::Action(const Action<From>& from)
-    : impl_(new internal::ActionAdaptor<To, From>(from)) {}
+    :
+#if GTEST_LANG_CXX11
+      fun_(from.fun_),
+#endif
+      impl_(from.impl_ == NULL ? NULL
+                               : new internal::ActionAdaptor<To, From>(from)) {
+}
 
 // Creates an action that returns 'value'.  'value' is passed by value
 // instead of const reference - otherwise Return("string literal")
@@ -2244,8 +2328,7 @@ inline internal::ReferenceWrapper<T> ByRef(T& l_value) {  // NOLINT
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
@@ -2253,11 +2336,16 @@ inline internal::ReferenceWrapper<T> ByRef(T& l_value) {  // NOLINT
 // cardinalities can be defined by the user implementing the
 // CardinalityInterface interface if necessary.
 
+// GOOGLETEST_CM0002 DO NOT DELETE
+
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_CARDINALITIES_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_CARDINALITIES_H_
 
 #include <limits.h>
 #include <ostream>  // NOLINT
+
+GTEST_DISABLE_MSC_WARNINGS_PUSH_(4251 \
+/* class A needs to have dll-interface to be used by clients of class B */)
 
 namespace testing {
 
@@ -2360,8 +2448,12 @@ inline Cardinality MakeCardinality(const CardinalityInterface* c) {
 
 }  // namespace testing
 
+GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251
+
 #endif  // GMOCK_INCLUDE_GMOCK_GMOCK_CARDINALITIES_H_
-// This file was GENERATED by a script.  DO NOT EDIT BY HAND!!!
+// This file was GENERATED by command:
+//     pump.py gmock-generated-actions.h.pump
+// DO NOT EDIT BY HAND!!!
 
 // Copyright 2007, Google Inc.
 // All rights reserved.
@@ -2391,12 +2483,13 @@ inline Cardinality MakeCardinality(const CardinalityInterface* c) {
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements some commonly used variadic actions.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_ACTIONS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_ACTIONS_H_
@@ -2406,8 +2499,8 @@ namespace testing {
 namespace internal {
 
 // InvokeHelper<F> knows how to unpack an N-tuple and invoke an N-ary
-// function or method with the unpacked values, where F is a function
-// type that takes N arguments.
+// function, method, or callback with the unpacked values, where F is
+// a function type that takes N arguments.
 template <typename Result, typename ArgumentTuple>
 class InvokeHelper;
 
@@ -2425,6 +2518,12 @@ class InvokeHelper<R, ::testing::tuple<> > {
                         const ::testing::tuple<>&) {
            return (obj_ptr->*method_ptr)();
   }
+
+  template <typename CallbackType>
+  static R InvokeCallback(CallbackType* callback,
+                          const ::testing::tuple<>&) {
+           return callback->Run();
+  }
 };
 
 template <typename R, typename A1>
@@ -2440,6 +2539,12 @@ class InvokeHelper<R, ::testing::tuple<A1> > {
                         MethodPtr method_ptr,
                         const ::testing::tuple<A1>& args) {
            return (obj_ptr->*method_ptr)(get<0>(args));
+  }
+
+  template <typename CallbackType>
+  static R InvokeCallback(CallbackType* callback,
+                          const ::testing::tuple<A1>& args) {
+           return callback->Run(get<0>(args));
   }
 };
 
@@ -2457,6 +2562,12 @@ class InvokeHelper<R, ::testing::tuple<A1, A2> > {
                         const ::testing::tuple<A1, A2>& args) {
            return (obj_ptr->*method_ptr)(get<0>(args), get<1>(args));
   }
+
+  template <typename CallbackType>
+  static R InvokeCallback(CallbackType* callback,
+                          const ::testing::tuple<A1, A2>& args) {
+           return callback->Run(get<0>(args), get<1>(args));
+  }
 };
 
 template <typename R, typename A1, typename A2, typename A3>
@@ -2473,6 +2584,12 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3> > {
                         const ::testing::tuple<A1, A2, A3>& args) {
            return (obj_ptr->*method_ptr)(get<0>(args), get<1>(args),
                get<2>(args));
+  }
+
+  template <typename CallbackType>
+  static R InvokeCallback(CallbackType* callback,
+                          const ::testing::tuple<A1, A2, A3>& args) {
+           return callback->Run(get<0>(args), get<1>(args), get<2>(args));
   }
 };
 
@@ -2492,6 +2609,13 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4> > {
                         const ::testing::tuple<A1, A2, A3, A4>& args) {
            return (obj_ptr->*method_ptr)(get<0>(args), get<1>(args),
                get<2>(args), get<3>(args));
+  }
+
+  template <typename CallbackType>
+  static R InvokeCallback(CallbackType* callback,
+                          const ::testing::tuple<A1, A2, A3, A4>& args) {
+           return callback->Run(get<0>(args), get<1>(args), get<2>(args),
+               get<3>(args));
   }
 };
 
@@ -2513,6 +2637,13 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4, A5> > {
            return (obj_ptr->*method_ptr)(get<0>(args), get<1>(args),
                get<2>(args), get<3>(args), get<4>(args));
   }
+
+  template <typename CallbackType>
+  static R InvokeCallback(CallbackType* callback,
+                          const ::testing::tuple<A1, A2, A3, A4, A5>& args) {
+           return callback->Run(get<0>(args), get<1>(args), get<2>(args),
+               get<3>(args), get<4>(args));
+  }
 };
 
 template <typename R, typename A1, typename A2, typename A3, typename A4,
@@ -2533,6 +2664,8 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4, A5, A6> > {
            return (obj_ptr->*method_ptr)(get<0>(args), get<1>(args),
                get<2>(args), get<3>(args), get<4>(args), get<5>(args));
   }
+
+  // There is no InvokeCallback() for 6-tuples
 };
 
 template <typename R, typename A1, typename A2, typename A3, typename A4,
@@ -2555,6 +2688,8 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4, A5, A6, A7> > {
                get<2>(args), get<3>(args), get<4>(args), get<5>(args),
                get<6>(args));
   }
+
+  // There is no InvokeCallback() for 7-tuples
 };
 
 template <typename R, typename A1, typename A2, typename A3, typename A4,
@@ -2578,6 +2713,8 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4, A5, A6, A7, A8> > {
                get<2>(args), get<3>(args), get<4>(args), get<5>(args),
                get<6>(args), get<7>(args));
   }
+
+  // There is no InvokeCallback() for 8-tuples
 };
 
 template <typename R, typename A1, typename A2, typename A3, typename A4,
@@ -2601,6 +2738,8 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4, A5, A6, A7, A8, A9> > {
                get<2>(args), get<3>(args), get<4>(args), get<5>(args),
                get<6>(args), get<7>(args), get<8>(args));
   }
+
+  // There is no InvokeCallback() for 9-tuples
 };
 
 template <typename R, typename A1, typename A2, typename A3, typename A4,
@@ -2626,6 +2765,33 @@ class InvokeHelper<R, ::testing::tuple<A1, A2, A3, A4, A5, A6, A7, A8, A9,
                get<2>(args), get<3>(args), get<4>(args), get<5>(args),
                get<6>(args), get<7>(args), get<8>(args), get<9>(args));
   }
+
+  // There is no InvokeCallback() for 10-tuples
+};
+
+// Implements the Invoke(callback) action.
+template <typename CallbackType>
+class InvokeCallbackAction {
+ public:
+  // The c'tor takes ownership of the callback.
+  explicit InvokeCallbackAction(CallbackType* callback)
+      : callback_(callback) {
+    callback->CheckIsRepeatable();  // Makes sure the callback is permanent.
+  }
+
+  // This type conversion operator template allows Invoke(callback) to
+  // be used wherever the callback's type is compatible with that of
+  // the mock function, i.e. if the mock function's arguments can be
+  // implicitly converted to the callback's arguments and the
+  // callback's result can be implicitly converted to the mock
+  // function's result.
+  template <typename Result, typename ArgumentTuple>
+  Result Perform(const ArgumentTuple& args) const {
+    return InvokeHelper<Result, ArgumentTuple>::InvokeCallback(
+        callback_.get(), args);
+  }
+ private:
+  const linked_ptr<CallbackType> callback_;
 };
 
 // An INTERNAL macro for extracting the type of a tuple field.  It's
@@ -3434,52 +3600,90 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
 #define GMOCK_INTERNAL_INIT_AND_0_VALUE_PARAMS()\
     ()
 #define GMOCK_INTERNAL_INIT_AND_1_VALUE_PARAMS(p0)\
-    (p0##_type gmock_p0) : p0(gmock_p0)
+    (p0##_type gmock_p0) : p0(::testing::internal::move(gmock_p0))
 #define GMOCK_INTERNAL_INIT_AND_2_VALUE_PARAMS(p0, p1)\
-    (p0##_type gmock_p0, p1##_type gmock_p1) : p0(gmock_p0), p1(gmock_p1)
+    (p0##_type gmock_p0, \
+        p1##_type gmock_p1) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1))
 #define GMOCK_INTERNAL_INIT_AND_3_VALUE_PARAMS(p0, p1, p2)\
     (p0##_type gmock_p0, p1##_type gmock_p1, \
-        p2##_type gmock_p2) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2)
+        p2##_type gmock_p2) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2))
 #define GMOCK_INTERNAL_INIT_AND_4_VALUE_PARAMS(p0, p1, p2, p3)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
-        p3##_type gmock_p3) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3)
+        p3##_type gmock_p3) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3))
 #define GMOCK_INTERNAL_INIT_AND_5_VALUE_PARAMS(p0, p1, p2, p3, p4)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
-        p3##_type gmock_p3, p4##_type gmock_p4) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3), p4(gmock_p4)
+        p3##_type gmock_p3, \
+        p4##_type gmock_p4) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4))
 #define GMOCK_INTERNAL_INIT_AND_6_VALUE_PARAMS(p0, p1, p2, p3, p4, p5)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
         p3##_type gmock_p3, p4##_type gmock_p4, \
-        p5##_type gmock_p5) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5)
+        p5##_type gmock_p5) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5))
 #define GMOCK_INTERNAL_INIT_AND_7_VALUE_PARAMS(p0, p1, p2, p3, p4, p5, p6)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
         p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
-        p6##_type gmock_p6) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6)
+        p6##_type gmock_p6) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6))
 #define GMOCK_INTERNAL_INIT_AND_8_VALUE_PARAMS(p0, p1, p2, p3, p4, p5, p6, p7)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
         p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
-        p6##_type gmock_p6, p7##_type gmock_p7) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-        p7(gmock_p7)
+        p6##_type gmock_p6, \
+        p7##_type gmock_p7) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)), \
+        p7(::testing::internal::move(gmock_p7))
 #define GMOCK_INTERNAL_INIT_AND_9_VALUE_PARAMS(p0, p1, p2, p3, p4, p5, p6, \
     p7, p8)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
         p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
         p6##_type gmock_p6, p7##_type gmock_p7, \
-        p8##_type gmock_p8) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7), \
-        p8(gmock_p8)
+        p8##_type gmock_p8) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)), \
+        p7(::testing::internal::move(gmock_p7)), \
+        p8(::testing::internal::move(gmock_p8))
 #define GMOCK_INTERNAL_INIT_AND_10_VALUE_PARAMS(p0, p1, p2, p3, p4, p5, p6, \
     p7, p8, p9)\
     (p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
         p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
         p6##_type gmock_p6, p7##_type gmock_p7, p8##_type gmock_p8, \
-        p9##_type gmock_p9) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7), \
-        p8(gmock_p8), p9(gmock_p9)
+        p9##_type gmock_p9) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)), \
+        p7(::testing::internal::move(gmock_p7)), \
+        p8(::testing::internal::move(gmock_p8)), \
+        p9(::testing::internal::move(gmock_p9))
 
 // Declares the fields for storing the value parameters.
 #define GMOCK_INTERNAL_DEFN_AND_0_VALUE_PARAMS()
@@ -3715,7 +3919,8 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
   template <typename p0##_type>\
   class name##ActionP {\
    public:\
-    explicit name##ActionP(p0##_type gmock_p0) : p0(gmock_p0) {}\
+    explicit name##ActionP(p0##_type gmock_p0) : \
+        p0(::testing::internal::forward<p0##_type>(gmock_p0)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -3723,7 +3928,8 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       typedef typename ::testing::internal::Function<F>::Result return_type;\
       typedef typename ::testing::internal::Function<F>::ArgumentTuple\
           args_type;\
-      explicit gmock_Impl(p0##_type gmock_p0) : p0(gmock_p0) {}\
+      explicit gmock_Impl(p0##_type gmock_p0) : \
+          p0(::testing::internal::forward<p0##_type>(gmock_p0)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -3765,8 +3971,9 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
   template <typename p0##_type, typename p1##_type>\
   class name##ActionP2 {\
    public:\
-    name##ActionP2(p0##_type gmock_p0, p1##_type gmock_p1) : p0(gmock_p0), \
-        p1(gmock_p1) {}\
+    name##ActionP2(p0##_type gmock_p0, \
+        p1##_type gmock_p1) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -3774,8 +3981,9 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       typedef typename ::testing::internal::Function<F>::Result return_type;\
       typedef typename ::testing::internal::Function<F>::ArgumentTuple\
           args_type;\
-      gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1) : p0(gmock_p0), \
-          p1(gmock_p1) {}\
+      gmock_Impl(p0##_type gmock_p0, \
+          p1##_type gmock_p1) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -3821,7 +4029,9 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
   class name##ActionP3 {\
    public:\
     name##ActionP3(p0##_type gmock_p0, p1##_type gmock_p1, \
-        p2##_type gmock_p2) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2) {}\
+        p2##_type gmock_p2) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -3830,7 +4040,9 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       typedef typename ::testing::internal::Function<F>::ArgumentTuple\
           args_type;\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, \
-          p2##_type gmock_p2) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2) {}\
+          p2##_type gmock_p2) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -3880,8 +4092,11 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
   class name##ActionP4 {\
    public:\
     name##ActionP4(p0##_type gmock_p0, p1##_type gmock_p1, \
-        p2##_type gmock_p2, p3##_type gmock_p3) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3) {}\
+        p2##_type gmock_p2, \
+        p3##_type gmock_p3) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -3890,8 +4105,10 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       typedef typename ::testing::internal::Function<F>::ArgumentTuple\
           args_type;\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
-          p3##_type gmock_p3) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-          p3(gmock_p3) {}\
+          p3##_type gmock_p3) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -3948,8 +4165,11 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
    public:\
     name##ActionP5(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, \
-        p4##_type gmock_p4) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4) {}\
+        p4##_type gmock_p4) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+        p4(::testing::internal::forward<p4##_type>(gmock_p4)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -3958,8 +4178,12 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       typedef typename ::testing::internal::Function<F>::ArgumentTuple\
           args_type;\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
-          p3##_type gmock_p3, p4##_type gmock_p4) : p0(gmock_p0), \
-          p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), p4(gmock_p4) {}\
+          p3##_type gmock_p3, \
+          p4##_type gmock_p4) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+          p4(::testing::internal::forward<p4##_type>(gmock_p4)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -4018,8 +4242,12 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
    public:\
     name##ActionP6(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
-        p5##_type gmock_p5) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5) {}\
+        p5##_type gmock_p5) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+        p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+        p5(::testing::internal::forward<p5##_type>(gmock_p5)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -4029,8 +4257,12 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
           args_type;\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, \
-          p5##_type gmock_p5) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-          p3(gmock_p3), p4(gmock_p4), p5(gmock_p5) {}\
+          p5##_type gmock_p5) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+          p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+          p5(::testing::internal::forward<p5##_type>(gmock_p5)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -4092,9 +4324,14 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
    public:\
     name##ActionP7(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
-        p5##_type gmock_p5, p6##_type gmock_p6) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), \
-        p6(gmock_p6) {}\
+        p5##_type gmock_p5, \
+        p6##_type gmock_p6) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+        p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+        p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+        p6(::testing::internal::forward<p6##_type>(gmock_p6)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -4104,8 +4341,13 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
           args_type;\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
-          p6##_type gmock_p6) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-          p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6) {}\
+          p6##_type gmock_p6) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+          p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+          p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+          p6(::testing::internal::forward<p6##_type>(gmock_p6)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -4174,9 +4416,14 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
     name##ActionP8(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
         p5##_type gmock_p5, p6##_type gmock_p6, \
-        p7##_type gmock_p7) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-        p7(gmock_p7) {}\
+        p7##_type gmock_p7) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+        p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+        p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+        p6(::testing::internal::forward<p6##_type>(gmock_p6)), \
+        p7(::testing::internal::forward<p7##_type>(gmock_p7)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -4186,9 +4433,15 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
           args_type;\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
-          p6##_type gmock_p6, p7##_type gmock_p7) : p0(gmock_p0), \
-          p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), p4(gmock_p4), \
-          p5(gmock_p5), p6(gmock_p6), p7(gmock_p7) {}\
+          p6##_type gmock_p6, \
+          p7##_type gmock_p7) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+          p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+          p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+          p6(::testing::internal::forward<p6##_type>(gmock_p6)), \
+          p7(::testing::internal::forward<p7##_type>(gmock_p7)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -4261,9 +4514,15 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
     name##ActionP9(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
         p5##_type gmock_p5, p6##_type gmock_p6, p7##_type gmock_p7, \
-        p8##_type gmock_p8) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7), \
-        p8(gmock_p8) {}\
+        p8##_type gmock_p8) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+        p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+        p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+        p6(::testing::internal::forward<p6##_type>(gmock_p6)), \
+        p7(::testing::internal::forward<p7##_type>(gmock_p7)), \
+        p8(::testing::internal::forward<p8##_type>(gmock_p8)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -4274,9 +4533,15 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
           p6##_type gmock_p6, p7##_type gmock_p7, \
-          p8##_type gmock_p8) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-          p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-          p7(gmock_p7), p8(gmock_p8) {}\
+          p8##_type gmock_p8) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+          p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+          p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+          p6(::testing::internal::forward<p6##_type>(gmock_p6)), \
+          p7(::testing::internal::forward<p7##_type>(gmock_p7)), \
+          p8(::testing::internal::forward<p8##_type>(gmock_p8)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -4353,9 +4618,17 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
     name##ActionP10(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
         p5##_type gmock_p5, p6##_type gmock_p6, p7##_type gmock_p7, \
-        p8##_type gmock_p8, p9##_type gmock_p9) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-        p7(gmock_p7), p8(gmock_p8), p9(gmock_p9) {}\
+        p8##_type gmock_p8, \
+        p9##_type gmock_p9) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+        p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+        p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+        p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+        p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+        p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+        p6(::testing::internal::forward<p6##_type>(gmock_p6)), \
+        p7(::testing::internal::forward<p7##_type>(gmock_p7)), \
+        p8(::testing::internal::forward<p8##_type>(gmock_p8)), \
+        p9(::testing::internal::forward<p9##_type>(gmock_p9)) {}\
     template <typename F>\
     class gmock_Impl : public ::testing::ActionInterface<F> {\
      public:\
@@ -4366,9 +4639,16 @@ DoAll(Action1 a1, Action2 a2, Action3 a3, Action4 a4, Action5 a5, Action6 a6,
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
           p6##_type gmock_p6, p7##_type gmock_p7, p8##_type gmock_p8, \
-          p9##_type gmock_p9) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-          p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-          p7(gmock_p7), p8(gmock_p8), p9(gmock_p9) {}\
+          p9##_type gmock_p9) : p0(::testing::internal::forward<p0##_type>(gmock_p0)), \
+          p1(::testing::internal::forward<p1##_type>(gmock_p1)), \
+          p2(::testing::internal::forward<p2##_type>(gmock_p2)), \
+          p3(::testing::internal::forward<p3##_type>(gmock_p3)), \
+          p4(::testing::internal::forward<p4##_type>(gmock_p4)), \
+          p5(::testing::internal::forward<p5##_type>(gmock_p5)), \
+          p6(::testing::internal::forward<p6##_type>(gmock_p6)), \
+          p7(::testing::internal::forward<p7##_type>(gmock_p7)), \
+          p8(::testing::internal::forward<p8##_type>(gmock_p8)), \
+          p9(::testing::internal::forward<p9##_type>(gmock_p9)) {}\
       virtual return_type Perform(const args_type& args) {\
         return ::testing::internal::ActionHelper<return_type, gmock_Impl>::\
             Perform(this, args);\
@@ -4730,12 +5010,14 @@ ACTION_TEMPLATE(ReturnNew,
 
 }  // namespace testing
 
-// Include any custom actions added by the local installation.
+// Include any custom callback actions added by the local installation.
 // We must include this header at the end to make sure it can use the
 // declarations from this file.
 // This file was GENERATED by command:
 //     pump.py gmock-generated-actions.h.pump
 // DO NOT EDIT BY HAND!!!
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_GENERATED_ACTIONS_H_
 #define GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_GENERATED_ACTIONS_H_
@@ -4775,12 +5057,13 @@ ACTION_TEMPLATE(ReturnNew,
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements function mockers of various arities.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_FUNCTION_MOCKERS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_FUNCTION_MOCKERS_H_
@@ -4813,8 +5096,7 @@ ACTION_TEMPLATE(ReturnNew,
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
@@ -4843,6 +5125,8 @@ ACTION_TEMPLATE(ReturnNew,
 //
 // where all clauses are optional, and .InSequence()/.After()/
 // .WillOnce() can appear any number of times.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_SPEC_BUILDERS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_SPEC_BUILDERS_H_
@@ -4880,14 +5164,15 @@ ACTION_TEMPLATE(ReturnNew,
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements some commonly used argument matchers.  More
 // matchers can be defined by the user implementing the
 // MatcherInterface<T> interface if necessary.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
@@ -4906,6 +5191,11 @@ ACTION_TEMPLATE(ReturnNew,
 # include <initializer_list>  // NOLINT -- must be after gtest.h
 #endif
 
+GTEST_DISABLE_MSC_WARNINGS_PUSH_(
+    4251 5046 /* class A needs to have dll-interface to be used by clients of
+                 class B */
+    /* Symbol involving type with internal linkage not defined */)
+
 namespace testing {
 
 // To implement a matcher Foo for type T, define:
@@ -4923,7 +5213,7 @@ namespace testing {
 // MatchResultListener is an abstract class.  Its << operator can be
 // used by a matcher to explain why a value matches or doesn't match.
 //
-// TODO(wan@google.com): add method
+// FIXME: add method
 //   bool InterestedInWhy(bool result) const;
 // to indicate whether the listener is interested in why the match
 // result is 'result'.
@@ -5030,6 +5320,35 @@ class MatcherInterface : public MatcherDescriberInterface {
   //   virtual void DescribeNegationTo(::std::ostream* os) const;
 };
 
+namespace internal {
+
+// Converts a MatcherInterface<T> to a MatcherInterface<const T&>.
+template <typename T>
+class MatcherInterfaceAdapter : public MatcherInterface<const T&> {
+ public:
+  explicit MatcherInterfaceAdapter(const MatcherInterface<T>* impl)
+      : impl_(impl) {}
+  virtual ~MatcherInterfaceAdapter() { delete impl_; }
+
+  virtual void DescribeTo(::std::ostream* os) const { impl_->DescribeTo(os); }
+
+  virtual void DescribeNegationTo(::std::ostream* os) const {
+    impl_->DescribeNegationTo(os);
+  }
+
+  virtual bool MatchAndExplain(const T& x,
+                               MatchResultListener* listener) const {
+    return impl_->MatchAndExplain(x, listener);
+  }
+
+ private:
+  const MatcherInterface<T>* const impl_;
+
+  GTEST_DISALLOW_COPY_AND_ASSIGN_(MatcherInterfaceAdapter);
+};
+
+}  // namespace internal
+
 // A match result listener that stores the explanation in a string.
 class StringMatchResultListener : public MatchResultListener {
  public:
@@ -5103,12 +5422,13 @@ class MatcherBase {
  public:
   // Returns true iff the matcher matches x; also explains the match
   // result to 'listener'.
-  bool MatchAndExplain(T x, MatchResultListener* listener) const {
+  bool MatchAndExplain(GTEST_REFERENCE_TO_CONST_(T) x,
+                       MatchResultListener* listener) const {
     return impl_->MatchAndExplain(x, listener);
   }
 
   // Returns true iff this matcher matches x.
-  bool Matches(T x) const {
+  bool Matches(GTEST_REFERENCE_TO_CONST_(T) x) const {
     DummyMatchResultListener dummy;
     return MatchAndExplain(x, &dummy);
   }
@@ -5122,7 +5442,8 @@ class MatcherBase {
   }
 
   // Explains why x matches, or doesn't match, the matcher.
-  void ExplainMatchResultTo(T x, ::std::ostream* os) const {
+  void ExplainMatchResultTo(GTEST_REFERENCE_TO_CONST_(T) x,
+                            ::std::ostream* os) const {
     StreamMatchResultListener listener(os);
     MatchAndExplain(x, &listener);
   }
@@ -5138,8 +5459,17 @@ class MatcherBase {
   MatcherBase() {}
 
   // Constructs a matcher from its implementation.
-  explicit MatcherBase(const MatcherInterface<T>* impl)
+  explicit MatcherBase(
+      const MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)>* impl)
       : impl_(impl) {}
+
+  template <typename U>
+  explicit MatcherBase(
+      const MatcherInterface<U>* impl,
+      typename internal::EnableIf<
+          !internal::IsSame<U, GTEST_REFERENCE_TO_CONST_(U)>::value>::type* =
+          NULL)
+      : impl_(new internal::MatcherInterfaceAdapter<U>(impl)) {}
 
   virtual ~MatcherBase() {}
 
@@ -5155,7 +5485,9 @@ class MatcherBase {
   //
   // If performance becomes a problem, we should see if using
   // shared_ptr helps.
-  ::testing::internal::linked_ptr<const MatcherInterface<T> > impl_;
+  ::testing::internal::linked_ptr<
+      const MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)> >
+      impl_;
 };
 
 }  // namespace internal
@@ -5174,7 +5506,13 @@ class Matcher : public internal::MatcherBase<T> {
   explicit Matcher() {}  // NOLINT
 
   // Constructs a matcher from its implementation.
-  explicit Matcher(const MatcherInterface<T>* impl)
+  explicit Matcher(const MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)>* impl)
+      : internal::MatcherBase<T>(impl) {}
+
+  template <typename U>
+  explicit Matcher(const MatcherInterface<U>* impl,
+                   typename internal::EnableIf<!internal::IsSame<
+                       U, GTEST_REFERENCE_TO_CONST_(U)>::value>::type* = NULL)
       : internal::MatcherBase<T>(impl) {}
 
   // Implicit constructor here allows people to write
@@ -5183,86 +5521,170 @@ class Matcher : public internal::MatcherBase<T> {
 };
 
 // The following two specializations allow the user to write str
-// instead of Eq(str) and "foo" instead of Eq("foo") when a string
+// instead of Eq(str) and "foo" instead of Eq("foo") when a std::string
 // matcher is expected.
 template <>
-class GTEST_API_ Matcher<const internal::string&>
-    : public internal::MatcherBase<const internal::string&> {
+class GTEST_API_ Matcher<const std::string&>
+    : public internal::MatcherBase<const std::string&> {
  public:
   Matcher() {}
 
-  explicit Matcher(const MatcherInterface<const internal::string&>* impl)
-      : internal::MatcherBase<const internal::string&>(impl) {}
+  explicit Matcher(const MatcherInterface<const std::string&>* impl)
+      : internal::MatcherBase<const std::string&>(impl) {}
 
   // Allows the user to write str instead of Eq(str) sometimes, where
-  // str is a string object.
-  Matcher(const internal::string& s);  // NOLINT
+  // str is a std::string object.
+  Matcher(const std::string& s);  // NOLINT
+
+#if GTEST_HAS_GLOBAL_STRING
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a ::string object.
+  Matcher(const ::string& s);  // NOLINT
+#endif                         // GTEST_HAS_GLOBAL_STRING
 
   // Allows the user to write "foo" instead of Eq("foo") sometimes.
   Matcher(const char* s);  // NOLINT
 };
 
 template <>
-class GTEST_API_ Matcher<internal::string>
-    : public internal::MatcherBase<internal::string> {
+class GTEST_API_ Matcher<std::string>
+    : public internal::MatcherBase<std::string> {
  public:
   Matcher() {}
 
-  explicit Matcher(const MatcherInterface<internal::string>* impl)
-      : internal::MatcherBase<internal::string>(impl) {}
+  explicit Matcher(const MatcherInterface<const std::string&>* impl)
+      : internal::MatcherBase<std::string>(impl) {}
+  explicit Matcher(const MatcherInterface<std::string>* impl)
+      : internal::MatcherBase<std::string>(impl) {}
 
   // Allows the user to write str instead of Eq(str) sometimes, where
   // str is a string object.
-  Matcher(const internal::string& s);  // NOLINT
+  Matcher(const std::string& s);  // NOLINT
+
+#if GTEST_HAS_GLOBAL_STRING
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a ::string object.
+  Matcher(const ::string& s);  // NOLINT
+#endif                         // GTEST_HAS_GLOBAL_STRING
 
   // Allows the user to write "foo" instead of Eq("foo") sometimes.
   Matcher(const char* s);  // NOLINT
 };
 
-#if GTEST_HAS_STRING_PIECE_
+#if GTEST_HAS_GLOBAL_STRING
 // The following two specializations allow the user to write str
-// instead of Eq(str) and "foo" instead of Eq("foo") when a StringPiece
+// instead of Eq(str) and "foo" instead of Eq("foo") when a ::string
 // matcher is expected.
 template <>
-class GTEST_API_ Matcher<const StringPiece&>
-    : public internal::MatcherBase<const StringPiece&> {
+class GTEST_API_ Matcher<const ::string&>
+    : public internal::MatcherBase<const ::string&> {
  public:
   Matcher() {}
 
-  explicit Matcher(const MatcherInterface<const StringPiece&>* impl)
-      : internal::MatcherBase<const StringPiece&>(impl) {}
+  explicit Matcher(const MatcherInterface<const ::string&>* impl)
+      : internal::MatcherBase<const ::string&>(impl) {}
 
   // Allows the user to write str instead of Eq(str) sometimes, where
-  // str is a string object.
-  Matcher(const internal::string& s);  // NOLINT
+  // str is a std::string object.
+  Matcher(const std::string& s);  // NOLINT
+
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a ::string object.
+  Matcher(const ::string& s);  // NOLINT
 
   // Allows the user to write "foo" instead of Eq("foo") sometimes.
   Matcher(const char* s);  // NOLINT
-
-  // Allows the user to pass StringPieces directly.
-  Matcher(StringPiece s);  // NOLINT
 };
 
 template <>
-class GTEST_API_ Matcher<StringPiece>
-    : public internal::MatcherBase<StringPiece> {
+class GTEST_API_ Matcher< ::string>
+    : public internal::MatcherBase< ::string> {
  public:
   Matcher() {}
 
-  explicit Matcher(const MatcherInterface<StringPiece>* impl)
-      : internal::MatcherBase<StringPiece>(impl) {}
+  explicit Matcher(const MatcherInterface<const ::string&>* impl)
+      : internal::MatcherBase< ::string>(impl) {}
+  explicit Matcher(const MatcherInterface< ::string>* impl)
+      : internal::MatcherBase< ::string>(impl) {}
 
   // Allows the user to write str instead of Eq(str) sometimes, where
-  // str is a string object.
-  Matcher(const internal::string& s);  // NOLINT
+  // str is a std::string object.
+  Matcher(const std::string& s);  // NOLINT
+
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a ::string object.
+  Matcher(const ::string& s);  // NOLINT
+
+  // Allows the user to write "foo" instead of Eq("foo") sometimes.
+  Matcher(const char* s);  // NOLINT
+};
+#endif  // GTEST_HAS_GLOBAL_STRING
+
+#if GTEST_HAS_ABSL
+// The following two specializations allow the user to write str
+// instead of Eq(str) and "foo" instead of Eq("foo") when a absl::string_view
+// matcher is expected.
+template <>
+class GTEST_API_ Matcher<const absl::string_view&>
+    : public internal::MatcherBase<const absl::string_view&> {
+ public:
+  Matcher() {}
+
+  explicit Matcher(const MatcherInterface<const absl::string_view&>* impl)
+      : internal::MatcherBase<const absl::string_view&>(impl) {}
+
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a std::string object.
+  Matcher(const std::string& s);  // NOLINT
+
+#if GTEST_HAS_GLOBAL_STRING
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a ::string object.
+  Matcher(const ::string& s);  // NOLINT
+#endif                         // GTEST_HAS_GLOBAL_STRING
 
   // Allows the user to write "foo" instead of Eq("foo") sometimes.
   Matcher(const char* s);  // NOLINT
 
-  // Allows the user to pass StringPieces directly.
-  Matcher(StringPiece s);  // NOLINT
+  // Allows the user to pass absl::string_views directly.
+  Matcher(absl::string_view s);  // NOLINT
 };
-#endif  // GTEST_HAS_STRING_PIECE_
+
+template <>
+class GTEST_API_ Matcher<absl::string_view>
+    : public internal::MatcherBase<absl::string_view> {
+ public:
+  Matcher() {}
+
+  explicit Matcher(const MatcherInterface<const absl::string_view&>* impl)
+      : internal::MatcherBase<absl::string_view>(impl) {}
+  explicit Matcher(const MatcherInterface<absl::string_view>* impl)
+      : internal::MatcherBase<absl::string_view>(impl) {}
+
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a std::string object.
+  Matcher(const std::string& s);  // NOLINT
+
+#if GTEST_HAS_GLOBAL_STRING
+  // Allows the user to write str instead of Eq(str) sometimes, where
+  // str is a ::string object.
+  Matcher(const ::string& s);  // NOLINT
+#endif                         // GTEST_HAS_GLOBAL_STRING
+
+  // Allows the user to write "foo" instead of Eq("foo") sometimes.
+  Matcher(const char* s);  // NOLINT
+
+  // Allows the user to pass absl::string_views directly.
+  Matcher(absl::string_view s);  // NOLINT
+};
+#endif  // GTEST_HAS_ABSL
+
+// Prints a matcher in a human-readable format.
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Matcher<T>& matcher) {
+  matcher.DescribeTo(&os);
+  return os;
+}
 
 // The PolymorphicMatcher class template makes it easy to implement a
 // polymorphic matcher (i.e. a matcher that can match values of more
@@ -5291,7 +5713,7 @@ class PolymorphicMatcher {
 
   template <typename T>
   operator Matcher<T>() const {
-    return Matcher<T>(new MonomorphicImpl<T>(impl_));
+    return Matcher<T>(new MonomorphicImpl<GTEST_REFERENCE_TO_CONST_(T)>(impl_));
   }
 
  private:
@@ -5381,21 +5803,18 @@ class MatcherCastImpl {
     return CastImpl(
         polymorphic_matcher_or_value,
         BooleanConstant<
-            internal::ImplicitlyConvertible<M, Matcher<T> >::value>());
+            internal::ImplicitlyConvertible<M, Matcher<T> >::value>(),
+        BooleanConstant<
+            internal::ImplicitlyConvertible<M, T>::value>());
   }
 
  private:
-  static Matcher<T> CastImpl(const M& value, BooleanConstant<false>) {
-    // M can't be implicitly converted to Matcher<T>, so M isn't a polymorphic
-    // matcher.  It must be a value then.  Use direct initialization to create
-    // a matcher.
-    return Matcher<T>(ImplicitCast_<T>(value));
-  }
-
+  template <bool Ignore>
   static Matcher<T> CastImpl(const M& polymorphic_matcher_or_value,
-                             BooleanConstant<true>) {
+                             BooleanConstant<true> /* convertible_to_matcher */,
+                             BooleanConstant<Ignore>) {
     // M is implicitly convertible to Matcher<T>, which means that either
-    // M is a polymorhpic matcher or Matcher<T> has an implicit constructor
+    // M is a polymorphic matcher or Matcher<T> has an implicit constructor
     // from M.  In both cases using the implicit conversion will produce a
     // matcher.
     //
@@ -5404,6 +5823,29 @@ class MatcherCastImpl {
     // (first to create T from M and then to create Matcher<T> from T).
     return polymorphic_matcher_or_value;
   }
+
+  // M can't be implicitly converted to Matcher<T>, so M isn't a polymorphic
+  // matcher. It's a value of a type implicitly convertible to T. Use direct
+  // initialization to create a matcher.
+  static Matcher<T> CastImpl(
+      const M& value, BooleanConstant<false> /* convertible_to_matcher */,
+      BooleanConstant<true> /* convertible_to_T */) {
+    return Matcher<T>(ImplicitCast_<T>(value));
+  }
+
+  // M can't be implicitly converted to either Matcher<T> or T. Attempt to use
+  // polymorphic matcher Eq(value) in this case.
+  //
+  // Note that we first attempt to perform an implicit cast on the value and
+  // only fall back to the polymorphic Eq() matcher afterwards because the
+  // latter calls bool operator==(const Lhs& lhs, const Rhs& rhs) in the end
+  // which might be undefined even when Rhs is implicitly convertible to Lhs
+  // (e.g. std::pair<const int, int> vs. std::pair<int, int>).
+  //
+  // We don't define this method inline as we need the declaration of Eq().
+  static Matcher<T> CastImpl(
+      const M& value, BooleanConstant<false> /* convertible_to_matcher */,
+      BooleanConstant<false> /* convertible_to_T */);
 };
 
 // This more specialized version is used when MatcherCast()'s argument
@@ -5424,6 +5866,22 @@ class MatcherCastImpl<T, Matcher<U> > {
 
     // We delegate the matching logic to the source matcher.
     virtual bool MatchAndExplain(T x, MatchResultListener* listener) const {
+#if GTEST_LANG_CXX11
+      using FromType = typename std::remove_cv<typename std::remove_pointer<
+          typename std::remove_reference<T>::type>::type>::type;
+      using ToType = typename std::remove_cv<typename std::remove_pointer<
+          typename std::remove_reference<U>::type>::type>::type;
+      // Do not allow implicitly converting base*/& to derived*/&.
+      static_assert(
+          // Do not trigger if only one of them is a pointer. That implies a
+          // regular conversion and not a down_cast.
+          (std::is_pointer<typename std::remove_reference<T>::type>::value !=
+           std::is_pointer<typename std::remove_reference<U>::type>::value) ||
+              std::is_same<FromType, ToType>::value ||
+              !std::is_base_of<FromType, ToType>::value,
+          "Can't implicitly convert from <base> to <derived>");
+#endif  // GTEST_LANG_CXX11
+
       return source_matcher_.MatchAndExplain(static_cast<U>(x), listener);
     }
 
@@ -5601,10 +6059,10 @@ class TuplePrefix {
     typename tuple_element<N - 1, MatcherTuple>::type matcher =
         get<N - 1>(matchers);
     typedef typename tuple_element<N - 1, ValueTuple>::type Value;
-    Value value = get<N - 1>(values);
+    GTEST_REFERENCE_TO_CONST_(Value) value = get<N - 1>(values);
     StringMatchResultListener listener;
     if (!matcher.MatchAndExplain(value, &listener)) {
-      // TODO(wan): include in the message the name of the parameter
+      // FIXME: include in the message the name of the parameter
       // as used in MOCK_METHOD*() when possible.
       *os << "  Expected arg #" << N - 1 << ": ";
       get<N - 1>(matchers).DescribeTo(os);
@@ -5706,10 +6164,12 @@ OutIter TransformTupleValues(Func f, const Tuple& t, OutIter out) {
 
 // Implements A<T>().
 template <typename T>
-class AnyMatcherImpl : public MatcherInterface<T> {
+class AnyMatcherImpl : public MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)> {
  public:
-  virtual bool MatchAndExplain(
-      T /* x */, MatchResultListener* /* listener */) const { return true; }
+  virtual bool MatchAndExplain(GTEST_REFERENCE_TO_CONST_(T) /* x */,
+                               MatchResultListener* /* listener */) const {
+    return true;
+  }
   virtual void DescribeTo(::std::ostream* os) const { *os << "is anything"; }
   virtual void DescribeNegationTo(::std::ostream* os) const {
     // This is mostly for completeness' safe, as it's not very useful
@@ -5979,6 +6439,19 @@ class StrEqualityMatcher {
                      bool case_sensitive)
       : string_(str), expect_eq_(expect_eq), case_sensitive_(case_sensitive) {}
 
+#if GTEST_HAS_ABSL
+  bool MatchAndExplain(const absl::string_view& s,
+                       MatchResultListener* listener) const {
+    if (s.data() == NULL) {
+      return !expect_eq_;
+    }
+    // This should fail to compile if absl::string_view is used with wide
+    // strings.
+    const StringType& str = string(s);
+    return MatchAndExplain(str, listener);
+  }
+#endif  // GTEST_HAS_ABSL
+
   // Accepts pointer types, particularly:
   //   const char*
   //   char*
@@ -5995,7 +6468,7 @@ class StrEqualityMatcher {
   // Matches anything that can convert to StringType.
   //
   // This is a template, not just a plain function with const StringType&,
-  // because StringPiece has some interfering non-explicit constructors.
+  // because absl::string_view has some interfering non-explicit constructors.
   template <typename MatcheeStringType>
   bool MatchAndExplain(const MatcheeStringType& s,
                        MatchResultListener* /* listener */) const {
@@ -6039,6 +6512,19 @@ class HasSubstrMatcher {
   explicit HasSubstrMatcher(const StringType& substring)
       : substring_(substring) {}
 
+#if GTEST_HAS_ABSL
+  bool MatchAndExplain(const absl::string_view& s,
+                       MatchResultListener* listener) const {
+    if (s.data() == NULL) {
+      return false;
+    }
+    // This should fail to compile if absl::string_view is used with wide
+    // strings.
+    const StringType& str = string(s);
+    return MatchAndExplain(str, listener);
+  }
+#endif  // GTEST_HAS_ABSL
+
   // Accepts pointer types, particularly:
   //   const char*
   //   char*
@@ -6052,7 +6538,7 @@ class HasSubstrMatcher {
   // Matches anything that can convert to StringType.
   //
   // This is a template, not just a plain function with const StringType&,
-  // because StringPiece has some interfering non-explicit constructors.
+  // because absl::string_view has some interfering non-explicit constructors.
   template <typename MatcheeStringType>
   bool MatchAndExplain(const MatcheeStringType& s,
                        MatchResultListener* /* listener */) const {
@@ -6086,6 +6572,19 @@ class StartsWithMatcher {
   explicit StartsWithMatcher(const StringType& prefix) : prefix_(prefix) {
   }
 
+#if GTEST_HAS_ABSL
+  bool MatchAndExplain(const absl::string_view& s,
+                       MatchResultListener* listener) const {
+    if (s.data() == NULL) {
+      return false;
+    }
+    // This should fail to compile if absl::string_view is used with wide
+    // strings.
+    const StringType& str = string(s);
+    return MatchAndExplain(str, listener);
+  }
+#endif  // GTEST_HAS_ABSL
+
   // Accepts pointer types, particularly:
   //   const char*
   //   char*
@@ -6099,7 +6598,7 @@ class StartsWithMatcher {
   // Matches anything that can convert to StringType.
   //
   // This is a template, not just a plain function with const StringType&,
-  // because StringPiece has some interfering non-explicit constructors.
+  // because absl::string_view has some interfering non-explicit constructors.
   template <typename MatcheeStringType>
   bool MatchAndExplain(const MatcheeStringType& s,
                        MatchResultListener* /* listener */) const {
@@ -6132,6 +6631,19 @@ class EndsWithMatcher {
  public:
   explicit EndsWithMatcher(const StringType& suffix) : suffix_(suffix) {}
 
+#if GTEST_HAS_ABSL
+  bool MatchAndExplain(const absl::string_view& s,
+                       MatchResultListener* listener) const {
+    if (s.data() == NULL) {
+      return false;
+    }
+    // This should fail to compile if absl::string_view is used with wide
+    // strings.
+    const StringType& str = string(s);
+    return MatchAndExplain(str, listener);
+  }
+#endif  // GTEST_HAS_ABSL
+
   // Accepts pointer types, particularly:
   //   const char*
   //   char*
@@ -6145,7 +6657,7 @@ class EndsWithMatcher {
   // Matches anything that can convert to StringType.
   //
   // This is a template, not just a plain function with const StringType&,
-  // because StringPiece has some interfering non-explicit constructors.
+  // because absl::string_view has some interfering non-explicit constructors.
   template <typename MatcheeStringType>
   bool MatchAndExplain(const MatcheeStringType& s,
                        MatchResultListener* /* listener */) const {
@@ -6178,6 +6690,13 @@ class MatchesRegexMatcher {
   MatchesRegexMatcher(const RE* regex, bool full_match)
       : regex_(regex), full_match_(full_match) {}
 
+#if GTEST_HAS_ABSL
+  bool MatchAndExplain(const absl::string_view& s,
+                       MatchResultListener* listener) const {
+    return s.data() && MatchAndExplain(string(s), listener);
+  }
+#endif  // GTEST_HAS_ABSL
+
   // Accepts pointer types, particularly:
   //   const char*
   //   char*
@@ -6191,7 +6710,7 @@ class MatchesRegexMatcher {
   // Matches anything that can convert to std::string.
   //
   // This is a template, not just a plain function with const std::string&,
-  // because StringPiece has some interfering non-explicit constructors.
+  // because absl::string_view has some interfering non-explicit constructors.
   template <class MatcheeStringType>
   bool MatchAndExplain(const MatcheeStringType& s,
                        MatchResultListener* /* listener */) const {
@@ -6291,12 +6810,13 @@ class Ge2Matcher : public PairMatchBase<Ge2Matcher, AnyGe> {
 // will prevent different instantiations of NotMatcher from sharing
 // the same NotMatcherImpl<T> class.
 template <typename T>
-class NotMatcherImpl : public MatcherInterface<T> {
+class NotMatcherImpl : public MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)> {
  public:
   explicit NotMatcherImpl(const Matcher<T>& matcher)
       : matcher_(matcher) {}
 
-  virtual bool MatchAndExplain(T x, MatchResultListener* listener) const {
+  virtual bool MatchAndExplain(GTEST_REFERENCE_TO_CONST_(T) x,
+                               MatchResultListener* listener) const {
     return !matcher_.MatchAndExplain(x, listener);
   }
 
@@ -6339,117 +6859,66 @@ class NotMatcher {
 // that will prevent different instantiations of BothOfMatcher from
 // sharing the same BothOfMatcherImpl<T> class.
 template <typename T>
-class BothOfMatcherImpl : public MatcherInterface<T> {
+class AllOfMatcherImpl
+    : public MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)> {
  public:
-  BothOfMatcherImpl(const Matcher<T>& matcher1, const Matcher<T>& matcher2)
-      : matcher1_(matcher1), matcher2_(matcher2) {}
+  explicit AllOfMatcherImpl(std::vector<Matcher<T> > matchers)
+      : matchers_(internal::move(matchers)) {}
 
   virtual void DescribeTo(::std::ostream* os) const {
     *os << "(";
-    matcher1_.DescribeTo(os);
-    *os << ") and (";
-    matcher2_.DescribeTo(os);
+    for (size_t i = 0; i < matchers_.size(); ++i) {
+      if (i != 0) *os << ") and (";
+      matchers_[i].DescribeTo(os);
+    }
     *os << ")";
   }
 
   virtual void DescribeNegationTo(::std::ostream* os) const {
     *os << "(";
-    matcher1_.DescribeNegationTo(os);
-    *os << ") or (";
-    matcher2_.DescribeNegationTo(os);
+    for (size_t i = 0; i < matchers_.size(); ++i) {
+      if (i != 0) *os << ") or (";
+      matchers_[i].DescribeNegationTo(os);
+    }
     *os << ")";
   }
 
-  virtual bool MatchAndExplain(T x, MatchResultListener* listener) const {
+  virtual bool MatchAndExplain(GTEST_REFERENCE_TO_CONST_(T) x,
+                               MatchResultListener* listener) const {
     // If either matcher1_ or matcher2_ doesn't match x, we only need
     // to explain why one of them fails.
-    StringMatchResultListener listener1;
-    if (!matcher1_.MatchAndExplain(x, &listener1)) {
-      *listener << listener1.str();
-      return false;
-    }
+    std::string all_match_result;
 
-    StringMatchResultListener listener2;
-    if (!matcher2_.MatchAndExplain(x, &listener2)) {
-      *listener << listener2.str();
-      return false;
+    for (size_t i = 0; i < matchers_.size(); ++i) {
+      StringMatchResultListener slistener;
+      if (matchers_[i].MatchAndExplain(x, &slistener)) {
+        if (all_match_result.empty()) {
+          all_match_result = slistener.str();
+        } else {
+          std::string result = slistener.str();
+          if (!result.empty()) {
+            all_match_result += ", and ";
+            all_match_result += result;
+          }
+        }
+      } else {
+        *listener << slistener.str();
+        return false;
+      }
     }
 
     // Otherwise we need to explain why *both* of them match.
-    const std::string s1 = listener1.str();
-    const std::string s2 = listener2.str();
-
-    if (s1 == "") {
-      *listener << s2;
-    } else {
-      *listener << s1;
-      if (s2 != "") {
-        *listener << ", and " << s2;
-      }
-    }
+    *listener << all_match_result;
     return true;
   }
 
  private:
-  const Matcher<T> matcher1_;
-  const Matcher<T> matcher2_;
+  const std::vector<Matcher<T> > matchers_;
 
-  GTEST_DISALLOW_ASSIGN_(BothOfMatcherImpl);
+  GTEST_DISALLOW_ASSIGN_(AllOfMatcherImpl);
 };
 
 #if GTEST_LANG_CXX11
-// MatcherList provides mechanisms for storing a variable number of matchers in
-// a list structure (ListType) and creating a combining matcher from such a
-// list.
-// The template is defined recursively using the following template parameters:
-//   * kSize is the length of the MatcherList.
-//   * Head is the type of the first matcher of the list.
-//   * Tail denotes the types of the remaining matchers of the list.
-template <int kSize, typename Head, typename... Tail>
-struct MatcherList {
-  typedef MatcherList<kSize - 1, Tail...> MatcherListTail;
-  typedef ::std::pair<Head, typename MatcherListTail::ListType> ListType;
-
-  // BuildList stores variadic type values in a nested pair structure.
-  // Example:
-  // MatcherList<3, int, string, float>::BuildList(5, "foo", 2.0) will return
-  // the corresponding result of type pair<int, pair<string, float>>.
-  static ListType BuildList(const Head& matcher, const Tail&... tail) {
-    return ListType(matcher, MatcherListTail::BuildList(tail...));
-  }
-
-  // CreateMatcher<T> creates a Matcher<T> from a given list of matchers (built
-  // by BuildList()). CombiningMatcher<T> is used to combine the matchers of the
-  // list. CombiningMatcher<T> must implement MatcherInterface<T> and have a
-  // constructor taking two Matcher<T>s as input.
-  template <typename T, template <typename /* T */> class CombiningMatcher>
-  static Matcher<T> CreateMatcher(const ListType& matchers) {
-    return Matcher<T>(new CombiningMatcher<T>(
-        SafeMatcherCast<T>(matchers.first),
-        MatcherListTail::template CreateMatcher<T, CombiningMatcher>(
-            matchers.second)));
-  }
-};
-
-// The following defines the base case for the recursive definition of
-// MatcherList.
-template <typename Matcher1, typename Matcher2>
-struct MatcherList<2, Matcher1, Matcher2> {
-  typedef ::std::pair<Matcher1, Matcher2> ListType;
-
-  static ListType BuildList(const Matcher1& matcher1,
-                            const Matcher2& matcher2) {
-    return ::std::pair<Matcher1, Matcher2>(matcher1, matcher2);
-  }
-
-  template <typename T, template <typename /* T */> class CombiningMatcher>
-  static Matcher<T> CreateMatcher(const ListType& matchers) {
-    return Matcher<T>(new CombiningMatcher<T>(
-        SafeMatcherCast<T>(matchers.first),
-        SafeMatcherCast<T>(matchers.second)));
-  }
-};
-
 // VariadicMatcher is used for the variadic implementation of
 // AllOf(m_1, m_2, ...) and AnyOf(m_1, m_2, ...).
 // CombiningMatcher<T> is used to recursively combine the provided matchers
@@ -6458,27 +6927,40 @@ template <template <typename T> class CombiningMatcher, typename... Args>
 class VariadicMatcher {
  public:
   VariadicMatcher(const Args&... matchers)  // NOLINT
-      : matchers_(MatcherListType::BuildList(matchers...)) {}
+      : matchers_(matchers...) {
+    static_assert(sizeof...(Args) > 0, "Must have at least one matcher.");
+  }
 
   // This template type conversion operator allows an
   // VariadicMatcher<Matcher1, Matcher2...> object to match any type that
   // all of the provided matchers (Matcher1, Matcher2, ...) can match.
   template <typename T>
   operator Matcher<T>() const {
-    return MatcherListType::template CreateMatcher<T, CombiningMatcher>(
-        matchers_);
+    std::vector<Matcher<T> > values;
+    CreateVariadicMatcher<T>(&values, std::integral_constant<size_t, 0>());
+    return Matcher<T>(new CombiningMatcher<T>(internal::move(values)));
   }
 
  private:
-  typedef MatcherList<sizeof...(Args), Args...> MatcherListType;
+  template <typename T, size_t I>
+  void CreateVariadicMatcher(std::vector<Matcher<T> >* values,
+                             std::integral_constant<size_t, I>) const {
+    values->push_back(SafeMatcherCast<T>(std::get<I>(matchers_)));
+    CreateVariadicMatcher<T>(values, std::integral_constant<size_t, I + 1>());
+  }
 
-  const typename MatcherListType::ListType matchers_;
+  template <typename T>
+  void CreateVariadicMatcher(
+      std::vector<Matcher<T> >*,
+      std::integral_constant<size_t, sizeof...(Args)>) const {}
+
+  tuple<Args...> matchers_;
 
   GTEST_DISALLOW_ASSIGN_(VariadicMatcher);
 };
 
 template <typename... Args>
-using AllOfMatcher = VariadicMatcher<BothOfMatcherImpl, Args...>;
+using AllOfMatcher = VariadicMatcher<AllOfMatcherImpl, Args...>;
 
 #endif  // GTEST_LANG_CXX11
 
@@ -6495,8 +6977,10 @@ class BothOfMatcher {
   // both Matcher1 and Matcher2 can match.
   template <typename T>
   operator Matcher<T>() const {
-    return Matcher<T>(new BothOfMatcherImpl<T>(SafeMatcherCast<T>(matcher1_),
-                                               SafeMatcherCast<T>(matcher2_)));
+    std::vector<Matcher<T> > values;
+    values.push_back(SafeMatcherCast<T>(matcher1_));
+    values.push_back(SafeMatcherCast<T>(matcher2_));
+    return Matcher<T>(new AllOfMatcherImpl<T>(internal::move(values)));
   }
 
  private:
@@ -6511,68 +6995,69 @@ class BothOfMatcher {
 // that will prevent different instantiations of AnyOfMatcher from
 // sharing the same EitherOfMatcherImpl<T> class.
 template <typename T>
-class EitherOfMatcherImpl : public MatcherInterface<T> {
+class AnyOfMatcherImpl
+    : public MatcherInterface<GTEST_REFERENCE_TO_CONST_(T)> {
  public:
-  EitherOfMatcherImpl(const Matcher<T>& matcher1, const Matcher<T>& matcher2)
-      : matcher1_(matcher1), matcher2_(matcher2) {}
+  explicit AnyOfMatcherImpl(std::vector<Matcher<T> > matchers)
+      : matchers_(internal::move(matchers)) {}
 
   virtual void DescribeTo(::std::ostream* os) const {
     *os << "(";
-    matcher1_.DescribeTo(os);
-    *os << ") or (";
-    matcher2_.DescribeTo(os);
+    for (size_t i = 0; i < matchers_.size(); ++i) {
+      if (i != 0) *os << ") or (";
+      matchers_[i].DescribeTo(os);
+    }
     *os << ")";
   }
 
   virtual void DescribeNegationTo(::std::ostream* os) const {
     *os << "(";
-    matcher1_.DescribeNegationTo(os);
-    *os << ") and (";
-    matcher2_.DescribeNegationTo(os);
+    for (size_t i = 0; i < matchers_.size(); ++i) {
+      if (i != 0) *os << ") and (";
+      matchers_[i].DescribeNegationTo(os);
+    }
     *os << ")";
   }
 
-  virtual bool MatchAndExplain(T x, MatchResultListener* listener) const {
+  virtual bool MatchAndExplain(GTEST_REFERENCE_TO_CONST_(T) x,
+                               MatchResultListener* listener) const {
+    std::string no_match_result;
+
     // If either matcher1_ or matcher2_ matches x, we just need to
     // explain why *one* of them matches.
-    StringMatchResultListener listener1;
-    if (matcher1_.MatchAndExplain(x, &listener1)) {
-      *listener << listener1.str();
-      return true;
-    }
-
-    StringMatchResultListener listener2;
-    if (matcher2_.MatchAndExplain(x, &listener2)) {
-      *listener << listener2.str();
-      return true;
+    for (size_t i = 0; i < matchers_.size(); ++i) {
+      StringMatchResultListener slistener;
+      if (matchers_[i].MatchAndExplain(x, &slistener)) {
+        *listener << slistener.str();
+        return true;
+      } else {
+        if (no_match_result.empty()) {
+          no_match_result = slistener.str();
+        } else {
+          std::string result = slistener.str();
+          if (!result.empty()) {
+            no_match_result += ", and ";
+            no_match_result += result;
+          }
+        }
+      }
     }
 
     // Otherwise we need to explain why *both* of them fail.
-    const std::string s1 = listener1.str();
-    const std::string s2 = listener2.str();
-
-    if (s1 == "") {
-      *listener << s2;
-    } else {
-      *listener << s1;
-      if (s2 != "") {
-        *listener << ", and " << s2;
-      }
-    }
+    *listener << no_match_result;
     return false;
   }
 
  private:
-  const Matcher<T> matcher1_;
-  const Matcher<T> matcher2_;
+  const std::vector<Matcher<T> > matchers_;
 
-  GTEST_DISALLOW_ASSIGN_(EitherOfMatcherImpl);
+  GTEST_DISALLOW_ASSIGN_(AnyOfMatcherImpl);
 };
 
 #if GTEST_LANG_CXX11
 // AnyOfMatcher is used for the variadic implementation of AnyOf(m_1, m_2, ...).
 template <typename... Args>
-using AnyOfMatcher = VariadicMatcher<EitherOfMatcherImpl, Args...>;
+using AnyOfMatcher = VariadicMatcher<AnyOfMatcherImpl, Args...>;
 
 #endif  // GTEST_LANG_CXX11
 
@@ -6590,8 +7075,10 @@ class EitherOfMatcher {
   // both Matcher1 and Matcher2 can match.
   template <typename T>
   operator Matcher<T>() const {
-    return Matcher<T>(new EitherOfMatcherImpl<T>(
-        SafeMatcherCast<T>(matcher1_), SafeMatcherCast<T>(matcher2_)));
+    std::vector<Matcher<T> > values;
+    values.push_back(SafeMatcherCast<T>(matcher1_));
+    values.push_back(SafeMatcherCast<T>(matcher2_));
+    return Matcher<T>(new AnyOfMatcherImpl<T>(internal::move(values)));
   }
 
  private:
@@ -6887,6 +7374,82 @@ class FloatingEqMatcher {
   GTEST_DISALLOW_ASSIGN_(FloatingEqMatcher);
 };
 
+// A 2-tuple ("binary") wrapper around FloatingEqMatcher:
+// FloatingEq2Matcher() matches (x, y) by matching FloatingEqMatcher(x, false)
+// against y, and FloatingEq2Matcher(e) matches FloatingEqMatcher(x, false, e)
+// against y. The former implements "Eq", the latter "Near". At present, there
+// is no version that compares NaNs as equal.
+template <typename FloatType>
+class FloatingEq2Matcher {
+ public:
+  FloatingEq2Matcher() { Init(-1, false); }
+
+  explicit FloatingEq2Matcher(bool nan_eq_nan) { Init(-1, nan_eq_nan); }
+
+  explicit FloatingEq2Matcher(FloatType max_abs_error) {
+    Init(max_abs_error, false);
+  }
+
+  FloatingEq2Matcher(FloatType max_abs_error, bool nan_eq_nan) {
+    Init(max_abs_error, nan_eq_nan);
+  }
+
+  template <typename T1, typename T2>
+  operator Matcher< ::testing::tuple<T1, T2> >() const {
+    return MakeMatcher(
+        new Impl< ::testing::tuple<T1, T2> >(max_abs_error_, nan_eq_nan_));
+  }
+  template <typename T1, typename T2>
+  operator Matcher<const ::testing::tuple<T1, T2>&>() const {
+    return MakeMatcher(
+        new Impl<const ::testing::tuple<T1, T2>&>(max_abs_error_, nan_eq_nan_));
+  }
+
+ private:
+  static ::std::ostream& GetDesc(::std::ostream& os) {  // NOLINT
+    return os << "an almost-equal pair";
+  }
+
+  template <typename Tuple>
+  class Impl : public MatcherInterface<Tuple> {
+   public:
+    Impl(FloatType max_abs_error, bool nan_eq_nan) :
+        max_abs_error_(max_abs_error),
+        nan_eq_nan_(nan_eq_nan) {}
+
+    virtual bool MatchAndExplain(Tuple args,
+                                 MatchResultListener* listener) const {
+      if (max_abs_error_ == -1) {
+        FloatingEqMatcher<FloatType> fm(::testing::get<0>(args), nan_eq_nan_);
+        return static_cast<Matcher<FloatType> >(fm).MatchAndExplain(
+            ::testing::get<1>(args), listener);
+      } else {
+        FloatingEqMatcher<FloatType> fm(::testing::get<0>(args), nan_eq_nan_,
+                                        max_abs_error_);
+        return static_cast<Matcher<FloatType> >(fm).MatchAndExplain(
+            ::testing::get<1>(args), listener);
+      }
+    }
+    virtual void DescribeTo(::std::ostream* os) const {
+      *os << "are " << GetDesc;
+    }
+    virtual void DescribeNegationTo(::std::ostream* os) const {
+      *os << "aren't " << GetDesc;
+    }
+
+   private:
+    FloatType max_abs_error_;
+    const bool nan_eq_nan_;
+  };
+
+  void Init(FloatType max_abs_error_val, bool nan_eq_nan_val) {
+    max_abs_error_ = max_abs_error_val;
+    nan_eq_nan_ = nan_eq_nan_val;
+  }
+  FloatType max_abs_error_;
+  bool nan_eq_nan_;
+};
+
 // Implements the Pointee(m) matcher for matching a pointer whose
 // pointee matches matcher m.  The pointer can be either raw or smart.
 template <typename InnerMatcher>
@@ -6904,7 +7467,8 @@ class PointeeMatcher {
   // enough for implementing the DescribeTo() method of Pointee().
   template <typename Pointer>
   operator Matcher<Pointer>() const {
-    return MakeMatcher(new Impl<Pointer>(matcher_));
+    return Matcher<Pointer>(
+        new Impl<GTEST_REFERENCE_TO_CONST_(Pointer)>(matcher_));
   }
 
  private:
@@ -6948,6 +7512,7 @@ class PointeeMatcher {
   GTEST_DISALLOW_ASSIGN_(PointeeMatcher);
 };
 
+#if GTEST_HAS_RTTI
 // Implements the WhenDynamicCastTo<T>(m) matcher that matches a pointer or
 // reference that matches inner_matcher when dynamic_cast<T> is applied.
 // The result of dynamic_cast<To> is forwarded to the inner matcher.
@@ -6974,11 +7539,7 @@ class WhenDynamicCastToMatcherBase {
   const Matcher<To> matcher_;
 
   static std::string GetToName() {
-#if GTEST_HAS_RTTI
     return GetTypeName<To>();
-#else  // GTEST_HAS_RTTI
-    return "the target type";
-#endif  // GTEST_HAS_RTTI
   }
 
  private:
@@ -6999,7 +7560,7 @@ class WhenDynamicCastToMatcher : public WhenDynamicCastToMatcherBase<To> {
 
   template <typename From>
   bool MatchAndExplain(From from, MatchResultListener* listener) const {
-    // TODO(sbenza): Add more detail on failures. ie did the dyn_cast fail?
+    // FIXME: Add more detail on failures. ie did the dyn_cast fail?
     To to = dynamic_cast<To>(from);
     return MatchPrintAndExplain(to, this->matcher_, listener);
   }
@@ -7024,6 +7585,7 @@ class WhenDynamicCastToMatcher<To&> : public WhenDynamicCastToMatcherBase<To&> {
     return MatchPrintAndExplain(*to, this->matcher_, listener);
   }
 };
+#endif  // GTEST_HAS_RTTI
 
 // Implements the Field() matcher for matching a field (i.e. member
 // variable) of an object.
@@ -7032,15 +7594,21 @@ class FieldMatcher {
  public:
   FieldMatcher(FieldType Class::*field,
                const Matcher<const FieldType&>& matcher)
-      : field_(field), matcher_(matcher) {}
+      : field_(field), matcher_(matcher), whose_field_("whose given field ") {}
+
+  FieldMatcher(const std::string& field_name, FieldType Class::*field,
+               const Matcher<const FieldType&>& matcher)
+      : field_(field),
+        matcher_(matcher),
+        whose_field_("whose field `" + field_name + "` ") {}
 
   void DescribeTo(::std::ostream* os) const {
-    *os << "is an object whose given field ";
+    *os << "is an object " << whose_field_;
     matcher_.DescribeTo(os);
   }
 
   void DescribeNegationTo(::std::ostream* os) const {
-    *os << "is an object whose given field ";
+    *os << "is an object " << whose_field_;
     matcher_.DescribeNegationTo(os);
   }
 
@@ -7058,7 +7626,7 @@ class FieldMatcher {
   // true_type iff the Field() matcher is used to match a pointer.
   bool MatchAndExplainImpl(false_type /* is_not_pointer */, const Class& obj,
                            MatchResultListener* listener) const {
-    *listener << "whose given field is ";
+    *listener << whose_field_ << "is ";
     return MatchPrintAndExplain(obj.*field_, matcher_, listener);
   }
 
@@ -7076,6 +7644,10 @@ class FieldMatcher {
 
   const FieldType Class::*field_;
   const Matcher<const FieldType&> matcher_;
+
+  // Contains either "whose given field " if the name of the field is unknown
+  // or "whose field `name_of_field` " if the name is known.
+  const std::string whose_field_;
 
   GTEST_DISALLOW_ASSIGN_(FieldMatcher);
 };
@@ -7095,15 +7667,23 @@ class PropertyMatcher {
   typedef GTEST_REFERENCE_TO_CONST_(PropertyType) RefToConstProperty;
 
   PropertyMatcher(Property property, const Matcher<RefToConstProperty>& matcher)
-      : property_(property), matcher_(matcher) {}
+      : property_(property),
+        matcher_(matcher),
+        whose_property_("whose given property ") {}
+
+  PropertyMatcher(const std::string& property_name, Property property,
+                  const Matcher<RefToConstProperty>& matcher)
+      : property_(property),
+        matcher_(matcher),
+        whose_property_("whose property `" + property_name + "` ") {}
 
   void DescribeTo(::std::ostream* os) const {
-    *os << "is an object whose given property ";
+    *os << "is an object " << whose_property_;
     matcher_.DescribeTo(os);
   }
 
   void DescribeNegationTo(::std::ostream* os) const {
-    *os << "is an object whose given property ";
+    *os << "is an object " << whose_property_;
     matcher_.DescribeNegationTo(os);
   }
 
@@ -7121,7 +7701,7 @@ class PropertyMatcher {
   // true_type iff the Property() matcher is used to match a pointer.
   bool MatchAndExplainImpl(false_type /* is_not_pointer */, const Class& obj,
                            MatchResultListener* listener) const {
-    *listener << "whose given property is ";
+    *listener << whose_property_ << "is ";
     // Cannot pass the return value (for example, int) to MatchPrintAndExplain,
     // which takes a non-const reference as argument.
 #if defined(_PREFAST_ ) && _MSC_VER == 1800
@@ -7150,21 +7730,29 @@ class PropertyMatcher {
   Property property_;
   const Matcher<RefToConstProperty> matcher_;
 
+  // Contains either "whose given property " if the name of the property is
+  // unknown or "whose property `name_of_property` " if the name is known.
+  const std::string whose_property_;
+
   GTEST_DISALLOW_ASSIGN_(PropertyMatcher);
 };
 
 // Type traits specifying various features of different functors for ResultOf.
 // The default template specifies features for functor objects.
-// Functor classes have to typedef argument_type and result_type
-// to be compatible with ResultOf.
 template <typename Functor>
 struct CallableTraits {
-  typedef typename Functor::result_type ResultType;
   typedef Functor StorageType;
 
   static void CheckIsValid(Functor /* functor */) {}
+
+#if GTEST_LANG_CXX11
+  template <typename T>
+  static auto Invoke(Functor f, T arg) -> decltype(f(arg)) { return f(arg); }
+#else
+  typedef typename Functor::result_type ResultType;
   template <typename T>
   static ResultType Invoke(Functor f, T arg) { return f(arg); }
+#endif
 };
 
 // Specialization for function pointers.
@@ -7185,13 +7773,11 @@ struct CallableTraits<ResType(*)(ArgType)> {
 
 // Implements the ResultOf() matcher for matching a return value of a
 // unary function of an object.
-template <typename Callable>
+template <typename Callable, typename InnerMatcher>
 class ResultOfMatcher {
  public:
-  typedef typename CallableTraits<Callable>::ResultType ResultType;
-
-  ResultOfMatcher(Callable callable, const Matcher<ResultType>& matcher)
-      : callable_(callable), matcher_(matcher) {
+  ResultOfMatcher(Callable callable, InnerMatcher matcher)
+      : callable_(internal::move(callable)), matcher_(internal::move(matcher)) {
     CallableTraits<Callable>::CheckIsValid(callable_);
   }
 
@@ -7205,9 +7791,17 @@ class ResultOfMatcher {
 
   template <typename T>
   class Impl : public MatcherInterface<T> {
+#if GTEST_LANG_CXX11
+    using ResultType = decltype(CallableTraits<Callable>::template Invoke<T>(
+        std::declval<CallableStorageType>(), std::declval<T>()));
+#else
+    typedef typename CallableTraits<Callable>::ResultType ResultType;
+#endif
+
    public:
-    Impl(CallableStorageType callable, const Matcher<ResultType>& matcher)
-        : callable_(callable), matcher_(matcher) {}
+    template <typename M>
+    Impl(const CallableStorageType& callable, const M& matcher)
+        : callable_(callable), matcher_(MatcherCast<ResultType>(matcher)) {}
 
     virtual void DescribeTo(::std::ostream* os) const {
       *os << "is mapped by the given callable to a value that ";
@@ -7221,8 +7815,10 @@ class ResultOfMatcher {
 
     virtual bool MatchAndExplain(T obj, MatchResultListener* listener) const {
       *listener << "which is mapped by the given callable to ";
-      // Cannot pass the return value (for example, int) to
-      // MatchPrintAndExplain, which takes a non-const reference as argument.
+      // Cannot pass the return value directly to MatchPrintAndExplain, which
+      // takes a non-const reference as argument.
+      // Also, specifying template argument explicitly is needed because T could
+      // be a non-const reference (e.g. Matcher<Uncopyable&>).
       ResultType result =
           CallableTraits<Callable>::template Invoke<T>(callable_, obj);
       return MatchPrintAndExplain(result, matcher_, listener);
@@ -7232,7 +7828,7 @@ class ResultOfMatcher {
     // Functors often define operator() as non-const method even though
     // they are actually stateless. But we need to use them even when
     // 'this' is a const pointer. It's the user's responsibility not to
-    // use stateful callables with ResultOf(), which does't guarantee
+    // use stateful callables with ResultOf(), which doesn't guarantee
     // how many times the callable will be invoked.
     mutable CallableStorageType callable_;
     const Matcher<ResultType> matcher_;
@@ -7241,7 +7837,7 @@ class ResultOfMatcher {
   };  // class Impl
 
   const CallableStorageType callable_;
-  const Matcher<ResultType> matcher_;
+  const InnerMatcher matcher_;
 
   GTEST_DISALLOW_ASSIGN_(ResultOfMatcher);
 };
@@ -7543,6 +8139,10 @@ class WhenSortedByMatcher {
 // container and the RHS container respectively.
 template <typename TupleMatcher, typename RhsContainer>
 class PointwiseMatcher {
+  GTEST_COMPILE_ASSERT_(
+      !IsHashTable<GTEST_REMOVE_REFERENCE_AND_CONST_(RhsContainer)>::value,
+      use_UnorderedPointwise_with_hash_tables);
+
  public:
   typedef internal::StlContainerView<RhsContainer> RhsView;
   typedef typename RhsView::type RhsStlContainer;
@@ -7560,6 +8160,10 @@ class PointwiseMatcher {
 
   template <typename LhsContainer>
   operator Matcher<LhsContainer>() const {
+    GTEST_COMPILE_ASSERT_(
+        !IsHashTable<GTEST_REMOVE_REFERENCE_AND_CONST_(LhsContainer)>::value,
+        use_UnorderedPointwise_with_hash_tables);
+
     return MakeMatcher(new Impl<LhsContainer>(tuple_matcher_, rhs_));
   }
 
@@ -7610,12 +8214,15 @@ class PointwiseMatcher {
       typename LhsStlContainer::const_iterator left = lhs_stl_container.begin();
       typename RhsStlContainer::const_iterator right = rhs_.begin();
       for (size_t i = 0; i != actual_size; ++i, ++left, ++right) {
-        const InnerMatcherArg value_pair(*left, *right);
-
         if (listener->IsInterested()) {
           StringMatchResultListener inner_listener;
+          // Create InnerMatcherArg as a temporarily object to avoid it outlives
+          // *left and *right. Dereference or the conversion to `const T&` may
+          // return temp objects, e.g for vector<bool>.
           if (!mono_tuple_matcher_.MatchAndExplain(
-                  value_pair, &inner_listener)) {
+                  InnerMatcherArg(ImplicitCast_<const LhsValue&>(*left),
+                                  ImplicitCast_<const RhsValue&>(*right)),
+                  &inner_listener)) {
             *listener << "where the value pair (";
             UniversalPrint(*left, listener->stream());
             *listener << ", ";
@@ -7625,7 +8232,9 @@ class PointwiseMatcher {
             return false;
           }
         } else {
-          if (!mono_tuple_matcher_.Matches(value_pair))
+          if (!mono_tuple_matcher_.Matches(
+                  InnerMatcherArg(ImplicitCast_<const LhsValue&>(*left),
+                                  ImplicitCast_<const RhsValue&>(*right))))
             return false;
         }
       }
@@ -7783,6 +8392,50 @@ class EachMatcher {
   GTEST_DISALLOW_ASSIGN_(EachMatcher);
 };
 
+struct Rank1 {};
+struct Rank0 : Rank1 {};
+
+namespace pair_getters {
+#if GTEST_LANG_CXX11
+using std::get;
+template <typename T>
+auto First(T& x, Rank1) -> decltype(get<0>(x)) {  // NOLINT
+  return get<0>(x);
+}
+template <typename T>
+auto First(T& x, Rank0) -> decltype((x.first)) {  // NOLINT
+  return x.first;
+}
+
+template <typename T>
+auto Second(T& x, Rank1) -> decltype(get<1>(x)) {  // NOLINT
+  return get<1>(x);
+}
+template <typename T>
+auto Second(T& x, Rank0) -> decltype((x.second)) {  // NOLINT
+  return x.second;
+}
+#else
+template <typename T>
+typename T::first_type& First(T& x, Rank0) {  // NOLINT
+  return x.first;
+}
+template <typename T>
+const typename T::first_type& First(const T& x, Rank0) {
+  return x.first;
+}
+
+template <typename T>
+typename T::second_type& Second(T& x, Rank0) {  // NOLINT
+  return x.second;
+}
+template <typename T>
+const typename T::second_type& Second(const T& x, Rank0) {
+  return x.second;
+}
+#endif  // GTEST_LANG_CXX11
+}  // namespace pair_getters
+
 // Implements Key(inner_matcher) for the given argument pair type.
 // Key(inner_matcher) matches an std::pair whose 'first' field matches
 // inner_matcher.  For example, Contains(Key(Ge(5))) can be used to match an
@@ -7803,8 +8456,8 @@ class KeyMatcherImpl : public MatcherInterface<PairType> {
   virtual bool MatchAndExplain(PairType key_value,
                                MatchResultListener* listener) const {
     StringMatchResultListener inner_listener;
-    const bool match = inner_matcher_.MatchAndExplain(key_value.first,
-                                                      &inner_listener);
+    const bool match = inner_matcher_.MatchAndExplain(
+        pair_getters::First(key_value, Rank0()), &inner_listener);
     const std::string explanation = inner_listener.str();
     if (explanation != "") {
       *listener << "whose first field is a value " << explanation;
@@ -7887,18 +8540,18 @@ class PairMatcherImpl : public MatcherInterface<PairType> {
     if (!listener->IsInterested()) {
       // If the listener is not interested, we don't need to construct the
       // explanation.
-      return first_matcher_.Matches(a_pair.first) &&
-             second_matcher_.Matches(a_pair.second);
+      return first_matcher_.Matches(pair_getters::First(a_pair, Rank0())) &&
+             second_matcher_.Matches(pair_getters::Second(a_pair, Rank0()));
     }
     StringMatchResultListener first_inner_listener;
-    if (!first_matcher_.MatchAndExplain(a_pair.first,
+    if (!first_matcher_.MatchAndExplain(pair_getters::First(a_pair, Rank0()),
                                         &first_inner_listener)) {
       *listener << "whose first field does not match";
       PrintIfNotEmpty(first_inner_listener.str(), listener->stream());
       return false;
     }
     StringMatchResultListener second_inner_listener;
-    if (!second_matcher_.MatchAndExplain(a_pair.second,
+    if (!second_matcher_.MatchAndExplain(pair_getters::Second(a_pair, Rank0()),
                                          &second_inner_listener)) {
       *listener << "whose second field does not match";
       PrintIfNotEmpty(second_inner_listener.str(), listener->stream());
@@ -8345,6 +8998,11 @@ class ElementsAreMatcher {
 
   template <typename Container>
   operator Matcher<Container>() const {
+    GTEST_COMPILE_ASSERT_(
+        !IsHashTable<GTEST_REMOVE_REFERENCE_AND_CONST_(Container)>::value ||
+            ::testing::tuple_size<MatcherTuple>::value < 2,
+        use_UnorderedElementsAre_with_hash_tables);
+
     typedef GTEST_REMOVE_REFERENCE_AND_CONST_(Container) RawContainer;
     typedef typename internal::StlContainerView<RawContainer>::type View;
     typedef typename View::value_type Element;
@@ -8393,6 +9051,10 @@ class ElementsAreArrayMatcher {
 
   template <typename Container>
   operator Matcher<Container>() const {
+    GTEST_COMPILE_ASSERT_(
+        !IsHashTable<GTEST_REMOVE_REFERENCE_AND_CONST_(Container)>::value,
+        use_UnorderedElementsAreArray_with_hash_tables);
+
     return MakeMatcher(new ElementsAreMatcherImpl<Container>(
         matchers_.begin(), matchers_.end()));
   }
@@ -8487,6 +9149,61 @@ GTEST_API_ std::string FormatMatcherDescription(bool negation,
                                                 const char* matcher_name,
                                                 const Strings& param_values);
 
+// Implements a matcher that checks the value of a optional<> type variable.
+template <typename ValueMatcher>
+class OptionalMatcher {
+ public:
+  explicit OptionalMatcher(const ValueMatcher& value_matcher)
+      : value_matcher_(value_matcher) {}
+
+  template <typename Optional>
+  operator Matcher<Optional>() const {
+    return MakeMatcher(new Impl<Optional>(value_matcher_));
+  }
+
+  template <typename Optional>
+  class Impl : public MatcherInterface<Optional> {
+   public:
+    typedef GTEST_REMOVE_REFERENCE_AND_CONST_(Optional) OptionalView;
+    typedef typename OptionalView::value_type ValueType;
+    explicit Impl(const ValueMatcher& value_matcher)
+        : value_matcher_(MatcherCast<ValueType>(value_matcher)) {}
+
+    virtual void DescribeTo(::std::ostream* os) const {
+      *os << "value ";
+      value_matcher_.DescribeTo(os);
+    }
+
+    virtual void DescribeNegationTo(::std::ostream* os) const {
+      *os << "value ";
+      value_matcher_.DescribeNegationTo(os);
+    }
+
+    virtual bool MatchAndExplain(Optional optional,
+                                 MatchResultListener* listener) const {
+      if (!optional) {
+        *listener << "which is not engaged";
+        return false;
+      }
+      const ValueType& value = *optional;
+      StringMatchResultListener value_listener;
+      const bool match = value_matcher_.MatchAndExplain(value, &value_listener);
+      *listener << "whose value " << PrintToString(value)
+                << (match ? " matches" : " doesn't match");
+      PrintIfNotEmpty(value_listener.str(), listener->stream());
+      return match;
+    }
+
+   private:
+    const Matcher<ValueType> value_matcher_;
+    GTEST_DISALLOW_ASSIGN_(Impl);
+  };
+
+ private:
+  const ValueMatcher value_matcher_;
+  GTEST_DISALLOW_ASSIGN_(OptionalMatcher);
+};
+
 namespace variant_matcher {
 // Overloads to allow VariantMatcher to do proper ADL lookup.
 template <typename T>
@@ -8535,9 +9252,10 @@ class VariantMatcher {
   }
 
  private:
-  static string GetTypeName() {
+  static std::string GetTypeName() {
 #if GTEST_HAS_RTTI
-    return internal::GetTypeName<T>();
+    GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(
+        return internal::GetTypeName<T>());
 #endif
     return "the element type";
   }
@@ -8547,6 +9265,66 @@ class VariantMatcher {
 
 }  // namespace variant_matcher
 
+namespace any_cast_matcher {
+
+// Overloads to allow AnyCastMatcher to do proper ADL lookup.
+template <typename T>
+void any_cast() {}
+
+// Implements a matcher that any_casts the value.
+template <typename T>
+class AnyCastMatcher {
+ public:
+  explicit AnyCastMatcher(const ::testing::Matcher<const T&>& matcher)
+      : matcher_(matcher) {}
+
+  template <typename AnyType>
+  bool MatchAndExplain(const AnyType& value,
+                       ::testing::MatchResultListener* listener) const {
+    if (!listener->IsInterested()) {
+      const T* ptr = any_cast<T>(&value);
+      return ptr != NULL && matcher_.Matches(*ptr);
+    }
+
+    const T* elem = any_cast<T>(&value);
+    if (elem == NULL) {
+      *listener << "whose value is not of type '" << GetTypeName() << "'";
+      return false;
+    }
+
+    StringMatchResultListener elem_listener;
+    const bool match = matcher_.MatchAndExplain(*elem, &elem_listener);
+    *listener << "whose value " << PrintToString(*elem)
+              << (match ? " matches" : " doesn't match");
+    PrintIfNotEmpty(elem_listener.str(), listener->stream());
+    return match;
+  }
+
+  void DescribeTo(std::ostream* os) const {
+    *os << "is an 'any' type with value of type '" << GetTypeName()
+        << "' and the value ";
+    matcher_.DescribeTo(os);
+  }
+
+  void DescribeNegationTo(std::ostream* os) const {
+    *os << "is an 'any' type with value of type other than '" << GetTypeName()
+        << "' or the value ";
+    matcher_.DescribeNegationTo(os);
+  }
+
+ private:
+  static std::string GetTypeName() {
+#if GTEST_HAS_RTTI
+    GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(
+        return internal::GetTypeName<T>());
+#endif
+    return "the element type";
+  }
+
+  const ::testing::Matcher<const T&> matcher_;
+};
+
+}  // namespace any_cast_matcher
 }  // namespace internal
 
 // ElementsAreArray(iterator_first, iterator_last)
@@ -8678,6 +9456,14 @@ inline internal::EqMatcher<T> Eq(T x) { return internal::EqMatcher<T>(x); }
 template <typename T>
 Matcher<T>::Matcher(T value) { *this = Eq(value); }
 
+template <typename T, typename M>
+Matcher<T> internal::MatcherCastImpl<T, M>::CastImpl(
+    const M& value,
+    internal::BooleanConstant<false> /* convertible_to_matcher */,
+    internal::BooleanConstant<false> /* convertible_to_T */) {
+  return Eq(value);
+}
+
 // Creates a monomorphic matcher that matches anything with type Lhs
 // and equal to rhs.  A user may need to use this instead of Eq(...)
 // in order to resolve an overloading ambiguity.
@@ -8806,6 +9592,7 @@ inline internal::PointeeMatcher<InnerMatcher> Pointee(
   return internal::PointeeMatcher<InnerMatcher>(inner_matcher);
 }
 
+#if GTEST_HAS_RTTI
 // Creates a matcher that matches a pointer or reference that matches
 // inner_matcher when dynamic_cast<To> is applied.
 // The result of dynamic_cast<To> is forwarded to the inner matcher.
@@ -8818,6 +9605,7 @@ WhenDynamicCastTo(const Matcher<To>& inner_matcher) {
   return MakePolymorphicMatcher(
       internal::WhenDynamicCastToMatcher<To>(inner_matcher));
 }
+#endif  // GTEST_HAS_RTTI
 
 // Creates a matcher that matches an object whose given field matches
 // 'matcher'.  For example,
@@ -8834,6 +9622,16 @@ inline PolymorphicMatcher<
   // matchers of compatible types.  For example, it allows
   //   Field(&Foo::bar, m)
   // to compile where bar is an int32 and m is a matcher for int64.
+}
+
+// Same as Field() but also takes the name of the field to provide better error
+// messages.
+template <typename Class, typename FieldType, typename FieldMatcher>
+inline PolymorphicMatcher<internal::FieldMatcher<Class, FieldType> > Field(
+    const std::string& field_name, FieldType Class::*field,
+    const FieldMatcher& matcher) {
+  return MakePolymorphicMatcher(internal::FieldMatcher<Class, FieldType>(
+      field_name, field, MatcherCast<const FieldType&>(matcher)));
 }
 
 // Creates a matcher that matches an object whose given property
@@ -8856,6 +9654,21 @@ Property(PropertyType (Class::*property)() const,
   // to compile where bar() returns an int32 and m is a matcher for int64.
 }
 
+// Same as Property() above, but also takes the name of the property to provide
+// better error messages.
+template <typename Class, typename PropertyType, typename PropertyMatcher>
+inline PolymorphicMatcher<internal::PropertyMatcher<
+    Class, PropertyType, PropertyType (Class::*)() const> >
+Property(const std::string& property_name,
+         PropertyType (Class::*property)() const,
+         const PropertyMatcher& matcher) {
+  return MakePolymorphicMatcher(
+      internal::PropertyMatcher<Class, PropertyType,
+                                PropertyType (Class::*)() const>(
+          property_name, property,
+          MatcherCast<GTEST_REFERENCE_TO_CONST_(PropertyType)>(matcher)));
+}
+
 #if GTEST_LANG_CXX11
 // The same as above but for reference-qualified member functions.
 template <typename Class, typename PropertyType, typename PropertyMatcher>
@@ -8869,6 +9682,20 @@ Property(PropertyType (Class::*property)() const &,
           property,
           MatcherCast<GTEST_REFERENCE_TO_CONST_(PropertyType)>(matcher)));
 }
+
+// Three-argument form for reference-qualified member functions.
+template <typename Class, typename PropertyType, typename PropertyMatcher>
+inline PolymorphicMatcher<internal::PropertyMatcher<
+    Class, PropertyType, PropertyType (Class::*)() const &> >
+Property(const std::string& property_name,
+         PropertyType (Class::*property)() const &,
+         const PropertyMatcher& matcher) {
+  return MakePolymorphicMatcher(
+      internal::PropertyMatcher<Class, PropertyType,
+                                PropertyType (Class::*)() const &>(
+          property_name, property,
+          MatcherCast<GTEST_REFERENCE_TO_CONST_(PropertyType)>(matcher)));
+}
 #endif
 
 // Creates a matcher that matches an object iff the result of applying
@@ -8876,25 +9703,15 @@ Property(PropertyType (Class::*property)() const &,
 // For example,
 //   ResultOf(f, StartsWith("hi"))
 // matches a Foo object x iff f(x) starts with "hi".
-// callable parameter can be a function, function pointer, or a functor.
-// Callable has to satisfy the following conditions:
-//   * It is required to keep no state affecting the results of
-//     the calls on it and make no assumptions about how many calls
-//     will be made. Any state it keeps must be protected from the
-//     concurrent access.
-//   * If it is a function object, it has to define type result_type.
-//     We recommend deriving your functor classes from std::unary_function.
-template <typename Callable, typename ResultOfMatcher>
-internal::ResultOfMatcher<Callable> ResultOf(
-    Callable callable, const ResultOfMatcher& matcher) {
-  return internal::ResultOfMatcher<Callable>(
-          callable,
-          MatcherCast<typename internal::CallableTraits<Callable>::ResultType>(
-              matcher));
-  // The call to MatcherCast() is required for supporting inner
-  // matchers of compatible types.  For example, it allows
-  //   ResultOf(Function, m)
-  // to compile where Function() returns an int32 and m is a matcher for int64.
+// `callable` parameter can be a function, function pointer, or a functor. It is
+// required to keep no state affecting the results of the calls on it and make
+// no assumptions about how many calls will be made. Any state it keeps must be
+// protected from the concurrent access.
+template <typename Callable, typename InnerMatcher>
+internal::ResultOfMatcher<Callable, InnerMatcher> ResultOf(
+    Callable callable, InnerMatcher matcher) {
+  return internal::ResultOfMatcher<Callable, InnerMatcher>(
+      internal::move(callable), internal::move(matcher));
 }
 
 // String matchers.
@@ -8974,53 +9791,53 @@ inline PolymorphicMatcher<internal::MatchesRegexMatcher> ContainsRegex(
 // Wide string matchers.
 
 // Matches a string equal to str.
-inline PolymorphicMatcher<internal::StrEqualityMatcher<internal::wstring> >
-    StrEq(const internal::wstring& str) {
-  return MakePolymorphicMatcher(internal::StrEqualityMatcher<internal::wstring>(
-      str, true, true));
+inline PolymorphicMatcher<internal::StrEqualityMatcher<std::wstring> > StrEq(
+    const std::wstring& str) {
+  return MakePolymorphicMatcher(
+      internal::StrEqualityMatcher<std::wstring>(str, true, true));
 }
 
 // Matches a string not equal to str.
-inline PolymorphicMatcher<internal::StrEqualityMatcher<internal::wstring> >
-    StrNe(const internal::wstring& str) {
-  return MakePolymorphicMatcher(internal::StrEqualityMatcher<internal::wstring>(
-      str, false, true));
+inline PolymorphicMatcher<internal::StrEqualityMatcher<std::wstring> > StrNe(
+    const std::wstring& str) {
+  return MakePolymorphicMatcher(
+      internal::StrEqualityMatcher<std::wstring>(str, false, true));
 }
 
 // Matches a string equal to str, ignoring case.
-inline PolymorphicMatcher<internal::StrEqualityMatcher<internal::wstring> >
-    StrCaseEq(const internal::wstring& str) {
-  return MakePolymorphicMatcher(internal::StrEqualityMatcher<internal::wstring>(
-      str, true, false));
+inline PolymorphicMatcher<internal::StrEqualityMatcher<std::wstring> >
+StrCaseEq(const std::wstring& str) {
+  return MakePolymorphicMatcher(
+      internal::StrEqualityMatcher<std::wstring>(str, true, false));
 }
 
 // Matches a string not equal to str, ignoring case.
-inline PolymorphicMatcher<internal::StrEqualityMatcher<internal::wstring> >
-    StrCaseNe(const internal::wstring& str) {
-  return MakePolymorphicMatcher(internal::StrEqualityMatcher<internal::wstring>(
-      str, false, false));
+inline PolymorphicMatcher<internal::StrEqualityMatcher<std::wstring> >
+StrCaseNe(const std::wstring& str) {
+  return MakePolymorphicMatcher(
+      internal::StrEqualityMatcher<std::wstring>(str, false, false));
 }
 
-// Creates a matcher that matches any wstring, std::wstring, or C wide string
+// Creates a matcher that matches any ::wstring, std::wstring, or C wide string
 // that contains the given substring.
-inline PolymorphicMatcher<internal::HasSubstrMatcher<internal::wstring> >
-    HasSubstr(const internal::wstring& substring) {
-  return MakePolymorphicMatcher(internal::HasSubstrMatcher<internal::wstring>(
-      substring));
+inline PolymorphicMatcher<internal::HasSubstrMatcher<std::wstring> > HasSubstr(
+    const std::wstring& substring) {
+  return MakePolymorphicMatcher(
+      internal::HasSubstrMatcher<std::wstring>(substring));
 }
 
 // Matches a string that starts with 'prefix' (case-sensitive).
-inline PolymorphicMatcher<internal::StartsWithMatcher<internal::wstring> >
-    StartsWith(const internal::wstring& prefix) {
-  return MakePolymorphicMatcher(internal::StartsWithMatcher<internal::wstring>(
-      prefix));
+inline PolymorphicMatcher<internal::StartsWithMatcher<std::wstring> >
+StartsWith(const std::wstring& prefix) {
+  return MakePolymorphicMatcher(
+      internal::StartsWithMatcher<std::wstring>(prefix));
 }
 
 // Matches a string that ends with 'suffix' (case-sensitive).
-inline PolymorphicMatcher<internal::EndsWithMatcher<internal::wstring> >
-    EndsWith(const internal::wstring& suffix) {
-  return MakePolymorphicMatcher(internal::EndsWithMatcher<internal::wstring>(
-      suffix));
+inline PolymorphicMatcher<internal::EndsWithMatcher<std::wstring> > EndsWith(
+    const std::wstring& suffix) {
+  return MakePolymorphicMatcher(
+      internal::EndsWithMatcher<std::wstring>(suffix));
 }
 
 #endif  // GTEST_HAS_GLOBAL_WSTRING || GTEST_HAS_STD_WSTRING
@@ -9048,6 +9865,58 @@ inline internal::Lt2Matcher Lt() { return internal::Lt2Matcher(); }
 // Creates a polymorphic matcher that matches a 2-tuple where the
 // first field != the second field.
 inline internal::Ne2Matcher Ne() { return internal::Ne2Matcher(); }
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// FloatEq(first field) matches the second field.
+inline internal::FloatingEq2Matcher<float> FloatEq() {
+  return internal::FloatingEq2Matcher<float>();
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// DoubleEq(first field) matches the second field.
+inline internal::FloatingEq2Matcher<double> DoubleEq() {
+  return internal::FloatingEq2Matcher<double>();
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// FloatEq(first field) matches the second field with NaN equality.
+inline internal::FloatingEq2Matcher<float> NanSensitiveFloatEq() {
+  return internal::FloatingEq2Matcher<float>(true);
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// DoubleEq(first field) matches the second field with NaN equality.
+inline internal::FloatingEq2Matcher<double> NanSensitiveDoubleEq() {
+  return internal::FloatingEq2Matcher<double>(true);
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// FloatNear(first field, max_abs_error) matches the second field.
+inline internal::FloatingEq2Matcher<float> FloatNear(float max_abs_error) {
+  return internal::FloatingEq2Matcher<float>(max_abs_error);
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// DoubleNear(first field, max_abs_error) matches the second field.
+inline internal::FloatingEq2Matcher<double> DoubleNear(double max_abs_error) {
+  return internal::FloatingEq2Matcher<double>(max_abs_error);
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// FloatNear(first field, max_abs_error) matches the second field with NaN
+// equality.
+inline internal::FloatingEq2Matcher<float> NanSensitiveFloatNear(
+    float max_abs_error) {
+  return internal::FloatingEq2Matcher<float>(max_abs_error, true);
+}
+
+// Creates a polymorphic matcher that matches a 2-tuple where
+// DoubleNear(first field, max_abs_error) matches the second field with NaN
+// equality.
+inline internal::FloatingEq2Matcher<double> NanSensitiveDoubleNear(
+    double max_abs_error) {
+  return internal::FloatingEq2Matcher<double>(max_abs_error, true);
+}
 
 // Creates a matcher that matches any value of type T that m doesn't
 // match.
@@ -9426,17 +10295,60 @@ inline bool ExplainMatchResult(
   return SafeMatcherCast<const T&>(matcher).MatchAndExplain(value, listener);
 }
 
+// Returns a string representation of the given matcher.  Useful for description
+// strings of matchers defined using MATCHER_P* macros that accept matchers as
+// their arguments.  For example:
+//
+// MATCHER_P(XAndYThat, matcher,
+//           "X that " + DescribeMatcher<int>(matcher, negation) +
+//               " and Y that " + DescribeMatcher<double>(matcher, negation)) {
+//   return ExplainMatchResult(matcher, arg.x(), result_listener) &&
+//          ExplainMatchResult(matcher, arg.y(), result_listener);
+// }
+template <typename T, typename M>
+std::string DescribeMatcher(const M& matcher, bool negation = false) {
+  ::std::stringstream ss;
+  Matcher<T> monomorphic_matcher = SafeMatcherCast<T>(matcher);
+  if (negation) {
+    monomorphic_matcher.DescribeNegationTo(&ss);
+  } else {
+    monomorphic_matcher.DescribeTo(&ss);
+  }
+  return ss.str();
+}
+
 #if GTEST_LANG_CXX11
 // Define variadic matcher versions. They are overloaded in
 // gmock-generated-matchers.h for the cases supported by pre C++11 compilers.
 template <typename... Args>
-inline internal::AllOfMatcher<Args...> AllOf(const Args&... matchers) {
-  return internal::AllOfMatcher<Args...>(matchers...);
+internal::AllOfMatcher<typename std::decay<const Args&>::type...> AllOf(
+    const Args&... matchers) {
+  return internal::AllOfMatcher<typename std::decay<const Args&>::type...>(
+      matchers...);
 }
 
 template <typename... Args>
-inline internal::AnyOfMatcher<Args...> AnyOf(const Args&... matchers) {
-  return internal::AnyOfMatcher<Args...>(matchers...);
+internal::AnyOfMatcher<typename std::decay<const Args&>::type...> AnyOf(
+    const Args&... matchers) {
+  return internal::AnyOfMatcher<typename std::decay<const Args&>::type...>(
+      matchers...);
+}
+
+template <typename... Args>
+internal::ElementsAreMatcher<tuple<typename std::decay<const Args&>::type...>>
+ElementsAre(const Args&... matchers) {
+  return internal::ElementsAreMatcher<
+      tuple<typename std::decay<const Args&>::type...>>(
+      make_tuple(matchers...));
+}
+
+template <typename... Args>
+internal::UnorderedElementsAreMatcher<
+    tuple<typename std::decay<const Args&>::type...>>
+UnorderedElementsAre(const Args&... matchers) {
+  return internal::UnorderedElementsAreMatcher<
+      tuple<typename std::decay<const Args&>::type...>>(
+      make_tuple(matchers...));
 }
 
 #endif  // GTEST_LANG_CXX11
@@ -9450,6 +10362,28 @@ inline internal::AnyOfMatcher<Args...> AnyOf(const Args&... matchers) {
 //   EXPECT_CALL(foo, Bar(_, _)).With(Eq());
 template <typename InnerMatcher>
 inline InnerMatcher AllArgs(const InnerMatcher& matcher) { return matcher; }
+
+// Returns a matcher that matches the value of an optional<> type variable.
+// The matcher implementation only uses '!arg' and requires that the optional<>
+// type has a 'value_type' member type and that '*arg' is of type 'value_type'
+// and is printable using 'PrintToString'. It is compatible with
+// std::optional/std::experimental::optional.
+// Note that to compare an optional type variable against nullopt you should
+// use Eq(nullopt) and not Optional(Eq(nullopt)). The latter implies that the
+// optional value contains an optional itself.
+template <typename ValueMatcher>
+inline internal::OptionalMatcher<ValueMatcher> Optional(
+    const ValueMatcher& value_matcher) {
+  return internal::OptionalMatcher<ValueMatcher>(value_matcher);
+}
+
+// Returns a matcher that matches the value of a absl::any type variable.
+template <typename T>
+PolymorphicMatcher<internal::any_cast_matcher::AnyCastMatcher<T> > AnyWith(
+    const Matcher<const T&>& matcher) {
+  return MakePolymorphicMatcher(
+      internal::any_cast_matcher::AnyCastMatcher<T>(matcher));
+}
 
 // Returns a matcher that matches the value of a variant<> type variable.
 // The matcher implementation uses ADL to find the holds_alternative and get
@@ -9472,6 +10406,8 @@ PolymorphicMatcher<internal::variant_matcher::VariantMatcher<T> > VariantWith(
     ::testing::internal::MakePredicateFormatterFromMatcher(matcher), value)
 
 }  // namespace testing
+
+GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251 5046
 
 // Include any custom callback matchers added by the local installation.
 // We must include this header at the end to make sure it can use the
@@ -9505,20 +10441,22 @@ PolymorphicMatcher<internal::variant_matcher::VariantMatcher<T> > VariantWith(
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// ============================================================
-// An installation-specific extension point for gmock-matchers.h.
-// ============================================================
+// Injection point for custom user configurations. See README for details
 //
-// Adds google3 callback support to CallableTraits.
-//
+// GOOGLETEST_CM0002 DO NOT DELETE
+
 #ifndef GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_MATCHERS_H_
 #define GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_MATCHERS_H_
 #endif  // GMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_MATCHERS_H_
+
 #endif  // GMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
 
 #if GTEST_HAS_EXCEPTIONS
 # include <stdexcept>  // NOLINT
 #endif
+
+GTEST_DISABLE_MSC_WARNINGS_PUSH_(4251 \
+/* class A needs to have dll-interface to be used by clients of class B */)
 
 namespace testing {
 
@@ -9591,14 +10529,13 @@ class GTEST_API_ UntypedFunctionMockerBase {
   // action fails.
   // L = *
   virtual UntypedActionResultHolderBase* UntypedPerformDefaultAction(
-      const void* untyped_args, const std::string& call_description) const = 0;
+      void* untyped_args, const std::string& call_description) const = 0;
 
   // Performs the given action with the given arguments and returns
   // the action's result.
   // L = *
   virtual UntypedActionResultHolderBase* UntypedPerformAction(
-      const void* untyped_action,
-      const void* untyped_args) const = 0;
+      const void* untyped_action, void* untyped_args) const = 0;
 
   // Writes a message that the call is uninteresting (i.e. neither
   // explicitly expected nor explicitly unexpected) to the given
@@ -9628,7 +10565,7 @@ class GTEST_API_ UntypedFunctionMockerBase {
   // this information in the global mock registry.  Will be called
   // whenever an EXPECT_CALL() or ON_CALL() is executed on this mock
   // method.
-  // TODO(wan@google.com): rename to SetAndRegisterOwner().
+  // FIXME: rename to SetAndRegisterOwner().
   void RegisterOwner(const void* mock_obj)
       GTEST_LOCK_EXCLUDED_(g_gmock_mutex);
 
@@ -9653,9 +10590,8 @@ class GTEST_API_ UntypedFunctionMockerBase {
   // arguments.  This function can be safely called from multiple
   // threads concurrently.  The caller is responsible for deleting the
   // result.
-  UntypedActionResultHolderBase* UntypedInvokeWith(
-      const void* untyped_args)
-          GTEST_LOCK_EXCLUDED_(g_gmock_mutex);
+  UntypedActionResultHolderBase* UntypedInvokeWith(void* untyped_args)
+      GTEST_LOCK_EXCLUDED_(g_gmock_mutex);
 
  protected:
   typedef std::vector<const void*> UntypedOnCallSpecs;
@@ -9680,6 +10616,14 @@ class GTEST_API_ UntypedFunctionMockerBase {
   UntypedOnCallSpecs untyped_on_call_specs_;
 
   // All expectations for this function mocker.
+  //
+  // It's undefined behavior to interleave expectations (EXPECT_CALLs
+  // or ON_CALLs) and mock function calls.  Also, the order of
+  // expectations is important.  Therefore it's a logic race condition
+  // to read/write untyped_expectations_ concurrently.  In order for
+  // tools like tsan to catch concurrent read/write accesses to
+  // untyped_expectations, we deliberately leave accesses to it
+  // unprotected.
   UntypedExpectations untyped_expectations_;
 };  // class UntypedFunctionMockerBase
 
@@ -10644,7 +11588,7 @@ class TypedExpectation : public ExpectationBase {
       mocker->DescribeDefaultActionTo(args, what);
       DescribeCallCountTo(why);
 
-      // TODO(wan@google.com): allow the user to control whether
+      // FIXME: allow the user to control whether
       // unexpected calls should fail immediately or continue using a
       // flag --gmock_unexpected_calls_are_fatal.
       return NULL;
@@ -10696,8 +11640,9 @@ class MockSpec {
 
   // Constructs a MockSpec object, given the function mocker object
   // that the spec is associated with.
-  explicit MockSpec(internal::FunctionMockerBase<F>* function_mocker)
-      : function_mocker_(function_mocker) {}
+  MockSpec(internal::FunctionMockerBase<F>* function_mocker,
+           const ArgumentMatcherTuple& matchers)
+      : function_mocker_(function_mocker), matchers_(matchers) {}
 
   // Adds a new default action spec to the function mocker and returns
   // the newly created spec.
@@ -10719,13 +11664,16 @@ class MockSpec {
         file, line, source_text, matchers_);
   }
 
+  // This operator overload is used to swallow the superfluous parameter list
+  // introduced by the ON/EXPECT_CALL macros. See the macro comments for more
+  // explanation.
+  MockSpec<F>& operator()(const internal::WithoutMatchers&, void* const) {
+    return *this;
+  }
+
  private:
   template <typename Function>
   friend class internal::FunctionMocker;
-
-  void SetMatchers(const ArgumentMatcherTuple& matchers) {
-    matchers_ = matchers;
-  }
 
   // The function mocker that owns this spec.
   internal::FunctionMockerBase<F>* const function_mocker_;
@@ -10790,11 +11738,7 @@ class ReferenceOrValueWrapper<T&> {
 // we need to temporarily disable the warning.  We have to do it for
 // the entire class to suppress the warning, even though it's about
 // the constructor only.
-
-#ifdef _MSC_VER
-# pragma warning(push)          // Saves the current warning state.
-# pragma warning(disable:4355)  // Temporarily disables warning 4355.
-#endif  // _MSV_VER
+GTEST_DISABLE_MSC_WARNINGS_PUSH_(4355)
 
 // C++ treats the void type specially.  For example, you cannot define
 // a void-typed variable or pass a void value to a function.
@@ -10834,19 +11778,20 @@ class ActionResultHolder : public UntypedActionResultHolderBase {
   template <typename F>
   static ActionResultHolder* PerformDefaultAction(
       const FunctionMockerBase<F>* func_mocker,
-      const typename Function<F>::ArgumentTuple& args,
+      typename RvalueRef<typename Function<F>::ArgumentTuple>::type args,
       const std::string& call_description) {
-    return new ActionResultHolder(Wrapper(
-        func_mocker->PerformDefaultAction(args, call_description)));
+    return new ActionResultHolder(Wrapper(func_mocker->PerformDefaultAction(
+        internal::move(args), call_description)));
   }
 
   // Performs the given action and returns the result in a new-ed
   // ActionResultHolder.
   template <typename F>
-  static ActionResultHolder*
-  PerformAction(const Action<F>& action,
-                const typename Function<F>::ArgumentTuple& args) {
-    return new ActionResultHolder(Wrapper(action.Perform(args)));
+  static ActionResultHolder* PerformAction(
+      const Action<F>& action,
+      typename RvalueRef<typename Function<F>::ArgumentTuple>::type args) {
+    return new ActionResultHolder(
+        Wrapper(action.Perform(internal::move(args))));
   }
 
  private:
@@ -10874,9 +11819,9 @@ class ActionResultHolder<void> : public UntypedActionResultHolderBase {
   template <typename F>
   static ActionResultHolder* PerformDefaultAction(
       const FunctionMockerBase<F>* func_mocker,
-      const typename Function<F>::ArgumentTuple& args,
+      typename RvalueRef<typename Function<F>::ArgumentTuple>::type args,
       const std::string& call_description) {
-    func_mocker->PerformDefaultAction(args, call_description);
+    func_mocker->PerformDefaultAction(internal::move(args), call_description);
     return new ActionResultHolder;
   }
 
@@ -10885,8 +11830,8 @@ class ActionResultHolder<void> : public UntypedActionResultHolderBase {
   template <typename F>
   static ActionResultHolder* PerformAction(
       const Action<F>& action,
-      const typename Function<F>::ArgumentTuple& args) {
-    action.Perform(args);
+      typename RvalueRef<typename Function<F>::ArgumentTuple>::type args) {
+    action.Perform(internal::move(args));
     return new ActionResultHolder;
   }
 
@@ -10905,7 +11850,7 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   typedef typename Function<F>::ArgumentTuple ArgumentTuple;
   typedef typename Function<F>::ArgumentMatcherTuple ArgumentMatcherTuple;
 
-  FunctionMockerBase() : current_spec_(this) {}
+  FunctionMockerBase() {}
 
   // The destructor verifies that all expectations on this mock
   // function have been satisfied.  If not, it will report Google Test
@@ -10941,12 +11886,13 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   // mutable state of this object, and thus can be called concurrently
   // without locking.
   // L = *
-  Result PerformDefaultAction(const ArgumentTuple& args,
-                              const std::string& call_description) const {
+  Result PerformDefaultAction(
+      typename RvalueRef<typename Function<F>::ArgumentTuple>::type args,
+      const std::string& call_description) const {
     const OnCallSpec<F>* const spec =
         this->FindOnCallSpec(args);
     if (spec != NULL) {
-      return spec->GetAction().Perform(args);
+      return spec->GetAction().Perform(internal::move(args));
     }
     const std::string message =
         call_description +
@@ -10968,11 +11914,11 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   // action fails.  The caller is responsible for deleting the result.
   // L = *
   virtual UntypedActionResultHolderBase* UntypedPerformDefaultAction(
-      const void* untyped_args,  // must point to an ArgumentTuple
+      void* untyped_args,  // must point to an ArgumentTuple
       const std::string& call_description) const {
-    const ArgumentTuple& args =
-        *static_cast<const ArgumentTuple*>(untyped_args);
-    return ResultHolder::PerformDefaultAction(this, args, call_description);
+    ArgumentTuple* args = static_cast<ArgumentTuple*>(untyped_args);
+    return ResultHolder::PerformDefaultAction(this, internal::move(*args),
+                                              call_description);
   }
 
   // Performs the given action with the given arguments and returns
@@ -10980,13 +11926,12 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   // result.
   // L = *
   virtual UntypedActionResultHolderBase* UntypedPerformAction(
-      const void* untyped_action, const void* untyped_args) const {
+      const void* untyped_action, void* untyped_args) const {
     // Make a copy of the action before performing it, in case the
     // action deletes the mock object (and thus deletes itself).
     const Action<F> action = *static_cast<const Action<F>*>(untyped_action);
-    const ArgumentTuple& args =
-        *static_cast<const ArgumentTuple*>(untyped_args);
-    return ResultHolder::PerformAction(action, args);
+    ArgumentTuple* args = static_cast<ArgumentTuple*>(untyped_args);
+    return ResultHolder::PerformAction(action, internal::move(*args));
   }
 
   // Implements UntypedFunctionMockerBase::ClearDefaultActionsLocked():
@@ -11026,10 +11971,14 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   // Returns the result of invoking this mock function with the given
   // arguments.  This function can be safely called from multiple
   // threads concurrently.
-  Result InvokeWith(const ArgumentTuple& args)
-        GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
+  Result InvokeWith(
+      typename RvalueRef<typename Function<F>::ArgumentTuple>::type args)
+      GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
+    // const_cast is required since in C++98 we still pass ArgumentTuple around
+    // by const& instead of rvalue reference.
+    void* untyped_args = const_cast<void*>(static_cast<const void*>(&args));
     scoped_ptr<ResultHolder> holder(
-        DownCast_<ResultHolder*>(this->UntypedInvokeWith(&args)));
+        DownCast_<ResultHolder*>(this->UntypedInvokeWith(untyped_args)));
     return holder->Unwrap();
   }
 
@@ -11053,6 +12002,8 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
     TypedExpectation<F>* const expectation =
         new TypedExpectation<F>(this, file, line, source_text, m);
     const linked_ptr<ExpectationBase> untyped_expectation(expectation);
+    // See the definition of untyped_expectations_ for why access to
+    // it is unprotected here.
     untyped_expectations_.push_back(untyped_expectation);
 
     // Adds this expectation into the implicit sequence if there is one.
@@ -11063,10 +12014,6 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
 
     return *expectation;
   }
-
-  // The current spec (either default action spec or expectation spec)
-  // being described on this function mocker.
-  MockSpec<F>& current_spec() { return current_spec_; }
 
  private:
   template <typename Func> friend class TypedExpectation;
@@ -11160,6 +12107,8 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
       const ArgumentTuple& args) const
           GTEST_EXCLUSIVE_LOCK_REQUIRED_(g_gmock_mutex) {
     g_gmock_mutex.AssertHeld();
+    // See the definition of untyped_expectations_ for why access to
+    // it is unprotected here.
     for (typename UntypedExpectations::const_reverse_iterator it =
              untyped_expectations_.rbegin();
          it != untyped_expectations_.rend(); ++it) {
@@ -11210,10 +12159,6 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
     }
   }
 
-  // The current spec (either default action spec or expectation spec)
-  // being described on this function mocker.
-  MockSpec<F> current_spec_;
-
   // There is no generally useful and implementable semantics of
   // copying a mock object, so copying a mock is usually a user error.
   // Thus we disallow copying function mockers.  If the user really
@@ -11229,9 +12174,7 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(FunctionMockerBase);
 };  // class FunctionMockerBase
 
-#ifdef _MSC_VER
-# pragma warning(pop)  // Restores the warning state.
-#endif  // _MSV_VER
+GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4355
 
 // Implements methods of FunctionMockerBase.
 
@@ -11276,18 +12219,79 @@ inline Expectation::Expectation(internal::ExpectationBase& exp)  // NOLINT
 
 }  // namespace testing
 
-// A separate macro is required to avoid compile errors when the name
-// of the method used in call is a result of macro expansion.
-// See CompilesWithMethodNameExpandedFromMacro tests in
-// internal/gmock-spec-builders_test.cc for more details.
-#define GMOCK_ON_CALL_IMPL_(obj, call) \
-    ((obj).gmock_##call).InternalDefaultActionSetAt(__FILE__, __LINE__, \
-                                                    #obj, #call)
-#define ON_CALL(obj, call) GMOCK_ON_CALL_IMPL_(obj, call)
+GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251
 
-#define GMOCK_EXPECT_CALL_IMPL_(obj, call) \
-    ((obj).gmock_##call).InternalExpectedAt(__FILE__, __LINE__, #obj, #call)
-#define EXPECT_CALL(obj, call) GMOCK_EXPECT_CALL_IMPL_(obj, call)
+// Implementation for ON_CALL and EXPECT_CALL macros. A separate macro is
+// required to avoid compile errors when the name of the method used in call is
+// a result of macro expansion. See CompilesWithMethodNameExpandedFromMacro
+// tests in internal/gmock-spec-builders_test.cc for more details.
+//
+// This macro supports statements both with and without parameter matchers. If
+// the parameter list is omitted, gMock will accept any parameters, which allows
+// tests to be written that don't need to encode the number of method
+// parameter. This technique may only be used for non-overloaded methods.
+//
+//   // These are the same:
+//   ON_CALL(mock, NoArgsMethod()).WillByDefault(...);
+//   ON_CALL(mock, NoArgsMethod).WillByDefault(...);
+//
+//   // As are these:
+//   ON_CALL(mock, TwoArgsMethod(_, _)).WillByDefault(...);
+//   ON_CALL(mock, TwoArgsMethod).WillByDefault(...);
+//
+//   // Can also specify args if you want, of course:
+//   ON_CALL(mock, TwoArgsMethod(_, 45)).WillByDefault(...);
+//
+//   // Overloads work as long as you specify parameters:
+//   ON_CALL(mock, OverloadedMethod(_)).WillByDefault(...);
+//   ON_CALL(mock, OverloadedMethod(_, _)).WillByDefault(...);
+//
+//   // Oops! Which overload did you want?
+//   ON_CALL(mock, OverloadedMethod).WillByDefault(...);
+//     => ERROR: call to member function 'gmock_OverloadedMethod' is ambiguous
+//
+// How this works: The mock class uses two overloads of the gmock_Method
+// expectation setter method plus an operator() overload on the MockSpec object.
+// In the matcher list form, the macro expands to:
+//
+//   // This statement:
+//   ON_CALL(mock, TwoArgsMethod(_, 45))...
+//
+//   // ...expands to:
+//   mock.gmock_TwoArgsMethod(_, 45)(WithoutMatchers(), nullptr)...
+//   |-------------v---------------||------------v-------------|
+//       invokes first overload        swallowed by operator()
+//
+//   // ...which is essentially:
+//   mock.gmock_TwoArgsMethod(_, 45)...
+//
+// Whereas the form without a matcher list:
+//
+//   // This statement:
+//   ON_CALL(mock, TwoArgsMethod)...
+//
+//   // ...expands to:
+//   mock.gmock_TwoArgsMethod(WithoutMatchers(), nullptr)...
+//   |-----------------------v--------------------------|
+//                 invokes second overload
+//
+//   // ...which is essentially:
+//   mock.gmock_TwoArgsMethod(_, _)...
+//
+// The WithoutMatchers() argument is used to disambiguate overloads and to
+// block the caller from accidentally invoking the second overload directly. The
+// second argument is an internal type derived from the method signature. The
+// failure to disambiguate two overloads of this method in the ON_CALL statement
+// is how we block callers from setting expectations on overloaded methods.
+#define GMOCK_ON_CALL_IMPL_(mock_expr, Setter, call)                          \
+  ((mock_expr).gmock_##call)(::testing::internal::GetWithoutMatchers(), NULL) \
+      .Setter(__FILE__, __LINE__, #mock_expr, #call)
+
+#define ON_CALL(obj, call) \
+  GMOCK_ON_CALL_IMPL_(obj, InternalDefaultActionSetAt, call)
+
+#define EXPECT_CALL(obj, call) \
+  GMOCK_ON_CALL_IMPL_(obj, InternalExpectedAt, call)
 
 #endif  // GMOCK_INCLUDE_GMOCK_GMOCK_SPEC_BUILDERS_H_
 
@@ -11316,8 +12320,8 @@ class FunctionMocker<R()> : public
   typedef R F();
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With() {
-    return this->current_spec();
+  MockSpec<F> With() {
+    return MockSpec<F>(this, ::testing::make_tuple());
   }
 
   R Invoke() {
@@ -11336,9 +12340,8 @@ class FunctionMocker<R(A1)> : public
   typedef R F(A1);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1));
-    return this->current_spec();
+  MockSpec<F> With(const Matcher<A1>& m1) {
+    return MockSpec<F>(this, ::testing::make_tuple(m1));
   }
 
   R Invoke(A1 a1) {
@@ -11346,7 +12349,7 @@ class FunctionMocker<R(A1)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1)));
   }
 };
 
@@ -11357,9 +12360,8 @@ class FunctionMocker<R(A1, A2)> : public
   typedef R F(A1, A2);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2));
-    return this->current_spec();
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2) {
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2));
   }
 
   R Invoke(A1 a1, A2 a2) {
@@ -11367,7 +12369,8 @@ class FunctionMocker<R(A1, A2)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2)));
   }
 };
 
@@ -11378,10 +12381,9 @@ class FunctionMocker<R(A1, A2, A3)> : public
   typedef R F(A1, A2, A3);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3) {
@@ -11389,7 +12391,8 @@ class FunctionMocker<R(A1, A2, A3)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3)));
   }
 };
 
@@ -11400,10 +12403,9 @@ class FunctionMocker<R(A1, A2, A3, A4)> : public
   typedef R F(A1, A2, A3, A4);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4) {
@@ -11411,7 +12413,9 @@ class FunctionMocker<R(A1, A2, A3, A4)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4)));
   }
 };
 
@@ -11423,10 +12427,9 @@ class FunctionMocker<R(A1, A2, A3, A4, A5)> : public
   typedef R F(A1, A2, A3, A4, A5);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4, const Matcher<A5>& m5) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4, m5));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4, m5));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) {
@@ -11434,7 +12437,9 @@ class FunctionMocker<R(A1, A2, A3, A4, A5)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4, a5));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4), internal::forward<A5>(a5)));
   }
 };
 
@@ -11446,12 +12451,10 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6)> : public
   typedef R F(A1, A2, A3, A4, A5, A6);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4, const Matcher<A5>& m5,
       const Matcher<A6>& m6) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4, m5,
-        m6));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4, m5, m6));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) {
@@ -11459,7 +12462,10 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4, a5, a6));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4), internal::forward<A5>(a5),
+        internal::forward<A6>(a6)));
   }
 };
 
@@ -11471,12 +12477,10 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7)> : public
   typedef R F(A1, A2, A3, A4, A5, A6, A7);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4, const Matcher<A5>& m5,
       const Matcher<A6>& m6, const Matcher<A7>& m7) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4, m5,
-        m6, m7));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4, m5, m6, m7));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) {
@@ -11484,7 +12488,10 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4, a5, a6, a7));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4), internal::forward<A5>(a5),
+        internal::forward<A6>(a6), internal::forward<A7>(a7)));
   }
 };
 
@@ -11496,12 +12503,11 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7, A8)> : public
   typedef R F(A1, A2, A3, A4, A5, A6, A7, A8);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4, const Matcher<A5>& m5,
       const Matcher<A6>& m6, const Matcher<A7>& m7, const Matcher<A8>& m8) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4, m5,
-        m6, m7, m8));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4, m5, m6, m7,
+        m8));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) {
@@ -11509,7 +12515,11 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7, A8)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4, a5, a6, a7, a8));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4), internal::forward<A5>(a5),
+        internal::forward<A6>(a6), internal::forward<A7>(a7),
+        internal::forward<A8>(a8)));
   }
 };
 
@@ -11521,13 +12531,12 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7, A8, A9)> : public
   typedef R F(A1, A2, A3, A4, A5, A6, A7, A8, A9);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4, const Matcher<A5>& m5,
       const Matcher<A6>& m6, const Matcher<A7>& m7, const Matcher<A8>& m8,
       const Matcher<A9>& m9) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4, m5,
-        m6, m7, m8, m9));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4, m5, m6, m7,
+        m8, m9));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) {
@@ -11535,7 +12544,11 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7, A8, A9)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4, a5, a6, a7, a8, a9));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4), internal::forward<A5>(a5),
+        internal::forward<A6>(a6), internal::forward<A7>(a7),
+        internal::forward<A8>(a8), internal::forward<A9>(a9)));
   }
 };
 
@@ -11548,13 +12561,12 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> : public
   typedef R F(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10);
   typedef typename internal::Function<F>::ArgumentTuple ArgumentTuple;
 
-  MockSpec<F>& With(const Matcher<A1>& m1, const Matcher<A2>& m2,
+  MockSpec<F> With(const Matcher<A1>& m1, const Matcher<A2>& m2,
       const Matcher<A3>& m3, const Matcher<A4>& m4, const Matcher<A5>& m5,
       const Matcher<A6>& m6, const Matcher<A7>& m7, const Matcher<A8>& m8,
       const Matcher<A9>& m9, const Matcher<A10>& m10) {
-    this->current_spec().SetMatchers(::testing::make_tuple(m1, m2, m3, m4, m5,
-        m6, m7, m8, m9, m10));
-    return this->current_spec();
+    return MockSpec<F>(this, ::testing::make_tuple(m1, m2, m3, m4, m5, m6, m7,
+        m8, m9, m10));
   }
 
   R Invoke(A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9,
@@ -11563,10 +12575,66 @@ class FunctionMocker<R(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)> : public
     // by the C++ standard [14.6.4] here, as the base class type is
     // dependent on the template argument (and thus shouldn't be
     // looked into when resolving InvokeWith).
-    return this->InvokeWith(ArgumentTuple(a1, a2, a3, a4, a5, a6, a7, a8, a9,
-        a10));
+    return this->InvokeWith(ArgumentTuple(internal::forward<A1>(a1),
+        internal::forward<A2>(a2), internal::forward<A3>(a3),
+        internal::forward<A4>(a4), internal::forward<A5>(a5),
+        internal::forward<A6>(a6), internal::forward<A7>(a7),
+        internal::forward<A8>(a8), internal::forward<A9>(a9),
+        internal::forward<A10>(a10)));
   }
 };
+
+// Removes the given pointer; this is a helper for the expectation setter method
+// for parameterless matchers.
+//
+// We want to make sure that the user cannot set a parameterless expectation on
+// overloaded methods, including methods which are overloaded on const. Example:
+//
+//   class MockClass {
+//     MOCK_METHOD0(GetName, string&());
+//     MOCK_CONST_METHOD0(GetName, const string&());
+//   };
+//
+//   TEST() {
+//     // This should be an error, as it's not clear which overload is expected.
+//     EXPECT_CALL(mock, GetName).WillOnce(ReturnRef(value));
+//   }
+//
+// Here are the generated expectation-setter methods:
+//
+//   class MockClass {
+//     // Overload 1
+//     MockSpec<string&()> gmock_GetName() { ... }
+//     // Overload 2. Declared const so that the compiler will generate an
+//     // error when trying to resolve between this and overload 4 in
+//     // 'gmock_GetName(WithoutMatchers(), nullptr)'.
+//     MockSpec<string&()> gmock_GetName(
+//         const WithoutMatchers&, const Function<string&()>*) const {
+//       // Removes const from this, calls overload 1
+//       return AdjustConstness_(this)->gmock_GetName();
+//     }
+//
+//     // Overload 3
+//     const string& gmock_GetName() const { ... }
+//     // Overload 4
+//     MockSpec<const string&()> gmock_GetName(
+//         const WithoutMatchers&, const Function<const string&()>*) const {
+//       // Does not remove const, calls overload 3
+//       return AdjustConstness_const(this)->gmock_GetName();
+//     }
+//   }
+//
+template <typename MockType>
+const MockType* AdjustConstness_const(const MockType* mock) {
+  return mock;
+}
+
+// Removes const from and returns the given pointer; this is a helper for the
+// expectation setter method for parameterless matchers.
+template <typename MockType>
+MockType* AdjustConstness_(const MockType* mock) {
+  return const_cast<MockType*>(mock);
+}
 
 }  // namespace internal
 
@@ -11601,324 +12669,534 @@ using internal::FunctionMocker;
     GTEST_CONCAT_TOKEN_(gmock##constness##arity##_##Method##_, __LINE__)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD0_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      ) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 0), \
-        this_method_does_not_take_0_arguments); \
-    GMOCK_MOCKER_(0, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(0, constness, Method).Invoke(); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method() constness { \
-    GMOCK_MOCKER_(0, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(0, constness, Method).With(); \
-  } \
+#define GMOCK_METHOD0_(tn, constness, ct, Method, ...)                       \
+  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method() constness {                     \
+    GTEST_COMPILE_ASSERT_(                                                   \
+        (::testing::tuple_size<tn ::testing::internal::Function<             \
+             __VA_ARGS__>::ArgumentTuple>::value == 0),                      \
+        this_method_does_not_take_0_arguments);                              \
+    GMOCK_MOCKER_(0, constness, Method).SetOwnerAndName(this, #Method);      \
+    return GMOCK_MOCKER_(0, constness, Method).Invoke();                     \
+  }                                                                          \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method() constness {              \
+    GMOCK_MOCKER_(0, constness, Method).RegisterOwner(this);                 \
+    return GMOCK_MOCKER_(0, constness, Method).With();                       \
+  }                                                                          \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                           \
+      const ::testing::internal::WithoutMatchers&,                           \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {         \
+    return ::testing::internal::AdjustConstness_##constness(this)            \
+        ->gmock_##Method();                                                  \
+  }                                                                          \
   mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(0, constness, \
-      Method)
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD1_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 1), \
-        this_method_does_not_take_1_argument); \
-    GMOCK_MOCKER_(1, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(1, constness, Method).Invoke(gmock_a1); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1) constness { \
-    GMOCK_MOCKER_(1, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(1, constness, Method).With(gmock_a1); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(1, constness, \
-      Method)
+#define GMOCK_METHOD1_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 1),                       \
+        this_method_does_not_take_1_argument);                                \
+    GMOCK_MOCKER_(1, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(1, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+            gmock_a1));                                                       \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1) constness {                \
+    GMOCK_MOCKER_(1, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(1, constness, Method).With(gmock_a1);                \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(1, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD2_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 2), \
-        this_method_does_not_take_2_arguments); \
-    GMOCK_MOCKER_(2, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(2, constness, Method).Invoke(gmock_a1, gmock_a2); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2) constness { \
-    GMOCK_MOCKER_(2, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(2, constness, Method).With(gmock_a1, gmock_a2); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(2, constness, \
-      Method)
+#define GMOCK_METHOD2_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 2),                       \
+        this_method_does_not_take_2_arguments);                               \
+    GMOCK_MOCKER_(2, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(2, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2) constness {                \
+    GMOCK_MOCKER_(2, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(2, constness, Method).With(gmock_a1, gmock_a2);      \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(2, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD3_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 3), \
-        this_method_does_not_take_3_arguments); \
-    GMOCK_MOCKER_(3, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(3, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3) constness { \
-    GMOCK_MOCKER_(3, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(3, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(3, constness, \
-      Method)
+#define GMOCK_METHOD3_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 3),                       \
+        this_method_does_not_take_3_arguments);                               \
+    GMOCK_MOCKER_(3, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(3, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3) constness {                \
+    GMOCK_MOCKER_(3, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(3, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3);                                  \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(3, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD4_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 4), \
-        this_method_does_not_take_4_arguments); \
-    GMOCK_MOCKER_(4, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(4, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4) constness { \
-    GMOCK_MOCKER_(4, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(4, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(4, constness, \
-      Method)
+#define GMOCK_METHOD4_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                          \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 4),                       \
+        this_method_does_not_take_4_arguments);                               \
+    GMOCK_MOCKER_(4, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(4, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>( \
+                    gmock_a4));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                            \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4) constness {                \
+    GMOCK_MOCKER_(4, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(4, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4);                        \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(4, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD5_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4, \
-      GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 5), \
-        this_method_does_not_take_5_arguments); \
-    GMOCK_MOCKER_(5, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(5, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4, \
-                     GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5) constness { \
-    GMOCK_MOCKER_(5, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(5, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(5, constness, \
-      Method)
+#define GMOCK_METHOD5_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                          \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4,                          \
+            GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 5),                       \
+        this_method_does_not_take_5_arguments);                               \
+    GMOCK_MOCKER_(5, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(5, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>( \
+                    gmock_a4),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 5, __VA_ARGS__)>( \
+                    gmock_a5));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                            \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4,                            \
+      GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5) constness {                \
+    GMOCK_MOCKER_(5, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(5, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4, gmock_a5);              \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 5, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(5, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD6_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4, \
-      GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5, \
-      GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 6), \
-        this_method_does_not_take_6_arguments); \
-    GMOCK_MOCKER_(6, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(6, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4, \
-                     GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5, \
-                     GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6) constness { \
-    GMOCK_MOCKER_(6, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(6, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(6, constness, \
-      Method)
+#define GMOCK_METHOD6_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                          \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4,                          \
+            GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5,                          \
+            GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 6),                       \
+        this_method_does_not_take_6_arguments);                               \
+    GMOCK_MOCKER_(6, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(6, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>( \
+                    gmock_a4),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 5, __VA_ARGS__)>( \
+                    gmock_a5),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 6, __VA_ARGS__)>( \
+                    gmock_a6));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                            \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4,                            \
+      GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5,                            \
+      GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6) constness {                \
+    GMOCK_MOCKER_(6, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(6, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4, gmock_a5, gmock_a6);    \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 5, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 6, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(6, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD7_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4, \
-      GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5, \
-      GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6, \
-      GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 7), \
-        this_method_does_not_take_7_arguments); \
-    GMOCK_MOCKER_(7, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(7, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4, \
-                     GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5, \
-                     GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6, \
-                     GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7) constness { \
-    GMOCK_MOCKER_(7, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(7, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(7, constness, \
-      Method)
+#define GMOCK_METHOD7_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                          \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4,                          \
+            GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5,                          \
+            GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6,                          \
+            GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 7),                       \
+        this_method_does_not_take_7_arguments);                               \
+    GMOCK_MOCKER_(7, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(7, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>( \
+                    gmock_a4),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 5, __VA_ARGS__)>( \
+                    gmock_a5),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 6, __VA_ARGS__)>( \
+                    gmock_a6),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 7, __VA_ARGS__)>( \
+                    gmock_a7));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                            \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4,                            \
+      GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5,                            \
+      GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6,                            \
+      GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7) constness {                \
+    GMOCK_MOCKER_(7, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(7, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4, gmock_a5, gmock_a6,     \
+              gmock_a7);                                                      \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 5, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 6, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 7, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(7, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD8_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4, \
-      GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5, \
-      GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6, \
-      GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7, \
-      GMOCK_ARG_(tn, 8, __VA_ARGS__) gmock_a8) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 8), \
-        this_method_does_not_take_8_arguments); \
-    GMOCK_MOCKER_(8, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(8, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7, gmock_a8); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4, \
-                     GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5, \
-                     GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6, \
-                     GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7, \
-                     GMOCK_MATCHER_(tn, 8, __VA_ARGS__) gmock_a8) constness { \
-    GMOCK_MOCKER_(8, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(8, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7, gmock_a8); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(8, constness, \
-      Method)
+#define GMOCK_METHOD8_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                          \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4,                          \
+            GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5,                          \
+            GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6,                          \
+            GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7,                          \
+            GMOCK_ARG_(tn, 8, __VA_ARGS__) gmock_a8) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 8),                       \
+        this_method_does_not_take_8_arguments);                               \
+    GMOCK_MOCKER_(8, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(8, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>( \
+                    gmock_a4),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 5, __VA_ARGS__)>( \
+                    gmock_a5),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 6, __VA_ARGS__)>( \
+                    gmock_a6),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 7, __VA_ARGS__)>( \
+                    gmock_a7),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 8, __VA_ARGS__)>( \
+                    gmock_a8));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                            \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4,                            \
+      GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5,                            \
+      GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6,                            \
+      GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7,                            \
+      GMOCK_MATCHER_(tn, 8, __VA_ARGS__) gmock_a8) constness {                \
+    GMOCK_MOCKER_(8, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(8, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4, gmock_a5, gmock_a6,     \
+              gmock_a7, gmock_a8);                                            \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 5, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 6, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 7, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 8, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(8, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD9_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4, \
-      GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5, \
-      GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6, \
-      GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7, \
-      GMOCK_ARG_(tn, 8, __VA_ARGS__) gmock_a8, \
-      GMOCK_ARG_(tn, 9, __VA_ARGS__) gmock_a9) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 9), \
-        this_method_does_not_take_9_arguments); \
-    GMOCK_MOCKER_(9, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(9, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7, gmock_a8, \
-        gmock_a9); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4, \
-                     GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5, \
-                     GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6, \
-                     GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7, \
-                     GMOCK_MATCHER_(tn, 8, __VA_ARGS__) gmock_a8, \
-                     GMOCK_MATCHER_(tn, 9, __VA_ARGS__) gmock_a9) constness { \
-    GMOCK_MOCKER_(9, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(9, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7, gmock_a8, \
-        gmock_a9); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(9, constness, \
-      Method)
+#define GMOCK_METHOD9_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                              \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                          \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                          \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                          \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4,                          \
+            GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5,                          \
+            GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6,                          \
+            GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7,                          \
+            GMOCK_ARG_(tn, 8, __VA_ARGS__) gmock_a8,                          \
+            GMOCK_ARG_(tn, 9, __VA_ARGS__) gmock_a9) constness {              \
+    GTEST_COMPILE_ASSERT_(                                                    \
+        (::testing::tuple_size<tn ::testing::internal::Function<              \
+             __VA_ARGS__>::ArgumentTuple>::value == 9),                       \
+        this_method_does_not_take_9_arguments);                               \
+    GMOCK_MOCKER_(9, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(9, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>( \
+                    gmock_a1),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>( \
+                    gmock_a2),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>( \
+                    gmock_a3),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>( \
+                    gmock_a4),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 5, __VA_ARGS__)>( \
+                    gmock_a5),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 6, __VA_ARGS__)>( \
+                    gmock_a6),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 7, __VA_ARGS__)>( \
+                    gmock_a7),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 8, __VA_ARGS__)>( \
+                    gmock_a8),                                                \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 9, __VA_ARGS__)>( \
+                    gmock_a9));                                               \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                            \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                            \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                            \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4,                            \
+      GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5,                            \
+      GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6,                            \
+      GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7,                            \
+      GMOCK_MATCHER_(tn, 8, __VA_ARGS__) gmock_a8,                            \
+      GMOCK_MATCHER_(tn, 9, __VA_ARGS__) gmock_a9) constness {                \
+    GMOCK_MOCKER_(9, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(9, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4, gmock_a5, gmock_a6,     \
+              gmock_a7, gmock_a8, gmock_a9);                                  \
+  }                                                                           \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                            \
+      const ::testing::internal::WithoutMatchers&,                            \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {          \
+    return ::testing::internal::AdjustConstness_##constness(this)             \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 5, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 6, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 7, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 8, __VA_ARGS__)>(),      \
+                         ::testing::A<GMOCK_ARG_(tn, 9, __VA_ARGS__)>());     \
+  }                                                                           \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(9, constness,  \
+                                                               Method)
 
 // INTERNAL IMPLEMENTATION - DON'T USE IN USER CODE!!!
-#define GMOCK_METHOD10_(tn, constness, ct, Method, ...) \
-  GMOCK_RESULT_(tn, __VA_ARGS__) ct Method( \
-      GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1, \
-      GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2, \
-      GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3, \
-      GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4, \
-      GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5, \
-      GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6, \
-      GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7, \
-      GMOCK_ARG_(tn, 8, __VA_ARGS__) gmock_a8, \
-      GMOCK_ARG_(tn, 9, __VA_ARGS__) gmock_a9, \
-      GMOCK_ARG_(tn, 10, __VA_ARGS__) gmock_a10) constness { \
-    GTEST_COMPILE_ASSERT_((::testing::tuple_size<                          \
-        tn ::testing::internal::Function<__VA_ARGS__>::ArgumentTuple>::value \
-            == 10), \
-        this_method_does_not_take_10_arguments); \
-    GMOCK_MOCKER_(10, constness, Method).SetOwnerAndName(this, #Method); \
-    return GMOCK_MOCKER_(10, constness, Method).Invoke(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7, gmock_a8, gmock_a9, \
-        gmock_a10); \
-  } \
-  ::testing::MockSpec<__VA_ARGS__>& \
-      gmock_##Method(GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1, \
-                     GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2, \
-                     GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3, \
-                     GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4, \
-                     GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5, \
-                     GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6, \
-                     GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7, \
-                     GMOCK_MATCHER_(tn, 8, __VA_ARGS__) gmock_a8, \
-                     GMOCK_MATCHER_(tn, 9, __VA_ARGS__) gmock_a9, \
-                     GMOCK_MATCHER_(tn, 10, \
-                         __VA_ARGS__) gmock_a10) constness { \
-    GMOCK_MOCKER_(10, constness, Method).RegisterOwner(this); \
-    return GMOCK_MOCKER_(10, constness, Method).With(gmock_a1, gmock_a2, \
-        gmock_a3, gmock_a4, gmock_a5, gmock_a6, gmock_a7, gmock_a8, gmock_a9, \
-        gmock_a10); \
-  } \
-  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(10, constness, \
-      Method)
+#define GMOCK_METHOD10_(tn, constness, ct, Method, ...)                        \
+  GMOCK_RESULT_(tn, __VA_ARGS__)                                               \
+  ct Method(GMOCK_ARG_(tn, 1, __VA_ARGS__) gmock_a1,                           \
+            GMOCK_ARG_(tn, 2, __VA_ARGS__) gmock_a2,                           \
+            GMOCK_ARG_(tn, 3, __VA_ARGS__) gmock_a3,                           \
+            GMOCK_ARG_(tn, 4, __VA_ARGS__) gmock_a4,                           \
+            GMOCK_ARG_(tn, 5, __VA_ARGS__) gmock_a5,                           \
+            GMOCK_ARG_(tn, 6, __VA_ARGS__) gmock_a6,                           \
+            GMOCK_ARG_(tn, 7, __VA_ARGS__) gmock_a7,                           \
+            GMOCK_ARG_(tn, 8, __VA_ARGS__) gmock_a8,                           \
+            GMOCK_ARG_(tn, 9, __VA_ARGS__) gmock_a9,                           \
+            GMOCK_ARG_(tn, 10, __VA_ARGS__) gmock_a10) constness {             \
+    GTEST_COMPILE_ASSERT_(                                                     \
+        (::testing::tuple_size<tn ::testing::internal::Function<               \
+             __VA_ARGS__>::ArgumentTuple>::value == 10),                       \
+        this_method_does_not_take_10_arguments);                               \
+    GMOCK_MOCKER_(10, constness, Method).SetOwnerAndName(this, #Method);       \
+    return GMOCK_MOCKER_(10, constness, Method)                                \
+        .Invoke(::testing::internal::forward<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(  \
+                    gmock_a1),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(  \
+                    gmock_a2),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(  \
+                    gmock_a3),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(  \
+                    gmock_a4),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 5, __VA_ARGS__)>(  \
+                    gmock_a5),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 6, __VA_ARGS__)>(  \
+                    gmock_a6),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 7, __VA_ARGS__)>(  \
+                    gmock_a7),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 8, __VA_ARGS__)>(  \
+                    gmock_a8),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 9, __VA_ARGS__)>(  \
+                    gmock_a9),                                                 \
+                ::testing::internal::forward<GMOCK_ARG_(tn, 10, __VA_ARGS__)>( \
+                    gmock_a10));                                               \
+  }                                                                            \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                             \
+      GMOCK_MATCHER_(tn, 1, __VA_ARGS__) gmock_a1,                             \
+      GMOCK_MATCHER_(tn, 2, __VA_ARGS__) gmock_a2,                             \
+      GMOCK_MATCHER_(tn, 3, __VA_ARGS__) gmock_a3,                             \
+      GMOCK_MATCHER_(tn, 4, __VA_ARGS__) gmock_a4,                             \
+      GMOCK_MATCHER_(tn, 5, __VA_ARGS__) gmock_a5,                             \
+      GMOCK_MATCHER_(tn, 6, __VA_ARGS__) gmock_a6,                             \
+      GMOCK_MATCHER_(tn, 7, __VA_ARGS__) gmock_a7,                             \
+      GMOCK_MATCHER_(tn, 8, __VA_ARGS__) gmock_a8,                             \
+      GMOCK_MATCHER_(tn, 9, __VA_ARGS__) gmock_a9,                             \
+      GMOCK_MATCHER_(tn, 10, __VA_ARGS__) gmock_a10) constness {               \
+    GMOCK_MOCKER_(10, constness, Method).RegisterOwner(this);                  \
+    return GMOCK_MOCKER_(10, constness, Method)                                \
+        .With(gmock_a1, gmock_a2, gmock_a3, gmock_a4, gmock_a5, gmock_a6,      \
+              gmock_a7, gmock_a8, gmock_a9, gmock_a10);                        \
+  }                                                                            \
+  ::testing::MockSpec<__VA_ARGS__> gmock_##Method(                             \
+      const ::testing::internal::WithoutMatchers&,                             \
+      constness ::testing::internal::Function<__VA_ARGS__>*) const {           \
+    return ::testing::internal::AdjustConstness_##constness(this)              \
+        ->gmock_##Method(::testing::A<GMOCK_ARG_(tn, 1, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 2, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 3, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 4, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 5, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 6, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 7, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 8, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 9, __VA_ARGS__)>(),       \
+                         ::testing::A<GMOCK_ARG_(tn, 10, __VA_ARGS__)>());     \
+  }                                                                            \
+  mutable ::testing::FunctionMocker<__VA_ARGS__> GMOCK_MOCKER_(10, constness,  \
+                                                               Method)
 
 #define MOCK_METHOD0(m, ...) GMOCK_METHOD0_(, , , m, __VA_ARGS__)
 #define MOCK_METHOD1(m, ...) GMOCK_METHOD1_(, , , m, __VA_ARGS__)
@@ -12128,7 +13406,7 @@ class MockFunction<R()> {
   MOCK_METHOD0_T(Call, R());
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R()> AsStdFunction() {
+  ::std::function<R()> AsStdFunction() {
     return [this]() -> R {
       return this->Call();
     };
@@ -12147,9 +13425,9 @@ class MockFunction<R(A0)> {
   MOCK_METHOD1_T(Call, R(A0));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0)> AsStdFunction() {
+  ::std::function<R(A0)> AsStdFunction() {
     return [this](A0 a0) -> R {
-      return this->Call(a0);
+      return this->Call(::std::move(a0));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12166,9 +13444,9 @@ class MockFunction<R(A0, A1)> {
   MOCK_METHOD2_T(Call, R(A0, A1));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1)> AsStdFunction() {
+  ::std::function<R(A0, A1)> AsStdFunction() {
     return [this](A0 a0, A1 a1) -> R {
-      return this->Call(a0, a1);
+      return this->Call(::std::move(a0), ::std::move(a1));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12185,9 +13463,9 @@ class MockFunction<R(A0, A1, A2)> {
   MOCK_METHOD3_T(Call, R(A0, A1, A2));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2) -> R {
-      return this->Call(a0, a1, a2);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12204,9 +13482,10 @@ class MockFunction<R(A0, A1, A2, A3)> {
   MOCK_METHOD4_T(Call, R(A0, A1, A2, A3));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3) -> R {
-      return this->Call(a0, a1, a2, a3);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12224,9 +13503,10 @@ class MockFunction<R(A0, A1, A2, A3, A4)> {
   MOCK_METHOD5_T(Call, R(A0, A1, A2, A3, A4));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3, A4)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3, A4)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) -> R {
-      return this->Call(a0, a1, a2, a3, a4);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3), ::std::move(a4));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12244,9 +13524,10 @@ class MockFunction<R(A0, A1, A2, A3, A4, A5)> {
   MOCK_METHOD6_T(Call, R(A0, A1, A2, A3, A4, A5));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3, A4, A5)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3, A4, A5)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) -> R {
-      return this->Call(a0, a1, a2, a3, a4, a5);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3), ::std::move(a4), ::std::move(a5));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12264,9 +13545,10 @@ class MockFunction<R(A0, A1, A2, A3, A4, A5, A6)> {
   MOCK_METHOD7_T(Call, R(A0, A1, A2, A3, A4, A5, A6));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3, A4, A5, A6)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3, A4, A5, A6)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) -> R {
-      return this->Call(a0, a1, a2, a3, a4, a5, a6);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3), ::std::move(a4), ::std::move(a5), ::std::move(a6));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12284,9 +13566,11 @@ class MockFunction<R(A0, A1, A2, A3, A4, A5, A6, A7)> {
   MOCK_METHOD8_T(Call, R(A0, A1, A2, A3, A4, A5, A6, A7));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3, A4, A5, A6, A7)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3, A4, A5, A6, A7)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) -> R {
-      return this->Call(a0, a1, a2, a3, a4, a5, a6, a7);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3), ::std::move(a4), ::std::move(a5), ::std::move(a6),
+          ::std::move(a7));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12304,10 +13588,12 @@ class MockFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> {
   MOCK_METHOD9_T(Call, R(A0, A1, A2, A3, A4, A5, A6, A7, A8));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3, A4, A5, A6, A7, A8)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7,
         A8 a8) -> R {
-      return this->Call(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3), ::std::move(a4), ::std::move(a5), ::std::move(a6),
+          ::std::move(a7), ::std::move(a8));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12326,10 +13612,12 @@ class MockFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> {
   MOCK_METHOD10_T(Call, R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9));
 
 #if GTEST_HAS_STD_FUNCTION_
-  std::function<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> AsStdFunction() {
+  ::std::function<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> AsStdFunction() {
     return [this](A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7,
         A8 a8, A9 a9) -> R {
-      return this->Call(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+      return this->Call(::std::move(a0), ::std::move(a1), ::std::move(a2),
+          ::std::move(a3), ::std::move(a4), ::std::move(a5), ::std::move(a6),
+          ::std::move(a7), ::std::move(a8), ::std::move(a9));
     };
   }
 #endif  // GTEST_HAS_STD_FUNCTION_
@@ -12377,6 +13665,8 @@ class MockFunction<R(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9)> {
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements some commonly used variadic matchers.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_MATCHERS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_MATCHERS_H_
@@ -13121,6 +14411,9 @@ ElementsAre(const T1& e1, const T2& e2, const T3& e3, const T4& e4,
 
 // UnorderedElementsAre(e_1, e_2, ..., e_n) is an ElementsAre extension
 // that matches n elements in any order.  We support up to n=10 arguments.
+//
+// If you have >10 elements, consider UnorderedElementsAreArray() or
+// UnorderedPointwise() instead.
 
 inline internal::UnorderedElementsAreMatcher<
     ::testing::tuple<> >
@@ -13610,7 +14903,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
 //   using testing::PrintToString;
 //
 //   MATCHER_P2(InClosedRange, low, hi,
-//       string(negation ? "is not" : "is") + " in range [" +
+//       std::string(negation ? "is not" : "is") + " in range [" +
 //       PrintToString(low) + ", " + PrintToString(hi) + "]") {
 //     return low <= arg && arg <= hi;
 //   }
@@ -13718,19 +15011,21 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
 // ================
 //
 // To learn more about using these macros, please search for 'MATCHER'
-// on https://github.com/google/googletest/blob/master/googlemock/docs/
-// CookBook.md
+// on
+// https://github.com/google/googletest/blob/master/googlemock/docs/CookBook.md
 
 #define MATCHER(name, description)\
   class name##Matcher {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl()\
            {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
@@ -13738,17 +15033,15 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
         *gmock_os << FormatDescription(true);\
       }\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<>()));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -13758,14 +15051,13 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     name##Matcher() {\
     }\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##Matcher);\
   };\
   inline name##Matcher name() {\
     return name##Matcher();\
   }\
   template <typename arg_type>\
   bool name##Matcher::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -13774,42 +15066,42 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       explicit gmock_Impl(p0##_type gmock_p0)\
-           : p0(gmock_p0) {}\
+           : p0(::testing::internal::move(gmock_p0)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
+      p0##_type const p0;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<p0##_type>(p0)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
       return ::testing::Matcher<arg_type>(\
           new gmock_Impl<arg_type>(p0));\
     }\
-    explicit name##MatcherP(p0##_type gmock_p0) : p0(gmock_p0) {\
+    explicit name##MatcherP(p0##_type gmock_p0) : \
+        p0(::testing::internal::move(gmock_p0)) {\
     }\
-    p0##_type p0;\
+    p0##_type const p0;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP);\
   };\
   template <typename p0##_type>\
   inline name##MatcherP<p0##_type> name(p0##_type p0) {\
@@ -13818,7 +15110,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename p0##_type>\
   template <typename arg_type>\
   bool name##MatcherP<p0##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -13827,45 +15119,46 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP2 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1)\
-           : p0(gmock_p0), p1(gmock_p1) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
+      p0##_type const p0;\
+      p1##_type const p1;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<p0##_type, p1##_type>(p0, p1)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
       return ::testing::Matcher<arg_type>(\
           new gmock_Impl<arg_type>(p0, p1));\
     }\
-    name##MatcherP2(p0##_type gmock_p0, p1##_type gmock_p1) : p0(gmock_p0), \
-        p1(gmock_p1) {\
+    name##MatcherP2(p0##_type gmock_p0, \
+        p1##_type gmock_p1) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
+    p0##_type const p0;\
+    p1##_type const p1;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP2);\
   };\
   template <typename p0##_type, typename p1##_type>\
   inline name##MatcherP2<p0##_type, p1##_type> name(p0##_type p0, \
@@ -13876,7 +15169,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename arg_type>\
   bool name##MatcherP2<p0##_type, \
       p1##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -13885,34 +15178,36 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP3 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<p0##_type, p1##_type, p2##_type>(p0, p1, \
                     p2)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -13920,13 +15215,14 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
           new gmock_Impl<arg_type>(p0, p1, p2));\
     }\
     name##MatcherP3(p0##_type gmock_p0, p1##_type gmock_p1, \
-        p2##_type gmock_p2) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2) {\
+        p2##_type gmock_p2) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP3);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type>\
   inline name##MatcherP3<p0##_type, p1##_type, p2##_type> name(p0##_type p0, \
@@ -13937,7 +15233,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename arg_type>\
   bool name##MatcherP3<p0##_type, p1##_type, \
       p2##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -13947,36 +15243,39 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP4 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<p0##_type, p1##_type, p2##_type, \
                     p3##_type>(p0, p1, p2, p3)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -13984,15 +15283,17 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
           new gmock_Impl<arg_type>(p0, p1, p2, p3));\
     }\
     name##MatcherP4(p0##_type gmock_p0, p1##_type gmock_p1, \
-        p2##_type gmock_p2, p3##_type gmock_p3) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3) {\
+        p2##_type gmock_p2, \
+        p3##_type gmock_p3) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP4);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type>\
@@ -14007,7 +15308,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename arg_type>\
   bool name##MatcherP4<p0##_type, p1##_type, p2##_type, \
       p3##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14017,38 +15318,41 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP5 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), \
-               p4(gmock_p4) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)), \
+               p4(::testing::internal::move(gmock_p4)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
-      p4##_type p4;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
+      p4##_type const p4;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<p0##_type, p1##_type, p2##_type, p3##_type, \
                     p4##_type>(p0, p1, p2, p3, p4)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -14057,16 +15361,18 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     }\
     name##MatcherP5(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, \
-        p4##_type gmock_p4) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4) {\
+        p4##_type gmock_p4) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
-    p4##_type p4;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
+    p4##_type const p4;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP5);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type, typename p4##_type>\
@@ -14081,7 +15387,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename arg_type>\
   bool name##MatcherP5<p0##_type, p1##_type, p2##_type, p3##_type, \
       p4##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14091,39 +15397,43 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP6 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), \
-               p4(gmock_p4), p5(gmock_p5) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)), \
+               p4(::testing::internal::move(gmock_p4)), \
+               p5(::testing::internal::move(gmock_p5)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
-      p4##_type p4;\
-      p5##_type p5;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
+      p4##_type const p4;\
+      p5##_type const p5;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
                 ::testing::tuple<p0##_type, p1##_type, p2##_type, p3##_type, \
                     p4##_type, p5##_type>(p0, p1, p2, p3, p4, p5)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -14132,17 +15442,20 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     }\
     name##MatcherP6(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
-        p5##_type gmock_p5) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5) {\
+        p5##_type gmock_p5) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
-    p4##_type p4;\
-    p5##_type p5;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
+    p4##_type const p4;\
+    p5##_type const p5;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP6);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type, typename p4##_type, typename p5##_type>\
@@ -14157,7 +15470,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename arg_type>\
   bool name##MatcherP6<p0##_type, p1##_type, p2##_type, p3##_type, p4##_type, \
       p5##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14168,34 +15481,40 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP7 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
           p6##_type gmock_p6)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), \
-               p4(gmock_p4), p5(gmock_p5), p6(gmock_p6) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)), \
+               p4(::testing::internal::move(gmock_p4)), \
+               p5(::testing::internal::move(gmock_p5)), \
+               p6(::testing::internal::move(gmock_p6)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
-      p4##_type p4;\
-      p5##_type p5;\
-      p6##_type p6;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
+      p4##_type const p4;\
+      p5##_type const p5;\
+      p6##_type const p6;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
@@ -14203,7 +15522,6 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
                     p4##_type, p5##_type, p6##_type>(p0, p1, p2, p3, p4, p5, \
                     p6)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -14212,19 +15530,23 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     }\
     name##MatcherP7(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
-        p5##_type gmock_p5, p6##_type gmock_p6) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), \
-        p6(gmock_p6) {\
+        p5##_type gmock_p5, \
+        p6##_type gmock_p6) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
-    p4##_type p4;\
-    p5##_type p5;\
-    p6##_type p6;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
+    p4##_type const p4;\
+    p5##_type const p5;\
+    p6##_type const p6;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP7);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type, typename p4##_type, typename p5##_type, \
@@ -14242,7 +15564,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   template <typename arg_type>\
   bool name##MatcherP7<p0##_type, p1##_type, p2##_type, p3##_type, p4##_type, \
       p5##_type, p6##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14253,35 +15575,42 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP8 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
           p6##_type gmock_p6, p7##_type gmock_p7)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), \
-               p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)), \
+               p4(::testing::internal::move(gmock_p4)), \
+               p5(::testing::internal::move(gmock_p5)), \
+               p6(::testing::internal::move(gmock_p6)), \
+               p7(::testing::internal::move(gmock_p7)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
-      p4##_type p4;\
-      p5##_type p5;\
-      p6##_type p6;\
-      p7##_type p7;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
+      p4##_type const p4;\
+      p5##_type const p5;\
+      p6##_type const p6;\
+      p7##_type const p7;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
@@ -14289,7 +15618,6 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
                     p4##_type, p5##_type, p6##_type, p7##_type>(p0, p1, p2, \
                     p3, p4, p5, p6, p7)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -14299,20 +15627,24 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     name##MatcherP8(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
         p5##_type gmock_p5, p6##_type gmock_p6, \
-        p7##_type gmock_p7) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-        p7(gmock_p7) {\
+        p7##_type gmock_p7) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)), \
+        p7(::testing::internal::move(gmock_p7)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
-    p4##_type p4;\
-    p5##_type p5;\
-    p6##_type p6;\
-    p7##_type p7;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
+    p4##_type const p4;\
+    p5##_type const p5;\
+    p6##_type const p6;\
+    p7##_type const p7;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP8);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type, typename p4##_type, typename p5##_type, \
@@ -14332,7 +15664,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   bool name##MatcherP8<p0##_type, p1##_type, p2##_type, p3##_type, p4##_type, \
       p5##_type, p6##_type, \
       p7##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14343,37 +15675,44 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP9 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
           p6##_type gmock_p6, p7##_type gmock_p7, p8##_type gmock_p8)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), \
-               p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7), \
-               p8(gmock_p8) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)), \
+               p4(::testing::internal::move(gmock_p4)), \
+               p5(::testing::internal::move(gmock_p5)), \
+               p6(::testing::internal::move(gmock_p6)), \
+               p7(::testing::internal::move(gmock_p7)), \
+               p8(::testing::internal::move(gmock_p8)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
-      p4##_type p4;\
-      p5##_type p5;\
-      p6##_type p6;\
-      p7##_type p7;\
-      p8##_type p8;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
+      p4##_type const p4;\
+      p5##_type const p5;\
+      p6##_type const p6;\
+      p7##_type const p7;\
+      p8##_type const p8;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
@@ -14381,7 +15720,6 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
                     p4##_type, p5##_type, p6##_type, p7##_type, \
                     p8##_type>(p0, p1, p2, p3, p4, p5, p6, p7, p8)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -14391,21 +15729,26 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     name##MatcherP9(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
         p5##_type gmock_p5, p6##_type gmock_p6, p7##_type gmock_p7, \
-        p8##_type gmock_p8) : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), \
-        p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7), \
-        p8(gmock_p8) {\
+        p8##_type gmock_p8) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)), \
+        p7(::testing::internal::move(gmock_p7)), \
+        p8(::testing::internal::move(gmock_p8)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
-    p4##_type p4;\
-    p5##_type p5;\
-    p6##_type p6;\
-    p7##_type p7;\
-    p8##_type p8;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
+    p4##_type const p4;\
+    p5##_type const p5;\
+    p6##_type const p6;\
+    p7##_type const p7;\
+    p8##_type const p8;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP9);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type, typename p4##_type, typename p5##_type, \
@@ -14426,7 +15769,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   bool name##MatcherP9<p0##_type, p1##_type, p2##_type, p3##_type, p4##_type, \
       p5##_type, p6##_type, p7##_type, \
       p8##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14438,39 +15781,47 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   class name##MatcherP10 {\
    public:\
     template <typename arg_type>\
-    class gmock_Impl : public ::testing::MatcherInterface<arg_type> {\
+    class gmock_Impl : public ::testing::MatcherInterface<\
+        GTEST_REFERENCE_TO_CONST_(arg_type)> {\
      public:\
       gmock_Impl(p0##_type gmock_p0, p1##_type gmock_p1, p2##_type gmock_p2, \
           p3##_type gmock_p3, p4##_type gmock_p4, p5##_type gmock_p5, \
           p6##_type gmock_p6, p7##_type gmock_p7, p8##_type gmock_p8, \
           p9##_type gmock_p9)\
-           : p0(gmock_p0), p1(gmock_p1), p2(gmock_p2), p3(gmock_p3), \
-               p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), p7(gmock_p7), \
-               p8(gmock_p8), p9(gmock_p9) {}\
+           : p0(::testing::internal::move(gmock_p0)), \
+               p1(::testing::internal::move(gmock_p1)), \
+               p2(::testing::internal::move(gmock_p2)), \
+               p3(::testing::internal::move(gmock_p3)), \
+               p4(::testing::internal::move(gmock_p4)), \
+               p5(::testing::internal::move(gmock_p5)), \
+               p6(::testing::internal::move(gmock_p6)), \
+               p7(::testing::internal::move(gmock_p7)), \
+               p8(::testing::internal::move(gmock_p8)), \
+               p9(::testing::internal::move(gmock_p9)) {}\
       virtual bool MatchAndExplain(\
-          arg_type arg, ::testing::MatchResultListener* result_listener) const;\
+          GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
+          ::testing::MatchResultListener* result_listener) const;\
       virtual void DescribeTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(false);\
       }\
       virtual void DescribeNegationTo(::std::ostream* gmock_os) const {\
         *gmock_os << FormatDescription(true);\
       }\
-      p0##_type p0;\
-      p1##_type p1;\
-      p2##_type p2;\
-      p3##_type p3;\
-      p4##_type p4;\
-      p5##_type p5;\
-      p6##_type p6;\
-      p7##_type p7;\
-      p8##_type p8;\
-      p9##_type p9;\
+      p0##_type const p0;\
+      p1##_type const p1;\
+      p2##_type const p2;\
+      p3##_type const p3;\
+      p4##_type const p4;\
+      p5##_type const p5;\
+      p6##_type const p6;\
+      p7##_type const p7;\
+      p8##_type const p8;\
+      p9##_type const p9;\
      private:\
-      ::testing::internal::string FormatDescription(bool negation) const {\
-        const ::testing::internal::string gmock_description = (description);\
-        if (!gmock_description.empty()) {\
+      ::std::string FormatDescription(bool negation) const {\
+        ::std::string gmock_description = (description);\
+        if (!gmock_description.empty())\
           return gmock_description;\
-        }\
         return ::testing::internal::FormatMatcherDescription(\
             negation, #name, \
             ::testing::internal::UniversalTersePrintTupleFieldsToStrings(\
@@ -14478,7 +15829,6 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
                     p4##_type, p5##_type, p6##_type, p7##_type, p8##_type, \
                     p9##_type>(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9)));\
       }\
-      GTEST_DISALLOW_ASSIGN_(gmock_Impl);\
     };\
     template <typename arg_type>\
     operator ::testing::Matcher<arg_type>() const {\
@@ -14488,22 +15838,29 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
     name##MatcherP10(p0##_type gmock_p0, p1##_type gmock_p1, \
         p2##_type gmock_p2, p3##_type gmock_p3, p4##_type gmock_p4, \
         p5##_type gmock_p5, p6##_type gmock_p6, p7##_type gmock_p7, \
-        p8##_type gmock_p8, p9##_type gmock_p9) : p0(gmock_p0), p1(gmock_p1), \
-        p2(gmock_p2), p3(gmock_p3), p4(gmock_p4), p5(gmock_p5), p6(gmock_p6), \
-        p7(gmock_p7), p8(gmock_p8), p9(gmock_p9) {\
+        p8##_type gmock_p8, \
+        p9##_type gmock_p9) : p0(::testing::internal::move(gmock_p0)), \
+        p1(::testing::internal::move(gmock_p1)), \
+        p2(::testing::internal::move(gmock_p2)), \
+        p3(::testing::internal::move(gmock_p3)), \
+        p4(::testing::internal::move(gmock_p4)), \
+        p5(::testing::internal::move(gmock_p5)), \
+        p6(::testing::internal::move(gmock_p6)), \
+        p7(::testing::internal::move(gmock_p7)), \
+        p8(::testing::internal::move(gmock_p8)), \
+        p9(::testing::internal::move(gmock_p9)) {\
     }\
-    p0##_type p0;\
-    p1##_type p1;\
-    p2##_type p2;\
-    p3##_type p3;\
-    p4##_type p4;\
-    p5##_type p5;\
-    p6##_type p6;\
-    p7##_type p7;\
-    p8##_type p8;\
-    p9##_type p9;\
+    p0##_type const p0;\
+    p1##_type const p1;\
+    p2##_type const p2;\
+    p3##_type const p3;\
+    p4##_type const p4;\
+    p5##_type const p5;\
+    p6##_type const p6;\
+    p7##_type const p7;\
+    p8##_type const p8;\
+    p9##_type const p9;\
    private:\
-    GTEST_DISALLOW_ASSIGN_(name##MatcherP10);\
   };\
   template <typename p0##_type, typename p1##_type, typename p2##_type, \
       typename p3##_type, typename p4##_type, typename p5##_type, \
@@ -14526,7 +15883,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
   bool name##MatcherP10<p0##_type, p1##_type, p2##_type, p3##_type, \
       p4##_type, p5##_type, p6##_type, p7##_type, p8##_type, \
       p9##_type>::gmock_Impl<arg_type>::MatchAndExplain(\
-      arg_type arg, \
+      GTEST_REFERENCE_TO_CONST_(arg_type) arg,\
       ::testing::MatchResultListener* result_listener GTEST_ATTRIBUTE_UNUSED_)\
           const
 
@@ -14563,8 +15920,7 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Implements class templates NiceMock, NaggyMock, and StrictMock.
 //
@@ -14584,10 +15940,9 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
 // NiceMock<MockFoo>.
 //
 // NiceMock, NaggyMock, and StrictMock "inherit" the constructors of
-// their respective base class, with up-to 10 arguments.  Therefore
-// you can write NiceMock<MockFoo>(5, "a") to construct a nice mock
-// where MockFoo has a constructor that accepts (int, const char*),
-// for example.
+// their respective base class.  Therefore you can write
+// NiceMock<MockFoo>(5, "a") to construct a nice mock where MockFoo
+// has a constructor that accepts (int, const char*), for example.
 //
 // A known limitation is that NiceMock<MockFoo>, NaggyMock<MockFoo>,
 // and StrictMock<MockFoo> only works for mock methods defined using
@@ -14596,10 +15951,8 @@ AnyOf(M1 m1, M2 m2, M3 m3, M4 m4, M5 m5, M6 m6, M7 m7, M8 m8, M9 m9, M10 m10) {
 // or "strict" modifier may not affect it, depending on the compiler.
 // In particular, nesting NiceMock, NaggyMock, and StrictMock is NOT
 // supported.
-//
-// Another known limitation is that the constructors of the base mock
-// cannot have arguments passed by non-const reference, which are
-// banned by the Google C++ style guide anyway.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_NICE_STRICT_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_GENERATED_NICE_STRICT_H_
@@ -14610,15 +15963,35 @@ namespace testing {
 template <class MockClass>
 class NiceMock : public MockClass {
  public:
-  // We don't factor out the constructor body to a common method, as
-  // we have to avoid a possible clash with members of MockClass.
-  NiceMock() {
+  NiceMock() : MockClass() {
     ::testing::Mock::AllowUninterestingCalls(
         internal::ImplicitCast_<MockClass*>(this));
   }
 
-  // C++ doesn't (yet) allow inheritance of constructors, so we have
-  // to define it for each arity.
+#if GTEST_LANG_CXX11
+  // Ideally, we would inherit base class's constructors through a using
+  // declaration, which would preserve their visibility. However, many existing
+  // tests rely on the fact that current implementation reexports protected
+  // constructors as public. These tests would need to be cleaned up first.
+
+  // Single argument constructor is special-cased so that it can be
+  // made explicit.
+  template <typename A>
+  explicit NiceMock(A&& arg) : MockClass(std::forward<A>(arg)) {
+    ::testing::Mock::AllowUninterestingCalls(
+        internal::ImplicitCast_<MockClass*>(this));
+  }
+
+  template <typename A1, typename A2, typename... An>
+  NiceMock(A1&& arg1, A2&& arg2, An&&... args)
+      : MockClass(std::forward<A1>(arg1), std::forward<A2>(arg2),
+                  std::forward<An>(args)...) {
+    ::testing::Mock::AllowUninterestingCalls(
+        internal::ImplicitCast_<MockClass*>(this));
+  }
+#else
+  // C++98 doesn't have variadic templates, so we have to define one
+  // for each arity.
   template <typename A1>
   explicit NiceMock(const A1& a1) : MockClass(a1) {
     ::testing::Mock::AllowUninterestingCalls(
@@ -14694,7 +16067,9 @@ class NiceMock : public MockClass {
         internal::ImplicitCast_<MockClass*>(this));
   }
 
-  virtual ~NiceMock() {
+#endif  // GTEST_LANG_CXX11
+
+  ~NiceMock() {
     ::testing::Mock::UnregisterCallReaction(
         internal::ImplicitCast_<MockClass*>(this));
   }
@@ -14706,15 +16081,35 @@ class NiceMock : public MockClass {
 template <class MockClass>
 class NaggyMock : public MockClass {
  public:
-  // We don't factor out the constructor body to a common method, as
-  // we have to avoid a possible clash with members of MockClass.
-  NaggyMock() {
+  NaggyMock() : MockClass() {
     ::testing::Mock::WarnUninterestingCalls(
         internal::ImplicitCast_<MockClass*>(this));
   }
 
-  // C++ doesn't (yet) allow inheritance of constructors, so we have
-  // to define it for each arity.
+#if GTEST_LANG_CXX11
+  // Ideally, we would inherit base class's constructors through a using
+  // declaration, which would preserve their visibility. However, many existing
+  // tests rely on the fact that current implementation reexports protected
+  // constructors as public. These tests would need to be cleaned up first.
+
+  // Single argument constructor is special-cased so that it can be
+  // made explicit.
+  template <typename A>
+  explicit NaggyMock(A&& arg) : MockClass(std::forward<A>(arg)) {
+    ::testing::Mock::WarnUninterestingCalls(
+        internal::ImplicitCast_<MockClass*>(this));
+  }
+
+  template <typename A1, typename A2, typename... An>
+  NaggyMock(A1&& arg1, A2&& arg2, An&&... args)
+      : MockClass(std::forward<A1>(arg1), std::forward<A2>(arg2),
+                  std::forward<An>(args)...) {
+    ::testing::Mock::WarnUninterestingCalls(
+        internal::ImplicitCast_<MockClass*>(this));
+  }
+#else
+  // C++98 doesn't have variadic templates, so we have to define one
+  // for each arity.
   template <typename A1>
   explicit NaggyMock(const A1& a1) : MockClass(a1) {
     ::testing::Mock::WarnUninterestingCalls(
@@ -14790,7 +16185,9 @@ class NaggyMock : public MockClass {
         internal::ImplicitCast_<MockClass*>(this));
   }
 
-  virtual ~NaggyMock() {
+#endif  // GTEST_LANG_CXX11
+
+  ~NaggyMock() {
     ::testing::Mock::UnregisterCallReaction(
         internal::ImplicitCast_<MockClass*>(this));
   }
@@ -14802,15 +16199,35 @@ class NaggyMock : public MockClass {
 template <class MockClass>
 class StrictMock : public MockClass {
  public:
-  // We don't factor out the constructor body to a common method, as
-  // we have to avoid a possible clash with members of MockClass.
-  StrictMock() {
+  StrictMock() : MockClass() {
     ::testing::Mock::FailUninterestingCalls(
         internal::ImplicitCast_<MockClass*>(this));
   }
 
-  // C++ doesn't (yet) allow inheritance of constructors, so we have
-  // to define it for each arity.
+#if GTEST_LANG_CXX11
+  // Ideally, we would inherit base class's constructors through a using
+  // declaration, which would preserve their visibility. However, many existing
+  // tests rely on the fact that current implementation reexports protected
+  // constructors as public. These tests would need to be cleaned up first.
+
+  // Single argument constructor is special-cased so that it can be
+  // made explicit.
+  template <typename A>
+  explicit StrictMock(A&& arg) : MockClass(std::forward<A>(arg)) {
+    ::testing::Mock::FailUninterestingCalls(
+        internal::ImplicitCast_<MockClass*>(this));
+  }
+
+  template <typename A1, typename A2, typename... An>
+  StrictMock(A1&& arg1, A2&& arg2, An&&... args)
+      : MockClass(std::forward<A1>(arg1), std::forward<A2>(arg2),
+                  std::forward<An>(args)...) {
+    ::testing::Mock::FailUninterestingCalls(
+        internal::ImplicitCast_<MockClass*>(this));
+  }
+#else
+  // C++98 doesn't have variadic templates, so we have to define one
+  // for each arity.
   template <typename A1>
   explicit StrictMock(const A1& a1) : MockClass(a1) {
     ::testing::Mock::FailUninterestingCalls(
@@ -14886,7 +16303,9 @@ class StrictMock : public MockClass {
         internal::ImplicitCast_<MockClass*>(this));
   }
 
-  virtual ~StrictMock() {
+#endif  // GTEST_LANG_CXX11
+
+  ~StrictMock() {
     ::testing::Mock::UnregisterCallReaction(
         internal::ImplicitCast_<MockClass*>(this));
   }
@@ -14954,12 +16373,13 @@ class StrictMock<StrictMock<MockClass> >;
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: wan@google.com (Zhanyong Wan)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
 // This file implements some actions that depend on gmock-generated-actions.h.
+
+// GOOGLETEST_CM0002 DO NOT DELETE
 
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_MORE_ACTIONS_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_MORE_ACTIONS_H_
@@ -15199,8 +16619,7 @@ ACTION_P(Throw, exception) { throw exception; }
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Author: marcus.boerger@google.com (Marcus Boerger)
+
 
 // Google Mock - a framework for writing C++ mock classes.
 //
@@ -15209,11 +16628,25 @@ ACTION_P(Throw, exception) { throw exception; }
 // Note that tests are implemented in gmock-matchers_test.cc rather than
 // gmock-more-matchers-test.cc.
 
-#ifndef GMOCK_GMOCK_MORE_MATCHERS_H_
-#define GMOCK_GMOCK_MORE_MATCHERS_H_
+// GOOGLETEST_CM0002 DO NOT DELETE
+
+#ifndef GMOCK_INCLUDE_GMOCK_MORE_MATCHERS_H_
+#define GMOCK_INCLUDE_GMOCK_MORE_MATCHERS_H_
 
 
 namespace testing {
+
+// Silence C4100 (unreferenced formal
+// parameter) for MSVC
+#ifdef _MSC_VER
+# pragma warning(push)
+# pragma warning(disable:4100)
+#if (_MSC_VER == 1900)
+// and silence C4800 (C4800: 'int *const ': forcing value
+// to bool 'true' or 'false') for MSVC 14
+# pragma warning(disable:4800)
+  #endif
+#endif
 
 // Defines a matcher that matches an empty container. The container must
 // support both size() and empty(), which all STL-like containers provide.
@@ -15241,9 +16674,14 @@ MATCHER(IsFalse, negation ? "is true" : "is false") {
   return !static_cast<bool>(arg);
 }
 
+#ifdef _MSC_VER
+# pragma warning(pop)
+#endif
+
+
 }  // namespace testing
 
-#endif  // GMOCK_GMOCK_MORE_MATCHERS_H_
+#endif  // GMOCK_INCLUDE_GMOCK_MORE_MATCHERS_H_
 
 namespace testing {
 
