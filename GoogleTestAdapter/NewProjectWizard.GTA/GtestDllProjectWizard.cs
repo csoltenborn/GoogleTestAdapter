@@ -1,5 +1,6 @@
 ﻿namespace NewProjectWizard.GTA
 {
+    // ReSharper disable once UnusedMember.Global
     public class GtestDllProjectWizard : ProjectWizardBase
     {
         protected override void RunStarted()

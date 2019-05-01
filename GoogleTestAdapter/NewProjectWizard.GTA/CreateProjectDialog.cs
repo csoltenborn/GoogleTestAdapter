@@ -51,22 +51,32 @@ namespace NewProjectWizard.GTA
                 : Item.NoProjectItem;
         }
 
-        public CreateProjectDialog() : this(new List<Project>())
+        public CreateProjectDialog() : this(new List<Project>(), new List<Project>())
         {
         }
 
-        public CreateProjectDialog(IEnumerable<Project> projects)
+        public CreateProjectDialog(ICollection<Project> allProjects, ICollection<Project> gtestProjects)
         {
-            InitializeComponent(); 
+            InitializeComponent();
 
-            gtestProjectComboBox.Items.Add(Item.NoProjectItem);
-            foreach (var project in projects)
+            foreach (var project in allProjects)
             {
                 var item = new Item(project); 
                 _projectsToItems.Add(project, item); 
-                gtestProjectComboBox.Items.Add(item); 
-                projectsUnderTestCheckedListBox.Items.Add(item);
-            } 
+            }
+
+            var projectUnderTestChoices = allProjects.Except(gtestProjects).OrderBy(p => p.Name).ToList();
+            foreach (var project in projectUnderTestChoices)
+            {
+                projectsUnderTestCheckedListBox.Items.Add(_projectsToItems[project]);
+            }
+
+            var gtestChoices = gtestProjects.OrderBy(p => p.Name).Concat(projectUnderTestChoices);
+            gtestProjectComboBox.Items.Add(Item.NoProjectItem);
+            foreach (var project in gtestChoices)
+            {
+                gtestProjectComboBox.Items.Add(_projectsToItems[project]); 
+            }
         }
 
         private void okButton_Click(object sender, EventArgs e)

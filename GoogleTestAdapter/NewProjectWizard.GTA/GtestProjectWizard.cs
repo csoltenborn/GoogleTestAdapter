@@ -9,6 +9,7 @@ using VSLangProj;
 
 namespace NewProjectWizard.GTA
 {
+    // ReSharper disable once UnusedMember.Global
     public class GtestProjectWizard : ProjectWizardBase
     {
         private const string GtestIncludePlaceholder = "$gtestinclude$";
@@ -23,7 +24,10 @@ namespace NewProjectWizard.GTA
             // TODO order by toolset?
             var gtestProjectCandidate = gtestProjects.FirstOrDefault();
 
-            using (var dialog = new CreateProjectDialog(CppProjects) {GtestProject = gtestProjectCandidate})
+            using (var dialog = new CreateProjectDialog(CppProjects, gtestProjects)
+            {
+                GtestProject = gtestProjectCandidate
+            })
             {
                 if (dialog.ShowDialog() != DialogResult.OK)
                 {
