@@ -1,30 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
-  <TemplateData>
-    <ProjectType>VC</ProjectType>
-    <TemplateID>A61B3F2B-057E-40B9-9854-E541DE2B7336</TemplateID>
-    <Name>Google Test DLL</Name>
-    <Description>C++ project containing Google Test to be compiled into a DLL, which can then be consumed by test projects.</Description>
-    <Icon>gtest-logo.ico</Icon>
-    <SortOrder>1000</SortOrder>
-    <DefaultName>gtest</DefaultName>
-  </TemplateData>
-  <TemplateContent>
-    <Project File="ProjectTemplate.vcxproj" TargetFileName="$safeprojectname$.vcxproj" ReplaceParameters="true" >
-      <ProjectItem TargetFileName="$safeprojectname$.vcxproj.filters" ReplaceParameters="true">ProjectTemplate.vcxproj.filters</ProjectItem>
+	<TemplateData>
+		<ProjectType>VC</ProjectType>
+		<TemplateID>A61B3F2B-057E-40B9-9854-E541DE2B7336</TemplateID>
+		<Name>Google Test DLL</Name>
+		<Description>C++ project containing Google Test to be compiled into a DLL, which can then be consumed by test projects.</Description>
+		<Icon>gtest-logo.ico</Icon>
+		<SortOrder>1000</SortOrder>
+		<DefaultName>gtest</DefaultName>
+	</TemplateData>
+	<TemplateContent>
+		<Project File="ProjectTemplate.vcxproj" TargetFileName="$safeprojectname$.vcxproj" ReplaceParameters="true" >
+			<ProjectItem TargetFileName="$safeprojectname$.vcxproj.filters" ReplaceParameters="true">ProjectTemplate.vcxproj.filters</ProjectItem>
 
-      <ProjectItem OpenInEditor="true">READ_ME</ProjectItem>
-      <ProjectItem>LICENSE</ProjectItem>
+			<ProjectItem OpenInEditor="true">READ_ME</ProjectItem>
+			<ProjectItem>LICENSE</ProjectItem>
 
-      <ProjectItem>include\gtest\gtest.h</ProjectItem>
-      <ProjectItem>include\gmock\gmock.h</ProjectItem>
-      <ProjectItem>gmock-gtest-all.cc</ProjectItem>
+			<ProjectItem>include\gtest\gtest.h</ProjectItem>
+			<ProjectItem>include\gmock\gmock.h</ProjectItem>
+			<ProjectItem>gtest-all.cc</ProjectItem>
+			<ProjectItem>gmock-gtest-all.cc</ProjectItem>
 
-      <ProjectItem>include\GTA_Traits_1.8.0.h</ProjectItem>
-    </Project>
-  </TemplateContent>
-  <WizardExtension>
-    <Assembly>NewProjectWizard.GTA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=028d073f99e04687</Assembly>
-    <FullClassName>NewProjectWizard.GTA.GtestDllProjectWizard</FullClassName>
-  </WizardExtension>
+			<ProjectItem>include\GTA_Traits_1.8.0.h</ProjectItem>
+		</Project>
+	</TemplateContent>
+	<WizardExtension>
+		<Assembly>NewProjectWizard.GTA, Version=0.1.0.0, Culture=neutral, PublicKeyToken=028d073f99e04687</Assembly>
+		<FullClassName>NewProjectWizard.GTA.GtestDllProjectWizard</FullClassName>
+	</WizardExtension>
 </VSTemplate>

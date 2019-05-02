@@ -83,7 +83,7 @@ namespace NewProjectWizard.GTA
 
             var configurationType = _gtestProject == null 
                 ? ProjectExtensions.ConfigurationType.Dynamic 
-                : GetLinkingKind(_gtestProject);
+                : GetConfigurationType(_gtestProject);
             value = configurationType == ProjectExtensions.ConfigurationType.Static 
                 ? "" 
                 : GtestHelper.GetLinkGtestAsDll(_gtestProject);
@@ -114,7 +114,7 @@ namespace NewProjectWizard.GTA
             }
         }
 
-        private ProjectExtensions.ConfigurationType GetLinkingKind(Project project)
+        private ProjectExtensions.ConfigurationType GetConfigurationType(Project project)
         {
             XmlDocument projectFile = new XmlDocument();
             projectFile.Load(project.FullName);

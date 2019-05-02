@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="gmock-gtest-all.cc" />
+    <Content Include="gtest-all.cc" />
     <Content Include="gtest-logo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

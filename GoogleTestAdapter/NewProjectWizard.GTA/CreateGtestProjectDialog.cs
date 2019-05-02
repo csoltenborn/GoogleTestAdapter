@@ -36,6 +36,12 @@ namespace NewProjectWizard.GTA
             set => gtestProjectComboBox.SelectedItem = _configurationTypes2Items[value];
         }
 
+        public bool IncludeGoogleMock
+        {
+            get => includeGoogleMockCheckBox.Checked;
+            set => includeGoogleMockCheckBox.Checked = value;
+        }
+
         private readonly IDictionary<ProjectExtensions.ConfigurationType, Item> _configurationTypes2Items = new Dictionary<ProjectExtensions.ConfigurationType, Item>();
 
         public CreateGtestProjectDialog()

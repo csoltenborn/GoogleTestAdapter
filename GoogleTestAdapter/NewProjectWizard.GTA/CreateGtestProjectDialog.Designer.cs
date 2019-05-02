@@ -35,6 +35,7 @@
             this.buttonsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
+            this.includeGoogleMockCheckBox = new System.Windows.Forms.CheckBox();
             this.rootTableLayoutPanel.SuspendLayout();
             this.buttonsFlowLayoutPanel.SuspendLayout();
             this.SuspendLayout();
@@ -50,6 +51,7 @@
             this.rootTableLayoutPanel.Controls.Add(this.selectGtestProjectTitleLabel, 0, 1);
             this.rootTableLayoutPanel.Controls.Add(this.gtestProjectComboBox, 0, 2);
             this.rootTableLayoutPanel.Controls.Add(this.buttonsFlowLayoutPanel, 0, 5);
+            this.rootTableLayoutPanel.Controls.Add(this.includeGoogleMockCheckBox, 0, 4);
             this.rootTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.rootTableLayoutPanel.Margin = new System.Windows.Forms.Padding(7);
             this.rootTableLayoutPanel.Name = "rootTableLayoutPanel";
@@ -138,6 +140,17 @@
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
+            // includeGoogleMockCheckBox
+            // 
+            this.includeGoogleMockCheckBox.AutoSize = true;
+            this.includeGoogleMockCheckBox.Location = new System.Drawing.Point(3, 189);
+            this.includeGoogleMockCheckBox.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
+            this.includeGoogleMockCheckBox.Name = "includeGoogleMockCheckBox";
+            this.includeGoogleMockCheckBox.Size = new System.Drawing.Size(273, 33);
+            this.includeGoogleMockCheckBox.TabIndex = 7;
+            this.includeGoogleMockCheckBox.Text = "Include Google Mock";
+            this.includeGoogleMockCheckBox.UseVisualStyleBackColor = true;
+            // 
             // CreateGtestProjectDialog
             // 
             this.AcceptButton = this.okButton;
@@ -167,5 +180,6 @@
         private System.Windows.Forms.FlowLayoutPanel buttonsFlowLayoutPanel;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.CheckBox includeGoogleMockCheckBox;
     }
 }
