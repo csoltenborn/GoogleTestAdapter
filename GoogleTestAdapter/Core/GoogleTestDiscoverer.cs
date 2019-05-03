@@ -57,13 +57,13 @@ namespace GoogleTestAdapter
                 void ReportTestCases(TestCase testCase)
                 {
                     reporter.ReportTestsFound(testCase.Yield());
-                    logger.DebugInfo("Added testcase " + testCase.DisplayName);
+                    logger.DebugInfo(String.Format(Resources.AddedTestCase, testCase.DisplayName));
                     nrOfTestCases++;
                 }
 
                 var factory = new TestCaseFactory(executable, logger, settings, diaResolverFactory, processExecutorFactory);
                 factory.CreateTestCases(ReportTestCases);
-                logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
+                logger.LogInfo(String.Format(Resources.NumberOfTestsMessage, nrOfTestCases, executable));
             });
         }
 

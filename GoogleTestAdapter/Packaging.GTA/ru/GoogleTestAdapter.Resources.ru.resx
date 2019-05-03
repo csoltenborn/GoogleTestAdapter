@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>Если этот параметр включен, подключенный отладчик (при его наличии) будет перехватывать сбои проверочных утверждений и автоматически переходить в интерактивный режим.
+Параметр Google Test: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Выходные данные команды "{1} {2}"</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>Не удается получить список тестовых случаев для исполняемого файла "{0}": ошибка выполнения процесса с кодом завершения {1}.</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Имена тестов, создаваемые платформой Google Test, могут содержать символ "/". Если имя теста не помещается в окне обозревателя тестов Visual Studio, часть имени после символа "/" обрезается. Чтобы избежать этого, можно задать значение данного параметра. Оно будет заменять символ "/". Обратите внимание на то, что при использовании значений "\", " ", "|" и "-" описанное поведение сохраняется (избежать его точно помогают значения ".", "_", ":" и "::"). Кроме того, имейте в виду, что регулярные выражения признаков вычисляются на основе отображаемых имен тестов (поэтому в них должно учитываться значение этого параметра).</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>Количество длительностей выполнения для фактических тестовых случаев: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}Из выходных данных в консоли получены результаты тестов ({1}).</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>Процесс завершил работу с кодом {0}.</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>Завершен процесс {0}, запущенный в {1}.</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: "{2}" успешно запущен.</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Выполнять тесты в случайном порядке</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}Выполнение было отменено: {1}.</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>После включения тестов ({1}) длина команды превышает максимальную ({0}) (длина следующей строки — {2}).</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>В двоичном файле {2} обнаружены символы методов теста ({0}) и символы признаков ({1}).</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Время ожидания обнаружения тестов в сек</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: перехвачено исключение, сообщение: "{2}", выполненная команда: "{3}"</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} — каталог решения (доступен только в Visual Studio)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>Максимальное число потоков</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>Если задано значение true, при отмене выполнения тестов запущенные исполняемые файлы тестов принудительно завершаются. Обратите внимание на то, что завершение процесса теста может иметь различные побочные эффекты. В частности, платформе Google Test не удастся выполнить задачи завершения работы.</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}Исключение при выполнении тестов: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Файл индикаторов Google Test для исполняемого файла {0} не найден.</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0 — начальное значение получается на основе системного времени; 1&lt;=n&lt;={0} — используется указанное начальное значение. См. примечание к параметру "{1}".
+Параметр Google Test: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}Тестовые случаи ({1}) не были запущены. Может быть, вы повторяете тестовый запуск, но тесты изменились? Тестовые случаи:{2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Дополнительные параметры выполнения теста</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>Файл индикаторов Google Test для исполняемого файла {0} найден.</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>В фактических длительностях выполнения были обнаружены ожидаемые длительности выполнения ({0}).</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>Расширение PATH</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>Невозможно проанализировать регулярное выражение "{0}": {1}.</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Тесты будут выполняться выбранное число раз (-1 — бесконечно).
+Параметр Google Test: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}А именно: откройте командную строку, перейдите в каталог "{1}" и выполните следующую команду, чтобы тесты можно было запускать в целом.{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>Использовать разделитель по числу тестов</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Неизвестный литерал: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Использовать новую платформу выполнения тестов (экспериментальная версия)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>Не удалось выполнить разбор пары регулярных выражений "{0}". Сообщение об исключении: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>В исполняемом файле {1} обнаружены тесты ({0}).</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>Обратите внимание, что при параллельном выполнении тестов выходные данные тестов будут отображаться в консоли тестирования.</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>Выходные данные команды:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Вывод выходных данных исполняемых файлов Google Test в окне вывода тестов.</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>Пакетный файл удаления теста</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}Выполнение заняло {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Рабочий каталог</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Пакетный файл для удаления тестов</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>В настройках выбрано параллельное выполнение тестов, но тесты будут запускаться последовательно, так как присоединен отладчик.</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Недопустимый файл {0}. {1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>После обнаружения тестов</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0} соответствует регулярному выражению по умолчанию {1}.</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>Отсутствуют известные тестовые случаи для результата теста в строке "{0}". Может быть, вы повторяете тестовый запуск, но тесты изменились?</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>Обнаружение теста для исполняемого файла {1} было отменено через {0} с.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>Параллельное выполнение тестов обеспечивается с помощью нескольких потоков, каждому из которых назначается ряд выполняемых тестов. Потоки последовательно вызывают необходимые исполняемые файлы для получения результатов тестов.</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}Тестовый случай уже добавлен в анализатор: {1}.</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Дополнительные параметры для исполняемого файла Google Test. Заполнители:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>Максимальные различия ({0}):</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>Не удалось проанализировать узел XmlNode: "{0}". Сообщение об исключении: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>Завершать процессы при отмене</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}Не удалось запустить исполняемый файл теста "{1}": {2}.</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>Стандартное отклонение: {0} мс</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Регулярные выражения для назначения признаков</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>Количество длительностей выполнения для ожидаемых тестовых случаев: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>Если задано значение true, после обновления расширения выводится диалоговое окно с заметками о выпуске.</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Используйте новую платформу выполнения тестов. Преимущества: обнаружение сбоев тестов и печать выходных данных тестов также возможны в режиме отладки.</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; Статистика планирования &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Показать заметки о выпуске после обновления</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>Выполняемая команда: "{0} {1}", рабочий каталог: "{2}"</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>При определении расположений и признаков тестов в файле {0} возникло исключение\n{1}.</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0} не соответствует регулярному выражению по умолчанию {1}.</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Число повторов теста</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>Выходные данные команды отсутствуют.</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: Не удалось найти файл: {2}.</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>Недопустимое регулярное выражение "{0}". Сообщение об исключении: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Прервать в случае ошибки</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Анализ информации отладочных символов для исполняемых файлов тестов с целью получения сведений о расположении исходного кода и признаков (определяются с помощью макросов в файле GTA_Traits.h).
+Если задано значение false, этап 2 обнаружения признаков будет пропущен и будут применяться только регулярные выражения признаков.</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Разделитель имени теста</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}В Visual Studio поступили результаты теста ({1}), исполняемый файл: "{2}", время выполнения теста: {3}.</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>Максимальное число потоков, используемых для выполнения тестов (0 — один поток на каждый процессор).</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Конец выходных данных</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} не может быть меньше 0.</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Разное</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Добавлять метку времени в выходные данные</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0} соответствует пользовательскому регулярному выражению {1}.</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Выходные данные теста:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>Неизвестное состояние тестового случая: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>Если значение не пустое, оно задает рабочий каталог для выполнения тестов (по умолчанию: {0})
+Пример: {1}\MyTestDir
+Заполнители:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>Средняя разность между ожидаемым и фактическим временем выполнения: {0} мс</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}Из XML-файла результатов теста {2} получены результаты тестов ({1}).</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>Если задано значение true, тесты будут выполняться в случайном порядке. Обратите внимание на то, что действительно случайный порядок обеспечивается, только если тесты выполняются не параллельно. В противном случае исполняемые файлы тестов, скорее всего, будут выполняться несколько раз, поэтому случайный порядок будет обеспечиваться только в пределах соответствующего потока.
+Параметр Google Test: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>Присоединение отладчика к процессу {0}</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0} не соответствует пользовательскому регулярному выражению {1}.</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>Если выбрано значение true, выходные данные отладки будут выводиться в консоли тестирования.</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>Если задано значение true, будут выполняться все выбранные тесты, даже если они отключены.
+Параметр Google Test: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} — каталог, содержащий исполняемый файл теста</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Выполнение теста</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Печать отладочной информации</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}Не удалось удалить каталог теста "{1}": {2}.</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Тесты в случайном порядке: начальное значение</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! Возможно, произошел СБОЙ этого теста !!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>Вероятная причина — сбой теста {0}</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>Не удалось полностью проанализировать файл результатов теста {0}. Это может быть вызвано сбоем при запуске исполняемого файла теста. Сообщение об исключении: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}Во время выполнения теста в Visual Studio поступили результаты теста ({1}), исполняемый файл: "{2}".</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Также выполнять отключенные тесты</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Число секунд, после которого обнаружение тестов считается завершившимся сбоем. 0 — бесконечное время ожидания</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Пакетный файл для настройки тестов</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>Если значение не пустое, содержимое будет добавляться к переменной PATH процессов выполнения и обнаружения тестов.
+Пример: C:\MyBins;{0}\MyOtherBins;
+Заполнители:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>Добавлен тестовый случай "{0}".</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>Запуск тестов ({0})...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}Для тестов, не найденных в XML-файле результатов и в выходных данных консоли, сформированы результаты тестов ({1}).</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>Тестовый случай уже добавлен в анализатор: {0}.</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>Проверьте, были ли успешно выполнены следующие команды (убедитесь, что пути ко всем необходимым двоичным файлам добавлены в переменную PATH):{0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>Пакетный файл настройки теста</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Обратите внимание на то, что из-за ограничений платформы модульного тестирования Visual Studio выходные данные исполняемого файла теста не могут выводиться в консоли тестирования при отладке тестов.</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: выполнение завершено с кодом {2}, выполнена команда: "{3}".</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Перехватывать исключения</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Поведение во время выполнения</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>Не удалось завершить процесс {0}, запущенный в {1}: {2}.</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Тест {0}: ожидаемое время выполнения — {1} мс, фактическое время выполнения — {2} мс</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>Параметры исполняемого файла теста "{0}": {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>Не удалось определить длительность выполнения в строке "{0}".</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>Файл выходных данных отсутствует. Возможно, при выполнении тестов произошел сбой.</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>Исполняемый файл {0} поступил с другого компьютера и был заблокирован для защиты текущего компьютера.</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>Выполнение тестов для потоков ({0})</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>До обнаружения тестов</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}Трассировка стека:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>Средство SettingsWrapper уже запущено с параметрами для исполняемого файла в потоке "{0}". Оно не может одновременно использоваться в потоке "{1}".</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Параллельное выполнение тестов</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>Не удалось найти расположение исходных файлов для теста {0}.</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>Выполнение уже запущено с параметрами для исполняемого файла {0}. Изменить параметры на параметры для исполняемого файла {1} невозможно.</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>Параметры для исполняемого файла теста "{0}" не указаны; тест будет запущен с параметрами решения: {1}.</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Истекло время ожидания анализа регулярного выражения "{0}": {1}.</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>Не удается прочитать время выполнения тестов: {0}.</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Анализ символьной информации</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Распараллеливание</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>Использовать разделитель по длительности тестов</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Позволяет переопределять или добавлять признаки для тестовых случаев, соответствующих регулярному выражению. Набор признаков формируется в 3 этапа. Сначала они назначаются тестам в соответствии со значением параметра "Признаки до". Затем к тестам добавляются признаки, определенные с помощью макросов в файле GTA_Traits.h. Они переопределяют значения признаков, назначенных на этапе 1. Наконец, применяется параметр "Признаки после", причем также при необходимости происходит переопределение.
+Синтаксис: {0} отделяет регулярное выражение от признаков, имя и значение признака разделяются строкой {1}, а пары регулярных выражений и признаков разделяются строкой {2}.
+Пример: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>Если значение не пустое, это регулярное выражение будет использоваться для обнаружения исполняемых файлов Google Test, содержащих тесты.
+Регулярное выражение по умолчанию: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Пакетный файл, выполняемый перед выполнением тестов. Если тесты выполняются параллельно, пакетный файл выполняется один раз для каждого потока. Заполнители:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>Если задано значение true, в выходные данные тестирования и отладки добавляется метка времени.</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>Восстановление параметров решения: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Печать выходных данных тестов</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>Данные для отчета отсутствуют.</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test по умолчанию перехватывает исключения. Соответствующий тест завершается сбоем, а выполнение тестов продолжается. Выбрав значение false, можно разрешить передачу исключений, благодаря чему они смогут перехватываться отладчиком.
+Параметр Google Test: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Регулярное выражение для обнаружения тестов</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Пакетный файл, выполняемый после выполнения тестов. Если тесты выполняются параллельно, пакетный файл выполняется один раз для каждого потока. Заполнители:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} — путь к каталогу, который может использоваться тестами
+{1} — идентификатор потока, который выполняет текущие тесты</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} — исполняемый файл, содержащий тесты</value>
+  </data>
+</root>

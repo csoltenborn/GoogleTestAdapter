@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>Etkinleştirilirse, iliştirilmiş olabilecek bir hata ayıklayıcısı, onaylama hatalarını yakalar ve etkileşimli moda otomatik olarak bırakır.
+Google Test seçeneği: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; '{1} {2}' komutunun çıkışı</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>'{0}' çalıştırılabilir dosyası için test çalışmaları listelenemedi: İşlem çalıştırması {1} çıkış kodu ile başarısız oldu</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Google Test tarafından üretilen test adları, '/' karakterini içerebilir. Bu da Test Listesi Düzenleyicisi ekranının yeterince büyük olmadığı durumlarda Visual Studio'nun, adın '/' karakterinden sonrasını kesmesine neden olur. Bu seçeneğin değeri, boş değilse, '/' karakterini bu davranıştan kaçınmasını sağlayacak şekilde değiştirir. '\', ' ', '|' ve '-' karakterleri, ('.', '_', ':' ve '::') karakterleriyle aynı davranışı üretir. Ayrıca traits normal ifadeleri, testlerin görünen adlarıyla karşılaştırmalı olarak hesaplanır (ve bu nedenle, bu seçenekle tutarlı olması gerekir).</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>Gerçek test çalışması sürelerinin sayısı: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}Konsol çıkışından {1} test sonucu toplandı</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>{0} koduyla işlemden çıkıldı</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>Başlatılma zamanı {1} olan {0} işlemi sonlandırıldı</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: '{2}' başarıyla çalıştırıldı</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Yürütme başına testleri karıştır</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}Çalıştırma iptal edildi: {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>Komut satırı için izin verilen en fazla uzunluk ({0}), {1} test eklendikten sonra aşıldı (sonraki dize uzunluğu: {2})</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>{2} İkili dosyası içinde {0} test metodu sembolü ve {1} nitelik sembolü bulundu</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Test bulma zaman aşımı süresi (saniye)</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: Özel durum yakalandı, ileti: '{2}', çalıştırılan komut: '{3}'</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - çözüm dizini (yalnızca Visual Studio içinde kullanılabilir)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>En fazla iş parçacığı sayısı</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>True olarak ayarlanırsa, test yürütmesi iptal edildiğinde, çalışan test yürütülebilir dosyaları etkin olarak sonlandırılır. Test işlemi sonlandırmanın birçok yan etkisi olabileceğini unutmayın; özellikle Google Test, hiçbir kapatma görevini gerçekleştiremeyecektir.</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}Testler çalıştırılırken özel durum oluştu: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>{0} çalıştırılabilir dosyası için Google Test gösterge dosyası bulunamadı</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: Çekirdek, sistem saatinden hesaplanır, 1&lt;=n&lt;={0}: Belirtilen çekirdek kullanılır. '{1}' seçeneğinin notuna bakın.
+Google Test seçeneği: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}{1} test çalıştırılmamış gibi görünüyor. Testleri zaman içinde değişmiş olan bir test çalıştırmasını tekrarlıyor olabilirsiniz. Test çalışmaları: {2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Ek test yürütme parametreleri</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>{0} çalıştırılabilir dosyası için Google Test gösterge dosyası bulundu</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>Gerçek süreler içinde {0} beklenen süre bulundu</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>PATH uzantısı</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>Normal ifade '{0}' ayrıştırılamıyor: {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Seçilen sayıda test çalıştırma işlemi gerçekleştirilir (-1: sonsuz).
+Google Test seçeneği: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}Özellikle: Komut istemini başlatın, dizini '{1}' olarak değiştirin ve testlerinizin genel olarak çalıştırılabilir olduğundan emin olmak için şu komutu çalıştırın:{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>Test sayısına göre ayırıcı kullanma</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Bilinmeyen sabit değer: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Yeni test yürütme çerçevesini kullan (deneysel)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>'{0}' çifti ayrıştırılamadı, özel durum iletisi: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>{1} çalıştırılabilir dosyasında {0} test bulundu</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>Testler aynı anda çalıştırılırken test konsolunda test çıkışı gösterilmez!</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>Komutun çıkışı:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Google Test yürütülebilir dosyalarının çıkışı Test Çıkış penceresine yazdırılır.</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>Test kapatma toplu iş dosyası</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}Yürütme şu sürede tamamlandı: {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Çalışma dizini</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Test kapatma toplu iş dosyası</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>Seçeneklerde paralel çalıştırma belirtilmiş, ancak hata ayıklayıcısı iliştirilmiş olduğundan testler sırayla çalıştırılıyor.</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>{0} dosyası geçersiz. {1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>Test bulmadan sonra</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0}, varsayılan normal ifade {1} ile eşleşiyor</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>'{0}' satırındaki test sonucu için bilinen hiçbir test çalışması yok. Testleri zaman içinde değişmiş olan bir test çalışmasını tekrarlıyor olabilirsiniz.</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>{1} çalıştırılabilir dosyası için test bulma {0} sn sonra iptal edildi</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>Paralel test yürütme, her birine çalıştırılmak üzere bir dizi test atanan farklı iş parçacıkları aracılığıyla gerçekleşir. Daha sonra bu iş parçacıkları sırayla, ilgili test sonuçlarını üretecek gerekli yürütülebilir dosyaları çağırır.</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}Bu test çalışması, çözümleyicide zaten var: {1}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Google Test yürütülebilir dosyası için ek parametreler. Yer tutucular:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>En kötü {0} fark:</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>XML düğümü ayrıştırılamadı: '{0}'. Özel durum iletisi: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>İptal edildiğinde işlemleri sonlandır</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}Test çalıştırılabilir dosyası '{1}' çalıştırılamadı: {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>Standart sapma: {0} ms</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Nitelik ataması için normal ifadeler</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>Beklenen test çalışması sürelerinin sayısı: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>True olarak ayarlanırsa, uzantı güncelleştirildikten sonra yayın notlarını içeren bir iletişim kutusu gösterilir.</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Yeni test yürütme çerçevesini kullanın. Avantajları: test kilitlenmesi algılama ve test çıkışı yazdırma, hata ayıklama modunda da çalışır.</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; Zamanlama istatistikleri &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Güncelleştirme sonrasında yayın notlarını göster</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>Çalıştırılan komut: '{0} {1}', çalışma dizini: '{2}'</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>{0} içindeki test konumları ve nitelikler çözümlenirken özel durum oluştu\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0}, varsayılan normal ifade {1} ile eşleşmiyor</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Test yinelemesi sayısı</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>Komut çıkış üretmedi</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: Dosya bulunamadı: {2}</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>"{0}" normal ifadesi geçersiz, özel durum iletisi: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Hata oluştuğunda kes</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Kaynak konumu bilgilerini ve nitelikleri (GTA_Traits.h içindeki makrolar aracılığıyla tanımlanır) almak için test yürütülebilir dosyalarında hata ayıklama sembolü bilgilerini ayrıştırır.
+False olarak ayarlanırsa, nitelik bulmanın 2. adımı atlanır ve yalnızca traits normal ifadeleri geçerli olur.</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Test adı ayıracı</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}Visual Studio'ya {1} test sonucu raporlandı, çalıştırılabilir dosya: '{2}', süre {3}</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>Test yürütmesi için kullanılacak en fazla iş parçacığı sayısı (0: her işlemci için bir iş parçacığı).</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Çıkışın Sonu</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} hiçbir zaman 0'dan küçük olmamalıdır</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Diğer</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Zaman damgası çıkışı</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0}, özel normal ifade {1} ile eşleşiyor</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Test çıkışı:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>Bilinmeyen test çalışması durumu: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>Boş değilse, çalışma dizinini testleri çalıştıracak şekilde ayarlar (varsayılan: {0})
+Örnek: {1}\MyTestDir
+Yer tutucular:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>Beklenen ve gerçek süre arasındaki ortalama fark: {0} ms</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}Sonuç XML dosyasından {1} test sonucu toplandı: {2}</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>True olarak ayarlanırsa, testler rastgele sıralamayla yürütülür. Rastgele sıralama ile yürütmenin düzgün şekilde yapılabilmesi için, tüm testlerin paralel olmayan bir düzende yürütülmesi gerekir. Aksi halde, test yürütülebilir dosyaları büyük olasılıkla bir kereden fazla yürütülür ve rastgele sıralama, ilgili yürütmelerle kısıtlanır.
+Google Test seçeneği: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>Hata ayıklayıcısı {0} komutuna iliştiriliyor</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0}, özel normal ifade {1} ile eşleşmiyor</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>True olarak ayarlanırsa hata ayıklama çıkışı, test konsoluna yazdırılır.</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>True olarak ayarlanırsa, devre dışı bırakılanlar dahil tüm testler (seçili olanlar) çalıştırılır.
+Google Test seçeneği: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - test yürütülebilir dosyasını içeren dizin</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Test yürütme</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Hata ayıklama bilgilerini yazdır</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}'{1}' Test dizini silinemedi: {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Testleri karıştır: Çekirdek</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! Bu test büyük olasılıkla KİLİTLENDİ !!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>nedeni {0} testinin kilitlenmesi olabilir</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>Test sonucu dosyası {0} tamamen ayrıştırılamadı. Test çalıştırılabilir dosyanız kilitlenmiş olabilir. Özel durum iletisi: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}Test yürütme sırasında Visual Studio'ya {1} test sonucu raporlandı, çalıştırılabilir dosya: '{2}'</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Devre dışı bırakılmış testleri de çalıştır</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Test bulmanın başarısız kabul edilmesi için geçmesi gereken saniye sayısı. 0: Sonsuz zaman aşımı</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Test kurulumu toplu iş dosyası</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>Boş değilse içerik, test yürütme ve bulma işlemlerinin PATH değişkenine eklenir.
+Örnek: C:\MyBins; {0}\MyOtherBins;
+Yer tutucular:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>'{0}' test çalışması eklendi</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>{0} test çalıştırılıyor...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}XML dosyasında veya konsol çıkışında bulunamayan testler için {1} test sonucu oluşturuldu</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>Bu test çalışması, çözümleyicide zaten var: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>Aşağıdaki komutların, komut satırında başarıyla çalıştırılabilecek durumda olup olmadığını test edin (gerekli tüm ikili dosyaların PATH üzerinde olduğundan emin olun): {0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>Test kurulumu toplu iş dosyası</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>VS Birim Testi çerçevesindeki kısıtlamalar nedeniyle, testlerde hata ayıklanırken test yürütülebilir dosyası çıkışı, test konsolunda görüntülenemez!</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: {2} koduyla çıkıldı, çalıştırılan komut: '{3}'</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Özel durumları yakala</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Çalışma zamanı davranışı</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>{1} tarihinde başlatılan {0} işlemi sonlandırılamadı: {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>{0} testi: Beklenen: {1} ms, gerçek: {2} ms</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>Test çalıştırılabilir dosyası '{0}' için ayarlar: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>'{0}' satırında süre ayrıştırılamadı</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>Çıkış dosyası yok, testleriniz kilitlendi mi?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>{0} çalıştırılabilir dosyası başka bir bilgisayardan geldi ve bu bilgisayarın korunmasına yardımcı olmak için engellendi.</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>Testler {0} iş parçacığı üzerinde çalıştırılıyor</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>Test bulmadan önce</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}Yığın izlemesi:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>SettingsWrapper, '{0}' iş parçacığı üzerindeki bir çalıştırılabilir dosyanın ayarlarıyla zaten çalışıyor; aynı zamanda '{1}' iş parçacığı tarafından kullanılamaz</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Paralel test yürütme</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>{0} adlı test için kaynak konum bulunamadı</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>Yürütme, {0} çalıştırılabilir dosyasının ayarlarıyla zaten çalışıyor; {1} dosyasının ayarlarına geçiş yapılamaz</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>'{0}' test çalıştırılabilir dosyası için ayar yapılandırılmadı. Şu çözüm ayarları ile çalıştırılıyor: {1}</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Normal ifade '{0}' zaman aşımına uğradı: {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>Test süreleri okunamadı: {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Sembol bilgilerini ayrıştır</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Paralelleştirme</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>Test sürelerine göre ayırıcı kullanma</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Bir normal ifadeyle eşleşen test çalışmalarında nitelikleri geçersiz kılmaya veya nitelik eklemeye izin verir. Nitelikler 3 aşamada oluşturulur. İlk olarak, 'Traits before' seçeneğine göre testlere nitelikler atanır. Sonra, test nitelikleri (GTA_Traits.h içindeki makrolar aracılığıyla tanımlanır) testlere eklenir ve 1. aşamadaki nitelikleri geçersiz kılıp yeni değerlerle değiştirir. Son olarak, 'Traits after' seçeneği, yine geçersiz kılacak biçimde hesaplanır.
+Söz dizimi: {0}, normal ifadeyi niteliklerden ayırır; {1}, niteliğin adını ve değerini ayırır; {2}, normal ifade ve nitelik çiftlerini ayırır.
+Örnek: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>Boş değilse, testlerinizi içeren Google Test yürütülebilir dosyalarını bulmak için bu normal ifade kullanılır.
+Varsayılan normal ifade: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Test yürütülmeden önce çalıştırılacak toplu iş dosyası. Testler paralel olarak yürütüldüğünde toplu iş dosyası, iş parçacığı başına bir kez yürütülür. Yer tutucular:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>True olarak ayarlanırsa, test ve hata ayıklama çıkışlarına zaman damgası eklenir.</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>Şu çözüm ayarları geri yükleniyor: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Test çıkışını yazdır</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>Raporlanacak veri yok.</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test, özel durumları varsayılan olarak yakalar; ilgili test başarısız olur ve test yürütme devam eder. False seçilirse, özel durumların geçişine izin verilir ve özel durumları hata ayıklayıcısı yakalar.
+Google Test seçeneği: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Test bulma için normal ifade</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Test yürütüldükten sonra çalıştırılacak toplu iş dosyası. Testler paralel olarak yürütüldüğünde toplu iş dosyası, iş parçacığı başına bir kez yürütülür. Yer tutucular:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - testler tarafından kullanılabilen dizin yolu
+{1} - geçerli testleri yürüten iş parçacığının kimliği</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - testleri içeren yürütülebilir dosya</value>
+  </data>
+</root>

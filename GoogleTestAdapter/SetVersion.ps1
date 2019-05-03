@@ -11,6 +11,7 @@ $coretests_assembly_info = "Core.Tests\Properties\AssemblyInfo.cs"
 $dia_assembly_info = "DiaResolver\Properties\AssemblyInfo.cs"
 $diatests_assembly_info = "DiaResolver.Tests\Properties\AssemblyInfo.cs"
 
+$packaging_gta_project = "Packaging.GTA\Packaging.GTA.csproj"
 $packaging_gta_assembly_info = "Packaging.GTA\Properties\AssemblyInfo.cs"
 $packaging_tafgt_assembly_info = "Packaging.TAfGT\Properties\AssemblyInfo.cs"
 $projecttemplates_vstemplate = "GoogleTestProjectTemplate\GoogleTest.vstemplate"
@@ -40,6 +41,7 @@ $wizard_assembly_info = "NewProjectWizard\Properties\AssemblyInfo.cs"
 (Get-Content $dia_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $dia_assembly_info
 (Get-Content $diatests_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $diatests_assembly_info
 
+(Get-Content $packaging_gta_project) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $packaging_gta_project
 (Get-Content $packaging_gta_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $packaging_gta_assembly_info
 (Get-Content $packaging_tafgt_assembly_info) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $packaging_tafgt_assembly_info
 (Get-Content $projecttemplates_vstemplate) | ForEach-Object { $_ -replace "0.1.0.0", $version } | Set-Content $projecttemplates_vstemplate

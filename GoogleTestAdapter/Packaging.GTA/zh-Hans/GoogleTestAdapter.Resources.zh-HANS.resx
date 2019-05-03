@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>如果启用，可能附加的调试程序将捕获断言失败，并自动进入交互模式。
+Google Test 选项: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 命令“{1} {2}”的输出</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>无法列出可执行文件“{0}”的测试用例: 进程执行失败，退出代码为 {1}</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>由 Google Test 生成的测试名称可能包含字符 "/"，这使 Visual Studio 在“测试资源管理器”窗口不够宽的情况下会截掉 "/" 后面的名称。如果此选项的值为非空，将替换 "/" 字符以避免发生这种行为。请注意，使用 "\"、" "、"|" 和 "-" 字符会导致相同的行为("."、"_"、":" 和 "::" 也同样有效)。同时也请注意，特征正则表达式是针对测试的显示名称进行计算的(且必须与此选项一致)。</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>实际测试用例持续时间数: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}从控制台输出中收集到 {1} 个测试结果</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>已退出进程，代码为 {0}</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>已终止于 {1} 开始的进程 {0}</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: 已成功运行“{2}”</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>按每个执行随机测试</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}已取消执行: {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>包括 {1} 个测试后，超过了命令行允许的最大长度({0}) (下一个字符串长度为 {2})</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>在二进制文件 {2} 中找到了 {0} 个测试方法符号和 {1} 个特征符号</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>测试查询超时(秒)</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: 捕获异常，消息:“{2}”，已执行命令:“{3}”</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - 解决方案的目录(仅在 Visual Studio 内可用)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>最大线程数</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>如果为 true，测试执行被取消时时将主动终止正在运行的测试可执行文件。请注意，终止测试进程可能存在各种负面影响；尤其是造成 Google Test 将无法执行任何关闭任务。</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}运行测试时出现异常: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>未找到了用于可执行文件 {0} 的 Google Test 指示器文件</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: 从系统时间计算种子，1&lt;= n&lt;={0}: 使用给定的种子。请参阅选项“{1}”的说明。
+Google Test 选项: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}{1} 个测试用例似乎没有运行 - 是否重复执行了测试运行，但测试在此期间有所改变? 测试用例:{2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>其他的测试执行参数</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>找到了用于可执行文件 {0} 的 Google Test 指示器文件</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>在实际持续时间中发现了 {0} 个预期持续时间</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>PATH 扩展</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>无法分析正则表达式“{0}”: {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>测试将运行所选的次数(-1: 无限)。
+Google Test 选项: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}特别是: 启动命令提示符，更改目录为“{1}”，然后执行以下命令，确保可在一般情况下运行测试。{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>基于测试数使用拆分器</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>未知文本: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>使用新的测试执行框架(实验性)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>无法分析正则表达式对“{0}”，异常消息: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>在可执行文件 {1} 发现 {0} 个测试</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>请注意，同时执行测试时，测试控制台上不会显示任何测试输出!</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>命令输出:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>将 Google Test 可执行文件的输出打印到“测试输出”窗口。</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>测试拆卸批处理文件</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}执行耗时 {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>工作目录</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>测试拆卸批处理文件</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>已在选项中选择并行执行，但由于附加了调试程序，因此测试是按顺序执行的。</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>无效的文件 {0}。{1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>测试发现之后</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0} 匹配默认正则表达式 {1}</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>行“{0}”的测试结果没有已知的测试用例 - 是否重复执行了测试运行，但测试在此期间有所改变?</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>{0} 秒后取消可执行文件 {1} 的测试发现</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>并行测试执行通过不同的线程实现，每个线程都分配有要执行的若干测试。线程将按顺序调用所需的可执行文件以生成相应的测试结果。</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}已在分析器中的测试用例: {1}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Google Test 可执行文件的其他参数。占位符:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>{0} 个严重差异:</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>无法分析 XmlNode:“{0}”。异常消息: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>取消时终止线程</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}无法运行测试可执行文件“{1}”: {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>标准偏差: {0} 毫秒</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>特征分配的正则表达式</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>预期测试用例持续时间数: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>如果为 true，将在扩展更新后显示包含发行说明的对话框。</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>使用新的测试执行框架。优势: 在调试模式下测试崩溃检测和测试输出打印也能正常工作。</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; 计划统计信息 &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>更新后显示发行说明</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>已执行的命令:“{0} {1}”，工作目录:“{2}”</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>在 {0} 中解析测试位置和特征时出现异常\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0} 与默认正则表达式 {1} 不匹配</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>测试重复的次数</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>命令未生成任何输出</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: 未找到文件: {2}</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>无效的正则表达式“{0}”，异常消息: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>在发生故障时中断</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>分析测试可执行文件的调试符号信息以获取源位置信息和特征(在 GTA_Traits.h 中通过宏定义的)。
+如果此设置为 false，特征发现的第 2 步将被遗漏，并且只有特征正则表达式将生效。</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>测试名称分隔符</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}测试执行期间向 Visual Studio 报告了 {1} 个测试结果，可执行文件:“{2}”，持续时间: {3}</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>用于测试执行的最大线程数(0: 每个处理器一个线程)。</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; 结束输出</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} 决不能小于 0</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>杂项</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>时间戳输出</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0} 匹配自定义正则表达式 {1}</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>测试输出:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>未知测试用例状态: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>如果为非空值，将设置用于运行测试的工作目录(默认值: {0})
+例如: {1}\MyTestDir
+占位符:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>预期持续时间和实际持续时间的平均差: {0} 毫秒</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}从结果 XML 文件 {2} 中收集到 {1} 个测试结果</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>如果为 true，将按随机顺序执行测试。请注意，在以非并行方式执行所有测试时才会给出真正的随机顺序。否则，很有可能将多次执行测试可执行文件 - 随机顺序不受限于相应的执行。
+Google Test 选项: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>正在将调试程序附加到 {0}</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0} 与自定义正则表达式 {1} 不匹配</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>如果为 true，调试输出将被打印到测试控制台。</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>如果为 true，将运行所有(选中的)测试，即使它们已被禁用也不例外。
+Google Test 选项: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - 包含测试可执行文件的目录</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>测试执行</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>打印调试信息</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}无法删除测试目录 "{1}": {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>随机测试: 种子</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! 此测试可能已崩溃!!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>原因可能是测试 {0} 崩溃</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>无法(完全)分析测试结果文件{0} - 测试可执行文件可能已崩溃。异常消息: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}测试执行期间向 Visual Studio 报告了 {1} 个测试结果，可执行文件:“{2}”</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>还运行已禁用的测试</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>秒数，超过此秒数后将假设测试发现已失败。0: 无限超时</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>测试安装批处理文件</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>如果为非空值，内容将被追加到测试执行和发现进程的 PATH 变量。
+例如: C:\MyBins;{0}\MyOtherBins;
+占位符:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>添加的测试用例“{0}”</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>正在运行 {0} 个测试...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}为结果 XML 文件或控制台输出中没有找到的测试创建了 {1} 个测试结果</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>已在分析器中的测试用例: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>测试是否能在命令行上成功执行以下命令(确保所有必需的二进制文件都在该路径上):{0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>测试设置批处理文件</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>请注意，由于 VS 单元测试框架的限制，调试测试时无法在测试控制台中显示测试可执行文件的输出!</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: 已退出，代码为 {2}，已执行命令:“{3}”</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>捕获异常</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>运行时行为</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>无法终止于 {1} 开始的进程 {0}: {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>测试 {0}: 预期 {1} 毫秒，实际为 {2} 毫秒</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>测试可执行文件“{0}”的设置: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>无法分析行“{0}”中的持续时间</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>输出文件不存在，测试崩溃了吗?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>可执行文件 {0} 来自于另一台计算机，并已阻止该文件以帮助保护此计算机。</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>正在对 {0} 个线程执行测试</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>测试发现之前</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}堆栈跟踪:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>SettingsWrapper 已在线程“{0}”上使用可执行文件的设置运行，不能同时用于线程“{1}”</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>并行测试执行</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>找不到测试 {0} 的源位置</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>可执行文件 {0} 的设置的执行已在运行，无法切换为 {1} 的设置</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>没有为测试可执行文件“{0}”配置任何设置；运行解决方案设置: {1}</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>正则表达式“{0}”超时: {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>无法读取测试持续时间: {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>分析符号信息</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>并行化</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>基于测试持续时间使用拆分器</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>允许替代/添加匹配正则表达式的测试用例的特征。特征由 3 个阶段构成。首先，根据“之前的特征”选项将特征分配给测试。然后，将测试的特征(在 GTA_Traits.h 中通过宏定义的)添加到测试中，使用新值从第 1 阶段替代特征。最后，再次以替代的方式评估“之后的特征”选项。
+语法: {0} 将正则表达式与特征分隔开，特征名称和值由 {1} 分隔，每对正则表达式和特征由 {2} 分隔。
+例如: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>如果为非空值，此正则表达式将用于发现包含测试的 Google Test 可执行文件。
+默认正则表达式: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>在测试执行之前要执行的批处理文件。如果并行执行测试，将按每个线程执行一次批处理文件。占位符:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>如果为 true，将向测试和调试输出添加一个时间戳。</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>正在还原解决方案设置: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>打印测试输出</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>无报告内容。</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test 将默认捕获异常；相应的测试将失败并且测试执行将继续进行。选择 false 让异常通过，使调试程序能够捕获这些异常。
+Google Test 选项: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>测试发现的正则表达式</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>在测试执行之后要执行的批处理文件。如果并行执行测试，将按每个线程执行一次批处理文件。占位符:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - 可由测试使用的目录路径
+{1} - 执行当前测试的线程 ID</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - 包含测试的可执行文件</value>
+  </data>
+</root>

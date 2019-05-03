@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>如果啟用，便可能附加偵錯工具，以攔截宣告失敗並自動進入互動模式。
+Google Test 選項: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 命令 '{1} {2}' 的輸出</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>無法列出可執行檔 '{0}' 的測試案例: 處理序執行失敗，結束代碼為 {1}</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Google Test 產生的測試名稱可能包含字元 '/' 導致 Visual Studio 在測試總管視窗寬度不足的情況下截斷 '/' 後面的名稱。如果此選項的值非空白，就會取代 '/' 字元以避免該行為。請注意，'\'、' '、'|' 和 '-' 會產生相同行為 ('.'、'_'、':' 和 '::' 則已知適用)。另請注意，特徵 Regex 會針對測試的顯示名稱來評估 (且必須與此選項一致)。</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>實際測試案例持續時間長度: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}已從主控台輸出收集到 {1} 個測試結果</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>處理序已結束，代碼為 {0}</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>已於 {1} 啟動了終止處理序 {0}</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: 已成功執行 '{2}'</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>隨機執行測試</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}已取消執行: {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>包括 {1} 個測試之後，已超過允許的命令列長度上限 ({0}) (下一個字串長度為 {2})</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>在二進位檔 {2} 中找到 {0} 個測試方法符號與 {1} 個特性符號</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>測試探索逾時 (秒)</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: 攔截到例外狀況，訊息: '{2}'，執行的命令: '{3}'</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - 解決方案的目錄 (僅在 Visual Studio 內適用)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>執行緒的最大數目</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>如果為 true，會在測試執行取消時主動終止正在執行的測試可執行檔。請注意，終止測試處理序可能會發生各種副作用; 尤其是 Google Test 將無法執行任何關機工作。</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}執行測試時發生例外狀況: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>找不到可執行檔 {0} 的任何 Google Test 指標檔案</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: 從系統時間計算種子，1&lt;=n&lt;={0}: 使用指定的種子。請參閱選項 '{1}' 的附註。
+Google Test 選項: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>似乎尚未執行 {0}{1} 測試案例 - 您是否要重複執行測試回合，但於此同時測試已有所變更嗎? 測試案例: {2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>其他測試執行參數</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>找到可執行檔 {0} 的 Google Test 指標檔案</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>{0} 應有的持續時間已位於實際的持續時間內</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>PATH 延伸</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>無法剖析 Regex '{0}': {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>測試要執行的選定次數 (-1: 無限)。
+Google Test 選項: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}尤其是: 啟動命令提示字元並將目錄變更到 '{1}'，然後執行下列命令，以確定在一般情況下可執行您的測試。{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>依據測試數目使用分隔器</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>未知的常值: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>使用新的測試執行架構 (實驗)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>無法剖析 '{0}' 組，例外狀況訊息: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>在可執行檔 {1} 中找到 {0} 個測試</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>請注意，同時執行測試時，在測試主控台上不會顯示任何測試輸出!</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>命令輸出:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>將 Google Test 可執行檔的輸出列印到 [測試輸出] 視窗。</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>測試終止批次檔</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}執行需時 {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>工作目錄</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>測試終止批次檔</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>在選項中選取了 [平行執行]，但因為附加了偵錯工具，所以測試會循序執行。</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>檔案 {0} 無效。{1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>在測試探索之後</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0} 可找到預設 regex {1}</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>第 '{0}' 行的測試結果沒有任何已知的測試案例 - 您是否要重複執行測試回合，但於此同時測試已有所變更嗎?</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>已於 {0} 秒後為可執行檔 {1} 取消了測試探索</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>平行測試執行會藉由不同執行緒達成，每個執行緒都指派了數項要執行的測試。執行緒接著會依序叫用必要的可執行檔，以產生對應的測試結果。</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}已位於分析器中的測試案例: {1}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Google 測試可執行檔的其他參數。預留位置:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>{0} 個最糟的差異:</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>無法剖析 XmlNode: '{0}'。例外狀況訊息: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>在取消時終止處理序</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}無法執行測試可執行檔 '{1}': {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>標準差: {0} 毫秒</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>用於特徵指派的 Regex</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>應有的測試案例持續時間長度: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>如果為 true，在更新延伸模組後，會顯示有版本資訊的對話方塊。</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>使用新的測試執行架構。優點: 測試損毀偵測和測試輸出列印也適用於偵錯模式。</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; 正在排程統計資料 &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>在更新後顯示版本資訊</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>執行的命令: '{0} {1}'，工作目錄: '{2}'</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>解析 {0} 中的測試位置與特性時，發生例外狀況\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0} 與預設 regex {1} 不相符</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>測試重複次數</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>命令未產生任何輸出</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: 找不到檔案: {2}</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>規則運算式 "{0}" 無效，例外狀況訊息: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>在失敗時中斷</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>剖析測試可執行檔的偵錯符號資訊，以取得來源位置資訊及特徵 (透過 GTA_Traits.h 中的巨集而定義)。
+若將這項設為 false，將會忽略特徵探索的步驟 2，只有特徵 Regex 會生效。</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>測試名稱分隔符號</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}已對 Visual Studio 回報了 {1} 項測試結果，可執行檔為: '{2}'，持續時間: {3}</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>要用於測試執行的執行緒最大數目 (0: 每個處理器一個執行緒)。</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; 輸出結尾</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} 不得為 &lt;0</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>時間戳記輸出</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0} 可找到自訂 regex {1}</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>測試輸出:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>未知的測試案例狀態: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>如果非空白，將會設定執行測試的工作目錄 (預設: {0})
+範例: {1}\MyTestDir
+版面配置區:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>預期與實際持續時間之間的平均差異: {0} 毫秒</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}已從結果 XML 檔案 {2} 收集到 {1} 個測試結果</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>如果為 true，測試會以隨機順序執行。請注意，只有在以非平行方式執行所有測試時，才會產生真正的隨機順序。否則，測試可執行檔很可能會執行一次以上，導致隨機順序受限於對應的執行。
+Google Test 選項: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>正在附加偵錯工具至 {0}</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0} 與自訂 regex {1} 不相符</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>如果為 true，偵錯輸出將會列印到測試主控台。</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>如果為 true，所有 (選取的) 測試都會執行，即使已停用亦然。
+Google Test 選項: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - 包含測試可執行檔的目錄</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>測試執行</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>列印偵錯資訊</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}無法刪除測試目錄 '{1}': {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>隨機測試: 種子</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! 這項測試可能已毀損 !!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>原因可能是測試 {0} 已損毀</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>無法完整剖析測試結果檔案 {0} - 測試可執行檔可能已毀損。例外狀況訊息: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}執行測試期間已對 Visual Studio 回報了 {1} 項測試結果，可執行檔為: '{2}'</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>也執行已停用的測試</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>經過這個秒數後，即假設測試探索失敗。0: 無限逾時</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>測試安裝批次檔</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>如果非空白，內容將會附加到測試可執行檔和探索處理序的 PATH 變數。
+範例: C:\MyBins;{0}\MyOtherBins;
+預留位置:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>已新增測試案例 '{0}'</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>正在執行 {0} 項測試...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}已為測試建立了 {1} 個測試結果，但在結果 XML 檔案中以及主控台輸出中都找不到任何結果</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>已位於分析器中的測試案例: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>測試是否可於命令列上成功執行下列命令 (請確定 PATH 上有所有必要的二進位檔): {0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>測試安裝批次檔</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>請注意，由於 VS 單元測試架構的限制，測試可執行檔的輸出可能不會在對測試偵錯時顯示於測試主控台中!</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: 已結束，代碼為 {2}，執行的命令: '{3}'</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>攔截例外狀況</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>執行階段行為</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>無法終止於 {1} 所啟動的處理序 {0}: {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>測試 {0}: 應為 {1} 毫秒，但實際為 {2} 毫秒</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>測試可執行檔 '{0}' 的設定: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>無法剖析第 '{0}' 行中的持續時間</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>輸出檔案不存在，您的測試是否損毀?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>可執行檔 {0} 來自另一台電腦，且已加以封鎖以協助您保護此電腦。</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>正於 {0} 個執行緒上執行測試</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>在測試探索之前</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}堆疊追蹤: {1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>已於執行緒 '{0}' 上用可執行檔的設定執行了 SettingsWrapper，所以無法也供執行緒 '{1}' 使用</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>平行測試執行</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>找不到測試 {0} 的來源位置</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>已利用可執行檔 {0} 的設定加以執行，不可切換至 {1} 的設定</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>未對可執行檔 '{0}' 設定任何設定值; 將以解決方案設定加以執行: {1}</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Regex '{0}' 逾時: {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>無法讀取測試持續時間: {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>剖析符號資訊</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>並行</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>依據測試持續時間使用分隔器</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>允許為符合 Regex 的測試案例覆寫/新增特徵。建立特徵有 3 個階段。首先，特徵會依據 'Traits before' 選項指派至測試。接下來，測試的特徵 (透過 GTA_Traits.h 中的巨集而定義) 會新增到測試，並以新的值覆寫來自階段 1 的特徵。最後，會再次以覆寫方式評估 'Traits after' 選項。
+語法: {0} 會從特徵中分隔出 Regex，特徵的名稱和值會以 {1} 分隔，每對 Regex 和特徵則以 {2} 分隔。
+範例: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>如果非空白，就會使用這個 regex 來探索包含測試的 Google Test 可執行檔。
+預設 regex: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>要在測試執行之前執行的批次檔。如果平行執行測試，批次檔會在每個執行緒中各執行一次。預留位置:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>如果為 true，會將時間戳記新增到測試和偵錯輸出。</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>正在還原解決方案設定: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>列印測試輸出</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>沒有要回報的項目。</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>根據預設值; Google 測試會攔截的例外狀況according 的測試失敗，且會繼續測試執行。選擇，則為 false 可讓例外狀況通過，讓偵錯工具攔截。
+Google 測試選項: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>用於測試探索的 Regex</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>要在測試執行之後執行的批次檔。如果平行執行測試，批次檔會在每個執行緒中各執行一次。預留位置:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - 可供測試使用的目錄路徑
+{1} - 執行目前測試的執行緒識別碼</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - 包含測試的可執行檔</value>
+  </data>
+</root>

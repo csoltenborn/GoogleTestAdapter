@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>Jeśli ta opcja jest włączona, potencjalnie dołączony debuger będzie przechwytywać błędy potwierdzenia i automatycznie przechodzić do trybu interaktywnego.
+Opcja biblioteki Google Test: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Dane wyjściowe polecenia „{1} {2}”</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>Nie można wyświetlić listy przypadków testowych dla pliku wykonywalnego „{0}”: wykonanie procesu nie powiodło się z kodem zakończenia {1}</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Nazwy testów tworzone przez bibliotekę Google Test mogą zawierać znak „/”, co sprawia, że Visual Studio obcina nazwę po znaku „/”, jeśli okno Eksploratora testów nie jest dostatecznie szerokie. Wartość tej opcji, jeśli nie jest pusta, zastąpi znak „/”, aby uniknąć tego zachowania. Należy zauważyć, że znaki „\”, „ ”, „|” i „-” powodują takie samo zachowanie (wiadomo, że znaki „.”, „_”, „:” i „::” działają). Należy także pamiętać, że wartości wyrażeń regularnych cech są obliczane względem nazw wyświetlanych testów (a więc muszą być zgodne z tą opcją).</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>Liczba rzeczywistych czasów trwania przypadków testowych: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}Pobrano wyniki testów ({1}) z danych wyjściowych w konsoli</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>Proces zakończył pracę z kodem {0}</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>Zakończono proces {0} rozpoczęty o {1}</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: Pomyślnie uruchomiono plik „{2}”</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Mieszaj losowo testy na wykonanie</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}Wykonanie zostało anulowane: {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>Przekroczono maksymalną dozwoloną długość wiersza polecenia ({0}) po uwzględnieniu {1} testów (długość następnego ciągu to {2})</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>Znaleziono symbole metody testowej ({0}) i symbole cech ({1}) w pliku binarnym {2}</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Limit czasu odnajdywania testu w s</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: Przechwycono wyjątek, komunikat: „{2}”, wykonane polecenie: „{3}”</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} — katalog rozwiązania (dostępny tylko w programie Visual Studio)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>Maksymalna liczba wątków</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>W przypadku wartości true uruchomione pliki wykonywalne testów będą aktywnie zakańczane, jeśli wykonanie testu zostanie anulowane. Należy zauważyć, że zakończenie procesu testu może mieć wszelkiego rodzaju skutki uboczne; w szczególności biblioteka Google Test nie będzie mogła wykonać żadnych zadań zamknięcia.</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}Wyjątek podczas wykonywania testów: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Nie znaleziono pliku wskaźnika biblioteki Google Test dla pliku wykonywalnego {0}</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: inicjator jest obliczany na podstawie czasu systemowego, 1&lt;= n&lt;={0}: używany jest dany inicjator. Patrz uwaga dotycząca opcji „{1}”.
+Opcja biblioteki Google Test: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>Istnieją przypadki testowe ({0}{1}), które wyglądają na nieuruchomione — czy powtarzasz uruchomienie testów, ale testy w międzyczasie uległy zmianie? Przypadki testowe:{2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Dodatkowe parametry wykonywania testów</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>Znaleziono plik wskaźnika biblioteki Google Test dla pliku wykonywalnego {0}</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>Liczba przewidywanych czasów trwania znalezionych w rzeczywistych czasach trwania: {0}</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>Rozszerzenie zmiennej PATH</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>Nie można przeanalizować wyrażenia regularnego „{0}”: {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Testy zostaną uruchomione wybraną liczbę razy (-1: nieskończona).
+Opcja biblioteki Google Test: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}W szczególności: uruchom wiersz polecenia, przejdź do katalogu „{1}” i wykonaj następujące polecenie, aby upewnić się, że Twoje testy mogą być uruchamiane ogólnie.{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>Używanie rozdzielacza na podstawie liczby testów</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Nieznany literał: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Użyj nowej struktury wykonywania testów (eksperymentalne)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>Nie można przeanalizować pary „{0}”, komunikat o wyjątku: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>Znaleziono testy ({0}) w pliku wykonywalnym {1}</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>Pamiętaj, że gdy testy uruchamiane są współbieżnie, żadne wyniki testów nie będą widoczne w konsoli testów.</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>Dane wyjściowe polecenia:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Wpisywanie danych wyjściowych plików wykonywalnych biblioteki Google Test do okna danych wyjściowych testów.</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>Plik wsadowy usuwania testu</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}Wykonywanie zajęło {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Katalog roboczy</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Plik wsadowy usuwania testów</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>W opcjach jest wybrane równoległe wykonywanie, ale testy są wykonywane sekwencyjnie, ponieważ jest dołączony debuger.</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Nieprawidłowy plik {0}. {1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>Po odnajdywaniu testów</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>Plik {0} jest zgodny z domyślnym wyrażeniem regularnym {1}</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>Brak znanego przypadku testowego dla wyniku testu z wiersza „{0}” — czy powtarzasz uruchomienie testu, ale testy w międzyczasie uległy zmianie?</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>Odnajdywanie testów zostało anulowane po {0} s dla pliku wykonywalnego {1}</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>Równoległe wykonywanie testów uzyskuje się za pomocą różnych wątków, z których każdy ma przypisaną liczbę testów do wykonania. Wątki będą następnie sekwencyjnie wywoływać niezbędne pliki wykonywalne w celu wygenerowania wyników odpowiednich testów.</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}Przypadek testowy już w analizatorze: {1}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Dodatkowe parametry dla pliku wykonywalnego biblioteki Google Test. Symbole zastępcze:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>Najgorsze różnice ({0}):</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>Nie można przeanalizować węzła: „{0}”. Komunikat o wyjątku: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>Zakończ procesy po anulowaniu</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}Nie można uruchomić pliku wykonywalnego testu „{1}”: {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>Odchylenie standardowe: {0} ms</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Wyrażenia regularne dla przydziału cech</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>Liczba oczekiwanych czasów trwania przypadków testowych: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>W przypadku wartości true po zaktualizowaniu rozszerzenia wyświetlane jest okno dialogowe zawierające informacje o wersji.</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Korzystanie z nowej struktury wykonywania testów. Zalety: wykrywanie awarii testu i drukowanie danych wyjściowych testu działa również w trybie debugowania.</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; Statystyki planowania &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Pokaż informacje o wersji po aktualizacji</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>Wykonane polecenie: „{0} {1}”, katalog roboczy: „{2}”</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>Wyjątek podczas rozpoznawania lokalizacji testów i cech w pliku {0}\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>Plik {0} jest niezgodny z domyślnym wyrażeniem regularnym {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Liczba powtórzeń testu</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>Polecenie nie wygenerowało danych wyjściowych</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: Nie znaleziono pliku: {2}</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne „{0}”, komunikat o wyjątku: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Przerwij w przypadku niepowodzenia</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Analizowanie informacji dotyczących symboli debugowania dla plików wykonywalnych testów w celu uzyskania informacji o lokalizacji źródła i cechach (zdefiniowanych za pomocą makr w pliku GTA_Traits.h).
+Jeśli ta opcja jest ustawiona na wartość false, krok 2 odnajdywania cech zostanie pominięta i będą obowiązywać tylko wyrażenia regularne cech.</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Separator nazwy testu</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}Liczba wyników testów zgłoszonych do programu Visual Studio: {1}, plik wykonywalny: „{2}”, czas trwania: {3}</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>Maksymalna liczba wątków do użycia na potrzeby wykonania testu (0: jeden wątek dla każdego procesora).</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Koniec danych wyjściowych</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>Zmienna {0} nigdy nie może być &lt; 0</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Różne</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Sygnatura czasowa danych wyjściowych</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>Plik {0} jest zgodny z niestandardowym wyrażeniem regularnym {1}</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Dane wyjściowe testu:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>Nieznany stan przypadku testowego: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>Jeśli ta opcja nie jest pusta, określi katalog roboczy na potrzeby uruchamiania testów (domyślnie: {0})
+Przykład: {1}\MyTestDir
+Symbole zastępcze:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>Średnia różnica między oczekiwanym i rzeczywistym czasem trwania: {0} ms</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}Pobrano wyniki testów ({1} ) z pliku XML z wynikami {2}</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>W przypadku wartości true testy będą wykonywane w kolejności losowej. Należy zauważyć, że prawdziwie losowa kolejność jest podawana tylko podczas wykonywania wszystkich testów w sposób nierównoległy. W przeciwnym razie pliki wykonywalne testów najprawdopodobniej będą wykonywane więcej niż jeden raz — kolejność losowa jest wtedy ograniczona zgodnie z wykonaniami.
+Opcja biblioteki Google Test: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>Dołączanie debugera do: {0}.</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>Plik {0} jest niezgodny z niestandardowym wyrażeniem regularnym {1}</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>W przypadku wartości true dane wyjściowe debugowania będą drukowane w konsoli testów.</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>Jeśli ta opcja ma wartość true, wszystkie testy (zaznaczone) zostaną uruchomione, nawet jeśli zostały wyłączone.
+Opcja biblioteki Google Test: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} — katalog zawierający plik wykonywalny testów</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Wykonanie testu</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Drukuj informacje o debugowaniu</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}Nie można usunąć katalogu testu „{1}”: {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Losowanie testów: inicjator</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! Ten test prawdopodobnie uległ awarii !!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>przyczyną jest prawdopodobnie awaria testu {0}</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>Nie można przeanalizować (całkowicie) pliku wyników testów {0} — prawdopodobnie plik wykonywalny testów uległ awarii. Komunikat o wyjątku: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}Liczba wyników testów zgłoszonych do programu Visual Studio podczas wykonywania testów: {1}, plik wykonywalny: „{2}”</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Uruchom również testy wyłączone</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Liczba sekund, po upływie których odnajdywanie testu będzie traktowane jako zakończone niepowodzeniem. 0: nieskończony limit czasu</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Plik wsadowy konfiguracji testów</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>Jeśli nie jest pusta, zawartość zostanie dołączona do zmiennej PATH procesów wykonywania i odnajdywania testów.
+Przykład: C:\MyBins; {0}\MyOtherBins;
+Symbole zastępcze:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>Dodano przypadek testowy „{0}”</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>Trwa uruchamianie {0} testów...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}Utworzono wyniki testów ({1}) dla testów, których nie znaleziono w pliku XML z wynikami ani w danych wyjściowych w konsoli</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>Przypadek testowy już w analizatorze: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>Sprawdź, czy następujące polecenia można pomyślnie uruchomić w wierszu polecenia (upewnij się, że wszystkie wymagane pliki binarne są w zmiennej PATH):{0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>Plik wsadowy instalacji testu</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Należy zauważyć, że ze względu na ograniczenia struktury testowania jednostek programu VS dane wyjściowe pliku wykonywalnego testu nie mogą być wyświetlane w konsoli testów podczas debugowania testów.</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: Zakończono z kodem {2}, wykonane polecenie: „{3}”</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Przechwytywanie wyjątków</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Zachowanie środowiska uruchomieniowego</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>Nie można zakończyć procesu {0} rozpoczętego o {1}: {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Test {0}: oczekiwano {1} ms, wartość rzeczywista to {2} ms</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>Ustawienia dla pliku wykonywalnego testu „{0}”: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>Nie można przeanalizować czasu trwania w wierszu „{0}”</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>Plik wyjściowy nie istnieje, czy testy uległy awarii?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>Plik wykonywalny {0} pochodzi z innego komputera i został zablokowany, aby pomóc chronić ten komputer.</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>Wykonywanie testów na {0} wątkach</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>Przed odnajdywaniem testów</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}Ślad stosu:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>Program SettingsWrapper jest już uruchomiony z ustawieniami dla pliku wykonywalnego w wątku „{0}”, nie może być również używany przez wątek „{1}”</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Równoległe wykonywanie testów</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>Nie można znaleźć lokacji źródłowej dla testu {0}</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>Wykonanie jest już uruchomione z ustawieniami dla pliku wykonywalnego {0}, nie można przełączyć na ustawienia dla pliku {1}</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>Nie skonfigurowano żadnych ustawień dla pliku wykonywalnego testu „{0}”; uruchamianie z ustawieniami rozwiązania: {1}</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Przekroczono limit czasu wyrażenia regularnego „{0}”: {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>Nie można odczytać czasów trwania testów: {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Analizuj informacje o symbolach</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Przetwarzanie równoległe</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>Używanie rozdzielacza na podstawie czasów trwania testów</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Umożliwia przesłonięcie/dodanie cech dla przypadków testowych dopasowujących wyrażenie regularne. Cechy są budowane w trzech fazach. Najpierw cechy są przypisywane do testów zgodnie z opcją „Cechy przed”. Następnie cechy testów (zdefiniowane za pomocą makr w pliku GTA_Traits.h) są dodawane do testów, przesłaniając cechy z fazy 1 nowymi wartościami. Na koniec wyliczana jest opcja „Cechy po”, ponownie za pomocą przesłaniania.
+Składnia: {0} oddziela wyrażenie regularne od cech, nazwa i wartość cechy są rozdzielone za pomocą {1}, a każda para wyrażenia regularnego i cechy jest oddzielona za pomocą {2}.
+Przykład: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>Jeśli nie jest puste, to wyrażenie regularne będzie używane do odnajdywania plików wykonywalnych biblioteki Google Test zawierających Twoje testy.
+Domyślne wyrażenie regularne: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Plik wsadowy, który ma być wykonywany przed wykonaniem testów. Jeśli testy są wykonywane równolegle, plik wsadowy będzie wykonywany raz na każdy wątek. Symbole zastępcze:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>W przypadku wartości true sygnatura czasowa jest dodawana do danych wyjściowych testowania i debugowania.</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>Przywracanie ustawień rozwiązania: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Drukuj dane wyjściowe testu</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>Nie ma niczego do zaraportowania.</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Biblioteka Google Test domyślnie przechwytuje wyjątki, odpowiedni test kończy się niepowodzeniem i wykonywanie testów jest kontynuowane. Wybranie ustawienia false pozwala przepuszczać wyjątki, umożliwiając debugerowi ich przechwycenie.
+Opcja biblioteki Google Test: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Wyrażenie regularne do odnajdywania testów</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Plik wsadowy wykonywany po zakończeniu wykonywania testów. Jeśli testy są wykonywane równolegle, plik wsadowy będzie wykonywany raz na każdym wątku. Symbole zastępcze:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} — ścieżka katalogu, który może być używany przez testy
+{1} — identyfikator wątku wykonującego bieżące testy</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} — plik wykonywalny zawierający testy</value>
+  </data>
+</root>

@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>Pokud se tato možnost povolí, případný připojený ladicí program zachytí selhání kontrolního výrazu a automaticky přejde do interaktivního režimu.
+Možnost Google Testu: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Výstup příkazu {1} {2}</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>Nešlo vytvořit seznam testovacích případů pro spustitelný soubor {0}: spuštění procesu se nezdařilo s ukončovacím kódem {1}.</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Názvy testů vytvořené Google Testem můžou obsahovat znak /, který způsobí, že Visual Studio název za znakem / odstraní, pokud okno Průzkumníka testů není dostatečně široké. Hodnota této možnosti, pokud není prázdná, nahradí znak / tak, aby k tomuto chování nedošlo. Poznámka: Znaky \, mezera ( ), | a - způsobují stejné chování (znaky ., _, : a :: se považují za funkční). Mějte také na paměti, že regulární výrazy vlastností se vyhodnocují ve vztahu k zobrazovaným názvům testů (a musí tak být konzistentní s touto možností).</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>Počet skutečných dob trvání testovacích případů: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}Byly shromážděny výsledky testu (počet: {1}) z výstupu konzoly.</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>Proces se ukončil s kódem {0}.</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>Byl ukončen proces {0} spuštěný v {1}.</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: Úspěšně spustil {2}.</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Při spuštění vybírat testy náhodně</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}Spuštění bylo zrušeno: {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>Byla překročena maximální povolená délka příkazového řádku ({0}) zahrnující tento počet testů: {1}. (Délka dalšího řetězce je {2}.)</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>Našly se symboly testovacích metod (počet: {0}) a symboly vlastností (počet: {1}) v binárním souboru {2}.</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Časový limit zjišťování testů v s</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: Byla zachycena výjimka; zpráva: {2}, provedený příkaz: {3}.</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} – adresář řešení (k dispozici jen uvnitř sady Visual Studio)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>Maximální počet vláken</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>Pokud se tato možnost nastaví na true a spouštění testu se zruší, spuštěné spustitelné soubory testu se aktivně ukončí. Poznámka: Ukončení testovací procesu může mít různorodé vedlejší účinky, především to, že Google Test nebude moct provést žádné úlohy související s vypínáním.</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}Výjimka při spouštění testů: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Nenašel se žádný soubor s indikátorem Google Test pro spustitelný soubor {0}.</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: Počáteční hodnota se vypočítá ze systémového času. 1&lt;=n&lt;={0}: Použije se zadaná počáteční hodnota. Podívejte se na poznámku k možnosti {1}.
+Možnost Google Testu: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}Vypadá to, že některé testovací případy (počet: {1}) se nespustily - opakujete testovací běh, ale testy se mezitím změnily? Testovací případy:{2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Další parametry spuštění testu</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>Našel se soubor s indikátorem Google Test pro spustitelný soubor {0}.</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>Ve skutečných dobách trvání byl nalezen tento počet očekávaných dob trvání: {0}.</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>Rozšíření PATH</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>Regulární výraz {0} nešlo analyzovat: {1}.</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Spuštění testů se zopakuje tolikrát, kolikrát se určí (-1: neomezeně).
+Možnost Google Test: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}Zejména: Spusťte příkazový řádek, přepněte na adresář {1} a zadejte následující příkaz, abyste se ujistili, že obecně je možné spouštět vaše testy.{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>Použití rozdělovače na základě počtu testů</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Neznámý literál: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Použít nový systém spouštění testů (experimentální)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>Nešlo analyzovat pár {0}. Zpráva o výjimce: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>Našly se testy (počet: {0}) ve spustitelném souboru {1}.</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>Všimněte si, že při souběžném spouštění testů se na testovací konzole nezobrazí žádný výstup testů!</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>Výstup příkazu:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Vypíše výstup spustitelných souborů Google Testu do okna Výstup testů.</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>Dávkový soubor rozboru testů</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}Spuštění trvalo {1}.</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Pracovní adresář</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Dávkový soubor rozboru testu</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>V možnostech je vybráno paralelní provádění, ale testy jsou prováděny postupně, protože je připojen ladicí program.</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Neplatný soubor {0}. {1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>Po zjišťování testů</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0} odpovídá výchozímu regulárnímu výrazu {1}.</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>Žádný známý testovací případ pro výsledek testu u řádku {0} – opakujete testovací běh, ale testy se mezitím změnily?</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>Zjišťování testů bylo zrušeno po {0} s pro spustitelný soubor {1}.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>Paralelní spouštění testů se provádí prostřednictvím různých vláken, z nichž každé má přiřazený určitý počet testů, které má spustit. Vlákna pak postupně vyvolávají potřebné spustitelné soubory, aby se získaly výsledky příslušného testu.</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}Testovací případ už v analyzátoru: {1}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Další parametry pro spustitelný soubor Google Test. Zástupné symboly:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>Nejhorší rozdíly (počet: {0}):</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>XmlNode nejde analyzovat: {0}. Zpráva o výjimce: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>Ukončit proces při zrušení</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}Nepodařilo se spustit spustitelný soubor testu {1}: {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>Směrodatná odchylka: {0} ms</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Regulární výrazy pro přiřazení vlastností</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>Počet očekávaných dob trvání testovacích případů: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>Pokud se tato možnost nastaví na true, po aktualizaci rozšíření se zobrazí dialog se zprávou k vydání verze.</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Využijte nový systém spouštění testů. Výhody: detekce chybového ukončení testu a výpis výstupu testu fungují i v režimu ladění.</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; Statistika plánování &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Po aktualizaci zobrazit zprávu k vydání verze</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>Byl proveden příkaz: {0} {1}, pracovní adresář: {2}.</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>Výjimka při překladu míst pro testy a jejich vlastností v {0}\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0} neodpovídá výchozímu regulárnímu výrazu {1}.</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Počet opakování testu</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>Příkaz nevytvořil žádný výstup.</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: Nenašel se soubor: {2}.</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>Neplatný regulární výraz {0}, zpráva o výjimce: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Zastavit při selhání</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Parsování informací symbolů ladění pro spustitelné soubory testů, ze kterých se získají informace o zdrojovém umístění a vlastnostech (definovaných pomocí maker v souboru GTA_Traits.h).
+Pokud se tato možnost nastaví na false, při zjišťování vlastností se vynechá krok 2 a v účinnosti zůstanou jen regulární výrazy vlastností.</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Oddělovač názvů testů</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}Do sady Visual Studio byly ohlášeny výsledky testů (počet: {1}); spustitelný soubor: {2}, doba trvání: {3}.</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>Maximální počet vláken, která se mají použít ke spouštění testů (0: jedno vlákno pro každý procesor)</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Konec výstupu</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} nesmí být nikdy &lt; 0.</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Různé</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Výstup časového razítka</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0} odpovídá vlastnímu regulárnímu výrazu {1}.</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Výstup testu:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>Neznámý stav testovacího případu: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>Pokud tato hodnota není prázdná, nastaví pracovní adresář pro spouštění testů (výchozí: {0})
+Příklad: {1}\MyTestDir
+Zástupné symboly:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>Průměrný rozdíl mezi očekávanou a skutečnou dobou trvání: {0} ms</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}Byly shromážděny výsledky testu (počet: {1}) z výsledného souboru XML {2}.</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>Pokud se tato možnost nastaví na true, testy se budou spouštět v náhodném pořadí. Poznámka: Skutečně náhodného pořadí je možné docílit jen v případě, že se žádný z testů nespouští paralelně. Jinak se spustitelné soubory testů s největší pravděpodobností spustí více než jednou – náhodné pořadí se pak omezí na příslušná spuštění.
+Možnost Google Testu: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>Ladicí program se připojuje k programu {0}.</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0} neodpovídá vlastnímu regulárnímu výrazu {1}.</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>Když se tato možnost nastaví na true, do testovací konzole se vypíše výstup ladění.</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>Pokud se tato možnost nastaví na true, spustí se všechny (vybrané) testy, a to i v případě, že se zakázaly.
+Možnost Google Testu: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} – adresář obsahující spustitelný soubor testu</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Provedení testu</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Vypsat informace o ladění</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}Nešlo odstranit adresář testů {1}: {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Náhodné testy: Počáteční hodnota</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! Tento test se pravděpodobně CHYBOVĚ UKONČIL !!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>důvodem je pravděpodobně chybové ukončení testu {0}</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>Soubor s výsledky testu {0} nešlo analyzovat (úplně) – pravděpodobně se spustitelný soubor testu chybově ukončil. Zpráva o výjimce: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}Do sady Visual Studio během byly spuštění testu ohlášeny výsledky testů (počet: {1}); spustitelný soubor: {2}.</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Spustit i zakázané testy</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Počet sekund, po kterých se zjišťování testů bude považovat za neúspěšné. 0: žádný časový limit</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Dávkový soubor nastavení testu</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>Pokud tato hodnota není prázdná, obsah se připojí k proměnné PATH daného spuštění testu a procesů zjišťování.
+Příklad: C:\MyBins;{0}\MyOtherBins;
+Zástupné symboly:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>Byl přidán testovací případ {0}.</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>Běží testy (počet: {0})...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}Byly vytvořeny výsledky (počet: {1}) testů, které se nenašly ve výsledném souboru XML ani ve výstupu konzoly.</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>Testovací případ už v analyzátoru: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>Otestujte, jestli jde následující příkazy úspěšně spustit na příkazovém řádku (přesvědčte se, že v CESTĚ jsou všechny požadované binární soubory):{0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>Dávkový soubor nastavení testů</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Poznámka: Z důvodu omezení rozhraní testování částí sady Visual Studio se při ladění testů výstup spustitelného souboru testu nedá zobrazit v testovací konzole!</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: Byl ukončen s kódem {2}; byl proveden příkaz: {3}.</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Zachytit výjimky</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Chování modulu runtime</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>Nešlo ukončit proces {0} spuštěný v {1}: {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Test {0}: očekáváno {1} ms, skutečnost {2} ms</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>Nastavení pro spustitelný soubor testu {0}: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>Nešlo analyzovat dobu trvání na řádku {0}.</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>Výstupní soubor neexistuje. Nedošlo k chybovému ukončení testů?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>Spustitelný soubor {0} pocházel z jiného počítače a byl zablokován, aby se ochránil tento počítač.</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>Provádění testů v tomto počtu vláken: {0}</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>Před zjišťováním testů</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}Trasování zásobníku:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>SettingsWrapper už běží s nastavením pro spustitelný soubor ve vlákně {0}; nemůže ho používat i vlákno {1}.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Paralelní spouštění testů</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>Nešlo najít zdrojové umístění pro test {0}.</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>Spuštění už běží s nastavením pro spustitelný soubor {0}; nejde přepnout na nastavení pro {1}.</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>Nebylo nakonfigurováno žádné nastavení pro spustitelný soubor testu {0}; běží s nastavením řešení: {1}.</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Vypršel časový limit regulárního výrazu {0}: {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>Nešlo přečíst dobu trvání testů: {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Parsovat informace symbolů</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Paralelizace</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>Použití rozdělovače na základě dob trvání testů</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Umožňuje přepsat nebo přidat vlastnosti pro testovací případy, které odpovídají určitému regulárnímu výrazu. Vlastnosti se vytvářejí ve 3 fázích. Nejdříve se vlastnosti přiřadí k testům podle možnosti Vlastnosti před. Pak se vlastnosti testů (definované pomocí maker v souboru GTA_Traits.h) přidají do testů, což přepíše vlastnosti z fáze 1 novými hodnotami. Nakonec se vyhodnotí možnost Vlastnosti po, a to opět způsobem, při kterém dojde k přepsání hodnot.
+Syntaxe: {0} odděluje regulární výrazy od vlastností, název a hodnota vlastnosti jsou oddělené pomocí {1} a každý pár regulárního výrazu a vlastnosti se odděluje řetězcem {2}.
+Příklad: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>Pokud tato hodnota není prázdná, tento regulární výraz se použije ke zjištění spustitelných souborů Google Testu, které obsahují vaše testy.
+Výchozí regulární výraz: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Dávkový soubor, který se spustí před spuštěním testu. Pokud se testy spouští paralelně, dávkový soubor se spustí jednou pro každé vlákno. Zástupné symboly:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>Pokud se tato možnost nastaví na true, do výstupu testu a ladění se přidá časové razítko.</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>Obnovuje se nastavení řešení: {0}.</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Vypsat výstup testu</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>Nic k zařazení do sestavy</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test standardně zachytává výjimky. Příslušný test bude neúspěšný a spouštění testů bude pokračovat dále. Když zvolíte false, výjimky se budou předávat dál, což ladicímu programu umožní je zachytit.
+Možnost Google Testu: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Regulární výraz pro zjišťování testů</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Dávkový soubor, který se spustí po spuštění testu. Pokud se testy spouští paralelně, dávkový soubor se spustí jednou pro každé vlákno. Zástupné symboly:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} – cesta k adresáři, který můžou testy použít
+{1} – ID vlákna, které spouští aktuální testy</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} – spustitelný soubor, který obsahuje testy</value>
+  </data>
+</root>

@@ -25,6 +25,7 @@ namespace Microsoft.NewProjectWizard
         private const string RuntimeDebug = "$rtdebug$";
         private const string RuntimeRelease = "$rtrelease$";
         private const string RunSilent = "$runsilent$";
+        private const string NuGetPackage = "$nugetpackage$";
         private List<Project> projects = new List<Project>();
         private int selectedProjectIndex;
         private IWizard nugetWizard;
@@ -127,11 +128,13 @@ namespace Microsoft.NewProjectWizard
             string nugetPackage = "Microsoft.googletest.v140.windesktop.msvcstl." + consumeGTestAs + ".rt-" + runtimeLibs;
 
             // Work around so we can choose the package for the nuget wizard
-            string tmpWizardData = Path.GetTempFileName();
-            File.AppendAllText(tmpWizardData, "<VSTemplate Version=\"3.0.0\" xmlns=\"http://schemas.microsoft.com/developer/vstemplate/2005\" Type=\"Project\"><WizardData>");
-            File.AppendAllText(tmpWizardData, replacementsDictionary[WizardData].Replace("$nugetpackage$", nugetPackage));
-            File.AppendAllText(tmpWizardData, "</WizardData></VSTemplate>");
-            customParams[0] = tmpWizardData;
+            //string tmpWizardData = Path.GetTempFileName();
+            //File.AppendAllText(tmpWizardData, "<VSTemplate Version=\"3.0.0\" xmlns=\"http://schemas.microsoft.com/developer/vstemplate/2005\" Type=\"Project\"><WizardData>");
+            //File.AppendAllText(tmpWizardData, replacementsDictionary[WizardData].Replace("$nugetpackage$", nugetPackage));
+            //File.AppendAllText(tmpWizardData, "</WizardData></VSTemplate>");
+            //customParams[0] = tmpWizardData;
+
+            replacementsDictionary[NuGetPackage] = nugetPackage;
 
             try
             {

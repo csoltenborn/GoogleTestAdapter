@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>사용하도록 설정하면 잠재적으로 연결된 디버거가 어설션 오류를 catch하고 자동으로 대화형 모드에 넣습니다.
+Google Test 옵션: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 명령 출력 '{1} {2}'</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>실행 파일 '{0}'에 대한 테스트 사례를 나열할 수 없습니다. 종료 코드 {1}(으)로 프로세스 실행에 실패했습니다.</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Google Test에서 생성하는 테스트 이름에는 '/' 문자가 포함될 수 있습니다. 이때 테스트 탐색기 창이 적당히 넓지 않은 경우 Visual Studio가 '/' 다음의 이름을 자릅니다. 이 옵션의 값(비어 있지 않은 경우)은 이러한 동작을 방지하기 위해 '/' 문자를 바꿉니다. '\', ' ', '|', '-'는 비슷한 동작을 생성합니다('.', '_', ':', '::'은 작동함). 또한 특성 regex는 테스트의 표시 이름에 대해 평가되므로 이 옵션과 일치해야 합니다.</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>실제 테스트 사례 기간 수: {0}개</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}콘솔 출력에서 수집된 테스트 결과 {1}개</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>프로세스가 {0} 코드로 종료되었습니다.</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>{1}에 시작한 프로세스 {0}이(가) 종료되었습니다.</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: '{2}'을(를) 성공적으로 실행했습니다.</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>실행당 테스트 순서 섞기</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}실행이 취소되었습니다. {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>테스트 {1}개를 포함한 후 초과된 최대 허용 명령줄 길이({0})(다음 문자열 길이는 {2}임)</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>이진 {2}에서 테스트 메서드 기호 {0}개와 특성 기호 {1}개를 찾았습니다.</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>테스트 검색 시간 제한(초)</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: 예외 발생, 메시지: '{2}', 명령 실행: '{3}'</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - 솔루션의 디렉터리(Visual Studio 내에서만 사용 가능)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>최대 스레드 수</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>True인 경우 테스트 실행이 취소되면 실행 중인 테스트 실행 파일이 종료됩니다. 테스트 프로세스를 종료하면 모든 종류의 부작용이 발생할 수 있습니다. 특히 Google Test는 종료 작업을 수행할 수 없습니다.</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}테스트를 실행하는 동안 예외가 발생했습니다. {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>실행 파일 {0}에 대한 Google Test 표시기 파일을 찾지 못했습니다.</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: 시드가 시스템 시간에서 계산됩니다. 1&lt;=n&lt;={0}: 제공된 시드가 사용됩니다. 옵션 '{1}'에 대한 메모를 참조하세요.
+Google Test 옵션: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}{1}테스트 사례가 실행되지 않은 것 같습니다. 그동안 테스트가 변경되었지만 테스트 실행을 반복하시겠습니까? 테스트 사례:{2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>추가 테스트 실행 매개 변수</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>실행 파일 {0}에 대한 Google Test 표시기 파일을 찾았습니다.</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>실제 기간에서 예상 기간 {0}개를 찾았습니다.</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>PATH 확장</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>Regex '{0}'을(를) 구문 분석할 수 없습니다. {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>선택한 횟수로 테스트가 실행됩니다(-1: 무한).
+Google Test 옵션: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}특히 명령 프롬프트를 시작하고, 디렉터리 '{1}'(으)로 변경하고, 다음 명령을 실행하여 테스트를 일반적으로 실행할 수 있어야 합니다.{2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>테스트 수를 기준으로 분할자 사용</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>알 수 없는 리터럴: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>새 테스트 실행 프레임워크 사용(실험적)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>'{0}' 쌍을 구문 분석할 수 없습니다. 예외 메시지: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>실행 파일 {1}에서 테스트 {0}개를 찾았습니다.</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>테스트를 동시에 실행하면 테스트 콘솔에 테스트 출력이 표시되지 않습니다.</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>명령 출력:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Google Test 실행 파일의 출력을 [테스트 출력] 창에 인쇄합니다.</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>테스트 종료 일괄 처리 파일</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}실행 소요 시간: {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>작업 디렉터리</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>테스트 종료 배치 파일</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>옵션에서 병렬 실행을 선택했지만, 디버거가 연결되어 있기 때문에 테스트가 순차적으로 실행됩니다.</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>잘못된 파일 {0}. {1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>테스트 검색 후</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0}이(가) 기본 regex {1}과(와) 일치합니다.</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>줄 '{0}'의 테스트 결과에 대해 알려진 테스트 사례가 없습니다. 테스트 실행을 반복하시겠습니까? 하지만 그동안 테스트가 변경되었습니다.</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>실행 파일 {1}에 대해 {0}초 후 테스트 검색이 취소되었습니다.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>병렬 테스트 실행은 각각 실행될 테스트 수가 할당된 여러 스레드를 통해 수행됩니다. 스레드는 필요한 실행 파일을 순차적으로 호출하여 테스트 결과를 생성합니다.</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}분석기에 이미 테스트 사례 {1}이(가) 있습니다.</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Google Test 실행 파일에 대한 추가 매개 변수입니다. 자리 표시자:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>가장 심한 차이점 {0}개:</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>XmlNode '{0}'을(를) 구문 분석할 수 없습니다. 예외 메시지: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>취소 시 프로세스 종료</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}테스트 실행 파일 '{1}'을(를) 실행하지 못했습니다. {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>표준 편차: {0}ms</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>특성 할당에 대한 regex</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>예상 테스트 사례 기간 수: {0}개</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>True인 경우 확장이 업데이트된 후 릴리스 정보가 포함된 대화 상자가 표시됩니다.</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>새 테스트 실행 프레임워크를 사용합니다. 장점: 테스트 중단 검색 및 테스트 출력 인쇄도 디버그 모드에서 작동됩니다.</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; 예약 통계 &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>업데이트 후 릴리스 정보 표시</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>실행된 명령: '{0} {1}', 작업 디렉터리: '{2}'</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>{0}에서 테스트 위치 및 특성을 확인하는 동안 예외가 발생했습니다.\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0}이(가) 기본 regex {1}과(와) 일치하지 않습니다.</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>테스트 반복 횟수</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>명령으로 생성된 출력이 없습니다.</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: 파일({2})을 찾을 수 없습니다.</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>잘못된 정규식 "{0}", 예외 메시지: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>실패 시 중단</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>테스트 실행 파일에 대한 디버그 기호 정보를 구문 분석하여 소스 위치 정보 및 특성(GTA_Traits.h의 매크로를 통해 정의됨)을 가져옵니다.
+False로 설정된 경우 특성 검색의 2단계가 생략되고 특성 regex만 적용됩니다.</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>테스트 이름 구분 기호</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}Visual Studio에 테스트 결과를 {1}개 보고했습니다. 실행 파일: '{2}', 기간: {3}</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>테스트 실행에 사용할 수 있는 최대 스레드 수입니다(0: 각 프로세서에 대해 스레드 하나).</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; 출력의 끝</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0}은(는) 0보다 작을 수 없습니다.</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>기타</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>타임스탬프 출력</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0}이(가) 사용자 지정 regex {1}과(와) 일치합니다.</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>테스트 출력:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>알 수 없는 테스트 사례 상태: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>비어 있는 경우 테스트 실행에 대해 작업 디렉터리를 설정합니다(기본값: {0}).
+예: {1}\MyTestDir
+자리 표시자:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>예상 기간과 실제 기간 간의 평균 차이: {0}ms</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}결과 XML 파일({2})에서 수집된 테스트 결과 {1}개</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>True인 경우 테스트가 임의 순서로 실행됩니다. 모든 테스트를 비병렬 방식으로 수행할 때에만 진정한 임의 순서가 제공됩니다. 비병렬 방식으로 수행하지 않는 경우 테스트 실행 파일은 두 번 이상 실행될 가능성이 크며, 임의 순서는 실행에 따라 제한됩니다.
+Google Test 옵션: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>디버거를 {0}에 연결하는 중</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0}이(가) 사용자 지정 regex {1}과(와) 일치하지 않습니다.</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>True인 경우 디버그 출력이 테스트 콘솔에 인쇄됩니다.</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>True인 경우 모든 (선택된) 테스트가 비활성화되더라도 실행됩니다.
+Google Test 옵션: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - 테스트 실행 파일이 포함되는 디렉터리</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>테스트 실행</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>디버그 정보 인쇄</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}테스트 디렉터리 '{1}'을(를) 삭제할 수 없습니다. {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>테스트 순서 섞기: 시드</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! 이 테스트는 손상된 것 같습니다. !!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>{0} 테스트 충돌 때문인 것 같습니다.</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>테스트 결과 파일 {0}을(를) (완전히) 구분 분석할 수 없습니다. 테스트 실행 파일이 손상된 것 같습니다. 예외 메시지: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}테스트 실행 중 Visual Studio에 테스트 결과를 {1}개 보고했습니다. 실행 파일: '{2}'</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>비활성화된 테스트도 실행</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>테스트 검색에 실패한 것으로 간주되는 시간(초)입니다. 0: 시간 제한 없음</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>테스트 설치 배치 파일</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>비어 있지 않은 경우 콘텐츠가 테스트 실행 및 검색 프로세스의 PATH 변수에 추가됩니다.
+예: C:\MyBins;{0}\MyOtherBins;
+자리 표시자:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>테스트 사례 '{0}'을(를) 추가했습니다.</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>테스트 {0}개를 실행하는 중...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}테스트 결과 {1}개가 생성되었으며 결과 XML 파일 또는 콘솔 출력에서 찾지 못했습니다.</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>분석기에 이미 있는 테스트 사례: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>다음 명령을 명령줄에서 성공적으로 실행할 수 있는지 여부를 테스트합니다(경로에 필요한 모든 이진이 있어야 함).{0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>테스트 설정 일괄 처리 파일</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>VS 유닛 테스트 프레임워크에 대한 제한으로 인해 디버깅 테스트 시 테스트 실행 파일의 출력을 테스트 콘솔에 표시할 수 없습니다.</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: 코드 {2}(으)로 종료되었습니다. 실행된 명령: '{3}'</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>예외 catch</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>런타임 동작</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>{1}에 시작한 {0} 프로세스를 종료할 수 없습니다. {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>테스트 {0}: 예상 {1}ms, 실제 {2}ms</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>테스트 실행 파일 '{0}'에 대한 설정: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>'{0}' 줄의 기간을 구문 분석할 수 없습니다.</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>출력 파일이 존재하지 않습니다. 테스트가 충돌했습니까?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>실행 파일 {0}은(는) 다른 컴퓨터에서 제공되었으며 이 컴퓨터를 보호하기 위해 차단되었습니다.</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>{0}개의 스레드에서 테스트 실행 중</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>테스트 검색 전</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}스택 추적:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>스레드 '{0}'의 실행 파일에 대한 설정으로 SettingsWrapper가 이미 실행 중입니다. 스레드 '{1}'에서도 사용할 수 없습니다.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>병렬 테스트 실행</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>테스트 {0}의 소스 위치를 찾을 수 없습니다.</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>실행 파일 {0}에 대한 설정으로 이미 실행이 진행 중입니다. {1}에 대한 설정으로 전환할 수 없습니다.</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>테스트 실행 파일 '{0}'에 대해 구성된 설정이 없습니다. 다음 솔루션 설정으로 실행합니다. {1}</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Regex '{0}'의 시간이 초과되었습니다. {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>테스트 기간을 읽을 수 없습니다. {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>기호 정보 구문 분석</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>병렬 처리</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>테스트 기간을 기준으로 분할자 사용</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Regex와 일치하는 테스트 사례에 대해 특성을 재정의/추가할 수 있습니다. 특성은 3단계로 작성됩니다. 먼저 특성은 '특성 이전' 옵션에 따라 테스트에 할당됩니다. 그다음으로 테스트의 특성(GTA_Traits.h의 매크로를 통해 정의됨)은 테스트에 추가되어 1단계의 특성이 새 값으로 재정의됩니다. 마지막으로 다시 재정의 방식으로 '특성 이후' 옵션이 평가됩니다.
+구문: {0}은(는) regex를 특성과 구분하고, 특성의 이름 및 값은 {1}(으)로 구분되며, 각 regex와 특성 쌍은 {2}(으)로 구분됩니다.
+예: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>비어 있지 않은 경우 테스트가 포함된 Google Test 실행 파일을 검색하는 데 이 regex가 사용됩니다.
+기본 regex: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>테스트 실행 전에 실행되는 배치 파일입니다. 테스트가 동시에 실행되는 경우 배치 파일은 스레드당 한 번 실행됩니다. 자리 표시자:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>True인 경우 타임스탬프가 테스트 및 디버그 출력에 추가됩니다.</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>솔루션 복원 설정: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>테스트 출력 인쇄</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>보고할 사항이 없습니다.</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test는 기본적으로 예외를 catch합니다. 테스트에 실패하면 테스트 실행이 계속됩니다. False를 선택하면 예외가 통과되어 디버거에서 예외를 catch할 수 있습니다.
+Google Test 옵션: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>테스트 검색에 대한 regex</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>테스트 실행 후에 실행되는 배치 파일입니다. 테스트가 동시에 실행되는 경우 배치 파일은 스레드당 한 번 실행됩니다. 자리 표시자:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - 테스트에서 사용할 수 있는 디렉터리의 경로
+{1} - 현재 테스트를 실행하는 스레드의 ID</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - 테스트를 포함하는 실행 파일</value>
+  </data>
+</root>

@@ -18,15 +18,11 @@
       <ProjectItem ReplaceParameters="true" TargetFileName="test.cpp" OpenInEditor="true">test.cpp</ProjectItem>
       <ProjectItem TargetFileName="pch.cpp">pch.cpp</ProjectItem>
       <ProjectItem TargetFileName="pch.h">pch.h</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="packages.config">packages.config.template</ProjectItem>
     </Project>
   </TemplateContent>
   <WizardExtension>
     <Assembly>NewProjectWizard, Version=0.1.0.0, Culture=neutral, PublicKeyToken=1924acebdd4c8a75</Assembly>
     <FullClassName>Microsoft.NewProjectWizard.WizardImplementation</FullClassName>
   </WizardExtension>
-  <WizardData>
-    <packages repository="extension" repositoryId="GoogleTestAdapterVSIX.d3b8e668-8582-4be9-ab42-aaf872704ef3">
-      <package id="$nugetpackage$" version="1.8.1" />
-    </packages>
-  </WizardData>
 </VSTemplate>

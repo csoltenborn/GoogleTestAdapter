@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="Main" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -17,7 +18,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Packaging.GTA</RootNamespace>
     <AssemblyName>Packaging.GTA</AssemblyName>
-    <TargetFrameworkVersion>$(FlavoredTargetFrameworkVersion)</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
@@ -48,7 +49,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -74,6 +77,26 @@
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GoogleTestItemTemplate\GoogleTestItemTemplate.csproj">
+      <Project>{87A1108A-3819-4B31-99EA-217F3E11E958}</Project>
+      <Name>GoogleTestItemTemplate</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\GoogleTestProjectTemplate\GoogleTestProjectTemplate.csproj">
+      <Project>{A56C1F19-EAA6-4C99-BAC3-2B14D0CCC544}</Project>
+      <Name>GoogleTestProjectTemplate</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\NewProjectWizard\NewProjectWizard.csproj">
+      <Project>{483FE0C7-4E8D-4591-BE45-EAC6B2EA5F4F}</Project>
+      <Name>NewProjectWizard</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
@@ -82,6 +105,320 @@
       <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
       <Name>VsPackage.GTA</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Res Include="cs\GoogleTestAdapter.Common.Resources.cs.resx">
+      <Culture>cs</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="cs\GoogleTestAdapter.DiaResolver.Resources.cs.resx">
+      <Culture>cs</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="cs\GoogleTestAdapter.Resources.cs.resx">
+      <Culture>cs</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="cs\GoogleTestAdapter.TestAdapter.Resources.cs.resx">
+      <Culture>cs</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="cs\NewProjectWizard.Properties.Resources.cs.resx">
+      <Culture>cs</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="cs\VSPackage.cs.resx">
+      <Culture>cs</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="de\GoogleTestAdapter.Common.Resources.de.resx">
+      <Culture>de</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="de\GoogleTestAdapter.DiaResolver.Resources.de.resx">
+      <Culture>de</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="de\GoogleTestAdapter.Resources.de.resx">
+      <Culture>de</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="de\GoogleTestAdapter.TestAdapter.Resources.de.resx">
+      <Culture>de</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="de\NewProjectWizard.Properties.Resources.de.resx">
+      <Culture>de</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="de\VSPackage.de.resx">
+      <Culture>de</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="es\GoogleTestAdapter.Common.Resources.es.resx">
+      <Culture>es</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="es\GoogleTestAdapter.DiaResolver.Resources.es.resx">
+      <Culture>es</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="es\GoogleTestAdapter.Resources.es.resx">
+      <Culture>es</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="es\GoogleTestAdapter.TestAdapter.Resources.es.resx">
+      <Culture>es</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="es\NewProjectWizard.Properties.Resources.es.resx">
+      <Culture>es</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="es\VSPackage.es.resx">
+      <Culture>es</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="fr\GoogleTestAdapter.Common.Resources.fr.resx">
+      <Culture>fr</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="fr\GoogleTestAdapter.DiaResolver.Resources.fr.resx">
+      <Culture>fr</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="fr\GoogleTestAdapter.Resources.fr.resx">
+      <Culture>fr</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="fr\GoogleTestAdapter.TestAdapter.Resources.fr.resx">
+      <Culture>fr</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="fr\NewProjectWizard.Properties.Resources.fr.resx">
+      <Culture>fr</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="fr\VSPackage.fr.resx">
+      <Culture>fr</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="it\GoogleTestAdapter.Common.Resources.it.resx">
+      <Culture>it</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="it\GoogleTestAdapter.DiaResolver.Resources.it.resx">
+      <Culture>it</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="it\GoogleTestAdapter.Resources.it.resx">
+      <Culture>it</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="it\GoogleTestAdapter.TestAdapter.Resources.it.resx">
+      <Culture>it</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="it\NewProjectWizard.Properties.Resources.it.resx">
+      <Culture>it</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="it\VSPackage.it.resx">
+      <Culture>it</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="ja\GoogleTestAdapter.Common.Resources.ja.resx">
+      <Culture>ja</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="ja\GoogleTestAdapter.DiaResolver.Resources.ja.resx">
+      <Culture>ja</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="ja\GoogleTestAdapter.Resources.ja.resx">
+      <Culture>ja</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="ja\GoogleTestAdapter.TestAdapter.Resources.ja.resx">
+      <Culture>ja</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="ja\NewProjectWizard.Properties.Resources.ja.resx">
+      <Culture>ja</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="ja\VSPackage.ja.resx">
+      <Culture>ja</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="ko\GoogleTestAdapter.Common.Resources.ko.resx">
+      <Culture>ko</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="ko\GoogleTestAdapter.DiaResolver.Resources.ko.resx">
+      <Culture>ko</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="ko\GoogleTestAdapter.Resources.ko.resx">
+      <Culture>ko</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="ko\GoogleTestAdapter.TestAdapter.Resources.ko.resx">
+      <Culture>ko</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="ko\NewProjectWizard.Properties.Resources.ko.resx">
+      <Culture>ko</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="ko\VSPackage.ko.resx">
+      <Culture>ko</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="pl\GoogleTestAdapter.Common.Resources.pl.resx">
+      <Culture>pl</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="pl\GoogleTestAdapter.DiaResolver.Resources.pl.resx">
+      <Culture>pl</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="pl\GoogleTestAdapter.Resources.pl.resx">
+      <Culture>pl</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="pl\GoogleTestAdapter.TestAdapter.Resources.pl.resx">
+      <Culture>pl</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="pl\NewProjectWizard.Properties.Resources.pl.resx">
+      <Culture>pl</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="pl\VSPackage.pl.resx">
+      <Culture>pl</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="pt-BR\GoogleTestAdapter.Common.Resources.pt-BR.resx">
+      <Culture>pt-BR</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="pt-BR\GoogleTestAdapter.DiaResolver.Resources.pt-BR.resx">
+      <Culture>pt-BR</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="pt-BR\GoogleTestAdapter.Resources.pt-BR.resx">
+      <Culture>pt-BR</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="pt-BR\GoogleTestAdapter.TestAdapter.Resources.pt-BR.resx">
+      <Culture>pt-BR</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="pt-BR\NewProjectWizard.Properties.Resources.pt-BR.resx">
+      <Culture>pt-BR</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="pt-BR\VSPackage.pt-BR.resx">
+      <Culture>pt-BR</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="ru\GoogleTestAdapter.Common.Resources.ru.resx">
+      <Culture>ru</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="ru\GoogleTestAdapter.DiaResolver.Resources.ru.resx">
+      <Culture>ru</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="ru\GoogleTestAdapter.Resources.ru.resx">
+      <Culture>ru</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="ru\GoogleTestAdapter.TestAdapter.Resources.ru.resx">
+      <Culture>ru</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="ru\NewProjectWizard.Properties.Resources.ru.resx">
+      <Culture>ru</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="ru\VSPackage.ru.resx">
+      <Culture>ru</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="tr\GoogleTestAdapter.Common.Resources.tr.resx">
+      <Culture>tr</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="tr\GoogleTestAdapter.DiaResolver.Resources.tr.resx">
+      <Culture>tr</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="tr\GoogleTestAdapter.Resources.tr.resources.resx">
+      <Culture>tr</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="tr\GoogleTestAdapter.TestAdapter.Resources.tr.resx">
+      <Culture>tr</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="tr\NewProjectWizard.Properties.Resources.tr.resx">
+      <Culture>tr</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="tr\VSPackage.tr.resx">
+      <Culture>tr</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="zh-Hans\GoogleTestAdapter.Common.Resources.zh-HANS.resx">
+      <Culture>zh-Hans</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="zh-Hans\GoogleTestAdapter.DiaResolver.Resources.zh-HANS.resx">
+      <Culture>zh-Hans</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="zh-Hans\GoogleTestAdapter.Resources.zh-HANS.resx">
+      <Culture>zh-Hans</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="zh-Hans\GoogleTestAdapter.TestAdapter.Resources.zh-HANS.resx">
+      <Culture>zh-Hans</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="zh-Hans\NewProjectWizard.Properties.Resources.zh-HANS.resx">
+      <Culture>zh-Hans</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="zh-Hans\VSPackage.zh-HANS.resx">
+      <Culture>zh-Hans</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
+    <Res Include="zh-Hant\GoogleTestAdapter.Common.Resources.zh-HANT.resx">
+      <Culture>zh-Hant</Culture>
+      <Name>GoogleTestAdapter.Common.Dynamic</Name>
+    </Res>
+    <Res Include="zh-Hant\GoogleTestAdapter.DiaResolver.Resources.zh-HANT.resx">
+      <Culture>zh-Hant</Culture>
+      <Name>GoogleTestAdapter.DiaResolver</Name>
+    </Res>
+    <Res Include="zh-Hant\GoogleTestAdapter.Resources.zh-HANT.resx">
+      <Culture>zh-Hant</Culture>
+      <Name>GoogleTestAdapter.Core</Name>
+    </Res>
+    <Res Include="zh-Hant\GoogleTestAdapter.TestAdapter.Resources.zh-HANT.resx">
+      <Culture>zh-Hant</Culture>
+      <Name>GoogleTestAdapter.TestAdapter</Name>
+    </Res>
+    <Res Include="zh-Hant\NewProjectWizard.Properties.Resources.zh-HANT.resx">
+      <Culture>zh-Hant</Culture>
+      <Name>NewProjectWizard</Name>
+    </Res>
+    <Res Include="zh-Hant\VSPackage.zh-HANT.resx">
+      <Culture>zh-Hant</Culture>
+      <Name>GoogleTestAdapter.VsPackage.GTA</Name>
+    </Res>
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt">
@@ -101,7 +438,260 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="cs\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="cs\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="cs\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="cs\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="cs\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="cs\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="de\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="de\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="de\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="de\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="de\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="de\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="es\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="es\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="es\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="es\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="es\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="es\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="fr\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="fr\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="fr\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="fr\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="fr\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="fr\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="it\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="it\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="it\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="it\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="it\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="it\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ja\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ja\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ja\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ja\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ja\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ja\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ko\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ko\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ko\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ko\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ko\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ko\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pl\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pl\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pl\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pl\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pl\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pl\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pt-BR\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pt-BR\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pt-BR\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pt-BR\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pt-BR\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="pt-BR\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ru\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ru\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ru\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ru\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ru\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ru\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="tr\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="tr\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="tr\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="tr\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="tr\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="tr\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hans\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hans\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hans\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hans\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hans\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hans\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hant\GoogleTestAdapter.Common.Dynamic.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hant\GoogleTestAdapter.Core.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hant\GoogleTestAdapter.DiaResolver.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hant\GoogleTestAdapter.TestAdapter.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hant\GoogleTestAdapter.VsPackage.GTA.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="zh-Hant\NewProjectWizard.resources.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
+  <PropertyGroup>
+    <KeyFile>$(SolutionDir)Keys\Key_Debug.snk</KeyFile>
+    <KeyFile Condition="Exists('$(SolutionDir)Keys\Key_Release.snk')">$(SolutionDir)Keys\Key_Release.snk</KeyFile>
+  </PropertyGroup>
+  <Target Name="Main">
+    <CallTarget Targets="CompileResources" />
+    <CallTarget Targets="BuildSatelliteAssemblies" />
+  </Target>
+  <!-- Generate .resource file from .resx -->
+  <Target Name="CompileResources">
+    <GenerateResource Sources="@(Res)" PublicClass="true" SdkToolsPath="$(SDK40ToolsPath)">
+      <Output ItemName="Resources" TaskParameter="OutputResources" />
+    </GenerateResource>
+  </Target>
+  <!-- Create a satellite assembly for each culture -->
+  <Target Name="BuildSatelliteAssemblies" DependsOnTargets="CompileResources">
+    <MakeDir Directories="%(Res.Culture)" />
+    <AL OutputAssembly="%(Culture)\%(Name).resources.dll" KeyFile="$(KeyFile)" Version="0.1.0.0" Culture="%(Culture)" EmbedResources="@(Resources)" />
+  </Target>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>

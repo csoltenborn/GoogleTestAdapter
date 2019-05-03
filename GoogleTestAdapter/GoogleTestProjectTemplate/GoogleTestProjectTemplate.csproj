@@ -45,7 +45,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="GoogleTest.vcxproj" />
+    <None Include="GoogleTest.vcxproj">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config.template" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="GoogleTest.vstemplate">
