@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Settings;
@@ -31,7 +31,7 @@ namespace GoogleTestAdapter.Helpers
                 }
                 catch (Exception e)
                 {
-                    string message = "Could not parse pair '" + pair + "', exception message: " + e.Message;
+                    string message = String.Format(Resources.ParsePair, pair, e.Message);
                     if (ignoreErrors)
                         _logger?.LogError(message);
                     else

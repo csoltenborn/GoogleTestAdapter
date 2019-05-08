@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 3/2019.
 
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -7,7 +7,6 @@ using GoogleTestAdapter.VsPackage.Debugging;
 using GoogleTestAdapter.VsPackage.Helpers;
 using GoogleTestAdapter.VsPackage.OptionsPages;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -26,21 +25,16 @@ using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.
 namespace GoogleTestAdapter.VsPackage
 {
 
-    [AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGeneralName, 0, 0, true)]
-    [ProvideOptionPage(typeof(TestDiscoveryOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageTestDiscovery, 0, 0, true)]
-    [ProvideOptionPage(typeof(TestExecutionOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageTestExecution, 0, 0, true)]
-    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), OptionsCategoryName, "General", 110, 501, true)]
+    [ProvideOptionPage(typeof(TestExecutionOptionsDialogPage), OptionsCategoryName, "Parallelization", 110, 502, true)]
+    [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, "Google Test", 110, 503, true)]
+    //    [Microsoft.VisualStudio.Shell.ProvideAutoLoad(UIContextGuids.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IAsyncLoadablePackageInitialize, IDisposable
     {
-        private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
-
         private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
         private IGlobalRunSettingsInternal _globalRunSettings;
@@ -51,47 +45,6 @@ namespace GoogleTestAdapter.VsPackage
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
-
-        private bool _isAsyncLoadSupported;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-
-            _isAsyncLoadSupported = this.IsAsyncPackageSupported();
-            if (!_isAsyncLoadSupported)
-            {
-                var componentModel = (IComponentModel) GetGlobalService(typeof(SComponentModel));
-                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
-
-                VsSettingsStorage.Init(this);
-
-                DoInitialize();
-            }
-        }
-
-        IVsTask IAsyncLoadablePackageInitialize.Initialize(IAsyncServiceProvider serviceProvider, IProfferAsyncService profferService,
-            IAsyncProgressCallback progressCallback)
-        {
-            if (!_isAsyncLoadSupported)
-            {
-                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
-            }
-
-            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
-            {
-                var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
-                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
-
-                VsSettingsStorage.Init(this);
-
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                
-                DoInitialize();
-
-                return null;
-            }).AsVsTask();
-        }
 
         private void DoInitialize()
         {

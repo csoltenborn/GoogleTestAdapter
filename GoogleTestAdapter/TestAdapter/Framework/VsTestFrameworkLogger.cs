@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Text;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
@@ -89,10 +91,10 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             switch (level)
             {
                 case TestMessageLevel.Informational: return "";
-                case TestMessageLevel.Warning: return "Warning";
-                case TestMessageLevel.Error: return "ERROR";
+                case TestMessageLevel.Warning: return Resources.WarningMessage;
+                case TestMessageLevel.Error: return Resources.ErrorMessage;
                 default:
-                    throw new InvalidOperationException($"Unknown literal {level}");
+                    throw new InvalidOperationException(String.Format(Resources.UnknownLiteral, level));
             }
         }
     }

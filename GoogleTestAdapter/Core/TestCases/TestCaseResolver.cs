@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -121,7 +123,7 @@ namespace GoogleTestAdapter.TestCases
                 {
                     _allTestMethodSymbols.AddRange(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     _allTraitSymbols.AddRange(diaResolver.GetFunctions("*" + TraitAppendix));
-                    _logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}, pdb {pdb}");
+                    _logger.DebugInfo(String.Format(Resources.FoundTestMethod, _allTestMethodSymbols.Count, _allTraitSymbols.Count, binary, pdb));
 
                     if (resolveMainMethod)
                     {
@@ -130,7 +132,7 @@ namespace GoogleTestAdapter.TestCases
                 }
                 catch (Exception e)
                 {
-                    _logger.DebugError($"Exception while resolving test locations and traits in '{binary}':{Environment.NewLine}{e}");
+                    _logger.DebugError(String.Format(Resources.ExceptionResolving, binary, e));
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 5/2018.
+
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,8 +16,11 @@ namespace GoogleTestAdapter.Runners
 {
     public class PreparingTestRunner : ITestRunner
     {
-        public const string TestSetup = "Test setup";
-        public const string TestTeardown = "Test teardown";
+        private enum BatchType
+        {
+            TestSetup,
+            TestTeardown
+        }
 
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
@@ -50,25 +55,24 @@ namespace GoogleTestAdapter.Runners
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 string batch = _settings.GetBatchForTestSetup(_testDirectory, _threadId);
-                SafeRunBatch(TestSetup, _settings.SolutionDir, batch, processExecutorFactory);
+                SafeRunBatch(BatchType.TestSetup, _settings.SolutionDir, batch, processExecutorFactory);
 
                 _innerTestRunner.RunTests(testCasesToRun, isBeingDebugged, processExecutorFactory);
 
                 batch = _settings.GetBatchForTestTeardown(_testDirectory, _threadId);
-                SafeRunBatch(TestTeardown, _settings.SolutionDir, batch, processExecutorFactory);
+                SafeRunBatch(BatchType.TestTeardown, _settings.SolutionDir, batch, processExecutorFactory);
 
                 stopwatch.Stop();
-                _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
+                _logger.DebugInfo(String.Format(Resources.ExecutionTime, _threadName, stopwatch.Elapsed));
 
                 if (!Utils.DeleteDirectory(_testDirectory, out var errorMessage))
                 {
-                    _logger.DebugWarning(
-                        $"{_threadName}Could not delete test directory '" + _testDirectory + "': " + errorMessage);
+                    _logger.DebugWarning(String.Format(Resources.DeleteTestDir, _threadName, _testDirectory, errorMessage));
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError($"{_threadName}Exception while running tests: " + e);
+                _logger.LogError(String.Format(Resources.ExceptionMessage, _threadName, e));
             }
         }
 
@@ -80,43 +84,42 @@ namespace GoogleTestAdapter.Runners
         }
 
 
-        private void SafeRunBatch(string batchType, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
+        private void SafeRunBatch(BatchType batchType, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
         {
+            string batchTypeString = (batchType == BatchType.TestSetup) ? Resources.TestSetupBatchFile : Resources.TestTeardownBatchFile;
+
             if (string.IsNullOrEmpty(batch))
             {
                 return;
             }
             if (!File.Exists(batch))
             {
-                _logger.LogError($"{_threadName}Did not find " + batchType.ToLower() + " batch file: " + batch);
+                _logger.LogError(String.Format(Resources.BatchFileMissing, _threadName, batchTypeString, batch));
                 return;
             }
 
             try
             {
-                RunBatch(batchType, workingDirectory, batch, processExecutorFactory);
+                RunBatch(batchTypeString, workingDirectory, batch, processExecutorFactory);
             }
             catch (Exception e)
             {
-                _logger.LogError(
-                    $"{_threadName}{batchType} batch caused exception, msg: \'{e.Message}\', executed command: \'{batch}\'");
+                _logger.LogError(String.Format(Resources.RunBatchException, _threadName, batchTypeString, e.Message, batch));
             }
         }
 
-        private void RunBatch(string batchType, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
+        private void RunBatch(string batchTypeString, string workingDirectory, string batch, IProcessExecutorFactory processExecutorFactory)
         {
             var executor = processExecutorFactory.CreateExecutor(false, _logger);
             int batchExitCode = executor.ExecuteBatchFileBlocking(batch, "", workingDirectory, "", s => { });
 
             if (batchExitCode == 0)
             {
-                _logger.DebugInfo(
-                    $"{_threadName}Successfully ran {batchType} batch \'{batch}\'");
+                _logger.DebugInfo(String.Format(Resources.SuccessfullyRun, _threadName, batchTypeString, batch));
             }
             else
             {
-                _logger.LogWarning(
-                    $"{_threadName}{batchType} batch returned exit code {batchExitCode}, executed command: \'{batch}\'");
+                _logger.LogWarning(String.Format(Resources.BatchReturnedExitCode, _threadName, batchTypeString, batchExitCode, batch));
             }
         }
 

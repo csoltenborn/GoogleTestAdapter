@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -171,14 +171,12 @@ namespace GoogleTestAdapter.TestCases
         {
             if (processExitCode != 0)
             {
-                string message =
-                    $"Could not list test cases of executable '{_executable}': executing process failed with return code {processExitCode}";
-                message +=
-                    $"\nCommand executed: '{_executable} {parameters}', working directory: '{workingDir}'";
+                string message = String.Format(Resources.CouldNotListTestCases, _executable, processExitCode);
+                message += Environment.NewLine + String.Format(Resources.CommandExecuted, _executable, GoogleTestConstants.ListTestsOption, Path.GetDirectoryName(_executable));
                 if (standardOutput.Count(s => !string.IsNullOrEmpty(s)) > 0)
-                    message += $"\nOutput of command:\n{string.Join("\n", standardOutput)}";
+                    message += Environment.NewLine + Resources.OutputOfCommand + Environment.NewLine + string.Join(Environment.NewLine, standardOutput);
                 else
-                    message += "\nCommand produced no output";
+                    message += Environment.NewLine + Resources.NoOutput;
 
                 _logger.LogError(message);
                 return false;
@@ -204,8 +202,17 @@ namespace GoogleTestAdapter.TestCases
                 return testCase;
             }
 
-            _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
+            _logger.LogWarning(String.Format(Resources.LocationNotFoundError, descriptor.FullyQualifiedName));
             return CreateTestCase(descriptor);
+        }
+
+        // TODO replacement for more complex regex in TestCaseResolver?
+        internal static string StripTestSymbolNamespace(string symbol)
+        {
+            var suffixLength = GoogleTestConstants.TestBodySignature.Length;
+            var namespaceEnd = symbol.LastIndexOf("::", symbol.Length - suffixLength - 1, StringComparison.Ordinal);
+            var nameStart = namespaceEnd >= 0 ? namespaceEnd + 2 : 0;
+            return symbol.Substring(nameStart);
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)

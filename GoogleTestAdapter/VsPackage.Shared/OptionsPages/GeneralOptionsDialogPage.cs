@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.Settings;
 using System.ComponentModel;
@@ -15,16 +15,6 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         #region Output
 
         [Category(SettingsWrapper.CategoryOutputName)]
-        [DisplayName(SettingsWrapper.OptionPrintTestOutput)]
-        [Description(SettingsWrapper.OptionPrintTestOutputDescription)]
-        public bool PrintTestOutput
-        {
-            get => _printTestOutput;
-            set => SetAndNotify(ref _printTestOutput, value);
-        }
-        private bool _printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
-
-        [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionOutputMode)]
         [Description(SettingsWrapper.OptionOutputModeDescription)]
         public OutputMode OutputMode
@@ -35,14 +25,15 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private OutputMode _outputMode = SettingsWrapper.OptionOutputModeDefaultValue;
 
         [Category(SettingsWrapper.CategoryOutputName)]
-        [DisplayName(SettingsWrapper.OptionTimestampOutput)]
-        [Description(SettingsWrapper.OptionTimestampOutputDescription)]
+        [LocalizedDisplayName("OptionTimestampOutput")]
+        [LocalizedDescription("OptionTimestampOutputDescription")]
         [PropertyPageTypeConverter(typeof(TimestampModeConverter))]
         public TimestampMode TimestampMode
         {
             get => _timestampMode;
             set => SetAndNotify(ref _timestampMode, value);
         }
+
         private TimestampMode _timestampMode = SettingsWrapper.OptionTimestampOutputDefaultValue;
 
         [Category(SettingsWrapper.CategoryOutputName)]
@@ -77,8 +68,38 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _prefixOutputWithGta = SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue;
 
-        #endregion
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionUseNewTestExecutionFramework")]
+        [LocalizedDescription("OptionUseNewTestExecutionFrameworkDescription")]
+        public bool UseNewTestExecutionFramework2
+        {
+            get { return _useNewTestExecutionFramework; }
+            set { SetAndNotify(ref _useNewTestExecutionFramework, value); }
+        }
+        private bool _useNewTestExecutionFramework = SettingsWrapper.OptionUseNewTestExecutionFrameworkDefaultValue;
 
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionPrintTestOutput")]
+        [LocalizedDescription("OptionPrintTestOutputDescription")]
+        public bool PrintTestOutput
+        {
+            get { return _printTestOutput; }
+            set { SetAndNotify(ref _printTestOutput, value); }
+        }
+        private bool _printTestOutput = SettingsWrapper.OptionPrintTestOutputDefaultValue;
+
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionDebugMode")]
+        [LocalizedDescription("OptionDebugModeDescription")]
+        public bool DebugMode
+        {
+            get { return _debugMode; }
+            set { SetAndNotify(ref _debugMode, value); }
+        }
+        private bool _debugMode = SettingsWrapper.OptionDebugModeDefaultValue;
+
+        #endregion
+        
         #region Security
 
         [Category(SettingsWrapper.CategorySecurityName)]

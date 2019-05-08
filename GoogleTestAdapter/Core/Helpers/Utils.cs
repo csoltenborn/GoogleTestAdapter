@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using System;
 using System.Collections.Generic;
@@ -67,6 +67,12 @@ namespace GoogleTestAdapter.Helpers
             return Task.WaitAll(tasks, timeoutInMs);
         }
 
+        public static bool BinaryFileContainsStrings(string executable, Encoding encoding, IEnumerable<string> strings)
+        {
+            byte[] file = File.ReadAllBytes(executable);
+            return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
+        }
+
         public static void ValidateRegex(string pattern)
         {
             try
@@ -76,7 +82,7 @@ namespace GoogleTestAdapter.Helpers
             }
             catch (ArgumentException e)
             {
-                throw new Exception($"Invalid regular expression \"{pattern}\", exception message: {e.Message}");
+                throw new Exception(String.Format(Resources.InvalidRegularExpression, pattern, e.Message));
             }
         }
 
@@ -85,12 +91,6 @@ namespace GoogleTestAdapter.Helpers
             // The parser will throw if the value is not well formed.
             var parser = new RegexTraitParser(null);
             parser.ParseTraitsRegexesString(value, ignoreErrors: false);
-        }
-
-        public static bool BinaryFileContainsStrings(string executable, Encoding encoding, IEnumerable<string> strings)
-        {
-            byte[] file = File.ReadAllBytes(executable);
-            return strings.All(s => file.IndexOf(encoding.GetBytes(s)) >= 0);
         }
 
         public static string[] SplitAdditionalPdbs(string additionalPdbs)

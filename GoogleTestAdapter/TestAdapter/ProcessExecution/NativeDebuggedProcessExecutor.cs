@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 8/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections;
@@ -180,9 +180,16 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             private static StringBuilder CreateEnvironment(string pathExtension)
             {
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
-                
+
                 if (!string.IsNullOrEmpty(pathExtension))
-                    envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                {
+                    var path = Utils.GetExtendedPath(pathExtension);
+                    if (envVariables.ContainsKey("PATH"))
+                    {
+                        path += $";{envVariables["PATH"]}";
+                    }
+                    envVariables["PATH"] = path;
+                }
 
                 var envVariablesList = new List<string>();
                 foreach (DictionaryEntry entry in envVariables)

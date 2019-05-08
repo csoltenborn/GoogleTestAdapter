@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 8/2017.
+
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
@@ -96,7 +98,7 @@ namespace GoogleTestAdapter.DiaResolver
             }
 
             locations.Should().BeEmpty();
-            fakeLogger.Errors.Should().Contain(msg => msg.Contains("PDB file") && msg.Contains("does not exist"));
+            fakeLogger.Warnings.Should().Contain(msg => msg.Contains("PDB file") && msg.Contains("does not exist"));
         }
 
         private void DoResolveTest(string executable, string filter, int expectedLocations, int expectedErrorMessages, bool disposeResolver = true)

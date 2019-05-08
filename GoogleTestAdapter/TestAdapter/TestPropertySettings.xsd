@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="TestPropertySettingsForGoogleAdapter" nillable="true" type="TestPropertySettings" />
+  <xs:complexType name="TestPropertySettings">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Tests" type="ArrayOfTestProperties" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTestProperties">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TestProperties" nillable="true" type="TestProperties" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TestProperties">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Command" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Environment" type="ArrayOfEnvVar" />
+      <xs:element minOccurs="0" maxOccurs="1" name="WorkingDirectory" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfEnvVar">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EnvVar" nillable="true" type="EnvVar" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EnvVar">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

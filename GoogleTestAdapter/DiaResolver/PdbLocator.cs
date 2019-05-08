@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.DiaResolver
                 }
             }
 
-            logger.DebugInfo("Attempts to find pdb: " + string.Join("::", attempts));
+            logger.DebugInfo(String.Format(Resources.AttemptsToFind, string.Join("::", attempts)));
 
             return null;
         }

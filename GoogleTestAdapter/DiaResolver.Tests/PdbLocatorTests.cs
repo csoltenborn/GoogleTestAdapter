@@ -58,7 +58,7 @@ namespace GoogleTestAdapter.DiaResolver
             pdbFound.Should().BeNull();
             fakeLogger.Infos
                 .Should()
-                .Contain(msg => msg.Contains("Attempts to find pdb:"));
+                .Contain(msg => msg.Contains("Attempts to find PDB:"));
         }
 
         [TestMethod]

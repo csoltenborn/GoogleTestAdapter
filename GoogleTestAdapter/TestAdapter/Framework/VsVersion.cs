@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -6,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using Process = System.Diagnostics.Process;
+using System.Globalization;
 
 namespace GoogleTestAdapter.TestAdapter.Framework
 {
@@ -119,7 +122,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         {
             string pathToBinary = FindVsOrVsTestConsoleExe()?.MainModule.FileName;
             if (pathToBinary == null)
-                throw new InvalidOperationException("Could not find process");
+                throw new InvalidOperationException(Resources.ProcessNotFound);
 
             FileVersionInfo binaryVersionInfo = FileVersionInfo.GetVersionInfo(pathToBinary);
 
@@ -141,10 +144,13 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             var process = Process.GetCurrentProcess();
             string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToLower();
             while (executable != null && !ParentProcessRegex.IsMatch(executable))
+            // TODO is this important?
+            // string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToUpperInvariant();
+            // while (executable != null && executable != "DEVENV.EXE" && executable != "VSTEST.CONSOLE.EXE")
             {
                 process = ParentProcessUtils.GetParentProcess(process.Id);
-                executable = process != null 
-                    ? Path.GetFileName(process.MainModule.FileName).Trim().ToLower()
+                executable = process != null
+                    ? Path.GetFileName(process.MainModule.FileName).Trim().ToUpperInvariant()
                     : null;
             }
             return process;
@@ -158,7 +164,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 return VsVersion.VS2012;
 
             if (version.Major < (int) FirstSupportedVersion || version.Major > (int) LastSupportedVersion)
-                throw new InvalidOperationException($"Unknown VisualStudio version: {versionString}");
+                throw new InvalidOperationException(String.Format(Resources.UnknownVisualStudioVersion, versionString));
 
             return (VsVersion) version.Major;
         }
