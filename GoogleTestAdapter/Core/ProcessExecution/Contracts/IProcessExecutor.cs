@@ -1,6 +1,7 @@
-// This file has been modified by Microsoft on 6/2017.
+// This file has been modified by Microsoft on 5/2018.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace GoogleTestAdapter.ProcessExecution.Contracts

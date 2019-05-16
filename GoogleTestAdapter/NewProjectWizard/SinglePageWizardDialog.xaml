@@ -6,6 +6,7 @@
     xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
     xmlns:vsimaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
     xmlns:vsimagecatalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog" 
+    xmlns:resx="clr-namespace:NewProjectWizard.Properties"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     Height="350"
     MinHeight="350"
@@ -76,6 +77,7 @@
             Margin="24,8,24,24">
             <StackPanel
                 x:Uid="StackPanel_2" Orientation ="Vertical">
+                <!-- Not localized because the title is set in the constructor -->
                 <Label
                     x:Uid="Label_DialogTitle" x:Name="Label_DialogTitle"
                     Style="{StaticResource TitleStyle}"
@@ -116,26 +118,38 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="projectToTestLabel" x:Uid="projectToTestLabel"  Grid.Column="0" Content="Select project to test (Optional):" Target="{Binding ElementName=projectComboBox}"/>
+                <Label x:Name="projectToTestLabel" x:Uid="projectToTestLabel"  Grid.Column="0" Content="{x:Static resx:Resources.SelectProject}" Target="{Binding ElementName=projectComboBox}"/>
                 <ComboBox x:Name="projectComboBox" Grid.Column="1" Width="160" Height="23" AutomationProperties.AutomationId="projectComboBox" AutomationProperties.LabeledBy="{Binding ElementName=projectToTestLabel}"/>
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width=".4*"/>
+                    <ColumnDefinition Width=".6*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="0,12,0,0">
-                    <Label x:Name="consumeGTestAsLabel" x:Uid="consumeGTestAsLabel" Content="Consume Google Test as:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="consumeGTestAsLabel" x:Uid="consumeGTestAsLabel" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.ConsumeAs}"/>
+                    </Label>
                     <StackPanel Margin="12,0,0,0">
-                        <RadioButton x:Name="staticLibRadioButton" x:Uid="staticLibRadioButton" Content="Static Library (.lib)" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7"/>
-                        <RadioButton x:Name="dynamicLibRadioButton" x:Uid="dynamicLibRadioButton" Content="Dynamic Library (.dll)" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="staticLibRadioButton" x:Uid="staticLibRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.StaticLib}"/>
+                        </RadioButton>
+                        <RadioButton x:Name="dynamicLibRadioButton" x:Uid="dynamicLibRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.DynamicLib}"/>
+                        </RadioButton>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="24,12,0,0">
-                    <Label x:Name="runtimeLibrariesLabel" x:Uid="runtimeLibrariesLabel" Content="C++ runtime libraries:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="runtimeLibrariesLabel" x:Uid="runtimeLibrariesLabel" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.RuntimeLibs}"/>
+                    </Label>
                     <StackPanel Margin="12,0,0,0">
-                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" Content="Link dynamically (Recommended)" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Width="203" Margin="0,0,0,7"/>
-                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" Content="Link statically" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.LinkDynamic}"/>
+                        </RadioButton>
+                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7">
+                            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.LinkStatic}"/>
+                        </RadioButton>
                     </StackPanel>
                 </StackPanel>
             </Grid>

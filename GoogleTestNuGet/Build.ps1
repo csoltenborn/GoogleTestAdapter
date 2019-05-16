@@ -126,6 +126,7 @@ function Add-Signing {
     )
 
     $xml = [xml](Get-Content "$Directory\$ProjectName.vcxproj")
+    $ProjectNameDebug = -join("$ProjectName", "d")
 
     $MicroBuildProps = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
     $MicroBuildProps.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props")
@@ -141,16 +142,26 @@ function Add-Signing {
     $RealSignGroup.AppendChild($DelaySign) | Out-Null
 
     $FileSignGroup = $xml.CreateElement("ItemGroup", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $FilesToSign = $xml.CreateElement("FilesToSign", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $FilesToSign.SetAttribute("Include", "`$(OutDir)\$ProjectName.dll")
-    $FilesToSign.SetAttribute("Condition", "'`$(RealSign)' == 'True' and '`$(TargetExt)' == '.dll'")
-    $Authenticode = $xml.CreateElement("Authenticode", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $Authenticode.set_InnerXML("Microsoft")
-    $StrongName = $xml.CreateElement("StrongName", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $StrongName.set_InnerXML("StrongName")
-    $FilesToSign.AppendChild($Authenticode) | Out-Null
-    $FilesToSign.AppendChild($StrongName) | Out-Null
-    $FileSignGroup.AppendChild($FilesToSign) | Out-Null
+    $FilesToSignRel = $xml.CreateElement("FilesToSign", "http://schemas.microsoft.com/developer/msbuild/2003")
+    $FilesToSignRel.SetAttribute("Include", "`$(OutDir)\$ProjectName.dll")
+    $FilesToSignRel.SetAttribute("Condition", "'`$(RealSign)' == 'True' and '`$(TargetExt)' == '.dll' and '`$(Configuration)' == 'RelWithDebInfo'")
+    $AuthenticodeRel = $xml.CreateElement("Authenticode", "http://schemas.microsoft.com/developer/msbuild/2003")
+    $AuthenticodeRel.set_InnerXML("Microsoft")
+    $StrongNameRel = $xml.CreateElement("StrongName", "http://schemas.microsoft.com/developer/msbuild/2003")
+    $StrongNameRel.set_InnerXML("StrongName")
+    $FilesToSignRel.AppendChild($AuthenticodeRel) | Out-Null
+    $FilesToSignRel.AppendChild($StrongNameRel) | Out-Null
+    $FileSignGroup.AppendChild($FilesToSignRel) | Out-Null
+    $FilesToSignDebug = $xml.CreateElement("FilesToSign", "http://schemas.microsoft.com/developer/msbuild/2003")
+    $FilesToSignDebug.SetAttribute("Include", "`$(OutDir)\$ProjectNameDebug.dll")
+    $FilesToSignDebug.SetAttribute("Condition", "'`$(RealSign)' == 'True' and '`$(TargetExt)' == '.dll' and '`$(Configuration)' == 'Debug'")
+    $AuthenticodeDebug = $xml.CreateElement("Authenticode", "http://schemas.microsoft.com/developer/msbuild/2003")
+    $AuthenticodeDebug.set_InnerXML("Microsoft")
+    $StrongNameDebug = $xml.CreateElement("StrongName", "http://schemas.microsoft.com/developer/msbuild/2003")
+    $StrongNameDebug.set_InnerXML("StrongName")
+    $FilesToSignDebug.AppendChild($AuthenticodeDebug) | Out-Null
+    $FilesToSignDebug.AppendChild($StrongNameDebug) | Out-Null
+    $FileSignGroup.AppendChild($FilesToSignDebug) | Out-Null
 
     $MicroBuildTargets = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
     $MicroBuildTargets.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets")
@@ -252,12 +263,12 @@ function Build-NuGet {
         $DestinationPath = $_[1]
 
         if ($DynamicLibraryLinkage) {
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest.dll"      -Destination "$DestinationPath\Debug\gtest.dll"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest.lib"      -Destination "$DestinationPath\Debug\gtest.lib"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest.pdb"      -Destination "$DestinationPath\Debug\gtest.pdb"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest_main.dll" -Destination "$DestinationPath\Debug\gtest_main.dll"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest_main.lib" -Destination "$DestinationPath\Debug\gtest_main.lib"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest_main.pdb" -Destination "$DestinationPath\Debug\gtest_main.pdb"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtestd.dll"      -Destination "$DestinationPath\Debug\gtestd.dll"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtestd.lib"      -Destination "$DestinationPath\Debug\gtestd.lib"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtestd.pdb"      -Destination "$DestinationPath\Debug\gtestd.pdb"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtest_maind.dll" -Destination "$DestinationPath\Debug\gtest_maind.dll"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtest_maind.lib" -Destination "$DestinationPath\Debug\gtest_maind.lib"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtest_maind.pdb" -Destination "$DestinationPath\Debug\gtest_maind.pdb"
 
             Copy-CreateItem -Path "$BuildPath\RelWithDebInfo\gtest.dll"      -Destination "$DestinationPath\Release\gtest.dll"
             Copy-CreateItem -Path "$BuildPath\RelWithDebInfo\gtest.lib"      -Destination "$DestinationPath\Release\gtest.lib"
@@ -266,10 +277,10 @@ function Build-NuGet {
             Copy-CreateItem -Path "$BuildPath\RelWithDebInfo\gtest_main.lib" -Destination "$DestinationPath\Release\gtest_main.lib"
             Copy-CreateItem -Path "$BuildPath\RelWithDebInfo\gtest_main.pdb" -Destination "$DestinationPath\Release\gtest_main.pdb"
         } else {
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest.lib"                              -Destination "$DestinationPath\Debug\gtest.lib"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest.pdb"                              -Destination "$DestinationPath\Debug\gtest.pdb"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest_main.lib"                         -Destination "$DestinationPath\Debug\gtest_main.lib"
-            Copy-CreateItem -Path "$BuildPath\Debug\gtest_main.pdb"                         -Destination "$DestinationPath\Debug\gtest_main.pdb"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtestd.lib"                    -Destination "$DestinationPath\Debug\gtestd.lib"
+            Copy-CreateItem -Path "$BuildPath\gtest.dir\Debug\gtest.pdb"           -Destination "$DestinationPath\Debug\gtest.pdb"
+            Copy-CreateItem -Path "$BuildPath\Debug\gtest_maind.lib"               -Destination "$DestinationPath\Debug\gtest_maind.lib"
+            Copy-CreateItem -Path "$BuildPath\gtest_main.dir\Debug\gtest_main.pdb" -Destination "$DestinationPath\Debug\gtest_main.pdb"
 
             Copy-CreateItem -Path "$BuildPath\RelWithDebInfo\gtest.lib"                     -Destination "$DestinationPath\Release\gtest.lib"
             Copy-CreateItem -Path "$BuildPath\gtest.dir\RelWithDebInfo\gtest.pdb"           -Destination "$DestinationPath\Release\gtest.pdb"

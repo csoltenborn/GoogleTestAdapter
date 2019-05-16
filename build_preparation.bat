@@ -1,10 +1,12 @@
 @echo off
+
  
 set VS_LOCATION=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community
 set DIA_SDK="%VS_LOCATION%\DIA SDK\bin"
 set VC_VARS_BAT="%VS_LOCATION%\VC\Auxiliary\Build\vcvars32.bat"
 set MS_BUILD="%VS_LOCATION%\MSBuild\15.0\Bin\MSBuild.exe"
 
+set TEMP_PLATFORM=%PLATFORM%
 
 if defined APPVEYOR goto Build
 
@@ -64,6 +66,12 @@ rem git submodule update
 rem pushd GoogleTestNuGet
 rem powershell .\Build.ps1 -Verbose
 rem popd
+
+
+if not defined APPVEYOR goto End
+
+echo Restoring PLATFORM env variable to %TEMP_PLATFORM% (currently: %PLATFORM%) 
+set PLATFORM=%TEMP_PLATFORM%
 
 
 :End

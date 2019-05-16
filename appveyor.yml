@@ -84,6 +84,8 @@ after_test:
 - codecov -f "OpenCover_Integration_CoverageData.xml" -F Integration
 before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 artifacts:
 - path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter-*.vsix
   name: VSIX installation package

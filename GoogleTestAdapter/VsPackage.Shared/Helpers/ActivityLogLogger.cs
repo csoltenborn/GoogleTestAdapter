@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.VsPackage.Helpers
             var activityLog = _package.GetActivityLog();
             if (activityLog == null)
             {
-                Console.WriteLine($"{Strings.Instance.ExtensionName}: {severity} - {message}");
+                Console.WriteLine($"{Common.Resources.ExtensionName}: {severity} - {message}");
                 return;
             }
 
@@ -40,7 +40,7 @@ namespace GoogleTestAdapter.VsPackage.Helpers
                     throw new Exception($"Unknown enum literal: {severity}");
             }
 
-            activityLog.LogEntry((uint)activitylogEntrytype, Strings.Instance.ExtensionName, message);
+            activityLog.LogEntry((uint)activitylogEntrytype, Common.Resources.ExtensionName, message);
         }
     }
 

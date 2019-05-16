@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 #pragma warning disable IDE0017 // Simplify object initialization
 
@@ -164,7 +164,7 @@ namespace GoogleTestAdapter.Scheduling
                 }
                 catch (InvalidOperationException e) when (e.InnerException is XmlSchemaValidationException)
                 {
-                    throw new InvalidTestDurationsException($"Invalid file {durationsFile}. {e.InnerException.Message}", e.InnerException);
+                    throw new InvalidTestDurationsException(String.Format(Resources.InvalidFile, durationsFile, e.InnerException.Message), e.InnerException);
                 }
             }
         }

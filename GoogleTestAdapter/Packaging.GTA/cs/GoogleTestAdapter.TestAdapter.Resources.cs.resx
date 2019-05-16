@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="RunSettingsMissingNode" xml:space="preserve">
+    <value>RunSettingsDocument neobsahuje uzel RunSettings! Ruší se slučování nastavení...</value>
+  </data>
+  <data name="ProcessNotFound" xml:space="preserve">
+    <value>Nepovedlo se najít proces.</value>
+  </data>
+  <data name="VSVersion" xml:space="preserve">
+    <value>Verze sady Visual Studio: {0}</value>
+  </data>
+  <data name="VS2012Error" xml:space="preserve">
+    <value>{0} vyžaduje minimálně Visual Studio 2012 Update 1 – aktualizujte si prosím instalaci sady Visual Studio.</value>
+  </data>
+  <data name="IdentifyVSError" xml:space="preserve">
+    <value>Nešlo určit verzi sady Visual Studio. {0} vyžaduje minimálně Visual Studio 2012 Update 1.</value>
+  </data>
+  <data name="CouldNotAttachMessage" xml:space="preserve">
+    <value>Nešlo připojit ladicí program k procesu {0}:{1}{2}</value>
+  </data>
+  <data name="TraitIgnoreMessage" xml:space="preserve">
+    <value>Vlastnost má stejný název jako základní vlastnost testů, takže se bude při filtrování testovacích případů ignorovat: {0}</value>
+  </data>
+  <data name="TestCaseFilter" xml:space="preserve">
+    <value>Filtr testovacích případů: {0}</value>
+  </data>
+  <data name="ErrorAndWarning" xml:space="preserve">
+    <value>Následující chyby a upozornění se vyskytly během {0} {1}:{2}</value>
+  </data>
+  <data name="VSVersionMessage" xml:space="preserve">
+    <value>Nenašla se verze sady Visual Studio: {0}</value>
+  </data>
+  <data name="UnknownEnum" xml:space="preserve">
+    <value>Neznámý literál výčtu: {0}</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Neznámý literál výčtu: {0}</value>
+  </data>
+  <data name="TestRunningException" xml:space="preserve">
+    <value>Výjimka při spouštění testů: {0}</value>
+  </data>
+  <data name="TestDiscoveryCompleted" xml:space="preserve">
+    <value>Zjišťování testů bylo dokončeno; celková doba trvání: {0}.</value>
+  </data>
+  <data name="DebuggingMessage" xml:space="preserve">
+    <value>Ladění je možné, jenom když je nainstalován GoogleTestAdapter do sady Visual Studio – instalace NuGet to nepodporuje (a další funkce, jako jsou možnosti sady Visual Studio, panel nástrojů a nastavení řešení).</value>
+  </data>
+  <data name="TestExecutionCancelled" xml:space="preserve">
+    <value>Spuštění testu bylo zrušeno.</value>
+  </data>
+  <data name="UnknownVisualStudioVersion" xml:space="preserve">
+    <value>Neznámá verze sady Visual Studio: {0}</value>
+  </data>
+  <data name="CantParseSettings" xml:space="preserve">
+    <value>Soubor nastavení testu řešení nešlo parsovat. Zkontrolujte ho: {0}
+Výjimka: {1}</value>
+  </data>
+  <data name="EnableDebugMode" xml:space="preserve">
+    <value> (povolit režim ladění pro další informace)</value>
+  </data>
+  <data name="NoTestCaseFilter" xml:space="preserve">
+    <value>Nebyl zadán žádný filtr testovacích případů.</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Nastavení řešení: {0}</value>
+  </data>
+  <data name="TestDiscoveryExceptionError" xml:space="preserve">
+    <value>Výjimka při zjišťování testů: {0}</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>CHYBA: {0}</value>
+  </data>
+  <data name="TestDiscovery" xml:space="preserve">
+    <value>zjišťování testů</value>
+  </data>
+  <data name="FilterInvalid" xml:space="preserve">
+    <value>Filtr testovacích případů je neplatný: {0}</value>
+  </data>
+  <data name="TestExecutionCompleted" xml:space="preserve">
+    <value>Spuštění Google Testu bylo dokončeno; celková doba trvání: {0}.</value>
+  </data>
+  <data name="MoreInformationMessage" xml:space="preserve">
+    <value>Další informace o tomto problému by mohly být v ActivityLog.xml sady Visual Studio (viz např. https://blogs.msdn.microsoft.com/visualstudio/2010/02/24/troubleshooting-extensions-with-the-activity-log/).</value>
+  </data>
+  <data name="DebuggerAttachTime" xml:space="preserve">
+    <value>Ladicí program se připojil k procesu {0}; trvalo to {1} ms.</value>
+  </data>
+  <data name="Matches" xml:space="preserve">
+    <value>{0} se shoduje s hodnotou {1}.</value>
+  </data>
+  <data name="DoesntMatch" xml:space="preserve">
+    <value>{0} neodpovídá hodnotě {1}.</value>
+  </data>
+  <data name="DebuggerAttachMessage" xml:space="preserve">
+    <value>Nešlo připojit ladicí program k procesu {0}; není k dispozici žádná chybová zpráva.</value>
+  </data>
+  <data name="TestExecution" xml:space="preserve">
+    <value>spuštění testu</value>
+  </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>Neplatná hodnota {0}</value>
+  </data>
+  <data name="WarningMessage" xml:space="preserve">
+    <value>Upozornění: {0}</value>
+  </data>
+  <data name="SolutionFoundButMissingNode" xml:space="preserve">
+    <value>Soubor nastavení testu řešení se našel na cestě {0}, ale neobsahuje uzel {1}.</value>
+  </data>
+</root>

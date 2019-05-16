@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>Si habilita esta opción, un depurador potencialmente asociado detectará errores de aserción y entrará automáticamente en modo interactivo.
+Opción de Google Test: {0}</value>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Salida del comando "{1} {2}"</value>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>No se pueden enumerar los casos de prueba para el ejecutable "{0}": error de ejecución del proceso con el código de salida {1}.</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Los nombres de prueba producidos por Google Test pueden contener el carácter "/", lo que provoca que Visual Studio corte el nombre después de "/" si la ventana del Explorador de pruebas no es lo suficientemente ancha. El valor de esta opción, si no está vacío, reemplazará al carácter "/" para evitar ese comportamiento. Tenga en cuenta que "\", " ", "|" y "-" producen el mismo comportamiento (". ", "_", ":" y "::" se sabe que funcionan). Tenga en cuenta también que los rasgos de regexes se comparan con los nombres para mostrar de las pruebas (y, por tanto, deben ser coherentes con esta opción).</value>
+  </data>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>Número de duraciones de casos de prueba reales: {0}</value>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}Se recopilaron {1} resultados de pruebas de la salida de la consola.</value>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>El proceso se cerró con el código {0}.</value>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>El proceso {0} finalizado se inició el {1}</value>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: "{2}" se ejecutó correctamente.</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Orden aleatorio de las pruebas por ejecución</value>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}La ejecución se ha cancelado: {1}</value>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>Se superó la longitud máxima permitida de la línea de comandos ({0}) después de incluir {1} pruebas (la longitud de la cadena siguiente es {2}).</value>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>Se encontraron {0} símbolos del método de prueba y {1} símbolos de rasgos en el archivo binario {2}.</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Tiempo de expiración para la detección de la prueba en s</value>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: se detectó una excepción, mensaje: "{2}". Comando ejecutado: "{3}"</value>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - directorio de la solución (solo disponible en Visual Studio)</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>Número máximo de subprocesos</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>Si es true, la ejecución de archivos ejecutables de prueba se termina activamente si se cancela la ejecución de la prueba. Tenga en cuenta que la terminación de un proceso de prueba puede tener todo tipo de efectos secundarios; en particular, Google Test no podrá realizar ninguna tarea de apagado.</value>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}Excepción durante la ejecución de las pruebas: {1}</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>No se encontró ningún archivo indicador de Google Test para el ejecutable {0}.</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: el valor de inicialización se calcula a partir de la hora del sistema, 1&lt;=n&lt;={0}: se utiliza el valor de inicialización dado. Consulte la nota de la opción "{1}".
+Opción de Google Test: {2}</value>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}Parece que {1} casos de prueba no se han ejecutado. ¿Está repitiendo una serie de pruebas, pero estas han cambiado durante el proceso? Casos de prueba:{2}{3}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Parámetros de ejecución de prueba adicionales</value>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>Se encontró un archivo indicador de Google Test para el ejecutable {0}.</value>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>Se encontraron {0} duraciones esperadas en las duraciones reales.</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>Extensión de PATH</value>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>No se puede analizar la instancia de regex "{0}": {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Las pruebas se ejecutarán el número de veces seleccionado (-1: infinito).
+Opción de Google Test: {0}</value>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}En concreto: inicie el símbolo del sistema, cambie al directorio "{1}" y ejecute el comando siguiente para asegurarse de que las pruebas pueden ejecutarse en general. {2}{3} {4}</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>Se usa un separador en función del número de pruebas.</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Literal desconocido: {0}</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Utilice el nuevo marco de ejecución de pruebas (experimental)</value>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>No se puede analizar el par "{0}". Mensaje de la excepción: {1}</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>Se encontraron {0} pruebas en el ejecutable {1}.</value>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>Tenga en cuenta que la consola de pruebas no mostrará ningún resultado si se ejecutan pruebas de forma simultánea.</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>Salida del comando:</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Imprimir el resultado de los ejecutables de Google Test en la ventana Resultados de pruebas.</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>Archivo por lotes de desmontaje de pruebas</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}La ejecución tardó {1}</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Directorio de trabajo</value>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Archivo por lotes de desmontaje de la prueba</value>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>La ejecución en paralelo se ha seleccionado como opción, pero las pruebas se ejecutan secuencialmente porque el depurador está asociado.</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Archivo {0} no válido. {1}</value>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>Después de la detección de pruebas</value>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0} coincide con la instancia de regex predeterminada {1}</value>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>No hay ningún caso de prueba conocido para el resultado de la prueba de la línea "{0}". ¿Está repitiendo una serie de pruebas, pero estas han cambiado durante el proceso?</value>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>La detección de pruebas se canceló después de {0} s para el ejecutable {1}.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>La ejecución de pruebas paralelas se consigue mediante subprocesos diferentes, cada uno de los cuales tiene asignado un número de pruebas para ejecutar. Los subprocesos invocarán entonces secuencialmente los ejecutables necesarios para producir los resultados de la prueba correspondientes.</value>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}El caso de prueba ya está en el analizador: {1}</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Parámetros adicionales para el ejecutable de Google Test. Marcadores de posición:</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>{0} peores diferencias:</value>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>No se pudo analizar XmlNode: "{0}". Mensaje de la excepción: {1}</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>Terminar procesos al cancelar</value>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}No se pudo ejecutar el archivo ejecutable "{1}" de la prueba: {2}</value>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>Desviación estándar: {0} ms</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Regexes para asignación de rasgo</value>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>Número de duraciones de casos de prueba esperadas: {0}</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>Si es true, se muestra un cuadro de diálogo con las notas de la versión una vez que la extensión se ha actualizado.</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Utilice el nuevo marco de ejecución de pruebas. Ventajas: la detección de los bloqueos de la prueba y la impresión del resultado de la prueba también funcionan en modo de depuración.</value>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; Estadísticas de programación &lt;&lt;&lt;</value>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Mostrar las notas de la versión después de la actualización</value>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>Comando ejecutado: "{0} {1}". Directorio de trabajo: "{2}"</value>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>Excepción al resolver los rasgos y las ubicaciones de las pruebas en {0}\n{1}</value>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0} no coincide con la instancia de regex predeterminada {1}</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Número de repeticiones de prueba</value>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>El comando no generó ningún resultado.</value>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: no se encontró el archivo: {2}</value>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>Expresión regular "{0}" no válida. Mensaje de la excepción: {1}</value>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Interrumpir en caso de error</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Analizar la información de símbolos de depuración para los archivos ejecutables de prueba a fin de obtener la información y los rasgos de la ubicación de origen (definidos a través de las macros en GTA_Traits.h).
+Si se establece en false, se descartará el paso 2 de la detección y solo será efectivo regexes.</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Separador de nombres de prueba</value>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}Se notificaron {1} resultados de pruebas para Visual Studio. Archivo ejecutable: "{2}". Duración: {3}</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>El número máximo de subprocesos que se utilizará para la ejecución de la prueba (0: un subproceso para cada procesador).</value>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Final de salida</value>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} nunca debe ser &lt; 0</value>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Varios</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Resultado de marca de tiempo</value>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0} coincide con la instancia de regex personalizada {1}</value>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Resultado de la prueba:</value>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>Estado de caso de prueba desconocido: {0}</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>Si no está vacío, establecerá el directorio de trabajo para ejecutar las pruebas (predeterminado: {0})
+Ejemplo: {1}\MyTestDir
+Marcadores de posición:</value>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>Promedio de diferencia entre la duración real y la esperada: {0} ms</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}Se recopilaron resultados de pruebas ({1}) del archivo XML de resultados {2}.</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>Si es true, las pruebas se ejecutarán en orden aleatorio. Tenga en cuenta que solo se da un verdadero orden aleatorio al ejecutar todas las pruebas de manera no paralela. De lo contrario, los ejecutables de prueba probablemente se ejecutarán más de una vez; en ese caso, el orden aleatorio se restringe a las ejecuciones correspondientes.
+Opción de Googe Test: {0}</value>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>Asociando el depurador a {0}.</value>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0} no coincide con la instancia de regex personalizada {1}</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>Si es true, se imprimirá el resultado de la depuración en la consola de prueba.</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>Si es true, se ejecutarán todas las pruebas (seleccionadas), incluso si se han deshabilitado.
+Opción de Google Test: {0}</value>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - directorio que contiene el ejecutable de prueba</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Ejecución de pruebas</value>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Imprimir información de depuración</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}No se puede eliminar el directorio de prueba "{1}": {2}</value>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Orden aleatorio de pruebas: valor de inicialización</value>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>¡Esta prueba probablemente se ha BLOQUEADO!</value>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>probablemente el motivo es un bloqueo de la prueba {0}</value>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>No se pudo analizar (por completo) el archivo de resultados de pruebas {0}. Probablemente el ejecutable de la prueba se ha bloqueado. Mensaje de la excepción: {1}</value>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}Se notificaron {1} resultados de pruebas para Visual Studio durante la ejecución de las pruebas. Archivo ejecutable: "{2}"</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Ejecutar también pruebas deshabilitadas</value>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Número de segundos para que se suponga que la detección de la prueba no se ha completado correctamente. 0: tiempo de expiración infinito</value>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Archivo por lotes de configuración de la prueba</value>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>Si no está vacío, el contenido se anexará a la variable de PATH de los procesos de detección y ejecución de la prueba.
+Ejemplo: C:\MyBins; {0}\MyOtherBins;
+Marcadores de posición:</value>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>Se agregó el caso de prueba "{0}".</value>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>Ejecutando {0} pruebas...</value>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}Se crearon {1} resultados de algunas pruebas que no se han encontrado en el archivo XML de resultados ni en la salida de la consola.</value>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>El caso de prueba ya está en el analizador: {0}</value>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>Compruebe si los comandos siguientes pueden ejecutarse correctamente en la línea de comandos (asegúrese de que todos los binarios requeridos están en la RUTA DE ACCESO):{0}{1}</value>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>Archivo por lotes de instalación de pruebas</value>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Tenga en cuenta que debido a las restricciones del marco de Unit Testing de VS, el resultado del archivo ejecutable de la prueba no puede mostrarse en la consola de prueba al depurar pruebas.</value>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: se cerró con el código {2}. Comando ejecutado: "{3}"</value>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Detectar excepciones</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Comportamiento en tiempo de ejecución</value>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>No se puede finalizar el proceso {0} iniciado el {1}: {2}</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Prueba {0}: duración esperada {1} ms, duración real {2} ms.</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>Configuración del ejecutable "{0}" de la prueba: {1}</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>No se puede analizar la duración de la línea "{0}".</value>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>El archivo de salida no existe. ¿Se bloquearon las pruebas?</value>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>El ejecutable {0} procede de otro equipo y se bloqueó para ayudar a proteger este equipo.</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>Ejecutando pruebas en {0} subprocesos.</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>Antes de la detección de pruebas</value>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}Seguimiento de la pila:{1}{2}</value>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>SettingsWrapper ya se está ejecutando con la configuración de un ejecutable en el subproceso "{0}". No lo puede usar también el subproceso "{1}".</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Ejecución de pruebas paralelas</value>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>No se encontró la ubicación de origen de la prueba {0}.</value>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>La ejecución ya se está realizando con la configuración para el ejecutable {0}. No se puede cambiar a la configuración para {1}.</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>El ejecutable "{0}" de la prueba no tiene valores configurados. La ejecución se realiza con la configuración de la solución: {1}</value>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Se agotó el tiempo de espera de la instancia de regex "{0}": {1}</value>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>No se pueden leer las duraciones de las pruebas: {0}</value>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Analizar la información de símbolos</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Paralelización</value>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>Se usa un separador en función de las duraciones de las pruebas.</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Permite agregar o reemplazar rasgos para los casos de prueba que coinciden con una expresión regular. Lso rasgos se generan en 3 fases. En primer lugar, se asignan rasgos a pruebas de acuerdo con la opción "Traits before". A continuación, los rasgos de las pruebas (definidos a través de las macros en GTA_Traits.h) se agregan a las pruebas, reemplazando los rasgos de la fase 1 por nuevos valores. Por último, se comparan con la opción "Traits after", de nuevo reemplazando.
+Sintaxis: {0} separa el regex de los rasgos, el nombre del rasgo y el valor están separados por {1} y cada par de regex y rasgo está separado por {2}.
+Ejemplo: MySuite\. *{0}tipo{1}Small{2}MySuite2\. * | MySuite3\. *{0}Tipo{1}Medio</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>Si no vacío, se utilizará este regex para detectar los archivos ejecutables de Google Test que contienen las pruebas.
+Regex predeterminado: {0}</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Archivo por lotes que se ejecutará antes de la ejecución de la prueba. Si las pruebas se ejecutan en paralelo, el archivo por lotes se ejecutará una vez por subproceso. Marcadores de posición:</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>Si es true, se agrega una marca de tiempo al resultado de la prueba y la depuración.</value>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>Restaurando la configuración de la solución: {0}</value>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Resultados de la prueba de impresión</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>No hay nada que notificar.</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test detecta las excepciones de forma predeterminada; se produce un error en la prueba correspondiente y continúa la ejecución de la prueba. Si elige false se permite el paso de las excepciones, con lo que el depurador las detectará.
+Opción de Google Test: {0}</value>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Regex para la detección de la prueba</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Archivo por lotes que se ejecutará después de la ejecución de la prueba. Si las pruebas se ejecutan en paralelo, el archivo por lotes se ejecutará una vez por subproceso. Marcadores de posición:</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - ruta de acceso de un directorio que puede se puede utilizar por las pruebas
+{1} - identificador del subproceso que ejecuta las pruebas actuales</value>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - archivo ejecutable que contiene las pruebas</value>
+  </data>
+</root>

@@ -17,7 +17,7 @@ namespace GoogleTestAdapter.Tests.Common
 
         protected AbstractConsoleTests()
         {
-            AbstractConsoleIntegrationTests.GetDirectories(out TestAdapterDir, out SolutionFile);
+           AbstractConsoleIntegrationTests.GetDirectories(out TestAdapterDir, out SolutionFile);
         }
 
         protected void RunTestsAndCheckOutput(string settingsFile, string arguments, [CallerMemberName] string testCaseName = null)

@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace GoogleTestAdapter.Settings
         private readonly object _lock = new object();
 
         private readonly IGoogleTestAdapterSettingsContainer _settingsContainer;
+        private readonly ITestPropertySettingsContainer _testPropertySettingsContainer;
         private readonly string _solutionDir;
         private readonly SettingsPrinter _settingsPrinter;
 
@@ -43,8 +44,16 @@ namespace GoogleTestAdapter.Settings
         public SettingsWrapper() { }
 
         public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer, string solutionDir = null)
+            : this(settingsContainer, null, solutionDir)
+        {
+        }
+
+        public ITestPropertySettingsContainer TestPropertySettingsContainer => _testPropertySettingsContainer;
+
+        public SettingsWrapper(IGoogleTestAdapterSettingsContainer settingsContainer, ITestPropertySettingsContainer testPropertySettingsContainer, string solutionDir)
         {
             _settingsContainer = settingsContainer;
+            _testPropertySettingsContainer = testPropertySettingsContainer;
             _solutionDir = solutionDir;
             _currentSettings = _settingsContainer.SolutionSettings;
             _settingsPrinter = new SettingsPrinter(this);
@@ -52,7 +61,7 @@ namespace GoogleTestAdapter.Settings
 
         public virtual SettingsWrapper Clone()
         {
-            return new SettingsWrapper(_settingsContainer, _solutionDir)
+            return new SettingsWrapper(_settingsContainer, _testPropertySettingsContainer, _solutionDir)
             {
                 RegexTraitParser = RegexTraitParser,
                 HelperFilesCache = HelperFilesCache
@@ -106,14 +115,13 @@ namespace GoogleTestAdapter.Settings
                     string settingsString = ToString();
                     _currentSettings = _settingsContainer.SolutionSettings;
                     logger.DebugInfo($"Test executable '{executable}': Project settings apply, regex: {projectSettings.ProjectRegex}");
-                    logger.VerboseInfo($"Settings for test executable '{executable}': {settingsString}");
+                    logger.DebugInfo(String.Format(Resources.SettingsMessage, executable, settingsString));
 
                     _currentSettings = projectSettings;
                 }
                 else
                 {
-                    logger.DebugInfo(
-                        $"No settings configured for test executable '{executable}'; running with solution settings");
+                    logger.DebugInfo(String.Format(Resources.NoSettingConfigured, executable, this));
                 }
             }
 
@@ -124,7 +132,7 @@ namespace GoogleTestAdapter.Settings
                 if (_currentSettings != _settingsContainer.SolutionSettings)
                 {
                     _currentSettings = _settingsContainer.SolutionSettings;
-                    logger.DebugInfo($"Back to solution settings");
+                    logger.DebugInfo(String.Format(Resources.RestoringSolutionSettings, this));
                 }
             }
 
@@ -136,15 +144,13 @@ namespace GoogleTestAdapter.Settings
             if (_nrOfRunningExecutions == 0)
                 return;
             if (_nrOfRunningExecutions < 0)
-                throw new InvalidOperationException($"{nameof(_nrOfRunningExecutions)} must never be < 0");
+                throw new InvalidOperationException(String.Format(Resources.NeverBeZero, nameof(_nrOfRunningExecutions)));
 
             if (_currentThread != Thread.CurrentThread)
-                throw new InvalidOperationException(
-                    $"SettingsWrapper is already running with settings for an executable on thread '{_currentThread.Name}', can not also be used by thread {Thread.CurrentThread.Name}");
+                throw new InvalidOperationException(String.Format(Resources.SettingsWrapperString, _currentThread.Name, Thread.CurrentThread.Name));
 
             if (executable != _currentExecutable)
-                throw new InvalidOperationException(
-                    $"Execution is already running with settings for executable {_currentExecutable}, can not switch to settings for {executable}");
+                throw new InvalidOperationException(String.Format(Resources.ExecutionString, _currentExecutable, executable));
         }
 
         #endregion
@@ -152,15 +158,16 @@ namespace GoogleTestAdapter.Settings
         #region Page and category names
 
         public const string PageGeneralName = "General";
+        public const string PageParallelizationName = "Parallelization";
         public const string PageGoogleTestName = "Google Test";
         public const string PageTestDiscovery = "Test Discovery";
         public const string PageTestExecution = "Test Execution";
 
-        public const string CategoryTestExecutionName = "Test execution";
-        public const string CategoryTraitsName = "Regexes for trait assignment";
-        public const string CategoryRuntimeBehaviorName = "Runtime behavior";
-        public const string CategoryParallelizationName = "Parallelization";
-        public const string CategoryMiscName = "Misc";
+        public static readonly string CategoryTestExecutionName = Resources.CategoryTestExecutionName;
+        public static readonly string CategoryTraitsName = Resources.CategoryTraitsName;
+        public static readonly string CategoryRuntimeBehaviorName = Resources.CategoryRuntimeBehaviorName;
+        public static readonly string CategoryParallelizationName = Resources.CategoryParallelizationName;
+        public static readonly string CategoryMiscName = Resources.CategoryMiscName;
         public const string CategoryOutputName = "Output";
         public const string CategorySecurityName = "Security";
         public const string CategoryRunConfigurationName = "Run configuration (also applies to test discovery)";
@@ -170,10 +177,9 @@ namespace GoogleTestAdapter.Settings
 
         #region GeneralOptionsPage
 
-        public const string OptionPrintTestOutput = "Print test output";
-        public const string OptionPrintTestOutputDescription = 
-            "Print the output of the Google Test executable(s) to the Tests Output window.";
+        public static readonly string OptionPrintTestOutput = Resources.OptionPrintTestOutput;
         public const bool OptionPrintTestOutputDefaultValue = false;
+        public static readonly string OptionPrintTestOutputDescription = Resources.OptionPrintTestOutputDescription;
 
         public virtual bool PrintTestOutput => _currentSettings.PrintTestOutput ?? OptionPrintTestOutputDefaultValue;
 
@@ -186,12 +192,8 @@ namespace GoogleTestAdapter.Settings
         public virtual OutputMode OutputMode => _currentSettings.OutputMode ?? OptionOutputModeDefaultValue;
 
 
-        public const string OptionTimestampOutput = "Timestamp output";
-        public const string OptionTimestampOutputDescription =
-            "Controls whether a timestamp is added to the output.\n" + 
-            TimestampModeConverter.Automatic + ": add timestamp on VS2013, VS2015\n" +
-            TimestampModeConverter.PrintTimeStamp + ": always add timestamp\n" + 
-            TimestampModeConverter.DoNotPrintTimeStamp + ": never add timestamp";
+        public static readonly string OptionTimestampOutput = Resources.OptionTimestampOutput;
+        public static readonly string OptionTimestampOutputDescription = Resources.OptionTimestampOutputDescription;
         public const TimestampMode OptionTimestampOutputDefaultValue = TimestampMode.Automatic;
 
         public virtual TimestampMode TimestampMode => _currentSettings.TimestampMode ?? OptionTimestampOutputDefaultValue;
@@ -236,38 +238,35 @@ namespace GoogleTestAdapter.Settings
 
         #region GoogleTestOptionsPage
 
-        public const string OptionCatchExceptions = "Catch exceptions";
-        public const string OptionCatchExceptionsDescription =
-            "Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.\n"
-            + "Google Test option:" + GoogleTestConstants.CatchExceptions;
+        public static readonly string OptionCatchExceptions = Resources.OptionCatchExceptions;
+        public static readonly string OptionCatchExceptionsDescription =
+            string.Format(Resources.OptionCatchExceptionsDescription, GoogleTestConstants.CatchExceptions);
         public const bool OptionCatchExceptionsDefaultValue = true;
 
         public virtual bool CatchExceptions => _currentSettings.CatchExceptions ?? OptionCatchExceptionsDefaultValue;
 
-
-        public const string OptionBreakOnFailure = "Break on failure";
-        public const string OptionBreakOnFailureDescription =
-            "If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.\n"
-            + "Google Test option:" + GoogleTestConstants.BreakOnFailure;
+        public static readonly string OptionBreakOnFailure = Resources.OptionBreakOnFailure;
         public const bool OptionBreakOnFailureDefaultValue = false;
+        public static readonly string OptionBreakOnFailureDescription =
+            string.Format(Resources.OptionBreakOnFailureDescription, GoogleTestConstants.BreakOnFailure);
 
         public virtual bool BreakOnFailure => _currentSettings.BreakOnFailure ?? OptionBreakOnFailureDefaultValue;
 
+        public static readonly string OptionUseNewTestExecutionFramework = Resources.OptionUseNewTestExecutionFramework;
+        public const bool OptionUseNewTestExecutionFrameworkDefaultValue = true;
+        public static readonly string OptionUseNewTestExecutionFrameworkDescription = Resources.OptionUseNewTestExecutionFrameworkDescription;
 
-        public const string OptionRunDisabledTests = "Also run disabled tests";
-        public const string OptionRunDisabledTestsDescription =
-            "If true, all (selected) tests will be run, even if they have been disabled.\n"
-            + "Google Test option:" + GoogleTestConstants.AlsoRunDisabledTestsOption;
+        public static readonly string OptionRunDisabledTests = Resources.OptionRunDisabledTests;
         public const bool OptionRunDisabledTestsDefaultValue = false;
+        public static readonly string OptionRunDisabledTestsDescription =
+            string.Format(Resources.OptionRunDisabledTestsDescription, GoogleTestConstants.AlsoRunDisabledTestsOption);
 
         public virtual bool RunDisabledTests => _currentSettings.RunDisabledTests ?? OptionRunDisabledTestsDefaultValue;
 
-
-        public const string OptionNrOfTestRepetitions = "Number of test repetitions";
-        public const string OptionNrOfTestRepetitionsDescription =
-            "Tests will be run for the selected number of times (-1: infinite).\n"
-            + "Google Test option:" + GoogleTestConstants.NrOfRepetitionsOption;
+        public static readonly string OptionNrOfTestRepetitions = Resources.OptionNrOfTestRepetitions;
         public const int OptionNrOfTestRepetitionsDefaultValue = 1;
+        public static readonly string OptionNrOfTestRepetitionsDescription =
+            string.Format(Resources.OptionNrOfTestRepetitionsDescription, GoogleTestConstants.NrOfRepetitionsOption);
 
         public virtual int NrOfTestRepetitions
         {
@@ -281,25 +280,22 @@ namespace GoogleTestAdapter.Settings
                 return nrOfRepetitions;
             }
         }
-
-
-        public const string OptionShuffleTests = "Shuffle tests per execution";
-        public const string OptionShuffleTestsDescription =
-            "If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is then restricted to the according executions.\n"
-            + "Google Test option:" + GoogleTestConstants.ShuffleTestsOption;
+        
+        public static readonly string OptionShuffleTests = Resources.OptionShuffleTests;
         public const bool OptionShuffleTestsDefaultValue = false;
+        public static readonly string OptionShuffleTestsDescription =
+            string.Format(Resources.OptionShuffleTestsDescription, GoogleTestConstants.ShuffleTestsOption);
 
         public virtual bool ShuffleTests => _currentSettings.ShuffleTests ?? OptionShuffleTestsDefaultValue;
 
 
-        public const string OptionShuffleTestsSeed = "Shuffle tests: Seed";
-        public const string OptionShuffleTestsSeedDescription = "0: Seed is computed from system time, 1<=n<="
-                                                           + GoogleTestConstants.ShuffleTestsSeedMaxValueAsString
-                                                           + ": The given seed is used. See note of option '"
-                                                           + OptionShuffleTests
-                                                           + "'.\n"
-            + "Google Test option:" + GoogleTestConstants.ShuffleTestsSeedOption;
+        public static readonly string OptionShuffleTestsSeed = Resources.OptionShuffleTestsSeed;
         public const int OptionShuffleTestsSeedDefaultValue = GoogleTestConstants.ShuffleTestsSeedDefaultValue;
+        public static readonly string OptionShuffleTestsSeedDescription = string.Format(
+            Resources.OptionShuffleTestsSeedDescription,
+            GoogleTestConstants.ShuffleTestsSeedMaxValueAsString,
+            Resources.OptionShuffleTests,
+            GoogleTestConstants.ShuffleTestsSeedOption);
 
         public virtual int ShuffleTestsSeed
         {
@@ -339,7 +335,6 @@ namespace GoogleTestAdapter.Settings
             => Utils.SplitAdditionalPdbs(AdditionalPdbs)
                 .Select(p => _placeholderReplacer.ReplaceAdditionalPdbsPlaceholders(p, executable));
 
-
         public const string OptionWorkingDir = "Working directory";
         public const string OptionWorkingDirDescription =
             "If non-empty, will set the working directory for running the tests (default: " + PlaceholderReplacer.DescriptionOfExecutableDirPlaceHolder + ").\nExample: " + PlaceholderReplacer.SolutionDirPlaceholder + "\\MyTestDir\n" + PlaceholderReplacer.WorkingDirPlaceholders;
@@ -359,7 +354,7 @@ namespace GoogleTestAdapter.Settings
             return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery(WorkingDir, executable);
         }
 
-        public const string OptionPathExtension = "PATH extension";
+        public static readonly string OptionPathExtension = Resources.OptionPathExtension;
         public const string OptionPathExtensionDescription =
             "If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.\nExample: C:\\MyBins;" + PlaceholderReplacer.ExecutableDirPlaceholder + "\\MyOtherBins\n" + PlaceholderReplacer.PathExtensionPlaceholders;
         public const string OptionPathExtensionDefaultValue = "";
@@ -370,7 +365,14 @@ namespace GoogleTestAdapter.Settings
             => _placeholderReplacer.ReplacePathExtensionPlaceholders(PathExtension, executable);
 
 
-        public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
+        public static readonly string OptionAdditionalTestExecutionParams = Resources.OptionAdditionalTestExecutionParams;
+
+        public static readonly string OptionDebugMode = Resources.OptionDebugMode;
+        public const bool OptionDebugModeDefaultValue = false;
+        public static readonly string OptionDebugModeDescription = Resources.OptionDebugModeDescription;
+
+        public virtual bool DebugMode => _currentSettings.DebugMode ?? OptionDebugModeDefaultValue;
+
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable during test execution. " + PlaceholderReplacer.AdditionalTestExecutionParamPlaceholders;
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
@@ -385,8 +387,8 @@ namespace GoogleTestAdapter.Settings
             => _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(
                 AdditionalTestExecutionParam, executable);
 
+        public static readonly string OptionBatchForTestSetup = Resources.OptionBatchForTestSetup;
 
-        public const string OptionBatchForTestSetup = "Test setup batch file";
         public const string OptionBatchForTestSetupDefaultValue = "";
 
         public const string OptionBatchForTestSetupDescription =
@@ -398,7 +400,7 @@ namespace GoogleTestAdapter.Settings
             => _placeholderReplacer.ReplaceSetupBatchPlaceholders(BatchForTestSetup, testDirectory, threadId);
 
 
-        public const string OptionBatchForTestTeardown = "Test teardown batch file";
+        public static readonly string OptionBatchForTestTeardown = Resources.OptionBatchForTestTeardown;
         public const string OptionBatchForTestTeardownDescription =
             "Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. " + PlaceholderReplacer.BatchesPlaceholders;
         public const string OptionBatchForTestTeardownDefaultValue = "";
@@ -410,10 +412,9 @@ namespace GoogleTestAdapter.Settings
                 threadId);
 
 
-        public const string OptionKillProcessesOnCancel = "Kill processes on cancel";
-        public const string OptionKillProcessesOnCancelDescription =
-            "If true, running test executables are actively killed if the test execution is canceled. Note that killing a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.";
+        public static readonly string OptionKillProcessesOnCancel = Resources.OptionKillProcessesOnCancel;
         public const bool OptionKillProcessesOnCancelDefaultValue = false;
+        public static readonly string OptionKillProcessesOnCancelDescription = Resources.OptionKillProcessesOnCancelDescription;
 
         public virtual bool KillProcessesOnCancel => _currentSettings.KillProcessesOnCancel ?? OptionKillProcessesOnCancelDefaultValue;
 
@@ -426,18 +427,16 @@ namespace GoogleTestAdapter.Settings
         public virtual string ExitCodeTestCase => _currentSettings.ExitCodeTestCase ?? OptionExitCodeTestCaseDefaultValue;
 
 
-        public const string OptionEnableParallelTestExecution = "Parallel test execution";
-        public const string OptionEnableParallelTestExecutionDescription =
-            "Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.";
+        public static readonly string OptionEnableParallelTestExecution = Resources.OptionEnableParallelTestExecution;
         public const bool OptionEnableParallelTestExecutionDefaultValue = false;
+        public static readonly string OptionEnableParallelTestExecutionDescription = Resources.OptionEnableParallelTestExecutionDescription;
 
         public virtual bool ParallelTestExecution => _currentSettings.ParallelTestExecution ?? OptionEnableParallelTestExecutionDefaultValue;
 
 
-        public const string OptionMaxNrOfThreads = "Maximum number of threads";
-        public const string OptionMaxNrOfThreadsDescription =
-            "Maximum number of threads to be used for test execution (0: one thread for each processor).";
+        public static readonly string OptionMaxNrOfThreads = Resources.OptionMaxNrOfThreads;
         public const int OptionMaxNrOfThreadsDefaultValue = 0;
+        public static readonly string OptionMaxNrOfThreadsDescription = Resources.OptionMaxNrOfThreadsDescription;
 
         public virtual int MaxNrOfThreads
         {
@@ -456,17 +455,15 @@ namespace GoogleTestAdapter.Settings
 
         #region TestDiscoveryOptionsPage
 
-        public const string OptionTestDiscoveryRegex = "Regex for test discovery";
-        public const string OptionTestDiscoveryRegexDescription =
-            "If non-empty, only executables matching this regex will be considered as Google Test executables. Note that setting this option will slightly speed up test discovery since the executables do not need to be scanned.";
+        public static readonly string OptionTestDiscoveryRegex = Resources.OptionTestDiscoveryRegex;
         public const string OptionTestDiscoveryRegexDefaultValue = "";
+        public static readonly string OptionTestDiscoveryRegexDescription = string.Format(Resources.OptionTestDiscoveryRegexDescription, String.Empty);
 
         public virtual string TestDiscoveryRegex => _currentSettings.TestDiscoveryRegex ?? OptionTestDiscoveryRegexDefaultValue;
 
 
         public const string OptionTestDiscoveryTimeoutInSeconds = "Test discovery timeout in s";
-        public const string OptionTestDiscoveryTimeoutInSecondsDescription =
-            "Number of seconds after which test discovery of an executable will be assumed to have failed. 0: Infinite timeout";
+        public static readonly string OptionTestDiscoveryTimeoutInSecondsDescription = Resources.OptionTestDiscoveryTimeoutInSecondsDescription;
         public const int OptionTestDiscoveryTimeoutInSecondsDefaultValue = 30;
 
         public virtual int TestDiscoveryTimeoutInSeconds {
@@ -484,22 +481,14 @@ namespace GoogleTestAdapter.Settings
         public const string TraitsRegexesPairSeparator = "//||//";
         public const string TraitsRegexesRegexSeparator = "///";
         public const string TraitsRegexesTraitSeparator = ",";
-        public const string OptionTraitsDescription = "Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases: 1st, traits are assigned to tests according to the '" + OptionTraitsRegexesBefore + "' option. 2nd, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. 3rd, the '" + OptionTraitsRegexesAfter + "' option is evaluated, again in an overriding manner.\nSyntax: "
-                                                 + TraitsRegexesRegexSeparator +
-                                                 " separates the regex from the traits, the trait's name and value are separated by "
-                                                 + TraitsRegexesTraitSeparator +
-                                                 " and each pair of regex and trait is separated by "
-                                                 + TraitsRegexesPairSeparator + ".\nExample: " +
-                                                 @"MySuite\.*"
-                                                 + TraitsRegexesRegexSeparator + "Type"
-                                                 + TraitsRegexesTraitSeparator + "Small"
-                                                 + TraitsRegexesPairSeparator +
-                                                 @"MySuite2\.*|MySuite3\.*"
-                                                 + TraitsRegexesRegexSeparator + "Type"
-                                                 + TraitsRegexesTraitSeparator + "Medium";
+        public static readonly string OptionTraitsDescription = string.Format(
+            Resources.OptionTraitsDescription,
+            TraitsRegexesRegexSeparator,
+            TraitsRegexesTraitSeparator,
+            TraitsRegexesPairSeparator);
         public const string OptionTraitsRegexesDefaultValue = "";
-
-        public const string OptionTraitsRegexesBefore = "Before test discovery";
+        
+        public static readonly string OptionTraitsRegexesBefore = Resources.OptionTraitsRegexesBefore;
 
         public virtual List<RegexTraitPair> TraitsRegexesBefore
         {
@@ -510,7 +499,7 @@ namespace GoogleTestAdapter.Settings
             }
         }
 
-        public const string OptionTraitsRegexesAfter = "After test discovery";
+        public static readonly string OptionTraitsRegexesAfter = Resources.OptionTraitsRegexesAfter;
 
         public virtual List<RegexTraitPair> TraitsRegexesAfter
         {
@@ -522,18 +511,15 @@ namespace GoogleTestAdapter.Settings
         }
 
 
-        public const string OptionTestNameSeparator = "Test name separator";
-        public const string OptionTestNameSeparatorDescription =
-            "Test names produced by Google Test might contain the character '/', which makes VS cut the name after the '/' if the test explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work - there might be more). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).";
+        public static readonly string OptionTestNameSeparator = Resources.OptionTestNameSeparator;
         public const string OptionTestNameSeparatorDefaultValue = "";
+        public static readonly string OptionTestNameSeparatorDescription = Resources.OptionTestNameSeparatorDescription;
 
         public virtual string TestNameSeparator => _currentSettings.TestNameSeparator ?? OptionTestNameSeparatorDefaultValue;
 
-
-        public const string OptionParseSymbolInformation = "Parse symbol information";
-        public const string OptionParseSymbolInformationDescription =
-            "Parse debug symbol information for test executables. Setting this to false will speed up test discovery, but tests will not have source location information, and traits defined via the macros in GTA_Traits.h will not be available.";
+        public static readonly string OptionParseSymbolInformation = Resources.OptionParseSymbolInformation;
         public const bool OptionParseSymbolInformationDefaultValue = true;
+        public static readonly string OptionParseSymbolInformationDescription = Resources.OptionParseSymbolInformationDescription;
 
         public virtual bool ParseSymbolInformation => _currentSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
 

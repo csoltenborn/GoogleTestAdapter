@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Collections.Generic;
@@ -17,8 +17,6 @@ namespace GoogleTestAdapter.TestResults
 {
     public class XmlTestResultParser
     {
-        private const string ErrorMsgNoXmlFile = "Output file does not exist, did your tests crash?";
-
         private static readonly NumberFormatInfo NumberFormatInfo = new CultureInfo("en-US").NumberFormat;
 
         private static readonly Regex SpecialCharsRegex = new Regex("[äöüÄÖÜß]+", RegexOptions.Compiled);
@@ -88,7 +86,7 @@ namespace GoogleTestAdapter.TestResults
                 return ParseTestResults();
             }
 
-            _logger.LogWarning(ErrorMsgNoXmlFile);
+            _logger.LogWarning(Resources.OutputFileMissing);
             return new List<TestResult>();
         }
 
@@ -123,8 +121,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (XmlException e)
             {
-                _logger.DebugWarning(
-                    $"Test result file {_xmlResultFile} could not be parsed (completely) - your test executable has probably crashed. Exception message: {e.Message}");
+                _logger.DebugWarning(String.Format(Resources.TestResultParse, _xmlResultFile, e.Message));
             }
 
             return testResults;
@@ -138,8 +135,7 @@ namespace GoogleTestAdapter.TestResults
             }
             catch (Exception e)
             {
-                _logger.DebugWarning(
-                    $"XmlNode could not be parsed: \'{GetQualifiedName(testcaseNode)}\'. Exception message: {e.Message}");
+                _logger.DebugWarning(String.Format(Resources.XmlNodeParse, GetQualifiedName(testcaseNode), e.Message));
                 return null;
             }
         }
@@ -186,7 +182,7 @@ namespace GoogleTestAdapter.TestResults
                     testResult.Outcome = TestOutcome.Skipped;
                     break;
                 default:
-                    string msg = "Unknown testcase status: " + testCaseStatus;
+                    string msg = String.Format(Resources.UnknownTestCase, testCaseStatus);
                     _logger.LogError(msg);
                     throw new Exception(msg);
             }

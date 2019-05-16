@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// This file has been modified by Microsoft on 9/2017.
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;

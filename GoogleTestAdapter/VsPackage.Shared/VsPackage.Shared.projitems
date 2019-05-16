@@ -26,6 +26,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\GeneralOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\LocalizedCategoryAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\LocalizedDescriptionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\LocalizedDisplayNameAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\NotifyingDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 9/2017.
 
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Tests.Common;
@@ -41,7 +41,7 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests_CrashingExecutable_CrashIsLogged()
         {
             RunExecutableAndCheckLogging(Path.GetFullPath(TestResources.AlwaysCrashingExe),
-                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not list test cases of executable"))),
+                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("Could not list test cases for executable"))),
                     Times.Once));
         }
 
@@ -50,13 +50,13 @@ namespace GoogleTestAdapter.TestAdapter
         public void DiscoverTests_FailingExecutable_ExitCodeIsLogged()
         {
             RunExecutableAndCheckLogging(Path.GetFullPath(TestResources.AlwaysFailingExe),
-                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 4711"))),
+                () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("process execution failed with exit code 4711"))),
                     Times.Once));
         }
 
         private void MarkUntrusted(string path)
         {
-            using (var handle = NativeMethods.CreateFileW(path + ":Zone.Identifier", NativeMethods.GENERIC_WRITE, 0, IntPtr.Zero,
+            using (var handle = NativeMethods.CreateFile(path + ":Zone.Identifier", NativeMethods.GENERIC_WRITE, 0, IntPtr.Zero,
                 NativeMethods.CREATE_NEW, 0, IntPtr.Zero))
             {
                 if (handle.IsInvalid)
@@ -90,7 +90,7 @@ namespace GoogleTestAdapter.TestAdapter
                 MarkUntrusted(temp2Exe);
                 semPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(temp2Exe,
-                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("process execution failed with exit code 143"))),
                         Times.Once));
                 semPath.AsFileInfo().Should().Exist("exe should have been run");
             }
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.TestAdapter
                 File.Copy(TestResources.SemaphoreExe, temp1Exe);
                 semPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(temp1Exe,
-                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("executing process failed with return code 143"))),
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("process execution failed with exit code 143"))),
                         Times.Once));
                 semPath.AsFileInfo().Should().Exist("exe should have been run");
             }
@@ -188,13 +188,13 @@ namespace GoogleTestAdapter.TestAdapter
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     static class NativeMethods
     {
-        public const int GENERIC_WRITE = 1073741824;
-        public const int CREATE_NEW = 1;
+        public const uint GENERIC_WRITE = 0x40000000;
+        public const uint CREATE_NEW = 1;
 
-        [DllImport("kernel32.dll")]
-        public static extern SafeFileHandle CreateFileW(
-            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes,
-            uint dwCreationDisposition,uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern SafeFileHandle CreateFile(
+            string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes,
+            uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
     }
 
 }

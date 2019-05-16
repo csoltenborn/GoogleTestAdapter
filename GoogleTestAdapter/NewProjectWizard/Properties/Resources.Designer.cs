@@ -22,7 +22,7 @@ namespace NewProjectWizard.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace NewProjectWizard.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NewProjectWizard.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace NewProjectWizard.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,18 +61,90 @@ namespace NewProjectWizard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Consume Google Test as:.
+        /// </summary>
+        public static string ConsumeAs {
+            get {
+                return ResourceManager.GetString("ConsumeAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic Library (.dll).
+        /// </summary>
+        public static string DynamicLib {
+            get {
+                return ResourceManager.GetString("DynamicLib", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link dynamically (Recommended).
+        /// </summary>
+        public static string LinkDynamic {
+            get {
+                return ResourceManager.GetString("LinkDynamic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link statically.
+        /// </summary>
+        public static string LinkStatic {
+            get {
+                return ResourceManager.GetString("LinkStatic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;No project&gt;.
+        /// </summary>
+        public static string NoProject {
+            get {
+                return ResourceManager.GetString("NoProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot find NuGet.VisualStudio.Interop.dll. Wizard cannot continue..
         /// </summary>
-        internal static string NuGetInteropNotFound {
+        public static string NuGetInteropNotFound {
             get {
                 return ResourceManager.GetString("NuGetInteropNotFound", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to C++ runtime libraries:.
+        /// </summary>
+        public static string RuntimeLibs {
+            get {
+                return ResourceManager.GetString("RuntimeLibs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select project to test (Optional):.
+        /// </summary>
+        public static string SelectProject {
+            get {
+                return ResourceManager.GetString("SelectProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Static Library (.lib).
+        /// </summary>
+        public static string StaticLib {
+            get {
+                return ResourceManager.GetString("StaticLib", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows SDK not found..
         /// </summary>
-        internal static string WinSDKNotFound {
+        public static string WinSDKNotFound {
             get {
                 return ResourceManager.GetString("WinSDKNotFound", resourceCulture);
             }
@@ -81,7 +153,7 @@ namespace NewProjectWizard.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Test Project Configuration.
         /// </summary>
-        internal static string WizardTitle {
+        public static string WizardTitle {
             get {
                 return ResourceManager.GetString("WizardTitle", resourceCulture);
             }

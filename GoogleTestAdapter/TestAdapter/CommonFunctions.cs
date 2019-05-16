@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This file has been modified by Microsoft on 5/2018.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,17 +17,24 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace GoogleTestAdapter.TestAdapter
 {
+    public enum TestPhase
+    {
+        TestDiscovery,
+        TestExecution
+    }
+
     public static class CommonFunctions
     {
         public const string GtaSettingsEnvVariable = "GTA_FALLBACK_SETTINGS";
         private const int MinWorkerThreads = 32;
 
-        public static void ReportErrors(ILogger logger, string phase, OutputMode outputMode, SummaryMode summaryMode)
+        public static void ReportErrors(ILogger logger, TestPhase phase, OutputMode outputMode, SummaryMode summaryMode)
         {
             if (summaryMode == SummaryMode.Never)
                 return;
 
             bool hasErrors = logger.GetMessages(Severity.Error).Count > 0;
+            
             if (!hasErrors && summaryMode == SummaryMode.Error)
                 return;
 
@@ -35,11 +44,12 @@ namespace GoogleTestAdapter.TestAdapter
 
             string hint = outputMode > OutputMode.Info
                 ? ""
-                : " (enable debug mode for more information)";
+                : Resources.EnableDebugMode;
             string jointErrors = string.Join(Environment.NewLine, errors);
-
-            string message = $"{Environment.NewLine}================{Environment.NewLine}" 
-                + $"The following warnings and errors occured during {phase}{hint}:{Environment.NewLine}" 
+            string phaseString = (phase == TestPhase.TestDiscovery) ? Resources.TestDiscovery : Resources.TestExecution;
+                
+            string message = $"{Environment.NewLine}================{Environment.NewLine}"
+                + String.Format(Resources.ErrorAndWarning, phaseString, hint, Environment.NewLine)
                 + jointErrors;
 
             if (hasErrors)
@@ -63,7 +73,8 @@ namespace GoogleTestAdapter.TestAdapter
                 projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
             }
 
-            var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
+            var testSettings = runSettings.GetSettings(GoogleTestConstants.TestPropertySettingsName) as TestPropertySettingsProvider;
+            var settingsWrapper = new SettingsWrapper(ourRunSettings, testSettings?.TestPropertySettings, solutionDir);
 
             var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, 
                 () => settingsWrapper.TimestampMode, () => settingsWrapper.SeverityMode, () => settingsWrapper.PrefixOutputWithGta);
@@ -212,7 +223,7 @@ namespace GoogleTestAdapter.TestAdapter
                 case VsVersion.VS2012:
                     return;
                 default:
-                    logger.DebugInfo($"Visual Studio Version: {version}");
+                    logger.DebugInfo(String.Format(Resources.VSVersion, version));
                     break;
             }
         }

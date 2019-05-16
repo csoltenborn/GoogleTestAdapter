@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="RunSettingsMissingNode" xml:space="preserve">
+    <value>RunSettingsDocument 不包含一个 RunSettings 节点! 正在取消设置合并...</value>
+  </data>
+  <data name="ProcessNotFound" xml:space="preserve">
+    <value>找不到进程</value>
+  </data>
+  <data name="VSVersion" xml:space="preserve">
+    <value>Visual Studio 版本: {0}</value>
+  </data>
+  <data name="VS2012Error" xml:space="preserve">
+    <value>{0} 要求最低版本为 Visual Studio 2012 Update 1 - 请更新 Visual Studio 安装。</value>
+  </data>
+  <data name="IdentifyVSError" xml:space="preserve">
+    <value>无法识别 Visual Studio 的版本。{0} 要求最低版本为 Visual Studio 2012 Update 1。</value>
+  </data>
+  <data name="CouldNotAttachMessage" xml:space="preserve">
+    <value>无法将调试程序附加到进程 {0}:{1}{2}</value>
+  </data>
+  <data name="TraitIgnoreMessage" xml:space="preserve">
+    <value>特征与基本测试属性具有相同的名称，因此筛选测试用例时将忽略: {0}</value>
+  </data>
+  <data name="TestCaseFilter" xml:space="preserve">
+    <value>测试用例筛选器: {0}</value>
+  </data>
+  <data name="ErrorAndWarning" xml:space="preserve">
+    <value>{0}{1}期间出现以下错误和警告:{2}</value>
+  </data>
+  <data name="VSVersionMessage" xml:space="preserve">
+    <value>无法查明 Visual Studio 版本: {0}</value>
+  </data>
+  <data name="UnknownEnum" xml:space="preserve">
+    <value>未知的枚举文本: {0}</value>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>未知的枚举文本: {0}</value>
+  </data>
+  <data name="TestRunningException" xml:space="preserve">
+    <value>运行测试时出现异常: {0}</value>
+  </data>
+  <data name="TestDiscoveryCompleted" xml:space="preserve">
+    <value>测试发现已完成，总持续时间: {0}</value>
+  </data>
+  <data name="DebuggingMessage" xml:space="preserve">
+    <value>只有在 Visual Studio 中已安装 GoogleTestAdapter 的情况下，才可能进行调试 - NuGet 安装不支持此功能(以及 Visual Studio 选项、工具栏和解决方案设置等其他功能)。</value>
+  </data>
+  <data name="TestExecutionCancelled" xml:space="preserve">
+    <value>测试执行已取消。</value>
+  </data>
+  <data name="UnknownVisualStudioVersion" xml:space="preserve">
+    <value>未知的 Visual Studio 版本: {0}</value>
+  </data>
+  <data name="CantParseSettings" xml:space="preserve">
+    <value>无法分析解决方案测试设置文件，检查文件: {0}
+异常: {1}</value>
+  </data>
+  <data name="EnableDebugMode" xml:space="preserve">
+    <value>(启用调试模式，了解详细信息)</value>
+  </data>
+  <data name="NoTestCaseFilter" xml:space="preserve">
+    <value>未提供任何测试用例筛选器</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>解决方案设置: {0}</value>
+  </data>
+  <data name="TestDiscoveryExceptionError" xml:space="preserve">
+    <value>发现测试时出现异常: {0}</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>错误: {0}</value>
+  </data>
+  <data name="TestDiscovery" xml:space="preserve">
+    <value>测试发现</value>
+  </data>
+  <data name="FilterInvalid" xml:space="preserve">
+    <value>测试用例筛选器无效: {0}</value>
+  </data>
+  <data name="TestExecutionCompleted" xml:space="preserve">
+    <value>Google Test 执行已完成，总持续时间: {0}</value>
+  </data>
+  <data name="MoreInformationMessage" xml:space="preserve">
+    <value>Visual Studio 的 ActivityLog.xml 中可能有该问题的详细介绍(请参阅 https://blogs.msdn.microsoft.com/visualstudio/2010/02/24/troubleshooting-extensions-with-the-activity-log/)</value>
+  </data>
+  <data name="DebuggerAttachTime" xml:space="preserve">
+    <value>调试程序已附加到进程 {0}，耗时 {1} 毫秒</value>
+  </data>
+  <data name="Matches" xml:space="preserve">
+    <value>{0} 匹配 {1}</value>
+  </data>
+  <data name="DoesntMatch" xml:space="preserve">
+    <value>{0} 与 {1} 不匹配</value>
+  </data>
+  <data name="DebuggerAttachMessage" xml:space="preserve">
+    <value>无法将调试程序附加到进程 {0}，未提供错误消息</value>
+  </data>
+  <data name="TestExecution" xml:space="preserve">
+    <value>测试执行</value>
+  </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>无效的 {0}</value>
+  </data>
+  <data name="WarningMessage" xml:space="preserve">
+    <value>警告: {0}</value>
+  </data>
+  <data name="SolutionFoundButMissingNode" xml:space="preserve">
+    <value>解决方案测试设置文件已在“{0}”处找到，但不包含 {1} 节点</value>
+  </data>
+</root>

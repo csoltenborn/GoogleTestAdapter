@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 8/2017.
 
 using System;
 using System.Diagnostics;
@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 {
                     client.Service.AttachDebugger(processId, debuggerEngine);
                     stopWatch.Stop();
-                    _logger.DebugInfo($"Debugger attached to process {processId}, took {stopWatch.ElapsedMilliseconds} ms");
+                    _logger.DebugInfo(String.Format(Resources.DebuggerAttachTime, processId, stopWatch.ElapsedMilliseconds));
                     return true;
                 }
             }
@@ -45,15 +45,15 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             {
                 var errorMessage = serviceFault.Detail.Message;
                 if (string.IsNullOrWhiteSpace(errorMessage))
-                    errorMessage = $"Could not attach debugger to process {processId}, no error message available";
+                    errorMessage = String.Format(Resources.DebuggerAttachMessage, processId);
 
-                errorMessage += $"{Environment.NewLine}There might be more information on the problem in Visual Studio's ActivityLog.xml (see e.g. https://blogs.msdn.microsoft.com/visualstudio/2010/02/24/troubleshooting-extensions-with-the-activity-log/)";
+                errorMessage += $"{Environment.NewLine}{Resources.MoreInformationMessage}";
 
                 _logger.LogError(errorMessage);
             }
             catch (Exception e)
             {
-                _logger.LogError($"Could not attach debugger to process {processId}:{Environment.NewLine}{e}");
+                _logger.LogError(String.Format(Resources.CouldNotAttachMessage, processId, Environment.NewLine, e));
             }
             return false;
         }

@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="E:\A\_work\76\s\out\binaries\GoogleTestAdapter\Release\TestAdapter\GoogleTestAdapter.TestAdapter.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ja-JP" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="RCCX" />
+  </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
+  <Item ItemId=";GoogleTestAdapter.TestAdapter.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" Disp="true" LocTbl="false" />
+      <Item ItemId=";CantParseSettings" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Solution test settings file could not be parsed, check file: {0}]D;]A;Exception: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ソリューションのテストの設定ファイルを解析できませんでした。次のファイルをご確認ください: {0}]D;]A;例外: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";CouldNotAttachMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not attach debugger to process {0}:{1}{2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバッガーをプロセス {0} にアタッチできませんでした:{1}{2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";DebuggerAttachMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not attach debugger to process {0}, no error message available]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバッガーをプロセス {0} にアタッチできませんでした。エラー メッセージはありません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";DebuggerAttachTime" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Debugger attached to process {0}, took {1} ms]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバッガーがプロセス {0} にアタッチされました。所要時間 {1} ミリ秒]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";DebuggingMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Debugging is only possible if GoogleTestAdapter has been installed into Visual Studio - NuGet installation does not support this (and other features such as Visual Studio Options, toolbar, and solution settings).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバッグは、GoogleTestAdapter が Visual Studio にインストールされている場合にのみ可能です。NuGet インストールでは、これはサポートされません (Visual Studio オプション、ツール バー、ソリューションの設定などの機能も同様です)。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";DoesntMatch" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not match {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} は {1} と一致しません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";EnableDebugMode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ (enable debug mode for more information)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ (詳細情報を確認するには、デバッグ モードを有効にします)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";ErrorAndWarning" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following errors and warnings have occured during {0} {1}:{2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 中に次のエラーと警告が発生しました{1}:{2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";ErrorMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ERROR: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[エラー: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";FilterInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test case filter is invalid: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テスト ケース フィルターが無効です: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";IdentifyVSError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not identify Visual Studio version. {0} requires at least Visual Studio 2012 Update 1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Visual Studio のバージョンを識別できませんでした。{0} には Visual Studio 2012 Update 1 以上が必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";Invalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} が無効です]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";Matches" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} matches {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} は {1} と一致します]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MoreInformationMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There might be more information on the problem in Visual Studio's ActivityLog.xml (see e.g. https://blogs.msdn.microsoft.com/visualstudio/2010/02/24/troubleshooting-extensions-with-the-activity-log/)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[問題の詳細情報が Visual Studio の ActivityLog.xml にある場合があります (https://blogs.msdn.microsoft.com/visualstudio/2010/02/24/troubleshooting-extensions-with-the-activity-log/ などを参照)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";NoTestCaseFilter" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No test case filter provided]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テスト ケース フィルターが指定されていません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";ProcessNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find process]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[プロセスが見つかりませんでした]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";RunSettingsMissingNode" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[RunSettingsDocument に RunSettings ノードが含まれていません。マージの設定をキャンセルしています...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";Settings" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Solution settings: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ソリューションの設定: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";SolutionFoundButMissingNode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Solution test settings file found at '{0}', but does not contain {1} node]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ソリューションのテストの設定ファイルが '{0}' で見つかりましたが、{1} ノードが含まれていません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestCaseFilter" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test case filter: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テスト ケース フィルター: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestDiscovery" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[test discovery]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テストの検出]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestDiscoveryCompleted" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test discovery completed, overall duration: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テストの検出が完了しました。全体の期間: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestDiscoveryExceptionError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Exception while discovering tests: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テストの検出中に例外が発生しました: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestExecution" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[test execution]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テストの実行]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestExecutionCancelled" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Test execution canceled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テストの実行がキャンセルされました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestExecutionCompleted" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Google Test execution completed, overall duration: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Google Test の実行が完了しました。全体の期間: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TestRunningException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Exception while running tests: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[テストの実行中に例外が発生しました: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";TraitIgnoreMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Trait has same name as base test property and will thus be ignored for test case filtering: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[特徴の名前が基本テスト プロパティと同じであるため、テスト ケース フィルターで無視されます: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";UnknownEnum" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown enum literal: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[不明な列挙型リテラル: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";UnknownLiteral" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown enum literal: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[不明な列挙型リテラル: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";UnknownVisualStudioVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown Visual Studio version: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[不明な Visual Studio バージョン: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";VS2012Error" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} requires at least Visual Studio 2012 Update 1 - please update your Visual Studio installation.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} には Visual Studio 2012 Update 1 以降が必要です。Visual Studio インストールを更新してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";VSVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Visual Studio version: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Visual Studio バージョン: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";VSVersionMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find out Visual Studio version: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Visual Studio バージョンを検出できませんでした: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";WarningMessage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Warning: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[警告: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";GoogleTestAdapterSettings.xsd" ItemType="0" PsrId="210" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" Path=" \ ;XML \ 0 \ 0" />
+  </Item>
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[0.10.1.1]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Provides main Visual Studio integration of the Test Adapter]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[テスト アダプターの主要な Visual Studio 統合を提供します]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Christian Soltenborn, Jonas Gefele]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[Christian Soltenborn、Jonas Gefele]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[GoogleTestAdapter.GoogleTestAdapter]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[GoogleTestAdapter.GoogleTestAdapter]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[0.10.1.1]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[GoogleTestAdapter.TestAdapter.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Copyright © 2015, 2016, 2017]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[Copyright © 2015, 2016, 2017]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[GoogleTestAdapter.TestAdapter.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[GoogleTestAdapter.GoogleTestAdapter]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Orig="New">
+          <Val><![CDATA[GoogleTestAdapter.GoogleTestAdapter]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[0.10.1.1]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+    </Item>
+  </Item>
+  <Item ItemId=";XML" ItemType="0" PsrId="210" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+  </Item>
+</LCX>

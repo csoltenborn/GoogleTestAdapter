@@ -13,9 +13,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
     {
         #region Misc
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionTestDiscoveryRegex)]
-        [Description(SettingsWrapper.OptionTestDiscoveryRegexDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionTestDiscoveryRegex")]
+        [LocalizedDescription("OptionTestDiscoveryRegexDescription")]
         public string TestDiscoveryRegex
         {
             get => _testDiscoveryRegex;
@@ -27,9 +27,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _testDiscoveryRegex = SettingsWrapper.OptionTestDiscoveryRegexDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionTestDiscoveryTimeoutInSeconds)]
-        [Description(SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionTestDiscoveryTimeoutInSeconds")]
+        [LocalizedDescription("OptionTestDiscoveryTimeoutInSecondsDescription")]
         public int TestDiscoveryTimeoutInSeconds
         {
             get => _testDiscoveryTimeoutInSeconds;
@@ -42,9 +42,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private int _testDiscoveryTimeoutInSeconds = SettingsWrapper.OptionTestDiscoveryTimeoutInSecondsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionTestNameSeparator)]
-        [Description(SettingsWrapper.OptionTestNameSeparatorDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionTestNameSeparator")]
+        [LocalizedDescription("OptionTestNameSeparatorDescription")]
         public string TestNameSeparator
         {
             get => _testNameSeparator;
@@ -57,9 +57,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _testNameSeparator = SettingsWrapper.OptionTestNameSeparatorDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionParseSymbolInformation)]
-        [Description(SettingsWrapper.OptionParseSymbolInformationDescription)]
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionParseSymbolInformation")]
+        [LocalizedDescription("OptionParseSymbolInformationDescription")]
         public bool ParseSymbolInformation
         {
             get => _parseSymbolInformation;
@@ -71,9 +71,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Traits
 
-        [Category(SettingsWrapper.CategoryTraitsName)]
-        [DisplayName(SettingsWrapper.OptionTraitsRegexesBefore)]
-        [Description(SettingsWrapper.OptionTraitsDescription)]
+        [LocalizedCategory("CategoryTraitsName")]
+        [LocalizedDisplayName("OptionTraitsRegexesBefore")]
+        [LocalizedDescription("OptionTraitsDescription")]
         public string TraitsRegexesBefore
         {
             get => _traitsRegexesBefore;
@@ -85,9 +85,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _traitsRegexesBefore = SettingsWrapper.OptionTraitsRegexesDefaultValue;
 
-        [Category(SettingsWrapper.CategoryTraitsName)]
-        [DisplayName(SettingsWrapper.OptionTraitsRegexesAfter)]
-        [Description(SettingsWrapper.OptionTraitsDescription)]
+        [LocalizedCategory("CategoryTraitsName")]
+        [LocalizedDisplayName("OptionTraitsRegexesAfter")]
+        [LocalizedDescription("OptionTraitsDescription")]
         public string TraitsRegexesAfter
         {
             get => _traitsRegexesAfter;

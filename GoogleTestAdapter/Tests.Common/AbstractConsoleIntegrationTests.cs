@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+// This file has been modified by Microsoft on 6/2017.
 
 using System.Collections.Generic;
 using System.IO;

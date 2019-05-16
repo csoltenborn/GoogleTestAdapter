@@ -1,0 +1,653 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActualTestCase" xml:space="preserve">
+    <value>Number of actual test case durations: {0}</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="AddedTestCase" xml:space="preserve">
+    <value>Added test case '{0}'</value>
+    <comment>{0} represents an unlocalized test name (e.g. "TestSuite1.Test2")</comment>
+  </data>
+  <data name="AlreadyInAnalyzer" xml:space="preserve">
+    <value>{0}Test case already in analyzer: {1}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents an unlocalized test name (e.g. "TestSuite1.Test2")</comment>
+  </data>
+  <data name="AttachDebuggerMessage" xml:space="preserve">
+    <value>Attaching debugger to {0}</value>
+    <comment>{0} represents an unlocalized command to which debugger attaches (e.g. cmd.exe)</comment>
+  </data>
+  <data name="AvgDifference" xml:space="preserve">
+    <value>Average difference between expected and actual duration: {0} ms</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="BatchFileMissing" xml:space="preserve">
+    <value>{0}{1}: Did not find file: {2}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents unlocalized file path (e.g c:\test\foo.bat)</comment>
+  </data>
+  <data name="BatchReturnedExitCode" xml:space="preserve">
+    <value>{0}{1}: Exited with code {2}, executed command: '{3}'</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents a number (e.g. 5), {3} represents unlocalized file path (e.g c:\test\foo.bat)</comment>
+  </data>
+  <data name="CategoryMiscName" xml:space="preserve">
+    <value>Misc</value>
+  </data>
+  <data name="CategoryParallelizationName" xml:space="preserve">
+    <value>Parallelization</value>
+  </data>
+  <data name="CategoryRuntimeBehaviorName" xml:space="preserve">
+    <value>Runtime behavior</value>
+  </data>
+  <data name="CategoryTestExecutionName" xml:space="preserve">
+    <value>Test execution</value>
+  </data>
+  <data name="CategoryTraitsName" xml:space="preserve">
+    <value>Regexes for trait assignment</value>
+  </data>
+  <data name="CollectedResults" xml:space="preserve">
+    <value>{0}Collected {1} test result(s) from result XML file {2}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5), {2} represents unlocalized file path (e.g c:\test\results.xml)</comment>
+  </data>
+  <data name="CollectedResultsFromConsole" xml:space="preserve">
+    <value>{0}Collected {1} test results from console output</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="CommandExecuted" xml:space="preserve">
+    <value>Command executed: '{0} {1}', working directory: '{2}'</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized options to test (e.g. "gtest_list_tests"), {2} represents unlocalized directory path (e.g c:\test\dir)</comment>
+  </data>
+  <data name="CommandLineGeneratorError" xml:space="preserve">
+    <value>Exceeded maximum allowed command line length ({0}) after including {1} tests (next string length is {2})</value>
+    <comment>{0} represents a number (e.g. 5), {1} represents a number (e.g. 5), {2} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="CouldNotListTestCases" xml:space="preserve">
+    <value>Could not list test cases for executable '{0}': process execution failed with exit code {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} is a number</comment>
+  </data>
+  <data name="CouldNotTerminate" xml:space="preserve">
+    <value>Could not terminate process {0} started at {1}: {2}</value>
+    <comment>{0} represents an unlocalized process name (e.g notepad.exe), {1} represents unlocalized string for time (e.g. "3/1/2008 7:00:00 AM"), {2} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="CrashTest" xml:space="preserve">
+    <value>reason is probably a crash of test {0}</value>
+    <comment>{0} represents an unlocalized name of test (e.g. foo)</comment>
+  </data>
+  <data name="CrashText" xml:space="preserve">
+    <value>!! This test has probably CRASHED !!</value>
+    <comment>The exclamation points and all-caps are for emphasis.</comment>
+  </data>
+  <data name="CreatedTestResults" xml:space="preserve">
+    <value>{0}Created {1} test results for tests which were neither found in result XML file nor in console output</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="DebuggerAttachedOutputMessage" xml:space="preserve">
+    <value>Note that due to restrictions of the VS Unit Testing framework, the test executable's output can not be displayed in the test console when debugging tests!</value>
+  </data>
+  <data name="DeleteTestDir" xml:space="preserve">
+    <value>{0}Could not delete test directory '{1}': {2}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents unlocalized directory path (e.g c:\test\dir), {2} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="DescriptionOfExecutableDirPlaceHolder" xml:space="preserve">
+    <value>{0} - directory containing the test executable</value>
+    <comment>{0} represents a directory containing a test executable</comment>
+  </data>
+  <data name="DescriptionOfPlaceholdersForBatches" xml:space="preserve">
+    <value>{0} - path of a directory which can be used by the tests
+{1} - id of the thread executing the current tests</value>
+    <comment>{0} represents a directory. {1} represents a thread id.</comment>
+  </data>
+  <data name="DescriptionOfPlaceholdersForExecutables" xml:space="preserve">
+    <value>{0} - executable containing the tests</value>
+    <comment>{0} represents the path of a test executable</comment>
+  </data>
+  <data name="DescriptionOfSolutionDirPlaceHolder" xml:space="preserve">
+    <value>{0} - directory of the solution (only available inside Visual Studio)</value>
+    <comment>{0} represents a directory containing a solution file</comment>
+  </data>
+  <data name="DoesntMatchCustom" xml:space="preserve">
+    <value>{0} does not match custom regex {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")</comment>
+  </data>
+  <data name="DoesntMatchDefault" xml:space="preserve">
+    <value>{0} does not match default regex {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")</comment>
+  </data>
+  <data name="EndOfOutputMessage" xml:space="preserve">
+    <value>{0}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; End of Output</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] ")</comment>
+  </data>
+  <data name="ExceptionMessage" xml:space="preserve">
+    <value>{0}Exception while running tests: {1}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="ExceptionResolving" xml:space="preserve">
+    <value>Exception while resolving test locations and traits in {0}\n{1}</value>
+    <comment>{0} represents an unlocalized binary name (e.g notepad.exe), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="ExecutableError" xml:space="preserve">
+    <value>Executable {0} came from another computer and was blocked to help protect this computer.</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="ExecuteSteps" xml:space="preserve">
+    <value>{0}In particular: launch command prompt, change into directory '{1}', and execute the following command to make sure your tests can be run in general.{2}{3} {4}</value>
+    <comment>This sentence is continuation of TroubleShootingLink string from Common.Dynamic.TAfGT resources file. {0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents unlocalized directory path (e.g c:\test\dir), {2} represents an unlocalized new line string (e.g "\n"), {3} is a name of an executable (e.g. foo.exe), {4} are parameters passed to the executable (e.g. /bar)</comment>
+  </data>
+  <data name="ExecutionCancelled" xml:space="preserve">
+    <value>{0}Execution has been cancelled: {1}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="ExecutionString" xml:space="preserve">
+    <value>Execution is already running with settings for executable {0}, cannot switch to settings for {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>{0}Execution took {1}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents unlocalized string for time it took (e.g. "0:00:02.0504161")</comment>
+  </data>
+  <data name="ExpectedDurations" xml:space="preserve">
+    <value>{0} expected durations have been found in actual durations</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="ExpectedTestCase" xml:space="preserve">
+    <value>Number of expected test case durations: {0}</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="FileFound" xml:space="preserve">
+    <value>Google Test indicator file found for executable {0}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>No Google Test indicator file found for executable {0}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="FoundTestMethod" xml:space="preserve">
+    <value>Found {0} test method symbols and {1} trait symbols in binary {2}, pdb {3}</value>
+    <comment>{0} represents a number (e.g. 5), {1} represents a number (e.g. 5), {2} represents an unlocalized binary name (e.g notepad.exe)</comment>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Invalid file {0}. {1}</value>
+    <comment>{0} represents an unlocalized file name (e.g. c:\foo.exe.gta.testdurations), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="InvalidRegularExpression" xml:space="preserve">
+    <value>Invalid regular expression "{0}", exception message: {1}</value>
+    <comment>{0} represents an unlocalized regex (e.g. "abc*d+e*"), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="LocationNotFoundError" xml:space="preserve">
+    <value>Could not find source location for test {0}</value>
+    <comment>{0} represents an unlocalized test name (e.g. "TestSuite1.Test2")</comment>
+  </data>
+  <data name="MatchesCustom" xml:space="preserve">
+    <value>{0} matches custom regex {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")</comment>
+  </data>
+  <data name="MatchesDefault" xml:space="preserve">
+    <value>{0} matches default regex {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents unlocalized string for regular expression (e.g ".*a.exe")</comment>
+  </data>
+  <data name="NeverBeZero" xml:space="preserve">
+    <value>{0} must never be &lt; 0</value>
+    <comment>{0} represents an unlocalized string for name of variable (e.g. _nrOfRunningExecutions)</comment>
+  </data>
+  <data name="NoKnownTestCaseMessage" xml:space="preserve">
+    <value>No known test case for test result of line '{0}' - are you repeating a test run, but tests have changed in the meantime?</value>
+    <comment>{0} represents an unlocalized string for line in test</comment>
+  </data>
+  <data name="NoOutput" xml:space="preserve">
+    <value>Command produced no output</value>
+  </data>
+  <data name="NoSettingConfigured" xml:space="preserve">
+    <value>No settings configured for test executable '{0}'; running with solution settings: {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents a comma-separated list of setting properties</comment>
+  </data>
+  <data name="NoTestOutputShown" xml:space="preserve">
+    <value>Note that no test output will be shown on the test console when executing tests concurrently!</value>
+  </data>
+  <data name="NothingToReport" xml:space="preserve">
+    <value>Nothing to report.</value>
+  </data>
+  <data name="NumberOfTestsMessage" xml:space="preserve">
+    <value>Found {0} tests in executable {1}</value>
+    <comment>{0} represents a number (e.g. 5), {1} represents an unlocalized binary name (e.g notepad.exe)</comment>
+  </data>
+  <data name="NumberOfTestsRunningMessage" xml:space="preserve">
+    <value>Running {0} tests...</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
+    <value>Additional test execution parameters</value>
+  </data>
+  <data name="OptionAdditionalTestExecutionParamsDescription" xml:space="preserve">
+    <value>Additional parameters for Google Test executable. Placeholders:</value>
+    <comment>Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionBatchForTestSetup" xml:space="preserve">
+    <value>Test setup batch file</value>
+  </data>
+  <data name="OptionBatchForTestSetupDescription" xml:space="preserve">
+    <value>Batch file to be executed before test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:</value>
+    <comment>Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionBatchForTestTeardown" xml:space="preserve">
+    <value>Test teardown batch file</value>
+  </data>
+  <data name="OptionBatchForTestTeardownDescription" xml:space="preserve">
+    <value>Batch file to be executed after test execution. If tests are executed in parallel, the batch file will be executed once per thread. Placeholders:</value>
+    <comment>Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionBreakOnFailure" xml:space="preserve">
+    <value>Break on failure</value>
+  </data>
+  <data name="OptionBreakOnFailureDescription" xml:space="preserve">
+    <value>If enabled, a potentially attached debugger will catch assertion failures and automatically drop into interactive mode.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionCatchExceptions" xml:space="preserve">
+    <value>Catch exceptions</value>
+  </data>
+  <data name="OptionCatchExceptionsDescription" xml:space="preserve">
+    <value>Google Test catches exceptions by default; the according test fails and test execution continues. Choosing false lets exceptions pass through, allowing the debugger to catch them.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionDebugMode" xml:space="preserve">
+    <value>Print debug info</value>
+  </data>
+  <data name="OptionDebugModeDescription" xml:space="preserve">
+    <value>If true, debug output will be printed to the test console.</value>
+  </data>
+  <data name="OptionEnableParallelTestExecution" xml:space="preserve">
+    <value>Parallel test execution</value>
+  </data>
+  <data name="OptionEnableParallelTestExecutionDescription" xml:space="preserve">
+    <value>Parallel test execution is achieved by means of different threads, each of which is assigned a number of tests to be executed. The threads will then sequentially invoke the necessary executables to produce the according test results.</value>
+  </data>
+  <data name="OptionKillProcessesOnCancel" xml:space="preserve">
+    <value>Terminate processes on cancel</value>
+  </data>
+  <data name="OptionKillProcessesOnCancelDescription" xml:space="preserve">
+    <value>If true, running test executables are actively terminated if the test execution is canceled. Note that terminating a test process might have all kinds of side effects; in particular, Google Test will not be able to perform any shutdown tasks.</value>
+  </data>
+  <data name="OptionMaxNrOfThreads" xml:space="preserve">
+    <value>Maximum number of threads</value>
+  </data>
+  <data name="OptionMaxNrOfThreadsDescription" xml:space="preserve">
+    <value>Maximum number of threads to be used for test execution (0: one thread for each processor).</value>
+  </data>
+  <data name="OptionNrOfTestRepetitions" xml:space="preserve">
+    <value>Number of test repetitions</value>
+  </data>
+  <data name="OptionNrOfTestRepetitionsDescription" xml:space="preserve">
+    <value>Tests will be run for the selected number of times (-1: infinite).
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionParseSymbolInformation" xml:space="preserve">
+    <value>Parse symbol information</value>
+  </data>
+  <data name="OptionParseSymbolInformationDescription" xml:space="preserve">
+    <value>Parse debug symbol information for test executables to obtain source location information and traits (defined via the macros in GTA_Traits.h).
+If this is set to false, step 2 of traits discovery will be left out and only traits regexes will be effective.</value>
+  </data>
+  <data name="OptionPathExtension" xml:space="preserve">
+    <value>PATH extension</value>
+    <comment>PATH represents an environment variable and should not be localized</comment>
+  </data>
+  <data name="OptionPathExtensionDescription" xml:space="preserve">
+    <value>If non-empty, the content will be appended to the PATH variable of the test execution and discovery processes.
+Example: C:\MyBins;{0}\MyOtherBins;
+Placeholders:</value>
+    <comment>{0} represents a directory. Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OptionPrintTestOutput" xml:space="preserve">
+    <value>Print test output</value>
+  </data>
+  <data name="OptionPrintTestOutputDescription" xml:space="preserve">
+    <value>Print the output of the Google Test executable(s) to the Tests Output window.</value>
+  </data>
+  <data name="OptionRunDisabledTests" xml:space="preserve">
+    <value>Also run disabled tests</value>
+  </data>
+  <data name="OptionRunDisabledTestsDescription" xml:space="preserve">
+    <value>If true, all (selected) tests will be run, even if they have been disabled.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionShowReleaseNotes" xml:space="preserve">
+    <value>Show release notes after update</value>
+  </data>
+  <data name="OptionShowReleaseNotesDescription" xml:space="preserve">
+    <value>If true, a dialog with release notes is shown after the extension has been updated.</value>
+  </data>
+  <data name="OptionShuffleTests" xml:space="preserve">
+    <value>Shuffle tests per execution</value>
+  </data>
+  <data name="OptionShuffleTestsDescription" xml:space="preserve">
+    <value>If true, tests will be executed in random order. Note that a true randomized order is only given when executing all tests in non-parallel fashion. Otherwise, the test excutables will most likely be executed more than once - random order is than restricted to the according executions.
+Google Test option: {0}</value>
+    <comment>{0} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionShuffleTestsSeed" xml:space="preserve">
+    <value>Shuffle tests: Seed</value>
+  </data>
+  <data name="OptionShuffleTestsSeedDescription" xml:space="preserve">
+    <value>0: Seed is computed from system time, 1&lt;=n&lt;={0}: The given seed is used. See note of option '{1}'.
+Google Test option: {2}</value>
+    <comment>{0} is an integer representing the maximum value of a seed. {1} represents the localized name of another option. {2} represents a command-line flag.</comment>
+  </data>
+  <data name="OptionTestDiscoveryRegex" xml:space="preserve">
+    <value>Regex for test discovery</value>
+  </data>
+  <data name="OptionTestDiscoveryRegexDescription" xml:space="preserve">
+    <value>If non-empty, this regex will be used to discover the Google Test executables containing your tests.
+Default regex: {0}</value>
+    <comment>{0} represents a regular expression</comment>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSeconds" xml:space="preserve">
+    <value>Test discovery timeout in s</value>
+    <comment>"s" stands for seconds</comment>
+  </data>
+  <data name="OptionTestDiscoveryTimeoutInSecondsDescription" xml:space="preserve">
+    <value>Number of seconds after which test discovery will be assumed to have failed. 0: Infinite timeout</value>
+  </data>
+  <data name="OptionTestNameSeparator" xml:space="preserve">
+    <value>Test name separator</value>
+  </data>
+  <data name="OptionTestNameSeparatorDescription" xml:space="preserve">
+    <value>Test names produced by Google Test might contain the character '/', which makes Visual Studio cut the name after the '/' if the Test Explorer window is not wide enough. This option's value, if non-empty, will replace the '/' character to avoid that behavior. Note that '\', ' ', '|', and '-' produce the same behavior ('.', '_', ':', and '::' are known to work). Note also that traits regexes are evaluated against the tests' display names (and must thus be consistent with this option).</value>
+  </data>
+  <data name="OptionTimestampOutput" xml:space="preserve">
+    <value>Timestamp output</value>
+  </data>
+  <data name="OptionTimestampOutputDescription" xml:space="preserve">
+    <value>If true, a timestamp is added to test and debug output.</value>
+  </data>
+  <data name="OptionTraitsDescription" xml:space="preserve">
+    <value>Allows to override/add traits for testcases matching a regex. Traits are build up in 3 phases. First, traits are assigned to tests according to the 'Traits before' option. Next, the tests' traits (defined via the macros in GTA_Traits.h) are added to the tests, overriding traits from phase 1 with new values. Finally, the 'Traits after' option is evaluated, again in an overriding manner.
+Syntax: {0} separates the regex from the traits, the trait's name and value are separated by {1} and each pair of regex and trait is separated by {2}.
+Example: MySuite\.*{0}Type{1}Small{2}MySuite2\.*|MySuite3\.*{0}Type{1}Medium</value>
+    <comment>{0} represents a string used to separate a regex from its traits. {1} represents a string used to separate names and values. {2} represents a string used to separate regexs.</comment>
+  </data>
+  <data name="OptionTraitsRegexesAfter" xml:space="preserve">
+    <value>After test discovery</value>
+  </data>
+  <data name="OptionTraitsRegexesBefore" xml:space="preserve">
+    <value>Before test discovery</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFramework" xml:space="preserve">
+    <value>Use new test execution framework (experimental)</value>
+  </data>
+  <data name="OptionUseNewTestExecutionFrameworkDescription" xml:space="preserve">
+    <value>Make use of the new test execution framework. Advantages: test crash detection and test output printing also work in debug mode.</value>
+  </data>
+  <data name="OptionWorkingDir" xml:space="preserve">
+    <value>Working directory</value>
+  </data>
+  <data name="OptionWorkingDirDescription" xml:space="preserve">
+    <value>If non-empty, will set the working directory for running the tests (default: {0})
+Example: {1}\MyTestDir
+Placeholders:</value>
+    <comment>{0} represents the default value of the working directory. {1} represents the directory containing the solution file. Followed by a list of placeholders.</comment>
+  </data>
+  <data name="OutputFileMissing" xml:space="preserve">
+    <value>Output file does not exist, did your tests crash?</value>
+  </data>
+  <data name="OutputOfCommand" xml:space="preserve">
+    <value>Output of command:</value>
+    <comment>Followed by standard output from the command ran</comment>
+  </data>
+  <data name="OutputOfCommandMessage" xml:space="preserve">
+    <value>{0}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Output of command '{1} {2}'</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents unlocalized command (e.g. cmd.exe), {2} represents unlocalized paramaters to executable (e.g. "/C exit 2")</comment>
+  </data>
+  <data name="ParallelExecution" xml:space="preserve">
+    <value>Parallel execution is selected in options, but tests are executed sequentially because debugger is attached.</value>
+  </data>
+  <data name="ParseDurationMessage" xml:space="preserve">
+    <value>Could not parse duration in line '{0}'</value>
+    <comment>{0} represents the line text</comment>
+  </data>
+  <data name="ParsePair" xml:space="preserve">
+    <value>Could not parse pair '{0}', exception message: {1}</value>
+    <comment>{0} is regex pair, {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="ProcessExitCode" xml:space="preserve">
+    <value>Process has exited with code {0}</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="ReadTestDurationError" xml:space="preserve">
+    <value>Could not read test durations: {0}</value>
+    <comment>{0} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="RegexParseError" xml:space="preserve">
+    <value>Regex '{0}' cannot be parsed: {1}</value>
+    <comment>{0} represents unlocalized regex pattern used (e.g. ab*d+), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="RegexTimedOut" xml:space="preserve">
+    <value>Regex '{0}' timed out: {1}</value>
+    <comment>{0} represents unlocalized regex pattern used (e.g. ab*d+), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="ReportedResultsToVS" xml:space="preserve">
+    <value>{0}Reported {1} test results to Visual Studio during test execution, executable: '{2}'</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5), {2} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="ReportedTestResults" xml:space="preserve">
+    <value>{0}Reported {1} test results to Visual Studio, executable: '{2}', duration: {3}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5), {2} represents an unlocalized name of executable (e.g. cmd.exe) file, {3} means stopwatch time</comment>
+  </data>
+  <data name="RestoringSolutionSettings" xml:space="preserve">
+    <value>Restoring solution settings: {0}</value>
+    <comment>{0} represents a comma-separated list of setting properties</comment>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Test {0}: Expected {1} ms, actual {2} ms</value>
+    <comment>{0} represents an unlocalized name of a test (e.g. foo), {1} represents a number (e.g. 5), {2} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="RunBatchException" xml:space="preserve">
+    <value>{0}{1}: Exception caught, message: '{2}', executed command: '{3}'</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents localized exception message (e.g. "Cannot load file"), {3} represents unlocalized file path (e.g c:\test\foo.bat)</comment>
+  </data>
+  <data name="RunExecutableError" xml:space="preserve">
+    <value>{0}Failed to run test executable '{1}': {2}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents an unlocalized name of executable (e.g. cmd.exe) file, {2} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="SchedulingStats" xml:space="preserve">
+    <value>&gt;&gt;&gt; Scheduling statistics &lt;&lt;&lt;</value>
+  </data>
+  <data name="SettingsMessage" xml:space="preserve">
+    <value>Settings for test executable '{0}': {1}</value>
+    <comment>{0} represents an unlocalized name of executable (e.g. cmd.exe) file, {1} represents an unlocalized settings string</comment>
+  </data>
+  <data name="SettingsWrapperString" xml:space="preserve">
+    <value>SettingsWrapper is already running with settings for an executable on thread '{0}', cannot also be used by thread '{1}'</value>
+    <comment>{0} is a name of a thread (e.g. "T0"), {1} is a name of a thread (e.g. "T0")</comment>
+  </data>
+  <data name="StackTrace" xml:space="preserve">
+    <value>{0}Stack trace:{1}{2}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} means new line string, {2} represents unlocalized exception stack trace</comment>
+  </data>
+  <data name="StandardDeviation" xml:space="preserve">
+    <value>Standard deviation: {0} ms</value>
+    <comment>{0} represents the standardDeviation for statistics to debug output</comment>
+  </data>
+  <data name="SuccessfullyRun" xml:space="preserve">
+    <value>{0}{1}: Successfully ran '{2}'</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} is TestSetupBatchFile or TestTeardownBatchFile string, {2} represents unlocalized file path (e.g c:\test\foo.bat)</comment>
+  </data>
+  <data name="TerminatedProcess" xml:space="preserve">
+    <value>Terminated process {0} started at {1}</value>
+    <comment>{0} represents an unlocalized process name (e.g notepad.exe), {1} represents unlocalized string for time (e.g. "3/1/2008 7:00:00 AM")</comment>
+  </data>
+  <data name="TestCaseInAnalyzer" xml:space="preserve">
+    <value>Test case already in analyzer: {0}</value>
+    <comment>{0} represents an unlocalized string for test name (e.g. "TestSuite1.Test2")</comment>
+  </data>
+  <data name="TestCaseNotRun" xml:space="preserve">
+    <value>{0}{1} test cases seem to not have been run - are you repeating a test run, but tests have changed in the meantime? Test cases:{2}{3}</value>
+    <comment>{0} is empty or a name of a thread followed by space (e.g. "[T0] "), {1} represents a number (e.g. 5), {2} represents an unlocalized new line string (e.g "\n"), {3} is a new-line separated list of unlocalized test case names</comment>
+  </data>
+  <data name="TestCommandCanBeRun" xml:space="preserve">
+    <value>Test whether the following commands can be executed sucessfully on the command line (make sure all required binaries are on the PATH):{0}{1}</value>
+    <comment>{0} represents an unlocalized new line string (e.g "\n"), {1} is a new-line separated sequence of commands</comment>
+  </data>
+  <data name="TestDiscoveryCancelled" xml:space="preserve">
+    <value>Test discovery was cancelled after {0} s for executable {1}</value>
+    <comment>{0} represents a number (e.g. 5), {1} represents an unlocalized name of executable (e.g. cmd.exe) file</comment>
+  </data>
+  <data name="TestOutput" xml:space="preserve">
+    <value>Test output:</value>
+    <comment>Followed by the output of a test case</comment>
+  </data>
+  <data name="TestResultParse" xml:space="preserve">
+    <value>Test result file {0} could not be parsed (completely) - your test executable has probably crashed. Exception message: {1}</value>
+    <comment>{0} represents unlocalized file path (e.g c:\test\results.xml), {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+  <data name="TestSetupBatchFile" xml:space="preserve">
+    <value>Test setup batch file</value>
+  </data>
+  <data name="TestTeardownBatchFile" xml:space="preserve">
+    <value>Test teardown batch file</value>
+  </data>
+  <data name="ThreadExecutionMessage" xml:space="preserve">
+    <value>Executing tests on {0} threads</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="UnknownLiteral" xml:space="preserve">
+    <value>Unknown literal: {0}</value>
+    <comment>{0} is a name of enum literal</comment>
+  </data>
+  <data name="UnknownTestCase" xml:space="preserve">
+    <value>Unknown test case status: {0}</value>
+    <comment>{0} represents an unlocalized status of test (e.g. "run" or "notrun")</comment>
+  </data>
+  <data name="UsingSplitterOnDuration" xml:space="preserve">
+    <value>Using splitter based on test durations</value>
+  </data>
+  <data name="UsingSplitterOnNumber" xml:space="preserve">
+    <value>Using splitter based on number of tests</value>
+  </data>
+  <data name="WorstDifferences" xml:space="preserve">
+    <value>{0} worst differences:</value>
+    <comment>{0} represents a number (e.g. 5)</comment>
+  </data>
+  <data name="XmlNodeParse" xml:space="preserve">
+    <value>XmlNode could not be parsed: '{0}'. Exception message: {1}</value>
+    <comment>{0} represents an unlocalized name of an XML node, {1} represents localized exception message (e.g. "Cannot load file")</comment>
+  </data>
+</root>

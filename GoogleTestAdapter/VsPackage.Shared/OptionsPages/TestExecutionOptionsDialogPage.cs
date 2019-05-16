@@ -18,9 +18,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
     {
         #region Parallelization
 
-        [Category(SettingsWrapper.CategoryParallelizationName)]
-        [DisplayName(SettingsWrapper.OptionEnableParallelTestExecution)]
-        [Description(SettingsWrapper.OptionEnableParallelTestExecutionDescription)]
+        [LocalizedCategory("CategoryParallelizationName")]
+        [LocalizedDisplayName("OptionEnableParallelTestExecution")]
+        [LocalizedDescription("OptionEnableParallelTestExecutionDescription")]
         public bool EnableParallelTestExecution
         {
             get => _enableParallelTestExecution;
@@ -28,9 +28,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _enableParallelTestExecution = SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue;
 
-        [Category(SettingsWrapper.CategoryParallelizationName)]
-        [DisplayName(SettingsWrapper.OptionMaxNrOfThreads)]
-        [Description(SettingsWrapper.OptionMaxNrOfThreadsDescription)]
+        [LocalizedCategory("CategoryParallelizationName")]
+        [LocalizedDisplayName("OptionMaxNrOfThreads")]
+        [LocalizedDescription("OptionMaxNrOfThreadsDescription")]
         public int MaxNrOfThreads
         {
             get => _maxNrOfThreads;
@@ -47,7 +47,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Run configuration
 
-        [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [LocalizedCategory("CategoryTestExecutionName")]
         [DisplayName(SettingsWrapper.OptionAdditionalPdbs)]
         [Description(SettingsWrapper.OptionAdditionalPdbsDescription)]
         public string AdditionalPdbs
@@ -74,9 +74,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _additionalPdbs = SettingsWrapper.OptionAdditionalPdbsDefaultValue;
 
-        [Category(SettingsWrapper.CategoryRunConfigurationName)]
-        [DisplayName(SettingsWrapper.OptionWorkingDir)]
-        [Description(SettingsWrapper.OptionWorkingDirDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionWorkingDir")]
+        [LocalizedDescription("OptionWorkingDirDescription")]
         public string WorkingDir
         {
             get => _workingDirectory;
@@ -84,9 +84,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _workingDirectory = SettingsWrapper.OptionWorkingDirDefaultValue;
 
-        [Category(SettingsWrapper.CategoryRunConfigurationName)]
-        [DisplayName(SettingsWrapper.OptionPathExtension)]
-        [Description(SettingsWrapper.OptionPathExtensionDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionPathExtension")]
+        [LocalizedDescription("OptionPathExtensionDescription")]
         public string PathExtension
         {
             get => _pathExtension;
@@ -94,9 +94,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
-        [Category(SettingsWrapper.CategoryRunConfigurationName)]
-        [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]
-        [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionAdditionalTestExecutionParams")]
+        [LocalizedDescription("OptionAdditionalTestExecutionParamsDescription")]
         public string AdditionalTestExecutionParams
         {
             get => _additionalTestExecutionParams;
@@ -108,9 +108,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Setup and teardown
 
-        [Category(SettingsWrapper.CategorySetupAndTeardownName)]
-        [DisplayName(SettingsWrapper.OptionBatchForTestSetup)]
-        [Description(SettingsWrapper.OptionBatchForTestSetupDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionBatchForTestSetup")]
+        [LocalizedDescription("OptionBatchForTestSetupDescription")]
         public string BatchForTestSetup
         {
             get => _batchForTestSetup;
@@ -118,9 +118,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private string _batchForTestSetup = SettingsWrapper.OptionBatchForTestSetupDefaultValue;
 
-        [Category(SettingsWrapper.CategorySetupAndTeardownName)]
-        [DisplayName(SettingsWrapper.OptionBatchForTestTeardown)]
-        [Description(SettingsWrapper.OptionBatchForTestTeardownDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionBatchForTestTeardown")]
+        [LocalizedDescription("OptionBatchForTestTeardownDescription")]
         public string BatchForTestTeardown
         {
             get => _batchForTestTeardown;
@@ -132,9 +132,9 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 
         #region Misc
 
-        [Category(SettingsWrapper.CategoryMiscName)]
-        [DisplayName(SettingsWrapper.OptionKillProcessesOnCancel)]
-        [Description(SettingsWrapper.OptionKillProcessesOnCancelDescription)]
+        [LocalizedCategory("CategoryTestExecutionName")]
+        [LocalizedDisplayName("OptionKillProcessesOnCancel")]
+        [LocalizedDescription("OptionKillProcessesOnCancelDescription")]
         public bool KillProcessesOnCancel
         {
             get => _killProcessesOnCancel;
@@ -142,7 +142,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _killProcessesOnCancel = SettingsWrapper.OptionKillProcessesOnCancelDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
+        [LocalizedCategory("CategoryMiscName")]
         [DisplayName(SettingsWrapper.OptionDebuggerKind)]
         [Description(SettingsWrapper.OptionDebuggerKindDescription)]
         [PropertyPageTypeConverter(typeof(DebuggerKindConverter))]
@@ -153,7 +153,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private DebuggerKind _debuggerKind = SettingsWrapper.OptionDebuggerKindDefaultValue;
 
-        [Category(SettingsWrapper.CategoryMiscName)]
+        [LocalizedCategory("CategoryMiscName")]
         [DisplayName(SettingsWrapper.OptionExitCodeTestCase)]
         [Description(SettingsWrapper.OptionExitCodeTestCaseDescription)]
         public string ExitCodeTestCase

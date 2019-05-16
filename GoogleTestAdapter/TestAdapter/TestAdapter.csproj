@@ -41,10 +41,17 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <FilesToLocalize Include="$(OutDir)\GoogleTestAdapter.TestAdapter.dll">
+      <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.TestAdapter.dll.lcl</TranslationFile>
+    </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.TestAdapter.dll" Condition="'$(RealSign)' == 'True'">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
+    <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning">
+      <!-- Do not have this show up in Solution Explorer in VS -->
+      <InProject>false</InProject>
+    </SignFilesDependsOn>
   </ItemGroup>
   <Choose>
     <When Condition="'$(TestAdapterFlavor)' == 'GTA'">
@@ -194,12 +201,20 @@
     <Compile Include="Helpers\ParentProcessUtils.cs" />
     <Compile Include="Helpers\TestCaseFilter.cs" />
     <Compile Include="Helpers\Throttle.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ProcessExecution\NativeDebuggedProcessExecutor.cs" />
     <Compile Include="Settings\GlobalRunSettingsProvider.cs" />
     <Compile Include="Settings\IGlobalRunSettings.cs" />
     <Compile Include="Settings\IGlobalRunSettingsInternal.cs" />
     <Compile Include="Settings\RunSettingsContainer.cs" />
     <Compile Include="Settings\RunSettingsProvider.cs" />
+    <Compile Include="Settings\TestPropertySettings.cs" />
+    <Compile Include="Settings\TestPropertySettingsContainer.cs" />
+    <Compile Include="Settings\TestPropertySettingsProvider.cs" />
     <Compile Include="TestDiscoverer.cs" />
     <Compile Include="TestExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -210,6 +225,15 @@
     <EmbeddedResource Include="GoogleTestAdapterSettings.xsd">
       <SubType>Designer</SubType>
       <LogicalName>GoogleTestAdapterSettings.xsd</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestPropertySettings.xsd">
+      <SubType>Designer</SubType>
+      <LogicalName>TestPropertySettings.xsd</LogicalName>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config">
@@ -253,4 +277,12 @@
     <StartProgram>$(DevEnvDir)CommonExtensions\Microsoft\TestWindow\vstest.console.exe</StartProgram>
     <StartArguments>"$(SolutionDir)..\SampleTests\Debug\Tests_gta.exe" /Settings:"$(SolutionDir)..\SampleTests\SampleTests.gta.runsettings" /TestCaseFilter:"DisplayName=TestMath.AddPasses" /TestAdapterPath:"$(TargetDir)"</StartArguments>
   </PropertyGroup>
+  <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'">
+    <ItemGroup>
+      <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">
+        <Authenticode>Microsoft</Authenticode>
+        <StrongName>StrongName</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
 </Project>

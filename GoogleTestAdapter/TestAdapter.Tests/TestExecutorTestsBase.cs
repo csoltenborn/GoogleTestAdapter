@@ -1,3 +1,5 @@
+﻿// This file has been modified by Microsoft on 8/2017.
+
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,8 +29,9 @@ namespace GoogleTestAdapter.TestAdapter
         protected readonly Mock<IDebuggerAttacher> MockDebuggerAttacher = new Mock<IDebuggerAttacher>();
 
         private readonly bool _parallelTestExecution;
-
         private readonly int _maxNrOfThreads;
+        private const string TestSetup = "Test setup";
+        private const string TestTeardown = "Test teardown";
 
 
         protected TestExecutorTestsBase(bool parallelTestExecution, int maxNrOfThreads)
@@ -200,10 +203,10 @@ namespace GoogleTestAdapter.TestAdapter
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogWarning(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
+                It.Is<string>(s => s.Contains(TestSetup))),
                 Times.Never);
             MockLogger.Verify(l => l.LogWarning(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestTeardown))),
+                It.Is<string>(s => s.Contains(TestTeardown))),
                 Times.AtLeastOnce());
         }
 
@@ -217,10 +220,10 @@ namespace GoogleTestAdapter.TestAdapter
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogWarning(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
+                It.Is<string>(s => s.Contains(TestSetup))),
                 Times.AtLeastOnce());
             MockLogger.Verify(l => l.LogWarning(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestTeardown))),
+                It.Is<string>(s => s.Contains(TestTeardown))),
                 Times.Never);
         }
 
@@ -231,22 +234,22 @@ namespace GoogleTestAdapter.TestAdapter
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0);
 
             MockLogger.Verify(l => l.LogInfo(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
+                It.Is<string>(s => s.Contains(TestSetup))),
                 Times.Never);
             MockLogger.Verify(l => l.LogWarning(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
+                It.Is<string>(s => s.Contains(TestSetup))),
                 Times.Never);
             MockLogger.Verify(l => l.LogError(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup))),
+                It.Is<string>(s => s.Contains(TestSetup))),
                 Times.Never);
             MockLogger.Verify(l => l.LogInfo(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestTeardown))),
+                It.Is<string>(s => s.Contains(TestTeardown))),
                 Times.Never);
             MockLogger.Verify(l => l.LogWarning(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestTeardown))),
+                It.Is<string>(s => s.Contains(TestTeardown))),
                 Times.Never);
             MockLogger.Verify(l => l.LogError(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestTeardown))),
+                It.Is<string>(s => s.Contains(TestTeardown))),
                 Times.Never);
         }
 
@@ -259,7 +262,7 @@ namespace GoogleTestAdapter.TestAdapter
             RunAndVerifyTests(TestResources.DllTests_ReleaseX86, 1, 1, 0, checkNoErrorsLogged: false);
 
             MockLogger.Verify(l => l.LogError(
-                It.Is<string>(s => s.Contains(PreparingTestRunner.TestSetup.ToLower()))),
+                It.Is<string>(s => s.Contains(TestSetup))),
                 Times.AtLeastOnce());
         }
 

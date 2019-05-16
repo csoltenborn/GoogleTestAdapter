@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
         <Identity Id="GoogleTestAdapterVSIX.e57b9720-dfde-4baa-bcb5-0f75772012b4" Version="0.1.0.0" Language="en-US" Publisher="Christian Soltenborn" />
@@ -17,7 +17,6 @@
         <InstallationTarget Version="[12.0,17.0)" Id="Microsoft.VisualStudio.Community" />
     </Installation>
     <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,4.7]" />
     </Dependencies>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="TestAdapter" Path="|TestAdapter|" />
@@ -25,9 +24,13 @@
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="VsPackage.GTA" Path="|VsPackage.GTA|" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="GoogleTestItemTemplate" d:TargetPath="|GoogleTestItemTemplate;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" Path="|NewProjectWizard|" AssemblyName="|NewProjectWizard;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="GoogleTestProjectTemplate" d:TargetPath="|GoogleTestProjectTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
         <Prerequisite Id="Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core" Version="[15.0,)" DisplayName="Visual Studio C++ core features" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.NuGet" Version="[15.0,17.0)" DisplayName="NuGet package manager" />
     </Prerequisites>
 </PackageManifest>

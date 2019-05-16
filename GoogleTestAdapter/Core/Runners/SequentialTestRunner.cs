@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 6/2017.
+﻿// This file has been modified by Microsoft on 5/2018.
 
 using System;
 using System.Collections.Generic;
@@ -105,11 +105,11 @@ namespace GoogleTestAdapter.Runners
                     _frameworkReporter.ReportTestResults(results);
                     stopwatch.Stop();
                     if (results.Length > 0)
-                        _logger.DebugInfo($"{_threadName}Reported {results.Length} test results to VS, executable: '{executable}', duration: {stopwatch.Elapsed}");
+                        _logger.DebugInfo(String.Format(Resources.ReportedTestResults, _threadName, results.Length, executable, stopwatch.Elapsed));
                 }
                 catch (TestRunCanceledException e)
                 {
-                    _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
+                    _logger.DebugInfo(String.Format(Resources.ExecutionCancelled, _threadName, e.InnerException?.Message ?? e.Message));
                     Cancel();
                 }
 
@@ -117,7 +117,7 @@ namespace GoogleTestAdapter.Runners
                 foreach (TestResult result in results)
                 {
                     if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int)result.Duration.TotalMilliseconds))
-                        _logger.DebugWarning("TestCase already in analyzer: " + result.TestCase.FullyQualifiedName);
+                        _logger.DebugWarning(String.Format(Resources.TestCaseInAnalyzer, result.TestCase.FullyQualifiedName));
                 }
             }
         }
@@ -138,16 +138,14 @@ namespace GoogleTestAdapter.Runners
 
         public static void LogExecutionError(ILogger logger, string executable, string workingDir, string arguments, Exception exception, string threadName = "")
         {
-            logger.LogError($"{threadName}Failed to run test executable '{executable}': {exception.Message}");
+            logger.LogError(String.Format(Resources.RunExecutableError, threadName, executable, exception.Message));
             if (exception is AggregateException aggregateException)
             {
                exception = aggregateException.Flatten();
             }
             logger.DebugError($@"{threadName}Exception:{Environment.NewLine}{exception}");
-            logger.LogError(
-                $"{threadName}{Strings.Instance.TroubleShootingLink}");
-            logger.LogError(
-                $"{threadName}In particular: launch command prompt, change into directory '{workingDir}', and execute the following command to make sure your tests can be run in general.{Environment.NewLine}{executable} {arguments}");
+            logger.LogError(String.Format(Common.Resources.TroubleShootingLink, threadName));
+            logger.LogError(String.Format(Resources.ExecuteSteps, threadName, workingDir, Environment.NewLine, executable, arguments));
         }
 
         private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, bool isBeingDebugged,
@@ -185,7 +183,7 @@ namespace GoogleTestAdapter.Runners
                 }
                 catch (TestRunCanceledException e)
                 {
-                    _logger.DebugInfo($"{_threadName}Execution has been canceled: {e.InnerException?.Message ?? e.Message}");
+                    _logger.DebugInfo(String.Format(Resources.ExecutionCancelled, _threadName, e.InnerException?.Message ?? e.Message));
                     Cancel();
                 }
             }
@@ -207,8 +205,8 @@ namespace GoogleTestAdapter.Runners
 
             var consoleOutput = new List<string>();
             new TestDurationSerializer().UpdateTestDurations(streamingParser.TestResults);
-            _logger.DebugInfo(
-                $"{_threadName}Reported {streamingParser.TestResults.Count} test results to VS during test execution, executable: '{executable}'");
+            _logger.DebugInfo(String.Format(Resources.ReportedResultsToVS, _threadName, streamingParser.TestResults.Count, executable));
+
             foreach (TestResult result in streamingParser.TestResults)
             {
                 if (!_schedulingAnalyzer.AddActualDuration(result.TestCase, (int) result.Duration.TotalMilliseconds))
