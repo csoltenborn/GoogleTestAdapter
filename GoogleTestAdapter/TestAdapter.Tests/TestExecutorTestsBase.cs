@@ -30,6 +30,8 @@ namespace GoogleTestAdapter.TestAdapter
 
         private readonly bool _parallelTestExecution;
         private readonly int _maxNrOfThreads;
+        private const string TestSetup = "Test setup";
+        private const string TestTeardown = "Test teardown";
 
 
         protected TestExecutorTestsBase(bool parallelTestExecution, int maxNrOfThreads)
