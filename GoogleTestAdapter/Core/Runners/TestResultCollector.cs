@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestResults;
 
 namespace GoogleTestAdapter.Runners
@@ -10,12 +11,15 @@ namespace GoogleTestAdapter.Runners
     public class TestResultCollector
     {
         private readonly ILogger _logger;
+        private readonly SettingsWrapper _settings;
+
         private readonly string _threadName;
 
-        public TestResultCollector(ILogger logger, string threadName)
+        public TestResultCollector(ILogger logger, string threadName, SettingsWrapper settings)
         {
             _logger = logger;
             _threadName = threadName;
+            _settings = settings;
         }
 
         public List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string testExecutable, string resultXmlFile, List<string> consoleOutput, TestCase crashedTestCase)
@@ -42,7 +46,7 @@ namespace GoogleTestAdapter.Runners
                 if (crashedTestCase != null)
                     CreateMissingResults(remainingTestCases, crashedTestCase, testResults);
                 else
-                    ReportSuspiciousTestCases(remainingTestCases);
+                    ReportSuspiciousTestCases(remainingTestCases, testResults);
             }
 
             return testResults;
@@ -84,25 +88,43 @@ namespace GoogleTestAdapter.Runners
             var errorStackTrace = ErrorMessageParser.CreateStackTraceEntry("crash suspect",
                 crashedTestCase.CodeFilePath, crashedTestCase.LineNumber.ToString());
 
-            foreach (TestCase testCase in testCases)
-            {
-                testResults.Add(new TestResult(testCase)
-                {
-                    ComputerName = Environment.MachineName,
-                    Outcome = TestOutcome.Skipped,
-                    ErrorMessage = errorMessage,
-                    ErrorStackTrace = errorStackTrace
-                });
-            }
+            testResults.AddRange(testCases.Select(testCase => 
+                CreateTestResult(testCase, TestOutcome.Skipped, errorMessage, errorStackTrace)));
             if (testCases.Length > 0)
                 _logger.DebugInfo($"{_threadName}Created {testCases.Length} test results for tests which were neither found in result XML file nor in console output");
         }
 
-        private void ReportSuspiciousTestCases(TestCase[] testCases)
+        private void ReportSuspiciousTestCases(TestCase[] testCases, List<TestResult> testResults)
         {
             string testCasesAsString = string.Join(Environment.NewLine, testCases.Select(tc => tc.DisplayName));
             _logger.DebugWarning(
                 $"{_threadName}{testCases.Length} test cases seem to not have been run - are you repeating a test run, but tests have changed in the meantime? Test cases:{Environment.NewLine}{testCasesAsString}");
+
+            string errorMessage = "Test case has not been run due to unkown reasons";
+            switch (_settings.MissingTestsReportMode)
+            {
+                case MissingTestsReportMode.DoNotReport:
+                    // nothing to do
+                    break;
+                case MissingTestsReportMode.ReportAsFailed:
+                    testResults.AddRange(testCases.Select(tc => CreateTestResult(tc, TestOutcome.Failed, errorMessage, null)));
+                    break;
+                case MissingTestsReportMode.ReportAsSkipped:
+                    testResults.AddRange(testCases.Select(tc => CreateTestResult(tc, TestOutcome.Skipped, errorMessage, null)));
+                    break;
+            }
+        }
+
+        private TestResult CreateTestResult(TestCase testCase, TestOutcome outcome, string errorMessage, string errorStackTrace)
+        {
+            return new TestResult(testCase)
+            {
+                ComputerName = Environment.MachineName,
+                Outcome = outcome,
+                ErrorMessage = errorMessage,
+                ErrorStackTrace = errorStackTrace
+
+            };
         }
 
     }

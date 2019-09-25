@@ -161,7 +161,7 @@ namespace GoogleTestAdapter.Runners
                 arguments.TestCases
                     .Except(streamingParser.TestResults.Select(tr => tr.TestCase))
                     .Where(tc => !tc.IsExitCodeTestCase);
-            var testResults = new TestResultCollector(_logger, _threadName)
+            var testResults = new TestResultCollector(_logger, _threadName, _settings)
                 .CollectTestResults(remainingTestCases, executable, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 

@@ -32,6 +32,7 @@
 				<UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
 				<KillProcessesOnCancel>false</KillProcessesOnCancel>
 				<ExitCodeTestCase/>
+				<MissingTestsReportMode>ReportAsFailed</MissingTestsReportMode>
 			</Settings>
 		</SolutionSettings>
 		<ProjectSettings/>

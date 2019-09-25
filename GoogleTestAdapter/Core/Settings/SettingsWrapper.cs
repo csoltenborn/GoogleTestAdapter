@@ -452,6 +452,14 @@ namespace GoogleTestAdapter.Settings
             }
         }
 
+        public const string OptionMissingTestsReportMode = "Behavior if discovered tests can not be run";
+        public const string OptionMissingTestsReportModeDescription =
+            "If a test can not be run (e.g. since a dependency has been removed since discovery without VS noticing), this option allows to configure how that test will be reported to the VS test framework.";
+        public const MissingTestsReportMode OptionMissingTestsReportModeDefaultValue = MissingTestsReportMode.ReportAsFailed;
+
+        public virtual MissingTestsReportMode MissingTestsReportMode =>
+            _currentSettings.MissingTestsReportMode ?? OptionMissingTestsReportModeDefaultValue;
+
         #endregion
 
         #region TestDiscoveryOptionsPage

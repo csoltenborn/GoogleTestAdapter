@@ -115,6 +115,9 @@ namespace GoogleTestAdapter.Settings
         public string ExitCodeTestCase { get; set; }
         public bool ShouldSerializeExitCodeTestCase() { return ExitCodeTestCase != null; }
 
+        public MissingTestsReportMode? MissingTestsReportMode { get; set; }
+        public bool ShouldSerializeMissingTestsReportMode() { return MissingTestsReportMode != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
