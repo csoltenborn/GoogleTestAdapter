@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Tests.Common;
@@ -12,6 +13,7 @@ using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 namespace GoogleTestAdapter.TestAdapter
 {
     [TestClass]
+    // ReSharper disable once InconsistentNaming
     public class TestExecutorSequentialTests_FrameworkDebugging : TestExecutorSequentialTests
     {
         [TestInitialize]
@@ -59,27 +61,112 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public override void RunTests_CrashingX64Tests_CorrectTestResults()
         {
-            // test crashes, no info available if debugged via framework 
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.DoNotReport);
+
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 0, 0, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX64Tests_CorrectTestResults_ReportAsFailed()
+        {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.ReportAsFailed);
+
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 0, 6, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX64Tests_CorrectTestResults_ReportAsSkipped()
+        {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.ReportAsSkipped);
+
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 0, 0, 0, 6);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX64Tests_CorrectTestResults_ReportAsNotFound()
+        {
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 0, 0, 0, nrOfNotFoundTests: 6);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public override void RunTests_CrashingX86Tests_CorrectTestResults()
         {
-            // test crashes, no info available if debugged via framework 
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.DoNotReport);
+
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 0, 0, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX86Tests_CorrectTestResults_ReportAsFailed()
+        {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.ReportAsFailed);
+
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 0, 6, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX86Tests_CorrectTestResults_ReportAsSkipped()
+        {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.ReportAsSkipped);
+
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 0, 0, 0, 6);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_CrashingX86Tests_CorrectTestResults_ReportAsNotFound()
+        {
+            RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 0, 0, 0, nrOfNotFoundTests: 6);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public override void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.DoNotReport);
+
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
-            // test crashes, no info available if debugged via framework 
-            CheckMockInvocations(0, 0, 0, 0);
+            CheckMockInvocations(0, 0, 0, 0, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_HardCrashingX86Tests_CorrectTestResults_ReportAsFailed()
+        {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.ReportAsFailed);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            CheckMockInvocations(0, 6, 0, 0, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_HardCrashingX86Tests_CorrectTestResults_ReportAsSkipped()
+        {
+            MockOptions.Setup(o => o.MissingTestsReportMode).Returns(MissingTestsReportMode.ReportAsSkipped);
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            CheckMockInvocations(0, 0, 0, 6, 0);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_HardCrashingX86Tests_CorrectTestResults_ReportAsNotFound()
+        {
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            CheckMockInvocations(0, 0, 0, 0, 6);
         }
 
         #region Method stubs for code coverage

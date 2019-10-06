@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using Microsoft.VisualStudio.Shell;
@@ -162,6 +163,17 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set => SetAndNotify(ref _exitCodeTestCase, value);
         }
         private string _exitCodeTestCase = SettingsWrapper.OptionExitCodeTestCaseDefaultValue;
+
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionMissingTestsReportMode)]
+        [Description(SettingsWrapper.OptionMissingTestsReportModeDescription)]
+        [PropertyPageTypeConverter(typeof(MissingTestsReportModeConverter))]
+        public MissingTestsReportMode MissingTestsReportMode
+        {
+            get => _missingTestsReportMode;
+            set => SetAndNotify(ref _missingTestsReportMode, value);
+        }
+        private MissingTestsReportMode _missingTestsReportMode = SettingsWrapper.OptionMissingTestsReportModeDefaultValue;
 
         #endregion
 
