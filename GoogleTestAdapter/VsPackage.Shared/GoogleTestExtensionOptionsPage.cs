@@ -278,6 +278,7 @@ namespace GoogleTestAdapter.VsPackage
                 ParallelTestExecution = _testExecutionOptions.EnableParallelTestExecution,
                 MaxNrOfThreads = _testExecutionOptions.MaxNrOfThreads,
                 DebuggerKind = _testExecutionOptions.DebuggerKind,
+                MissingTestsReportMode = _testExecutionOptions.MissingTestsReportMode,
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
                 SolutionDir = solutionDir,

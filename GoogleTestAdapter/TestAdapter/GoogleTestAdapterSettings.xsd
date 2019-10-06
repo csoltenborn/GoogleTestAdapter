@@ -137,6 +137,15 @@
 		  </xsd:simpleType>
       </xsd:element>
       <xsd:element name="ExitCodeTestCase" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="MissingTestsReportMode" minOccurs="0">
+	      <xsd:simpleType>
+		      <xsd:restriction base="xsd:string">
+			      <xsd:enumeration value ="DoNotReport"/>
+			      <xsd:enumeration value ="ReportAsSkipped"/>
+			      <xsd:enumeration value ="ReportAsFailed"/>
+		      </xsd:restriction>
+	      </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="SkipOriginCheck"              minOccurs="0" type="xsd:boolean">
         <xsd:annotation>
           <xsd:documentation>Only for internal use</xsd:documentation>

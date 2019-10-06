@@ -53,6 +53,7 @@ namespace GoogleTestAdapter.Settings
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
         string ExitCodeTestCase { get; set; }
+        MissingTestsReportMode? MissingTestsReportMode { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
         DebuggerKind? DebuggerKind { get; set; }
@@ -100,6 +101,7 @@ namespace GoogleTestAdapter.Settings
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
             self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
+            self.MissingTestsReportMode = self.MissingTestsReportMode ?? other.MissingTestsReportMode;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
             self.DebuggerKind = self.DebuggerKind ?? other.DebuggerKind;
