@@ -27,6 +27,11 @@
         {
           return Regex.Replace(text, "([0-9A-F]{8}){1,2} pointing to", "${MemoryLocation} pointing to", RegexOptions.IgnoreCase);
         }
+		
+		public string toLower(string text)
+		{
+			return text.ToLower();
+		}
     ]]>
   </msxsl:script>
   
@@ -73,7 +78,7 @@
 
   <xsl:template match="ms:StackTrace">
     <StackTrace>
-      <xsl:value-of select="regex:replace(., '[a-z]:\\+(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_:line \d+)', '$(Directory)\$1')" />
+      <xsl:value-of select="regex:toLower(regex:replace(., '[a-z]:\\+(?:_DIR_\\)*(sampletests\\(?:_DIR_\\)*_FILE_:line \d+)', '$(Directory)\$1'))" />
       <xsl:apply-templates />
     </StackTrace>
   </xsl:template>
