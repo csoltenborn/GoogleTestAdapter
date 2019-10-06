@@ -10,6 +10,12 @@ namespace GoogleTestAdapter.Runners
 {
     public class TestResultCollector
     {
+        private static readonly IReadOnlyList<string> TestsNotRunCauses = new List<string>
+        {
+            "A test run is repeated, but tests have changed in the meantime",
+            "A test dependency has been removed or changed without Visual Studio noticing"
+        };
+
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
 
@@ -96,22 +102,34 @@ namespace GoogleTestAdapter.Runners
 
         private void ReportSuspiciousTestCases(TestCase[] testCases, List<TestResult> testResults)
         {
+            string causesAsString = $" - possible causes:{Environment.NewLine}{string.Join(Environment.NewLine, TestsNotRunCauses.Select(s => $"- {s}"))}";
             string testCasesAsString = string.Join(Environment.NewLine, testCases.Select(tc => tc.DisplayName));
-            _logger.DebugWarning(
-                $"{_threadName}{testCases.Length} test cases seem to not have been run - are you repeating a test run, but tests have changed in the meantime? Test cases:{Environment.NewLine}{testCasesAsString}");
 
-            string errorMessage = "Test case has not been run due to unkown reasons";
+            _logger.DebugWarning($"{_threadName}{testCases.Length} test cases seem to not have been run{causesAsString}");
+            _logger.VerboseInfo($"{_threadName}Test cases:{Environment.NewLine}{testCasesAsString}");
+
+            TestOutcome? testOutcome = GetTestOutcomeOfMissingTests();
+            if (testOutcome.HasValue)
+            {
+                string errorMessage = $"Test case has not been run{causesAsString}";
+                testResults.AddRange(testCases.Select(tc => CreateTestResult(tc, testOutcome.Value, errorMessage, null)));
+            }
+        }
+
+        private TestOutcome? GetTestOutcomeOfMissingTests()
+        {
             switch (_settings.MissingTestsReportMode)
             {
                 case MissingTestsReportMode.DoNotReport:
-                    // nothing to do
-                    break;
+                    return null;
                 case MissingTestsReportMode.ReportAsFailed:
-                    testResults.AddRange(testCases.Select(tc => CreateTestResult(tc, TestOutcome.Failed, errorMessage, null)));
-                    break;
+                    return TestOutcome.Failed;
                 case MissingTestsReportMode.ReportAsSkipped:
-                    testResults.AddRange(testCases.Select(tc => CreateTestResult(tc, TestOutcome.Skipped, errorMessage, null)));
-                    break;
+                    return TestOutcome.Skipped;
+                case MissingTestsReportMode.ReportAsNotFound:
+                    return TestOutcome.NotFound;
+                default:
+                    throw new InvalidOperationException($"Unknown {nameof(MissingTestsReportMode)}: {_settings.MissingTestsReportMode}");
             }
         }
 

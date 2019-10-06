@@ -7,6 +7,7 @@ namespace GoogleTestAdapter.Common
     public enum MissingTestsReportMode
     {
         DoNotReport,
+        ReportAsNotFound,
         ReportAsSkipped,
         ReportAsFailed
     }
@@ -14,12 +15,14 @@ namespace GoogleTestAdapter.Common
     public class MissingTestsReportModeConverter : EnumConverterBase<MissingTestsReportMode>
     {
         public const string DoNotReport = "Do not report";
+        public const string ReportAsNotFound = "Report as not found";
         public const string ReportAsSkipped = "Report as skipped";
         public const string ReportAsFailed = "Report as failed";
 
         public MissingTestsReportModeConverter() : base(new Dictionary<MissingTestsReportMode, string>
         {
             { MissingTestsReportMode.DoNotReport, DoNotReport},
+            { MissingTestsReportMode.ReportAsNotFound, ReportAsNotFound},
             { MissingTestsReportMode.ReportAsSkipped, ReportAsSkipped},
             { MissingTestsReportMode.ReportAsFailed, ReportAsFailed},
         }) {}
