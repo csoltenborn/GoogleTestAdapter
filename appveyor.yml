@@ -1,6 +1,6 @@
 version: 0.16.1.{build}
 os: 
-- Visual Studio 2019
+- Visual Studio 2017
 configuration: Release
 platform: Any CPU
 environment:
