@@ -141,6 +141,7 @@
 	      <xsd:simpleType>
 		      <xsd:restriction base="xsd:string">
 			      <xsd:enumeration value ="DoNotReport"/>
+			      <xsd:enumeration value ="ReportAsNotFound"/>
 			      <xsd:enumeration value ="ReportAsSkipped"/>
 			      <xsd:enumeration value ="ReportAsFailed"/>
 		      </xsd:restriction>
