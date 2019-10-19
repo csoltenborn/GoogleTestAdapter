@@ -19,6 +19,7 @@ namespace GoogleTestAdapter.Settings
         private readonly SettingsPrinter _settingsPrinter;
 
         public RegexTraitParser RegexTraitParser { private get; set; }
+        public EnvironmentVariablesParser EnvironmentVariablesParser { private get; set; }
 
         private HelperFilesCache _cache;
         public HelperFilesCache HelperFilesCache
@@ -55,7 +56,8 @@ namespace GoogleTestAdapter.Settings
             return new SettingsWrapper(_settingsContainer, _solutionDir)
             {
                 RegexTraitParser = RegexTraitParser,
-                HelperFilesCache = HelperFilesCache
+                HelperFilesCache = HelperFilesCache,
+                EnvironmentVariablesParser = EnvironmentVariablesParser
             };
         }
 
@@ -369,6 +371,25 @@ namespace GoogleTestAdapter.Settings
         public string GetPathExtension(string executable)
             => _placeholderReplacer.ReplacePathExtensionPlaceholders(PathExtension, executable);
 
+
+        public const string OptionEnvironmentVariables = "Environment variables";
+        public const string OptionEnvironmentVariablesDescription = "Allows to provide environment variables which will be added to a test executable's run context. Environment variables are separated by '" 
+                                                                    + EnvironmentVariablesParser.Separator
+                                                                    + "'.\nExample: MyVar=MyValue" + EnvironmentVariablesParser.Separator + "MyDir=" + PlaceholderReplacer.TestDirPlaceholder 
+                                                                    + "\n" + PlaceholderReplacer.EnvironmentPlaceholders;
+        public const string OptionEnvironmentVariablesDefaultValue = "";
+
+        public virtual string EnvironmentVariables =>
+            _currentSettings.EnvironmentVariables ?? OptionEnvironmentVariablesDefaultValue;
+
+        public IDictionary<string, string> GetEnvironmentVariablesForDiscovery(string executable)
+            => EnvironmentVariablesParser.ParseEnvironmentVariablesString(
+                _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForDiscovery(EnvironmentVariables, executable));
+
+        public IDictionary<string, string> GetEnvironmentVariablesForExecution(string executable, string testDirectory, int threadId) 
+            => EnvironmentVariablesParser.ParseEnvironmentVariablesString(
+                _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForExecution(EnvironmentVariables, executable, testDirectory, threadId));
+        
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
         public const string OptionAdditionalTestExecutionParamsDescription =

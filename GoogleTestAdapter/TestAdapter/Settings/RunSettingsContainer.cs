@@ -195,6 +195,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             ValidateOne(nameof(settings.TestDiscoveryRegex), settings.TestDiscoveryRegex, Utils.ValidateRegex);
             ValidateOne(nameof(settings.TraitsRegexesBefore), settings.TraitsRegexesBefore, Utils.ValidateTraitRegexes);
             ValidateOne(nameof(settings.TraitsRegexesAfter), settings.TraitsRegexesAfter, Utils.ValidateTraitRegexes);
+            ValidateOne(nameof(settings.EnvironmentVariables), settings.EnvironmentVariables, Utils.ValidateEnvironmentVariables);
             ValidateOne(nameof(settings.ShuffleTestsSeed), settings.ShuffleTestsSeed, GoogleTestConstants.ValidateShuffleTestsSeedValue);
         }
 

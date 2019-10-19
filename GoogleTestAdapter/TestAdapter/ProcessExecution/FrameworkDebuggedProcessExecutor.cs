@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension,
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, IDictionary<string, string> environmentVariables,
             Action<string> reportOutputLine)
         {
             if (reportOutputLine != null)
@@ -37,9 +37,8 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 throw new InvalidOperationException();
             }
 
-            IDictionary<string, string> envVariables = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(pathExtension))
-                envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                environmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
 
             _logger.DebugInfo($"Attaching debugger to '{command}' via {DebuggerKind.VsTestFramework} engine");
             if (_printTestOutput)
@@ -48,7 +47,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     $"Note that due to restrictions of the VsTest framework, the test executable's output can not be displayed in the test console when debugging tests. Use '{SettingsWrapper.OptionDebuggerKind}' option to overcome this problem.'");
             }
 
-            _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, envVariables);
+            _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, environmentVariables);
 
             ProcessWaiter waiter;
             using (var process = Process.GetProcessById(_processId.Value))

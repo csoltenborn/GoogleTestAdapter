@@ -37,6 +37,9 @@ namespace GoogleTestAdapter.Settings
         public virtual string PathExtension { get; set; }
         public bool ShouldSerializePathExtension() { return PathExtension != null; }
 
+        public virtual string EnvironmentVariables { get; set; }
+        public bool ShouldSerializeEnvironmentVariables() { return EnvironmentVariables != null; }
+
         public virtual bool? CatchExceptions { get; set; }
         public bool ShouldSerializeCatchExceptions() { return CatchExceptions != null; }
 

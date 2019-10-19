@@ -374,11 +374,11 @@ namespace GoogleTestAdapter
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.Tests_ReleaseX86);
 
             var abcdTest = testCases.Single(tc => tc.DisplayName == "abcd.t");
-            abcdTest.LineNumber.Should().Be(156);
+            abcdTest.LineNumber.Should().Be(167);
             var bbcdTest = testCases.Single(tc => tc.DisplayName == "bbcd.t");
-            bbcdTest.LineNumber.Should().Be(161);
+            bbcdTest.LineNumber.Should().Be(172);
             var bcdTest = testCases.Single(tc => tc.DisplayName == "bcd.t");
-            bcdTest.LineNumber.Should().Be(166);
+            bcdTest.LineNumber.Should().Be(177);
         }
 
         [TestMethod]

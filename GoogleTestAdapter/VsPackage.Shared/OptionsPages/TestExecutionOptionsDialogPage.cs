@@ -96,6 +96,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
         [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [DisplayName(SettingsWrapper.OptionEnvironmentVariables)]
+        [Description(SettingsWrapper.OptionEnvironmentVariablesDescription)]
+        public string EnvironmentVariables
+        {
+            get => _environmentVariables;
+            set
+            {
+                Utils.ValidateEnvironmentVariables(value);
+                SetAndNotify(ref _environmentVariables, value);
+            }
+        }
+        private string _environmentVariables = SettingsWrapper.OptionEnvironmentVariablesDefaultValue;
+
+        [Category(SettingsWrapper.CategoryRunConfigurationName)]
         [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]
         [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams

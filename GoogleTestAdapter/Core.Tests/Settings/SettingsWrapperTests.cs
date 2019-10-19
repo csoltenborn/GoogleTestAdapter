@@ -33,6 +33,7 @@ namespace GoogleTestAdapter.Settings
             TheOptions = new SettingsWrapper(containerMock.Object)
             {
                 RegexTraitParser = new RegexTraitParser(TestEnvironment.Logger),
+                EnvironmentVariablesParser = new EnvironmentVariablesParser(TestEnvironment.Logger),
                 HelperFilesCache = new HelperFilesCache(TestEnvironment.Logger)
             };
         }
@@ -48,7 +49,7 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void NrOfTestRepitions_InvalidValue_ReturnsDefaultValue()
+        public void NrOfTestRepetitions_InvalidValue_ReturnsDefaultValue()
         {
             MockXmlOptions.Setup(o => o.NrOfTestRepetitions).Returns(-2);
             TheOptions.NrOfTestRepetitions.Should().Be(SettingsWrapper.OptionNrOfTestRepetitionsDefaultValue);
@@ -631,6 +632,96 @@ namespace GoogleTestAdapter.Settings
             });
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void EnvironmentVariables_Empty_ReturnsEmptyDictionary()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("");
+
+            var envVars = TheOptions.GetEnvironmentVariablesForDiscovery("theExecutable");
+            envVars.Should().BeEmpty();
+
+            envVars = TheOptions.GetEnvironmentVariablesForExecution("theExecutable", "theTestDirectory", 42);
+            envVars.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void EnvironmentVariables_SingleKeyValuePair_ReturnsDictionaryWithThatPair()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("MyVar=MyValue");
+
+            var envVars = TheOptions.GetEnvironmentVariablesForDiscovery("theExecutable");
+            envVars.Should().HaveCount(1);
+            envVars["MyVar"].Should().Be("MyValue");
+
+            envVars = TheOptions.GetEnvironmentVariablesForExecution("theExecutable", "theTestDirectory", 42);
+            envVars.Should().HaveCount(1);
+            envVars["MyVar"].Should().Be("MyValue");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void EnvironmentVariables_SinglePairWithEmptyValue_ReturnsDictionaryWithThatPair()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("MyVar=");
+
+            var envVars = TheOptions.GetEnvironmentVariablesForDiscovery("theExecutable");
+            envVars.Should().HaveCount(1);
+            envVars["MyVar"].Should().BeEmpty();
+
+            envVars = TheOptions.GetEnvironmentVariablesForExecution("theExecutable", "theTestDirectory", 42);
+            envVars.Should().HaveCount(1);
+            envVars["MyVar"].Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void EnvironmentVariables_SinglePairWithoutValue_ReturnsDictionaryWithThatPair()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("MyVar");
+
+            var envVars = TheOptions.GetEnvironmentVariablesForDiscovery("theExecutable");
+            envVars.Should().BeEmpty();
+
+            envVars = TheOptions.GetEnvironmentVariablesForExecution("theExecutable", "theTestDirectory", 42);
+            envVars.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void EnvironmentVariables_SinglePairWithEqualsSignInValue_ReturnsDictionaryWithThatPair()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("MyVar=A=B");
+
+            var envVars = TheOptions.GetEnvironmentVariablesForDiscovery("theExecutable");
+            envVars.Should().HaveCount(1);
+            envVars["MyVar"].Should().Be("A=B");
+
+            envVars = TheOptions.GetEnvironmentVariablesForExecution("theExecutable", "theTestDirectory", 42);
+            envVars.Should().HaveCount(1);
+            envVars["MyVar"].Should().Be("A=B");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void EnvironmentVariables_SeveralPairs_AreAllReturned()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("MyVar=A=B//||//MyOtherVar==//||//MyLastVar=Foo///||//");
+
+            var envVars = TheOptions.GetEnvironmentVariablesForDiscovery("theExecutable");
+            envVars.Should().HaveCount(3);
+            envVars["MyVar"].Should().Be("A=B");
+            envVars["MyOtherVar"].Should().Be("=");
+            envVars["MyLastVar"].Should().Be("Foo/");
+
+            envVars = TheOptions.GetEnvironmentVariablesForExecution("theExecutable", "theTestDirectory", 42);
+            envVars.Should().HaveCount(3);
+            envVars["MyVar"].Should().Be("A=B");
+            envVars["MyOtherVar"].Should().Be("=");
+            envVars["MyLastVar"].Should().Be("Foo/");
+        }
+
         private SettingsWrapper CreateSettingsWrapper(string solutionWorkdir, params string[] projects)
         {
             var containerMock = new Mock<IGoogleTestAdapterSettingsContainer>();
@@ -647,6 +738,7 @@ namespace GoogleTestAdapter.Settings
             return new SettingsWrapper(containerMock.Object)
             {
                 RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                EnvironmentVariablesParser = new EnvironmentVariablesParser(MockLogger.Object),
                 HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }

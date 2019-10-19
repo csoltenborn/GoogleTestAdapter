@@ -72,6 +72,7 @@ namespace GoogleTestAdapter.TestCases
 
             string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
             var finalParams = GetDiscoveryParams();
+            var environmentVariables = _settings.GetEnvironmentVariablesForDiscovery(_executable);
             try
             {
                 int processExitCode = ExecutionFailed;
@@ -92,6 +93,7 @@ namespace GoogleTestAdapter.TestCases
                         finalParams,
                         workingDir,
                         _settings.GetPathExtension(_executable),
+                        environmentVariables,
                         OnReportOutputLine);
                     _logger.VerboseInfo($"Finished execution of {_executable}");
                 });

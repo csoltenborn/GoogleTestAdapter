@@ -8,6 +8,7 @@ TheFixture.AddPassesWithTraits2
 TheFixture.AddPassesWithTraits3
 CommandArgs.TestDirectoryIsSet
 WorkingDir.IsSolutionDirectory
+EnvironmentVariable.IsSet
 TestMath.AddFails
 TestMath.AddPasses
 TestMath.Crash
