@@ -40,10 +40,10 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Tests_DebugX64 = SampleTestsBuildDir + @"Debug-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64_Output = TestdataDir + @"Tests_gta_exe_output.txt";
-        public const int NrOfTests = 108;
+        public const int NrOfTests = 109;
         public const int NrOfPassingTests = 53;
-        public const int NrOfFailingTests = 55;
-        public const int NrOfGtest170CompatibleTests = 104;
+        public const int NrOfFailingTests = 56;
+        public const int NrOfGtest170CompatibleTests = 105;
 
         public static readonly string LoadTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LoadTests_gta.exe");
         public const string LoadTests_Generated = TestdataDir + @"LoadTests\GeneratedLoadTests_gta.exe";

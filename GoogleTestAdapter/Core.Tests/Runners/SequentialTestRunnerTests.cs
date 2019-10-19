@@ -83,6 +83,22 @@ namespace GoogleTestAdapter.Runners
                 It.Is<IEnumerable<TestResult>>(tr => CheckSingleResultHasOutcome(tr, TestOutcome.Passed))), Times.Once);
         }
 
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_EnvironmentVariableSetForSolution_TestPasses()
+        {
+            TestCase testCase = TestDataCreator.GetTestCases("EnvironmentVariable.IsSet").First();
+            var settings = CreateSettings(PlaceholderReplacer.SolutionDirPlaceholder, null, "MYENVVAR=MyValue");
+
+            var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
+
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockFrameworkReporter.Verify(r => r.ReportTestResults(
+                It.Is<IEnumerable<TestResult>>(tr => CheckSingleResultHasOutcome(tr, TestOutcome.Passed))), Times.Once);
+        }
+
         private void DoRunCancelingTests(bool killProcesses, int lower, int upper)
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
@@ -106,13 +122,14 @@ namespace GoogleTestAdapter.Runners
             stopwatch.ElapsedMilliseconds.Should().BeLessThan(upper); // 2nd test should not be executed 
         }
 
-        private SettingsWrapper CreateSettings(string solutionWorkingDir, string projectWorkingDir)
+        private SettingsWrapper CreateSettings(string solutionWorkingDir, string projectWorkingDir, string environmentVariable = null)
         {
             var mockContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
 
+            var solutionSettings = new RunSettings {WorkingDir = solutionWorkingDir};
             mockContainer
                 .Setup(c => c.SolutionSettings)
-                .Returns(new RunSettings { WorkingDir = solutionWorkingDir });
+                .Returns(solutionSettings);
 
             if (projectWorkingDir != null)
             {
@@ -121,9 +138,15 @@ namespace GoogleTestAdapter.Runners
                     .Returns(new RunSettings { WorkingDir = projectWorkingDir });
             }
 
+            if (environmentVariable != null)
+            {
+                solutionSettings.EnvironmentVariables = environmentVariable;
+            }
+
             return new SettingsWrapper(mockContainer.Object, TestResources.SampleTestsSolutionDir)
             {
                 RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                EnvironmentVariablesParser = new EnvironmentVariablesParser(MockLogger.Object),
                 HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }

@@ -48,6 +48,19 @@ namespace GoogleTestAdapter.Helpers
             Test_WithSimpleCommand_ReturnsOutputOfCommand();
         }
 
+        [TestMethod]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
+        public void ExecuteProcessBlocking_SetEnvVariable_EnvVariableIsSet()
+        {
+            Test_WithEnvSetting_EnvVariableIsSet();
+        }
+
+        [TestMethod]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
+        public void ExecuteProcessBlocking_SetExistingEnvVariable_EnvVariableIsOverridden()
+        {
+            Test_WithOverridingEnvSetting_EnvVariableHasNewValue();
+        }
     }
 
 }

@@ -2,12 +2,13 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace GoogleTestAdapter.ProcessExecution.Contracts
 {
     public interface IProcessExecutor
     {
-        int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine);
+        int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension,  IDictionary<string, string> environmentVariables, Action<string> reportOutputLine);
         void Cancel();
     }
 
@@ -22,7 +23,7 @@ namespace GoogleTestAdapter.ProcessExecution.Contracts
             }
 
             string command = Path.Combine(Environment.SystemDirectory, "cmd.exe");
-            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, pathExtension,
+            return executor.ExecuteCommandBlocking(command, $"/C \"{batchFile}\" {parameters}", workingDir, pathExtension, new Dictionary<string, string>(),
                 reportOutputLine);
         }
     }

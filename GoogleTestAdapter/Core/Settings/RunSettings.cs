@@ -37,6 +37,9 @@ namespace GoogleTestAdapter.Settings
         public virtual string PathExtension { get; set; }
         public bool ShouldSerializePathExtension() { return PathExtension != null; }
 
+        public virtual string EnvironmentVariables { get; set; }
+        public bool ShouldSerializeEnvironmentVariables() { return EnvironmentVariables != null; }
+
         public virtual bool? CatchExceptions { get; set; }
         public bool ShouldSerializeCatchExceptions() { return CatchExceptions != null; }
 
@@ -114,6 +117,9 @@ namespace GoogleTestAdapter.Settings
 
         public string ExitCodeTestCase { get; set; }
         public bool ShouldSerializeExitCodeTestCase() { return ExitCodeTestCase != null; }
+
+        public MissingTestsReportMode? MissingTestsReportMode { get; set; }
+        public bool ShouldSerializeMissingTestsReportMode() { return MissingTestsReportMode != null; }
 
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }

@@ -87,6 +87,13 @@ namespace GoogleTestAdapter.Helpers
             parser.ParseTraitsRegexesString(value, ignoreErrors: false);
         }
 
+        public static void ValidateEnvironmentVariables(string value)
+        {
+            // The parser will throw if the value is not well formed.
+            var parser = new EnvironmentVariablesParser(null);
+            parser.ParseEnvironmentVariablesString(value, ignoreErrors: false);
+        }
+
         public static bool BinaryFileContainsStrings(string executable, Encoding encoding, IEnumerable<string> strings)
         {
             byte[] file = File.ReadAllBytes(executable);

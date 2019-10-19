@@ -40,6 +40,17 @@ TEST(WorkingDir, IsSolutionDirectory)
 	ASSERT_TRUE(ends_with(working_directory, "SampleTests")) << "working_directory is " << working_directory;
 }
 
+TEST(EnvironmentVariable, IsSet)
+{
+	char* buf = nullptr;
+	size_t sz = 0;
+	ASSERT_EQ(0, _dupenv_s(&buf, &sz, "MYENVVAR"));
+	ASSERT_TRUE(buf != nullptr);
+    ASSERT_EQ(std::string(buf), "MyValue");
+	free(buf);
+}
+
+
 TEST(TestMath, AddFails)
 {
 	EXPECT_EQ(1000, Add(10, 10));

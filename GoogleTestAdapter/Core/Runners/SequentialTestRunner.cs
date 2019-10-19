@@ -55,12 +55,14 @@ namespace GoogleTestAdapter.Runners
                 {
                     string workingDir = _settings.GetWorkingDirForExecution(executable, _testDir, _threadId);
                     string userParameters = _settings.GetUserParametersForExecution(executable, _testDir, _threadId);
+                    IDictionary<string, string> environmentVariables = _settings.GetEnvironmentVariablesForExecution(executable, _testDir, _threadId);
 
                     RunTestsFromExecutable(
                         executable,
                         workingDir,
                         groupedTestCases[executable],
                         userParameters,
+                        environmentVariables,
                         isBeingDebugged,
                         processExecutorFactory);
                 });
@@ -82,7 +84,7 @@ namespace GoogleTestAdapter.Runners
 
         // ReSharper disable once UnusedParameter.Local
         private void RunTestsFromExecutable(string executable, string workingDir,
-            IEnumerable<TestCase> testCasesToRun, string userParameters,
+            IEnumerable<TestCase> testCasesToRun, string userParameters, IDictionary<string, string> environmentVariables,
             bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory)
         {
             string resultXmlFile = Path.GetTempFileName();
@@ -96,7 +98,7 @@ namespace GoogleTestAdapter.Runners
                     break;
                 }
                 var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, _frameworkReporter);
-                var results = RunTests(executable, workingDir, isBeingDebugged, processExecutorFactory, arguments, resultXmlFile, streamingParser).ToArray();
+                var results = RunTests(executable, workingDir, isBeingDebugged, processExecutorFactory, arguments, environmentVariables, resultXmlFile, streamingParser).ToArray();
 
                 try
                 {
@@ -123,11 +125,11 @@ namespace GoogleTestAdapter.Runners
         }
 
         private IEnumerable<TestResult> RunTests(string executable, string workingDir, bool isBeingDebugged,
-            IDebuggedProcessExecutorFactory processExecutorFactory, CommandLineGenerator.Args arguments, string resultXmlFile, StreamingStandardOutputTestResultParser streamingParser)
+            IDebuggedProcessExecutorFactory processExecutorFactory, CommandLineGenerator.Args arguments, IDictionary<string, string> environmentVariables, string resultXmlFile, StreamingStandardOutputTestResultParser streamingParser)
         {
             try
             {
-                return TryRunTests(executable, workingDir, isBeingDebugged, processExecutorFactory, arguments, resultXmlFile, streamingParser);
+                return TryRunTests(executable, workingDir, isBeingDebugged, processExecutorFactory, arguments, environmentVariables, resultXmlFile, streamingParser);
             }
             catch (Exception e)
             {
@@ -151,27 +153,36 @@ namespace GoogleTestAdapter.Runners
         }
 
         private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, bool isBeingDebugged,
-            IDebuggedProcessExecutorFactory processExecutorFactory, CommandLineGenerator.Args arguments, string resultXmlFile,
+            IDebuggedProcessExecutorFactory processExecutorFactory, CommandLineGenerator.Args arguments, IDictionary<string, string> environmentVariables, string resultXmlFile,
             StreamingStandardOutputTestResultParser streamingParser)
         {
             var consoleOutput = 
-                RunTestExecutable(executable, workingDir, arguments,isBeingDebugged, processExecutorFactory, streamingParser);
+                RunTestExecutable(executable, workingDir, arguments, environmentVariables, isBeingDebugged, processExecutorFactory, streamingParser);
 
             var remainingTestCases =
                 arguments.TestCases
                     .Except(streamingParser.TestResults.Select(tr => tr.TestCase))
                     .Where(tc => !tc.IsExitCodeTestCase);
-            var testResults = new TestResultCollector(_logger, _threadName)
+            var testResults = new TestResultCollector(_logger, _threadName, _settings)
                 .CollectTestResults(remainingTestCases, executable, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 
             return testResults;
         }
 
-        private List<string> RunTestExecutable(string executable, string workingDir, CommandLineGenerator.Args arguments, bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory,
+        private List<string> RunTestExecutable(string executable, string workingDir, CommandLineGenerator.Args arguments, IDictionary<string, string> environmentVariables, bool isBeingDebugged, IDebuggedProcessExecutorFactory processExecutorFactory,
             StreamingStandardOutputTestResultParser streamingParser)
         {
             string pathExtension = _settings.GetPathExtension(executable);
+            if (!string.IsNullOrEmpty(pathExtension))
+            {
+                if (environmentVariables.ContainsKey("PATH") && !string.IsNullOrEmpty(environmentVariables["PATH"]))
+                {
+                    _logger.LogWarning($"Executable {executable}: Both a path extension and a PATH environment variable have been provided! The PATH environment variable will be ignored.");
+                    environmentVariables.Remove("PATH");
+                }
+            }
+
             bool isTestOutputAvailable = !isBeingDebugged || _settings.DebuggerKind > DebuggerKind.VsTestFramework;
             bool printTestOutput = _settings.PrintTestOutput &&
                                    !_settings.ParallelTestExecution &&
@@ -198,7 +209,7 @@ namespace GoogleTestAdapter.Runners
                         printTestOutput, _logger)
                 : processExecutorFactory.CreateExecutor(printTestOutput, _logger);
             int exitCode = _processExecutor.ExecuteCommandBlocking(
-                executable, arguments.CommandLine, workingDir, pathExtension,
+                executable, arguments.CommandLine, workingDir, pathExtension, environmentVariables,
                 isTestOutputAvailable ? (Action<string>) OnNewOutputLine : null);
             streamingParser.Flush();
 
