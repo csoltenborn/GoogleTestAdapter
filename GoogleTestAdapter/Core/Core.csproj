@@ -53,6 +53,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\EnvironmentVariablesParser.cs" />
     <Compile Include="ProcessExecution\Contracts\IDebuggedProcessExecutor.cs" />
     <Compile Include="ProcessExecution\Contracts\IDebuggedProcessExecutorFactory.cs" />
     <Compile Include="ProcessExecution\Contracts\IProcessExecutor.cs" />

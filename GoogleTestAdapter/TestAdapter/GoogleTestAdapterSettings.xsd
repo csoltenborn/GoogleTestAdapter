@@ -35,6 +35,7 @@
       </xsd:element>
       <xsd:element name="WorkingDir"                   minOccurs="0" type="xsd:string"  />
       <xsd:element name="PathExtension"                minOccurs="0" type="xsd:string"  />
+      <xsd:element name="EnvironmentVariables"         minOccurs="0" type="xsd:string"  />
       <xsd:element name="CatchExceptions"              minOccurs="0" type="xsd:boolean" />
       <xsd:element name="BreakOnFailure"               minOccurs="0" type="xsd:boolean" />
       <xsd:element name="RunDisabledTests"             minOccurs="0" type="xsd:boolean" />

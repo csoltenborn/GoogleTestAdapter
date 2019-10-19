@@ -270,6 +270,7 @@ namespace GoogleTestAdapter.VsPackage
                 AdditionalPdbs = _testExecutionOptions.AdditionalPdbs,
                 WorkingDir = _testExecutionOptions.WorkingDir,
                 PathExtension = _testExecutionOptions.PathExtension,
+                EnvironmentVariables = _testExecutionOptions.EnvironmentVariables,
                 AdditionalTestExecutionParam = _testExecutionOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = _testExecutionOptions.BatchForTestSetup,
                 BatchForTestTeardown = _testExecutionOptions.BatchForTestTeardown,

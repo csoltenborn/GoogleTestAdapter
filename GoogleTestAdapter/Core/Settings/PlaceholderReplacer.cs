@@ -138,6 +138,46 @@ namespace GoogleTestAdapter.Settings
         }
 
 
+        public const string EnvironmentPlaceholders = "Placeholders:\n" +
+                                                        DescriptionOfSolutionDirPlaceHolder + "\n" +
+                                                        DescriptionOfPlatformNamePlaceholder + "\n" +
+                                                        DescriptionOfConfigurationNamePlaceholder + "\n" +
+                                                        DescriptionOfExecutableDirPlaceHolder + "\n" +
+                                                        DescriptionOfExecutablePlaceHolder + "\n" + 
+                                                        DescriptionOfTestDirPlaceholder + TestExecutionOnly + "\n" + 
+                                                        DescriptionOfThreadIdPlaceholder + TestExecutionOnly + "\n" + 
+                                                        DescriptionOfEnvVarPlaceholders;
+
+        public string ReplaceEnvironmentVariablesPlaceholdersForExecution(string environmentVariables, string executable, string testDirectory, int threadId)
+        {
+            environmentVariables =
+                ReplaceTestDirAndThreadIdPlaceholders(environmentVariables, testDirectory, threadId);
+            environmentVariables = ReplaceExecutablePlaceholders(environmentVariables, executable);
+            environmentVariables = ReplacePlatformAndConfigurationPlaceholders(environmentVariables, executable);
+            environmentVariables = ReplaceSolutionDirPlaceholder(environmentVariables, executable);
+            environmentVariables = ReplaceEnvironmentVariables(environmentVariables);
+            environmentVariables = ReplaceHelperFileSettings(environmentVariables, executable);
+
+            CheckForRemainingPlaceholders(environmentVariables, SettingsWrapper.OptionAdditionalTestExecutionParams);
+
+            return environmentVariables;
+        }
+
+        public string ReplaceEnvironmentVariablesPlaceholdersForDiscovery(string environmentVariables, string executable)
+        {
+            environmentVariables = ReplaceExecutablePlaceholders(environmentVariables, executable);
+            environmentVariables = RemoveTestDirAndThreadIdPlaceholders(environmentVariables);
+            environmentVariables = ReplacePlatformAndConfigurationPlaceholders(environmentVariables, executable);
+            environmentVariables = ReplaceSolutionDirPlaceholder(environmentVariables, executable);
+            environmentVariables = ReplaceEnvironmentVariables(environmentVariables);
+            environmentVariables = ReplaceHelperFileSettings(environmentVariables, executable);
+
+            CheckForRemainingPlaceholders(environmentVariables, SettingsWrapper.OptionAdditionalTestExecutionParams);
+
+            return environmentVariables;
+        }
+
+
         public const string AdditionalTestExecutionParamPlaceholders = "Placeholders:\n" + 
                                                                        DescriptionOfSolutionDirPlaceHolder + "\n" + 
                                                                        DescriptionOfPlatformNamePlaceholder + "\n" + 

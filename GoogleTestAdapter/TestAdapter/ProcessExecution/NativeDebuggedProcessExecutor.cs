@@ -36,11 +36,11 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, Action<string> reportOutputLine)
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, IDictionary<string, string> environmentVariables, Action<string> reportOutputLine)
         {
             try
             {
-                int exitCode = NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, _debuggerAttacher, _debuggerEngine, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
+                int exitCode = NativeMethods.ExecuteCommandBlocking(command, parameters, workingDir, pathExtension, environmentVariables, _debuggerAttacher, _debuggerEngine, _logger, _printTestOutput, reportOutputLine, processId => _processId = processId);
                 _logger.DebugInfo($"Executable {command} returned with exit code {exitCode}");
                 return exitCode;
             }
@@ -104,7 +104,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             private const uint INFINITE = 0xFFFFFFFF;
 
             internal static int ExecuteCommandBlocking(
-                string command, string parameters, string workingDir, string pathExtension, 
+                string command, string parameters, string workingDir, string pathExtension, IDictionary<string, string> environmentVariables, 
                 IDebuggerAttacher debuggerAttacher, DebuggerEngine debuggerEngine, 
                 ILogger logger, bool printTestOutput, Action<string> reportOutputLine, Action<int> reportProcessId)
             {
@@ -113,7 +113,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 {
                     pipeStream = new ProcessOutputPipeStream();
 
-                    var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, pipeStream._writingEnd);
+                    var processInfo = CreateProcess(command, parameters, workingDir, pathExtension, environmentVariables, pipeStream._writingEnd);
                     reportProcessId(processInfo.dwProcessId);
                     using (var process = new SafeWaitHandle(processInfo.hProcess, true))
                     using (var thread  = new SafeWaitHandle(processInfo.hThread, true))
@@ -177,12 +177,14 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not set handle information");
             }
 
-            private static StringBuilder CreateEnvironment(string pathExtension)
+            private static StringBuilder CreateEnvironment(string pathExtension, IDictionary<string, string> environmentVariables)
             {
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
                 
                 if (!string.IsNullOrEmpty(pathExtension))
                     envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                foreach (var environmentVariable in environmentVariables)
+                    envVariables[environmentVariable.Key] = environmentVariable.Value;
 
                 var envVariablesList = new List<string>();
                 foreach (DictionaryEntry entry in envVariables)
@@ -200,7 +202,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 return result;
             }
 
-            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, 
+            private static PROCESS_INFORMATION CreateProcess(string command, string parameters, string workingDir, string pathExtension, IDictionary<string, string> environmentVariables, 
                 SafePipeHandle outputPipeWritingEnd)
             {
                 var startupinfoex = new STARTUPINFOEX
@@ -231,7 +233,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     lpThreadAttributes: null, 
                     bInheritHandles: true,
                     dwCreationFlags: CREATE_EXTENDED_STARTUPINFO_PRESENT | CREATE_SUSPENDED,
-                    lpEnvironment: CreateEnvironment(pathExtension),
+                    lpEnvironment: CreateEnvironment(pathExtension, environmentVariables),
                     lpCurrentDirectory: workingDir,
                     lpStartupInfo: startupinfoex,
                     lpProcessInformation: out processInfo))

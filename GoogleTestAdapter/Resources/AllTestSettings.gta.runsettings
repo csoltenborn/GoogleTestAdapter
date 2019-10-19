@@ -25,6 +25,7 @@
 				<TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
 				<WorkingDir>${SolutionDir}</WorkingDir>
 				<PathExtension>C:\fooDir;C:\barDir</PathExtension>
+				<EnvironmentVariables>MyEnvVar=MyValue</EnvironmentVariables>
 				<TraitsRegexesAfter />
 				<TraitsRegexesBefore />
 				<TestNameSeparator />

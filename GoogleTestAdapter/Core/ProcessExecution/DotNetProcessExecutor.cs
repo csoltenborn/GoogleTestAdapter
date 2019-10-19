@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -33,7 +34,7 @@ namespace GoogleTestAdapter.ProcessExecution
             _logger = logger;
         }
 
-        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension,
+        public int ExecuteCommandBlocking(string command, string parameters, string workingDir, string pathExtension, IDictionary<string, string> environmentVariables,
             Action<string> reportOutputLine)
         {
             // output reading after https://stackoverflow.com/a/7608823/1276129
@@ -49,6 +50,9 @@ namespace GoogleTestAdapter.ProcessExecution
 
             if (!string.IsNullOrEmpty(pathExtension))
                 processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+
+            foreach (var environmentVariable in environmentVariables)
+                processStartInfo.EnvironmentVariables[environmentVariable.Key] = environmentVariable.Value;
 
             _process = new Process {StartInfo = processStartInfo};
             using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))

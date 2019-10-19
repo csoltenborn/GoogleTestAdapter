@@ -7,6 +7,7 @@
         <ShuffleTestsSeed>3</ShuffleTestsSeed>
         <WorkingDir>$(ExecutableDir)\..</WorkingDir>
         <TestNameSeparator>!</TestNameSeparator>
+	    <EnvironmentVariables>MYENVVAR=MyValue</EnvironmentVariables>
       </Settings>
     </SolutionSettings>
     <ProjectSettings>
