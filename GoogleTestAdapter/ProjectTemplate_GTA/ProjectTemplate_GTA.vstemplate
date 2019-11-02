@@ -15,7 +15,7 @@
 
       <ProjectItem OpenInEditor="true">READ_ME</ProjectItem>
 
-      <ProjectItem>main.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="true">main.cpp</ProjectItem>
       <ProjectItem>sample_tests.cpp</ProjectItem>
     </Project>
   </TemplateContent>

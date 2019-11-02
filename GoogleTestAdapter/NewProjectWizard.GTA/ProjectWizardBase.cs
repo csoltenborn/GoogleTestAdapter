@@ -33,6 +33,7 @@ namespace NewProjectWizard.GTA
             Logger = new TestWindowLogger(() => Settings.OutputMode, () => Settings.TimestampMode);
             Settings.RegexTraitParser = new RegexTraitParser(Logger);
             Settings.HelperFilesCache = new HelperFilesCache(Logger);
+            Settings.EnvironmentVariablesParser = new EnvironmentVariablesParser(Logger);
 
             Logger.DebugInfo($"VS version: '{VisualStudioHelper.GetVisualStudioVersionString()}'");
         }

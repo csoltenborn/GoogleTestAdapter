@@ -21,11 +21,11 @@ namespace NewProjectWizard.GTA.Helpers
             {
                 string projectDir = Path.GetDirectoryName(project.FullName);
                 // ReSharper disable once AssignNullToNotNullAttribute
-                string gtest_all_cc = Path.Combine(projectDir, "gmock-gtest-all.cc");
+                string gtest_all_cc = Path.Combine(projectDir, "gtest-all.cc");
                 string gtest_h = Path.Combine(projectDir, "include", "gtest", "gtest.h");
 
                 bool gtestExists = File.Exists(gtest_h);
-                bool gtestAllExists = File.Exists(gtest_all_cc);
+                bool gtestAllExists = File.Exists(gtest_all_cc) || ProvidesGoogleMock(project);
                 if (gtestExists && gtestAllExists)
                 {
                     gtestProjects.Add(project);
@@ -53,6 +53,15 @@ namespace NewProjectWizard.GTA.Helpers
             string projectDir = Path.GetDirectoryName(gtestProject.FullName);
             string relativeProjectDir = GetRelativePath($@"{solutionDir}\", $@"{projectDir}\").Replace('/', Path.DirectorySeparatorChar);
             return $@"$(SolutionDir){relativeProjectDir}include;";
+        }
+
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        public static bool ProvidesGoogleMock(Project gtestProject)
+        {
+            string projectDir = Path.GetDirectoryName(gtestProject.FullName);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            string gmock_all_cc = Path.Combine(projectDir, "gmock-gtest-all.cc");
+            return File.Exists(gmock_all_cc);
         }
 
         public static string GetLinkGtestAsDll(Project gtestProject)

@@ -16,13 +16,20 @@ namespace NewProjectWizard.GTA
         private const string GtestIncludePlaceholder = "$gtestinclude$";
         private const string LinkGtestAsDllPlaceholder = "$link_gtest_as_dll$";
 
+        private const string MainFileIncludePlaceholder = "$main_gtest_include$";
+        private const string MainFileIncludeValueGtest = "gtest/gtest.h";
+        private const string MainFileIncludeValueGmock = "gmock/gmock.h";
+
+        private const string MainFileInitFrameworkPlaceholder = "$main_init_framework$";
+        private const string MainFileInitFrameworkValueGtest = "InitGoogleTest";
+        private const string MainFileInitFrameworkValueGmock = "InitGoogleMock";
+
         private readonly List<Project> _projectsUnderTest = new List<Project>();
         private Project _gtestProject;
 
         protected override void RunStarted()
         {
             var gtestProjects = GtestHelper.FindGtestProjects(CppProjects, Logger).ToList();
-            // TODO order by toolset?
             var gtestProjectCandidate = gtestProjects.FirstOrDefault();
 
             using (var dialog = new CreateProjectDialog(CppProjects, gtestProjects)
@@ -93,6 +100,15 @@ namespace NewProjectWizard.GTA
             value = GtestHelper.GetGtestInclude(_gtestProject);
             ReplacementsDictionary.Add(GtestIncludePlaceholder, value);
             Logger.DebugInfo($"Includes folder: '{value}'");
+
+            bool gtestProjectProvidesGmock = _gtestProject != null && GtestHelper.ProvidesGoogleMock(_gtestProject);
+            value = gtestProjectProvidesGmock ? MainFileIncludeValueGmock : MainFileIncludeValueGtest;
+            ReplacementsDictionary.Add(MainFileIncludePlaceholder, value);
+            Logger.DebugInfo($"Main file include: {value}");
+
+            value = gtestProjectProvidesGmock ? MainFileInitFrameworkValueGmock : MainFileInitFrameworkValueGtest;
+            ReplacementsDictionary.Add(MainFileInitFrameworkPlaceholder, value);
+            Logger.DebugInfo($"Main file init framework: {value}");
         }
 
         private void SafeAddProjectReference(Project project, Project referencedProject)
