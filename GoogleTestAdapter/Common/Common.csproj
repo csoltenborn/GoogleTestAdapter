@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.Common.dll" Condition="'$(RealSign)' == 'True'">
-      <Authenticode>Microsoft</Authenticode>
+      <Authenticode>Microsoft400</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
   </ItemGroup>

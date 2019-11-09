@@ -146,7 +146,7 @@ function Add-Signing {
     $FilesToSignRel.SetAttribute("Include", "`$(OutDir)\$ProjectName.dll")
     $FilesToSignRel.SetAttribute("Condition", "'`$(RealSign)' == 'True' and '`$(TargetExt)' == '.dll' and '`$(Configuration)' == 'RelWithDebInfo'")
     $AuthenticodeRel = $xml.CreateElement("Authenticode", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $AuthenticodeRel.set_InnerXML("Microsoft")
+    $AuthenticodeRel.set_InnerXML("Microsoft400")
     $StrongNameRel = $xml.CreateElement("StrongName", "http://schemas.microsoft.com/developer/msbuild/2003")
     $StrongNameRel.set_InnerXML("StrongName")
     $FilesToSignRel.AppendChild($AuthenticodeRel) | Out-Null
@@ -156,7 +156,7 @@ function Add-Signing {
     $FilesToSignDebug.SetAttribute("Include", "`$(OutDir)\$ProjectNameDebug.dll")
     $FilesToSignDebug.SetAttribute("Condition", "'`$(RealSign)' == 'True' and '`$(TargetExt)' == '.dll' and '`$(Configuration)' == 'Debug'")
     $AuthenticodeDebug = $xml.CreateElement("Authenticode", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $AuthenticodeDebug.set_InnerXML("Microsoft")
+    $AuthenticodeDebug.set_InnerXML("Microsoft400")
     $StrongNameDebug = $xml.CreateElement("StrongName", "http://schemas.microsoft.com/developer/msbuild/2003")
     $StrongNameDebug.set_InnerXML("StrongName")
     $FilesToSignDebug.AppendChild($AuthenticodeDebug) | Out-Null

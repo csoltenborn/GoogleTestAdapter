@@ -45,7 +45,7 @@
       <TranslationFile>$(MSBuildThisFileDirectory)..\..\loc\lcl\{Lang}\GoogleTestAdapter.Core.dll.lcl</TranslationFile>
     </FilesToLocalize>
     <FilesToSign Include="$(OutDir)\GoogleTestAdapter.Core.dll" Condition="'$(RealSign)' == 'True'">
-      <Authenticode>Microsoft</Authenticode>
+      <Authenticode>Microsoft400</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
     <SignFilesDependsOn Include="GatherLocalizedOutputsForSigning">
@@ -165,7 +165,7 @@
   <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'">
     <ItemGroup>
       <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">
-        <Authenticode>Microsoft</Authenticode>
+        <Authenticode>Microsoft400</Authenticode>
         <StrongName>StrongName</StrongName>
       </FilesToSign>
     </ItemGroup>
