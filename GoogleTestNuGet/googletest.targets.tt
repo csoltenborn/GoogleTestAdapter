@@ -33,9 +33,12 @@
     <# if (ConfigurationType == "dyn") { #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtestd.dll" />
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_maind.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtestd.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_maind.pdb" />
+    <# } else { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.pdb" />
     <# } #>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtestd.pdb" />
-    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_maind.pdb" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>
@@ -49,16 +52,20 @@
     <# if (ConfigurationType == "dyn") { #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtestd.dll" />
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_maind.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtestd.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_maind.pdb" />
+    <# } else { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_main.pdb" />
     <# } #>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtestd.pdb" />
-    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_maind.pdb" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.dll" />
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } else { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.pdb" />
     <# } #>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.pdb" />
-    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.pdb" />
   </ItemGroup>
 </Project>
