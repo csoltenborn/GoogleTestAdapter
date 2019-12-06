@@ -137,7 +137,7 @@
       <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName) &gt; $(TargetPath).gta_settings_helper</Command>
+      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName)::GTA::TheWorkingDirectory=$(LocalDebuggerWorkingDirectory) &gt; $(TargetPath).gta_settings_helper</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,7 +157,7 @@
       <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName) &gt; $(TargetPath).gta_settings_helper</Command>
+      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName)::GTA::TheWorkingDirectory=$(LocalDebuggerWorkingDirectory) &gt; $(TargetPath).gta_settings_helper</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -181,7 +181,7 @@
       <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName) &gt; $(TargetPath).gta_settings_helper</Command>
+      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName)::GTA::TheWorkingDirectory=$(LocalDebuggerWorkingDirectory) &gt; $(TargetPath).gta_settings_helper</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -205,7 +205,7 @@
       <GenerateDebugInformation Condition="$(VisualStudioVersion) &lt; 15">true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName) &gt; $(TargetPath).gta_settings_helper</Command>
+      <Command>echo SolutionPath=$(SolutionPath)::GTA::SolutionDir=$(SolutionDir)::GTA::PlatformName=$(PlatformName)::GTA::ConfigurationName=$(ConfigurationName)::GTA::TheTarget=$(TargetFileName)::GTA::TheWorkingDirectory=$(LocalDebuggerWorkingDirectory) &gt; $(TargetPath).gta_settings_helper</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -51,7 +51,7 @@ namespace GoogleTestAdapter.Settings
                 if (!File.Exists(helperFile))
                     return new Dictionary<string, string>();
 
-                return ParseHelperFile(File.ReadAllText(helperFile));
+                return ParseHelperFile(File.ReadAllText(helperFile).Trim());
             }
             catch (Exception e)
             {
