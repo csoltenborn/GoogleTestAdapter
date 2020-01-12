@@ -23,7 +23,7 @@
 				<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
 				<AdditionalPdbs/>
 				<TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
-				<WorkingDir>${SolutionDir}</WorkingDir>
+				<WorkingDir>$(SolutionDir)</WorkingDir>
 				<PathExtension>C:\fooDir;C:\barDir</PathExtension>
 				<TraitsRegexesAfter />
 				<TraitsRegexesBefore />
