@@ -18,12 +18,12 @@
     <Link>
       <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'x64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -40,13 +40,13 @@
       <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.pdb" />
     <# } #>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+  <ItemGroup Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'x64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.dll" />
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
     <# } #>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.pdb" />
-    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.pdb" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.pdb" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>
@@ -59,7 +59,7 @@
       <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_main.pdb" />
     <# } #>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
+  <ItemGroup Condition="'$(Configuration)' != 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.dll" />
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
