@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using Microsoft.VisualStudio.Shell;
@@ -95,6 +96,20 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         private string _pathExtension = SettingsWrapper.OptionPathExtensionDefaultValue;
 
         [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [DisplayName(SettingsWrapper.OptionEnvironmentVariables)]
+        [Description(SettingsWrapper.OptionEnvironmentVariablesDescription)]
+        public string EnvironmentVariables
+        {
+            get => _environmentVariables;
+            set
+            {
+                Utils.ValidateEnvironmentVariables(value);
+                SetAndNotify(ref _environmentVariables, value);
+            }
+        }
+        private string _environmentVariables = SettingsWrapper.OptionEnvironmentVariablesDefaultValue;
+
+        [Category(SettingsWrapper.CategoryRunConfigurationName)]
         [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]
         [Description(SettingsWrapper.OptionAdditionalTestExecutionParamsDescription)]
         public string AdditionalTestExecutionParams
@@ -162,6 +177,17 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set => SetAndNotify(ref _exitCodeTestCase, value);
         }
         private string _exitCodeTestCase = SettingsWrapper.OptionExitCodeTestCaseDefaultValue;
+
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionMissingTestsReportMode)]
+        [Description(SettingsWrapper.OptionMissingTestsReportModeDescription)]
+        [PropertyPageTypeConverter(typeof(MissingTestsReportModeConverter))]
+        public MissingTestsReportMode MissingTestsReportMode
+        {
+            get => _missingTestsReportMode;
+            set => SetAndNotify(ref _missingTestsReportMode, value);
+        }
+        private MissingTestsReportMode _missingTestsReportMode = SettingsWrapper.OptionMissingTestsReportModeDefaultValue;
 
         #endregion
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Framework;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
@@ -63,6 +64,7 @@ namespace GoogleTestAdapter.Tests.Common
         public static void SetupOptions(Mock<SettingsWrapper> mockOptions, ILogger logger)
         {
             mockOptions.Object.HelperFilesCache = new HelperFilesCache(logger);
+            mockOptions.Object.EnvironmentVariablesParser = new EnvironmentVariablesParser(logger);
 
             mockOptions.Setup(o => o.CheckCorrectUsage(It.IsAny<string>())).Callback(() => { });
             mockOptions.Setup(o => o.Clone()).Returns(mockOptions.Object);
@@ -95,10 +97,13 @@ namespace GoogleTestAdapter.Tests.Common
                 .Returns(SettingsWrapper.OptionEnableParallelTestExecutionDefaultValue);
             mockOptions.Setup(o => o.MaxNrOfThreads).Returns(SettingsWrapper.OptionMaxNrOfThreadsDefaultValue);
             mockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.OptionPathExtensionDefaultValue);
+            mockOptions.Setup(o => o.EnvironmentVariables).Returns(SettingsWrapper.OptionEnvironmentVariablesDefaultValue);
             mockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
             mockOptions.Setup(o => o.KillProcessesOnCancel).Returns(SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
             mockOptions.Setup(o => o.SkipOriginCheck).Returns(SettingsWrapper.OptionSkipOriginCheckDefaultValue);
             mockOptions.Setup(o => o.ExitCodeTestCase).Returns(SettingsWrapper.OptionExitCodeTestCaseDefaultValue);
+            mockOptions.Setup(o => o.MissingTestsReportMode)
+                .Returns(SettingsWrapper.OptionMissingTestsReportModeDefaultValue);
 
             mockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.Native);
 

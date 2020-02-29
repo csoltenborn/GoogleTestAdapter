@@ -50,6 +50,20 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 tr.Outcome == TestOutcome.Passed)), Times.Once);
         }
 
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void HelperFileTests_WorkingDirIsSetFromProjectSettings_TestSucceeds()
+        {
+            MockOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-TheTarget=$(TheTarget)");
+            MockOptions.Setup(o => o.WorkingDir).Returns("$(TheWorkingDirectory)");
+
+            RunHelperFileTestsExecutable();
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => 
+                tr.DisplayName.Contains("HelperFileTests.TheTargetIsSet") && 
+                tr.Outcome == TestOutcome.Passed)), Times.Once);
+        }
+
         private void RunHelperFileTestsExecutable()
         {
             var testCase = new GoogleTestDiscoverer(MockLogger.Object, TestEnvironment.Options, new ProcessExecutorFactory())

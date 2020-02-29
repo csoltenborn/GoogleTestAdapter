@@ -93,6 +93,8 @@ namespace VsPackage.Shared.Settings
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.DebugMode), bool.Parse, out var debugMode)) { _generalOptions.OutputMode = debugMode ? OutputMode.Debug : OutputMode.Info; }
             if (GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.TimestampOutput), bool.Parse, out bool timestampOutput)) { _generalOptions.TimestampMode = GetTimestampMode(timestampOutput); }
             GetAndDeleteValue(GeneralOptionsPage, nameof(IGoogleTestAdapterSettings.ShowReleaseNotes), bool.Parse, out _);
+
+            DeleteSubkey(ParallelizationOptionsPage);
         }
 
         private static bool GetAndDeleteValue<T>(string optionsKey, string propertyName, Func<string, T> map, out T value)
@@ -117,6 +119,18 @@ namespace VsPackage.Shared.Settings
 
             value = default(T);
             return false;
+        }
+
+        private static void DeleteSubkey(string subkey)
+        {
+            try
+            {
+                Registry.CurrentUser.DeleteSubKey(subkey);
+            }
+            catch (Exception)
+            {
+                // too bad
+            }
         }
 
         private TimestampMode GetTimestampMode(bool timestampOutput)

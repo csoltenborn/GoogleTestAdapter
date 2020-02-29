@@ -36,6 +36,7 @@ namespace GoogleTestAdapter.Settings
         int? TestDiscoveryTimeoutInSeconds { get; set; }
         string WorkingDir { get; set; }
         string PathExtension { get; set; }
+        string EnvironmentVariables { get; set; }
         string BatchForTestSetup { get; set; }
         string BatchForTestTeardown { get; set; }
         string TraitsRegexesAfter { get; set; }
@@ -53,6 +54,7 @@ namespace GoogleTestAdapter.Settings
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
         string ExitCodeTestCase { get; set; }
+        MissingTestsReportMode? MissingTestsReportMode { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
         DebuggerKind? DebuggerKind { get; set; }
@@ -83,6 +85,7 @@ namespace GoogleTestAdapter.Settings
             self.TestDiscoveryTimeoutInSeconds = self.TestDiscoveryTimeoutInSeconds ?? other.TestDiscoveryTimeoutInSeconds;
             self.WorkingDir = self.WorkingDir ?? other.WorkingDir;
             self.PathExtension = self.PathExtension ?? other.PathExtension;
+            self.EnvironmentVariables = self.EnvironmentVariables ?? other.EnvironmentVariables;
             self.BatchForTestSetup = self.BatchForTestSetup ?? other.BatchForTestSetup;
             self.BatchForTestTeardown = self.BatchForTestTeardown ?? other.BatchForTestTeardown;
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;
@@ -100,6 +103,7 @@ namespace GoogleTestAdapter.Settings
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
             self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
+            self.MissingTestsReportMode = self.MissingTestsReportMode ?? other.MissingTestsReportMode;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
             self.DebuggerKind = self.DebuggerKind ?? other.DebuggerKind;

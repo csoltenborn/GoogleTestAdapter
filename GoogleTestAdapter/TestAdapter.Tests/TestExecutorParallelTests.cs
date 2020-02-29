@@ -18,9 +18,9 @@ namespace GoogleTestAdapter.TestAdapter
         public TestExecutorParallelTests() : base(true, Environment.ProcessorCount) { }
 
 
-        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests)
+        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests, int nrOfNotFoundTests)
         {
-            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
+            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests, nrOfNotFoundTests);
 
             if (nrOfPassedTests > 0)
             {
@@ -36,6 +36,14 @@ namespace GoogleTestAdapter.TestAdapter
                     Times.AtLeast(nrOfFailedTests));
                 MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Failed)),
                     Times.AtLeast(nrOfFailedTests));
+            }
+
+            if (nrOfNotFoundTests > 0)
+            {
+                MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.NotFound)),
+                    Times.AtLeast(nrOfNotFoundTests));
+                MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.NotFound)),
+                    Times.AtLeast(nrOfNotFoundTests));
             }
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Skipped)),

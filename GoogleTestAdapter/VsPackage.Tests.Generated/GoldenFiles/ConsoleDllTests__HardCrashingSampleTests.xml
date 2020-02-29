@@ -5,7 +5,7 @@
       <Output>
         <ErrorInfo>
           <Message>reason is probably a crash of test Crashing.TheCrash</Message>
-          <StackTrace>at crash suspect in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
+          <StackTrace>at crash suspect in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -16,7 +16,7 @@
   1000
   Add(10, 10)
     Which is: 20</Message>
-          <StackTrace>at crashingtests.cpp:12 in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 12</StackTrace>
+          <StackTrace>at crashingtests.cpp:12 in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 12</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -24,7 +24,7 @@
       <Output>
         <ErrorInfo>
           <Message>reason is probably a crash of test Crashing.TheCrash</Message>
-          <StackTrace>at crash suspect in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
+          <StackTrace>at crash suspect in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -33,7 +33,7 @@
       <Output>
         <ErrorInfo>
           <Message>reason is probably a crash of test Crashing.TheCrash</Message>
-          <StackTrace>at crash suspect in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
+          <StackTrace>at crash suspect in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>

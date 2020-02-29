@@ -35,6 +35,7 @@
       </xsd:element>
       <xsd:element name="WorkingDir"                   minOccurs="0" type="xsd:string"  />
       <xsd:element name="PathExtension"                minOccurs="0" type="xsd:string"  />
+      <xsd:element name="EnvironmentVariables"         minOccurs="0" type="xsd:string"  />
       <xsd:element name="CatchExceptions"              minOccurs="0" type="xsd:boolean" />
       <xsd:element name="BreakOnFailure"               minOccurs="0" type="xsd:boolean" />
       <xsd:element name="RunDisabledTests"             minOccurs="0" type="xsd:boolean" />
@@ -137,6 +138,16 @@
 		  </xsd:simpleType>
       </xsd:element>
       <xsd:element name="ExitCodeTestCase" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="MissingTestsReportMode" minOccurs="0">
+	      <xsd:simpleType>
+		      <xsd:restriction base="xsd:string">
+			      <xsd:enumeration value ="DoNotReport"/>
+			      <xsd:enumeration value ="ReportAsNotFound"/>
+			      <xsd:enumeration value ="ReportAsSkipped"/>
+			      <xsd:enumeration value ="ReportAsFailed"/>
+		      </xsd:restriction>
+	      </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="SkipOriginCheck"              minOccurs="0" type="xsd:boolean">
         <xsd:annotation>
           <xsd:documentation>Only for internal use</xsd:documentation>

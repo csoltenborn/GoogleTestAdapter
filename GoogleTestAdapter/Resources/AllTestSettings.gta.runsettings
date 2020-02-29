@@ -23,8 +23,9 @@
 				<TestDiscoveryRegex>.*Tests.*.exe</TestDiscoveryRegex>
 				<AdditionalPdbs/>
 				<TestDiscoveryTimeoutInSeconds>30</TestDiscoveryTimeoutInSeconds>
-				<WorkingDir>${SolutionDir}</WorkingDir>
+				<WorkingDir>$(SolutionDir)</WorkingDir>
 				<PathExtension>C:\fooDir;C:\barDir</PathExtension>
+				<EnvironmentVariables>MyEnvVar=MyValue</EnvironmentVariables>
 				<TraitsRegexesAfter />
 				<TraitsRegexesBefore />
 				<TestNameSeparator />
@@ -32,6 +33,7 @@
 				<UseNewTestExecutionFramework>true</UseNewTestExecutionFramework>
 				<KillProcessesOnCancel>false</KillProcessesOnCancel>
 				<ExitCodeTestCase/>
+				<MissingTestsReportMode>ReportAsFailed</MissingTestsReportMode>
 			</Settings>
 		</SolutionSettings>
 		<ProjectSettings/>

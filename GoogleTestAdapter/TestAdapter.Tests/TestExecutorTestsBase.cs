@@ -38,7 +38,7 @@ namespace GoogleTestAdapter.TestAdapter
         }
 
 
-        protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests)
+        protected virtual void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests, int nrOfNotFoundTests)
         {
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr => tr.Outcome == VsTestOutcome.None)),
                 Times.Exactly(nrOfUnexecutedTests));
@@ -187,7 +187,7 @@ namespace GoogleTestAdapter.TestAdapter
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(TestResources.CrashingTests_DebugX86.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
 
-            CheckMockInvocations(1, 2, 0, 3);
+            CheckMockInvocations(1, 2, 0, 3, 0);
         }
 
         [TestMethod]
@@ -306,8 +306,8 @@ namespace GoogleTestAdapter.TestAdapter
                 Utils.DeleteDirectory(baseDir).Should().BeTrue();
             }
         }
-
-        protected void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests = 0, bool checkNoErrorsLogged = true)
+        
+        protected void RunAndVerifyTests(string executable, int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests = 0, int nrOfNotFoundTests = 0, bool checkNoErrorsLogged = true)
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
             executor.RunTests(executable.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
@@ -318,7 +318,7 @@ namespace GoogleTestAdapter.TestAdapter
                 MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
             }
 
-            CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
+            CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests, nrOfNotFoundTests);
         }
 
         [TestMethod]

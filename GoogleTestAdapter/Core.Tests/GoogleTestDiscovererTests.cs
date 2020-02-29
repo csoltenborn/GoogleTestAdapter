@@ -169,7 +169,7 @@ namespace GoogleTestAdapter
             var exitCodeTestCase = testCases.Single(tc => tc.FullyQualifiedName == finalName);
             exitCodeTestCase.DisplayName.Should().Be(finalName);
             exitCodeTestCase.Source.Should().Be(TestResources.Tests_DebugX86);
-            exitCodeTestCase.CodeFilePath.Should().Contain(@"sampletests\tests\main.cpp");
+            exitCodeTestCase.CodeFilePath.Should().ContainEquivalentOf(@"sampletests\tests\main.cpp");
             exitCodeTestCase.LineNumber.Should().Be(8);
 
             MockLogger.Verify(l => l.DebugInfo(It.Is<string>(msg => msg.Contains("Exit code") && msg.Contains("ignored"))), Times.Once);
@@ -374,11 +374,11 @@ namespace GoogleTestAdapter
             IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.Tests_ReleaseX86);
 
             var abcdTest = testCases.Single(tc => tc.DisplayName == "abcd.t");
-            abcdTest.LineNumber.Should().Be(156);
+            abcdTest.LineNumber.Should().Be(167);
             var bbcdTest = testCases.Single(tc => tc.DisplayName == "bbcd.t");
-            bbcdTest.LineNumber.Should().Be(161);
+            bbcdTest.LineNumber.Should().Be(172);
             var bcdTest = testCases.Single(tc => tc.DisplayName == "bcd.t");
-            bcdTest.LineNumber.Should().Be(166);
+            bcdTest.LineNumber.Should().Be(177);
         }
 
         [TestMethod]
@@ -445,12 +445,12 @@ namespace GoogleTestAdapter
 
             TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == "TheFixture.AddFails");
             testCase.DisplayName.Should().Be("TheFixture.AddFails");
-            testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\fixturetests.cpp");
+            testCase.CodeFilePath.Should().EndWithEquivalent(@"sampletests\tests\fixturetests.cpp");
             testCase.LineNumber.Should().Be(11);
 
             testCase = testCases.Single(tc => tc.FullyQualifiedName == "Arr/TypeParameterizedTests/1.CanDefeatMath");
             testCase.DisplayName.Should().Be("Arr/TypeParameterizedTests/1.CanDefeatMath<MyStrangeArray>");
-            testCase.CodeFilePath.Should().EndWith(@"sampletests\tests\typeparameterizedtests.cpp");
+            testCase.CodeFilePath.Should().EndWithEquivalent(@"sampletests\tests\typeparameterizedtests.cpp");
             testCase.LineNumber.Should().Be(56);
 
             return testCases;
@@ -465,11 +465,11 @@ namespace GoogleTestAdapter
 
             string expectedCodeFilePath = Path.GetFullPath($@"{TestResources.SampleTestsSolutionDir}dlldependentproject\dlltests.cpp").ToLower();
             testCases[0].DisplayName.Should().Be("Passing.InvokeFunction");
-            testCases[0].CodeFilePath.Should().Be(expectedCodeFilePath);
+            testCases[0].CodeFilePath.Should().BeEquivalentTo(expectedCodeFilePath);
             testCases[0].LineNumber.Should().Be(5);
 
             testCases[1].DisplayName.Should().Be("Failing.InvokeFunction");
-            testCases[1].CodeFilePath.Should().Be(expectedCodeFilePath);
+            testCases[1].CodeFilePath.Should().BeEquivalentTo(expectedCodeFilePath);
             testCases[1].LineNumber.Should().Be(10);
         }
 

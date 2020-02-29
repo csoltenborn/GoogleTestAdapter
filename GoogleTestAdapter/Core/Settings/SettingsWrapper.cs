@@ -19,6 +19,7 @@ namespace GoogleTestAdapter.Settings
         private readonly SettingsPrinter _settingsPrinter;
 
         public RegexTraitParser RegexTraitParser { private get; set; }
+        public EnvironmentVariablesParser EnvironmentVariablesParser { private get; set; }
 
         private HelperFilesCache _cache;
         public HelperFilesCache HelperFilesCache
@@ -55,7 +56,8 @@ namespace GoogleTestAdapter.Settings
             return new SettingsWrapper(_settingsContainer, _solutionDir)
             {
                 RegexTraitParser = RegexTraitParser,
-                HelperFilesCache = HelperFilesCache
+                HelperFilesCache = HelperFilesCache,
+                EnvironmentVariablesParser = EnvironmentVariablesParser
             };
         }
 
@@ -370,6 +372,25 @@ namespace GoogleTestAdapter.Settings
             => _placeholderReplacer.ReplacePathExtensionPlaceholders(PathExtension, executable);
 
 
+        public const string OptionEnvironmentVariables = "Environment variables";
+        public const string OptionEnvironmentVariablesDescription = "Allows to provide environment variables which will be added to a test executable's run context. Environment variables are separated by '" 
+                                                                    + EnvironmentVariablesParser.Separator
+                                                                    + "'.\nExample: MyVar=MyValue" + EnvironmentVariablesParser.Separator + "MyDir=" + PlaceholderReplacer.TestDirPlaceholder 
+                                                                    + "\n" + PlaceholderReplacer.EnvironmentPlaceholders;
+        public const string OptionEnvironmentVariablesDefaultValue = "";
+
+        public virtual string EnvironmentVariables =>
+            _currentSettings.EnvironmentVariables ?? OptionEnvironmentVariablesDefaultValue;
+
+        public IDictionary<string, string> GetEnvironmentVariablesForDiscovery(string executable)
+            => EnvironmentVariablesParser.ParseEnvironmentVariablesString(
+                _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForDiscovery(EnvironmentVariables, executable));
+
+        public IDictionary<string, string> GetEnvironmentVariablesForExecution(string executable, string testDirectory, int threadId) 
+            => EnvironmentVariablesParser.ParseEnvironmentVariablesString(
+                _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForExecution(EnvironmentVariables, executable, testDirectory, threadId));
+        
+
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
         public const string OptionAdditionalTestExecutionParamsDescription =
             "Additional parameters for Google Test executable during test execution. " + PlaceholderReplacer.AdditionalTestExecutionParamPlaceholders;
@@ -451,6 +472,15 @@ namespace GoogleTestAdapter.Settings
                 return result;
             }
         }
+
+        public const string OptionMissingTestsReportMode = "Behavior for missing test results";
+        public const string OptionMissingTestsReportModeDescription =
+            "If a test can not be run (e.g. because a dependency has been removed since discovery without VS noticing), this option allows to configure how that test will be reported to the VS test framework." + 
+            "\nDefault: " + MissingTestsReportModeConverter.ReportAsNotFound;
+        public const MissingTestsReportMode OptionMissingTestsReportModeDefaultValue = MissingTestsReportMode.ReportAsNotFound;
+
+        public virtual MissingTestsReportMode MissingTestsReportMode =>
+            _currentSettings.MissingTestsReportMode ?? OptionMissingTestsReportModeDefaultValue;
 
         #endregion
 
