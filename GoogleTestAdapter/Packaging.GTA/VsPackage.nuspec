@@ -11,11 +11,15 @@
     <language>en-US</language>
     <projectUrl>https://github.com/csoltenborn/GoogleTestAdapter</projectUrl>
     <iconUrl>https://github.com/csoltenborn/GoogleTestAdapter/raw/4e1957f62df47a2dad6b3e2fed1f790503cba399/GoogleTestAdapter/Packaging.GTA/Resources/gtest-logo.png</iconUrl>
-    <license type="file">LICENSE.txt</license>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<icon>gtest-logo.png</icon>
+	<license type="expression">Apache-2.0</license>
+	<requireLicenseAcceptance>false</requireLicenseAcceptance>
     <developmentDependency>true</developmentDependency>
-    <copyright>Copyright 2015-2019 Christian Soltenborn</copyright>
+    <copyright>Copyright 2015-2020 Christian Soltenborn</copyright>
     <tags>native gtest Google Test adapter C++ unit integration automated testing</tags>
+	<dependencies>
+	    <group targetFramework="native0.0" />
+	</dependencies>
   </metadata>
   <files>
     <file src="GoogleTestAdapter.Common.dll" target="build\_common\" />
@@ -28,6 +32,7 @@
     <file src="x64\msdia140.dll" target="build\_common\x64\" />
 
     <file src="LICENSE.txt" target="" />
+    <file src="Resources\gtest-logo.png" target="" />
     <file src="_.txt" target="lib\native\" />
   </files>
 </package>
