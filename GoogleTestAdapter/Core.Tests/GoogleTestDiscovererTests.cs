@@ -86,8 +86,7 @@ namespace GoogleTestAdapter
             }
             finally
             {
-                string errorMessage;
-                Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out errorMessage).Should().BeTrue();
+                Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out _).Should().BeTrue();
             }
         }
 
@@ -105,8 +104,7 @@ namespace GoogleTestAdapter
             }
             finally
             {
-                string errorMessage;
-                Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out errorMessage).Should().BeTrue();
+                Utils.DeleteDirectory(Path.GetDirectoryName(testExecutable), out _).Should().BeTrue();
             }
         }
 
@@ -128,6 +126,17 @@ namespace GoogleTestAdapter
                 .IsGoogleTestExecutable(TestResources.FakeGtestDllExeX64, "", TestEnvironment.Logger);
 
             result.Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestExecutable_EmptyExe_CorrectErrorHandling()
+        {
+            bool result = GoogleTestDiscoverer
+                .IsGoogleTestExecutable(TestResources.EmptyExe, "", TestEnvironment.Logger);
+
+            result.Should().BeFalse();
+            MockLogger.Verify(l => l.DebugWarning(It.Is<string>(s => s.Contains("Error while parsing imports") && s.Contains(" 0:") && s.Contains(new System.ComponentModel.Win32Exception(0).Message))));
         }
 
         [TestMethod]

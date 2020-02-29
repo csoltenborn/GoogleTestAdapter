@@ -30,6 +30,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string TenSecondsWaiter = GoogleTestAdapterBuildDir + @"TenSecondsWaiter\TenSecondsWaiter.exe";
         public const string AlwaysCrashingExe = GoogleTestAdapterBuildDir + @"CrashingExe\CrashingExe.exe";
         public const string AlwaysFailingExe = GoogleTestAdapterBuildDir + @"FailingExe\FailingExe.exe";
+        public const string EmptyExe = GoogleTestAdapterBuildDir + @"EmptyExe\EmptyExe.exe";
         public const string FakeGtestDllExe = GoogleTestAdapterBuildDir + @"FakeGtestDllApplication\FakeGtestDllApplication.exe";
         public const string FakeGtestDllExeX64 = GoogleTestAdapterBuildDir + @"FakeGtestDllApplication-x64\FakeGtestDllApplication-x64.exe";
         public const string SemaphoreExe = GoogleTestAdapterBuildDir + @"SemaphoreExe\SemaphoreExe.exe";
