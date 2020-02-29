@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using GoogleTestAdapter.VsPackage.GTA.ReleaseNotes;
 
 namespace GoogleTestAdapter.VsPackage.ReleaseNotes
 {
@@ -56,16 +55,23 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
                 { new Version(0, 12, 1), new DateTime(2017, 11, 16) },
                 { new Version(0, 12, 2), new DateTime(2017, 12, 6) },
                 { new Version(0, 12, 3), new DateTime(2017, 12, 9) },
-                { Donations.Version, new DateTime(2018, 6, 25) },
+                { new Version(0, 13, 0), new DateTime(2018, 6, 25) },
                 { new Version(0, 13, 1), new DateTime(2018, 6, 26) },
                 { new Version(0, 13, 2), new DateTime(2018, 7, 3) },
-                { new Version(0, 13, 3), new DateTime(2018, 7, 16) }
+                { new Version(0, 13, 3), new DateTime(2018, 7, 16) },
+                { new Version(0, 13, 4), new DateTime(2018, 8, 4) },
+                { new Version(0, 14, 0), new DateTime(2018, 12, 9) },
+                { new Version(0, 14, 1), new DateTime(2018, 12, 10) },
+                { new Version(0, 14, 2), new DateTime(2018, 12, 16) },
+                { new Version(0, 14, 3), new DateTime(2019, 2, 5) },
+                { new Version(0, 14, 4), new DateTime(2019, 2, 24) },
+                { new Version(0, 15, 0), new DateTime(2019, 3, 9) },
+                { new Version(0, 16, 0), new DateTime(2019, 4, 28) },
+                { new Version(0, 16, 1), new DateTime(2019, 5, 4) },
+                { new Version(0, 17, 0), new DateTime(2019, 10, 6) },
+                { new Version(0, 17, 1), new DateTime(2019, 10, 12) },
+                { new Version(0, 18, 0), new DateTime(2020, 2, 29) }
             };
-        }
-
-        public static bool ForceShowReleaseNotes(Version formerVersion)
-        {
-            return Donations.IsPreDonationsVersion(formerVersion);
         }
     }
 

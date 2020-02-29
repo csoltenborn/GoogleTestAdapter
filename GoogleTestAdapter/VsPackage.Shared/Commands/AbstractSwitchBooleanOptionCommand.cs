@@ -12,13 +12,9 @@ namespace GoogleTestAdapter.VsPackage.Commands
 
         protected AbstractSwitchBooleanOptionCommand(IGoogleTestExtensionOptionsPage package, int commandId)
         {
-            if (package == null)
-                throw new ArgumentNullException(nameof(package));
+            Package = package ?? throw new ArgumentNullException(nameof(package));
 
-            Package = package;
-
-            OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
             {
                 var finalCommandId = new CommandID(CommandSet, commandId);
                 var command = new OleMenuCommand(OnCommandInvoked, finalCommandId);
@@ -33,8 +29,7 @@ namespace GoogleTestAdapter.VsPackage.Commands
 
         private void OnBeforeQueryStatus(object sender, EventArgs e)
         {
-            var command = sender as OleMenuCommand;
-            if (command != null)
+            if (sender is OleMenuCommand command)
                 command.Checked = Value;
         }
 

@@ -1,6 +1,8 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using System.Xml.Serialization;
+using GoogleTestAdapter.Common;
+using GoogleTestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {
@@ -35,6 +37,9 @@ namespace GoogleTestAdapter.Settings
         public virtual string PathExtension { get; set; }
         public bool ShouldSerializePathExtension() { return PathExtension != null; }
 
+        public virtual string EnvironmentVariables { get; set; }
+        public bool ShouldSerializeEnvironmentVariables() { return EnvironmentVariables != null; }
+
         public virtual bool? CatchExceptions { get; set; }
         public bool ShouldSerializeCatchExceptions() { return CatchExceptions != null; }
 
@@ -65,8 +70,23 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? DebugMode { get; set; }
         public bool ShouldSerializeDebugMode() { return DebugMode != null; }
 
+        public virtual OutputMode? OutputMode { get; set; }
+        public bool ShouldSerializeOutputMode() { return OutputMode != null; }
+
         public virtual bool? TimestampOutput { get; set; }
         public bool ShouldSerializeTimestampOutput() { return TimestampOutput != null; }
+
+        public virtual TimestampMode? TimestampMode { get; set; }
+        public bool ShouldSerializeTimestampMode() { return TimestampMode != null; }
+
+        public virtual SeverityMode? SeverityMode { get; set; }
+        public bool ShouldSerializeSeverityMode() { return SeverityMode != null; }
+
+        public virtual SummaryMode? SummaryMode { get; set; }
+        public bool ShouldSerializeSummaryMode() { return SummaryMode != null; }
+
+        public virtual bool? PrefixOutputWithGta { get; set; }
+        public bool ShouldSerializePrefixOutputWithGta() { return PrefixOutputWithGta != null; }
 
         public virtual bool? ShowReleaseNotes { get; set; }
         public bool ShouldSerializeShowReleaseNotes() { return ShowReleaseNotes != null; }
@@ -95,9 +115,18 @@ namespace GoogleTestAdapter.Settings
         public bool? SkipOriginCheck { get; set; }
         public bool ShouldSerializeSkipOriginCheck() { return SkipOriginCheck != null; }
 
+        public string ExitCodeTestCase { get; set; }
+        public bool ShouldSerializeExitCodeTestCase() { return ExitCodeTestCase != null; }
+
+        public MissingTestsReportMode? MissingTestsReportMode { get; set; }
+        public bool ShouldSerializeMissingTestsReportMode() { return MissingTestsReportMode != null; }
+
 
         public virtual bool? UseNewTestExecutionFramework { get; set; }
         public bool ShouldSerializeUseNewTestExecutionFramework() { return UseNewTestExecutionFramework != null; }
+
+        public virtual DebuggerKind? DebuggerKind { get; set; }
+        public bool ShouldSerializeDebuggerKind() { return DebuggerKind != null; }
 
 
         // internal
@@ -105,7 +134,7 @@ namespace GoogleTestAdapter.Settings
         public bool ShouldSerializeDebuggingNamedPipeId() { return DebuggingNamedPipeId != null; }
 
         public virtual string SolutionDir { get; set; }
-        public bool ShouldSerializeSolutionDir() { return DebuggingNamedPipeId != null; }
+        public bool ShouldSerializeSolutionDir() { return SolutionDir != null; }
 
         public virtual string PlatformName { get; set; }
         public bool ShouldSerializePlatformName() { return PlatformName != null; }

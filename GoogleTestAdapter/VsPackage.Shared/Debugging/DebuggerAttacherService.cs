@@ -2,8 +2,8 @@
 
 using System;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Framework;
 using System.ServiceModel;
+using GoogleTestAdapter.TestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {
@@ -22,12 +22,12 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             _logger = logger;
         }
 
-        public void AttachDebugger(int processId)
+        public void AttachDebugger(int processId, DebuggerEngine debuggerEngine)
         {
             bool success = false;
             try
             {
-                success = _debuggerAttacher.AttachDebugger(processId);
+                success = _debuggerAttacher.AttachDebugger(processId, debuggerEngine);
             }
             catch (Exception e)
             {

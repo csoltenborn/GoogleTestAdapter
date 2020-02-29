@@ -45,9 +45,8 @@ namespace GoogleTestAdapter.Runners
             var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
             var settings = CreateSettings(null, null);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
 
-            runner.RunTests(testCase.Yield(), false, null, executor);
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
 
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
@@ -59,11 +58,10 @@ namespace GoogleTestAdapter.Runners
         public void RunTests_WorkingDirSetForSolution_TestPasses()
         {
             var testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
-            var settings = CreateSettings(SettingsWrapper.SolutionDirPlaceholder, null);
+            var settings = CreateSettings(PlaceholderReplacer.SolutionDirPlaceholder, null);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
 
-            runner.RunTests(testCase.Yield(), false, null, executor);
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
 
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
@@ -75,11 +73,26 @@ namespace GoogleTestAdapter.Runners
         public void RunTests_WorkingDirSetForProject_TestPasses()
         {
             TestCase testCase = TestDataCreator.GetTestCases("WorkingDir.IsSolutionDirectory").First();
-            var settings = CreateSettings("foo", SettingsWrapper.SolutionDirPlaceholder);
+            var settings = CreateSettings("foo", PlaceholderReplacer.SolutionDirPlaceholder);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
 
-            runner.RunTests(testCase.Yield(), false, null, executor);
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockFrameworkReporter.Verify(r => r.ReportTestResults(
+                It.Is<IEnumerable<TestResult>>(tr => CheckSingleResultHasOutcome(tr, TestOutcome.Passed))), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void RunTests_EnvironmentVariableSetForSolution_TestPasses()
+        {
+            TestCase testCase = TestDataCreator.GetTestCases("EnvironmentVariable.IsSet").First();
+            var settings = CreateSettings(PlaceholderReplacer.SolutionDirPlaceholder, null, "MYENVVAR=MyValue");
+
+            var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
+
+            runner.RunTests(testCase.Yield(), false, ProcessExecutorFactory);
 
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
@@ -93,8 +106,7 @@ namespace GoogleTestAdapter.Runners
 
             var stopwatch = new Stopwatch();
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, TestEnvironment.Options, new SchedulingAnalyzer(TestEnvironment.Logger));
-            var executor = new ProcessExecutor(null, MockLogger.Object);
-            var thread = new Thread(() => runner.RunTests(testCasesToRun, false, null, executor));
+            var thread = new Thread(() => runner.RunTests(testCasesToRun, false, ProcessExecutorFactory));
 
             stopwatch.Start();
             thread.Start();
@@ -103,20 +115,21 @@ namespace GoogleTestAdapter.Runners
             thread.Join();
             stopwatch.Stop();
 
-            testCasesToRun.Count.Should().Be(2);
+            testCasesToRun.Should().HaveCount(2);
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
 
             stopwatch.ElapsedMilliseconds.Should().BeGreaterThan(lower); // 1st test should be executed
             stopwatch.ElapsedMilliseconds.Should().BeLessThan(upper); // 2nd test should not be executed 
         }
 
-        private SettingsWrapper CreateSettings(string solutionWorkingDir, string projectWorkingDir)
+        private SettingsWrapper CreateSettings(string solutionWorkingDir, string projectWorkingDir, string environmentVariable = null)
         {
             var mockContainer = new Mock<IGoogleTestAdapterSettingsContainer>();
 
+            var solutionSettings = new RunSettings {WorkingDir = solutionWorkingDir};
             mockContainer
                 .Setup(c => c.SolutionSettings)
-                .Returns(new RunSettings { WorkingDir = solutionWorkingDir });
+                .Returns(solutionSettings);
 
             if (projectWorkingDir != null)
             {
@@ -125,9 +138,16 @@ namespace GoogleTestAdapter.Runners
                     .Returns(new RunSettings { WorkingDir = projectWorkingDir });
             }
 
+            if (environmentVariable != null)
+            {
+                solutionSettings.EnvironmentVariables = environmentVariable;
+            }
+
             return new SettingsWrapper(mockContainer.Object, TestResources.SampleTestsSolutionDir)
             {
-                RegexTraitParser = new RegexTraitParser(MockLogger.Object)
+                RegexTraitParser = new RegexTraitParser(MockLogger.Object),
+                EnvironmentVariablesParser = new EnvironmentVariablesParser(MockLogger.Object),
+                HelperFilesCache = new HelperFilesCache(MockLogger.Object)
             };
         }
 

@@ -53,5 +53,8 @@
     <ClCompile Include="..\Tests\NamespaceTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Tests\MainMethodTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

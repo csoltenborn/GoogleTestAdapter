@@ -23,9 +23,9 @@ namespace GoogleTestAdapter.TestAdapter
 
         public TestExecutorSequentialTests() : base(false, 1) { }
 
-        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests)
+        protected override void CheckMockInvocations(int nrOfPassedTests, int nrOfFailedTests, int nrOfUnexecutedTests, int nrOfSkippedTests, int nrOfNotFoundTests)
         {
-            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests);
+            base.CheckMockInvocations(nrOfPassedTests, nrOfFailedTests, nrOfUnexecutedTests, nrOfSkippedTests, nrOfNotFoundTests);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.Passed)),
                 Times.Exactly(nrOfPassedTests));
@@ -41,19 +41,24 @@ namespace GoogleTestAdapter.TestAdapter
                 Times.Exactly(nrOfSkippedTests));
             MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.Skipped)),
                 Times.Exactly(nrOfSkippedTests));
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<TestResult>(tr => tr.Outcome == TestOutcome.NotFound)),
+                Times.Exactly(nrOfNotFoundTests));
+            MockFrameworkHandle.Verify(h => h.RecordEnd(It.IsAny<TestCase>(), It.Is<TestOutcome>(to => to == TestOutcome.NotFound)),
+                Times.Exactly(nrOfNotFoundTests));
         }
 
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CancelingExecutor_StopsTestExecution()
+        public virtual void RunTests_CancelingExecutor_StopsTestExecution()
         {
             DoRunCancelingTests(false, DurationOfEachLongRunningTestInMs);  // (only) 1st test should be executed
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
+        public virtual void RunTests_CancelingExecutorAndKillProcesses_StopsTestExecutionFaster()
         {
             DoRunCancelingTests(true, WaitBeforeCancelInMs);  // 1st test should be actively canceled
         }
@@ -62,10 +67,10 @@ namespace GoogleTestAdapter.TestAdapter
         {
             MockOptions.Setup(o => o.KillProcessesOnCancel).Returns(killProcesses);
             List<Model.TestCase> testCasesToRun = TestDataCreator.GetTestCases("Crashing.LongRunning", "LongRunningTests.Test2");
-            testCasesToRun.Count.Should().Be(2);
+            testCasesToRun.Should().HaveCount(2);
 
             var stopwatch = new Stopwatch();
-            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options);
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
 
             var canceller = new Thread(() =>
             {
@@ -119,18 +124,24 @@ namespace GoogleTestAdapter.TestAdapter
         public override void RunTests_StaticallyLinkedX64Tests_CorrectTestResults()
         {
             base.RunTests_StaticallyLinkedX64Tests_CorrectTestResults();
+        }        
+        
+        [TestMethod]
+        public override void RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce()
+        {
+            base.RunTests_StaticallyLinkedX64Tests_OutputIsPrintedAtMostOnce();
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CrashingX64Tests_CorrectTestResults()
+        public virtual void RunTests_CrashingX64Tests_CorrectTestResults()
         {
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX64, 1, 2, 0, 3);
         }
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void RunTests_CrashingX86Tests_CorrectTestResults()
+        public virtual void RunTests_CrashingX86Tests_CorrectTestResults()
         {
             RunAndVerifyTests(TestResources.CrashingTests_ReleaseX86, 1, 2, 0, 3);
         }
@@ -183,19 +194,55 @@ namespace GoogleTestAdapter.TestAdapter
             base.RunTests_WithoutPathExtension_ExecutionFails();
         }
 
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_PassingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_PassingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void RunTests_ExitCodeTest_FailingTestResultIsProduced()
+        {
+            base.RunTests_ExitCodeTest_FailingTestResultIsProduced();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaksRelease_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_PassingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_PassingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
+        {
+            base.MemoryLeakTests_FailingWithoutLeaks_CorrectResult();
+        }
+
+        [TestMethod]
+        public override void MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings()
+        {
+            base.MemoryLeakTests_ExitCodeTest_OnlyexitCodeTestResultAndNoWarnings();
+        }
+
         #endregion
 
     }
-
-    [TestClass]
-    public class TestExecutorSequentialTests_OldTestExecutionFramework : TestExecutorSequentialTests
-    {
-        [TestInitialize]
-        public override void SetUp()
-        {
-            base.SetUp();
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
-        }
-    }
-
 }

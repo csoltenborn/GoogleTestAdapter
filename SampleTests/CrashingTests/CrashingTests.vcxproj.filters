@@ -18,17 +18,17 @@
     <ClCompile Include="CrashingTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(ProjectDir)..\3rdparty\gtest-1.8.0\fused-src\gtest\gtest-all.cc">
+    <ClCompile Include="$(ProjectDir)..\3rdparty\gtest-1.8.1\fused-src\gtest\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CrashReallyHard64.asm">
+    <Text Include="CrashReallyHard32.asm">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="CrashReallyHard32.asm">
+    <MASM Include="CrashReallyHard64.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>

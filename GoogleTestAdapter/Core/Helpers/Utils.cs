@@ -26,8 +26,7 @@ namespace GoogleTestAdapter.Helpers
 
         public static bool DeleteDirectory(string directory)
         {
-            string dummy;
-            return DeleteDirectory(directory, out dummy);
+            return DeleteDirectory(directory, out _);
         }
 
         public static bool DeleteDirectory(string directory, out string errorMessage)
@@ -51,10 +50,9 @@ namespace GoogleTestAdapter.Helpers
             return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
         }
 
-        public static void TimestampMessage(ref string message)
+        public static string GetTimestamp()
         {
-            string timestamp = DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            message = $"{timestamp} - {message ?? ""}";
+            return DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
         }
 
         /// <exception cref="AggregateException">If at least one of the actions has thrown an exception</exception>
@@ -63,7 +61,7 @@ namespace GoogleTestAdapter.Helpers
             var tasks = new Task[actions.Length];
             for (int i = 0; i < actions.Length; i++)
             {
-                tasks[i] = Task.Factory.StartNew(actions[i]);
+                tasks[i] = Task.Run(actions[i]);
             }
       
             return Task.WaitAll(tasks, timeoutInMs);
@@ -87,6 +85,13 @@ namespace GoogleTestAdapter.Helpers
             // The parser will throw if the value is not well formed.
             var parser = new RegexTraitParser(null);
             parser.ParseTraitsRegexesString(value, ignoreErrors: false);
+        }
+
+        public static void ValidateEnvironmentVariables(string value)
+        {
+            // The parser will throw if the value is not well formed.
+            var parser = new EnvironmentVariablesParser(null);
+            parser.ParseEnvironmentVariablesString(value, ignoreErrors: false);
         }
 
         public static bool BinaryFileContainsStrings(string executable, Encoding encoding, IEnumerable<string> strings)

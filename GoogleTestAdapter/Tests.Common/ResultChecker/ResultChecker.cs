@@ -32,8 +32,7 @@ namespace GoogleTestAdapter.Tests.Common.ResultChecker
             }
 
             string expectedResult = File.ReadAllText(expectationFile);
-            string msg;
-            bool stringsAreEqual = AreEqual(expectedResult, testResults, out msg);
+            bool stringsAreEqual = AreEqual(expectedResult, testResults, out var msg);
             if (!stringsAreEqual)
             {
 #pragma warning disable CS0162 // Unreachable code (because overwriteTestResults is compile time constant)

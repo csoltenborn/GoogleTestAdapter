@@ -146,8 +146,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private bool ValidateTraitValue(object value)
         {
-            string traitValue = value as string;
-            if (traitValue == null)
+            if (!(value is string traitValue))
                 return false;
 
             return TraitValueRegex.IsMatch(traitValue);

@@ -8,6 +8,7 @@ TheFixture.AddPassesWithTraits2
 TheFixture.AddPassesWithTraits3
 CommandArgs.TestDirectoryIsSet
 WorkingDir.IsSolutionDirectory
+EnvironmentVariable.IsSet
 TestMath.AddFails
 TestMath.AddPasses
 TestMath.Crash
@@ -30,6 +31,7 @@ OutputHandling.OneLine
 abcd.t
 bbcd.t
 bcd.t
+MainMethodTests.StupidMethod
 Namespace_Named.Test
 Namespace_Named_Named.Test
 Namespace_Named_Anon.Test

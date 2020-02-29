@@ -1,49 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestRun>
   <Results>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" outcome="Passed" />
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits|0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits|1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
   Actual: "!"
 Expected: ""</Message>
-          <StackTrace>at parameterizedtests.cpp:30 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 30</StackTrace>
+          <StackTrace>at parameterizedtests.cpp:30 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 30</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits|2 [(-1,)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().i
   Actual: -1
 Expected: 1</Message>
-          <StackTrace>at parameterizedtests.cpp:29 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 29</StackTrace>
+          <StackTrace>at parameterizedtests.cpp:29 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 29</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" outcome="Passed" />
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits2|0 [(1,)]" outcome="Passed" />
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits2|1 [(1,!)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().s
   Actual: "!"
 Expected: ""</Message>
-          <StackTrace>at parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 35</StackTrace>
+          <StackTrace>at parameterizedtests.cpp:35 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 35</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" outcome="Failed">
+    <UnitTestResult testName="InstantiationName|ParameterizedTests.SimpleTraits2|2 [(-1,)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>Value of: GetParam().i
   Actual: -1
 Expected: 1</Message>
-          <StackTrace>at parameterizedtests.cpp:34 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 34</StackTrace>
+          <StackTrace>at parameterizedtests.cpp:34 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 34</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ParameterizedTests.SimpleTraits/0 [(0,_)]" outcome="Failed">
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>#1 - Value of: GetParam().i
@@ -52,12 +52,12 @@ Expected: 1
 #2 - Value of: GetParam().s
   Actual: "_"
 Expected: ""</Message>
-          <StackTrace>at #1 - parameterizedtests.cpp:29 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 29
-at #2 - parameterizedtests.cpp:30 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 30</StackTrace>
+          <StackTrace>at #1 - parameterizedtests.cpp:29 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 29
+at #2 - parameterizedtests.cpp:30 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 30</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
-    <UnitTestResult testName="ParameterizedTests.SimpleTraits2/0 [(0,_)]" outcome="Failed">
+    <UnitTestResult testName="ParameterizedTests.SimpleTraits2|0 [(0,_)]" outcome="Failed">
       <Output>
         <ErrorInfo>
           <Message>#1 - Value of: GetParam().i
@@ -66,8 +66,8 @@ Expected: 1
 #2 - Value of: GetParam().s
   Actual: "_"
 Expected: ""</Message>
-          <StackTrace>at #1 - parameterizedtests.cpp:34 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 34
-at #2 - parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterizedtests.cpp:line 35</StackTrace>
+          <StackTrace>at #1 - parameterizedtests.cpp:34 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 34
+at #2 - parameterizedtests.cpp:35 in $(directory)\sampletests\tests\parameterizedtests.cpp:line 35</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -77,29 +77,29 @@ at #2 - parameterizedtests.cpp:35 in $(Directory)\sampletests\tests\parameterize
     <UnitTestResult testName="TheFixture.AddPassesWithTraits3" outcome="Passed" />
   </Results>
   <TestDefinitions>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits|1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits|1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits|2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits|2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits2|0 [(1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits2|0 [(1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits2|1 [(1,!)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits2|1 [(1,!)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="InstantiationName/ParameterizedTests.SimpleTraits2/2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="InstantiationName|ParameterizedTests.SimpleTraits2|2 [(-1,)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="InstantiationName|ParameterizedTests.SimpleTraits2|2 [(-1,)]" className="InstantiationName/ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="ParameterizedTests.SimpleTraits/0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="ParameterizedTests.SimpleTraits|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
-    <UnitTest name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
-      <TestMethod name="ParameterizedTests.SimpleTraits2/0 [(0,_)]" className="ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
+    <UnitTest name="ParameterizedTests.SimpleTraits2|0 [(0,_)]" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
+      <TestMethod name="ParameterizedTests.SimpleTraits2|0 [(0,_)]" className="ParameterizedTests" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />
     </UnitTest>
     <UnitTest name="TestMath.AddPassesWithTraits" storage="$(Directory)\sampletests\${ConfigurationName}\tests_1.7.0_gta.exe">
       <TestMethod name="TestMath.AddPassesWithTraits" className="TestMath" adapterTypeName="executor://googletestrunner/v1" codeBase="$(Directory)\SampleTests\${ConfigurationName}\Tests_1.7.0_gta.exe" />

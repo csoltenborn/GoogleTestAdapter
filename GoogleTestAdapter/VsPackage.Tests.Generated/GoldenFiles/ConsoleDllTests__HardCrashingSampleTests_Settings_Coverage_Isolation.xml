@@ -4,20 +4,22 @@
     <UnitTestResult testName="Crashing.AddFailsAfterCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>Expected: 1000
-To be equal to: Add(10, 10)
-      Which is: 20</Message>
-          <StackTrace>at crashingtests.cpp:27 in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 27</StackTrace>
+          <Message>Expected equality of these values:
+  1000
+  Add(10, 10)
+    Which is: 20</Message>
+          <StackTrace>at crashingtests.cpp:27 in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 27</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
     <UnitTestResult testName="Crashing.AddFailsBeforeCrash" outcome="Failed">
       <Output>
         <ErrorInfo>
-          <Message>Expected: 1000
-To be equal to: Add(10, 10)
-      Which is: 20</Message>
-          <StackTrace>at crashingtests.cpp:12 in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 12</StackTrace>
+          <Message>Expected equality of these values:
+  1000
+  Add(10, 10)
+    Which is: 20</Message>
+          <StackTrace>at crashingtests.cpp:12 in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 12</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -25,7 +27,7 @@ To be equal to: Add(10, 10)
       <Output>
         <ErrorInfo>
           <Message>reason is probably a crash of test Crashing.TheCrash</Message>
-          <StackTrace>at crash suspect in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
+          <StackTrace>at crash suspect in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>
@@ -33,7 +35,7 @@ To be equal to: Add(10, 10)
       <Output>
         <ErrorInfo>
           <Message>reason is probably a crash of test Crashing.TheCrash</Message>
-          <StackTrace>at crash suspect in $(Directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
+          <StackTrace>at crash suspect in $(directory)\sampletests\crashingtests\crashingtests.cpp:line 21</StackTrace>
         </ErrorInfo>
       </Output>
     </UnitTestResult>

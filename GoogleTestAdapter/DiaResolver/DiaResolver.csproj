@@ -60,6 +60,7 @@
     <Compile Include="DiaFactory.cs" />
     <Compile Include="DiaMemoryStream.cs" />
     <Compile Include="DefaultDiaResolverFactory.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IClassFactory.cs" />
     <Compile Include="IDiaResolver.cs" />
     <Compile Include="IDiaResolverFactory.cs" />

@@ -1,4 +1,4 @@
-version: 0.13.3.{build}
+version: 0.18.0.{build}
 os: 
 - Visual Studio 2017
 configuration: Release
@@ -62,8 +62,8 @@ test_script:
         $TestExitCode = $LASTEXITCODE
     }
 
-    if (Test-Path out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors) {
-        7z a TestErrors.zip out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\TestErrors\*
+    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
+        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
         Push-AppveyorArtifact TestErrors.zip
     }
 

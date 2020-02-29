@@ -1,8 +1,10 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
+using GoogleTestAdapter.Common;
+using GoogleTestAdapter.ProcessExecution;
+
 namespace GoogleTestAdapter.Settings
 {
-
     /*
     To add a new option, make the following changes:
     - add (nullable!) property to GoogleTestAdapter.Settings.IGoogleTestAdapterSettings
@@ -11,7 +13,7 @@ namespace GoogleTestAdapter.Settings
     - handle property serialization in class GoogleTestAdapter.Settings.RunSettings
     - add Options UI integration to one of the classes in GoogleTestAdapter.VsPackage.OptionsPages.*
     - handle property in method GoogleTestAdapter.VsPackage.GoogleTestExtensionOptionsPage.GetRunSettingsFromOptionPages()
-    - update schema in GoogleTestAdapterSettings.xsd
+    - update schema in TestAdapter/GoogleTestAdapterSettings.xsd
     - add new option to Solution Items/AllTestSettings.gta.runsettings
     - add default mock configuration in method GoogleTestAdapter.Tests.Common.TestsBase.SetUp()
     */
@@ -34,6 +36,7 @@ namespace GoogleTestAdapter.Settings
         int? TestDiscoveryTimeoutInSeconds { get; set; }
         string WorkingDir { get; set; }
         string PathExtension { get; set; }
+        string EnvironmentVariables { get; set; }
         string BatchForTestSetup { get; set; }
         string BatchForTestTeardown { get; set; }
         string TraitsRegexesAfter { get; set; }
@@ -41,12 +44,20 @@ namespace GoogleTestAdapter.Settings
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
         bool? DebugMode { get; set; }
+        OutputMode? OutputMode { get; set; }
         bool? TimestampOutput { get; set; }
+        TimestampMode? TimestampMode { get; set; }
+        SeverityMode? SeverityMode { get; set; }
+        SummaryMode? SummaryMode { get; set; }
+        bool? PrefixOutputWithGta { get; set; }
         bool? ShowReleaseNotes { get; set; }
         bool? KillProcessesOnCancel { get; set; }
         bool? SkipOriginCheck { get; set; }
+        string ExitCodeTestCase { get; set; }
+        MissingTestsReportMode? MissingTestsReportMode { get; set; }
 
         bool? UseNewTestExecutionFramework { get; set; }
+        DebuggerKind? DebuggerKind { get; set; }
 
         // internal
         string DebuggingNamedPipeId { get; set; }
@@ -74,6 +85,7 @@ namespace GoogleTestAdapter.Settings
             self.TestDiscoveryTimeoutInSeconds = self.TestDiscoveryTimeoutInSeconds ?? other.TestDiscoveryTimeoutInSeconds;
             self.WorkingDir = self.WorkingDir ?? other.WorkingDir;
             self.PathExtension = self.PathExtension ?? other.PathExtension;
+            self.EnvironmentVariables = self.EnvironmentVariables ?? other.EnvironmentVariables;
             self.BatchForTestSetup = self.BatchForTestSetup ?? other.BatchForTestSetup;
             self.BatchForTestTeardown = self.BatchForTestTeardown ?? other.BatchForTestTeardown;
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;
@@ -81,12 +93,20 @@ namespace GoogleTestAdapter.Settings
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
+            self.OutputMode = self.OutputMode ?? other.OutputMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;
+            self.TimestampMode = self.TimestampMode ?? other.TimestampMode;
+            self.SeverityMode = self.SeverityMode ?? other.SeverityMode;
+            self.SummaryMode = self.SummaryMode ?? other.SummaryMode;
+            self.PrefixOutputWithGta = self.PrefixOutputWithGta ?? other.PrefixOutputWithGta;
             self.ShowReleaseNotes = self.ShowReleaseNotes ?? other.ShowReleaseNotes;
             self.KillProcessesOnCancel = self.KillProcessesOnCancel ?? other.KillProcessesOnCancel;
             self.SkipOriginCheck = self.SkipOriginCheck ?? other.SkipOriginCheck;
+            self.ExitCodeTestCase = self.ExitCodeTestCase ?? other.ExitCodeTestCase;
+            self.MissingTestsReportMode = self.MissingTestsReportMode ?? other.MissingTestsReportMode;
 
             self.UseNewTestExecutionFramework = self.UseNewTestExecutionFramework ?? other.UseNewTestExecutionFramework;
+            self.DebuggerKind = self.DebuggerKind ?? other.DebuggerKind;
 
             self.DebuggingNamedPipeId = self.DebuggingNamedPipeId ?? other.DebuggingNamedPipeId;
             self.SolutionDir = self.SolutionDir ?? other.SolutionDir;

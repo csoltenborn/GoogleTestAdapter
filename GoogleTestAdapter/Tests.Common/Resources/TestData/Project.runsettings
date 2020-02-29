@@ -9,7 +9,7 @@
       </Settings>
     </SolutionSettings>
     <ProjectSettings>
-      <Settings ProjectRegex=".*\\Tests_gta\.exe">
+      <Settings ProjectRegex=".*\\Tests(_1.7.0)?_gta\.exe">
         <TestNameSeparator>|</TestNameSeparator>
       </Settings>
     </ProjectSettings>

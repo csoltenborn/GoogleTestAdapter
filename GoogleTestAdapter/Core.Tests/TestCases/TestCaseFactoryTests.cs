@@ -6,6 +6,8 @@ using System.IO;
 using FluentAssertions;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,17 +20,18 @@ namespace GoogleTestAdapter.TestCases
     [TestClass]
     public class TestCaseFactoryTests : TestsBase
     {
+        private readonly IProcessExecutorFactory _processExecutorFactory = new ProcessExecutorFactory();
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged()
+        public void CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancellationIsLogged()
         {
             MockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds).Returns(1);
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
 
             var reportedTestCases = new List<TestCase>();
             var stopWatch = Stopwatch.StartNew();
-            var factory = new TestCaseFactory(TestResources.TenSecondsWaiter, MockLogger.Object, TestEnvironment.Options, null);
+            var factory = new TestCaseFactory(TestResources.TenSecondsWaiter, MockLogger.Object, TestEnvironment.Options, null, _processExecutorFactory);
             var returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
             stopWatch.Stop();
 
@@ -37,22 +40,22 @@ namespace GoogleTestAdapter.TestCases
             stopWatch.Elapsed.Should().BeGreaterOrEqualTo(TimeSpan.FromSeconds(1));
             stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(2));
             MockLogger.Verify(o => o.LogError(It.Is<string>(s => s.Contains(TestResources.TenSecondsWaiter))), Times.Once);
-            MockLogger.Verify(o => o.DebugError(It.Is<string>(s => s.Contains(Path.GetFileName(TestResources.TenSecondsWaiter)))), Times.Once);
+            MockLogger.Verify(o => o.DebugError(It.Is<string>(s => s.Contains(Path.GetFileName(TestResources.TenSecondsWaiter)))), Times.AtLeastOnce);
         }
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void CreateTestCases_OldExeDiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged()
+        public void CreateTestCases_OldExeDiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancellationIsLogged()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
-            CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancelationIsLogged();
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
+            CreateTestCases_DiscoveryTimeoutIsExceeded_DiscoveryIsCanceledAndCancellationIsLogged();
         }
 
         [TestMethod]
         [TestCategory(Integration)]
         public void CreateTestCases_OldExeWithAdditionalPdb_TestCasesAreFound()
         {
-            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(false);
+            MockOptions.Setup(o => o.DebuggerKind).Returns(DebuggerKind.VsTestFramework);
             CheckIfSourceLocationsAreFound();
         }
 
@@ -81,7 +84,7 @@ namespace GoogleTestAdapter.TestCases
 
                 var reportedTestCases = new List<TestCase>();
                 var diaResolverFactory = new DefaultDiaResolverFactory();
-                var factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory);
+                var factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory, _processExecutorFactory);
                 var returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
 
                 returnedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
@@ -90,7 +93,7 @@ namespace GoogleTestAdapter.TestCases
                 reportedTestCases.Clear();
                 MockOptions.Setup(o => o.AdditionalPdbs).Returns("$(ExecutableDir)\\*.pdb.bak");
                 MockOptions.Setup(o => o.TestDiscoveryTimeoutInSeconds).Returns(10000);
-                factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory);
+                factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory, _processExecutorFactory);
                 returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
 
                 reportedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));

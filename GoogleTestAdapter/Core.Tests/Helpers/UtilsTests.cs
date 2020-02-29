@@ -55,7 +55,7 @@ namespace GoogleTestAdapter.Helpers
             string result = Utils.GetExtendedPath(toAdd);
 
             string path = Environment.GetEnvironmentVariable("PATH");
-            result.Length.Should().Be(path.Length + toAdd.Length + 1);
+            result.Should().HaveLength(path.Length + toAdd.Length + 1);
             result.Should().Contain(path);
             string[] pathParts = result.Split(';');
             pathParts.Should().Contain(s => s.Equals(toAdd));
@@ -115,34 +115,11 @@ namespace GoogleTestAdapter.Helpers
 
         [TestMethod]
         [TestCategory(Unit)]
-        public void TimestampMessage_MessageIsNullOrEmpty_ResultIsTheSame()
+        public void SpawnAndWait_SeveralTasks_AreExecutedInParallel()
         {
-            string timestampSeparator = " - ";
-            string resultRegex = @"[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}" + timestampSeparator;
-
-            string nullMessage = null;
-            Utils.TimestampMessage(ref nullMessage);
-            nullMessage.Should().MatchRegex(resultRegex);
-            nullMessage.Should().EndWith(timestampSeparator);
-
-            string emptyMessage = "";
-            Utils.TimestampMessage(ref emptyMessage);
-            emptyMessage.Should().MatchRegex(resultRegex);
-            emptyMessage.Should().EndWith(timestampSeparator);
-
-            string fooMessage = "foo";
-            Utils.TimestampMessage(ref fooMessage);
-            fooMessage.Should().MatchRegex(resultRegex);
-            fooMessage.Should().EndWith(timestampSeparator + "foo");
-        }
-
-        [TestMethod]
-        [TestCategory(Unit)]
-        public void SpawnAndWait_TwoTasks_AreExecutedInParallel()
-        {
-            int nrOfTasks = Environment.ProcessorCount;
+            int nrOfTasks = Environment.ProcessorCount - 2;
             if (nrOfTasks < 2)
-                Assert.Inconclusive("System only has one processor, skipping test");
+                Assert.Inconclusive("System does not have enough processors, skipping test");
 
             int taskDurationInMs = 500;
 
@@ -157,7 +134,7 @@ namespace GoogleTestAdapter.Helpers
             stopWatch.Stop();
 
             stopWatch.ElapsedMilliseconds.Should().BeGreaterOrEqualTo(taskDurationInMs);
-            stopWatch.ElapsedMilliseconds.Should().BeLessThan(2 * taskDurationInMs);
+            stopWatch.ElapsedMilliseconds.Should().BeLessThan((int)(1.9 * taskDurationInMs));
         }
 
         [TestMethod]

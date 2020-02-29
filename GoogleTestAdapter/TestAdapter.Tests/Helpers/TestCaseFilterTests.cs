@@ -136,44 +136,44 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             TestProperty property = TestProperty.Find("MyTrait");
 
             Action action = () => testCase.SetPropertyValue(property, "i");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             action = () => testCase.SetPropertyValue(property, "_i");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             action = () => testCase.SetPropertyValue(property, "äöüÄÖÜß$");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             action = () => testCase.SetPropertyValue(property, "_äöüÄÖÜß$");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             // since we are not at the beginning of the method name
             action = () => testCase.SetPropertyValue(property, "1");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             action = () => testCase.SetPropertyValue(property, "_1");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             action = () => testCase.SetPropertyValue(property, "_");
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
 
             action = () => testCase.SetPropertyValue(property, "");
-            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+            action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
 
             action = () => testCase.SetPropertyValue(property, "_(");
-            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+            action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
 
             action = () => testCase.SetPropertyValue(property, "a(");
-            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+            action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
 
             action = () => testCase.SetPropertyValue(property, "1(");
-            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+            action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
 
             action = () => testCase.SetPropertyValue(property, "%");
-            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+            action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
 
             action = () => testCase.SetPropertyValue(property, "+");
-            action.ShouldThrow<ArgumentException>().WithMessage("MyTrait");
+            action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
         }
 
         private void SetupFilterToAcceptTraitForTestCase(TestCase testCase, string traitName, string traitValue)
@@ -184,7 +184,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private static void AssertAreEqual(IEnumerable<TestCase> testCases1, IEnumerable<TestCase> testCases2)
         {
-            testCases1.Count().ShouldBeEquivalentTo(testCases2.Count());
+            testCases1.Should().HaveSameCount(testCases2);
 
             using (IEnumerator<TestCase> enumerator1 = testCases1.GetEnumerator())
             using (IEnumerator<TestCase> enumerator2 = testCases2.GetEnumerator())
@@ -198,14 +198,14 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private static void AssertAreEqual(TestCase testCase1, TestCase testCase2)
         {
-            testCase1.FullyQualifiedName.ShouldBeEquivalentTo(testCase2.FullyQualifiedName);
-            testCase1.DisplayName.ShouldBeEquivalentTo(testCase2.DisplayName);
-            testCase1.CodeFilePath.ShouldBeEquivalentTo(testCase2.CodeFilePath);
-            testCase1.Source.ShouldBeEquivalentTo(testCase2.Source);
-            testCase1.LineNumber.ShouldBeEquivalentTo(testCase2.LineNumber);
-            testCase1.Id.ShouldBeEquivalentTo(testCase2.Id);
-            testCase1.ExecutorUri.ShouldBeEquivalentTo(testCase2.ExecutorUri);
-            testCase1.Traits.Count().ShouldBeEquivalentTo(testCase2.Traits.Count());
+            testCase1.FullyQualifiedName.Should().BeEquivalentTo(testCase2.FullyQualifiedName);
+            testCase1.DisplayName.Should().BeEquivalentTo(testCase2.DisplayName);
+            testCase1.CodeFilePath.Should().BeEquivalentTo(testCase2.CodeFilePath);
+            testCase1.Source.Should().BeEquivalentTo(testCase2.Source);
+            testCase1.LineNumber.Should().Be(testCase2.LineNumber);
+            testCase1.Id.Should().Be(testCase2.Id);
+            testCase1.ExecutorUri.Should().BeEquivalentTo(testCase2.ExecutorUri);
+            testCase1.Traits.Count().Should().Be(testCase2.Traits.Count());
         }
 
     }
