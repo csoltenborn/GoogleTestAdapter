@@ -160,7 +160,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionDebuggerKind)]
         [Description(SettingsWrapper.OptionDebuggerKindDescription)]
-        [PropertyPageTypeConverter(typeof(DebuggerKindConverter))]
+        [PropertyPageTypeConverter(typeof(AttributedEnumConverter))]
         public DebuggerKind DebuggerKind
         {
             get => _debuggerKind;
@@ -181,7 +181,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryMiscName)]
         [DisplayName(SettingsWrapper.OptionMissingTestsReportMode)]
         [Description(SettingsWrapper.OptionMissingTestsReportModeDescription)]
-        [PropertyPageTypeConverter(typeof(MissingTestsReportModeConverter))]
+        [PropertyPageTypeConverter(typeof(AttributedEnumConverter))]
         public MissingTestsReportMode MissingTestsReportMode
         {
             get => _missingTestsReportMode;

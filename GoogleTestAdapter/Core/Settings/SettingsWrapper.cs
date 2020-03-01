@@ -191,9 +191,9 @@ namespace GoogleTestAdapter.Settings
         public const string OptionTimestampOutput = "Timestamp output";
         public const string OptionTimestampOutputDescription =
             "Controls whether a timestamp is added to the output.\n" + 
-            TimestampModeConverter.Automatic + ": add timestamp on VS2013, VS2015\n" +
-            TimestampModeConverter.PrintTimeStamp + ": always add timestamp\n" + 
-            TimestampModeConverter.DoNotPrintTimeStamp + ": never add timestamp";
+            TimeStampModeDescriptions.Automatic + ": add timestamp on VS2013, VS2015\n" +
+            TimeStampModeDescriptions.PrintTimestamp + ": always add timestamp\n" + 
+            TimeStampModeDescriptions.DoNotPrintTimestamp + ": never add timestamp";
         public const TimestampMode OptionTimestampOutputDefaultValue = TimestampMode.Automatic;
 
         public virtual TimestampMode TimestampMode => _currentSettings.TimestampMode ?? OptionTimestampOutputDefaultValue;
@@ -202,9 +202,9 @@ namespace GoogleTestAdapter.Settings
         public const string OptionSeverityMode = "Print severity";
         public const string OptionSeverityModeDescription =
             "Controls whether the messages' severity is added to the output.\n" + 
-            SeverityModeConverter.Automatic + ": print severity on VS2013, VS2015\n" +
-            SeverityModeConverter.PrintSeverity + ": always print severity\n" +
-            SeverityModeConverter.DoNotPrintSeverity + ": never print severity";
+            SeverityModeDescriptions.Automatic + ": print severity on VS2013, VS2015\n" +
+            SeverityModeDescriptions.PrintSeverity + ": always print severity\n" +
+            SeverityModeDescriptions.DoNotPrintSeverity + ": never print severity";
         public const SeverityMode OptionSeverityModeDefaultValue = SeverityMode.Automatic;
 
         public virtual SeverityMode SeverityMode => _currentSettings.SeverityMode ?? OptionSeverityModeDefaultValue;
@@ -322,9 +322,9 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionDebuggerKind = "Debugger engine";
         public const string OptionDebuggerKindDescription =
-                DebuggerKindConverter.VsTestFramework + ": Debugger engine as provided by the VsTest framework; no test crash detection, no test output printing, less interactive UI\n" +
-                DebuggerKindConverter.Native + ": Debugger engine as provided by VS native API; no restrictions (default)\n" + 
-                DebuggerKindConverter.ManagedAndNative + ": Same as '" + DebuggerKindConverter.Native + "', but allows to also debug into managed code";
+                DebuggerKindDescriptions.VsTestFramework + ": Debugger engine as provided by the VsTest framework; no test crash detection, no test output printing, less interactive UI\n" +
+                DebuggerKindDescriptions.Native + ": Debugger engine as provided by VS native API; no restrictions (default)\n" + 
+                DebuggerKindDescriptions.ManagedAndNative + ": Same as '" + DebuggerKindDescriptions.Native + "', but allows to also debug into managed code";
         public const DebuggerKind OptionDebuggerKindDefaultValue = DebuggerKind.Native;
 
         public virtual DebuggerKind DebuggerKind => _currentSettings.DebuggerKind ?? OptionDebuggerKindDefaultValue;
@@ -476,7 +476,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionMissingTestsReportMode = "Behavior for missing test results";
         public const string OptionMissingTestsReportModeDescription =
             "If a test can not be run (e.g. because a dependency has been removed since discovery without VS noticing), this option allows to configure how that test will be reported to the VS test framework." + 
-            "\nDefault: " + MissingTestsReportModeConverter.ReportAsNotFound;
+            "\nDefault: " + MissingTestsReportModeDescriptions.ReportAsNotFound;
         public const MissingTestsReportMode OptionMissingTestsReportModeDefaultValue = MissingTestsReportMode.ReportAsNotFound;
 
         public virtual MissingTestsReportMode MissingTestsReportMode =>

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.ProcessExecution;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -14,7 +15,7 @@ namespace GoogleTestAdapter.Runners
         public void TypeDescriptor_DeliversCorrectType()
         {
             var converter = TypeDescriptor.GetConverter(typeof(DebuggerKind));
-            converter.Should().BeOfType<DebuggerKindConverter>();
+            converter.Should().BeOfType<AttributedEnumConverter>();
         }
 
         [TestMethod]
@@ -30,11 +31,12 @@ namespace GoogleTestAdapter.Runners
         [TestCategory(Unit)]
         public void ConvertFrom_ReturnsCorrectLiterals()
         {
-            new DebuggerKindConverter().ConvertFrom("VsTest framework").Should().Be(DebuggerKind.VsTestFramework);
-            new DebuggerKindConverter().ConvertFrom("VsTestFramework").Should().Be(DebuggerKind.VsTestFramework);
-            new DebuggerKindConverter().ConvertFrom("Native").Should().Be(DebuggerKind.Native);
-            new DebuggerKindConverter().ConvertFrom("Managed and native").Should().Be(DebuggerKind.ManagedAndNative);
-            new DebuggerKindConverter().ConvertFrom("ManagedAndNative").Should().Be(DebuggerKind.ManagedAndNative);
+            var converter = TypeDescriptor.GetConverter(typeof(DebuggerKind));
+            converter.ConvertFrom("VsTest framework").Should().Be(DebuggerKind.VsTestFramework);
+            converter.ConvertFrom("VsTestFramework").Should().Be(DebuggerKind.VsTestFramework);
+            converter.ConvertFrom("Native").Should().Be(DebuggerKind.Native);
+            converter.ConvertFrom("Managed and native").Should().Be(DebuggerKind.ManagedAndNative);
+            converter.ConvertFrom("ManagedAndNative").Should().Be(DebuggerKind.ManagedAndNative);
         }
 
     }
