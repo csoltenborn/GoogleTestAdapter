@@ -93,6 +93,7 @@
     <Compile Include="GoogleTestExecutorTests.cs" />
     <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="Helpers\DotNetProcessExecutorTests.cs" />
+    <Compile Include="Helpers\AttributedEnumConverterTests.cs" />
     <Compile Include="Helpers\EnvironmentVariablesParserTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />

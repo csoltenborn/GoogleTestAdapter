@@ -51,7 +51,8 @@ namespace GoogleTestAdapter.Settings
                 if (!File.Exists(helperFile))
                     return new Dictionary<string, string>();
 
-                return ParseHelperFile(File.ReadAllText(helperFile));
+                _logger.DebugInfo($"Parsing settings helper file at {helperFile} (executable: {executable})");
+                return ParseHelperFile(File.ReadAllText(helperFile).Trim());
             }
             catch (Exception e)
             {
@@ -71,6 +72,7 @@ namespace GoogleTestAdapter.Settings
                     string placeholder = setting.Substring(0, index);
                     string value = setting.Substring(index + 1, setting.Length - index - 1);
                     replacementMap.Add(placeholder, value);
+                    _logger.VerboseInfo($"Found placeholder {placeholder} with value '{value}'");
                 }
             }
             return replacementMap;

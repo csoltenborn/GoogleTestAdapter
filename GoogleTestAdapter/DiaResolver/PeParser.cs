@@ -104,17 +104,26 @@ namespace GoogleTestAdapter.DiaResolver
             // ReSharper disable once InconsistentNaming
             public const ushort IMAGE_DIRECTORY_ENTRY_IMPORT = 1;
 
-            [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+            [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, SetLastError = true)]
             public static extern bool MapAndLoad(string imageName, string dllPath, LOADED_IMAGE* loadedImage, bool dotDll, bool readOnly);
 
-            [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi)]
+            [DllImport("imageHlp.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
             public static extern bool UnMapAndLoad(ref LOADED_IMAGE loadedImage);
 
-            [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
-            public static extern void* ImageDirectoryEntryToData(IntPtr pBase, byte mappedAsImage, ushort directoryEntry, uint* size);
+            [DllImport("dbghelp.dll", EntryPoint = "ImageDirectoryEntryToData", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
+            private static extern void* _ImageDirectoryEntryToData(IntPtr pBase, byte mappedAsImage, ushort directoryEntry, uint* size);
+            public static void* ImageDirectoryEntryToData(IntPtr pBase, byte mappedAsImage, ushort directoryEntry, uint* size)
+            {
+                // DbgHelp function ImageDirectoryEntryToData returns null in some cases without calling SetLastError. We thus set last error before calling the actual function to have a known value in these cases.
+                SetLastError(0);
+                return _ImageDirectoryEntryToData(pBase, mappedAsImage, directoryEntry, size);
+            }
 
-            [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi)]
+            [DllImport("dbghelp.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
             public static extern IntPtr ImageRvaToVa(IntPtr pNtHeaders, IntPtr pBase, uint rva, IntPtr pLastRvaSection);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            private static extern void SetLastError(uint dwErrCode);
         }
 
         private static void ParsePeFile(string executable, ILogger logger, Action<LOADED_IMAGE> action)

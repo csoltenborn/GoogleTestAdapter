@@ -51,7 +51,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnumConverterBase.cs" />
+    <Compile Include="AttributedEnumConverter.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="DebuggerAttacherServiceConfiguration.cs" />
     <Compile Include="Functional.cs" />

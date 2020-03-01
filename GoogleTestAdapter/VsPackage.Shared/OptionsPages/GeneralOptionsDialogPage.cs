@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionTimestampOutput)]
         [Description(SettingsWrapper.OptionTimestampOutputDescription)]
-        [PropertyPageTypeConverter(typeof(TimestampModeConverter))]
+        [PropertyPageTypeConverter(typeof(AttributedEnumConverter))]
         public TimestampMode TimestampMode
         {
             get => _timestampMode;
@@ -48,7 +48,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionSeverityMode)]
         [Description(SettingsWrapper.OptionSeverityModeDescription)]
-        [PropertyPageTypeConverter(typeof(SeverityModeConverter))]
+        [PropertyPageTypeConverter(typeof(AttributedEnumConverter))]
         public SeverityMode SeverityMode
         {
             get => _severityMode;
@@ -59,7 +59,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         [Category(SettingsWrapper.CategoryOutputName)]
         [DisplayName(SettingsWrapper.OptionSummaryMode)]
         [Description(SettingsWrapper.OptionSummaryModeDescription)]
-        [PropertyPageTypeConverter(typeof(SummaryModeConverter))]
+        [PropertyPageTypeConverter(typeof(AttributedEnumConverter))]
         public SummaryMode SummaryMode
         {
             get => _summaryMode;

@@ -1,4 +1,4 @@
-version: 0.17.1.{build}
+version: 0.18.0.{build}
 os: 
 - Visual Studio 2017
 configuration: Release
@@ -46,11 +46,11 @@ test_script:
 - ps: >-
     $opencover = (Resolve-Path "NuGetPackages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Unit`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Unit_CoverageData.xml -returntargetcode
+    & $opencover -threshold:1 -register:path32 -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Unit`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Unit_CoverageData.xml -returntargetcode
 
     $TestExitCode = $LASTEXITCODE
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
+    & $opencover -threshold:1 -register:path32 -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
 
     if ($LASTEXITCODE -ne 0) {
         $TestExitCode = $LASTEXITCODE
@@ -89,10 +89,10 @@ artifacts:
   name: VSIX installation package
 - path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter.*.nupkg
   name: NuGet package
-#- path: OpenCover_Unit_CoverageData.xml
-#  name: OpenCover Unit coverage data
-#- path: OpenCover_Integration_CoverageData.xml
-#  name: OpenCover Integration coverage data
+- path: OpenCover_Unit_CoverageData.xml
+  name: OpenCover Unit coverage data
+- path: OpenCover_Integration_CoverageData.xml
+  name: OpenCover Integration coverage data
 deploy:
 - provider: GitHub
   auth_token:
