@@ -194,9 +194,10 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void ValidatePattern_LocalFile_PathPartReported()
         {
-            bool result = Utils.ValidatePattern(@"InvalidPath::\Foo.exe", out string errorMessage);
+            string pattern = @"InvalidPath::\Foo.exe";
+            bool result = Utils.ValidatePattern(pattern, out string errorMessage);
 
-            result.Should().BeFalse();
+            result.Should().BeFalse($"pattern '{pattern}' is invalid");
             errorMessage.Should().NotContain("file pattern part");
             errorMessage.Should().Contain("path part");
         }
