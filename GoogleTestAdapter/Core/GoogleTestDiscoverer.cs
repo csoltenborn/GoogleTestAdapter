@@ -47,6 +47,12 @@ namespace GoogleTestAdapter
 
         private static void DiscoverTests(string executable, ITestFrameworkReporter reporter, SettingsWrapper settings, ILogger logger, IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
         {
+            var proxy = DebuggerAttacherServiceConfiguration.CreateProxy(settings.DebuggingNamedPipeId, TimeSpan.MaxValue);
+            using (var client = new DebuggerAttacherServiceProxyWrapper(proxy))
+            {
+                var dictionary = client.Service.GetProjectProperties(executable);
+            }
+
             settings.ExecuteWithSettingsForExecutable(executable, logger, () =>
             {
                 if (!VerifyExecutableTrust(executable, settings, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))

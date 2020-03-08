@@ -93,6 +93,12 @@ namespace GoogleTestAdapter.TestAdapter
             if (!AbleToRun(runContext))
                 return;
 
+            var proxy = DebuggerAttacherServiceConfiguration.CreateProxy(_settings.DebuggingNamedPipeId, TimeSpan.MaxValue);
+            using (var client = new DebuggerAttacherServiceProxyWrapper(proxy))
+            {
+                var dictionary = client.Service.GetProjectProperties(executables.First());
+            }
+
             IList<TestCase> allTestCasesInExecutables = GetAllTestCasesInExecutables(executables).ToList();
 
             ISet<string> allTraitNames = GetAllTraitNames(allTestCasesInExecutables);
@@ -115,6 +121,12 @@ namespace GoogleTestAdapter.TestAdapter
 
             if (!AbleToRun(runContext))
                 return;
+
+            var proxy = DebuggerAttacherServiceConfiguration.CreateProxy(_settings.DebuggingNamedPipeId, TimeSpan.MaxValue);
+            using (var client = new DebuggerAttacherServiceProxyWrapper(proxy))
+            {
+                var dictionary = client.Service.GetProjectProperties(vsTestCasesToRun.First().Source);
+            }
 
             var vsTestCasesToRunAsArray = vsTestCasesToRun as VsTestCase[] ?? vsTestCasesToRun.ToArray();
             ISet<string> allTraitNames = GetAllTraitNames(vsTestCasesToRunAsArray.Select(tc => tc.ToTestCase()));
@@ -147,7 +159,7 @@ namespace GoogleTestAdapter.TestAdapter
             if (_settings == null || _settings.GetType() == typeof(SettingsWrapper)) // the latter prevents test settings and logger from being replaced 
                 CommonFunctions.CreateEnvironment(runSettings, messageLogger, out _logger, out _settings, runContext.SolutionDirectory);
         }
-
+        
         private bool AbleToRun(IRunContext runContext)
         {
             if (!IsVisualStudioProcessAvailable() && runContext.IsBeingDebugged)

@@ -1,9 +1,11 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
 using System;
+using System.Collections.Generic;
 using GoogleTestAdapter.Common;
 using System.ServiceModel;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
+using GoogleTestAdapter.VsPackage.GTA.Settings;
 
 namespace GoogleTestAdapter.VsPackage.Debugging
 {
@@ -37,6 +39,12 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             {
                 ThrowFaultException($"Could not attach debugger to process {processId} for unknown reasons");
             }
+        }
+
+        public IDictionary<string, string> GetProjectProperties(string executable)
+        {
+            var propertyResolver = new ProjectPropertyResolver();
+            return propertyResolver.GetPlaceholderDictionary(executable);
         }
 
         private void ThrowFaultException(string message)

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 
@@ -27,6 +28,10 @@ namespace GoogleTestAdapter.Common
         [OperationContract]
         [FaultContract(typeof(DebuggerAttacherServiceFault))]
         void AttachDebugger(int processId, DebuggerEngine debuggerEngine);
+
+        [OperationContract]
+        [FaultContract(typeof(DebuggerAttacherServiceFault))]
+        IDictionary<string, string> GetProjectProperties(string executable);
     }
 
     /// <summary>

@@ -36,6 +36,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\OptionsUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\ProjectPropertyResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\ProjectProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\RunSettingsService.cs" />
   </ItemGroup>
   <ItemGroup>
