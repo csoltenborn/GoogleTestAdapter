@@ -1,0 +1,5 @@
+﻿This project has been created with the project template of Google Test Adapter (GTA). It provides references to the project(s) under test as well as a couple of sample tests.
+
+To learn about the more sophisticated features of Google Test, you may find the following resources useful:
+- Overview of the official Google Test documentation: https://raw.githubusercontent.com/google/googletest/master/googletest/docs/Documentation.md
+- GTA's "Google Test example code" item template creates a test file containing tests demonstrating the most important functionality of Google Test, ready to be compiled and executed; right-click this Google Test project, select Add -> New item... -> Visual C++ -> Test -> Google Test example code

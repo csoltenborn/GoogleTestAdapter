@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <ProjectType>VC</ProjectType>
+    <TemplateID>0A5607E4-4889-4EDD-9EB8-C615E32E892F</TemplateID>
+    <Name>Google Test</Name>
+    <Description>A Google Test based unit test.</Description>
+    <Icon>gtest-logo.ico</Icon>
+    <SortOrder>110</SortOrder>
+    <DefaultName>tests.cpp</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem TargetFileName="$fileinputname$.cpp" >sample_tests.cpp</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

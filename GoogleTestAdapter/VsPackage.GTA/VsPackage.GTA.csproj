@@ -417,6 +417,10 @@
       <Project>{7f4372da-70e2-48d0-bee2-8043528428d0}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NewProjectWizard.GTA\NewProjectWizard.GTA.csproj">
+      <Project>{ac5c0bf4-a5cb-4445-b5dd-6f43f8f0c726}</Project>
+      <Name>NewProjectWizard.GTA</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
       <Name>TestAdapter</Name>
