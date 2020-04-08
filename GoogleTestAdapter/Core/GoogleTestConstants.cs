@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 4/2020.
 
 using System;
 
@@ -31,6 +31,9 @@ namespace GoogleTestAdapter
         public const string TypedTestMarker = ".  # TypeParam = ";
 
         public const string GoogleTestDllMarker = "gtest.dll";
+        public const string GoogleTestDllMarkerDebug = "gtestd.dll";
+        public const string GoogleTestMainDllMarker = "gtest_main.dll";
+        public const string GoogleTestMainDllMarkerDebug = "gtest_maind.dll";
 
         public static readonly string[] GoogleTestExecutableMarkers =
         {

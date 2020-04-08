@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 4/2020.
 
 using System;
 using System.Collections.Generic;
@@ -91,7 +91,10 @@ namespace GoogleTestAdapter
 
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                if (PeParser.FindImport(executable, GoogleTestConstants.GoogleTestDllMarker, StringComparison.OrdinalIgnoreCase, logger)
+                List<string> gtestImports = new List<string>() { GoogleTestConstants.GoogleTestDllMarker, GoogleTestConstants.GoogleTestDllMarkerDebug,
+                                                                 GoogleTestConstants.GoogleTestMainDllMarker, GoogleTestConstants.GoogleTestMainDllMarkerDebug };
+
+                if (PeParser.FindImport(executable, gtestImports, StringComparison.OrdinalIgnoreCase, logger)
                     || Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
                 {
                     logger.DebugInfo($"Google Test indicators found in executable {executable}");
