@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 11/2017.
+﻿// This file has been modified by Microsoft on 4/2020.
 
 using GoogleTestAdapter.Common;
 using Microsoft.Win32.SafeHandles;
@@ -277,12 +277,14 @@ namespace GoogleTestAdapter.DiaResolver
             return imports;
         }
 
-        public static bool FindImport(string executable, string import, StringComparison comparisonType, ILogger logger)
+        public static bool FindImport(string executable, List<string> imports, StringComparison comparisonType, ILogger logger)
         {
             var found = false;
             ProcessImports(executable, logger, (currentImport) =>
             {
-                found = String.Compare(import, currentImport, comparisonType) == 0;
+                foreach (var import in imports)
+                    found = found || String.Compare(import, currentImport, comparisonType) == 0;
+
                 return !found; // Continue only if not found yet.
             });
             return found;
