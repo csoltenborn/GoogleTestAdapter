@@ -45,7 +45,8 @@ namespace GoogleTestAdapter.TestCases
             {
                 var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
                 int processExitCode;
-                standardOutput = launcher.GetOutputOfCommand("", null, _executable, GoogleTestConstants.ListTestsOption,
+                string workingDir = new FileInfo(_executable).DirectoryName;
+                standardOutput = launcher.GetOutputOfCommand(workingDir, null, _executable, GoogleTestConstants.ListTestsOption,
                     false, false, out processExitCode);
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
@@ -129,6 +130,7 @@ namespace GoogleTestAdapter.TestCases
 
             try
             {
+                string workingDir = new FileInfo(_executable).DirectoryName;
                 int processExitCode = ProcessExecutor.ExecutionFailed;
                 ProcessExecutor executor = null;
                 var listAndParseTestsTask = new Task(() =>
@@ -137,7 +139,7 @@ namespace GoogleTestAdapter.TestCases
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
                         GoogleTestConstants.ListTestsOption,
-                        "",
+                        workingDir,
                         null,
                         _settings.GetPathExtension(_executable),
                         lineAction);

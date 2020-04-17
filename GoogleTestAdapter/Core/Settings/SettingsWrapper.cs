@@ -176,7 +176,11 @@ namespace GoogleTestAdapter.Settings
             => ReplacePlaceholders(BatchForTestTeardown, solutionDirectory, testDirectory, threadId);
 
         public string GetWorkingDir(string solutionDirectory, string testDirectory, int threadId)
-            => ReplacePlaceholders(WorkingDir, solutionDirectory, testDirectory, threadId);
+        {
+            return string.IsNullOrWhiteSpace(WorkingDir)
+                ? OptionWorkingDirDefaultValue
+                : ReplacePlaceholders(WorkingDir, solutionDirectory, testDirectory, threadId);
+        }
 
 
         private string ReplacePlaceholders(string theString, string solutionDirectory, string testDirectory, int threadId)
