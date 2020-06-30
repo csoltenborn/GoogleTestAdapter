@@ -3,7 +3,7 @@
 namespace GoogleTestAdapter.TestAdapter.Settings
 {
 
-    public interface IGlobalRunSettingsInternal : IGlobalRunSettings
+    public interface IGlobalRunSettingsInternal2 : IGlobalRunSettings2
     {
         new RunSettings RunSettings { get; set; }
     }

@@ -6,7 +6,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
     {
         private readonly string _solutionRunSettingsFile;
 
-        internal RunSettingsServiceUnderTest(IGlobalRunSettings globalRunSettings, string solutionRunSettingsFile) 
+        internal RunSettingsServiceUnderTest(IGlobalRunSettings2 globalRunSettings, string solutionRunSettingsFile) 
             : base(globalRunSettings)
         {
             _solutionRunSettingsFile = solutionRunSettingsFile;

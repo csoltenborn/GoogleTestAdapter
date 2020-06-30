@@ -22,10 +22,10 @@ namespace GoogleTestAdapter.TestAdapter.Settings
     {
         public string Name => GoogleTestConstants.SettingsName;
 
-        private readonly IGlobalRunSettings _globalRunSettings;
+        private readonly IGlobalRunSettings2 _globalRunSettings;
 
         [ImportingConstructor]
-        public RunSettingsService([Import(typeof(IGlobalRunSettings))] IGlobalRunSettings globalRunSettings)
+        public RunSettingsService([Import(typeof(IGlobalRunSettings2))] IGlobalRunSettings2 globalRunSettings)
         {
             _globalRunSettings = globalRunSettings;
         }

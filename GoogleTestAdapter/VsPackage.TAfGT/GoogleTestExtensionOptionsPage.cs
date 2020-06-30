@@ -27,7 +27,7 @@ namespace GoogleTestAdapter.VsPackage
             await base.InitializeAsync(cancellationToken, progress);
 
             var componentModel = await GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
-            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal2>();
 
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 

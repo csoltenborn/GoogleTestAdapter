@@ -30,7 +30,7 @@ namespace GoogleTestAdapter.VsPackage
             if (!_isAsyncLoadSupported)
             {
                 var componentModel = (IComponentModel)GetGlobalService(typeof(SComponentModel));
-                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal2>();
                 DoInitialize();
             }
         }
@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.VsPackage
             return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
             {
                 var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
-                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal2>();
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
