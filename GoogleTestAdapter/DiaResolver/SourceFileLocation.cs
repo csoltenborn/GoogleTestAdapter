@@ -5,7 +5,7 @@ namespace GoogleTestAdapter.DiaResolver
 
     public class SourceFileLocation
     {
-        private static readonly string Separator = "::";
+        private const string Separator = "::";
         private static readonly int SeparatorLength = Separator.Length;
 
         public string Symbol { get; }

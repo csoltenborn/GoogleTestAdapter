@@ -86,7 +86,7 @@ namespace GoogleTestAdapter.DiaResolver
         }
 
         /// From given symbol enumeration, extract name, section, offset and length
-        private IList<NativeSourceFileLocation> GetSymbolNamesAndAddresses(IDiaEnumSymbols diaSymbols)
+        private static IList<NativeSourceFileLocation> GetSymbolNamesAndAddresses(IDiaEnumSymbols diaSymbols)
         {
             var locations = new List<NativeSourceFileLocation>();
             foreach (IDiaSymbol diaSymbol in diaSymbols)

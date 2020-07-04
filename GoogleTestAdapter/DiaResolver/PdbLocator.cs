@@ -40,6 +40,7 @@ namespace GoogleTestAdapter.DiaResolver
                             return file;
                         attempts.Add($"\"{file}\"");
                     }
+#pragma warning disable CA1031 // Do not catch general exception types
                     catch (Exception e)
                     {
                         string message = $"Exception while searching for the PDB file of binary '{binary}'. ";
@@ -48,6 +49,7 @@ namespace GoogleTestAdapter.DiaResolver
                         logger.LogWarning(message);
                         logger.DebugWarning($"Exception:{Environment.NewLine}{e}");
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
                 }
             }
 
