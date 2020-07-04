@@ -5,12 +5,10 @@ namespace GoogleTestAdapter.Common
 {
    public class Strings : IStrings
    {
-      private static readonly IStrings _strings;
+      private static readonly IStrings _strings = new Strings();
 
       static Strings()
       {
-         _strings = new Strings();
-
          // this is broken since 0.14.0 for reasons I don't understand. Switching to fixed GTA strings for now...
          // var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "GoogleTestAdapter.Common.Dynamic.dll");
          // var asm = Assembly.LoadFile(path);

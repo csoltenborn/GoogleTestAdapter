@@ -7,6 +7,8 @@ namespace GoogleTestAdapter.Common
 
     public class ProcessWaiter
     {
+        private readonly object _lock = new object();
+
         public int ProcessExitCode { get; private set; } = -1;
         private bool _exited;
 
@@ -20,7 +22,7 @@ namespace GoogleTestAdapter.Common
 
         public int WaitForExit()
         {
-            lock (this)
+            lock (_lock)
             {
                 while (!_exited)
                 {
@@ -35,7 +37,7 @@ namespace GoogleTestAdapter.Common
         {
             if (sender is Process process)
             {
-                lock (this)
+                lock (_lock)
                 {
                     ProcessExitCode = process.ExitCode;
                     _exited = true;
