@@ -61,11 +61,38 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enables Visual Studio&apos;s testing tools with unit tests written for Google Test..
+        /// </summary>
+        public static string ExtensionDescription {
+            get {
+                return ResourceManager.GetString("ExtensionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test Adapter for Google Test.
         /// </summary>
         public static string ExtensionName {
             get {
                 return ResourceManager.GetString("ExtensionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Google Test based unit test..
+        /// </summary>
+        public static string NewItemDescription {
+            get {
+                return ResourceManager.GetString("NewItemDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write C++ unit tests using Google Test. Includes a copy of the Google Test library for use..
+        /// </summary>
+        public static string NewProjectDescrption {
+            get {
+                return ResourceManager.GetString("NewProjectDescrption", resourceCulture);
             }
         }
         

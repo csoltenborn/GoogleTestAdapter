@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ExtensionDescription" xml:space="preserve">
+    <value>Enables Visual Studio's testing tools with unit tests written for Google Test.</value>
+  </data>
   <data name="ExtensionName" xml:space="preserve">
     <value>Test Adapter for Google Test</value>
+  </data>
+  <data name="NewItemDescription" xml:space="preserve">
+    <value>A Google Test based unit test.</value>
+  </data>
+  <data name="NewProjectDescrption" xml:space="preserve">
+    <value>Write C++ unit tests using Google Test. Includes a copy of the Google Test library for use.</value>
   </data>
   <data name="TestDiscoveryStarting" xml:space="preserve">
     <value>Test Adapter for Google Test: Test discovery starting...</value>
