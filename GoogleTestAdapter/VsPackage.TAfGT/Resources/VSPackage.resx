@@ -123,6 +123,15 @@
   <data name="112" xml:space="preserve">
     <value>Enables Visual Studio's testing tools with unit tests written for Google Test.  The use terms and Third Party Notices are available in the extension installation directory.</value>
   </data>
+  <data name="113" xml:space="preserve">
+    <value>A Google Test based unit test.</value>
+  </data>
+  <data name="114" xml:space="preserve">
+    <value>Write C++ unit tests using Google Test. Includes a copy of the Google Test library for use.</value>
+  </data>
+  <data name="115" xml:space="preserve">
+    <value>Google Test</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Resources\Icons\Icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
