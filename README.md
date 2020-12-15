@@ -111,7 +111,7 @@ Note that the settings helper files need to be located within the same folder as
 
 #### Assigning traits to tests
 
-GTA has full support for [traits](http://blogs.msdn.com/b/visualstudioalm/archive/2012/11/09/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1-using-traits-in-the-unit-test-explorer.aspx), which can be assigned to tests in two ways:
+GTA has full support for [traits](https://devblogs.microsoft.com/devops/how-to-manage-unit-tests-in-visual-studio-2012-update-1-part-1using-traits-in-the-unit-test-explorer/), which can be assigned to tests in two ways:
 
 * <a name="trait_macros"></a>You can make use of the custom test macros provided in [GTA_Traits_1.8.0.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits_1.8.0.h) (or [GTA_Traits_1.7.0.h](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/Core/Resources/GTA_Traits_1.7.0.h) if you are still on Google Test 1.7.0), which contain macros for all test types of the Google Test framework. The macros do not change behavior of the tests; they only add some information to the generated test code which encodes the traits assigned to the respective test. All GTA provided macros follow the same naming schema `<Google Test macro>_TRAITS`, where, obviously, `<Google Test macro>` is the name of the according macro in Google Test. Each test can be assigned up to 8 traits.
 * <a name="trait_regexes"></a>Combinations of regular expressions and traits can be specified under the GTA options: If a test's name matches one of these regular expressions, the according trait is assigned to that test. 
