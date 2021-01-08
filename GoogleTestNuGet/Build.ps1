@@ -192,7 +192,7 @@ function Build-Binaries {
     Push-Location $Dir
     try {
         $CMakeArgs = @()
-        $CMakeArgs += "-G", "Visual Studio 15 2017"
+        $CMakeArgs += "-G", "`"Visual Studio 15 2017`""
         $CMakeArgs += "-T", $BuildToolset
         $CMakeArgs += "-A", $Platform
         $CMakeArgs += "-D", "BUILD_SHARED_LIBS=$(Convert-BooleanToOnOff $DynamicLibraryLinkage)"
@@ -247,11 +247,7 @@ function Build-NuGet {
     $TargetsTTArgs += "googletest.targets.tt.proj"
     Invoke-Executable msbuild $TargetsTTArgs
 
-    $PropertiesUITTArgs = @()
-    $PropertiesUITTArgs += "/p:PackageNameDashes=`"$PackageNameDashes`""
-    $PropertiesUITTArgs += "/p:OutputFileName=`"$Dir\build\native\$PackageName.propertiesui.xml`""
-    $PropertiesUITTArgs += "googletest.propertiesui.xml.tt.proj"
-    Invoke-Executable msbuild $PropertiesUITTArgs
+    Copy-Item -Path "googletest.propertiesui.xml" -Destination "$Dir\build\native\googletest.propertiesui.xml"
 
     Copy-Item -Recurse -Path "..\ThirdParty\googletest\googletest\include" -Destination "$Dir\build\native\include"
 
