@@ -247,11 +247,7 @@ function Build-NuGet {
     $TargetsTTArgs += "googletest.targets.tt.proj"
     Invoke-Executable msbuild $TargetsTTArgs
 
-    $PropertiesUITTArgs = @()
-    $PropertiesUITTArgs += "/p:PackageNameDashes=`"$PackageNameDashes`""
-    $PropertiesUITTArgs += "/p:OutputFileName=`"$Dir\build\native\$PackageName.propertiesui.xml`""
-    $PropertiesUITTArgs += "googletest.propertiesui.xml.tt.proj"
-    Invoke-Executable msbuild $PropertiesUITTArgs
+    Copy-Item -Path "googletest.propertiesui.xml" -Destination "$Dir\build\native\googletest.propertiesui.xml"
 
     Copy-Item -Recurse -Path "..\ThirdParty\googletest\googletest\include" -Destination "$Dir\build\native\include"
 
