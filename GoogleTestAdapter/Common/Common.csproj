@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
-  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
+  <Import Project="$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -63,7 +63,7 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
+  <Import Project="$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets')" />
   <PropertyGroup>
     <PreBuildEvent Condition="'$(RealSign)' != 'True'">if exist "$(SolutionDir)Keys\Key_Release.snk" (
     echo Using Release key for signing assembly

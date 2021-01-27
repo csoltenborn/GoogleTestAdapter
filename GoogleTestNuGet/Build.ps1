@@ -129,8 +129,8 @@ function Add-Signing {
     $ProjectNameDebug = -join("$ProjectName", "d")
 
     $MicroBuildProps = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $MicroBuildProps.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props")
-    $MicroBuildProps.SetAttribute("Condition", "Exists('$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')")
+    $MicroBuildProps.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props")
+    $MicroBuildProps.SetAttribute("Condition", "Exists('$PSScriptRoot\..\NuGetPackages\Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props')")
 
     $RealSignGroup = $xml.CreateElement("PropertyGroup", "http://schemas.microsoft.com/developer/msbuild/2003")
     $RealSignGroup.SetAttribute("Condition", "'`$(RealSign)' == 'True'")
@@ -164,8 +164,8 @@ function Add-Signing {
     $FileSignGroup.AppendChild($FilesToSignDebug) | Out-Null
 
     $MicroBuildTargets = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
-    $MicroBuildTargets.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets")
-    $MicroBuildTargets.SetAttribute("Condition", "Exists('$PSScriptRoot\..\NuGetPackages\MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')")
+    $MicroBuildTargets.SetAttribute("Project", "$PSScriptRoot\..\NuGetPackages\Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets")
+    $MicroBuildTargets.SetAttribute("Condition", "Exists('$PSScriptRoot\..\NuGetPackages\Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets')")
 
     $xml.Project.AppendChild($MicroBuildProps) | Out-Null
     $xml.Project.AppendChild($RealSignGroup) | Out-Null

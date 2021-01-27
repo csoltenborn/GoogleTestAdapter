@@ -11,11 +11,11 @@
   </PropertyGroup>
   
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
-  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" />
+  <Import Project="$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props" />
   
   <ItemGroup>
     <MergeManifest Include="$(OutputPath)\..\Packaging.TAfGT\Microsoft.VisualStudio.VC.Ide.TestAdapterForGoogleTest.json" />
   </ItemGroup>
 
-  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" /> 
+  <Import Project="$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets" /> 
 </Project> 

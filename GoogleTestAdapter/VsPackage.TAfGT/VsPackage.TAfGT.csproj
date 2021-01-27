@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
-  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
+  <Import Project="$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -183,14 +183,14 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.TestPlatform.CoreUtilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.1\lib\net46\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
+      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.0\lib\net46\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.1\lib\net46\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.15.0.0\lib\net46\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Microsoft.VisualStudio.TestWindow.Interfaces.15.0.26510-d15rel\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+      <HintPath>$(NuGetPackages)Microsoft.VisualStudio.TestWindow.Interfaces.11.0.61030\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -284,10 +284,10 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props'))" />
-    <Error Condition="!Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets'))" />
+    <Error Condition="!Exists('$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.props'))" />
+    <Error Condition="!Exists('$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets'))" />
   </Target>
-  <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
+  <Import Project="$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)Microsoft.VisualStudioEng.MicroBuild.Core.0.4.1\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets')" />
   <Target Name="GatherLocalizedOutputsForSigning" Condition="'$(LocalizationEnabled)' == 'true' AND '$(RealSign)' == 'True'">
     <ItemGroup>
       <FilesToSign Include="$(OutDir)\localize\**\$(AssemblyName).resources.dll">

@@ -30,7 +30,7 @@
   <package id="VSSDK.TextManager.Interop.8" version="8.0.4" targetFramework="net45" />
   <package id="VSSDK.TextManager.Interop.9" version="9.0.4" targetFramework="net45" />
 <# } else if (TestAdapterFlavor == "TAfGT") { #>
-  <package id="Microsoft.TestPlatform.ObjectModel" version="15.0.1" targetFramework="net46" />
-  <package id="Microsoft.VisualStudio.TestWindow.Interfaces" version="15.0.26510-d15rel" targetFramework="net46" />
+  <package id="Microsoft.TestPlatform.ObjectModel" version="15.0.0" targetFramework="net46" />
+  <package id="Microsoft.VisualStudio.TestWindow.Interfaces" version="11.0.61030" targetFramework="net46" />
 <# } #>
 </packages>
