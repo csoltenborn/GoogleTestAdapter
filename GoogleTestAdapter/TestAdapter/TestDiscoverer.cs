@@ -46,7 +46,7 @@ namespace GoogleTestAdapter.TestAdapter
                 return;
             CommonFunctions.LogVisualStudioVersion(_logger);
 
-            _logger.LogInfo(Common.Resources.TestDiscoveryStarting);
+            _logger.LogInfo(CommonResources.TestDiscoveryStarting);
             _logger.DebugInfo(String.Format(Resources.Settings, _settings));
 
             try
@@ -71,10 +71,10 @@ namespace GoogleTestAdapter.TestAdapter
             switch (version)
             {
                 case VsVersion.Unknown:
-                    _logger.LogWarning(String.Format(Resources.IdentifyVSError, Common.Resources.ExtensionName));
+                    _logger.LogWarning(String.Format(Resources.IdentifyVSError, CommonResources.ExtensionName));
                     return true;
                 case VsVersion.VS2012:
-                    _logger.LogError(String.Format(Resources.VS2012Error, Common.Resources.ExtensionName));
+                    _logger.LogError(String.Format(Resources.VS2012Error, CommonResources.ExtensionName));
                     return false;
                 default:
                     return true;

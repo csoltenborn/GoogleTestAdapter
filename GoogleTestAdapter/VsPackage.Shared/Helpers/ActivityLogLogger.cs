@@ -2,7 +2,6 @@
 
 using System;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace GoogleTestAdapter.VsPackage.Helpers

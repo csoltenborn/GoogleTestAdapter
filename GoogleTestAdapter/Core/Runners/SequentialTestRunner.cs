@@ -171,7 +171,7 @@ namespace GoogleTestAdapter.Runners
         {
             logger.LogError(String.Format(Resources.RunExecutableError, threadName, executable, exception.Message));
             logger.DebugError(String.Format(Resources.StackTrace, threadName, Environment.NewLine, exception.StackTrace));
-            logger.LogError(String.Format(Common.Resources.TroubleShootingLink, threadName));
+            logger.LogError(String.Format(CommonResources.TroubleShootingLink, threadName));
             logger.LogError(String.Format(Resources.ExecuteSteps, threadName, workingDir, Environment.NewLine, executable, arguments));
         }
 

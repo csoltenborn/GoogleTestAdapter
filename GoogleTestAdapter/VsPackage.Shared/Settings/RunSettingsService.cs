@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 9/2017.
+﻿// This file has been modified by Microsoft on 1/2021.
 
 using EnvDTE;
 using GoogleTestAdapter.Settings;
@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             Debug.Assert(runSettingsNavigator != null, "userRunSettingsNavigator == null!");
             if (!runSettingsNavigator.MoveToChild(Constants.RunSettingsName, ""))
             {
-                logger.Log(MessageLevel.Warning, Resources.RunSettingsMissingNode);
+                logger.Log(MessageLevel.Warning, Common.Resources.RunSettingsMissingNode);
                 return runSettingsNavigator;
             }
 
@@ -72,7 +72,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                         }
                         else
                         {
-                            logger.Log(MessageLevel.Warning, string.Format(Resources.SolutionFoundButMissingNode, solutionRunSettingsFile, Constants.RunSettingsName));
+                            logger.Log(MessageLevel.Warning, string.Format(Common.Resources.SolutionFoundButMissingNode, solutionRunSettingsFile, Constants.RunSettingsName));
                         }
 		    }
                 }
@@ -80,7 +80,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             catch (Exception e)
             {
                 logger.Log(MessageLevel.Warning,
-                    string.Format(Resources.CantParseSettings, solutionRunSettingsFile, e));
+                    string.Format(Common.Resources.CantParseSettings, solutionRunSettingsFile, e));
             }
 
             foreach (var projectSettings in settingsContainer.ProjectSettings)

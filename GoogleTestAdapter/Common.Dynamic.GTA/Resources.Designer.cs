@@ -61,11 +61,48 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Solution test settings file could not be parsed, check file: {0}
+        ///Exception: {1}.
+        /// </summary>
+        public static string CantParseSettings {
+            get {
+                return ResourceManager.GetString("CantParseSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Google Test Adapter.
         /// </summary>
         public static string ExtensionName {
             get {
                 return ResourceManager.GetString("ExtensionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RunSettingsDocument does not contain a RunSettings node! Canceling settings merging....
+        /// </summary>
+        public static string RunSettingsMissingNode {
+            get {
+                return ResourceManager.GetString("RunSettingsMissingNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution test settings file found at &apos;{0}&apos;, but does not contain {1} node.
+        /// </summary>
+        public static string SolutionFoundButMissingNode {
+            get {
+                return ResourceManager.GetString("SolutionFoundButMissingNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         

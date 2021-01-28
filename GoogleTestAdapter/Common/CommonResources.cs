@@ -6,7 +6,7 @@
     /// <summary>
     ///   Based on the auto-generated resources file from Common.Dynamic
     /// </summary>
-    public class Resources
+    public class CommonResources
     {
 
         private static global::System.Resources.ResourceManager resourceMan;
@@ -14,7 +14,7 @@
         private static global::System.Globalization.CultureInfo resourceCulture;
 
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
+        internal CommonResources()
         {
         }
 

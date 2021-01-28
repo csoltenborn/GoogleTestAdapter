@@ -53,6 +53,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>$(NuGetPackages)Microsoft.VisualStudio.TestWindow.Interfaces.11.0.61030\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>$(NuGetPackages)Moq.4.5.30\lib\net45\Moq.dll</HintPath>
     </Reference>
@@ -76,9 +82,11 @@
   <ItemGroup>
     <Compile Include="Debugging\MessageBasedDebuggerAttacherTests.cs" />
     <Compile Include="Debugging\DebuggerAttacherServiceTests.cs" />
+    <Compile Include="Helpers\RunSettingsServiceUnderTest.cs" />
     <Compile Include="ReleaseNotes\HistoryTests.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\RunSettingsServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -105,7 +113,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

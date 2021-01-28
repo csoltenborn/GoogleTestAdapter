@@ -61,6 +61,16 @@ namespace GoogleTestAdapter.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Solution test settings file could not be parsed, check file: {0}
+        ///Exception: {1}.
+        /// </summary>
+        public static string CantParseSettings {
+            get {
+                return ResourceManager.GetString("CantParseSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enables Visual Studio&apos;s testing tools with unit tests written for Google Test..
         /// </summary>
         public static string ExtensionDescription {
@@ -75,6 +85,24 @@ namespace GoogleTestAdapter.Common {
         public static string ExtensionName {
             get {
                 return ResourceManager.GetString("ExtensionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RunSettingsDocument does not contain a RunSettings node! Canceling settings merging....
+        /// </summary>
+        public static string RunSettingsMissingNode {
+            get {
+                return ResourceManager.GetString("RunSettingsMissingNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Solution test settings file found at &apos;{0}&apos;, but does not contain {1} node.
+        /// </summary>
+        public static string SolutionFoundButMissingNode {
+            get {
+                return ResourceManager.GetString("SolutionFoundButMissingNode", resourceCulture);
             }
         }
         

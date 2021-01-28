@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CantParseSettings" xml:space="preserve">
+    <value>Solution test settings file could not be parsed, check file: {0}
+Exception: {1}</value>
+    <comment>{0} represents the path to a solution test settings file. {1} represents a textual summary of an exception, likely non-localized.</comment>
+  </data>
   <data name="ExtensionDescription" xml:space="preserve">
     <value>Enables Visual Studio's testing tools with unit tests written for Google Test.</value>
   </data>
   <data name="ExtensionName" xml:space="preserve">
     <value>Test Adapter for Google Test</value>
+  </data>
+  <data name="RunSettingsMissingNode" xml:space="preserve">
+    <value>RunSettingsDocument does not contain a RunSettings node! Canceling settings merging...</value>
+  </data>
+  <data name="SolutionFoundButMissingNode" xml:space="preserve">
+    <value>Solution test settings file found at '{0}', but does not contain {1} node</value>
+    <comment>{0} represents the path to a solution test settings file. {1} represents the non-localized name of an XML node.</comment>
   </data>
   <data name="TestDiscoveryStarting" xml:space="preserve">
     <value>Test Adapter for Google Test: Test discovery starting...</value>
