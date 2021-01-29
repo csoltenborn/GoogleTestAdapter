@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 7/2017.
+﻿// This file has been modified by Microsoft on 1/2021.
 
 using System;
 using GoogleTestAdapter.Common;
