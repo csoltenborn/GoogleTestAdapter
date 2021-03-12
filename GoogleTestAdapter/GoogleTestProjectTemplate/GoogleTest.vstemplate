@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
-    <Name Package="{6e0d1c7a-ef6a-4442-b8ce-9a58b21c3239}" ID="115"/>
-    <Description Package="{6e0d1c7a-ef6a-4442-b8ce-9a58b21c3239}" ID="114"/>
+    <Name Package="{6fac3232-df1d-400a-95ac-7daeaaee74ac}" ID="115"/>
+    <Description Package="{6fac3232-df1d-400a-95ac-7daeaaee74ac}" ID="114"/>
     <ProjectType>VC</ProjectType>
     <TemplateID>Microsoft.VisualC.Project.GoogleTest</TemplateID>
     <SortOrder>1000</SortOrder>
