@@ -20,7 +20,7 @@ namespace GoogleTestAdapter.TestAdapter
 {
 
     [ExtensionUri(ExecutorUriString)]
-    public partial class TestExecutor : ITestExecutor
+    public partial class TestExecutor : ITestExecutor2
     {
         public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
 
@@ -234,6 +234,17 @@ namespace GoogleTestAdapter.TestAdapter
             reporter.AllTestsFinished();
         }
 
+        public bool ShouldAttachToTestHost(IEnumerable<string> sources, IRunContext runContext)
+        {
+            // TODO: expose setting in runContext to attach to testhost if needed?
+            return false;
+        }
+
+        public bool ShouldAttachToTestHost(IEnumerable<VsTestCase> tests, IRunContext runContext)
+        {
+            // TODO: expose setting in runContext to attach to testhost if needed?
+            return false;
+        }
     }
 
 }
