@@ -247,7 +247,21 @@ function Build-NuGet {
     $TargetsTTArgs += "googletest.targets.tt.proj"
     Invoke-Executable msbuild $TargetsTTArgs
 
-    Copy-Item -Path "googletest.propertiesui.xml" -Destination "$Dir\build\native\googletest.propertiesui.xml"
+    # Copy all the locale ID folders with the localized versions of googletest.propertiesui.xml
+    Copy-Item -Path "4" -Destination "$Dir\build\native\4" -Recurse
+    Copy-Item -Path "1029" -Destination "$Dir\build\native\1029" -Recurse
+    Copy-Item -Path "1031" -Destination "$Dir\build\native\1031" -Recurse
+    Copy-Item -Path "1033" -Destination "$Dir\build\native\1033" -Recurse
+    Copy-Item -Path "1034" -Destination "$Dir\build\native\1034" -Recurse
+    Copy-Item -Path "1036" -Destination "$Dir\build\native\1036" -Recurse
+    Copy-Item -Path "1040" -Destination "$Dir\build\native\1040" -Recurse
+    Copy-Item -Path "1041" -Destination "$Dir\build\native\1041" -Recurse
+    Copy-Item -Path "1042" -Destination "$Dir\build\native\1042" -Recurse
+    Copy-Item -Path "1045" -Destination "$Dir\build\native\1045" -Recurse
+    Copy-Item -Path "1046" -Destination "$Dir\build\native\1046" -Recurse
+    Copy-Item -Path "1049" -Destination "$Dir\build\native\1049" -Recurse
+    Copy-Item -Path "1055" -Destination "$Dir\build\native\1055" -Recurse
+    Copy-Item -Path "31748" -Destination "$Dir\build\native\31748" -Recurse
 
     Copy-Item -Recurse -Path "..\ThirdParty\googletest\googletest\include" -Destination "$Dir\build\native\include"
 

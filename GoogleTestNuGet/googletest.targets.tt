@@ -12,7 +12,7 @@
     <Disable-<#= PackageNameDashes #>>true</Disable-<#= PackageNameDashes #>>
   </PropertyGroup>
   <ItemGroup Condition="'$(Disable-<#= PackageNameDashes #>)' == ''">
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\googletest.propertiesui.xml" />
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\$(LangID)\googletest.propertiesui.xml" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Disable-<#= PackageNameDashes #>)' == ''">
     <Link>
