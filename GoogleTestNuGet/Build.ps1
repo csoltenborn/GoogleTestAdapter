@@ -248,7 +248,7 @@ function Build-NuGet {
     Invoke-Executable msbuild $TargetsTTArgs
 
     # Copy all the locale ID folders with the localized versions of googletest.propertiesui.xml
-    Copy-Item -Path "4" -Destination "$Dir\build\native\4" -Recurse
+    Copy-Item -Path "1028" -Destination "$Dir\build\native\1028" -Recurse
     Copy-Item -Path "1029" -Destination "$Dir\build\native\1029" -Recurse
     Copy-Item -Path "1031" -Destination "$Dir\build\native\1031" -Recurse
     Copy-Item -Path "1033" -Destination "$Dir\build\native\1033" -Recurse
@@ -261,7 +261,7 @@ function Build-NuGet {
     Copy-Item -Path "1046" -Destination "$Dir\build\native\1046" -Recurse
     Copy-Item -Path "1049" -Destination "$Dir\build\native\1049" -Recurse
     Copy-Item -Path "1055" -Destination "$Dir\build\native\1055" -Recurse
-    Copy-Item -Path "31748" -Destination "$Dir\build\native\31748" -Recurse
+    Copy-Item -Path "2052" -Destination "$Dir\build\native\2052" -Recurse
 
     Copy-Item -Recurse -Path "..\ThirdParty\googletest\googletest\include" -Destination "$Dir\build\native\include"
 
