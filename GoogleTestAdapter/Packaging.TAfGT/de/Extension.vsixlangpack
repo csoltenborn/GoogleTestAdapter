@@ -2,6 +2,6 @@
 <PackageLanguagePackManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
     <DisplayName>Testadapter für Google Test</DisplayName>
-    <Description></Description>
+    <Description>Ermöglicht die Verwendung von Visual Studio-Testtools mit Komponententests, die für Google Test geschrieben wurden.</Description>
   </Metadata>
 </PackageLanguagePackManifest>

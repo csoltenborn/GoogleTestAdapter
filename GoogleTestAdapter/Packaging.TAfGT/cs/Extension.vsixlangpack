@@ -2,6 +2,6 @@
 <PackageLanguagePackManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
     <DisplayName>Testovací adaptér pro Google Test</DisplayName>
-    <Description></Description>
+    <Description>Povolí v testovacích nástrojích sady Visual Studio testy jednotek vytvořené na bázi knihovny Google Test.</Description>
   </Metadata>
 </PackageLanguagePackManifest>

@@ -2,6 +2,6 @@
 <PackageLanguagePackManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
     <DisplayName>适用于 Google Test 的测试适配器</DisplayName>
-    <Description></Description>
+    <Description>启用带有针对 Google Test 编写的单元测试的 Visual Studio 测试工具。</Description>
   </Metadata>
 </PackageLanguagePackManifest>

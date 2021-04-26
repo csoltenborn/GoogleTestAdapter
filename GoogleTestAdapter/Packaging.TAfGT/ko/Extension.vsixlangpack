@@ -2,6 +2,6 @@
 <PackageLanguagePackManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
     <DisplayName>Test Adapter for Google Test</DisplayName>
-    <Description></Description>
+    <Description>Google Test용으로 작성된 단위 테스트와 함께 Visual Studio의 테스트 도구를 사용합니다.</Description>
   </Metadata>
 </PackageLanguagePackManifest>

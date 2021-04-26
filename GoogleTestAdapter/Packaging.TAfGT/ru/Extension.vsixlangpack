@@ -2,6 +2,6 @@
 <PackageLanguagePackManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
     <DisplayName>Адаптер теста для Google Test</DisplayName>
-    <Description></Description>
+    <Description>Включает средства тестирования Visual Studio с модульными тестами, созданными для Google Test.</Description>
   </Metadata>
 </PackageLanguagePackManifest>
