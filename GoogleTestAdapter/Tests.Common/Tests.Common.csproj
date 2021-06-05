@@ -43,34 +43,22 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
+    <PackageReference Include="Castle.Core" Version="4.0.0" Private="true" />
+    <PackageReference Include="FluentAssertions" Version="4.19.0" Private="true" GeneratePathProperty="true" />
+    <PackageReference Include="Moq" Version="4.5.30" Private="true" />
+    <PackageReference Include="XMLDiffPatch" Version="1.0.8.28" GeneratePathProperty="true" />
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>$(PkgFluentAssertions)\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+    <Reference Include="XMLDiffPatch.View">
+      <HintPath>$(PkgXmlDiffPatch)\lib\net\XmlDiffPatch.View.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Moq.4.5.30\lib\net45\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="XmlDiffPatch, Version=1.0.8.28, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>$(NuGetPackages)XMLDiffPatch.1.0.8.28\lib\net\XmlDiffPatch.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="XmlDiffPatch.View, Version=1.0.1493.40755, Culture=neutral">
-      <HintPath>$(NuGetPackages)XMLDiffPatch.1.0.8.28\lib\net\XmlDiffPatch.View.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -154,9 +142,6 @@
     <Content Include="Resources\TestData\Project.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Resources\TestData\ListTests.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

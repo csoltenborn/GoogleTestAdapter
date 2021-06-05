@@ -36,12 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+    <PackageReference Include="FluentAssertions" Version="4.19.0" Private="true" GeneratePathProperty="true" />
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>$(PkgFluentAssertions)\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -112,9 +109,6 @@
     <None Include="GenerateCSV.bat" />
     <None Include="GTA_Console.csv" />
     <None Include="GTA_Console.pictmodel" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Choose>

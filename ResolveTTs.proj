@@ -11,10 +11,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
     </Content>
-    <Content Include="GoogleTestAdapter\TestAdapter\packages.config.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <OutputFileName>packages.config</OutputFileName>
-    </Content>
     <Content Include="GoogleTestAdapter\TestAdapter\TestExecutorBranding.cs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>TestExecutorBranding.cs</OutputFileName>
@@ -22,10 +18,6 @@
     <Content Include="GoogleTestAdapter\TestAdapter.Tests\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
-    </Content>
-    <Content Include="GoogleTestAdapter\TestAdapter.Tests\packages.config.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <OutputFileName>packages.config</OutputFileName>
     </Content>
     <Content Include="GoogleTestAdapter\Tests.Common\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -42,10 +34,6 @@
     <Content Include="GoogleTestAdapter\VsPackage.Tests\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <OutputFileName>app.config</OutputFileName>
-    </Content>
-    <Content Include="GoogleTestAdapter\VsPackage.Tests\packages.config.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <OutputFileName>packages.config</OutputFileName>
     </Content>
     <Content Include="GoogleTestAdapter\VsPackage.Tests.Generated\app.config.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

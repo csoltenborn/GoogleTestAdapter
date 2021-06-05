@@ -40,23 +40,14 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+    <PackageReference Include="Castle.Core" Version="4.0.0" PrivateAssets="all" />
+    <PackageReference Include="FluentAssertions" Version="4.19.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Moq" Version="4.5.30" PrivateAssets="all" />
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>$(PkgFluentAssertions)\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Moq.4.5.30\lib\net45\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -99,9 +90,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Choose>

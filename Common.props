@@ -11,6 +11,7 @@
         <IntDir>$(EnlistmentRoot)out\intermediate\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
         <IntermediateOutputPath>$(IntDir)</IntermediateOutputPath>
         <BaseIntermediateOutputPath>$(IntDir)</BaseIntermediateOutputPath>
+        <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
     </PropertyGroup>
 
     <!-- Commonly used test adapter-flavored properties. -->
@@ -18,6 +19,6 @@
         <FlavoredTargetFrameworkVersion>v4.5</FlavoredTargetFrameworkVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'TAfGT'">
-        <FlavoredTargetFrameworkVersion>v4.6</FlavoredTargetFrameworkVersion>
+        <FlavoredTargetFrameworkVersion>v4.7.2</FlavoredTargetFrameworkVersion>
     </PropertyGroup>
 </Project>

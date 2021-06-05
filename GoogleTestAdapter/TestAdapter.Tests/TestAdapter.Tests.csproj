@@ -40,31 +40,12 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)FluentAssertions.4.19.0\lib\net45\FluentAssertions.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.TestPlatform.CoreUtilities, Version=16.10.0-release-20210330-02, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(TestAdapterFlavor)' == 'TAfGT'">
-      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.16.10.0-release-20210330-02\lib\net45\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(TestAdapterFlavor)' == 'GTA'">
-      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=16.10.0-release-20210330-02, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(TestAdapterFlavor)' == 'TAfGT'">
-      <HintPath>$(NuGetPackages)Microsoft.TestPlatform.ObjectModel.16.10.0-release-20210330-02\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Moq, Version=4.5.30.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>$(NuGetPackages)Moq.4.5.30\lib\net45\Moq.dll</HintPath>
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.10.0-release-20210330-02" />
+    <PackageReference Include="Castle.Core" Version="4.0.0" Private="true" />
+    <PackageReference Include="FluentAssertions" Version="4.19.0" Private="true" GeneratePathProperty="true" />
+    <PackageReference Include="Moq" Version="4.5.30" Private="true" />
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>$(PkgFluentAssertions)\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -103,9 +84,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Settings\runsettings.csv" />
     <None Include="Settings\runsettings.pictmodel" />
   </ItemGroup>
