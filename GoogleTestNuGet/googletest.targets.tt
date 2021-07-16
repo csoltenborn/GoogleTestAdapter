@@ -5,7 +5,7 @@
 <#@ parameter type="System.String" name="PathToBinaries" #>
 <#@ parameter type="System.String" name="ConfigurationType" #>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(Force-Enable-<#= PackageNameDashes #>)' == '' And (('$(PlatformToolset)' != 'v142' And '$(PlatformToolset)' != 'v141' And '$(PlatformToolset)' != 'v140') Or '$(ApplicationType)' != '')">
+  <PropertyGroup Condition="'$(Force-Enable-<#= PackageNameDashes #>)' == '' And (('$(PlatformToolset)' != 'v143' And ('$(PlatformToolset)' != 'v142' And '$(PlatformToolset)' != 'v141' And '$(PlatformToolset)' != 'v140') Or '$(ApplicationType)' != '')">
     <Disable-<#= PackageNameDashes #>>true</Disable-<#= PackageNameDashes #>>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Force-Disable-<#= PackageNameDashes #>)' != ''">
