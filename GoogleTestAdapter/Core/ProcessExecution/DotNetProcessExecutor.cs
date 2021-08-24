@@ -49,7 +49,7 @@ namespace GoogleTestAdapter.ProcessExecution
             };
 
             if (!string.IsNullOrEmpty(pathExtension))
-                processStartInfo.EnvironmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                processStartInfo.EnvironmentVariables["PATH"] = CommonUtils.GetExtendedPath(pathExtension);
 
             foreach (var environmentVariable in environmentVariables)
                 processStartInfo.EnvironmentVariables[environmentVariable.Key] = environmentVariable.Value;

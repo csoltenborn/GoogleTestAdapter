@@ -12,7 +12,6 @@ using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using Microsoft.Win32.SafeHandles;
@@ -182,7 +181,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                 StringDictionary envVariables = new ProcessStartInfo().EnvironmentVariables;
                 
                 if (!string.IsNullOrEmpty(pathExtension))
-                    envVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                    envVariables["PATH"] = CommonUtils.GetExtendedPath(pathExtension);
                 foreach (var environmentVariable in environmentVariables)
                     envVariables[environmentVariable.Key] = environmentVariable.Value;
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
@@ -38,7 +37,7 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
             }
 
             if (!string.IsNullOrEmpty(pathExtension))
-                environmentVariables["PATH"] = Utils.GetExtendedPath(pathExtension);
+                environmentVariables["PATH"] = CommonUtils.GetExtendedPath(pathExtension);
 
             _logger.DebugInfo($"Attaching debugger to '{command}' via {DebuggerKind.VsTestFramework} engine");
             if (_printTestOutput)

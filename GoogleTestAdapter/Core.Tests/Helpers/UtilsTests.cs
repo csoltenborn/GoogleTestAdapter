@@ -52,7 +52,7 @@ namespace GoogleTestAdapter.Helpers
         public void GetExtendedPath_WithExtension_ExtendsPath()
         {
             const string toAdd = @"c:\some\path\to\add";
-            string result = Utils.GetExtendedPath(toAdd);
+            string result = CommonUtils.GetExtendedPath(toAdd);
 
             string path = Environment.GetEnvironmentVariable("PATH");
             result.Should().HaveLength(path.Length + toAdd.Length + 1);
@@ -65,7 +65,7 @@ namespace GoogleTestAdapter.Helpers
         [TestCategory(Unit)]
         public void GetExtendedPath_NoExtension_ReturnsPath()
         {
-            string result = Utils.GetExtendedPath("");
+            string result = CommonUtils.GetExtendedPath("");
 
             string path = Environment.GetEnvironmentVariable("PATH");
             result.Should().Be(path);

@@ -44,12 +44,6 @@ namespace GoogleTestAdapter.Helpers
             }
         }
 
-        public static string GetExtendedPath(string pathExtension)
-        {
-            string path = Environment.GetEnvironmentVariable("PATH");
-            return string.IsNullOrEmpty(pathExtension) ? path : $"{pathExtension};{path}";
-        }
-
         public static string GetTimestamp()
         {
             return DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);

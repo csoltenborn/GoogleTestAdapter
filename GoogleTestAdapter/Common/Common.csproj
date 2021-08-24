@@ -71,6 +71,7 @@
     <Compile Include="Strings.cs" />
     <Compile Include="MissingTestsReportMode.cs" />
     <Compile Include="SummaryMode.cs" />
+    <Compile Include="CommonUtils.cs" />
     <Compile Include="Win32Utils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +89,7 @@
     <Analyzer Include="..\..\NuGetPackages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\..\NuGetPackages\Microsoft.NetFramework.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
   <PropertyGroup>
