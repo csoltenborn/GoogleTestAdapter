@@ -25,7 +25,7 @@ namespace GoogleTestAdapter.Runners
         private readonly string _testDirectory;
 
 
-        public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, bool reduceToRootTestSuite)
         {
             _logger = logger;
             _settings = settings;
@@ -33,12 +33,12 @@ namespace GoogleTestAdapter.Runners
             _threadName = string.IsNullOrEmpty(threadName) ? "" : $"{threadName} ";
             _threadId = Math.Max(0, threadId);
             _testDirectory = Utils.GetTempDirectory();
-            _innerTestRunner = new SequentialTestRunner(_threadName, _threadId, _testDirectory, reporter, _logger, _settings, schedulingAnalyzer);
+            _innerTestRunner = new SequentialTestRunner(_threadName, _threadId, _testDirectory, reporter, _logger, _settings, schedulingAnalyzer, reduceToRootTestSuite);
         }
 
         public PreparingTestRunner(ITestFrameworkReporter reporter,
-            ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
-            : this(-1, reporter, logger, settings, schedulingAnalyzer){
+            ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, bool reduceToRootTestSuite)
+            : this(-1, reporter, logger, settings, schedulingAnalyzer, reduceToRootTestSuite){
         }
 
 

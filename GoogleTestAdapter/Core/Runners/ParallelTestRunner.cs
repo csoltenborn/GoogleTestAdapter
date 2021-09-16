@@ -79,7 +79,7 @@ namespace GoogleTestAdapter.Runners
             int threadId = 0;
             foreach (List<TestCase> testcases in splittedTestCasesToRun)
             {
-                var runner = new PreparingTestRunner(threadId++, _frameworkReporter, _logger, _settings.Clone(), _schedulingAnalyzer);
+                var runner = new PreparingTestRunner(threadId++, _frameworkReporter, _logger, _settings.Clone(), _schedulingAnalyzer, false);
                 _testRunners.Add(runner);
 
                 var thread = new Thread(
