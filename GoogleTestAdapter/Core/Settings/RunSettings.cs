@@ -2,7 +2,7 @@
 
 using System.Xml.Serialization;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {

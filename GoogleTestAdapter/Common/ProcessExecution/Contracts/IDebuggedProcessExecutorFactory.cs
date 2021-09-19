@@ -1,6 +1,4 @@
-﻿using GoogleTestAdapter.Common;
-
-namespace GoogleTestAdapter.ProcessExecution.Contracts
+﻿namespace GoogleTestAdapter.Common.ProcessExecution.Contracts
 {
     public interface IDebuggedProcessExecutorFactory : IProcessExecutorFactory
     {

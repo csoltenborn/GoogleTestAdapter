@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {

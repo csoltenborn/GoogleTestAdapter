@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
-using GoogleTestAdapter.Common;
 
 // ReSharper disable NotResolvedInText
 
-namespace GoogleTestAdapter.ProcessExecution
+namespace GoogleTestAdapter.Common.ProcessExecution
 {
     public static class DebuggerKindDescriptions
     {

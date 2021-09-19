@@ -1,7 +1,6 @@
-﻿using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution.Contracts;
+﻿using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 
-namespace GoogleTestAdapter.ProcessExecution
+namespace GoogleTestAdapter.Common.ProcessExecution
 {
     public class ProcessExecutorFactory : IProcessExecutorFactory
     {

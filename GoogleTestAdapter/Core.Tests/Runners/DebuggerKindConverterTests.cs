@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
 

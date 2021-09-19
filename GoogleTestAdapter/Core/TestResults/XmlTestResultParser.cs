@@ -9,8 +9,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.TestResults

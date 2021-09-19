@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Runners

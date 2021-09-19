@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Runners;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;

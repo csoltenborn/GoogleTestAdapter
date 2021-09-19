@@ -12,8 +12,8 @@ using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Text;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.Common.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using Microsoft.Win32.SafeHandles;
 
 namespace GoogleTestAdapter.TestAdapter.ProcessExecution

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

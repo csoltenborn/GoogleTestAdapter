@@ -54,12 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\EnvironmentVariablesParser.cs" />
-    <Compile Include="ProcessExecution\Contracts\IDebuggedProcessExecutor.cs" />
-    <Compile Include="ProcessExecution\Contracts\IDebuggedProcessExecutorFactory.cs" />
-    <Compile Include="ProcessExecution\Contracts\IProcessExecutor.cs" />
-    <Compile Include="ProcessExecution\Contracts\IProcessExecutorFactory.cs" />
     <Compile Include="Framework\ITestFrameworkReporter.cs" />
-    <Compile Include="ProcessExecution\ProcessExecutorFactory.cs" />
     <Compile Include="Framework\TestRunCanceledException.cs" />
     <Compile Include="GoogleTestConstants.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
@@ -67,11 +62,9 @@
     <Compile Include="Helpers\DebugUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\ByteUtils.cs" />
-    <Compile Include="ProcessExecution\DotNetProcessExecutor.cs" />
     <Compile Include="Helpers\RegexTraitParser.cs" />
     <Compile Include="Model\TestCaseMetaDataProperty.cs" />
     <Compile Include="Model\TestProperty.cs" />
-    <Compile Include="ProcessExecution\DebuggerKind.cs" />
     <Compile Include="Runners\ExecutableResult.cs" />
     <Compile Include="Runners\TestResultCollector.cs" />
     <Compile Include="Scheduling\SchedulingAnalyzer.cs" />

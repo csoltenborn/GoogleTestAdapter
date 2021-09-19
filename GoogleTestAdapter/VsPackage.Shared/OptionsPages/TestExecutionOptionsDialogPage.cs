@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.ProcessExecution;
 using Microsoft.VisualStudio.Shell;
 
 // ReSharper disable LocalizableElement

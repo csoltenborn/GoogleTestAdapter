@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.Common.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 

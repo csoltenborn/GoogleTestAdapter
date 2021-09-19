@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using Moq;
 
 namespace GoogleTestAdapter.Tests.Common.Tests

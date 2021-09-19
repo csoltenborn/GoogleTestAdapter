@@ -1,4 +1,4 @@
-﻿using GoogleTestAdapter.ProcessExecution;
+﻿using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

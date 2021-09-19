@@ -3,10 +3,10 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Settings;
 

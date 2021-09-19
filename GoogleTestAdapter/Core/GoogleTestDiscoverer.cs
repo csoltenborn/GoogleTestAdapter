@@ -8,12 +8,12 @@ using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestCases;
 

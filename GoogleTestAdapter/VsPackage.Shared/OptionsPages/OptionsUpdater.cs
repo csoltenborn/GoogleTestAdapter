@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.VsPackage.GTA.Helpers;

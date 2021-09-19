@@ -1,7 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Common;
-using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution;
 
 namespace GoogleTestAdapter.Settings
 {

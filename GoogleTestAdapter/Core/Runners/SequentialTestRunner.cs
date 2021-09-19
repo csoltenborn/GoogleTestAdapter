@@ -6,13 +6,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Framework;
-using GoogleTestAdapter.ProcessExecution;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
 
 namespace GoogleTestAdapter.Runners

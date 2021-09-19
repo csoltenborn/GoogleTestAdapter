@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Common.ProcessExecution;
 using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;

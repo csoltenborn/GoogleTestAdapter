@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using GoogleTestAdapter.Common;
-using GoogleTestAdapter.Helpers;
-using GoogleTestAdapter.ProcessExecution.Contracts;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 
-namespace GoogleTestAdapter.ProcessExecution
+namespace GoogleTestAdapter.Common.ProcessExecution
 {
 
     public class DotNetProcessExecutor : IProcessExecutor

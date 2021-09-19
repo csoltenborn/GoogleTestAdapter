@@ -1,10 +1,10 @@
 // This file has been modified by Microsoft on 6/2017.
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
-namespace GoogleTestAdapter.ProcessExecution.Contracts
+namespace GoogleTestAdapter.Common.ProcessExecution.Contracts
 {
     public interface IProcessExecutor
     {

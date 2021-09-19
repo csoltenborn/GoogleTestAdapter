@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using GoogleTestAdapter.Common.ProcessExecution.Contracts;
 using GoogleTestAdapter.Model;
-using GoogleTestAdapter.ProcessExecution.Contracts;
 
 namespace GoogleTestAdapter.Runners
 {

@@ -59,6 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributedEnumConverter.cs" />
+    <Compile Include="ProcessExecution\Contracts\IDebuggedProcessExecutor.cs" />
+    <Compile Include="ProcessExecution\Contracts\IDebuggedProcessExecutorFactory.cs" />
+    <Compile Include="ProcessExecution\Contracts\IProcessExecutor.cs" />
+    <Compile Include="ProcessExecution\Contracts\IProcessExecutorFactory.cs" />
+    <Compile Include="ProcessExecution\DebuggerKind.cs" />
+    <Compile Include="ProcessExecution\DotNetProcessExecutor.cs" />
+    <Compile Include="ProcessExecution\ProcessExecutorFactory.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="DebuggerAttacherServiceConfiguration.cs" />
     <Compile Include="Functional.cs" />
