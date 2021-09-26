@@ -214,7 +214,7 @@
 
 set NUGET="$(ProjectDir)nuget.exe"
 if not exist %25NUGET%25 (
-  bitsadmin.exe /transfer "Download nuget.exe" https://dist.nuget.org/win-x86-commandline/v4.7.1/nuget.exe %25NUGET%25
+  bitsadmin.exe /transfer "Download nuget.exe" https://dist.nuget.org/win-x86-commandline/latest/nuget.exe %25NUGET%25
 )
 set VSTEST_DIR=$(ProjectDir)VsTestConsole
 
