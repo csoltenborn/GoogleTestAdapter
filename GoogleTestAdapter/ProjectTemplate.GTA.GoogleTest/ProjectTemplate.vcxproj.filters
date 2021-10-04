@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Source Files">
+			<UniqueIdentifier>$guid2$</UniqueIdentifier>
+			<Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+		</Filter>
+		<Filter Include="Header Files">
+			<UniqueIdentifier>$guid3$</UniqueIdentifier>
+			<Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+		</Filter>
+		<Filter Include="Resource Files">
+			<UniqueIdentifier>$guid4$</UniqueIdentifier>
+			<Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="gtest-all.cc">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="gmock-gtest-all.cc">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="READ_ME" />
+		<None Include="LICENSE" />
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="include\gtest\gtest.h">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="include\gmock\gmock.h">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="include\GTA_Traits_1.8.0.h">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+	</ItemGroup>
+</Project>

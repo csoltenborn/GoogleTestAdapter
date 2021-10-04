@@ -47,7 +47,42 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ItemTemplates\Test\GTest_Traits\gtest-logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplates\Test\GTest_Traits\GTest_Traits.vstemplate" />
+    <Content Include="ItemTemplates\Test\GTest\gtest-logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplates\Test\GTest\GTest.vstemplate" />
+    <Content Include="ItemTemplates\Test\GTestExamples\gtest-logo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplates\Test\GTestExamples\GTestExamples.vstemplate" />
+    <Content Include="ItemTemplates\Test\GTestExamples\gtest_examples.cpp" />
+    <Content Include="ItemTemplates\Test\GTest\sample_tests.cpp" />
+    <Content Include="ItemTemplates\Test\GTest_Traits\sample_tests_with_traits.cpp" />
+    <Content Include="ItemTemplates\Test\GTestExamples.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ItemTemplates\Test\GTest.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ItemTemplates\Test\GTest_Traits.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config" />
+    <Content Include="ProjectTemplates\Test\ProjectTemplate_GTA.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ProjectTemplates\Test\ProjectTemplate.GTA.GoogleTest.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -72,6 +107,12 @@
     <ProjectReference Include="..\DiaResolver\DiaResolver.csproj">
       <Project>{fdc95d92-5e1e-4bdf-aa35-181851fce755}</Project>
       <Name>DiaResolver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NewProjectWizard.GTA\NewProjectWizard.GTA.csproj">
+      <Project>{ac5c0bf4-a5cb-4445-b5dd-6f43f8f0c726}</Project>
+      <Name>NewProjectWizard.GTA</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <ProjectReference Include="..\TestAdapter\TestAdapter.csproj">
       <Project>{44c04e51-d543-4155-a57e-bbeb73d3f8e5}</Project>
@@ -116,4 +157,24 @@ $(NuGetPackages)NuGet.CommandLine.5.4.0\tools\nuget pack VsPackage.nuspec -NonIn
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>mkdir "$(ProjectDir)ProjectTemplates\Test"
+
+copy "$(SolutionDir)ProjectTemplate.GTA.GoogleTest\bin\$(ConfigurationName)\ProjectTemplates\VC\1033\ProjectTemplate.GTA.GoogleTest.zip" "$(ProjectDir)ProjectTemplates\Test\ProjectTemplate.GTA.GoogleTest.zip"
+
+copy "$(SolutionDir)ProjectTemplate_GTA\bin\$(ConfigurationName)\ProjectTemplates\VC\1033\ProjectTemplate_GTA.zip" "$(ProjectDir)ProjectTemplates\Test\ProjectTemplate_GTA.zip"
+
+powershell Compress-Archive -Path '$(ProjectDir)ItemTemplates\Test\GTestExamples\*' -DestinationPath '$(ProjectDir)ItemTemplates\Test\GTestExamples.zip' -Force
+
+powershell Compress-Archive -Path '$(ProjectDir)ItemTemplates\Test\GTest\*' -DestinationPath '$(ProjectDir)ItemTemplates\Test\GTest.zip' -Force
+
+powershell Compress-Archive -Path '$(ProjectDir)ItemTemplates\Test\GTest_Traits\*' -DestinationPath '$(ProjectDir)ItemTemplates\Test\GTest_Traits.zip' -Force</PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="AfterClean">
+    <Delete Files="ItemTemplates\Test\GTest.zip" ContinueOnError="true" />
+    <Delete Files="ItemTemplates\Test\GTest_Traits.zip" ContinueOnError="true" />
+    <Delete Files="ItemTemplates\Test\GTestExamples.zip" ContinueOnError="true" />
+    <Delete Files="ProjectTemplates\Test\ProjectTemplate_GTA.zip" ContinueOnError="true" />
+    <Delete Files="ProjectTemplates\Test\ProjectTemplate.GTA.GoogleTest.zip" ContinueOnError="true" />
+  </Target>
 </Project>

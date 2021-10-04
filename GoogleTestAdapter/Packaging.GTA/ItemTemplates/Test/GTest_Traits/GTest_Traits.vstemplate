@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <ProjectType>VC</ProjectType>
+    <TemplateID>F8964068-3761-4F60-B462-475F5C6F2C62</TemplateID>
+    <Name>Google Test with Traits</Name>
+    <Description>A Google Test based unit test making use of VS/GTA's traits support.</Description>
+    <Icon>gtest-logo.ico</Icon>
+    <SortOrder>120</SortOrder>
+    <DefaultName>tests.cpp</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem TargetFileName="$fileinputname$.cpp" >sample_tests_with_traits.cpp</ProjectItem>
+  </TemplateContent>
+</VSTemplate>
