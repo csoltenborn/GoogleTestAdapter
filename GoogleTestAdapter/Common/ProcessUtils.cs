@@ -24,7 +24,14 @@ namespace GoogleTestAdapter.Common
                     process.Kill();
                     logger.DebugInfo($"Invoked Kill() on process {process} with startTime={startTime.ToShortTimeString()}, waiting for it to exit...");
                     process.WaitForExit();
-                    logger.DebugInfo($"Successfully killed process {process} with startTime={startTime.ToShortTimeString()}");
+                    if (process.HasExited)
+                    {
+                        logger.DebugInfo($"Successfully killed process {process} with startTime={startTime.ToShortTimeString()}");
+                    }
+                    else
+                    {
+                        logger.DebugWarning($"Wasn't able to kill process {process} with startTime={startTime.ToShortTimeString()}...");
+                    }
                 }
                 catch (Exception e)
                 {
