@@ -37,7 +37,7 @@ namespace GoogleTestAdapter.TestCases
 
             reportedTestCases.Should().BeEmpty();
             returnedTestCases.Should().BeEmpty();
-            stopWatch.Elapsed.Should().BeGreaterOrEqualTo(TimeSpan.FromSeconds(1));
+            stopWatch.Elapsed.Should().BeGreaterOrEqualTo(TimeSpan.FromSeconds(0.9));
             stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(2));
             MockLogger.Verify(o => o.LogError(It.Is<string>(s => s.Contains(TestResources.TenSecondsWaiter))), Times.Once);
             MockLogger.Verify(o => o.DebugError(It.Is<string>(s => s.Contains(Path.GetFileName(TestResources.TenSecondsWaiter)))), Times.AtLeastOnce);

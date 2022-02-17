@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GoogleTestAdapter.Common;
@@ -19,18 +20,18 @@ namespace GoogleTestAdapter.Tests.Common.Helpers
         {
             Process process = CreateProcess(workingDirectory, command, param);
 
-            var localStandardOut = new List<string>();
-            var localStandardErr = new List<string>();
-            var localAllOutput = new List<string>();
+            var localStandardOut = new ConcurrentQueue<string>();
+            var localStandardErr = new ConcurrentQueue<string>();
+            var localAllOutput = new ConcurrentQueue<string>();
             process.OutputDataReceived += (sender, e) =>
             {
-                localStandardOut.Add(e.Data);
-                localAllOutput.Add(e.Data);
+                localStandardOut.Enqueue(e.Data);
+                localAllOutput.Enqueue(e.Data);
             };
             process.ErrorDataReceived += (sender, e) =>
             {
-                localStandardErr.Add(e.Data);
-                localAllOutput.Add(e.Data);
+                localStandardErr.Enqueue(e.Data);
+                localAllOutput.Enqueue(e.Data);
             };
 
             try
