@@ -128,7 +128,7 @@ function Add-Signing {
     $xml = [xml](Get-Content "$Directory\$ProjectName.vcxproj")
     $ProjectNameDebug = -join("$ProjectName", "d")
 
-    $microbuild = "$Env:USERPROFILE\.nuget\packages\microsoft.visualstudioeng.microbuild.core\0.4.1"
+    $microbuild = "$Env:USERPROFILE\.nuget\packages\microsoft.visualstudioeng.microbuild.core\1.0.0"
 
     $MicroBuildProps = $xml.CreateElement("Import", "http://schemas.microsoft.com/developer/msbuild/2003")
     $MicroBuildProps.SetAttribute("Project", "$microbuild\build\Microsoft.VisualStudioEng.MicroBuild.Core.props")
