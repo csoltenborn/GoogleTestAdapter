@@ -48,15 +48,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.1.5.nupkg">
+    <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.1.6.nupkg">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.5.nupkg">
+    <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.6.nupkg">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.5.nupkg">
+    <Content Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.6.nupkg">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

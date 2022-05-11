@@ -16,7 +16,36 @@ namespace GoogleTestAdapter.DiaResolver
 
         static DiaFactory()
         {
-            string path = Path.Combine(GetAssemblyBaseDir(), Is32Bit() ? "x86" : "x64", DiaDll);
+            string archDir;
+            Architecture architecture = RuntimeInformation.ProcessArchitecture;
+            switch (architecture)
+            {
+                case Architecture.X86:
+                {
+                    archDir = "x86";
+                    break;
+                }
+                case Architecture.X64:
+                {
+                    archDir = "x64";
+                    break;
+                }
+                case Architecture.Arm:
+                {
+                    archDir = "arm";
+                    break;
+                }
+                case Architecture.Arm64:
+                {
+                    archDir = "arm64";
+                    break;
+                }
+                default:
+                {
+                    throw new Exception("Unknown platform architecture.");
+                }
+            }
+            string path = Path.Combine(GetAssemblyBaseDir(), archDir, DiaDll);
             var ptrDll = LoadLibrary(path);
             if (ptrDll == IntPtr.Zero)
                 throw new Exception(String.Format(Resources.LoadError, path));

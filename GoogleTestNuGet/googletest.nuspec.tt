@@ -5,7 +5,7 @@
 <package>
   <metadata>
     <id><#= PackageName #></id>
-    <version>1.8.1.5</version>
+    <version>1.8.1.6</version>
     <authors>Microsoft</authors>
     <owners>microsoft,visualcpp</owners>
     <projectUrl>https://github.com/Microsoft/TestAdapterForGoogleTest</projectUrl>
