@@ -70,7 +70,7 @@ namespace GoogleTestAdapter.TestAdapter.Framework
                 }
                 catch (Exception e)
                 {
-                    logger?.LogError(String.Format(Resources.VSVersionMessage, e.Message));
+                    logger?.LogInfo(String.Format(Resources.VSVersionMessage, e.Message));
                     _version = VsVersion.Unknown;
                 }
                 return _version.Value;
