@@ -74,6 +74,9 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? ParseSymbolInformation { get; set; }
         public bool ShouldSerializeParseSymbolInformation() { return ParseSymbolInformation != null; }
 
+        public virtual string AdditionalTestDiscoveryParam { get; set; }
+        public bool ShouldSerializeAdditionalTestDiscoveryParam() { return AdditionalTestDiscoveryParam != null; }
+
         public virtual string AdditionalTestExecutionParam { get; set; }
         public bool ShouldSerializeAdditionalTestExecutionParam() { return AdditionalTestExecutionParam != null; }
 

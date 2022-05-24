@@ -59,6 +59,7 @@
       <xsd:element name="TimestampOutput"              minOccurs="0" type="xsd:boolean" />
       <xsd:element name="ShowReleaseNotes"             minOccurs="0" type="xsd:boolean" /><!-- used only by GTA -->
       <xsd:element name="ParseSymbolInformation"       minOccurs="0" type="xsd:boolean" />
+	  <xsd:element name="AdditionalTestDiscoveryParam" minOccurs="0" type="xsd:string"  />
       <xsd:element name="AdditionalTestExecutionParam" minOccurs="0" type="xsd:string"  />
       <xsd:element name="ParallelTestExecution"        minOccurs="0" type="xsd:boolean" />
       <xsd:element name="MaxNrOfThreads"               minOccurs="0">

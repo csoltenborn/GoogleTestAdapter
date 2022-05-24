@@ -31,6 +31,7 @@ namespace GoogleTestAdapter.Tests.Common
         public const string FakeGtestDllExe = GoogleTestAdapterBuildDir + @"FakeGtestDllApplication\FakeGtestDllApplication.exe";
         public const string FakeGtestDllExeX64 = GoogleTestAdapterBuildDir + @"FakeGtestDllApplication-x64\FakeGtestDllApplication-x64.exe";
         public const string SemaphoreExe = GoogleTestAdapterBuildDir + @"SemaphoreExe\SemaphoreExe.exe";
+        public const string TestDiscoveryParamExe = GoogleTestAdapterBuildDir + @"TestDiscoveryParam\TestDiscoveryParam.exe";
         public const string UnicodeNameExe = GoogleTestAdapterBuildDir + @"UnicodeNameExe\㐀㕵ExtAxCP936丂狛狜.exe";
 
         public const string Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Tests_gta.exe";

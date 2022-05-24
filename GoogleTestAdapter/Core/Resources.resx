@@ -329,6 +329,12 @@
     <value>Running {0} tests...</value>
     <comment>{0} represents a number (e.g. 5)</comment>
   </data>
+  <data name="OptionAdditionalTestDiscoveryParams" xml:space="preserve">
+    <value>Additional test discovery parameters</value>
+  </data>
+  <data name="OptionAdditionalTestDiscoveryParamsDescription" xml:space="preserve">
+    <value>Additional parameters passed to the Google Test executable during test discovery.</value>
+  </data>
   <data name="OptionAdditionalTestExecutionParams" xml:space="preserve">
     <value>Additional test execution parameters</value>
   </data>

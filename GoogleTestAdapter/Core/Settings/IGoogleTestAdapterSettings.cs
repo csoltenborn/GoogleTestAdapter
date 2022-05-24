@@ -18,7 +18,7 @@ namespace GoogleTestAdapter.Settings
     public interface IGoogleTestAdapterSettings
     {
         string ProjectRegex { get; set; }
-
+        string AdditionalTestDiscoveryParam { get; set; }
         string AdditionalTestExecutionParam { get; set; }
         bool? CatchExceptions { get; set; }
         bool? BreakOnFailure { get; set; }
@@ -54,6 +54,7 @@ namespace GoogleTestAdapter.Settings
     {
         public static void GetUnsetValuesFrom(this IGoogleTestAdapterSettings self, IGoogleTestAdapterSettings other)
         {
+            self.AdditionalTestDiscoveryParam = self.AdditionalTestDiscoveryParam ?? other.AdditionalTestDiscoveryParam;
             self.AdditionalTestExecutionParam = self.AdditionalTestExecutionParam ?? other.AdditionalTestExecutionParam;
             self.CatchExceptions = self.CatchExceptions ?? other.CatchExceptions;
             self.BreakOnFailure = self.BreakOnFailure ?? other.BreakOnFailure;

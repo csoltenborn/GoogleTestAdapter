@@ -19,7 +19,7 @@ namespace GoogleTestAdapter {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -553,6 +553,24 @@ namespace GoogleTestAdapter {
         internal static string NumberOfTestsRunningMessage {
             get {
                 return ResourceManager.GetString("NumberOfTestsRunningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional test discovery parameters.
+        /// </summary>
+        internal static string OptionAdditionalTestDiscoveryParams {
+            get {
+                return ResourceManager.GetString("OptionAdditionalTestDiscoveryParams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional parameters passed to the Google Test executable during test discovery..
+        /// </summary>
+        internal static string OptionAdditionalTestDiscoveryParamsDescription {
+            get {
+                return ResourceManager.GetString("OptionAdditionalTestDiscoveryParamsDescription", resourceCulture);
             }
         }
         

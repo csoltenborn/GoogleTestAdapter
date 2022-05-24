@@ -3,7 +3,8 @@
   <GoogleTestAdapterSettings>
     <SolutionSettings>
       <Settings>
-        <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
+        <AdditionalTestDiscoveryParam>-testDiscoveryflag</AdditionalTestDiscoveryParam>
+		<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
         <BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
         <BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
         <BreakOnFailure>false</BreakOnFailure>

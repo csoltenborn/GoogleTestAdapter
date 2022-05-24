@@ -46,7 +46,14 @@ namespace GoogleTestAdapter.TestCases
                 var launcher = new ProcessLauncher(_logger, _settings.GetPathExtension(_executable), null);
                 int processExitCode;
                 string workingDir = new FileInfo(_executable).DirectoryName;
-                standardOutput = launcher.GetOutputOfCommand(workingDir, null, _executable, GoogleTestConstants.ListTestsOption,
+
+                string cmdLine = GoogleTestConstants.ListTestsOption;
+                if (!string.IsNullOrEmpty(_settings.AdditionalTestDiscoveryParam))
+                {
+                    cmdLine = string.Format("{0} {1}", _settings.AdditionalTestDiscoveryParam, cmdLine);
+                }
+
+                standardOutput = launcher.GetOutputOfCommand(workingDir, null, _executable, cmdLine,
                     false, false, out processExitCode);
 
                 if (!CheckProcessExitCode(processExitCode, standardOutput))
@@ -128,17 +135,25 @@ namespace GoogleTestAdapter.TestCases
                 parser.ReportLine(s);
             };
 
+            string cmdLine = GoogleTestConstants.ListTestsOption;
+            if (!string.IsNullOrEmpty(_settings.AdditionalTestDiscoveryParam))
+            {
+                cmdLine = string.Format("{0} {1}", _settings.AdditionalTestDiscoveryParam, cmdLine);
+            }
+
             try
             {
                 string workingDir = new FileInfo(_executable).DirectoryName;
                 int processExitCode = ProcessExecutor.ExecutionFailed;
                 ProcessExecutor executor = null;
+
                 var listAndParseTestsTask = new Task(() =>
                 {
                     executor = new ProcessExecutor(null, _logger);
+                  
                     processExitCode = executor.ExecuteCommandBlocking(
                         _executable,
-                        GoogleTestConstants.ListTestsOption,
+                        cmdLine,
                         workingDir,
                         null,
                         _settings.GetPathExtension(_executable),
@@ -152,7 +167,7 @@ namespace GoogleTestAdapter.TestCases
 
                     string dir = Path.GetDirectoryName(_executable);
                     string file = Path.GetFileName(_executable);
-                    string command = $@"cd ""{dir}""{Environment.NewLine}{file} {GoogleTestConstants.ListTestsOption}";
+                    string command = $@"cd ""{dir}""{Environment.NewLine}{file} {cmdLine}";
 
                     _logger.LogError(String.Format(Resources.TestDiscoveryCancelled, _settings.TestDiscoveryTimeoutInSeconds, _executable));
                     _logger.DebugError(String.Format(Resources.TestCommandCanBeRun, Environment.NewLine, command));
@@ -175,7 +190,7 @@ namespace GoogleTestAdapter.TestCases
             catch (Exception e)
             {
                 SequentialTestRunner.LogExecutionError(_logger, _executable, Path.GetFullPath(""),
-                    GoogleTestConstants.ListTestsOption, e);
+                    cmdLine, e);
                 return new List<TestCase>();
             }
             return testCases;

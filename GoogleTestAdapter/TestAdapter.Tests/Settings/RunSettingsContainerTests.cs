@@ -24,18 +24,21 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             _solutionSettings = new RunSettings
             {
                 ProjectRegex = null,
+                AdditionalTestDiscoveryParam = "solution",
                 AdditionalTestExecutionParam = "solution"
             };
 
             _projectSettings1 = new RunSettings
             {
                 ProjectRegex = ".*PerformanceTests.exe",
+                AdditionalTestDiscoveryParam = "project1",
                 AdditionalTestExecutionParam = "project1"
             };
 
             _projectSettings2 = new RunSettings
             {
                 ProjectRegex = ".*UnitTests.exe",
+                AdditionalTestDiscoveryParam = "project2",
                 AdditionalTestExecutionParam = "project2"
             };
 
@@ -58,10 +61,12 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         {
             var settings = _container.GetSettingsForExecutable(@"C:\Users\chris\Desktop\MyPerformanceTests.exe");
             settings.Should().Be(_projectSettings1);
+            settings.AdditionalTestDiscoveryParam.Should().Be("project1");
             settings.AdditionalTestExecutionParam.Should().Be("project1");
 
             settings = _container.GetSettingsForExecutable(@"TheUnitTests.exe");
             settings.Should().Be(_projectSettings2);
+            settings.AdditionalTestDiscoveryParam.Should().Be("project2");
             settings.AdditionalTestExecutionParam.Should().Be("project2");
         }
 
@@ -72,6 +77,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var solutionSettings = new RunSettings
             {
                 ProjectRegex = null,
+                AdditionalTestDiscoveryParam = "bar",
                 AdditionalTestExecutionParam = "foo",
                 BatchForTestSetup = "solution"
             };
@@ -79,6 +85,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var projectSettings1 = new RunSettings
             {
                 ProjectRegex = ".*PerformanceTests.exe",
+                AdditionalTestDiscoveryParam = "bar",
                 AdditionalTestExecutionParam = "foo",
                 BatchForTestSetup = "project1"
             };
@@ -86,6 +93,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             var projectSettings2 = new RunSettings
             {
                 ProjectRegex = ".*IntegrationTests.exe",
+                AdditionalTestDiscoveryParam = "bar",
                 AdditionalTestExecutionParam = "foo",
                 BatchForTestSetup = "project2"
             };
@@ -96,10 +104,14 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             _container.GetUnsetValuesFrom(container);
 
+            _container.SolutionSettings.AdditionalTestDiscoveryParam.Should().Be("solution");
             _container.SolutionSettings.AdditionalTestExecutionParam.Should().Be("solution");
             _container.SolutionSettings.BatchForTestSetup.Should().Be("solution");
 
             _container.ProjectSettings.Count.Should().Be(3);
+            _container.ProjectSettings[0].AdditionalTestDiscoveryParam.Should().Be("project1");
+            _container.ProjectSettings[1].AdditionalTestDiscoveryParam.Should().Be("project2");
+            _container.ProjectSettings[2].AdditionalTestDiscoveryParam.Should().Be("bar");
             _container.ProjectSettings[0].AdditionalTestExecutionParam.Should().Be("project1");
             _container.ProjectSettings[1].AdditionalTestExecutionParam.Should().Be("project2");
             _container.ProjectSettings[2].AdditionalTestExecutionParam.Should().Be("foo");

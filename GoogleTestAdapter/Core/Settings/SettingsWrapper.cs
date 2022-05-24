@@ -371,6 +371,13 @@ namespace GoogleTestAdapter.Settings
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
 
 
+        public static readonly string OptionAdditionalTestDiscoveryParams = Resources.OptionAdditionalTestDiscoveryParams;
+        public const string OptionAdditionalTestDiscoveryParamsDefaultValue = "";
+        public static readonly string OptionAdditionalTestDiscoveryParamsDescription = Resources.OptionAdditionalTestDiscoveryParamsDescription;
+
+        public virtual string AdditionalTestDiscoveryParam => _currentSettings.AdditionalTestDiscoveryParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
+
+
         public static readonly string OptionBatchForTestSetup = Resources.OptionBatchForTestSetup;
         public const string OptionBatchForTestSetupDefaultValue = "";
         public static readonly string OptionBatchForTestSetupDescription =
@@ -378,7 +385,6 @@ namespace GoogleTestAdapter.Settings
             "\n" + DescriptionOfPlaceholdersForBatches;
 
         public virtual string BatchForTestSetup => _currentSettings.BatchForTestSetup ?? OptionBatchForTestSetupDefaultValue;
-
 
         public static readonly string OptionBatchForTestTeardown = Resources.OptionBatchForTestTeardown;
         public const string OptionBatchForTestTeardownDefaultValue = "";

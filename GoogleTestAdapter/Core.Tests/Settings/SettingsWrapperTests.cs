@@ -216,6 +216,19 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void AdditionalTestDiscoveryParam__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns((string)null);
+            string result = TheOptions.AdditionalTestDiscoveryParam;
+            result.Should().Be(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue);
+
+            MockXmlOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-testDiscoveryFlag");
+            result = TheOptions.AdditionalTestDiscoveryParam;
+            result.Should().Be("-testDiscoveryFlag");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void TestDiscoveryRegex__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.TestDiscoveryRegex).Returns((string)null);
@@ -346,6 +359,7 @@ namespace GoogleTestAdapter.Settings
             optionsString.Should().Contain("DebugMode: False");
             optionsString.Should().Contain("TimestampOutput: False");
             optionsString.Should().Contain("ShowReleaseNotes: True");
+            optionsString.Should().Contain("AdditionalTestDiscoveryParam: ''");
             optionsString.Should().Contain("AdditionalTestExecutionParam: ''");
             optionsString.Should().Contain("BatchForTestSetup: 'C:\\\\myfolder\\myfile.xml'");
             optionsString.Should().Contain("BatchForTestTeardown: ''");

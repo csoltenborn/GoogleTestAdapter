@@ -71,6 +71,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
             service.AddRunSettings(xml, mockRunSettingsConfigInfo.Object, mockLogger.Object);
 
             // 1: from global, 2: from solution, 3, ShuffleTests: from user test settings
+            AssertContainsSetting(xml, "AdditionalTestDiscoveryParam", "Global");
             AssertContainsSetting(xml, "AdditionalTestExecutionParam", "Global");
             AssertContainsSetting(xml, "ShuffleTests", "true");
             AssertContainsSetting(xml, "NrOfTestRepetitions", "1");
@@ -300,6 +301,7 @@ namespace GoogleTestAdapter.VsPackage.Settings
         {
             var globalRunSettings = new RunSettings
             {
+                AdditionalTestDiscoveryParam = "Global",
                 AdditionalTestExecutionParam = "Global",
                 NrOfTestRepetitions = 1,
                 MaxNrOfThreads = 1,

@@ -9,12 +9,14 @@ using System.Text.RegularExpressions;
 using FluentAssertions;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
+using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using GoogleTestAdapter.Tests.Common.Assertions;
 using GoogleTestAdapter.Tests.Common.Helpers;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using static GoogleTestAdapter.Tests.Common.TestMetadata.TestCategories;
@@ -24,6 +26,7 @@ namespace GoogleTestAdapter
     [TestClass]
     public class GoogleTestDiscovererTests : TestsBase
     {
+        private readonly Mock<IFrameworkHandle> MockFrameworkHandle = new Mock<IFrameworkHandle>();
 
         [TestMethod]
         [TestCategory(Unit)]
@@ -282,6 +285,46 @@ namespace GoogleTestAdapter
                 testCase.DisplayName.Should().NotBeNullOrEmpty();
                 testCase.FullyQualifiedName.Should().NotBeNullOrEmpty();
             }
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void DiscoverTests_TestDiscoveryParam_TestsFoundWithAdditionalDiscoveryParam()
+        {
+            MockFrameworkHandle.Reset();
+            MockOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-testDiscoveryFlag");
+            MockOptions.Setup(o => o.UseNewTestExecutionFramework).Returns(true);
+
+            List<TestCase> testCases = new List<TestCase>();
+
+            MockFrameworkReporter.Setup(o => o.ReportTestsFound(It.IsAny<IEnumerable<TestCase>>())).Callback
+            (
+                (IEnumerable<TestCase> discoveredTestCases) =>
+                {
+                    testCases.AddRange(discoveredTestCases);
+                }
+            );
+
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            discoverer.DiscoverTests(TestResources.TestDiscoveryParamExe.Yield(), MockFrameworkReporter.Object);
+
+            testCases.Count.Should().Be(2);
+            testCases.Should().Contain(t => t.FullyQualifiedName == "TestDiscovery.TestFails");
+            testCases.Should().Contain(t => t.FullyQualifiedName == "TestDiscovery.TestPasses");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecubable_TestDiscoveryParam_TestsFoundWithAdditionalDiscoveryParam()
+        { 
+            MockOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-testDiscoveryFlag");
+
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            IList<TestCase> testCases = discoverer.GetTestsFromExecutable(TestResources.TestDiscoveryParamExe);
+
+            testCases.Count.Should().Be(2);
+            testCases.Should().Contain(t => t.FullyQualifiedName == "TestDiscovery.TestFails");
+            testCases.Should().Contain(t => t.FullyQualifiedName == "TestDiscovery.TestPasses");
         }
 
         [TestMethod]

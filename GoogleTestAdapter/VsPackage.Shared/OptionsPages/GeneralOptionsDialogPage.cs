@@ -203,6 +203,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _timestampOutput = SettingsWrapper.OptionTimestampOutputDefaultValue;
 
+        [LocalizedCategory("CategoryMiscName")]
+        [LocalizedDisplayName("OptionAdditionalTestDiscoveryParams")]
+        [LocalizedDescription("OptionAdditionalTestDiscoveryParamsDescription")]
+        public string AdditionalTestDiscoveryParams
+        {
+            get { return _additionalTestDiscoveryParams; }
+            set { SetAndNotify(ref _additionalTestDiscoveryParams, value); }
+        }
+        private string _additionalTestDiscoveryParams = SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue;
+
         #endregion
     }
 
