@@ -4,7 +4,7 @@
     <SolutionSettings>
       <Settings>
         <AdditionalTestDiscoveryParam>-testDiscoveryflag</AdditionalTestDiscoveryParam>
-		<AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
+        <AdditionalTestExecutionParam>-testdirectory=$(TestDir)</AdditionalTestExecutionParam>
         <BatchForTestSetup>Tests\Returns0.bat</BatchForTestSetup>
         <BatchForTestTeardown>Tests\Returns1.bat</BatchForTestTeardown>
         <BreakOnFailure>false</BreakOnFailure>
