@@ -8,8 +8,10 @@ namespace GoogleTestAdapter.TestCases
 
     public class StreamingListTestsParser
     {
-        private static readonly Regex SuiteRegex = new Regex($@"([\w\/]*(?:\.[\w\/]+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
-        private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly string SuiteInitialRegex = @"([\w\/\p{Nl}]*(?:\.[\w\/\p{Nl}]+)*)";
+        private static readonly string NameInitialRegex = @"([\w\/\p{Nl}]*)";
+        private static readonly Regex SuiteRegex = new Regex($@"{SuiteInitialRegex}(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex NameRegex = new Regex($@"{NameInitialRegex}(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
         private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;
