@@ -37,8 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Interop" Version="17.0.0-preview-2-31221-277" />
-    <PackageReference Include="Castle.Core" Version="4.0.0" Private="true" />
-    <PackageReference Include="FluentAssertions" Version="4.19.0" Private="true" GeneratePathProperty="true" />
+    <PackageReference Include="Castle.Core" Version="5.0.0" Private="true" />
+    <PackageReference Include="FluentAssertions" Version="6.7.0" Private="true" GeneratePathProperty="true" />
     <Reference Include="FluentAssertions.Core">
       <HintPath>$(PkgFluentAssertions)\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>

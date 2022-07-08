@@ -43,16 +43,17 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="4.0.0" Private="true" />
-    <PackageReference Include="FluentAssertions" Version="4.19.0" Private="true" GeneratePathProperty="true" />
-    <PackageReference Include="Moq" Version="4.5.30" Private="true" />
-    <PackageReference Include="XMLDiffPatch" Version="1.0.8.28" GeneratePathProperty="true" />
+    <PackageReference Include="Castle.Core" Version="5.0.0" Private="true" />
+    <PackageReference Include="FluentAssertions" Version="6.7.0" Private="true" GeneratePathProperty="true" />
+    <PackageReference Include="LovettSoftware.XmlDiff">
+      <Version>1.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.18.1" Private="true" />
     <Reference Include="FluentAssertions.Core">
       <HintPath>$(PkgFluentAssertions)\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="XMLDiffPatch.View">
-      <HintPath>$(PkgXmlDiffPatch)\lib\net\XmlDiffPatch.View.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

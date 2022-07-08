@@ -444,7 +444,7 @@ namespace GoogleTestAdapter.Settings
                 {
                     s.ExecuteWithSettingsForExecutable("bar", () => { }, MockLogger.Object);
                 }, MockLogger.Object))
-                .ShouldThrow<InvalidOperationException>();
+                .Should().Throw<InvalidOperationException>();
         }
 
         [TestMethod]
