@@ -143,7 +143,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="16.10.0-release-20210330-02" />
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="17.0.49-g3bcbfd968c" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.0.0-preview-2-31221-277" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="17.2.32505.113" />
     <PackageReference Include="Microsoft.VisualStudio.Interop" Version="17.0.0-preview-2-31221-277" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
