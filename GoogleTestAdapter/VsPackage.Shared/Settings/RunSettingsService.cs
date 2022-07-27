@@ -5,6 +5,7 @@ using GoogleTestAdapter.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
@@ -127,9 +128,17 @@ namespace GoogleTestAdapter.TestAdapter.Settings
         // protected for testing
         protected virtual string GetSolutionSettingsXmlFile()
         {
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            Debug.Assert(dte != null, "dte == null!");
-            return Path.ChangeExtension(dte.Solution.FullName, GoogleTestConstants.SettingsExtension);
+            string path = string.Empty;
+
+            ThreadHelper.JoinableTaskFactory.Run(async delegate
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+                Debug.Assert(dte != null, "dte == null!");
+                path = dte.Solution.FullName;
+            });
+
+            return Path.ChangeExtension(path, GoogleTestConstants.SettingsExtension);
         }
 
     }
