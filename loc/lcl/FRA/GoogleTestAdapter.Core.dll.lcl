@@ -508,12 +508,18 @@
       <Item ItemId=";OptionAdditionalTestDiscoveryParams" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional test discovery parameters]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Paramètres de découverte de tests supplémentaires]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";OptionAdditionalTestDiscoveryParamsDescription" ItemType="0" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Additional parameters passed to the Google Test executable during test discovery.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Paramètres supplémentaires passés à l’exécutable Google Test pendant la découverte de tests.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
