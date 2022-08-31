@@ -29,27 +29,24 @@ namespace GoogleTestAdapter.Runners
 
         private readonly int _lengthOfExecutableString;
         private readonly IList<TestCase> _testCasesToRun;
-        private readonly string _resultXmlFile;
         private readonly SettingsWrapper _settings;
         private readonly string _userParameters;
 
         public CommandLineGenerator(IEnumerable<TestCase> testCasesToRun,
-            int lengthOfExecutableString, string userParameters, string resultXmlFile,
-            SettingsWrapper settings)
+            int lengthOfExecutableString, string userParameters, SettingsWrapper settings)
         {
             if (userParameters == null)
                 throw new ArgumentNullException(nameof(userParameters));
 
             _lengthOfExecutableString = lengthOfExecutableString;
             _testCasesToRun = testCasesToRun.ToList();
-            _resultXmlFile = resultXmlFile;
             _settings = settings;
             _userParameters = userParameters;
         }
 
         public IEnumerable<Args> GetCommandLines()
         {
-            string baseCommandLine = GetOutputpathParameter();
+            string baseCommandLine = string.Empty;
             baseCommandLine += GetCatchExceptionsParameter();
             baseCommandLine += GetBreakOnFailureParameter();
             baseCommandLine += GetAlsoRunDisabledTestsParameter();
@@ -138,11 +135,6 @@ namespace GoogleTestAdapter.Runners
         private string GetAdditionalUserParameter()
         {
             return _userParameters.Length == 0 ? "" : " " + _userParameters;
-        }
-
-        private string GetOutputpathParameter()
-        {
-            return GoogleTestConstants.GetResultXmlFileOption(_resultXmlFile);
         }
 
         private string GetCatchExceptionsParameter()

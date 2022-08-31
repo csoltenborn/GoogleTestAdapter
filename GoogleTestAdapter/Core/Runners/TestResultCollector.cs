@@ -20,13 +20,10 @@ namespace GoogleTestAdapter.Runners
             _threadName = threadName;
         }
 
-        public List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, string resultXmlFile, List<string> consoleOutput, TestCase crashedTestCase)
+        public List<TestResult> CollectTestResults(IEnumerable<TestCase> testCasesRun, List<string> consoleOutput, TestCase crashedTestCase)
         {
             var testResults = new List<TestResult>();
             TestCase[] arrTestCasesRun = testCasesRun as TestCase[] ?? testCasesRun.ToArray();
-
-            if (testResults.Count < arrTestCasesRun.Length)
-                CollectResultsFromXmlFile(arrTestCasesRun, resultXmlFile, testResults);
 
             var consoleParser = new StandardOutputTestResultParser(arrTestCasesRun, consoleOutput, _logger);
             if (testResults.Count < arrTestCasesRun.Length)
@@ -48,22 +45,6 @@ namespace GoogleTestAdapter.Runners
             }
 
             return testResults;
-        }
-
-        private void CollectResultsFromXmlFile(TestCase[] testCasesRun, string resultXmlFile, List<TestResult> testResults)
-        {
-            var xmlParser = new XmlTestResultParser(testCasesRun, resultXmlFile, _logger);
-            List<TestResult> xmlResults = xmlParser.GetTestResults();
-            int nrOfCollectedTestResults = 0;
-            foreach (TestResult testResult in xmlResults.Where(
-                tr => !testResults.Exists(tr2 => tr.TestCase.FullyQualifiedName == tr2.TestCase.FullyQualifiedName)))
-            {
-                testResults.Add(testResult);
-                nrOfCollectedTestResults++;
-            }
-            if (nrOfCollectedTestResults > 0)
-                _logger.DebugInfo(
-                    String.Format(Resources.CollectedResults, _threadName, nrOfCollectedTestResults, resultXmlFile));
         }
 
         private void CollectResultsFromConsoleOutput(StandardOutputTestResultParser consoleParser, List<TestResult> testResults)

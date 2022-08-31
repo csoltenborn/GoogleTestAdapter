@@ -116,10 +116,9 @@ namespace GoogleTestAdapter.Runners
             IEnumerable<TestCase> testCasesToRun, string userParameters,
             bool isBeingDebugged, IDebuggedProcessLauncher debuggedLauncher, IProcessExecutor executor)
         {
-            string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
+            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, _settings);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)
@@ -127,7 +126,7 @@ namespace GoogleTestAdapter.Runners
                     break;
                 }
                 var streamingParser = new StreamingStandardOutputTestResultParser(arguments.TestCases, _logger, _frameworkReporter);
-                var results = RunTests(executable, workingDir, envVars, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser).ToArray();
+                var results = RunTests(executable, workingDir, envVars, isBeingDebugged, debuggedLauncher, arguments, executor, streamingParser).ToArray();
 
                 try
                 {
@@ -154,11 +153,11 @@ namespace GoogleTestAdapter.Runners
         }
 
         private IEnumerable<TestResult> RunTests(string executable, string workingDir, IDictionary<string, string> envVars, bool isBeingDebugged,
-            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
+            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
         {
             try
             {
-                return TryRunTests(executable, workingDir, envVars, isBeingDebugged, debuggedLauncher, arguments, resultXmlFile, executor, streamingParser);
+                return TryRunTests(executable, workingDir, envVars, isBeingDebugged, debuggedLauncher, arguments, executor, streamingParser);
             }
             catch (Exception e)
             {
@@ -176,8 +175,7 @@ namespace GoogleTestAdapter.Runners
         }
 
         private IEnumerable<TestResult> TryRunTests(string executable, string workingDir, IDictionary<string, string> envVars, bool isBeingDebugged,
-            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, string resultXmlFile, IProcessExecutor executor,
-            StreamingStandardOutputTestResultParser streamingParser)
+            IDebuggedProcessLauncher debuggedLauncher, CommandLineGenerator.Args arguments, IProcessExecutor executor, StreamingStandardOutputTestResultParser streamingParser)
         {
             List<string> consoleOutput;
             if (_settings.UseNewTestExecutionFramework)
@@ -197,7 +195,7 @@ namespace GoogleTestAdapter.Runners
             var remainingTestCases =
                 arguments.TestCases.Except(streamingParser.TestResults.Select(tr => tr.TestCase));
             var testResults = new TestResultCollector(_logger, _threadName)
-                .CollectTestResults(remainingTestCases, resultXmlFile, consoleOutput, streamingParser.CrashedTestCase);
+                .CollectTestResults(remainingTestCases, consoleOutput, streamingParser.CrashedTestCase);
             testResults = testResults.OrderBy(tr => tr.TestCase.FullyQualifiedName).ToList();
 
             return testResults;
