@@ -28,9 +28,9 @@
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="NewProjectWizard" Path="|NewProjectWizard|" AssemblyName="|NewProjectWizard;AssemblyName|" />
-        <Asset Type="Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.1.6.nupkg" d:Source="File" Path="Packages\Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.1.6.nupkg" d:VsixSubPath="Packages" />
-        <Asset Type="Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.6.nupkg" d:Source="File" Path="Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.6.nupkg" d:VsixSubPath="Packages" />
-        <Asset Type="Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.6.nupkg" d:Source="File" Path="Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.6.nupkg" d:VsixSubPath="Packages" />
+        <Asset Type="Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.1.7.nupkg" d:Source="File" Path="Packages\Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.8.1.7.nupkg" d:VsixSubPath="Packages" />
+        <Asset Type="Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7.nupkg" d:Source="File" Path="Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.8.1.7.nupkg" d:VsixSubPath="Packages" />
+        <Asset Type="Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.7.nupkg" d:Source="File" Path="Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.8.1.7.nupkg" d:VsixSubPath="Packages" />
         <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="GoogleTestProjectTemplate" d:TargetPath="|GoogleTestProjectTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="GoogleTestItemTemplate" d:TargetPath="|GoogleTestItemTemplate;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
 		<Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="VsPackage.TAfGT" Path="|VsPackage.TAfGT|" />

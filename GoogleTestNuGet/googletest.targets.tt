@@ -28,6 +28,10 @@
       <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'arm64' And '$(Microsoft-GoogleTest-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'arm64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'arm64' And '$(Microsoft-GoogleTest-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'arm'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'arm' And '$(Microsoft-GoogleTest-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'arm'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'arm' And '$(Microsoft-GoogleTest-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -90,5 +94,24 @@
     <# } #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest.pdb" />
       <ReferenceCopyLocalPaths Condition="'$(Microsoft-GoogleTest-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest_main.pdb" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'arm' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtestd.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtest_maind.dll" Condition="'$(Microsoft-GoogleTest-Disable-gtest_main)' == ''" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtestd.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(Microsoft-GoogleTest-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtest_maind.pdb" />
+    <# } else { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtest.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(Microsoft-GoogleTest-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Debug\gtest_main.pdb" />
+    <# } #>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != 'Debug' And '$(Platform)' == 'arm' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Release\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Release\gtest_main.dll" Condition="'$(Microsoft-GoogleTest-Disable-gtest_main)' == ''" />
+    <# } #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Release\gtest.pdb" />
+      <ReferenceCopyLocalPaths Condition="'$(Microsoft-GoogleTest-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm\Release\gtest_main.pdb" />
   </ItemGroup>
 </Project>
