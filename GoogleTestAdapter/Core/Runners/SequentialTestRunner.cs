@@ -1,4 +1,4 @@
-﻿// This file has been modified by Microsoft on 1/2021.
+﻿// This file has been modified by Microsoft on 10/2022.
 
 using System;
 using System.Collections.Generic;
@@ -64,7 +64,9 @@ namespace GoogleTestAdapter.Runners
                         foreach (var testCase in groupedTestCases[executable])
                         {
                             ITestPropertySettings settings;
-                            if (_settings.TestPropertySettingsContainer.TryGetSettings(testCase.FullyQualifiedName, out settings))
+                            // Tests with default settings are treated as not having settings and can be run together
+                            if (_settings.TestPropertySettingsContainer.TryGetSettings(testCase.FullyQualifiedName, out settings)
+                                && (settings.Environment.Count > 0 || Path.GetFullPath(settings.WorkingDirectory) != Path.GetFullPath(finalWorkingDir)))
                             {
                                 RunTestsFromExecutable(
                                     executable,
