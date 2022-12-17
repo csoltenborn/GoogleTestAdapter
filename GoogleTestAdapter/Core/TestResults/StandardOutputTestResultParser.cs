@@ -59,8 +59,8 @@ namespace GoogleTestAdapter.TestResults
             int currentLineIndex = indexOfTestcase;
 
             string line = _consoleOutput[currentLineIndex++];
-            string qualifiedTestname = RemovePrefix(line).Trim();
-            TestCase testCase = FindTestcase(qualifiedTestname);
+            string testDisplayName = RemovePrefix(line).Trim();
+            TestCase testCase = FindTestcase(testDisplayName);
             if (testCase == null)
             {
                 _logger.DebugWarning(String.Format(Resources.NoKnownTestCaseMessage, line));
@@ -189,14 +189,14 @@ namespace GoogleTestAdapter.TestResults
             return -1;
         }
 
-        private TestCase FindTestcase(string qualifiedTestname)
+        private TestCase FindTestcase(string testDisplayName)
         {
-            return FindTestcase(qualifiedTestname, _testCasesRun);
+            return FindTestcase(testDisplayName, _testCasesRun);
         }
 
-        public static TestCase FindTestcase(string qualifiedTestname, IList<TestCase> testCasesRun)
+        public static TestCase FindTestcase(string testDisplayName, IList<TestCase> testCasesRun)
         {
-            return testCasesRun.SingleOrDefault(tc => tc.FullyQualifiedName == qualifiedTestname);
+            return testCasesRun.SingleOrDefault(tc => tc.DisplayName == testDisplayName);
         }
 
         public static bool IsRunLine(string line)
