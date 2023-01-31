@@ -176,6 +176,11 @@ namespace Microsoft.NewProjectWizard
                         .Select(moniker => TryParsePlatformVersion(moniker))
                         .Where(name => name != null)
                         .OrderByDescending(p => p.Version).ToList();
+
+                    if (this.IsARM64()) {
+                        allPlatformsForLatestSdk.Add(TryParsePlatformVersion("ARM64"));
+                    }
+
                     Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
 
                     if (latestPlatform == null)
@@ -193,6 +198,16 @@ namespace Microsoft.NewProjectWizard
 
                 replacementsDictionary[TargetPlatformVersion] = versionString;
             }
+        }
+
+        /// <summary>
+        /// Checks architecture of Visual Studio Process.
+        /// </summary>
+        /// <returns>boolean indicating if running arm64 VS</returns>
+        protected bool IsARM64() {
+            string cpu = System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE", EnvironmentVariableTarget.Process);
+
+            return cpu.Equals("ARM64", StringComparison.OrdinalIgnoreCase);
         }
 
         // This method is only called for item templates,

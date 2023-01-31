@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+	<ProjectConfiguration Include="Debug|ARM64">
+	  <Configuration>Debug</Configuration>
+	  <Platform>ARM64</Platform>
+	</ProjectConfiguration>
+	<ProjectConfiguration Include="Release|ARM64">
+	  <Configuration>Release</Configuration>
+	  <Platform>ARM64</Platform>
+	</ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{$guid1$}</ProjectGuid>
@@ -77,6 +85,21 @@
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+	<ClCompile>
+	  <PrecompiledHeader>Use</PrecompiledHeader>
+	  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+	  <Optimization>Disabled</Optimization>
+	  <PreprocessorDefinitions>ARM64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+	  <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+	  <RuntimeLibrary>$rtdebug$</RuntimeLibrary>
+	  <WarningLevel>Level3</WarningLevel>
+	</ClCompile>
+	<Link>
+	  <GenerateDebugInformation>true</GenerateDebugInformation>
+	  <SubSystem>Console</SubSystem>
+	</Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -108,5 +131,21 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+	<ClCompile>
+	  <PrecompiledHeader>Use</PrecompiledHeader>
+	  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+	  <PreprocessorDefinitions>ARM64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+	  <RuntimeLibrary>$rtrelease$</RuntimeLibrary>
+	  <WarningLevel>Level3</WarningLevel>
+	  <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+	</ClCompile>
+	<Link>
+	  <GenerateDebugInformation>true</GenerateDebugInformation>
+	  <SubSystem>Console</SubSystem>
+	  <OptimizeReferences>true</OptimizeReferences>
+	  <EnableCOMDATFolding>true</EnableCOMDATFolding>
+	</Link>
   </ItemDefinitionGroup>
 </Project>
