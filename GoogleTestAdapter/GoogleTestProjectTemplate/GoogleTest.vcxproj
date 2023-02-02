@@ -85,21 +85,7 @@
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-	<ClCompile>
-	  <PrecompiledHeader>Use</PrecompiledHeader>
-	  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-	  <Optimization>Disabled</Optimization>
-	  <PreprocessorDefinitions>ARM64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-	  <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-	  <RuntimeLibrary>$rtdebug$</RuntimeLibrary>
-	  <WarningLevel>Level3</WarningLevel>
-	</ClCompile>
-	<Link>
-	  <GenerateDebugInformation>true</GenerateDebugInformation>
-	  <SubSystem>Console</SubSystem>
-	</Link>
-  </ItemDefinitionGroup>
+  $arm64debugplatform$
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -132,20 +118,5 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-	<ClCompile>
-	  <PrecompiledHeader>Use</PrecompiledHeader>
-	  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-	  <PreprocessorDefinitions>ARM64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-	  <RuntimeLibrary>$rtrelease$</RuntimeLibrary>
-	  <WarningLevel>Level3</WarningLevel>
-	  <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-	</ClCompile>
-	<Link>
-	  <GenerateDebugInformation>true</GenerateDebugInformation>
-	  <SubSystem>Console</SubSystem>
-	  <OptimizeReferences>true</OptimizeReferences>
-	  <EnableCOMDATFolding>true</EnableCOMDATFolding>
-	</Link>
-  </ItemDefinitionGroup>
+  $arm64releaseplatform$
 </Project>

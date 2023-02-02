@@ -25,6 +25,10 @@ namespace Microsoft.NewProjectWizard
         private const string RuntimeDebug = "$rtdebug$";
         private const string RuntimeRelease = "$rtrelease$";
         private const string RunSilent = "$runsilent$";
+        private const string ARM64DebugPlatform = "$arm64debugplatform$";
+        private string arm64DebugXMLChunk = "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|ARM64'\">\r\n\t<ClCompile>\r\n\t  <PrecompiledHeader>Use</PrecompiledHeader>\r\n\t  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\r\n\t  <Optimization>Disabled</Optimization>\r\n\t  <PreprocessorDefinitions>ARM64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\r\n\t  <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>\r\n\t  <RuntimeLibrary>$rtdebug$</RuntimeLibrary>\r\n\t  <WarningLevel>Level3</WarningLevel>\r\n\t</ClCompile>\r\n\t<Link>\r\n\t  <GenerateDebugInformation>true</GenerateDebugInformation>\r\n\t  <SubSystem>Console</SubSystem>\r\n\t</Link>\r\n  </ItemDefinitionGroup>";
+        private const string ARM64ReleasePlatform = "$arm64releaseplatform$";
+        private string arm64ReleaseXMLChunk = "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|ARM64'\">\r\n\t<ClCompile>\r\n\t  <PrecompiledHeader>Use</PrecompiledHeader>\r\n\t  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\r\n\t  <PreprocessorDefinitions>ARM64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\r\n\t  <RuntimeLibrary>$rtrelease$</RuntimeLibrary>\r\n\t  <WarningLevel>Level3</WarningLevel>\r\n\t  <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>\r\n\t</ClCompile>\r\n\t<Link>\r\n\t  <GenerateDebugInformation>true</GenerateDebugInformation>\r\n\t  <SubSystem>Console</SubSystem>\r\n\t  <OptimizeReferences>true</OptimizeReferences>\r\n\t  <EnableCOMDATFolding>true</EnableCOMDATFolding>\r\n\t</Link>\r\n  </ItemDefinitionGroup>";
         private List<Project> projects = new List<Project>();
         private int selectedProjectIndex;
         private IWizard nugetWizard;
@@ -180,6 +184,12 @@ namespace Microsoft.NewProjectWizard
                     if (this.IsARM64()) {
                         allPlatformsForLatestSdk.Add(TryParsePlatformVersion("ARM64"));
                     }
+                    else {
+                        arm64DebugXMLChunk = "";
+                        arm64ReleaseXMLChunk = "";
+                    }
+                    replacementsDictionary[ARM64DebugPlatform] = arm64DebugXMLChunk;
+                    replacementsDictionary[arm64ReleaseXMLChunk] = arm64ReleaseXMLChunk;
 
                     Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
 
