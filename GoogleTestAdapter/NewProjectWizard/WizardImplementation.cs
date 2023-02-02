@@ -29,6 +29,8 @@ namespace Microsoft.NewProjectWizard
         private string arm64DebugXMLChunk = "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|ARM64'\">\r\n\t<ClCompile>\r\n\t  <PrecompiledHeader>Use</PrecompiledHeader>\r\n\t  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\r\n\t  <Optimization>Disabled</Optimization>\r\n\t  <PreprocessorDefinitions>ARM64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\r\n\t  <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>\r\n\t  <RuntimeLibrary>$rtdebug$</RuntimeLibrary>\r\n\t  <WarningLevel>Level3</WarningLevel>\r\n\t</ClCompile>\r\n\t<Link>\r\n\t  <GenerateDebugInformation>true</GenerateDebugInformation>\r\n\t  <SubSystem>Console</SubSystem>\r\n\t</Link>\r\n  </ItemDefinitionGroup>";
         private const string ARM64ReleasePlatform = "$arm64releaseplatform$";
         private string arm64ReleaseXMLChunk = "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|ARM64'\">\r\n\t<ClCompile>\r\n\t  <PrecompiledHeader>Use</PrecompiledHeader>\r\n\t  <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>\r\n\t  <PreprocessorDefinitions>ARM64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\r\n\t  <RuntimeLibrary>$rtrelease$</RuntimeLibrary>\r\n\t  <WarningLevel>Level3</WarningLevel>\r\n\t  <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>\r\n\t</ClCompile>\r\n\t<Link>\r\n\t  <GenerateDebugInformation>true</GenerateDebugInformation>\r\n\t  <SubSystem>Console</SubSystem>\r\n\t  <OptimizeReferences>true</OptimizeReferences>\r\n\t  <EnableCOMDATFolding>true</EnableCOMDATFolding>\r\n\t</Link>\r\n  </ItemDefinitionGroup>";
+        private const string ARM64Config = "$arm64config$";
+        private string arm64ConfigXML = "\t<ProjectConfiguration Include=\"Debug|ARM64\">\r\n\t  <Configuration>Debug</Configuration>\r\n\t  <Platform>ARM64</Platform>\r\n\t</ProjectConfiguration>\r\n\t<ProjectConfiguration Include=\"Release|ARM64\">\r\n\t  <Configuration>Release</Configuration>\r\n\t  <Platform>ARM64</Platform>\r\n\t</ProjectConfiguration>";
         private List<Project> projects = new List<Project>();
         private int selectedProjectIndex;
         private IWizard nugetWizard;
@@ -187,7 +189,9 @@ namespace Microsoft.NewProjectWizard
                     else {
                         arm64DebugXMLChunk = "";
                         arm64ReleaseXMLChunk = "";
+                        arm64ConfigXML = "";
                     }
+                    replacementsDictionary[ARM64Config] = arm64ConfigXML;
                     replacementsDictionary[ARM64DebugPlatform] = arm64DebugXMLChunk;
                     replacementsDictionary[ARM64DebugPlatform] = arm64ReleaseXMLChunk;
 
