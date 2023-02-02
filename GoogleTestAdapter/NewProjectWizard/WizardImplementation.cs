@@ -190,7 +190,7 @@ namespace Microsoft.NewProjectWizard
                     }
                     replacementsDictionary[ARM64Config] = arm64ConfigXML;
                     replacementsDictionary[ARM64DebugPlatform] = arm64DebugXMLChunk;
-                    replacementsDictionary[ARM64DebugPlatform] = arm64ReleaseXMLChunk;
+                    replacementsDictionary[ARM64ReleasePlatform] = arm64ReleaseXMLChunk;
 
                     Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
 
