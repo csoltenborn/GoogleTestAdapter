@@ -183,7 +183,7 @@ namespace Microsoft.NewProjectWizard
                         .Where(name => name != null)
                         .OrderByDescending(p => p.Version).ToList();
 
-                    if (this.IsARM64()) {
+                    if (!this.IsARM64()) {
                         arm64DebugXMLChunk = "";
                         arm64ReleaseXMLChunk = "";
                         arm64ConfigXML = "";
