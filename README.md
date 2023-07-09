@@ -3,12 +3,14 @@
 [![Visual Studio Marketplace downloads](https://img.shields.io/badge/vs_marketplace-52k-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
 [![NuGet downloads](https://img.shields.io/nuget/dt/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
 
+# Looking for a Maintainer
+
+As you might have noticed, this project is not maintained any more (I have moved to different technologies and are not even working as a developer any more). Since it still has a few features which the [MS clone](https://github.com/microsoft/TestAdapterForGoogleTest) (which is still developed and delivered with Visual Studio) does not support, there still seems to be some interest in the project. Thus, if anybody wants to take over this project, please get in touch - I will certainly try to get you up and running!
+
 
 ### Google Test Adapter
 
 Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the [Google Test](https://github.com/google/googletest) framework.
-
-[![Donate to Google Test Adapter](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif "Donate to Google Test Adapter")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WWTKRV62UJW6C)
 
 ![Screenshot of Test Explorer](https://raw.githubusercontent.com/csoltenborn/GoogleTestAdapter/master/GoogleTestAdapter/VsPackage.Shared/Resources/Screenshot.png "Screenshot of Test Explorer")
 
@@ -34,19 +36,6 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 #### History
 
 * See [releases](https://github.com/csoltenborn/GoogleTestAdapter/releases)
-
-#### Donations
-
-In the last couple of months, I noticed that my private laptop certainly has a finite lifetime. Thinking about the requirements a new one has to stand up to, I realized that developing and supporting *Google Test Adapter* has in the last years been one of the major use cases of that laptop. Thus, I decided to take this as reason for from now on accepting donations :-)
-
-Update: In the meantime, I have received a few donations, and some rather generous ones (thanks again to everybody - the new laptop is great :-) ), but since I'm still quite far away from my original donation goal of collecting half of the laptop's price, I will leave this section as is.
-
-Therefore, if you would like to appreciate development and support of *Google Test Adapter*, **please consider to donate!** 
-
-[![Donate to Google Test Adapter](https://www.paypalobjects.com/en_US/DE/i/btn/btn_donateCC_LG.gif "Donate to Google Test Adapter")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWJX68LZWGN5S)
-
-Please note that I will see your donations as appreciation of my work so far and a motivational factor for the future, but just to be sure, they do not result in any obligations on my part (e.g. prioritized support, your favorite feature, or even continued maintenance).
-
 
 ### Usage
 
