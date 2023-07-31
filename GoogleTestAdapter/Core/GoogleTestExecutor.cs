@@ -73,7 +73,7 @@ namespace GoogleTestAdapter
             }
             else
             {
-                _runner = new PreparingTestRunner(reporter, _logger, _settings, _schedulingAnalyzer);
+                _runner = new PreparingTestRunner(reporter, _logger, _settings, _schedulingAnalyzer, true);
                 if (_settings.ParallelTestExecution && isBeingDebugged)
                 {
                     _logger.DebugInfo(

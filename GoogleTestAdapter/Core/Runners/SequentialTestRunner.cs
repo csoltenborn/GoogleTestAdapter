@@ -28,10 +28,11 @@ namespace GoogleTestAdapter.Runners
         private readonly ILogger _logger;
         private readonly SettingsWrapper _settings;
         private readonly SchedulingAnalyzer _schedulingAnalyzer;
+        private readonly bool _reduceToRootTestSuite;
 
         private IProcessExecutor _processExecutor;
 
-        public SequentialTestRunner(string threadName, int threadId, string testDir, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
+        public SequentialTestRunner(string threadName, int threadId, string testDir, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer, bool reduceToRootTestSuite)
         {
             _threadName = threadName;
             _threadId = threadId;
@@ -40,6 +41,7 @@ namespace GoogleTestAdapter.Runners
             _logger = logger;
             _settings = settings;
             _schedulingAnalyzer = schedulingAnalyzer;
+            _reduceToRootTestSuite = reduceToRootTestSuite;
         }
 
 
@@ -90,7 +92,7 @@ namespace GoogleTestAdapter.Runners
             string resultXmlFile = Path.GetTempFileName();
             var serializer = new TestDurationSerializer();
 
-            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings);
+            var generator = new CommandLineGenerator(testCasesToRun, executable.Length, userParameters, resultXmlFile, _settings, _reduceToRootTestSuite);
             foreach (CommandLineGenerator.Args arguments in generator.GetCommandLines())
             {
                 if (_canceled)

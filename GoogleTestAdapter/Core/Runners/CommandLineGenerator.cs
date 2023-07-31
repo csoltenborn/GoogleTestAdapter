@@ -31,16 +31,18 @@ namespace GoogleTestAdapter.Runners
         private readonly string _resultXmlFile;
         private readonly SettingsWrapper _settings;
         private readonly string _userParameters;
+        private readonly bool _reduceToRootTestSuite;
 
         public CommandLineGenerator(IEnumerable<TestCase> testCasesToRun,
             int lengthOfExecutableString, string userParameters, string resultXmlFile,
-            SettingsWrapper settings)
+            SettingsWrapper settings, bool reduceToRootTestSuite)
         {
             _lengthOfExecutableString = lengthOfExecutableString;
             _testCasesToRun = testCasesToRun.ToList();
             _resultXmlFile = resultXmlFile;
             _settings = settings;
             _userParameters = userParameters ?? throw new ArgumentNullException(nameof(userParameters));
+            _reduceToRootTestSuite = reduceToRootTestSuite;
         }
 
         public IEnumerable<Args> GetCommandLines()
@@ -78,9 +80,8 @@ namespace GoogleTestAdapter.Runners
                 return commandLines;
             }
 
-            List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
+            List<string> suitesRunningAllTests = _reduceToRootTestSuite ? GetSuitesRunningAllTests() : new List<string>();
             int maxSuiteLength = MaxCommandLength - _lengthOfExecutableString - userParam.Length - 1;
-
             List<List<string>> suiteLists = GetSuiteListsForCommandLines(suitesRunningAllTests, maxSuiteLength);
             
             // lambda to return the base commandline string (including suite filters) and the list of testcases to execute
@@ -286,14 +287,11 @@ namespace GoogleTestAdapter.Runners
             foreach (string suite in GetAllSuitesOfTestCasesToRun())
             {
                 List<TestCase> allMatchingTestCasesToBeRun = GetAllMatchingTestCases(_testCasesToRun, suite);
-                TestCaseMetaDataProperty metaData = allMatchingTestCasesToBeRun.First().Properties
-                    .OfType<TestCaseMetaDataProperty>()
-                    .SingleOrDefault();
-                if (metaData == null)
-                    throw new Exception($"Test does not have meta data: {allMatchingTestCasesToBeRun.First()}");
-
-                if (allMatchingTestCasesToBeRun.Count == metaData.NrOfTestCasesInSuite)
+                if (allMatchingTestCasesToBeRun.All(_testCasesToRun.Contains)
+                    && allMatchingTestCasesToBeRun.Count == _testCasesToRun.Count)
+                {
                     suitesRunningAllTests.Add(suite);
+                }
             }
             return suitesRunningAllTests;
         }
