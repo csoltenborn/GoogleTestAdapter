@@ -376,7 +376,7 @@ You might consider using GTA's project settings to switch off symbol parsing and
 
 ### Development of Google Test Adapter
 
-Please refer to our [wiki](https://github.com/csoltenborn/GoogleTestAdapter/wiki/Development-Knowledge-Base).
+See [DEVELOPMENT.md](DEVELOPMENT.md) for building, testing, releasing, and the design of this fork, and the original project's [wiki](https://github.com/csoltenborn/GoogleTestAdapter/wiki/Development-Knowledge-Base) for the code base before the fork.
 
 
 ### Credits
