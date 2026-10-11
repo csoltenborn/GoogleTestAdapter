@@ -89,6 +89,7 @@
     <Compile Include="Debugging\MessageBasedDebuggerAttacherTests.cs" />
     <Compile Include="Debugging\DebuggerAttacherServiceTests.cs" />
     <Compile Include="Debugging\VsDebuggerAttacherTests.cs" />
+    <Compile Include="Settings\CodeCoverageRunSettingsTests.cs" />
     <Compile Include="Helpers\RunSettingsServiceUnderTest.cs" />
     <Compile Include="ReleaseNotes\HistoryTests.cs" />
     <Compile Include="ReleaseNotes\ReleaseNotesCreatorTests.cs" />

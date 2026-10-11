@@ -36,6 +36,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)OptionsPages\OptionsUpdater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\CodeCoverageRunSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\RunSettingsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\SolutionPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\VisualStudioConfiguration.cs" />

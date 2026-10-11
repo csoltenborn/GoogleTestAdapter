@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.Framework;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
@@ -65,8 +66,26 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             runSettingsNavigator.MoveToChild(Constants.RunSettingsName, "");
             runSettingsNavigator.AppendChild(settingsContainer.ToXml().CreateNavigator());
 
+            ConfigureCodeCoverage(runSettingDocument, logger);
+
             runSettingsNavigator.MoveToRoot();
             return runSettingsNavigator;
+        }
+
+        // an exception would make Test Explorer drop all settings provided by GTA
+        private static void ConfigureCodeCoverage(IXPathNavigable runSettingDocument, ILogger logger)
+        {
+            try
+            {
+                // the code coverage of VS 2022 and later knows dynamic native instrumentation
+                bool enableDynamicNativeInstrumentation = VsVersionUtils.VsVersion >= VsVersion.VS2022;
+                if (CodeCoverageRunSettings.Configure(runSettingDocument, enableDynamicNativeInstrumentation))
+                    logger.Log(MessageLevel.Informational, "Google Test Adapter: adjusted code coverage settings to Google Test executables");
+            }
+            catch (Exception e)
+            {
+                logger.Log(MessageLevel.Warning, $"Google Test Adapter: could not adjust code coverage settings: {e.Message}");
+            }
         }
 
         private void GetValuesFromSolutionSettingsFile(RunSettingsContainer settingsContainer, ILogger logger)
