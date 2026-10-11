@@ -66,6 +66,7 @@
     <Compile Include="IDiaResolverFactory.cs" />
     <Compile Include="PdbLocator.cs" />
     <Compile Include="PeParser.cs" />
+    <Compile Include="SymbolUndecorator.cs" />
     <Compile Include="DiaResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceFileLocation.cs" />

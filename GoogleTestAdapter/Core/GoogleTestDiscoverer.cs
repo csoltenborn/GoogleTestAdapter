@@ -95,6 +95,7 @@ namespace GoogleTestAdapter
             if (string.IsNullOrWhiteSpace(customRegex))
             {
                 if (PeParser.ParseImports(executable, logger).Any(IsGoogleTestDll)
+                    || PeParser.FindImportedFunction(executable, IsGoogleTestFunction, logger)
                     || Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
                 {
                     logger.DebugInfo($"Google Test indicators found in executable {executable}");
@@ -117,6 +118,34 @@ namespace GoogleTestAdapter
         public static bool IsGoogleTestDll(string import)
         {
             return GoogleTestConstants.GoogleTestDllMarkers.Contains(import, StringComparer.OrdinalIgnoreCase);
+        }
+
+        // scopes of Google Test's core: every test executable linking Google Test as DLL uses some of them (e.g.
+        // testing::internal::MakeAndRegisterTestInfo() for TEST(), testing::UnitTest for TEST_P())
+        private static readonly string[] GoogleTestScopes = { "testing::internal::", "testing::UnitTest::", "testing::Test::" };
+
+        // fallback if a name can not be undecorated: MSVC mangles names from the innermost to the outermost scope, e.g.
+        // "?GetInstance@UnitTest@testing@@..."; constructors and destructors are mangled as "??0Test@testing@@...", "??1..."
+        private static readonly Regex MsvcGoogleTestFunctionRegex = new Regex(
+            @"@(?:internal|UnitTest|Test)@testing@@|^\?\?[0-9]Test@testing@@", RegexOptions.Compiled);
+
+        // Itanium mangling (MinGW, clang), which dbghelp can not undecorate, names the outermost scope first, e.g.
+        // "_ZN7testing8UnitTest11GetInstanceEv"; names are prefixed with their length
+        private static readonly Regex ItaniumGoogleTestFunctionRegex = new Regex(
+            @"^_?_ZNK?7testing(?:8internal|8UnitTest|4Test)(?=[0-9CDE])", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Test executables linking Google Test (or Google Mock) as DLL, whatever its name, import functions of
+        /// testing::internal, testing::UnitTest, or testing::Test.
+        /// </summary>
+        public static bool IsGoogleTestFunction(string importedFunction)
+        {
+            string qualifiedName = SymbolUndecorator.UndecorateNameOnly(importedFunction);
+            if (qualifiedName != null)
+                return GoogleTestScopes.Any(scope => qualifiedName.StartsWith(scope, StringComparison.Ordinal));
+
+            return MsvcGoogleTestFunctionRegex.IsMatch(importedFunction)
+                || ItaniumGoogleTestFunctionRegex.IsMatch(importedFunction);
         }
 
         private static bool SafeMatches(string executable, string regex, ILogger logger)

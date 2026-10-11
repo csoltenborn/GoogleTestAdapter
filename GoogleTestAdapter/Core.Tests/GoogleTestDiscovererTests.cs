@@ -85,6 +85,40 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void IsGoogleTestFunction_FunctionsOfGoogleTestCore_AreRecognized()
+        {
+            // imported by a test executable linking Google Test as DLL (x64, MSVC)
+            GoogleTestDiscoverer.IsGoogleTestFunction("?MakeAndRegisterTestInfo@internal@testing@@YAPEAVTestInfo@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEBD11UCodeLocation@12@PEBXP6AXXZ4PEAVTestFactoryBase@12@@Z").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("?GetInstance@UnitTest@testing@@SAPEAV12@XZ").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??0Test@testing@@IEAA@XZ").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??1Test@testing@@UEAA@XZ").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??4AssertHelper@internal@testing@@QEBAXAEBVMessage@2@@Z").Should().BeTrue();
+            // x86
+            GoogleTestDiscoverer.IsGoogleTestFunction("?GetInstance@UnitTest@testing@@SAPAV12@XZ").Should().BeTrue();
+            // MinGW, clang
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing8UnitTest11GetInstanceEv").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing8internal23MakeAndRegisterTestInfoEPKcS2_S2_S2_NS0_12CodeLocationEPKvPFvvES7_PNS0_15TestFactoryBaseE").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing4TestC2Ev").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("__ZN7testing4TestD2Ev").Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestFunction_OtherFunctions_AreNotRecognized()
+        {
+            GoogleTestDiscoverer.IsGoogleTestFunction("GetLastError").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("?ReturnZero@@YAHXZ").Should().BeFalse();
+            // classes of namespace testing which are not part of Google Test's core
+            GoogleTestDiscoverer.IsGoogleTestFunction("??0MyTest@testing@@QEAA@XZ").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??1TestPartResult@testing@@QEAA@XZ").Should().BeFalse();
+            // namespace testing::internal within another namespace
+            GoogleTestDiscoverer.IsGoogleTestFunction("?Foo@internal@testing@mylib@@YAXXZ").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing14TestPartResultC2Ev").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN5mylib7testing8internal3FooEv").Should().BeFalse();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void IsGoogleTestDll_GoogleTestAndGoogleMockDlls_AreRecognized()
         {
             GoogleTestDiscoverer.IsGoogleTestDll("gtest.dll").Should().BeTrue();

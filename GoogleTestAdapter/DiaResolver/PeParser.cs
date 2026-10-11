@@ -47,6 +47,7 @@ namespace GoogleTestAdapter.DiaResolver
     {
         public IntPtr MappedAddress;
         public IntPtr FileHeader;
+        public long Size;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -66,6 +67,20 @@ namespace GoogleTestAdapter.DiaResolver
         public uint Name;
         [FieldOffset(16)]
         public uint FirstThunk;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    // ReSharper disable once InconsistentNaming
+    struct IMAGE_DELAYLOAD_DESCRIPTOR
+    {
+        public uint Attributes;
+        public uint DllNameRVA;
+        public uint ModuleHandleRVA;
+        public uint ImportAddressTableRVA;
+        public uint ImportNameTableRVA;
+        public uint BoundImportAddressTableRVA;
+        public uint UnloadInformationTableRVA;
+        public uint TimeDateStamp;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -122,6 +137,12 @@ namespace GoogleTestAdapter.DiaResolver
         {
             // ReSharper disable once InconsistentNaming
             public const ushort IMAGE_DIRECTORY_ENTRY_IMPORT = 1;
+            // ReSharper disable once InconsistentNaming
+            public const ushort IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT = 13;
+            // ReSharper disable once InconsistentNaming
+            public const ushort IMAGE_NT_OPTIONAL_HDR64_MAGIC = 0x20b;
+            // ReSharper disable once InconsistentNaming
+            public const uint DLL_ATTRIBUTE_RVA_BASED = 1;
 
             public const ushort IMAGE_DOS_SIGNATURE = 0x5A4D; // MZ
             public const uint IMAGE_NT_SIGNATURE = 0x00004550; // PE\0\0
@@ -194,6 +215,7 @@ namespace GoogleTestAdapter.DiaResolver
 
             image.MappedAddress = mappedAddress;
             image.FileHeader = new IntPtr((byte*)mappedAddress + dosHeader->e_lfanew);
+            image.Size = fileSize;
             return true;
         }
 
@@ -262,6 +284,107 @@ namespace GoogleTestAdapter.DiaResolver
         {
             IntPtr stringPtr = NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, offset, IntPtr.Zero);
             return PtrToStringUtf8(stringPtr);
+        }
+
+        // limits protect against malformed files, whose tables might not be terminated
+        private const int MaxNrOfImportedFunctionsPerDll = 100000;
+        private const int MaxFunctionNameLength = 4096;
+
+        /// <summary>
+        /// Calls the predicate for the names of the functions the executable imports from DLLs (including delay-loaded
+        /// DLLs) until it returns true; functions imported by ordinal are skipped.
+        /// </summary>
+        /// <returns>True if the predicate has returned true</returns>
+        public static bool FindImportedFunction(string executable, Func<string, bool> predicate, ILogger logger)
+        {
+            bool found = false;
+            ParsePeFile(executable, logger, image =>
+            {
+                bool is64Bit = ((IMAGE_NT_HEADERS*)image.FileHeader)->OptionalHeaderMagic == NativeMethods.IMAGE_NT_OPTIONAL_HDR64_MAGIC;
+
+                uint size = 0u;
+                var importDescriptor = (IMAGE_IMPORT_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, NativeMethods.IMAGE_DIRECTORY_ENTRY_IMPORT, &size);
+                if (importDescriptor != null)
+                {
+                    for (; !found && IsInImage(image, importDescriptor, sizeof(IMAGE_IMPORT_DESCRIPTOR)) && importDescriptor->Name != 0u; importDescriptor++)
+                    {
+                        // the import name table, or the import address table if the executable has been bound
+                        uint nameTable = importDescriptor->OriginalFirstThunk != 0u ? importDescriptor->OriginalFirstThunk : importDescriptor->FirstThunk;
+                        found = FindFunctionName(image, nameTable, is64Bit, predicate);
+                    }
+                }
+
+                var delayDescriptor = (IMAGE_DELAYLOAD_DESCRIPTOR*)NativeMethods.ImageDirectoryEntryToData(image.MappedAddress, 0, NativeMethods.IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT, &size);
+                if (delayDescriptor != null)
+                {
+                    for (; !found && IsInImage(image, delayDescriptor, sizeof(IMAGE_DELAYLOAD_DESCRIPTOR)) && delayDescriptor->DllNameRVA != 0u; delayDescriptor++)
+                    {
+                        // descriptors of old linkers contain addresses rather than RVAs
+                        if ((delayDescriptor->Attributes & NativeMethods.DLL_ATTRIBUTE_RVA_BASED) != 0u)
+                            found = FindFunctionName(image, delayDescriptor->ImportNameTableRVA, is64Bit, predicate);
+                    }
+                }
+            });
+            return found;
+        }
+
+        public static List<string> ParseImportedFunctions(string executable, ILogger logger)
+        {
+            var functions = new List<string>();
+            FindImportedFunction(executable, function =>
+            {
+                functions.Add(function);
+                return false; // Always continue.
+            }, logger);
+            return functions;
+        }
+
+        private static bool FindFunctionName(LoadedImage image, uint nameTableRva, bool is64Bit, Func<string, bool> predicate)
+        {
+            if (nameTableRva == 0u)
+                return false;
+
+            var thunk = (byte*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, nameTableRva, IntPtr.Zero);
+            int thunkSize = is64Bit ? sizeof(ulong) : sizeof(uint);
+            for (int i = 0; i < MaxNrOfImportedFunctionsPerDll && IsInImage(image, thunk, thunkSize); i++, thunk += thunkSize)
+            {
+                ulong value = is64Bit ? *(ulong*)thunk : *(uint*)thunk;
+                if (value == 0u)
+                    return false;
+
+                bool importedByOrdinal = is64Bit ? (value & 0x8000000000000000UL) != 0u : (value & 0x80000000UL) != 0u;
+                if (importedByOrdinal)
+                    continue;
+
+                // IMAGE_IMPORT_BY_NAME: 2 bytes hint, followed by the name
+                var hintAndName = (byte*)NativeMethods.ImageRvaToVa(image.FileHeader, image.MappedAddress, (uint)value, IntPtr.Zero);
+                string name = GetBoundedString(image, hintAndName == null ? null : hintAndName + 2);
+                if (name != null && predicate(name))
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool IsInImage(LoadedImage image, void* pointer, int length)
+        {
+            var start = (byte*)image.MappedAddress;
+            var p = (byte*)pointer;
+            return p != null && p >= start && p + length <= start + image.Size;
+        }
+
+        private static string GetBoundedString(LoadedImage image, byte* pointer)
+        {
+            if (!IsInImage(image, pointer, 1))
+                return null;
+
+            var end = (byte*)image.MappedAddress + image.Size;
+            int length = 0;
+            while (pointer + length < end && length < MaxFunctionNameLength && pointer[length] != 0)
+                length++;
+            if (pointer + length >= end || pointer[length] != 0)
+                return null;
+
+            return Encoding.ASCII.GetString(pointer, length);
         }
 
         // the linker stores strings (e.g. the PDB path) as UTF-8
