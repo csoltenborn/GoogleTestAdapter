@@ -44,17 +44,17 @@ jobs:
         "version=$version" >> $env:GITHUB_OUTPUT
         "build_version=$version.$env:GITHUB_RUN_NUMBER" >> $env:GITHUB_OUTPUT
 
-    # without secret RELEASE_KEY_PASSWORD, the assemblies are signed with Keys\Key_Debug.snk
-    - name: Decrypt release signing key
+    # secret RELEASE_KEY is the base64-encoded strong name key Key_Release.snk; without it, the assemblies are signed
+    # with Keys\Key_Debug.snk
+    - name: Provide release signing key
       if: github.ref_type == 'tag'
       env:
-        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        RELEASE_KEY: ${{ secrets.RELEASE_KEY }}
       run: |
-        if ($env:RELEASE_KEY_PASSWORD) {
-            nuget install secure-file -ExcludeVersion -OutputDirectory NuGetPackages
-            NuGetPackages\secure-file\tools\secure-file -decrypt GoogleTestAdapter\Keys\Key_Release.snk.enc -secret $env:RELEASE_KEY_PASSWORD
+        if ($env:RELEASE_KEY) {
+            [IO.File]::WriteAllBytes("$env:GITHUB_WORKSPACE\GoogleTestAdapter\Keys\Key_Release.snk", [Convert]::FromBase64String($env:RELEASE_KEY))
         } else {
-            Write-Output "::warning::Secret RELEASE_KEY_PASSWORD is not defined, the assemblies are signed with the debug key"
+            Write-Output "::warning::Secret RELEASE_KEY is not defined, the assemblies are signed with the debug key"
         }
 
     - name: Stamp version

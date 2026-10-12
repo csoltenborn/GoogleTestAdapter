@@ -92,12 +92,16 @@ artifact `packages-<vs2022|vs2026>`, and runs the tests of `DiaResolver.Tests`, 
 `VsPackage.GTA.Tests.Unit` (ignoring a timing-sensitive test with `IgnoreTests.ps1`; the TRX results are artifact
 `test-results-<vs2022|vs2026>`). For a tag `v<version>`, which must match the version of `VsPackage.nuspec`, it creates
 a draft prerelease with the packages built with VS 2022 and the release notes `<version>.md`, using the workflow's own
-token. The release signing key `Keys/Key_Release.snk.enc` is decrypted (with AppVeyor's `secure-file` tool) only for
-tags, and only if the repository secret `RELEASE_KEY_PASSWORD` is defined; otherwise, assemblies are signed with
-`Keys/Key_Debug.snk`. The original project's password is not known, so a new release key has to be encrypted with
-`secure-file -encrypt` (which would change the assemblies' public key token) or the debug key be used. On the command
-line, call batch files with an explicit path (`call .\SetVersion.bat`): some machines do not search the current
-directory for commands.
+token. On the command line, call batch files with an explicit path (`call .\SetVersion.bat`): some machines do not
+search the current directory for commands.
+
+**Strong name keys:** the assemblies are signed with `Keys/Key_Release.snk` if it exists (pre-build events of the
+projects; the file is ignored by Git), and with `Keys/Key_Debug.snk` (public key token `028d073f99e04687`) otherwise;
+`NewProjectWizard` always uses its own `Key.snk` (token `1924acebdd4c8a75`, referenced by the project template). The
+fork's release key (token `a5acb60cd53bf87d`; the original project's key is not available) is kept by the maintainer
+and is the repository secret `RELEASE_KEY` (base64 of the `.snk`, e.g. `base64 -w0 Key_Release.snk`), which the
+workflow writes to `Keys/Key_Release.snk` for tags only. Strong names are identities, not trust: nothing references
+GTA's public key, so the key can be replaced (e.g. `sn -k 2048 Key_Release.snk`) without other changes.
 
 ## Testing
 
