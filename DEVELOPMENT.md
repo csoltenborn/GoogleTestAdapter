@@ -52,6 +52,11 @@ sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`
 * The VSIX projects use the VS SDK build tools from NuGet (`Microsoft.VSSDK.BuildTools`, version defined in
   `Common.props`) rather than those of the Visual Studio installation, so builds do not depend on the Visual Studio
   version (VS 2026's installed `CreatePkgDef.exe` misses a dependency and fails).
+* The .NET Framework 4.6 and 4.6.1 projects (GTA, and the samples `ClrDotNetLibProject` and `ClrLibProject`) build
+  against the reference assemblies from NuGet (`Microsoft.NETFramework.ReferenceAssemblies.net46`/`net461`, restored
+  by `Packaging.GTA/packages.config`, applied by the root `Directory.Build.targets`), since current Visual Studio
+  installations and the GitHub runners do not have these targeting packs anymore (error MSB3644). Only if the packages
+  are missing (e.g. `SampleTests.sln` built on its own on a fresh clone) are the installed targeting packs used.
 * Configuration `Any CPU` of `GoogleTestAdapter.sln` also builds the sample tests (project `SampleTestsBuilder` builds
   `SampleTests/SampleTests.sln` for Debug and Release, Win32 and x64); GTA's tests use the binaries in
   `out/binaries/SampleTests/`. The samples' intermediate files are separated by platform and Visual Studio version,

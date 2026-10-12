@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- The .NET Framework 4.6 and 4.6.1 projects (of GTA and of the sample tests) build against the reference
+         assemblies from NuGet (restored by Packaging.GTA/packages.config) rather than against the targeting packs of
+         the machine, which current Visual Studio installations and CI runners do not provide anymore. Without the
+         packages (e.g. if SampleTests.sln is built on its own before GTA's solution has been restored), the installed
+         targeting packs are used. -->
+    <PropertyGroup>
+        <ReferenceAssembliesNet46Dir>$(MSBuildThisFileDirectory)NuGetPackages\Microsoft.NETFramework.ReferenceAssemblies.net46.1.0.3\build\</ReferenceAssembliesNet46Dir>
+        <ReferenceAssembliesNet461Dir>$(MSBuildThisFileDirectory)NuGetPackages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.3\build\</ReferenceAssembliesNet461Dir>
+    </PropertyGroup>
+
+    <!-- C# projects use the packages' targets, as SDK-style projects do -->
+    <Import Project="$(ReferenceAssembliesNet46Dir)Microsoft.NETFramework.ReferenceAssemblies.net46.targets"
+            Condition="'$(MSBuildProjectExtension)' == '.csproj' And Exists('$(ReferenceAssembliesNet46Dir)')" />
+    <Import Project="$(ReferenceAssembliesNet461Dir)Microsoft.NETFramework.ReferenceAssemblies.net461.targets"
+            Condition="'$(MSBuildProjectExtension)' == '.csproj' And Exists('$(ReferenceAssembliesNet461Dir)')" />
+
+    <!-- C++/CLI projects reference mscorlib implicitly, so only the location of the reference assemblies is changed -->
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vcxproj' And '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+        <TargetFrameworkRootPath Condition="'$(TargetFrameworkVersion)' == 'v4.6' And Exists('$(ReferenceAssembliesNet46Dir)')">$(ReferenceAssembliesNet46Dir)</TargetFrameworkRootPath>
+        <TargetFrameworkRootPath Condition="'$(TargetFrameworkVersion)' == 'v4.6.1' And Exists('$(ReferenceAssembliesNet461Dir)')">$(ReferenceAssembliesNet461Dir)</TargetFrameworkRootPath>
+    </PropertyGroup>
+</Project>
