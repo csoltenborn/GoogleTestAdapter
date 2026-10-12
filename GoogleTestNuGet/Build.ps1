@@ -350,10 +350,10 @@ function Main {
 
     # Ensure nuget is available.
     if ((Get-Command "nuget" -ErrorAction SilentlyContinue) -eq $null) {
-        if (!(Test-Path "$PSScriptRoot\..\NuGetPackages\NuGet.CommandLine.5.11.5\tools\NuGet.exe")) {
+        if (!(Test-Path "$PSScriptRoot\..\NuGetPackages\NuGet.CommandLine.7.9.0\tools\NuGet.exe")) {
             throw "nuget.exe is not available. Provide through PATH or restore NuGet packages for the solution."
         }
-        $env:Path += ";$PSScriptRoot\..\NuGetPackages\NuGet.CommandLine.5.11.5\tools"
+        $env:Path += ";$PSScriptRoot\..\NuGetPackages\NuGet.CommandLine.7.9.0\tools"
     }
     Invoke-Executable nuget
 
