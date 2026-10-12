@@ -44,6 +44,8 @@ namespace GoogleTestAdapter.TestResults
         private readonly ILogger _logger;
         private readonly ITestFrameworkReporter _reporter;
 
+        // output lines, the end of the output, and timeouts are reported by different threads
+        private readonly object _lock = new object();
         private readonly List<string> _consoleOutput = new List<string>();
         private bool _isParsingExitCodeOutput;
 
@@ -74,21 +76,27 @@ namespace GoogleTestAdapter.TestResults
 
         private readonly SourcePathMapper _sourcePathMapper;
 
+        /// <summary>
+        /// Thread safe.
+        /// </summary>
         public void ReportLine(string line)
         {
-            Match testEndMatch = PrefixedLineRegex.Match(line);
-            if (testEndMatch.Success)
+            lock (_lock)
             {
-                string restOfErrorMessage = testEndMatch.Groups[1].Value;
-                if (!string.IsNullOrEmpty(restOfErrorMessage))
-                    DoReportLine(restOfErrorMessage);
+                Match testEndMatch = PrefixedLineRegex.Match(line);
+                if (testEndMatch.Success)
+                {
+                    string restOfErrorMessage = testEndMatch.Groups[1].Value;
+                    if (!string.IsNullOrEmpty(restOfErrorMessage))
+                        DoReportLine(restOfErrorMessage);
 
-                string testEndPart = testEndMatch.Groups[2].Value;
-                DoReportLine(testEndPart);
-            }
-            else
-            {
-                DoReportLine(line);
+                    string testEndPart = testEndMatch.Groups[2].Value;
+                    DoReportLine(testEndPart);
+                }
+                else
+                {
+                    DoReportLine(line);
+                }
             }
         }
 
@@ -136,20 +144,23 @@ namespace GoogleTestAdapter.TestResults
         /// <param name="exitCode">the exit code of the test executable, which is added to the error message of a crashed test</param>
         public void Flush(int? exitCode = null)
         {
-            _exitCode = exitCode;
-            if (_consoleOutput.Count > 0)
+            lock (_lock)
             {
-                if (_isParsingExitCodeOutput)
+                _exitCode = exitCode;
+                if (_consoleOutput.Count > 0)
                 {
-                    _consoleOutput.ForEach(l => ExitCodeOutput.Add(l));
-                    _isParsingExitCodeOutput = false;
-                }
-                else
-                {
-                    ReportTestResult();
-                }
+                    if (_isParsingExitCodeOutput)
+                    {
+                        _consoleOutput.ForEach(l => ExitCodeOutput.Add(l));
+                        _isParsingExitCodeOutput = false;
+                    }
+                    else
+                    {
+                        ReportTestResult();
+                    }
 
-                _consoleOutput.Clear();
+                    _consoleOutput.Clear();
+                }
             }
         }
 
@@ -178,8 +189,11 @@ namespace GoogleTestAdapter.TestResults
         /// </summary>
         public void SetTimedOut(TestCase testCase, TimeSpan timeout)
         {
-            _timeout = timeout;
-            TimedOutTestCase = testCase;
+            lock (_lock)
+            {
+                _timeout = timeout;
+                TimedOutTestCase = testCase;
+            }
         }
 
         public static string CreateTimeoutText(TimeSpan timeout)

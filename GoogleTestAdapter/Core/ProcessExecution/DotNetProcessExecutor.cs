@@ -16,6 +16,8 @@ namespace GoogleTestAdapter.ProcessExecution
         
         private Process _process;
         private readonly object _lock = new object();
+        // standard output and standard error are read by different threads
+        private readonly object _outputLock = new object();
         private bool _canceled;
         private int? _processId;
         private JobObject _job;
@@ -72,10 +74,13 @@ namespace GoogleTestAdapter.ProcessExecution
                     else
                     {
                         line = ProcessOutputEncoding.DecodeLine(line);
-                        reportOutputLine(line);
-                        if (_printTestOutput)
+                        lock (_outputLock)
                         {
-                            _logger.LogInfo(line);
+                            reportOutputLine(line);
+                            if (_printTestOutput)
+                            {
+                                _logger.LogInfo(line);
+                            }
                         }
                     }
                 }

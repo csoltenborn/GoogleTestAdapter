@@ -61,10 +61,14 @@ namespace GoogleTestAdapter.TestCases
                 int processExitCode = ExecutionFailed;
                 IProcessExecutor executor = null;
 
+                // on a timeout, the output is logged while the executable might still be producing it
                 void OnReportOutputLine(string line)
                 {
-                    standardOutput.Add(line);
-                    parser.ReportLine(line);
+                    lock (standardOutput)
+                    {
+                        standardOutput.Add(line);
+                        parser.ReportLine(line);
+                    }
                 }
 
                 var listAndParseTestsTask = Task.Run(() =>
@@ -85,7 +89,12 @@ namespace GoogleTestAdapter.TestCases
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     executor?.Cancel();
-                    LogTimeoutError(workingDir, finalParams, standardOutput);
+                    List<string> outputSoFar;
+                    lock (standardOutput)
+                    {
+                        outputSoFar = standardOutput.ToList();
+                    }
+                    LogTimeoutError(workingDir, finalParams, outputSoFar);
                     return new List<TestCase>();
                 }
 
