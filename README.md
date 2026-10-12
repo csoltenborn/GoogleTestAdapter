@@ -3,7 +3,7 @@
 
 # About this fork
 
-This fork of [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter) supports **Visual Studio 2017 to Visual Studio 2026** (Visual Studio 2013 and 2015 are no longer supported), and treats CMake projects as first-class citizens alongside Visual Studio projects. Note that the downloads linked in the [installation section](#installation) (Visual Studio Marketplace, NuGet, and the original project's GitHub releases) refer to the original version 0.18.0, which contains none of the changes below.
+This fork of [Google Test Adapter](https://github.com/csoltenborn/GoogleTestAdapter) supports **Visual Studio 2017 to Visual Studio 2026** (Visual Studio 2013 and 2015 are no longer supported), and treats CMake projects as first-class citizens alongside Visual Studio projects. The fork's releases are available from its [GitHub releases](https://github.com/snargit/GoogleTestAdapter/releases) (see [installation](#installation)); the Visual Studio Marketplace and nuget.org only provide the original version 0.18.0, which contains none of the changes below.
 
 Changes compared to the original project:
 
@@ -87,15 +87,12 @@ Google Test Adapter (GTA) is a Visual Studio extension providing test discovery 
 
 #### Installation
 
-[![Download from Visual Studio Marketplace](https://img.shields.io/badge/vs_marketplace-v0.18.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter)
-[![Download from NuGet](https://img.shields.io/nuget/vpre/GoogleTestAdapter.svg?colorB=0c7dbe&label=nuget)](https://www.nuget.org/packages/GoogleTestAdapter)
-[![Download from GitHub](https://img.shields.io/github/release/csoltenborn/GoogleTestAdapter/all.svg?colorB=0c7dbe&label=github)](https://github.com/csoltenborn/GoogleTestAdapter/releases)
+[![Download from GitHub](https://img.shields.io/github/v/release/snargit/GoogleTestAdapter?include_prereleases&colorB=0c7dbe&label=github)](https://github.com/snargit/GoogleTestAdapter/releases)
 
-Google Test Adapter can be installed in three ways:
+The releases of this fork are available from its [GitHub releases](https://github.com/snargit/GoogleTestAdapter/releases) only (the Visual Studio Marketplace and nuget.org provide the original version 0.18.0, which does not support Visual Studio 2022 and later). Google Test Adapter can be installed in two ways:
 
-* Install through the Visual Studio Marketplace at *Tools/Extensions and Updates* - search for *Google Test Adapter*.
-* Download and launch the VSIX installer from either the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianSoltenborn.GoogleTestAdapter) or [GitHub](https://github.com/csoltenborn/GoogleTestAdapter/releases/download/v0.18.0/GoogleTestAdapter-0.18.0.vsix)
-* Add a NuGet dependency to the [Google test adapter nuget package](https://www.nuget.org/packages/GoogleTestAdapter/) to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
+* Download the VSIX installer (e.g. [GoogleTestAdapter-0.19.0.vsix](https://github.com/snargit/GoogleTestAdapter/releases/download/v0.19.0/GoogleTestAdapter-0.19.0.vsix)) and launch it. Since the fork's extension has the same identity as the original Google Test Adapter, it replaces an installed original version.
+* Download the NuGet package (e.g. [GoogleTestAdapter.0.19.0.nupkg](https://github.com/snargit/GoogleTestAdapter/releases/download/v0.19.0/GoogleTestAdapter.0.19.0.nupkg)) into a [local package source](https://learn.microsoft.com/en-us/nuget/hosting-packages/local-feeds) (e.g. a folder listed in your `nuget.config`), and add a dependency to it to your Google Test projects. Note, however, that Visual Studio integration is limited this way: VS can discover and run tests, but no debugging, options or toolbar will be available; configuration is only possible through solution config files (see below).
 
 After restarting VS, your tests will be displayed in the Test Explorer at build completion time. If no or not all tests show up, have a look at the [trouble shooting section](#trouble_shooting).
 
