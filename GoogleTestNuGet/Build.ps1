@@ -333,13 +333,12 @@ function Build-BinariesAndNuGet {
 }
 
 function Main {
-    # Script works either inside VS env, or takes VS path to set it up.
-    if ((Get-Command "msbuild" -ErrorAction SilentlyContinue) -eq $null) {
-        if ($VSPath) {
-            Invoke-BatchFile "$VSPath\Common7\Tools\VsDevCmd.bat"
-        } else {
-            throw "msbuild is not available. Start from Developer Command Prompt or call script with VS path."
-        }
+    # Script works either inside VS env, or takes VS path to set it up (e.g. when called by the build of
+    # Packaging.GTA, whose environment does not define VisualStudioVersion).
+    if ($VSPath) {
+        Invoke-BatchFile "$VSPath\Common7\Tools\VsDevCmd.bat"
+    } elseif ((Get-Command "msbuild" -ErrorAction SilentlyContinue) -eq $null) {
+        throw "msbuild is not available. Start from Developer Command Prompt or call script with VS path."
     }
 
     # Ensure CMake is available.

@@ -30,7 +30,7 @@ describes the code base as it was before the fork.
 |---|---|
 | `GoogleTestAdapter/GoogleTestAdapter.sln` | The adapter: `Common`, `Core` (discovery, execution, settings), `DiaResolver` (PE and PDB parsing), `TestAdapter` (VSTest adapter), `VsPackage.Shared` (shared project with the VS package code), `VsPackage.GTA`, `Packaging.GTA` (VSIX and NuGet package), and the test projects `Core.Tests`, `DiaResolver.Tests`, `TestAdapter.Tests`, `VsPackage.GTA.Tests.Unit`, `Tests.Common` |
 | `SampleTests/SampleTests.sln` | C++ sample test executables used by GTA's tests; many of their tests **fail, crash, or hang on purpose** |
-| `GoogleTestNuGet/Build.ps1` | Builds the Google Test NuGet packages (`Microsoft.googletest.*`) |
+| `GoogleTestNuGet/Build.ps1` | Builds the Google Test NuGet packages (`Microsoft.googletest.*`) into `GoogleTestAdapter/Packages/`; run by the build of `Packaging.GTA` if they are missing |
 | `ThirdParty/googletest` | Submodule, Google Test 1.18.0 |
 | `GoogleTestAdapter/Core/Resources/GTA_Traits_*.h` | Trait macros headers for Google Test 1.7.0 to 1.18.0; `GTA_Traits.md` describes how to create and verify them |
 | `NuGetPackages/` | Restored NuGet packages (not under source control) |
@@ -57,6 +57,13 @@ sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`
   by `Packaging.GTA/packages.config`, applied by the root `Directory.Build.targets`), since current Visual Studio
   installations and the GitHub runners do not have these targeting packs anymore (error MSB3644). Only if the packages
   are missing (e.g. `SampleTests.sln` built on its own on a fresh clone) are the installed targeting packs used.
+* The VSIX contains the Google Test project and item templates (`ProjectTemplates/`, `ItemTemplates/`, zipped by
+  `Packaging.GTA`), the template wizard (`NewProjectWizard`, whose VS assemblies come from NuGet and are not part of
+  the VSIX), and the three Google Test NuGet packages the wizard chooses from (folder `Packages` of the VSIX, found by
+  NuGet via `repositoryId` in the template's `WizardData`, which must be GTA's VSIX id). `Packaging.GTA` runs
+  `GoogleTestNuGet/Build.ps1` if the packages are missing in `GoogleTestAdapter/Packages/` (a few minutes, i.e. on
+  clean checkouts and in CI); delete them to rebuild them, e.g. after updating Google Test. The templates have their
+  own `TemplateID`s, so they do not replace Microsoft's templates if TAfGT is installed.
 * Configuration `Any CPU` of `GoogleTestAdapter.sln` also builds the sample tests (project `SampleTestsBuilder` builds
   `SampleTests/SampleTests.sln` for Debug and Release, Win32 and x64); GTA's tests use the binaries in
   `out/binaries/SampleTests/`. The samples' intermediate files are separated by platform and Visual Studio version,
