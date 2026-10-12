@@ -57,11 +57,11 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             }
         }
 
+        // GTA requires VS 2017 or later, so an unknown version is not assumed to need throttling
         public static bool NeedsToBeThrottled(this VsVersion version)
         {
             switch (version)
             {
-                case VsVersion.Unknown:
                 case VsVersion.VS2012:
                 case VsVersion.VS2012_1:
                 case VsVersion.VS2013:
@@ -99,21 +99,32 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         public static readonly VsVersion LastSupportedVersion = Enum.GetValues(typeof(VsVersion)).Cast<VsVersion>().Max();
 
 
+        // the process tree of a test host is not expected to be deeper, the limit protects against cycles (process ids
+        // of exited parents might have been reused)
+        private const int MaxNrOfParentProcesses = 32;
+
         public static readonly VsVersion VsVersion;
+
+        /// <summary>
+        /// The reason why <see cref="VsVersion"/> is <see cref="TestAdapter.Framework.VsVersion.Unknown"/>, null otherwise
+        /// </summary>
+        public static readonly string VsVersionDetectionError;
 
         static VsVersionUtils()
         {
-            VsVersion = GetVisualStudioVersion();
+            VsVersion = GetVisualStudioVersion(out VsVersionDetectionError);
         }
 
-        private static VsVersion GetVisualStudioVersion()
+        private static VsVersion GetVisualStudioVersion(out string error)
         {
+            error = null;
             try
             {
                 return GetVsVersionFromProcess();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                error = e.Message;
                 return VsVersion.Unknown;
             }
         }
@@ -121,9 +132,9 @@ namespace GoogleTestAdapter.TestAdapter.Framework
         // after http://stackoverflow.com/questions/11082436/detect-the-visual-studio-version-inside-a-vspackage
         private static VsVersion GetVsVersionFromProcess()
         {
-            string pathToBinary = FindVsOrVsTestConsoleExe()?.MainModule.FileName;
+            string pathToBinary = FindVsOrVsTestConsoleExe();
             if (pathToBinary == null)
-                throw new InvalidOperationException("Could not find process");
+                throw new InvalidOperationException("Could not find devenv.exe or vstest.*.exe among the parent processes");
 
             FileVersionInfo binaryVersionInfo = FileVersionInfo.GetVersionInfo(pathToBinary);
 
@@ -140,18 +151,21 @@ namespace GoogleTestAdapter.TestAdapter.Framework
             return GetVsVersionFromVersionString(versionString);
         }
 
-        private static Process FindVsOrVsTestConsoleExe()
+        /// <returns>The path of the first process up the process tree which is VS or a VSTest host, or null</returns>
+        public static string FindVsOrVsTestConsoleExe()
         {
-            var process = Process.GetCurrentProcess();
-            string executable = Path.GetFileName(process.MainModule.FileName).Trim().ToLower();
-            while (executable != null && !ParentProcessRegex.IsMatch(executable))
+            int processId = Process.GetCurrentProcess().Id;
+            for (int i = 0; i < MaxNrOfParentProcesses && processId > 0; i++)
             {
-                process = ParentProcessUtils.GetParentProcess(process.Id);
-                executable = process != null 
-                    ? Path.GetFileName(process.MainModule.FileName).Trim().ToLower()
-                    : null;
+                string path = ParentProcessUtils.GetExecutablePath(processId);
+                if (path == null)
+                    return null;
+                if (ParentProcessRegex.IsMatch(Path.GetFileName(path).Trim()))
+                    return path;
+
+                processId = ParentProcessUtils.GetParentProcessId(processId);
             }
-            return process;
+            return null;
         }
 
         private static VsVersion GetVsVersionFromVersionString(string versionString)

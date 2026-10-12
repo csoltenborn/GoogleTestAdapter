@@ -110,6 +110,7 @@
     <Compile Include="TestExecutorTestsBase.cs" />
     <Compile Include="TestAdapterTestsBase.cs" />
     <Compile Include="Framework\VsTestFrameworkReporterTests.cs" />
+    <Compile Include="Framework\VsVersionTests.cs" />
     <Compile Include="Framework\VsTestFrameworkLoggerTests.cs" />
     <Compile Include="Helpers\ThrottleTests.cs" />
     <Compile Include="Helpers\TestCaseFilterTests.cs" />

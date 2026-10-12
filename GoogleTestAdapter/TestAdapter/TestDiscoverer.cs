@@ -72,7 +72,8 @@ namespace GoogleTestAdapter.TestAdapter
             switch (version)
             {
                 case VsVersion.Unknown:
-                    _logger.LogWarning($"Could not identify Visual Studio version. {Strings.Instance.ExtensionName} requires at least Visual Studio 2012 Update 1.");
+                    // e.g. if run by another test runner; GTA's installation requires VS 2017 or later anyway
+                    _logger.DebugInfo($"Could not identify Visual Studio version: {VsVersionUtils.VsVersionDetectionError}");
                     return true;
                 case VsVersion.VS2012:
                     _logger.LogError($"{Strings.Instance.ExtensionName} requires at least Visual Studio 2012 Update 1 - please update your Visual Studio installation.");
