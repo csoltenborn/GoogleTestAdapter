@@ -57,6 +57,10 @@ sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`
   `out/binaries/SampleTests/`. The samples' intermediate files are separated by platform and Visual Studio version,
   since object files of different compiler versions must not be mixed (whole program optimization fails with internal
   compiler errors).
+* `Common.props` sets `IsTestProject` to `false` for all projects in folder `GoogleTestAdapter/` whose names do not end
+  with `.Tests`, `.Tests.Unit`, or `.Tests.Generated`, so Test Explorer ignores GTA itself and the helpers of its tests
+  (otherwise, the installed GTA runs helpers such as `FakeGtestDllApplication` and reports errors). New test projects
+  must follow this naming (or set `IsTestProject` to `true`), or Test Explorer silently ignores them.
 
 **In Visual Studio:** open `GoogleTestAdapter/GoogleTestAdapter.sln` and build configuration `Release|Any CPU` (or
 `Debug|Any CPU`). On a fresh clone, the first build might stop with "NuGet package Microsoft.VSSDK.BuildTools is
