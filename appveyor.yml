@@ -1,30 +1,26 @@
 version: 0.19.0.{build}
-os: 
-- Visual Studio 2017
+image: Visual Studio 2022
 configuration: Release
 platform: Any CPU
 environment:
+  # Encrypted for the AppVeyor account of the original project; to sign releases with the release key, replace it with
+  # the password encrypted for this fork's AppVeyor account (https://ci.appveyor.com/tools/encrypt). Without it, the
+  # assemblies are signed with Keys\Key_Debug.snk.
   RELEASE_KEY_PASSWORD:
     secure: 3+fpAMwxomiOZ5fzpb+3kjV4RvPSn0GRvFp71bZZs3QQr06zNU2Wvu4p77dmTKH+
 install:
 - ps: >-
-    if ($env:APPVEYOR_REPO_TAG -eq "true") {
-        nuget install secure-file -ExcludeVersion
+    if ($env:APPVEYOR_REPO_TAG -eq "true" -and $env:RELEASE_KEY_PASSWORD) {
+        nuget install secure-file -ExcludeVersion -OutputDirectory NuGetPackages
         NuGetPackages\secure-file\tools\secure-file -decrypt GoogleTestAdapter\Keys\Key_Release.snk.enc -secret $env:RELEASE_KEY_PASSWORD
-    } else {
-        # $blockRdp = $true
-        iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     }
 before_build:
-- cmd: build_preparation
-- ps: >-
-    Start-Process -WorkingDirectory GoogleTestAdapter -FilePath SetVersion.bat -ArgumentList $env:APPVEYOR_BUILD_VERSION
-
-    Start-Process -WorkingDirectory GoogleTestAdapter\TestAdapter.Tests -FilePath IgnoreTests.bat -ArgumentList TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
-build:
-  project: GoogleTestAdapter\GoogleTestAdapter.sln
-  parallel: true
-  verbosity: normal
+- cmd: pushd GoogleTestAdapter && call .\SetVersion.bat %APPVEYOR_BUILD_VERSION% && popd
+# measures speed-up of parallel test execution, which is unreliable on CI machines
+- cmd: pushd GoogleTestAdapter\TestAdapter.Tests && call .\IgnoreTests.bat TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution && popd
+build_script:
+# restores the NuGet packages and builds GTA including the sample tests and the VSIX (see DEVELOPMENT.md)
+- cmd: msbuild GoogleTestAdapter\GoogleTestAdapter.sln -restore -p:RestorePackagesConfig=true -p:Configuration=%CONFIGURATION% -p:Platform="%PLATFORM%" -m -verbosity:minimal -logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:
 - ps: >-
     $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
@@ -43,45 +39,23 @@ after_build:
 
     [IO.File]::WriteAllText("C:\\GTAReleaseNotes.txt", $releaseNotes)
 test_script:
+# the end-to-end tests of VsPackage.Tests and VsPackage.Tests.Generated compare the complete output of test runs with
+# expected files, which have not been updated for the changes of the fork yet (see DEVELOPMENT.md)
 - ps: >-
-    $opencover = (Resolve-Path "NuGetPackages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+    $binaries = "out\binaries\GoogleTestAdapter\$env:CONFIGURATION"
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Unit`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Unit_CoverageData.xml -returntargetcode
+    & vstest.console.exe "$binaries\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll" "$binaries\Core.Tests\GoogleTestAdapter.Core.Tests.dll" "$binaries\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll" "$binaries\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" /Parallel /Logger:Appveyor
 
     $TestExitCode = $LASTEXITCODE
 
-    & $opencover -register:user -target:VsTest.Console.exe "-targetargs:/Logger:Appveyor /TestCaseFilter:`"TestCategory=Integration|TestCategory=Load`" out\binaries\GoogleTestAdapter\$env:CONFIGURATION\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\Core.Tests\GoogleTestAdapter.Core.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" "-filter:+[*]* -[*Tests]* -[*Tests.Unit]* -[*Tests.Common]* -[FluentAssertions*]* -[CommonMark*]*" -excludebyfile:*.Designer.cs -output:OpenCover_Integration_CoverageData.xml -returntargetcode
-
-    if ($LASTEXITCODE -ne 0) {
-        $TestExitCode = $LASTEXITCODE
-    }
-
-    & VsTest.Console out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests\GoogleTestAdapter.VsPackage.Tests.dll out\binaries\GoogleTestAdapter\$env:CONFIGURATION\VsPackage.Tests.Generated\GoogleTestAdapter.VsPackage.Tests.Generated.dll /TestCaseFilter:"TestCategory=End to end" /Logger:Appveyor
-
-     if ($LASTEXITCODE -ne 0) {
-        $TestExitCode = $LASTEXITCODE
-    }
-
-    if (Test-Path GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors) {
-        7z a TestErrors.zip GoogleTestAdapter\VsPackage.Tests.Generated\TestErrors\*
-        Push-AppveyorArtifact TestErrors.zip
-    }
-
     if ($TestExitCode -ne 0) {
         $version = $env:APPVEYOR_BUILD_VERSION.SubString(0, $env:APPVEYOR_BUILD_VERSION.LastIndexOf("."))
-        $sourceFile = (Resolve-Path ("out\binaries\GoogleTestAdapter\" + $env:CONFIGURATION + "\Packaging.GTA\Packaging.GTA.vsix")).ToString()
-        $targetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter-" + $version + ".vsix"
-        $nugetFile = $([IO.FileInfo]$sourceFile).DirectoryName + "\GoogleTestAdapter." + $version + ".nupkg"
-        Push-AppveyorArtifact $targetFile
-        Push-AppveyorArtifact $nugetFile
+        $packagingDir = "$binaries\Packaging.GTA"
+        Push-AppveyorArtifact "$packagingDir\GoogleTestAdapter-$version.vsix"
+        Push-AppveyorArtifact "$packagingDir\GoogleTestAdapter.$version.nupkg"
 
         exit $TestExitCode
     }
-after_test: 
-- "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
-- pip install codecov
-- codecov -f "OpenCover_Unit_CoverageData.xml" -F Unit
-- codecov -f "OpenCover_Integration_CoverageData.xml" -F Integration
 before_deploy:
 - set /p RELEASE_NOTES=<"C:\\GTAReleaseNotes.txt"
 artifacts:
@@ -89,11 +63,9 @@ artifacts:
   name: VSIX installation package
 - path: out\binaries\GoogleTestAdapter\$(configuration)\Packaging.GTA\GoogleTestAdapter.*.nupkg
   name: NuGet package
-#- path: OpenCover_Unit_CoverageData.xml
-#  name: OpenCover Unit coverage data
-#- path: OpenCover_Integration_CoverageData.xml
-#  name: OpenCover Integration coverage data
 deploy:
+# draft release for tags; the token is encrypted for the AppVeyor account of the original project and has to be
+# replaced with a GitHub token of this fork, encrypted for this fork's AppVeyor account
 - provider: GitHub
   auth_token:
     secure: yRqT6kz8c9NZEuCUyBjKXvCLUNXcAc41F2Y4fa318ylBPaIcl38UNAK5Jt8MsNhs
@@ -103,10 +75,3 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: true
-# - provider: NuGet
-#   api_key:
-#     secure: rx+/6IsV+rGqz6/fd3QD6nag41KxW+iGxMTq7Hm3cV03r/TRUub8R6xJA9TjW0mG
-#   skip_symbols: true
-#   on:
-#     branch: master
-#     appveyor_repo_tag: true

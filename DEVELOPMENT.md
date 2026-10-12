@@ -11,6 +11,9 @@ describes the code base as it was before the fork.
 * Version **0.19.0** is complete (see `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/0.19.0.md`), but has not
   been tagged or published yet.
 * Supported: Visual Studio 2017 to 2026, .NET Framework 4.6. Visual Studio 2013/2015 support has been dropped.
+* Known gap: the end-to-end tests (`VsPackage.Tests`, `VsPackage.Tests.Generated`, category `End to end`) compare the
+  complete console output of test runs with expected files, which have not been updated for the fork's changes (e.g.
+  stack traces, standard output) and thus fail; they are not run by CI. Updating them requires reviewing each difference.
 * Open ideas (no concrete use case yet):
   * Discovering test executables which are not outputs of the solution's projects (e.g. built by scripts or another
     build system, or downloaded from CI), which would require GTA's own `ITestContainerDiscoverer`.
@@ -75,8 +78,17 @@ cd GoogleTestAdapter
 building, so a clean checkout builds in a single invocation (verified with VS 2022's and VS 2026's MSBuild). On CI
 runners, locate MSBuild with `vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`.
 `build_preparation.bat` (which also restores the packages, but asks for license acceptance unless `APPVEYOR` is
-defined) is no longer needed; `appveyor.yml` still uses it and the `Visual Studio 2017` image, and has not been updated
-for the fork.
+defined) is no longer needed.
+
+**AppVeyor** (`appveyor.yml`, image `Visual Studio 2022`) builds with this command after stamping the version
+(`SetVersion.bat`), runs the tests of `DiaResolver.Tests`, `Core.Tests`, `TestAdapter.Tests`, and
+`VsPackage.GTA.Tests.Unit` (ignoring a timing-sensitive test with `IgnoreTests.bat`), publishes the VSIX and NuGet
+package as artifacts, and creates a draft GitHub release for tags. Its encrypted values (`RELEASE_KEY_PASSWORD` for the
+release signing key, the GitHub token for deployment) still belong to the original project's AppVeyor account and must
+be replaced with values encrypted for the fork's account (https://ci.appveyor.com/tools/encrypt); without the password,
+assemblies are signed with `Keys/Key_Debug.snk`. The steps have been verified locally, but not on AppVeyor itself. Call
+batch files with an explicit path (`call .\SetVersion.bat`): some machines do not search the current directory for
+commands.
 
 ## Testing
 
