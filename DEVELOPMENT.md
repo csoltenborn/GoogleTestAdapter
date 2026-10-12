@@ -84,15 +84,20 @@ runners, locate MSBuild with `vswhere -latest -requires Microsoft.Component.MSBu
 `build_preparation.bat` (which also restores the packages, but asks for license acceptance unless `APPVEYOR` is
 defined) is no longer needed.
 
-**AppVeyor** (`appveyor.yml`, image `Visual Studio 2022`) builds with this command after stamping the version
-(`SetVersion.bat`), runs the tests of `DiaResolver.Tests`, `Core.Tests`, `TestAdapter.Tests`, and
-`VsPackage.GTA.Tests.Unit` (ignoring a timing-sensitive test with `IgnoreTests.bat`), publishes the VSIX and NuGet
-package as artifacts, and creates a draft GitHub release for tags. Its encrypted values (`RELEASE_KEY_PASSWORD` for the
-release signing key, the GitHub token for deployment) still belong to the original project's AppVeyor account and must
-be replaced with values encrypted for the fork's account (https://ci.appveyor.com/tools/encrypt); without the password,
-assemblies are signed with `Keys/Key_Debug.snk`. The steps have been verified locally, but not on AppVeyor itself. Call
-batch files with an explicit path (`call .\SetVersion.bat`): some machines do not search the current directory for
-commands.
+**GitHub Actions** (`.github/workflows/build.yml`) builds with VS 2022 (runner `windows-2022`) and VS 2026 (runner
+`windows-2025-vs2026`) for pushes to `master`, pull requests, tags `v*`, and manually. It checks out the repository
+including the `ThirdParty/googletest` submodule, stamps the version `<version of VsPackage.nuspec>.<run number>`
+(`SetVersion.ps1`), builds with this command, uploads the VSIX (`GoogleTestAdapter-<version>.vsix`) and NuGet package as
+artifact `packages-<vs2022|vs2026>`, and runs the tests of `DiaResolver.Tests`, `Core.Tests`, `TestAdapter.Tests`, and
+`VsPackage.GTA.Tests.Unit` (ignoring a timing-sensitive test with `IgnoreTests.ps1`; the TRX results are artifact
+`test-results-<vs2022|vs2026>`). For a tag `v<version>`, which must match the version of `VsPackage.nuspec`, it creates
+a draft prerelease with the packages built with VS 2022 and the release notes `<version>.md`, using the workflow's own
+token. The release signing key `Keys/Key_Release.snk.enc` is decrypted (with AppVeyor's `secure-file` tool) only for
+tags, and only if the repository secret `RELEASE_KEY_PASSWORD` is defined; otherwise, assemblies are signed with
+`Keys/Key_Debug.snk`. The original project's password is not known, so a new release key has to be encrypted with
+`secure-file -encrypt` (which would change the assemblies' public key token) or the debug key be used. On the command
+line, call batch files with an explicit path (`call .\SetVersion.bat`): some machines do not search the current
+directory for commands.
 
 ## Testing
 
@@ -104,7 +109,7 @@ cd out/binaries/GoogleTestAdapter/Release
     VsPackage.GTA.Tests.Unit/GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll //Parallel
 ```
 
-* As of 0.19.0, all 672 tests pass. Run the suite more than once after changes affecting timing or files: the test
+* As of 0.19.0, all 677 tests pass. Run the suite more than once after changes affecting timing or files: the test
   assemblies run in parallel and share the sample binaries, so tests must never rename or modify sample files (one
   test renaming a sample's .pdb was flaky for exactly this reason).
 * VS 2026's `vstest.console.exe` (`.../18/Professional/...`) runs the tests as well.
@@ -115,10 +120,11 @@ cd out/binaries/GoogleTestAdapter/Release
 
 ## Releasing and installing locally
 
-1. Version numbers live in `appveyor.yml`, `GoogleTestAdapter/Packaging.GTA/VsPackage.nuspec`,
+1. Version numbers live in `GoogleTestAdapter/Packaging.GTA/VsPackage.nuspec` (also the version of the CI builds),
    `GoogleTestAdapter/VsPackage.GTA/ReleaseNotes/History.cs` (version and date), and the release notes
    `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/<version>.md` (registered as `Content` in
-   `VsPackage.GTA.csproj`; a test checks that every version in `History.cs` has release notes).
+   `VsPackage.GTA.csproj`; a test checks that every version in `History.cs` has release notes). Pushing tag
+   `v<version>` makes the CI create a draft release (see [Building](#building)).
 2. Stamp the version for the build, build, and revert the stamp:
    ```bash
    cd GoogleTestAdapter

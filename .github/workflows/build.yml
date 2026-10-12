@@ -1,0 +1,131 @@
+# Builds GTA including the sample tests, the VSIX, and the NuGet package, runs GTA's tests, and creates a draft GitHub
+# release for tags v<version> (see DEVELOPMENT.md)
+name: Build
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # builds with Visual Studio 2022 and 2026; releases contain the packages built with VS 2022
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - vs: vs2022
+          runner: windows-2022
+        - vs: vs2026
+          runner: windows-2025-vs2026
+    name: build (${{ matrix.vs }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    # the version of the NuGet package is the release version; the build number is the workflow's run number
+    - name: Determine version
+      id: version
+      run: |
+        $version = ([xml](Get-Content GoogleTestAdapter\Packaging.GTA\VsPackage.nuspec)).package.metadata.version
+        if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag $env:GITHUB_REF_NAME does not match version $version of VsPackage.nuspec"
+        }
+        "version=$version" >> $env:GITHUB_OUTPUT
+        "build_version=$version.$env:GITHUB_RUN_NUMBER" >> $env:GITHUB_OUTPUT
+
+    # without secret RELEASE_KEY_PASSWORD, the assemblies are signed with Keys\Key_Debug.snk
+    - name: Decrypt release signing key
+      if: github.ref_type == 'tag'
+      env:
+        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      run: |
+        if ($env:RELEASE_KEY_PASSWORD) {
+            nuget install secure-file -ExcludeVersion -OutputDirectory NuGetPackages
+            NuGetPackages\secure-file\tools\secure-file -decrypt GoogleTestAdapter\Keys\Key_Release.snk.enc -secret $env:RELEASE_KEY_PASSWORD
+        } else {
+            Write-Output "::warning::Secret RELEASE_KEY_PASSWORD is not defined, the assemblies are signed with the debug key"
+        }
+
+    - name: Stamp version
+      working-directory: GoogleTestAdapter
+      run: .\SetVersion.ps1 -version ${{ steps.version.outputs.build_version }}
+
+    # measures speed-up of parallel test execution, which is unreliable on CI machines
+    - name: Ignore timing-sensitive tests
+      working-directory: GoogleTestAdapter\TestAdapter.Tests
+      run: .\IgnoreTests.ps1 -tests TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
+
+    # restores the NuGet packages and builds GTA including the sample tests and the VSIX
+    - name: Build
+      run: |
+        $msbuild = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | Select-Object -First 1
+        & $msbuild GoogleTestAdapter\GoogleTestAdapter.sln -restore -p:RestorePackagesConfig=true -p:Configuration=Release "-p:Platform=Any CPU" -m -verbosity:minimal -nologo
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    - name: Collect packages
+      run: |
+        $packaging = "out\binaries\GoogleTestAdapter\Release\Packaging.GTA"
+        New-Item -ItemType Directory packages | Out-Null
+        Copy-Item "$packaging\Packaging.GTA.vsix" "packages\GoogleTestAdapter-${{ steps.version.outputs.version }}.vsix"
+        Copy-Item "$packaging\GoogleTestAdapter.${{ steps.version.outputs.version }}.nupkg" packages
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: packages-${{ matrix.vs }}
+        path: packages
+        if-no-files-found: error
+
+    # the end-to-end tests of VsPackage.Tests and VsPackage.Tests.Generated compare the complete output of test runs
+    # with expected files, which have not been updated for the changes of the fork yet (see DEVELOPMENT.md)
+    - name: Test
+      run: |
+        $vstest = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -find **\TestPlatform\vstest.console.exe | Select-Object -First 1
+        $binaries = "out\binaries\GoogleTestAdapter\Release"
+        & $vstest "$binaries\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll" `
+            "$binaries\Core.Tests\GoogleTestAdapter.Core.Tests.dll" `
+            "$binaries\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll" `
+            "$binaries\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" `
+            /Parallel /Logger:trx /ResultsDirectory:TestResults
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.vs }}
+        path: TestResults
+        if-no-files-found: ignore
+
+  # draft release with the packages and the release notes of the version
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: packages-vs2022
+        path: packages
+
+    - name: Create draft release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        VERSION: ${{ needs.build.outputs.version }}
+      run: >-
+        gh release create "$GITHUB_REF_NAME" packages/*
+        --draft --prerelease --title "Google Test Adapter $VERSION"
+        --notes-file "GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/$VERSION.md"
