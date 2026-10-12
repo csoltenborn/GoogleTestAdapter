@@ -404,7 +404,8 @@ namespace GoogleTestAdapter
             MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
             tests.Select(t => t.FullyQualifiedName).Should().BeEquivalentTo(
                 "\u00dcmlaut\u00df.T\u00e4st", "\u00dcmlaut\u00df.F\u00e4il\u00fcng", "\u00dcmlaut\u00df.Tr\u00e4its",
-                "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac.\u0394\u03bf\u03ba\u03b9\u03bc\u03ae", "\u4e2d\u6587.\u6d4b\u8bd5");
+                "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac.\u0394\u03bf\u03ba\u03b9\u03bc\u03ae", "\u4e2d\u6587.\u6d4b\u8bd5",
+                "\u0938\u0942\u091f.\u0928\u093e\u092e", "Suite\u2160.Test\u2161");
             foreach (TestCase test in tests)
             {
                 test.CodeFilePath.Should().EndWithEquivalent("Utf8Tests.cpp", test.FullyQualifiedName);
@@ -412,6 +413,9 @@ namespace GoogleTestAdapter
             }
             tests.Single(t => t.FullyQualifiedName == "\u00dcmlaut\u00df.Tr\u00e4its").Traits
                 .Should().ContainSingle(t => t.Name == "Type" && t.Value == "\u00dcmlaut");
+            // the namespace contains a spacing combining mark, which is not a word character for .NET's regexes
+            tests.Single(t => t.FullyQualifiedName == "\u0938\u0942\u091f.\u0928\u093e\u092e").Namespace
+                .Should().Be("\u092a\u0930\u0940\u0915\u094d\u0937\u0923");
         }
 
         private static readonly string[] TearDownTestSuiteTestCasesOfFixtureTests =

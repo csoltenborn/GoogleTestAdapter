@@ -6,10 +6,14 @@ namespace GoogleTestAdapter.TestCases
 
     public class StreamingListTestsParser
     {
-        private static readonly Regex SuiteRegex = new Regex($@"([\w\/]*(?:\.[\w\/]+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
-        private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
-        private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\w+", RegexOptions.Compiled);
-        private static readonly Regex IsParamRegexPreNamedParameters = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
+        // Suites and tests are named by C++ identifiers (and "/" for instantiations of typed and parameterized tests).
+        // Identifiers may contain characters \w does not match (e.g. spacing combining marks \p{Mc} as in Devanagari,
+        // and letter numbers \p{Nl}), so all characters but whitespace and the separators are accepted.
+        private const string NameChar = @"[^\s./]";
+        private static readonly Regex SuiteRegex = new Regex($@"((?:{NameChar}|/)*(?:\.(?:{NameChar}|/)+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex NameRegex = new Regex($@"((?:{NameChar}|/)*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegex = new Regex($@"({NameChar}+/)?{NameChar}+/{NameChar}+", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegexPreNamedParameters = new Regex($@"({NameChar}+/)?{NameChar}+/\d+", RegexOptions.Compiled);
         private static readonly Regex StructKeywordsRegex = new Regex(@"\b(?:class|struct) ", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;

@@ -26,3 +26,19 @@ TEST(中文, 测试)
 {
   EXPECT_EQ(1, 1);
 }
+
+// names with characters which are not word characters for .NET's regular expressions: a spacing combining mark
+// (Devanagari vowel sign aa, category Mc) in the namespace and the test's name, and letter numbers (Roman numerals,
+// category Nl)
+namespace परीक्षण
+{
+  TEST(सूट, नाम)
+  {
+    EXPECT_EQ(1, 1);
+  }
+}
+
+TEST(SuiteⅠ, TestⅡ)
+{
+  EXPECT_EQ(1, 1);
+}

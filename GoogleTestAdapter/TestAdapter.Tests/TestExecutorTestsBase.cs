@@ -184,7 +184,7 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void RunTests_Utf8Tests_CorrectTestResults()
         {
-            RunAndVerifyTests(TestResources.Utf8Tests_DebugX86, 4, 1, 0);
+            RunAndVerifyTests(TestResources.Utf8Tests_DebugX86, 6, 1, 0);
 
             MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
                     tr.TestCase.FullyQualifiedName == "\u4e2d\u6587.\u6d4b\u8bd5" && tr.Outcome == VsTestOutcome.Passed)),

@@ -374,7 +374,9 @@ namespace GoogleTestAdapter.TestCases
         private const string NamespaceGroup = "namespace";
         private const string AnonymousNamespaceSymbol = "`anonymous namespace'";
         public const string AnonymousNamespace = "(anonymous namespace)";
-        private const string NamespacesPattern = @"(?:(?:(?:\w+)|(?:" + AnonymousNamespaceSymbol + "))::)*";
+        // namespaces are C++ identifiers, which may contain characters \w does not match (see StreamingListTestsParser);
+        // "<" and ">" are excluded, since enclosing template classes are not namespaces
+        private const string NamespacesPattern = @"(?:(?:(?:[^\s:<>`']+)|(?:" + AnonymousNamespaceSymbol + "))::)*";
 
         private static readonly Regex NamespacesRegex = new Regex($"^{NamespacesPattern}$", RegexOptions.Compiled);
 

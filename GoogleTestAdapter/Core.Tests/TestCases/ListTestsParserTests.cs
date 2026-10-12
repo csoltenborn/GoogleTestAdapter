@@ -36,6 +36,33 @@ namespace GoogleTestAdapter.TestCases
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void ParseListTestsOutput_NamesWithNonWordCharacters_CompleteNames()
+        {
+            // spacing combining mark (category Mc) and letter numbers (category Nl), which \w does not match
+            var consoleOutput = new List<string>
+            {
+                "सूट.",
+                "  नाम",
+                "PrefixⅠ/SuiteⅠ.",
+                "  TestⅡ/0  # GetParam() = 1",
+                "TypedⅠ/0.  # TypeParam = int",
+                "  TestⅡ"
+            };
+
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+                .ParseListTestsOutput(consoleOutput);
+
+            descriptors.Select(d => d.FullyQualifiedName).Should().Equal(
+                "सूट.नाम", "PrefixⅠ/SuiteⅠ.TestⅡ/0", "TypedⅠ/0.TestⅡ");
+            descriptors[1].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+            descriptors[1].TestClass.Should().Be("SuiteⅠ");
+            descriptors[1].TestGroup.Should().Be("TestⅡ");
+            descriptors[2].DisplayName.Should().Be("TypedⅠ/0.TestⅡ<int>");
+            descriptors[2].TestClass.Should().Be("TypedⅠ");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void ParseListTestsOutput_TestWithParam_CorrectParsing()
         {
             var consoleOutput = new List<string>
