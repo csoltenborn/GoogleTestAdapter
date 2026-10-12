@@ -112,12 +112,26 @@ namespace GoogleTestAdapter.TestCases
                     testCasesOfSuite.Add(testCase);
                 }
 
+                int nrOfTestCases = testCases.Count;
                 foreach (var suiteTestCasesPair in suite2TestCases)
                 {
                     foreach (var testCase in suiteTestCasesPair.Value)
                     {
-                        testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, testCases.Count));
+                        testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, nrOfTestCases));
                         reportTestCase?.Invoke(testCase);
+                    }
+                }
+
+                if (_settings.TearDownTestSuiteTestCases && _settings.ParseSymbolInformation)
+                {
+                    foreach (var suiteTestCasesPair in suite2TestCases)
+                    {
+                        TestCase tearDownTestCase = CreateTearDownTestSuiteTestCase(suiteTestCasesPair.Key, suiteTestCasesPair.Value, nrOfTestCases, resolver);
+                        if (tearDownTestCase != null)
+                        {
+                            testCases.Add(tearDownTestCase);
+                            reportTestCase?.Invoke(tearDownTestCase);
+                        }
                     }
                 }
 
@@ -259,6 +273,31 @@ namespace GoogleTestAdapter.TestCases
 
             _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
             return CreateTestCase(descriptor);
+        }
+
+        // the test case reporting failures of TearDownTestSuite() of the suite's fixture (see option
+        // TearDownTestSuiteTestCases), placed with the suite's tests in Test Explorer; null if the fixture does not
+        // define the method
+        private TestCase CreateTearDownTestSuiteTestCase(string suite, ICollection<TestCase> testCasesOfSuite, int nrOfTestCases, TestCaseResolver resolver)
+        {
+            TestCase anyTestCase = testCasesOfSuite.First();
+            TestCaseLocation location = MapSourcePath(resolver.FindTearDownTestSuiteLocation(suite, anyTestCase.Namespace));
+            if (location == null)
+                return null;
+
+            // an empty method folded by the linker has the location of Google Test's default implementation
+            bool hasLocation = !string.IsNullOrEmpty(location.Sourcefile);
+            string name = $"{suite}.{GoogleTestConstants.TearDownTestSuiteTestName}";
+            var testCase = new TestCase(name, _executable, name,
+                hasLocation ? location.Sourcefile : anyTestCase.CodeFilePath,
+                hasLocation ? (int)location.Line : anyTestCase.LineNumber)
+            {
+                Namespace = location.Namespace,
+                TestClass = anyTestCase.TestClass,
+                TestGroup = GoogleTestConstants.TearDownTestSuiteTestName
+            };
+            testCase.Properties.Add(new TestCaseMetaDataProperty(testCasesOfSuite.Count, nrOfTestCases, isTearDownTestSuite: true));
+            return testCase;
         }
 
         private TestCaseLocation MapSourcePath(TestCaseLocation location)

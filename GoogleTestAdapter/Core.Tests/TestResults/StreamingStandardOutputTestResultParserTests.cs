@@ -78,6 +78,115 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetTestResults_FailingSetUpAndTearDownTestSuite_TestsFailAndTearDownTestSuiteTestCaseFails()
+        {
+            string[] consoleOutput = {
+                @"[==========] Running 3 tests from 2 test suites.",
+                @"[----------] Global test environment set-up.",
+                @"[----------] 2 tests from FailingSetUp",
+                @"C:\tests\fixtures.cpp(5): error: Failed",
+                @"setup failed",
+                @"",
+                @"[ RUN      ] FailingSetUp.First",
+                @"C:\tests\fixtures.cpp(7): Skipped",
+                @"",
+                @"[  SKIPPED ] FailingSetUp.First (0 ms)",
+                @"[ RUN      ] FailingSetUp.Second",
+                @"C:\tests\fixtures.cpp(8): Skipped",
+                @"",
+                @"[  SKIPPED ] FailingSetUp.Second (0 ms)",
+                @"[----------] 2 tests from FailingSetUp (1 ms total)",
+                @"",
+                @"[----------] 1 test from FailingTearDown",
+                @"[ RUN      ] FailingTearDown.Only",
+                @"[       OK ] FailingTearDown.Only (0 ms)",
+                @"C:\tests\fixtures.cpp(12): error: Failed",
+                @"teardown failed",
+                @"",
+                @"[----------] 1 test from FailingTearDown (0 ms total)",
+                @"",
+                @"[----------] Global test environment tear-down",
+                @"[==========] 3 tests from 2 test suites ran. (2 ms total)",
+                @"[  PASSED  ] 1 test.",
+                @"[  SKIPPED ] 2 tests, listed below:",
+                @"[  SKIPPED ] FailingSetUp.First",
+                @"[  SKIPPED ] FailingSetUp.Second",
+                @"[  FAILED  ] FailingSetUp: SetUpTestSuite or TearDownTestSuite",
+                @"[  FAILED  ] FailingTearDown: SetUpTestSuite or TearDownTestSuite",
+            };
+            var cases = CreateFixtureTestCases("FailingSetUp.First", "FailingSetUp.Second", "FailingTearDown.Only");
+            cases.Add(CreateTearDownTestSuiteTestCase("FailingTearDown", 1, 3));
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+            IList<TestResult> results = parser.TestResults;
+
+            results.Should().HaveCount(4);
+            foreach (string testName in new[] { "FailingSetUp.First", "FailingSetUp.Second" })
+            {
+                TestResult result = results.Single(r => r.TestCase.FullyQualifiedName == testName);
+                result.Outcome.Should().Be(TestOutcome.Failed, testName);
+                result.ErrorMessage.Should().StartWith("SetUpTestSuite() failed:").And.Contain("setup failed");
+                result.ErrorStackTrace.Should().Contain(@"at FailingSetUp.SetUpTestSuite in C:\tests\fixtures.cpp:line 5");
+            }
+            results.Single(r => r.TestCase.FullyQualifiedName == "FailingTearDown.Only").Outcome.Should().Be(TestOutcome.Passed);
+            TestResult tearDownResult = results.Single(r => r.TestCase.FullyQualifiedName == "FailingTearDown.TearDownTestSuite");
+            tearDownResult.Outcome.Should().Be(TestOutcome.Failed);
+            tearDownResult.ErrorMessage.Should().Contain("teardown failed");
+            tearDownResult.ErrorStackTrace.Should().Contain(@"at FailingTearDown.TearDownTestSuite in C:\tests\fixtures.cpp:line 12");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestResults_SkippingSetUpTestSuiteAndPassingTearDownTestSuite_TestIsSkippedWithMessageAndTearDownPasses()
+        {
+            string[] consoleOutput = {
+                @"[----------] 1 test from SkippingSetUp",
+                @"C:\tests\fixtures.cpp(18): Skipped",
+                @"skipped in setup",
+                @"",
+                @"[ RUN      ] SkippingSetUp.Skipped",
+                @"C:\tests\fixtures.cpp(20): Skipped",
+                @"",
+                @"[  SKIPPED ] SkippingSetUp.Skipped (0 ms)",
+                @"[----------] 1 test from SkippingSetUp (0 ms total)",
+                @"",
+                @"[----------] 1 test from TypedFixture/0, where TypeParam = int",
+                @"[ RUN      ] TypedFixture/0.Passes",
+                @"[       OK ] TypedFixture/0.Passes (0 ms)",
+                @"[----------] 1 test from TypedFixture/0 (0 ms total)",
+            };
+            var cases = CreateFixtureTestCases("SkippingSetUp.Skipped", "TypedFixture/0.Passes");
+            cases.Add(CreateTearDownTestSuiteTestCase("TypedFixture/0", 1, 2));
+
+            var parser = new StreamingStandardOutputTestResultParser(cases, MockLogger.Object, MockFrameworkReporter.Object);
+            consoleOutput.ToList().ForEach(parser.ReportLine);
+            parser.Flush();
+            IList<TestResult> results = parser.TestResults;
+
+            results.Should().HaveCount(3);
+            TestResult skippedResult = results.Single(r => r.TestCase.FullyQualifiedName == "SkippingSetUp.Skipped");
+            skippedResult.Outcome.Should().Be(TestOutcome.Skipped);
+            skippedResult.ErrorMessage.Should().Be("skipped in setup");
+            results.Single(r => r.TestCase.FullyQualifiedName == "TypedFixture/0.Passes").Outcome.Should().Be(TestOutcome.Passed);
+            results.Single(r => r.TestCase.FullyQualifiedName == "TypedFixture/0.TearDownTestSuite").Outcome.Should().Be(TestOutcome.Passed);
+        }
+
+        private List<TestCase> CreateFixtureTestCases(params string[] qualifiedNames)
+        {
+            return TestDataCreator.CreateDummyTestCases(qualifiedNames).ToList();
+        }
+
+        private TestCase CreateTearDownTestSuiteTestCase(string suite, int nrOfTestCasesInSuite, int nrOfTestCasesInExecutable)
+        {
+            TestCase testCase = TestDataCreator.ToTestCase($"{suite}.{GoogleTestConstants.TearDownTestSuiteTestName}");
+            testCase.Properties.Add(new TestCaseMetaDataProperty(nrOfTestCasesInSuite, nrOfTestCasesInExecutable, isTearDownTestSuite: true));
+            return testCase;
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_OutputWithImmediateCrash_CorrectResultHasCrashText()
         {
             string[] consoleOutput = {

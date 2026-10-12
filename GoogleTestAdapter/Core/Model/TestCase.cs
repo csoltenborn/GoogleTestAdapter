@@ -44,6 +44,15 @@ namespace GoogleTestAdapter.Model
             get { return !Properties.Any(p => p is TestCaseMetaDataProperty); }
         }
 
+        /// <summary>
+        /// Whether the test case reports the result of TearDownTestSuite() of its suite (see option
+        /// TearDownTestSuiteTestCases)
+        /// </summary>
+        public bool IsTearDownTestSuiteTestCase
+        {
+            get { return Properties.OfType<TestCaseMetaDataProperty>().Any(p => p.IsTearDownTestSuite); }
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is TestCase other))

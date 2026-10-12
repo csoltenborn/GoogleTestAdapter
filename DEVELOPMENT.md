@@ -125,7 +125,7 @@ cd out/binaries/GoogleTestAdapter/Release
     VsPackage.GTA.Tests.Unit/GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll //Parallel
 ```
 
-* As of 0.19.0, all 678 tests pass. Run the suite more than once after changes affecting timing or files: the test
+* As of 0.19.0, all 697 tests pass. Run the suite more than once after changes affecting timing or files: the test
   assemblies run in parallel and share the sample binaries, so tests must never rename or modify sample files (one
   test renaming a sample's .pdb was flaky for exactly this reason).
 * VS 2026's `vstest.console.exe` (`.../18/Professional/...`) runs the tests as well.
@@ -196,6 +196,17 @@ cd out/binaries/GoogleTestAdapter/Release
   Locations come from the .pdb (`TestCaseResolver`, which also provides traits and namespaces; symbols are indexed,
   matching used to be quadratic in the number of tests) or, as fallback, from the XML file (Google Test >= 1.8.1). CTest
   test properties are cached per settings instance (one discovery or run).
+* **Fixture failures** (sample `SampleTests/FixtureTests`): Google Test prints failures of `SetUpTestSuite()` between
+  a suite's header and its first `[ RUN ]`, and failures of `TearDownTestSuite()` between the suite's last test and its
+  footer (`... (N ms total)`); `StreamingStandardOutputTestResultParser` tracks suites accordingly (setup results are
+  kept per suite, since a test's result is only created when the next test starts), and `XmlTestResultParser`
+  evaluates the nameless test cases Google Test writes for such failures. The `<suite>.TearDownTestSuite` test cases
+  are created by discovery for fixtures with a `TearDownTestSuite()`/`TearDownTestCase()` symbol (`TestCaseResolver`;
+  an empty method folded with Google Test's default by `/OPT:ICF` gets the location of the suite's first test). They
+  are marked by a third field of `TestCaseMetaDataProperty` (`IsExitCodeTestCase` means "no meta data"), are not
+  counted in the meta data's numbers of tests, are attached to the command line running their suite (a suite is run
+  completely if only its `TearDownTestSuite` test is selected), and are kept with their suite by
+  `ParallelTestRunner`.
 * **Test Explorer hierarchy:** `TestAdapter/DataConversionExtensions.cs` sets the `TestCase.Hierarchy` property
   (project, namespace, class, test group); instances of typed and parameterized tests share class and group.
 * **Code coverage** (`VsPackage.Shared/Settings/CodeCoverageRunSettings.cs`): VS only instruments the test

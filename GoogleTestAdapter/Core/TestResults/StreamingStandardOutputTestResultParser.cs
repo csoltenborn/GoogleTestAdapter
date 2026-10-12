@@ -34,6 +34,15 @@ namespace GoogleTestAdapter.TestResults
 
         private static readonly Regex PrefixedLineRegex;
 
+        // e.g. "[----------] 2 tests from Suite" and "[----------] 1 test from TypedTests/0, where TypeParam = int"
+        private static readonly Regex SuiteStartRegex = new Regex(@"^\[-{10}\] \d+ tests? from (?<suite>[^\s,]+)(?:, where .*)?$", RegexOptions.Compiled);
+        // e.g. "[----------] 2 tests from Suite (3 ms total)"
+        private static readonly Regex SuiteEndRegex = new Regex(@"^\[-{10}\] \d+ tests? from (?<suite>[^\s,]+) \(\d+ ms total\)$", RegexOptions.Compiled);
+        // e.g. "C:\test.cpp(5): error: Failed" and "unknown file: error: SEH exception ..."
+        private static readonly Regex FailureRegex = new Regex(@"(?:\(\d+\)|^unknown file): error: ", RegexOptions.Compiled);
+        // e.g. "C:\test.cpp(18): Skipped"
+        private static readonly Regex SkipRegex = new Regex(@"\(\d+\): Skipped$", RegexOptions.Compiled);
+
         public TestCase CrashedTestCase { get; private set; }
         public TestCase TimedOutTestCase { get; private set; }
         public IList<TestResult> TestResults { get; } = new List<TestResult>();
@@ -57,6 +66,20 @@ namespace GoogleTestAdapter.TestResults
         private volatile RunningTest _runningTest;
         private TimeSpan _timeout;
         private int? _exitCode;
+
+        // the output of SetUpTestSuite() of the current suite (null once its first test has started), and the output
+        // since the end of the suite's last test, i.e. of TearDownTestSuite() once the suite has ended
+        private List<string> _setUpTestSuiteOutput;
+        private List<string> _outputSinceEndOfTest;
+        private class SetUpTestSuiteResult
+        {
+            public bool IsFailed { get; set; }
+            public string Message { get; set; }
+            public string StackTrace { get; set; }
+            public string Output { get; set; }
+        }
+        // by suite, since a test's result is created once the next test (possibly of the next suite) starts
+        private readonly Dictionary<string, SetUpTestSuiteResult> _setUpTestSuiteResults = new Dictionary<string, SetUpTestSuiteResult>();
 
         static StreamingStandardOutputTestResultParser()
         {
@@ -102,6 +125,8 @@ namespace GoogleTestAdapter.TestResults
 
         private void DoReportLine(string line)
         {
+            TrackTestSuite(line);
+
             if (IsPassedLine(line) || IsFailedLine(line) || IsSkippedLine(line))
                 _runningTest = null;
 
@@ -201,9 +226,111 @@ namespace GoogleTestAdapter.TestResults
             return $"!! This test has TIMED OUT after {timeout.TotalSeconds.ToString(CultureInfo.InvariantCulture)}s (CMake test property TIMEOUT) !!";
         }
 
+        private void TrackTestSuite(string line)
+        {
+            if (IsRunLine(line))
+            {
+                if (_setUpTestSuiteOutput != null)
+                {
+                    StoreSetUpTestSuiteResult(_setUpTestSuiteOutput);
+                    _setUpTestSuiteOutput = null;
+                }
+                _outputSinceEndOfTest = null;
+                return;
+            }
+
+            if (IsPassedLine(line) || IsFailedLine(line) || IsSkippedLine(line))
+            {
+                _outputSinceEndOfTest = new List<string>();
+                return;
+            }
+
+            Match suiteEnd = SuiteEndRegex.Match(line);
+            if (suiteEnd.Success)
+            {
+                if (_outputSinceEndOfTest != null)
+                    ReportTearDownTestSuiteResult(suiteEnd.Groups["suite"].Value, _outputSinceEndOfTest);
+                _setUpTestSuiteOutput = null;
+                _outputSinceEndOfTest = null;
+                return;
+            }
+
+            Match suiteStart = SuiteStartRegex.Match(line);
+            if (suiteStart.Success)
+            {
+                _currentSuite = suiteStart.Groups["suite"].Value;
+                _setUpTestSuiteOutput = new List<string>();
+                _outputSinceEndOfTest = null;
+                return;
+            }
+
+            _setUpTestSuiteOutput?.Add(line);
+            _outputSinceEndOfTest?.Add(line);
+        }
+
+        private string _currentSuite;
+
+        private void StoreSetUpTestSuiteResult(List<string> output)
+        {
+            bool isFailed = output.Any(l => FailureRegex.IsMatch(l));
+            if (!isFailed && !output.Any(l => SkipRegex.IsMatch(l)))
+                return;
+
+            string outputText = string.Concat(output.Select(l => l + "\n"));
+            var parser = new ErrorMessageParser(outputText, TestSuiteFixtureResults.GetSetUpTestSuiteName(_currentSuite), _sourcePathMapper);
+            parser.Parse();
+            _setUpTestSuiteResults[_currentSuite] = new SetUpTestSuiteResult
+            {
+                IsFailed = isFailed,
+                Message = parser.ErrorMessage,
+                StackTrace = parser.ErrorStackTrace,
+                Output = outputText
+            };
+        }
+
+        // Google Test skips the tests of a suite whose SetUpTestSuite() has failed or has called GTEST_SKIP()
+        private TestResult WithSetUpTestSuiteResult(TestResult result)
+        {
+            if (result == null || result.Outcome != TestOutcome.Skipped
+                || !_setUpTestSuiteResults.TryGetValue(TestSuiteFixtureResults.GetSuite(result.TestCase), out var setUpResult))
+                return result;
+
+            result.StandardOutput = setUpResult.Output + result.StandardOutput;
+            if (setUpResult.IsFailed)
+                return TestSuiteFixtureResults.CreateSetUpTestSuiteFailedResult(result, setUpResult.Message, setUpResult.StackTrace);
+
+            if (string.IsNullOrEmpty(result.ErrorMessage) && !string.IsNullOrEmpty(setUpResult.Message))
+            {
+                result.ErrorMessage = setUpResult.Message;
+                result.ErrorStackTrace = setUpResult.StackTrace;
+            }
+            return result;
+        }
+
+        private void ReportTearDownTestSuiteResult(string suite, List<string> output)
+        {
+            TestCase tearDownTestCase = TestSuiteFixtureResults.FindTearDownTestSuiteTestCase(suite, _testCasesRun);
+            if (tearDownTestCase == null)
+                return;
+
+            string outputText = string.Concat(output.Select(l => l + "\n"));
+            string errorMessage = null, errorStackTrace = null;
+            if (output.Any(l => FailureRegex.IsMatch(l)))
+            {
+                var parser = new ErrorMessageParser(outputText, tearDownTestCase.FullyQualifiedName, _sourcePathMapper);
+                parser.Parse();
+                errorMessage = parser.ErrorMessage;
+                errorStackTrace = parser.ErrorStackTrace;
+            }
+
+            TestResult result = TestSuiteFixtureResults.CreateTearDownTestSuiteResult(tearDownTestCase, errorMessage, errorStackTrace, outputText);
+            _reporter.ReportTestResults(result.Yield());
+            TestResults.Add(result);
+        }
+
         private void ReportTestResult()
         {
-            TestResult result = CreateTestResult();
+            TestResult result = WithSetUpTestSuiteResult(CreateTestResult());
             if (result != null)
             {
                 _reporter.ReportTestResults(result.Yield());

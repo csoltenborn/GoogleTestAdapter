@@ -414,6 +414,73 @@ namespace GoogleTestAdapter
                 .Should().ContainSingle(t => t.Name == "Type" && t.Value == "\u00dcmlaut");
         }
 
+        private static readonly string[] TearDownTestSuiteTestCasesOfFixtureTests =
+        {
+            "FailingTearDown.TearDownTestSuite", "PassingFixture.TearDownTestSuite", "LegacyTearDown.TearDownTestSuite",
+            "NamespacedFixture.TearDownTestSuite", "TypedFixture/0.TearDownTestSuite", "TypedFixture/1.TearDownTestSuite",
+            "Instantiation/ParameterizedFixture.TearDownTestSuite"
+        };
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_FixtureTestsDebugX86_TearDownTestSuiteTestCasesForFixturesDefiningTearDownTestSuite()
+        {
+            AssertFindsTearDownTestSuiteTestCases(TestResources.FixtureTests_DebugX86);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_FixtureTestsReleaseX64_TearDownTestSuiteTestCasesForFixturesDefiningTearDownTestSuite()
+        {
+            AssertFindsTearDownTestSuiteTestCases(TestResources.FixtureTests_ReleaseX64);
+        }
+
+        private void AssertFindsTearDownTestSuiteTestCases(string executable)
+        {
+            executable.AsFileInfo().Should().Exist("building the SampleTests solution produces that executable");
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).GetTestsFromExecutable(executable);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            List<TestCase> tearDownTestCases = testCases.Where(tc => tc.IsTearDownTestSuiteTestCase).ToList();
+            tearDownTestCases.Select(tc => tc.FullyQualifiedName).Should().BeEquivalentTo(TearDownTestSuiteTestCasesOfFixtureTests);
+            testCases.Where(tc => !tc.IsTearDownTestSuiteTestCase).Should().HaveCount(13);
+            foreach (TestCase testCase in tearDownTestCases)
+            {
+                testCase.CodeFilePath.Should().EndWithEquivalent("FixtureTests.cpp", testCase.FullyQualifiedName);
+                testCase.LineNumber.Should().BeGreaterThan(0, testCase.FullyQualifiedName);
+                testCase.TestGroup.Should().Be(GoogleTestConstants.TearDownTestSuiteTestName);
+                testCase.IsExitCodeTestCase.Should().BeFalse();
+            }
+            tearDownTestCases.Single(tc => tc.FullyQualifiedName == "NamespacedFixture.TearDownTestSuite").Namespace.Should().Be("fixtures");
+            tearDownTestCases.Single(tc => tc.FullyQualifiedName == "TypedFixture/1.TearDownTestSuite").TestClass
+                .Should().Be(testCases.Single(tc => tc.FullyQualifiedName == "TypedFixture/1.Passes").TestClass);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_TearDownTestSuiteTestCasesOff_NoTearDownTestSuiteTestCases()
+        {
+            MockOptions.Setup(o => o.TearDownTestSuiteTestCases).Returns(false);
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).GetTestsFromExecutable(TestResources.FixtureTests_DebugX86);
+
+            testCases.Should().HaveCount(13);
+            testCases.Should().NotContain(tc => tc.IsTearDownTestSuiteTestCase);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_DoNotParseSymbolInformation_NoTearDownTestSuiteTestCases()
+        {
+            MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).GetTestsFromExecutable(TestResources.FixtureTests_DebugX86);
+
+            testCases.Should().HaveCount(13);
+            testCases.Should().NotContain(tc => tc.IsTearDownTestSuiteTestCase);
+        }
+
         [TestMethod]
         [TestCategory(Integration)]
         public void GetTestsFromExecutable_ParseSymbolInformation_DiaResolverIsCreated()

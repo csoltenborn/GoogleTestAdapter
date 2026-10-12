@@ -688,6 +688,15 @@ namespace GoogleTestAdapter.Settings
         public virtual bool ParseSymbolInformation => _currentSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
 
 
+        public const string OptionTearDownTestSuiteTestCases = "TearDownTestSuite test cases";
+        public const string OptionTearDownTestSuiteTestCasesDescription =
+            "Adds a test case named " + GoogleTestConstants.TearDownTestSuiteTestName + " to each test suite whose fixture defines TearDownTestSuite() (or the deprecated TearDownTestCase()). The test case fails if TearDownTestSuite() fails, which is not reported by any of the suite's tests, and passes otherwise; it is run whenever tests of its suite are run. Requires option '" + OptionParseSymbolInformation + "'.\n" +
+            "Failures of SetUpTestSuite() are reported by the tests of the suite, independent of this option.";
+        public const bool OptionTearDownTestSuiteTestCasesDefaultValue = true;
+
+        public virtual bool TearDownTestSuiteTestCases => _currentSettings.TearDownTestSuiteTestCases ?? OptionTearDownTestSuiteTestCasesDefaultValue;
+
+
         #endregion
 
         #region Internal properties

@@ -51,6 +51,9 @@ namespace GoogleTestAdapter.Tests.Common
         public const string Utf8Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Utf8Tests_gta.exe";
         public const string Utf8Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Utf8Tests_gta.exe";
 
+        public const string FixtureTests_DebugX86 = SampleTestsBuildDir + @"Debug\FixtureTests_gta.exe";
+        public const string FixtureTests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\FixtureTests_gta.exe";
+
         public const string CrashingTests_DebugX86 = SampleTestsBuildDir + @"Debug\CrashingTests_gta.exe";
         public const string CrashingTests_ReleaseX86 = SampleTestsBuildDir + @"Release\CrashingTests_gta.exe";
         public const string CrashingTests_DebugX64 = SampleTestsBuildDir + @"Debug-x64\CrashingTests_gta.exe";

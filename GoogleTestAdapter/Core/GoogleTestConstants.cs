@@ -27,6 +27,10 @@ namespace GoogleTestAdapter
         public const string FilterOption = " --gtest_filter=";
 
         public const string TestBodySignature = "::TestBody";
+        // the test cases reporting failures of TearDownTestSuite() (see option TearDownTestSuiteTestCases) are named
+        // <suite>.TearDownTestSuite; TearDownTestCase is the deprecated name of the method
+        public const string TearDownTestSuiteTestName = "TearDownTestSuite";
+        public const string TearDownTestCaseMethodName = "TearDownTestCase";
         // trait name of the labels of CMake tests (test property LABELS)
         public const string CMakeLabelTraitName = "Label";
 

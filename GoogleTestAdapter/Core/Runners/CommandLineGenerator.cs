@@ -60,26 +60,52 @@ namespace GoogleTestAdapter.Runners
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
+            // TearDownTestSuite() is executed whenever tests of its suite are executed, so the TearDownTestSuite test
+            // cases are added to the command lines executing their suites; a suite none of whose tests are to be run
+            // is run completely
+            List<TestCase> tearDownTestCases = _testCasesToRun.Where(tc => tc.IsTearDownTestSuiteTestCase).ToList();
+            foreach (TestCase tearDownTestCase in tearDownTestCases)
+                _testCasesToRun.Remove(tearDownTestCase);
+            List<string> suitesOnlyRunForTearDown = tearDownTestCases
+                .Select(GetTestsuiteName)
+                .Where(suite => !_testCasesToRun.Any(tc => GetTestsuiteName(tc) == suite))
+                .ToList();
+
             var exitCodeTest =
                 _testCasesToRun.SingleOrDefault(tc => tc.IsExitCodeTestCase);
             if (exitCodeTest != null)
             {
                 _testCasesToRun.Remove(exitCodeTest);
-                if (!_testCasesToRun.Any())
+                if (!_testCasesToRun.Any() && !tearDownTestCases.Any())
                 {
                     return CreateDummyCommandLineArgs(baseCommandLine, exitCodeTest).Yield();
                 }
             }
 
+            List<Args> commandLines = GetFinalCommandLines(baseCommandLine, suitesOnlyRunForTearDown);
+            foreach (TestCase tearDownTestCase in tearDownTestCases)
+            {
+                string suite = GetTestsuiteName(tearDownTestCase);
+                string suiteFilter = GetFilterForSuite(suite);
+                Args args = commandLines.FirstOrDefault(a => a.TestCases.Any(tc => GetTestsuiteName(tc) == suite))
+                            ?? commandLines.First(a => a.CommandLine.Contains("=" + suiteFilter) || a.CommandLine.Contains(":" + suiteFilter));
+                args.TestCases.Add(tearDownTestCase);
+            }
+            return commandLines;
+        }
+
+        private List<Args> GetFinalCommandLines(string baseCommandLine, List<string> suitesOnlyRunForTearDown)
+        {
             var commandLines = new List<Args>();
             string userParam = GetAdditionalUserParameter();
-            if (AllTestCasesOfExecutableAreRun())
+            // (if only TearDownTestSuite test cases are to be run, their suites are run)
+            if ((_testCasesToRun.Any() || !suitesOnlyRunForTearDown.Any()) && AllTestCasesOfExecutableAreRun())
             {
                 commandLines.Add(new Args(_testCasesToRun, baseCommandLine + userParam));
                 return commandLines;
             }
 
-            List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
+            List<string> suitesRunningAllTests = GetSuitesRunningAllTests().Concat(suitesOnlyRunForTearDown).ToList();
             int maxSuiteLength = MaxCommandLength - _lengthOfExecutableString - userParam.Length - 1;
 
             List<List<string>> suiteLists = GetSuiteListsForCommandLines(suitesRunningAllTests, maxSuiteLength);

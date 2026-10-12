@@ -18,6 +18,9 @@ build/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
+# ...but not GTA's source folders of that name
+!/Core/TestResults/
+!/Core.Tests/TestResults/
 [Bb]uild[Ll]og.*
 
 *_i.c

@@ -83,6 +83,7 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.ShuffleTests).Returns(SettingsWrapper.OptionShuffleTestsDefaultValue);
             mockOptions.Setup(o => o.ShuffleTestsSeed).Returns(SettingsWrapper.OptionShuffleTestsSeedDefaultValue);
             mockOptions.Setup(o => o.ParseSymbolInformation).Returns(SettingsWrapper.OptionParseSymbolInformationDefaultValue);
+            mockOptions.Setup(o => o.TearDownTestSuiteTestCases).Returns(SettingsWrapper.OptionTearDownTestSuiteTestCasesDefaultValue);
             mockOptions.Setup(o => o.OutputMode).Returns(SettingsWrapper.OptionOutputModeDefaultValue);
             mockOptions.Setup(o => o.TimestampMode).Returns(TimestampMode.DoNotPrintTimestamp);
             mockOptions.Setup(o => o.SeverityMode).Returns(SeverityMode.PrintSeverity);

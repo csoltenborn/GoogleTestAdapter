@@ -34,6 +34,11 @@ namespace GoogleTestAdapter.TestCases
         private readonly Dictionary<string, List<int>> _testMethodSymbolsByClassName = new Dictionary<string, List<int>>(StringComparer.Ordinal);
         private readonly List<int> _unindexedTestMethodSymbols = new List<int>();
         private readonly Dictionary<string, List<SourceFileLocation>> _traitSymbolsByTestClass = new Dictionary<string, List<SourceFileLocation>>(StringComparer.Ordinal);
+        // TearDownTestSuite() (and TearDownTestCase()) methods of fixtures by class name (see GetClassNameKey())
+        private readonly Dictionary<string, List<SourceFileLocation>> _tearDownTestSuiteSymbolsByClassName = new Dictionary<string, List<SourceFileLocation>>(StringComparer.Ordinal);
+        // locations of Google Test's empty default implementations, with which the linker folds empty methods of
+        // fixtures (/OPT:ICF), which then have the location of the default implementation
+        private readonly HashSet<string> _defaultTearDownTestSuiteLocations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         private bool _loadedSymbolsFromAdditionalPdbs;
         private bool _loadedSymbolsFromImports;
@@ -135,6 +140,11 @@ namespace GoogleTestAdapter.TestCases
                 {
                     AddTestMethodSymbols(diaResolver.GetFunctions("*" + GoogleTestConstants.TestBodySignature));
                     AddTraitSymbols(diaResolver.GetFunctions("*" + TraitAppendix));
+                    if (_settings.TearDownTestSuiteTestCases)
+                    {
+                        AddTearDownTestSuiteSymbols(diaResolver.GetFunctions("*::" + GoogleTestConstants.TearDownTestSuiteTestName));
+                        AddTearDownTestSuiteSymbols(diaResolver.GetFunctions("*::" + GoogleTestConstants.TearDownTestCaseMethodName));
+                    }
                     _logger.DebugInfo($"Found {_allTestMethodSymbols.Count} test method symbols and {_allTraitSymbols.Count} trait symbols in binary {binary}, pdb {pdb}");
 
                     if (resolveMainMethod)
@@ -205,6 +215,78 @@ namespace GoogleTestAdapter.TestCases
                     _traitSymbolsByTestClass.Add(symbol.TestClassSignature, traitSymbols = new List<SourceFileLocation>());
                 traitSymbols.Add(symbol);
             }
+        }
+
+        private void AddTearDownTestSuiteSymbols(IEnumerable<SourceFileLocation> symbols)
+        {
+            foreach (SourceFileLocation symbol in symbols)
+            {
+                // Google Test's empty default implementations of testing::Test
+                if (symbol.Symbol.StartsWith("testing::", StringComparison.Ordinal))
+                {
+                    _defaultTearDownTestSuiteLocations.Add(GetLocationKey(symbol));
+                    continue;
+                }
+
+                string key = GetClassNameKey(symbol.Symbol, symbol.Symbol.LastIndexOf("::", StringComparison.Ordinal));
+                if (key == null)
+                    continue;
+
+                if (!_tearDownTestSuiteSymbolsByClassName.TryGetValue(key, out var tearDownSymbols))
+                    _tearDownTestSuiteSymbolsByClassName.Add(key, tearDownSymbols = new List<SourceFileLocation>());
+                tearDownSymbols.Add(symbol);
+            }
+        }
+
+        /// <summary>
+        /// The location of TearDownTestSuite() (or TearDownTestCase()) of the fixture of test suite
+        /// <paramref name="suite"/>, which is the last part of the suite's name which is not a number (e.g. "Fixture" for
+        /// suites "Fixture", "Fixture/0", "Prefix/Fixture", and "Prefix/Fixture/0"); if there are several fixtures of
+        /// that name, the one in namespace <paramref name="testNamespace"/> (the namespace of the suite's tests) is
+        /// preferred. Null if the fixture does not define the method (or no symbols are available); the location's
+        /// source file is empty if the linker has folded the method with Google Test's empty default implementation.
+        /// </summary>
+        public TestCaseLocation FindTearDownTestSuiteLocation(string suite, string testNamespace)
+        {
+            string fixture = suite.Split('/').LastOrDefault(part => part.Length > 0 && !part.All(char.IsDigit));
+            if (fixture == null || !_tearDownTestSuiteSymbolsByClassName.TryGetValue(fixture, out var symbols))
+                return null;
+
+            SourceFileLocation symbol = symbols.FirstOrDefault(s => GetNamespaceOfMethod(s.Symbol) == testNamespace) ?? symbols[0];
+            TestCaseLocation location = _defaultTearDownTestSuiteLocations.Contains(GetLocationKey(symbol))
+                ? new TestCaseLocation(symbol.Symbol, "", 0)
+                : ToTestCaseLocation(symbol);
+            location.Namespace = GetNamespaceOfMethod(symbol.Symbol);
+            return location;
+        }
+
+        private static string GetLocationKey(SourceFileLocation location)
+        {
+            return $"{location.Sourcefile}:{location.Line}";
+        }
+
+        // e.g. "outer::inner" for "outer::inner::Fixture<int>::TearDownTestSuite"
+        private static string GetNamespaceOfMethod(string symbol)
+        {
+            int endOfClass = symbol.LastIndexOf("::", StringComparison.Ordinal);
+            string className = GetClassNameKey(symbol, endOfClass);
+            if (className == null)
+                return null;
+
+            // as in GetClassNameKey(): skip the template arguments, which may contain "::"
+            int end = endOfClass;
+            if (symbol[end - 1] == '>')
+            {
+                int depth = 0;
+                for (end--; end >= 0; end--)
+                {
+                    if (symbol[end] == '>')
+                        depth++;
+                    else if (symbol[end] == '<' && --depth == 0)
+                        break;
+                }
+            }
+            return GetNamespace(symbol.Substring(0, end - className.Length));
         }
 
         /// <summary>

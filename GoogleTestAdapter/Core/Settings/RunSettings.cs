@@ -106,6 +106,9 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? ParseSymbolInformation { get; set; }
         public bool ShouldSerializeParseSymbolInformation() { return ParseSymbolInformation != null; }
 
+        public virtual bool? TearDownTestSuiteTestCases { get; set; }
+        public bool ShouldSerializeTearDownTestSuiteTestCases() { return TearDownTestSuiteTestCases != null; }
+
         public virtual string AdditionalTestExecutionParam { get; set; }
         public bool ShouldSerializeAdditionalTestExecutionParam() { return AdditionalTestExecutionParam != null; }
 

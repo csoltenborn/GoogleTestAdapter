@@ -220,6 +220,51 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void RunTests_FixtureTests_FailuresOfSetUpAndTearDownTestSuiteAreReported()
+        {
+            RunAndVerifyTests(TestResources.FixtureTests_DebugX86, 13, 6, 0, 1);
+
+            // Google Test skips the tests of a suite whose SetUpTestSuite() fails
+            VerifyFixtureTestResult("FailingSetUp.First", VsTestOutcome.Failed, "SetUpTestSuite failure");
+            VerifyFixtureTestResult("FailingSetUp.Second", VsTestOutcome.Failed, "SetUpTestSuite() failed");
+            VerifyFixtureTestResult("SkippingSetUp.Skipped", VsTestOutcome.Skipped);
+
+            VerifyFixtureTestResult("FailingTearDown.Passes", VsTestOutcome.Passed);
+            VerifyFixtureTestResult("FailingTearDown.TearDownTestSuite", VsTestOutcome.Failed, "TearDownTestSuite failure");
+            VerifyFixtureTestResult("LegacyTearDown.TearDownTestSuite", VsTestOutcome.Failed, "TearDownTestCase failure");
+            VerifyFixtureTestResult("PassingFixture.TearDownTestSuite", VsTestOutcome.Passed);
+            VerifyFixtureTestResult("TypedFixture/1.TearDownTestSuite", VsTestOutcome.Passed);
+            VerifyFixtureTestResult("Instantiation/ParameterizedFixture.TearDownTestSuite", VsTestOutcome.Failed, "Parameterized TearDownTestSuite failure");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_OnlyTearDownTestSuiteTestCase_SuiteIsRunAndTearDownResultIsReported()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            var testCases = discoverer.GetTestsFromExecutable(TestResources.FixtureTests_DebugX86)
+                .Where(tc => tc.FullyQualifiedName == "FailingTearDown.TearDownTestSuite")
+                .ToList();
+            testCases.Should().ContainSingle();
+
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCases.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            CheckMockInvocations(0, 1, 0, 0, 0);
+            VerifyFixtureTestResult("FailingTearDown.TearDownTestSuite", VsTestOutcome.Failed, "TearDownTestSuite failure");
+        }
+
+        private void VerifyFixtureTestResult(string fullyQualifiedName, VsTestOutcome outcome, string errorMessagePart = null)
+        {
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
+                    tr.TestCase.FullyQualifiedName == fullyQualifiedName && tr.Outcome == outcome &&
+                    (errorMessagePart == null || (tr.ErrorMessage != null && tr.ErrorMessage.Contains(errorMessagePart))))),
+                Times.Once, fullyQualifiedName);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);

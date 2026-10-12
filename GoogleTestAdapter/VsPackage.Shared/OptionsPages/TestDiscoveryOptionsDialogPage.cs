@@ -67,6 +67,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
 
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionTearDownTestSuiteTestCases)]
+        [Description(SettingsWrapper.OptionTearDownTestSuiteTestCasesDescription)]
+        public bool TearDownTestSuiteTestCases
+        {
+            get => _tearDownTestSuiteTestCases;
+            set => SetAndNotify(ref _tearDownTestSuiteTestCases, value);
+        }
+        private bool _tearDownTestSuiteTestCases = SettingsWrapper.OptionTearDownTestSuiteTestCasesDefaultValue;
+
         #endregion
 
         #region Traits

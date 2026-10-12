@@ -47,6 +47,7 @@ namespace GoogleTestAdapter.Settings
         string TraitsRegexesBefore { get; set; }
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
+        bool? TearDownTestSuiteTestCases { get; set; }
         bool? DebugMode { get; set; }
         OutputMode? OutputMode { get; set; }
         bool? TimestampOutput { get; set; }
@@ -100,6 +101,7 @@ namespace GoogleTestAdapter.Settings
             self.TraitsRegexesBefore = self.TraitsRegexesBefore ?? other.TraitsRegexesBefore;
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
+            self.TearDownTestSuiteTestCases = self.TearDownTestSuiteTestCases ?? other.TearDownTestSuiteTestCases;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.OutputMode = self.OutputMode ?? other.OutputMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;

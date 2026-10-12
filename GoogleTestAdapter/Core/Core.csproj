@@ -113,6 +113,7 @@
     <Compile Include="TestCases\TestCaseResolver.cs" />
     <Compile Include="TestCases\XmlTestListParser.cs" />
     <Compile Include="TestResults\ErrorMessageParser.cs" />
+    <Compile Include="TestResults\TestSuiteFixtureResults.cs" />
     <Compile Include="TestResults\IExitCodeTestsAggregator.cs" />
     <Compile Include="TestResults\IExitCodeTestsReporter.cs" />
     <Compile Include="TestResults\ExitCodeTestsAggregator.cs" />

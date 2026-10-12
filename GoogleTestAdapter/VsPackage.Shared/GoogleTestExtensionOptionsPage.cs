@@ -249,6 +249,7 @@ namespace GoogleTestAdapter.VsPackage
                 TraitsRegexesAfter = _testDiscoveryOptions.TraitsRegexesAfter,
                 TestNameSeparator = _testDiscoveryOptions.TestNameSeparator,
                 ParseSymbolInformation = _testDiscoveryOptions.ParseSymbolInformation,
+                TearDownTestSuiteTestCases = _testDiscoveryOptions.TearDownTestSuiteTestCases,
 
                 AdditionalPdbs = _testExecutionOptions.AdditionalPdbs,
                 WorkingDir = _testExecutionOptions.WorkingDir,

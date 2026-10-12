@@ -6,6 +6,7 @@ using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Scheduling;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.TestResults;
 using GoogleTestAdapter.Framework;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Settings;
@@ -71,7 +72,7 @@ namespace GoogleTestAdapter.Runners
             TestCase[] testCasesToRunAsArray = testCasesToRun as TestCase[] ?? testCasesToRun.ToArray();
 
             ITestsSplitter splitter = GetTestsSplitter(testCasesToRunAsArray);
-            List<List<TestCase>> splittedTestCasesToRun = splitter.SplitTestcases();
+            List<List<TestCase>> splittedTestCasesToRun = KeepTearDownTestSuiteTestCasesWithTheirSuites(splitter.SplitTestcases());
 
             _logger.LogInfo("Executing tests on " + splittedTestCasesToRun.Count + " threads");
             _logger.DebugInfo("Note that no test output will be shown on the test console when executing tests concurrently!");
@@ -88,6 +89,30 @@ namespace GoogleTestAdapter.Runners
 
                 thread.Start();
             }
+        }
+
+        // TearDownTestSuite() is executed by each thread executing tests of its suite, so the TearDownTestSuite test
+        // case is moved to such a thread (otherwise, its thread would execute the suite once more)
+        public static List<List<TestCase>> KeepTearDownTestSuiteTestCasesWithTheirSuites(List<List<TestCase>> testCaseGroups)
+        {
+            bool IsOfSuite(TestCase testCase, TestCase tearDownTestCase) =>
+                !testCase.IsTearDownTestSuiteTestCase && testCase.Source == tearDownTestCase.Source &&
+                TestSuiteFixtureResults.GetSuite(testCase) == TestSuiteFixtureResults.GetSuite(tearDownTestCase);
+
+            foreach (TestCase tearDownTestCase in testCaseGroups.SelectMany(g => g).Where(tc => tc.IsTearDownTestSuiteTestCase).ToList())
+            {
+                List<TestCase> group = testCaseGroups.First(g => g.Contains(tearDownTestCase));
+                if (group.Any(tc => IsOfSuite(tc, tearDownTestCase)))
+                    continue;
+
+                List<TestCase> groupOfSuite = testCaseGroups.FirstOrDefault(g => g.Any(tc => IsOfSuite(tc, tearDownTestCase)));
+                if (groupOfSuite == null)
+                    continue;
+
+                group.Remove(tearDownTestCase);
+                groupOfSuite.Add(tearDownTestCase);
+            }
+            return testCaseGroups.Where(g => g.Any()).ToList();
         }
 
         private ITestsSplitter GetTestsSplitter(TestCase[] testCasesToRun)
