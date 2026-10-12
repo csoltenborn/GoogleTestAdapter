@@ -45,6 +45,7 @@ Changes compared to the original project:
   * A missing .pdb file of a test executable is reported as a warning (rather than only in debug mode), since its tests have neither traits nor namespaces then
   * Tests have source locations even without .pdb file, with option *Parse symbol information* switched off, or if they have been registered at runtime with `::testing::RegisterTest()`: GTA takes them from the test list Google Test (1.8.1 or later) writes with `--gtest_list_tests --gtest_output=xml` (upstream [#309](https://github.com/csoltenborn/GoogleTestAdapter/issues/309)); locations found in the .pdb are still preferred, since only these come with traits and namespaces
   * More reliable killing of test processes on cancellation
+  * The Visual Studio version is also identified if tests are run by a 32-bit test host of the 64-bit VS 2022 or later (e.g. for x86 test executables): GTA no longer warns that it could not identify the Visual Studio version, and no longer slows down the reporting of test results as needed for VS 2015 and earlier
   * The Google Test NuGet packages link the debug or release libraries depending on the project's *Use Debug Libraries* setting, so they also work with configurations not named `Debug` or `Release` (upstream #356); the choice can be overridden with property `<package name with dashes>-LibraryConfiguration`
   * The Google Test NuGet packages contain the [trait macros](#trait_macros) header for their version of Google Test as `GTA_Traits.h` (upstream #316)
 
