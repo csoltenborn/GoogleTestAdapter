@@ -4,6 +4,10 @@
     <PropertyGroup>
         <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
         <NuGetPackages>$(EnlistmentRoot)NuGetPackages\</NuGetPackages>
+        <!-- The VSIX projects use the VS SDK build tools from NuGet rather than those of the Visual Studio
+             installation building them: builds do not depend on the version of Visual Studio, and VS 2026's
+             installation lacks a dependency of CreatePkgDef.exe (System.Numerics.Vectors). -->
+        <VSSDKBuildToolsDir>$(NuGetPackages)Microsoft.VSSDK.BuildTools.18.5.40034\build\</VSSDKBuildToolsDir>
 
         <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
         <OutputPath>$(OutDir)</OutputPath>

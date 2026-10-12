@@ -10,6 +10,11 @@
         <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)$(PlatformSuffix)\</OutDir>
         <OutputPath>$(OutDir)</OutputPath>
 
+        <!-- Object files of different platforms and compiler versions must not be mixed (whole program optimization
+             fails with internal compiler errors), e.g. when building with VS 2022 and VS 2026 -->
+        <IntDir>$(EnlistmentRoot)out\intermediate\$(SolutionName)\$(Configuration)$(PlatformSuffix)\vs$(VisualStudioVersion)\$(MSBuildProjectName)\</IntDir>
+        <IntermediateOutputPath>$(IntDir)</IntermediateOutputPath>
+
         <!-- Google Test as provided by the ThirdParty\googletest submodule -->
         <GoogleTestDir>$(EnlistmentRoot)ThirdParty\googletest\googletest\</GoogleTestDir>
 

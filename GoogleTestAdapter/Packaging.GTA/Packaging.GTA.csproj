@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
+  <Import Project="$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.props" Condition="Exists('$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -115,5 +116,9 @@ $(NuGetPackages)NuGet.CommandLine.5.11.5\tools\nuget pack VsPackage.nuspec -NonI
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.targets" Condition="Exists('$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.targets')" />
+  <Target Name="EnsureVSSDKBuildTools" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.targets')" Text="NuGet package Microsoft.VSSDK.BuildTools is missing: restore the NuGet packages of the solution and build again." />
+  </Target>
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
 </Project>

@@ -37,20 +37,46 @@ describes the code base as it was before the fork.
 
 ## Building
 
-Prerequisites: Visual Studio 2022 or later with the VS SDK and C++ workloads (the DIA SDK ships with VS), NuGet. Run
-`build_preparation.bat` once (sets the GTA flavor, restores NuGet packages, copies the DIA DLLs, generates `dia2.dll`).
+Prerequisites: Visual Studio 2022 or 2026 (or the corresponding Build Tools) with the workloads *Visual Studio
+extension development* and *Desktop development with C++* (the latter provides the DIA SDK and the C++ toolset for the
+sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`). No other preparation is needed:
+
+* NuGet packages (`packages.config`) are restored by Visual Studio or by MSBuild's `-restore` (see below) into
+  `NuGetPackages/` (configured in `NuGet.config`).
+* `DiaResolver.csproj` copies `msdia140.dll` from the DIA SDK of the Visual Studio installation building it and
+  generates the interop assembly `dia2.dll` from it (properties `DiaSdkDir` and `TlbImpPath` override the locations).
+  Which `msdia140.dll` is shipped thus depends on the Visual Studio version which first builds the project; both work.
+* The VSIX projects use the VS SDK build tools from NuGet (`Microsoft.VSSDK.BuildTools`, version defined in
+  `Common.props`) rather than those of the Visual Studio installation, so builds do not depend on the Visual Studio
+  version (VS 2026's installed `CreatePkgDef.exe` misses a dependency and fails).
+* Configuration `Any CPU` of `GoogleTestAdapter.sln` also builds the sample tests (project `SampleTestsBuilder` builds
+  `SampleTests/SampleTests.sln` for Debug and Release, Win32 and x64); GTA's tests use the binaries in
+  `out/binaries/SampleTests/`. The samples' intermediate files are separated by platform and Visual Studio version,
+  since object files of different compiler versions must not be mixed (whole program optimization fails with internal
+  compiler errors).
+
+**In Visual Studio:** open `GoogleTestAdapter/GoogleTestAdapter.sln` and build configuration `Release|Any CPU` (or
+`Debug|Any CPU`). On a fresh clone, the first build might stop with "NuGet package Microsoft.VSSDK.BuildTools is
+missing" since packages are restored after the projects have been loaded - just build again.
+
+**On the command line and in CI pipelines** (headless; one command, nothing interactive):
 
 ```bash
 # Git Bash; without unsetting the proxy variables, MSBuild, vstest.console, VSIXInstaller and devenv fail with
-# "Item has already been added. Key in dictionary: 'https_proxy'" (variables differing only in case)
+# "Item has already been added. Key in dictionary: 'https_proxy'" (variables differing only in case) - this only
+# affects machines defining these variables in different cases
 unset https_proxy http_proxy no_proxy HTTPS_PROXY HTTP_PROXY NO_PROXY
 cd GoogleTestAdapter
 "/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/MSBuild.exe" GoogleTestAdapter.sln \
-    -p:Configuration=Release -p:Platform="Any CPU" -m -v:m -nologo
+    -restore -p:RestorePackagesConfig=true -p:Configuration=Release -p:Platform="Any CPU" -m -v:m -nologo
 ```
 
-The sample tests (`SampleTests/SampleTests.sln`) must be built for Debug and Release, Win32 and x64 (the Any CPU
-configurations build the CLR samples); GTA's tests use the binaries in `out/binaries/SampleTests/`.
+`-restore -p:RestorePackagesConfig=true` restores the `packages.config` packages and re-evaluates the projects before
+building, so a clean checkout builds in a single invocation (verified with VS 2022's and VS 2026's MSBuild). On CI
+runners, locate MSBuild with `vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`.
+`build_preparation.bat` (which also restores the packages, but asks for license acceptance unless `APPVEYOR` is
+defined) is no longer needed; `appveyor.yml` still uses it and the `Visual Studio 2017` image, and has not been updated
+for the fork.
 
 ## Testing
 
@@ -65,6 +91,7 @@ cd out/binaries/GoogleTestAdapter/Release
 * As of 0.19.0, all 672 tests pass. Run the suite more than once after changes affecting timing or files: the test
   assemblies run in parallel and share the sample binaries, so tests must never rename or modify sample files (one
   test renaming a sample's .pdb was flaky for exactly this reason).
+* VS 2026's `vstest.console.exe` (`.../18/Professional/...`) runs the tests as well.
 * For end-to-end checks, run sample executables through `vstest.console.exe <exe> /TestAdapterPath:<repo>\out\binaries\GoogleTestAdapter\Release\Packaging.GTA`,
   optionally with `/Settings:<file>` containing `<GoogleTestAdapterSettings>` (e.g. `<OutputMode>Debug</OutputMode>`,
   `<TimestampMode>PrintTimestamp</TimestampMode>`), `/TestCaseFilter:` or `/ListTests`.
