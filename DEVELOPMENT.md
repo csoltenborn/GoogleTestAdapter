@@ -65,7 +65,10 @@ sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`
   the VSIX), and the three Google Test NuGet packages the wizard chooses from (folder `Packages` of the VSIX, found by
   NuGet via `repositoryId` in the template's `WizardData`, which must be GTA's VSIX id). `Packaging.GTA` runs
   `GoogleTestNuGet/Build.ps1` if the packages are missing in `GoogleTestAdapter/Packages/` (a few minutes, i.e. on
-  clean checkouts and in CI); delete them to rebuild them, e.g. after updating Google Test. The templates have their
+  clean checkouts and in CI); delete them to rebuild them, e.g. after updating Google Test. Their binaries (x86, x64, and ARM64)
+  are built with the v143 toolset, so that VS 2022 projects can link them; where its build tools are missing for a
+  platform (GitHub's VS 2026 images), `Build.ps1` uses v145 instead and says so, unless environment variable
+  `GOOGLETEST_PACKAGES_REQUIRE_TOOLSET` is set (the CI job whose packages are released sets it). The templates have their
   own `TemplateID`s, so they do not replace Microsoft's templates if TAfGT is installed.
 * Configuration `Any CPU` of `GoogleTestAdapter.sln` also builds the sample tests (project `SampleTestsBuilder` builds
   `SampleTests/SampleTests.sln` for Debug and Release, Win32 and x64); GTA's tests use the binaries in

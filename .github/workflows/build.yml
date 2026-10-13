@@ -14,7 +14,9 @@ permissions:
 
 jobs:
   # builds with Visual Studio 2022 and 2026, and on ARM64 (where the tests run in an ARM64 process, and the x86 and x64
-  # sample tests are emulated); releases contain the packages built with VS 2022
+  # sample tests are emulated); releases contain the packages built with VS 2022. The Google Test NuGet packages are
+  # built with the v143 toolset, which the VS 2026 images lack for some (or all) platforms; GoogleTestNuGet\Build.ps1
+  # then uses v145, which is not acceptable for the released packages (require-toolset).
   build:
     strategy:
       fail-fast: false
@@ -22,6 +24,7 @@ jobs:
         include:
         - vs: vs2022
           runner: windows-2022
+          require-toolset: true
         - vs: vs2026
           runner: windows-2025-vs2026
         - vs: vs2026-arm64
@@ -30,6 +33,8 @@ jobs:
     name: build (${{ matrix.vs }})
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
+    env:
+      GOOGLETEST_PACKAGES_REQUIRE_TOOLSET: ${{ matrix.require-toolset }}
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:

@@ -317,6 +317,53 @@ function Build-NuGet {
     Invoke-Executable nuget $NugetPackArgs
 }
 
+<#
+.SYNOPSIS
+Whether the compilers of the build toolset are installed for the platform: VS 2026 installations may contain the v143
+build tools (MSVC 14.3x and 14.4x) for some platforms only, or not at all (e.g. GitHub's VS 2026 runner images lack them
+for ARM64, or completely on ARM64 Windows). Other toolsets, and environments without VCINSTALLDIR, are assumed to be
+complete.
+#>
+function Test-BuildTools {
+    param(
+        [String]$BuildToolset,
+        [String]$Platform
+    )
+
+    if ($BuildToolset -ne "v143" -or !$env:VCINSTALLDIR) { return $true }
+
+    $TargetDirectory = @{ "Win32" = "x86"; "x64" = "x64"; "ARM64" = "arm64" }[$Platform]
+    $Compilers = @(Get-ChildItem -Path "$env:VCINSTALLDIR\Tools\MSVC\14.[34]*\bin\Host*\$TargetDirectory\cl.exe" -ErrorAction SilentlyContinue)
+    return $Compilers.Count -gt 0
+}
+
+<#
+.SYNOPSIS
+The toolset to build the binaries for the platform with: the requested toolset if its build tools are installed,
+otherwise the toolset of the Visual Studio installation (the binaries can then not be linked by projects using the
+requested toolset), unless environment variable GOOGLETEST_PACKAGES_REQUIRE_TOOLSET is set (e.g. for builds of
+releases), which makes the build fail instead.
+#>
+function Get-BuildToolset {
+    param(
+        [String]$BuildToolset,
+        [String]$Platform
+    )
+
+    if (Test-BuildTools -BuildToolset $BuildToolset -Platform $Platform) { return $BuildToolset }
+
+    $Message = "The $BuildToolset build tools for $Platform are not installed"
+    if ($env:GOOGLETEST_PACKAGES_REQUIRE_TOOLSET) { throw "$Message (required by GOOGLETEST_PACKAGES_REQUIRE_TOOLSET)." }
+
+    $DefaultToolset = switch -Wildcard ($env:VisualStudioVersion) {
+        "17.*" { "v143" }
+        "18.*" { "v145" }
+        default { throw "$Message, and Visual Studio version '$env:VisualStudioVersion' is not supported." }
+    }
+    Write-Host "$Message, building the $Platform binaries with $DefaultToolset (they can not be linked by $BuildToolset projects)"
+    return $DefaultToolset
+}
+
 function Build-BinariesAndNuGet {
     param(
         [String]$ToolsetName,
@@ -326,12 +373,12 @@ function Build-BinariesAndNuGet {
         [String]$OutputDir
     )
 
-    $BuildDir32 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $BuildToolset -Platform "Win32" -DynamicLibraryLinkage $DynamicLibraryLinkage `
-        -DynamicCRTLinkage $DynamicCRTLinkage
-    $BuildDir64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $BuildToolset -Platform "x64"   -DynamicLibraryLinkage $DynamicLibraryLinkage `
-        -DynamicCRTLinkage $DynamicCRTLinkage
-    $BuildDirArm64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $BuildToolset -Platform "ARM64" -DynamicLibraryLinkage $DynamicLibraryLinkage `
-        -DynamicCRTLinkage $DynamicCRTLinkage
+    $BuildDir32 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset (Get-BuildToolset $BuildToolset "Win32") -Platform "Win32" `
+        -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage
+    $BuildDir64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset (Get-BuildToolset $BuildToolset "x64") -Platform "x64" `
+        -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage
+    $BuildDirArm64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset (Get-BuildToolset $BuildToolset "ARM64") -Platform "ARM64" `
+        -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage
     Build-NuGet -BuildDir32 $BuildDir32 -BuildDir64 $BuildDir64 -BuildDirArm64 $BuildDirArm64 -ToolsetName $ToolsetName -BuildToolset $BuildToolset `
         -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage -OutputDir $OutputDir | Out-Null
 }
