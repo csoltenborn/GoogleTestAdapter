@@ -321,22 +321,30 @@ function Build-NuGet {
 
 <#
 .SYNOPSIS
-Whether the compilers of the build toolset are installed for the platform: VS 2026 installations may contain the v143
-build tools (MSVC 14.3x and 14.4x) for some platforms only, or not at all (e.g. GitHub's VS 2026 runner images lack them
-for ARM64, or completely on ARM64 Windows). Other toolsets, and environments without VCINSTALLDIR, are assumed to be
-complete.
+Whether the build toolset can build for the platform: VS 2026 installations may contain the v143 build tools for some
+platforms only, or not at all (e.g. GitHub's VS 2026 runner images lack them for ARM64, or completely on ARM64
+Windows), and contain files of the toolset even then. CMake is thus asked to configure a trivial C++ project, which
+fails like the build would (MSB8020); results are cached.
 #>
+$BuildToolsAvailable = @{}
 function Test-BuildTools {
     param(
         [String]$BuildToolset,
         [String]$Platform
     )
 
-    if ($BuildToolset -ne "v143" -or !$env:VCINSTALLDIR) { return $true }
-
-    $TargetDirectory = @{ "Win32" = "x86"; "x64" = "x64"; "ARM64" = "arm64" }[$Platform]
-    $Compilers = @(Get-ChildItem -Path "$env:VCINSTALLDIR\Tools\MSVC\14.[34]*\bin\Host*\$TargetDirectory\cl.exe" -ErrorAction SilentlyContinue)
-    return $Compilers.Count -gt 0
+    $Key = "$BuildToolset.$Platform"
+    if (!$BuildToolsAvailable.ContainsKey($Key)) {
+        $Dir = "$pwd\Intermediate\probe.$Key"
+        if (Test-Path $Dir) { Remove-Item -Recurse -Path $Dir }
+        New-Item -ItemType Directory -Path $Dir | Out-Null
+        Set-Content -Path "$Dir\CMakeLists.txt" -Value "cmake_minimum_required(VERSION 3.15)`nproject(probe CXX)"
+        # via cmd, since PowerShell turns output of native commands to stderr into errors
+        cmd /c "cmake -G `"$(Get-CMakeGenerator)`" -T $BuildToolset -A $Platform -S `"$Dir`" -B `"$Dir\build`" >nul 2>&1"
+        $BuildToolsAvailable[$Key] = $LASTEXITCODE -eq 0
+        Write-Host "Build tools of $BuildToolset for $($Platform): $(if ($BuildToolsAvailable[$Key]) { 'available' } else { 'not available' })"
+    }
+    return $BuildToolsAvailable[$Key]
 }
 
 <#

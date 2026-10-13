@@ -105,7 +105,12 @@ jobs:
     # restores the NuGet packages and builds GTA including the sample tests and the VSIX
     - name: Build
       run: |
-        $msbuild = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | Select-Object -First 1
+        # the MSBuild of the machine's architecture: the x86 MSBuild (Bin\MSBuild.exe) uses the 32-bit compilers, which
+        # run out of memory for precompiled headers when emulated on ARM64 (C3859, C1076)
+        $architecture = if ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -eq 'Arm64') { 'arm64' } else { 'amd64' }
+        $msbuild = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\$architecture\MSBuild.exe" | Select-Object -First 1
+        if (!$msbuild) { throw "MSBuild for $architecture not found" }
+        Write-Output "Using $msbuild"
         & $msbuild GoogleTestAdapter\GoogleTestAdapter.sln -restore -p:RestorePackagesConfig=true -p:Configuration=Release "-p:Platform=Any CPU" -m -verbosity:minimal -nologo
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
