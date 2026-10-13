@@ -8,8 +8,8 @@ describes the code base as it was before the fork.
 
 ## Status (October 2026)
 
-* Version **0.19.0** has been published as a pre-release on GitHub. Version **0.20.0** is complete (see
-  `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/0.20.0.md`), but has not been tagged or published yet.
+* Versions **0.19.0** and **0.20.0** have been published as pre-releases on GitHub (see
+  `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/`).
 * Supported: Visual Studio 2017 to 2026, .NET Framework 4.6. Visual Studio 2013/2015 support has been dropped.
 * Known gap: the end-to-end tests (`VsPackage.Tests`, `VsPackage.Tests.Generated`, category `End to end`) compare the
   complete console output of test runs with expected files, which have not been updated for the fork's changes (e.g.
