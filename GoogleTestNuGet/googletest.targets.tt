@@ -27,6 +27,10 @@
       <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And '$(Platform)' == 'x64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And '$(Platform)' == 'x64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And '$(Platform)' == 'ARM64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And '$(Platform)' == 'ARM64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And '$(Platform)' == 'ARM64'">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And '$(Platform)' == 'ARM64' And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Debug\gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86')">$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x86\Release\gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -46,6 +50,14 @@
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest.pdb" />
     <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Debug\gtest_main.pdb" />
   </ItemGroup>
+  <ItemGroup Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And '$(Platform)' == 'ARM64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } #>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest.pdb" />
+    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Debug\gtest_main.pdb" />
+  </ItemGroup>
   <ItemGroup Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And '$(Platform)' == 'x64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>
       <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.dll" />
@@ -53,6 +65,14 @@
     <# } #>
     <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest.pdb" />
     <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\x64\Release\gtest_main.pdb" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Release' And '$(Platform)' == 'ARM64' And '$(Disable-<#= PackageNameDashes #>)' == ''">
+    <# if (ConfigurationType == "dyn") { #>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest.dll" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest_main.dll" Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" />
+    <# } #>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest.pdb" />
+    <ReferenceCopyLocalPaths Condition="'$(<#= PackageNameDashes #>-Disable-gtest_main)' == ''" Include="$(MSBuildThisFileDirectory)..\..\\<#= PathToBinaries #>\arm64\Release\gtest_main.pdb" />
   </ItemGroup>
   <ItemGroup Condition="'$(<#= PackageNameDashes #>-LibraryConfiguration)' == 'Debug' And ('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And '$(Disable-<#= PackageNameDashes #>)' == ''">
     <# if (ConfigurationType == "dyn") { #>

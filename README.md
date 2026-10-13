@@ -9,6 +9,7 @@ Changes compared to the original project:
 
 * **Visual Studio 2022 and 2026**
   * The VSIX can be installed into VS 2022 (17.x) and VS 2026 (18.x); GTA and its sample projects build with the v143/v145 toolsets
+  * Windows on ARM: the VSIX can be installed into the ARM64 versions of VS 2022 and 2026, GTA reads the symbols of test executables also in ARM64 processes (it ships the ARM64 version of the DIA SDK's `msdia140.dll`), and the Google Test NuGet packages and the Google Test project template support platform ARM64
   * GTA requires VS 2017 or later and .NET Framework 4.6; its VS package is an async package built against the VS 2017 SDK, since VS 2022 and later no longer ship the assemblies of older SDKs
   * Updated to Google Test 1.18.0 (including the Google Test NuGet packages, which now require C++17 and support the v143/v145 toolsets; the rt-static packages are now actually built against the static CRT)
   * The sample projects are built against Google Test 1.18.0 as provided by the `ThirdParty/googletest` submodule (instead of fused copies of Google Test 1.7.0 and 1.8.1); support for building against older versions has been dropped

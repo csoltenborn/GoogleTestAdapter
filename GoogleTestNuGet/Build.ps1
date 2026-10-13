@@ -225,6 +225,7 @@ function Build-NuGet {
     param(
         [String]$BuildDir32,
         [String]$BuildDir64,
+        [String]$BuildDirArm64,
         [String]$ToolsetName,
         [String]$BuildToolset,
         [Boolean]$DynamicLibraryLinkage,
@@ -266,6 +267,7 @@ function Build-NuGet {
     $BuildToDestinationPath = @()
     $BuildToDestinationPath += ,@($BuildDir32, "$Dir\$PathToBinaries\x86")
     $BuildToDestinationPath += ,@($BuildDir64, "$Dir\$PathToBinaries\x64")
+    $BuildToDestinationPath += ,@($BuildDirArm64, "$Dir\$PathToBinaries\arm64")
     $BuildToDestinationPath | ForEach-Object {
         $BuildPath = $_[0]
         $DestinationPath = $_[1]
@@ -328,7 +330,9 @@ function Build-BinariesAndNuGet {
         -DynamicCRTLinkage $DynamicCRTLinkage
     $BuildDir64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $BuildToolset -Platform "x64"   -DynamicLibraryLinkage $DynamicLibraryLinkage `
         -DynamicCRTLinkage $DynamicCRTLinkage
-    Build-NuGet -BuildDir32 $BuildDir32 -BuildDir64 $BuildDir64 -ToolsetName $ToolsetName -BuildToolset $BuildToolset `
+    $BuildDirArm64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $BuildToolset -Platform "ARM64" -DynamicLibraryLinkage $DynamicLibraryLinkage `
+        -DynamicCRTLinkage $DynamicCRTLinkage
+    Build-NuGet -BuildDir32 $BuildDir32 -BuildDir64 $BuildDir64 -BuildDirArm64 $BuildDirArm64 -ToolsetName $ToolsetName -BuildToolset $BuildToolset `
         -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage -OutputDir $OutputDir | Out-Null
 }
 

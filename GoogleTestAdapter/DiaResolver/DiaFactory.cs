@@ -4,6 +4,7 @@
 using Microsoft.Dia;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -14,19 +15,27 @@ namespace GoogleTestAdapter.DiaResolver
         private const string DiaDll = "msdia140.dll";
         [ThreadStatic] private static IClassFactory DiaSourceFactory;
 
-        private static readonly string MsdiaDllPath;
+        private static readonly string[] MsdiaDllPaths;
         private static readonly IntPtr MsdiaDll;
 
         static DiaFactory()
         {
-            MsdiaDllPath = Path.Combine(GetAssemblyBaseDir(), Is32Bit() ? "x86" : "x64", DiaDll);
-            MsdiaDll = NativeMethods.LoadLibrary(MsdiaDllPath);
+            // A 64-bit process is an x64 process (also if emulated on ARM64 Windows) or an ARM64 process, which can only
+            // load the DLL of its own architecture (loading the other one fails with ERROR_BAD_EXE_FORMAT).
+            string[] architectures = Is32Bit() ? new[] { "x86" } : new[] { "x64", "arm64" };
+            MsdiaDllPaths = architectures.Select(architecture => Path.Combine(GetAssemblyBaseDir(), architecture, DiaDll)).ToArray();
+            foreach (string msdiaDllPath in MsdiaDllPaths)
+            {
+                MsdiaDll = NativeMethods.LoadLibrary(msdiaDllPath);
+                if (MsdiaDll != IntPtr.Zero)
+                    break;
+            }
         }
 
         public static IDiaDataSource CreateInstance()
         {
             if (MsdiaDll == IntPtr.Zero)
-                throw new Exception($"Cannot load {MsdiaDllPath}.");
+                throw new Exception($"Cannot load {string.Join(" or ", MsdiaDllPaths)}.");
 
             if (DiaSourceFactory == null)
             {

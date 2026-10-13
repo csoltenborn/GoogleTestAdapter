@@ -13,7 +13,8 @@ permissions:
   contents: read
 
 jobs:
-  # builds with Visual Studio 2022 and 2026; releases contain the packages built with VS 2022
+  # builds with Visual Studio 2022 and 2026, and on ARM64 (where the tests run in an ARM64 process, and the x86 and x64
+  # sample tests are emulated); releases contain the packages built with VS 2022
   build:
     strategy:
       fail-fast: false
@@ -23,6 +24,9 @@ jobs:
           runner: windows-2022
         - vs: vs2026
           runner: windows-2025-vs2026
+        - vs: vs2026-arm64
+          runner: windows-11-vs2026-arm
+          test-platform: ARM64
     name: build (${{ matrix.vs }})
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
@@ -92,11 +96,12 @@ jobs:
       run: |
         $vstest = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -find **\TestPlatform\vstest.console.exe | Select-Object -First 1
         $binaries = "out\binaries\GoogleTestAdapter\Release"
+        $platform = if ("${{ matrix.test-platform }}") { "/Platform:${{ matrix.test-platform }}" } else { $null }
         & $vstest "$binaries\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll" `
             "$binaries\Core.Tests\GoogleTestAdapter.Core.Tests.dll" `
             "$binaries\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll" `
             "$binaries\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" `
-            /Parallel /Logger:trx /ResultsDirectory:TestResults
+            /Parallel /Logger:trx /ResultsDirectory:TestResults $platform
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
     - uses: actions/upload-artifact@v7

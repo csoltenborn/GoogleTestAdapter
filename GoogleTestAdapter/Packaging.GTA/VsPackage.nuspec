@@ -30,6 +30,7 @@
 
     <file src="x86\msdia140.dll" target="build\_common\x86\" />
     <file src="x64\msdia140.dll" target="build\_common\x64\" />
+    <file src="arm64\msdia140.dll" target="build\_common\arm64\" />
 
     <file src="LICENSE.txt" target="" />
     <file src="Resources\gtest-logo.png" target="" />

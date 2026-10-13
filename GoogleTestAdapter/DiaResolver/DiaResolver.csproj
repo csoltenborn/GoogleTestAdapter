@@ -87,6 +87,9 @@
     <Content Include="x86\msdia140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="arm64\msdia140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <!-- The DIA SDK is part of Visual Studio's C++ workload: msdia140.dll is copied from the Visual Studio installation
        building the project, and the interop assembly dia2.dll is generated from its type library (both are not under
@@ -97,14 +100,15 @@
     <TlbImpPath Condition="'$(TlbImpPath)' == ''">$(SDK40ToolsPath)TlbImp.exe</TlbImpPath>
   </PropertyGroup>
   <Target Name="PrepareDiaSdk" BeforeTargets="ResolveAssemblyReferences"
-          Inputs="$(DiaSdkDir)bin\msdia140.dll;$(DiaSdkDir)bin\amd64\msdia140.dll"
-          Outputs="$(MSBuildProjectDirectory)\x86\msdia140.dll;$(MSBuildProjectDirectory)\x64\msdia140.dll;$(MSBuildProjectDirectory)\dia2\dia2.dll">
-    <Error Condition="!Exists('$(DiaSdkDir)bin\msdia140.dll') Or !Exists('$(DiaSdkDir)bin\amd64\msdia140.dll')"
+          Inputs="$(DiaSdkDir)bin\msdia140.dll;$(DiaSdkDir)bin\amd64\msdia140.dll;$(DiaSdkDir)bin\arm64\msdia140.dll"
+          Outputs="$(MSBuildProjectDirectory)\x86\msdia140.dll;$(MSBuildProjectDirectory)\x64\msdia140.dll;$(MSBuildProjectDirectory)\arm64\msdia140.dll;$(MSBuildProjectDirectory)\dia2\dia2.dll">
+    <Error Condition="!Exists('$(DiaSdkDir)bin\msdia140.dll') Or !Exists('$(DiaSdkDir)bin\amd64\msdia140.dll') Or !Exists('$(DiaSdkDir)bin\arm64\msdia140.dll')"
            Text="DIA SDK not found at '$(DiaSdkDir)': install Visual Studio's 'Desktop development with C++' workload, or set property DiaSdkDir." />
     <Error Condition="!Exists('$(TlbImpPath)')"
            Text="TlbImp.exe not found at '$(TlbImpPath)': install the .NET Framework developer pack, or set property TlbImpPath." />
     <Copy SourceFiles="$(DiaSdkDir)bin\msdia140.dll" DestinationFolder="$(MSBuildProjectDirectory)\x86" />
     <Copy SourceFiles="$(DiaSdkDir)bin\amd64\msdia140.dll" DestinationFolder="$(MSBuildProjectDirectory)\x64" />
+    <Copy SourceFiles="$(DiaSdkDir)bin\arm64\msdia140.dll" DestinationFolder="$(MSBuildProjectDirectory)\arm64" />
     <Exec Command="&quot;$(TlbImpPath)&quot; &quot;$(DiaSdkDir)bin\msdia140.dll&quot; /out:&quot;$(MSBuildProjectDirectory)\dia2\dia2.dll&quot; /namespace:Microsoft.Dia /nologo /silent" />
     <Touch Files="$(MSBuildProjectDirectory)\dia2\dia2.dll" />
   </Target>

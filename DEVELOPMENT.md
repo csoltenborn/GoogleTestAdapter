@@ -46,9 +46,12 @@ sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`
 
 * NuGet packages (`packages.config`) are restored by Visual Studio or by MSBuild's `-restore` (see below) into
   `NuGetPackages/` (configured in `NuGet.config`).
-* `DiaResolver.csproj` copies `msdia140.dll` from the DIA SDK of the Visual Studio installation building it and
-  generates the interop assembly `dia2.dll` from it (properties `DiaSdkDir` and `TlbImpPath` override the locations).
-  Which `msdia140.dll` is shipped thus depends on the Visual Studio version which first builds the project; both work.
+* `DiaResolver.csproj` copies `msdia140.dll` (x86, x64, and arm64) from the DIA SDK of the Visual Studio installation
+  building it and generates the interop assembly `dia2.dll` from it (properties `DiaSdkDir` and `TlbImpPath` override
+  the locations). Which `msdia140.dll` is shipped thus depends on the Visual Studio version which first builds the
+  project; both work. `DiaFactory` loads the x86 DLL in 32-bit processes, and the x64 or the arm64 DLL in 64-bit
+  processes, whichever loads (an x64 process, also when emulated on ARM64 Windows, can not load the arm64 DLL, and vice
+  versa).
 * The VSIX projects use the VS SDK build tools from NuGet (`Microsoft.VSSDK.BuildTools`, version defined in
   `Common.props`) rather than those of the Visual Studio installation, so builds do not depend on the Visual Studio
   version (VS 2026's installed `CreatePkgDef.exe` misses a dependency and fails).
@@ -96,8 +99,9 @@ runners, locate MSBuild with `vswhere -latest -requires Microsoft.Component.MSBu
 `build_preparation.bat` (which also restores the packages, but asks for license acceptance unless `APPVEYOR` is
 defined) is no longer needed.
 
-**GitHub Actions** (`.github/workflows/build.yml`) builds with VS 2022 (runner `windows-2022`) and VS 2026 (runner
-`windows-2025-vs2026`) for pushes to `master`, pull requests, tags `v*`, and manually. It checks out the repository
+**GitHub Actions** (`.github/workflows/build.yml`) builds with VS 2022 (runner `windows-2022`), VS 2026 (runner
+`windows-2025-vs2026`), and VS 2026 on ARM64 (runner `windows-11-vs2026-arm`, which runs the tests in an ARM64 process
+with `/Platform:ARM64`; the x86 and x64 sample tests are emulated) for pushes to `master`, pull requests, tags `v*`, and manually. It checks out the repository
 including the `ThirdParty/googletest` submodule, stamps the version `<version of VsPackage.nuspec>.<run number>`
 (`SetVersion.ps1`), builds with this command, uploads the VSIX (`GoogleTestAdapter-<version>.vsix`) and NuGet package as
 artifact `packages-<vs2022|vs2026>`, and runs the tests of `DiaResolver.Tests`, `Core.Tests`, `TestAdapter.Tests`, and
