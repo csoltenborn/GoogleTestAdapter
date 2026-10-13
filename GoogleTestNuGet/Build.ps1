@@ -226,6 +226,7 @@ function Build-NuGet {
         [String]$BuildDir32,
         [String]$BuildDir64,
         [String]$BuildDirArm64,
+        [Boolean]$SupportsV143,
         [String]$ToolsetName,
         [String]$BuildToolset,
         [Boolean]$DynamicLibraryLinkage,
@@ -250,6 +251,7 @@ function Build-NuGet {
     $TargetsTTArgs += "/p:PackageNameDashes=`"$PackageNameDashes`""
     $TargetsTTArgs += "/p:PathToBinaries=`"$PathToBinaries`""
     $TargetsTTArgs += "/p:ConfigurationType=`"$(Convert-DynamicLibraryLinkageToString $DynamicLibraryLinkage)`""
+    $TargetsTTArgs += "/p:SupportsV143=`"$($SupportsV143.ToString().ToLower())`""
     $TargetsTTArgs += "/p:OutputFileName=`"$Dir\build\native\$PackageName.targets`""
     $TargetsTTArgs += "googletest.targets.tt.proj"
     Invoke-Executable msbuild $TargetsTTArgs
@@ -339,16 +341,19 @@ function Test-BuildTools {
 
 <#
 .SYNOPSIS
-The toolset to build the binaries for the platform with: the requested toolset if its build tools are installed,
-otherwise the toolset of the Visual Studio installation (the binaries can then not be linked by projects using the
-requested toolset), unless environment variable GOOGLETEST_PACKAGES_REQUIRE_TOOLSET is set (e.g. for builds of
-releases), which makes the build fail instead.
+The toolset to build the binaries for the platform with: the toolset of environment variable
+GOOGLETEST_PACKAGES_TOOLSET if set (e.g. v145 for packages for VS 2026 only); otherwise the requested toolset if its
+build tools are installed, or else the toolset of the Visual Studio installation (the binaries can then not be linked
+by projects using the requested toolset), unless environment variable GOOGLETEST_PACKAGES_REQUIRE_TOOLSET is set (e.g.
+for builds of releases), which makes the build fail instead.
 #>
 function Get-BuildToolset {
     param(
         [String]$BuildToolset,
         [String]$Platform
     )
+
+    if ($env:GOOGLETEST_PACKAGES_TOOLSET) { return $env:GOOGLETEST_PACKAGES_TOOLSET }
 
     if (Test-BuildTools -BuildToolset $BuildToolset -Platform $Platform) { return $BuildToolset }
 
@@ -373,13 +378,17 @@ function Build-BinariesAndNuGet {
         [String]$OutputDir
     )
 
-    $BuildDir32 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset (Get-BuildToolset $BuildToolset "Win32") -Platform "Win32" `
+    $Toolsets = @{}
+    foreach ($Platform in "Win32", "x64", "ARM64") { $Toolsets[$Platform] = Get-BuildToolset $BuildToolset $Platform }
+    $BuildDir32 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $Toolsets["Win32"] -Platform "Win32" `
         -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage
-    $BuildDir64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset (Get-BuildToolset $BuildToolset "x64") -Platform "x64" `
+    $BuildDir64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $Toolsets["x64"] -Platform "x64" `
         -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage
-    $BuildDirArm64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset (Get-BuildToolset $BuildToolset "ARM64") -Platform "ARM64" `
+    $BuildDirArm64 = Build-Binaries -ToolsetName $ToolsetName -BuildToolset $Toolsets["ARM64"] -Platform "ARM64" `
         -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage
-    Build-NuGet -BuildDir32 $BuildDir32 -BuildDir64 $BuildDir64 -BuildDirArm64 $BuildDirArm64 -ToolsetName $ToolsetName -BuildToolset $BuildToolset `
+    # binaries built with v145 can only be linked by v145 projects
+    $SupportsV143 = @($Toolsets.Values | Where-Object { $_ -ne "v143" }).Count -eq 0
+    Build-NuGet -BuildDir32 $BuildDir32 -BuildDir64 $BuildDir64 -BuildDirArm64 $BuildDirArm64 -SupportsV143 $SupportsV143 -ToolsetName $ToolsetName -BuildToolset $BuildToolset `
         -DynamicLibraryLinkage $DynamicLibraryLinkage -DynamicCRTLinkage $DynamicCRTLinkage -OutputDir $OutputDir | Out-Null
 }
 

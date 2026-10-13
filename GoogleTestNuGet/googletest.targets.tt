@@ -4,8 +4,14 @@
 <#@ parameter type="System.String" name="PackageNameDashes" #>
 <#@ parameter type="System.String" name="PathToBinaries" #>
 <#@ parameter type="System.String" name="ConfigurationType" #>
+<#@ parameter type="System.String" name="SupportsV143" #>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- binaries built with v145 can not be linked by v143 projects -->
+<# if (SupportsV143 == "true") { #>
   <PropertyGroup Condition="'$(Force-Enable-<#= PackageNameDashes #>)' == '' And (('$(PlatformToolset)' != 'v143' And '$(PlatformToolset)' != 'v145') Or '$(ApplicationType)' != '')">
+<# } else { #>
+  <PropertyGroup Condition="'$(Force-Enable-<#= PackageNameDashes #>)' == '' And ('$(PlatformToolset)' != 'v145' Or '$(ApplicationType)' != '')">
+<# } #>
     <Disable-<#= PackageNameDashes #>>true</Disable-<#= PackageNameDashes #>>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Force-Disable-<#= PackageNameDashes #>)' != ''">

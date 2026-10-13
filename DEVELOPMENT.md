@@ -68,7 +68,10 @@ sample tests), and the .NET Framework 4.6+ developer pack (provides `TlbImp.exe`
   clean checkouts and in CI); delete them to rebuild them, e.g. after updating Google Test. Their binaries (x86, x64, and ARM64)
   are built with the v143 toolset, so that VS 2022 projects can link them; where its build tools are missing for a
   platform (GitHub's VS 2026 images), `Build.ps1` uses v145 instead and says so, unless environment variable
-  `GOOGLETEST_PACKAGES_REQUIRE_TOOLSET` is set (the CI job whose packages are released sets it). The templates have their
+  `GOOGLETEST_PACKAGES_REQUIRE_TOOLSET` is set (the CI job building the v143 packages for releases sets it). Environment
+  variable `GOOGLETEST_PACKAGES_TOOLSET` builds all binaries with the given toolset (v145 for the VS 2026 variants of
+  the VSIX); packages containing binaries not built with v143 are only enabled for v145 projects (parameter
+  `SupportsV143` of `googletest.targets.tt`). The templates have their
   own `TemplateID`s, so they do not replace Microsoft's templates if TAfGT is installed.
 * Configuration `Any CPU` of `GoogleTestAdapter.sln` also builds the sample tests (project `SampleTestsBuilder` builds
   `SampleTests/SampleTests.sln` for Debug and Release, Win32 and x64); GTA's tests use the binaries in
@@ -104,7 +107,11 @@ defined) is no longer needed.
 
 **GitHub Actions** (`.github/workflows/build.yml`) builds with VS 2022 (runner `windows-2022`), VS 2026 (runner
 `windows-2025-vs2026`), and VS 2026 on ARM64 (runner `windows-11-vs2026-arm`, which runs the tests in an ARM64 process
-with `/Platform:ARM64`; the x86 and x64 sample tests are emulated) for pushes to `master`, pull requests, tags `v*`, and manually. It checks out the repository
+with `/Platform:ARM64`; the x86 and x64 sample tests are emulated). Each job provides a variant of the VSIX
+(see the comment of the workflow's matrix): the VS 2022 one for VS 2017-2026 with Google Test packages built with v143,
+and the VS 2026 ones restricted to VS 2026 (step "Restrict VSIX to VS 2026") with packages built with v145; releases
+contain all three, GTA's NuGet package, and the Google Test packages of both toolsets as zip files. The workflow runs
+for pushes to `master`, pull requests, tags `v*`, and manually. It checks out the repository
 including the `ThirdParty/googletest` submodule, stamps the version `<version of VsPackage.nuspec>.<run number>`
 (`SetVersion.ps1`), builds with this command, uploads the VSIX (`GoogleTestAdapter-<version>.vsix`) and NuGet package as
 artifact `packages-<vs2022|vs2026>`, and runs the tests of `DiaResolver.Tests`, `Core.Tests`, `TestAdapter.Tests`, and

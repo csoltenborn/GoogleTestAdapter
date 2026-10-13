@@ -13,10 +13,15 @@ permissions:
   contents: read
 
 jobs:
-  # builds with Visual Studio 2022 and 2026, and on ARM64 (where the tests run in an ARM64 process, and the x86 and x64
-  # sample tests are emulated); releases contain the packages built with VS 2022. The Google Test NuGet packages are
-  # built with the v143 toolset, which the VS 2026 images lack for some (or all) platforms; GoogleTestNuGet\Build.ps1
-  # then uses v145, which is not acceptable for the released packages (require-toolset).
+  # Builds with Visual Studio 2022 and 2026, and on ARM64 (where the tests run in an ARM64 process, and the x86 and x64
+  # sample tests are emulated). Each build provides a variant of the VSIX, whose project template installs the Google
+  # Test NuGet packages built by that job:
+  # - vs2022: GoogleTestAdapter-<version>.vsix for VS 2017 to 2026, packages built with v143 (which VS 2022 and 2026
+  #   projects can link; require-toolset makes the build fail if the v143 build tools are missing for a platform)
+  # - vs2026, vs2026-arm64: GoogleTestAdapter-<version>-vs2026[-arm64].vsix for VS 2026 only, packages built with v145
+  #   (which only VS 2026 projects can link)
+  # Releases contain the three VSIX files, GTA's NuGet package (of the vs2022 build), and the Google Test NuGet packages
+  # of each toolset as GoogleTestNuGetPackages-<Google Test version>-<toolset>.zip.
   build:
     strategy:
       fail-fast: false
@@ -25,16 +30,26 @@ jobs:
         - vs: vs2022
           runner: windows-2022
           require-toolset: true
+          googletest-packages: v143
+          gta-package: true
         - vs: vs2026
           runner: windows-2025-vs2026
+          packages-toolset: v145
+          googletest-packages: v145
+          vsix-suffix: -vs2026
+          vs2026-only: true
         - vs: vs2026-arm64
           runner: windows-11-vs2026-arm
           test-platform: ARM64
+          packages-toolset: v145
+          vsix-suffix: -vs2026-arm64
+          vs2026-only: true
     name: build (${{ matrix.vs }})
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
     env:
       GOOGLETEST_PACKAGES_REQUIRE_TOOLSET: ${{ matrix.require-toolset }}
+      GOOGLETEST_PACKAGES_TOOLSET: ${{ matrix.packages-toolset }}
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -70,6 +85,18 @@ jobs:
       working-directory: GoogleTestAdapter
       run: .\SetVersion.ps1 -version ${{ steps.version.outputs.build_version }}
 
+    # the project template of the VS 2026 variants installs packages which only VS 2026 projects can link
+    - name: Restrict VSIX to VS 2026
+      if: matrix.vs2026-only
+      run: |
+        $manifest = "GoogleTestAdapter\Packaging.GTA\source.extension.vsixmanifest"
+        $content = Get-Content $manifest -Raw
+        $content = $content -replace '(?s)\s*<InstallationTarget Version="\[15\.0,17\.0\)"[^>]*/>', ''
+        $content = $content -replace 'Version="\[17\.0,19\.0\)"', 'Version="[18.0,19.0)"'
+        if ($content -match '15\.0,17\.0|17\.0,19\.0') { throw "Could not restrict the installation targets of $manifest" }
+        Set-Content $manifest $content -NoNewline
+        Select-String -Path $manifest -Pattern 'InstallationTarget '
+
     # measures speed-up of parallel test execution, which is unreliable on CI machines
     - name: Ignore timing-sensitive tests
       working-directory: GoogleTestAdapter\TestAdapter.Tests
@@ -86,8 +113,17 @@ jobs:
       run: |
         $packaging = "out\binaries\GoogleTestAdapter\Release\Packaging.GTA"
         New-Item -ItemType Directory packages | Out-Null
-        Copy-Item "$packaging\Packaging.GTA.vsix" "packages\GoogleTestAdapter-${{ steps.version.outputs.version }}.vsix"
-        Copy-Item "$packaging\GoogleTestAdapter.${{ steps.version.outputs.version }}.nupkg" packages
+        Copy-Item "$packaging\Packaging.GTA.vsix" "packages\GoogleTestAdapter-${{ steps.version.outputs.version }}${{ matrix.vsix-suffix }}.vsix"
+        if ("${{ matrix.gta-package }}") {
+            Copy-Item "$packaging\GoogleTestAdapter.${{ steps.version.outputs.version }}.nupkg" packages
+        }
+        if ("${{ matrix.googletest-packages }}") {
+            $googleTestPackages = @(Get-ChildItem GoogleTestAdapter\Packages\Microsoft.googletest.*.nupkg)
+            if ($googleTestPackages.Count -ne 3) { throw "Expected 3 Google Test NuGet packages, found $($googleTestPackages.Count)" }
+            $googleTestVersion = [regex]::Match($googleTestPackages[0].Name, '\.(\d+\.\d+\.\d+)\.nupkg$').Groups[1].Value
+            Compress-Archive -Path $googleTestPackages.FullName -DestinationPath "packages\GoogleTestNuGetPackages-$googleTestVersion-${{ matrix.googletest-packages }}.zip"
+        }
+        Get-ChildItem packages | ForEach-Object { Write-Output $_.Name }
 
     - uses: actions/upload-artifact@v7
       with:
@@ -128,7 +164,8 @@ jobs:
 
     - uses: actions/download-artifact@v8
       with:
-        name: packages-vs2022
+        pattern: packages-*
+        merge-multiple: true
         path: packages
 
     - name: Create draft release
