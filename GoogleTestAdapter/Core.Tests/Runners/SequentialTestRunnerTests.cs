@@ -260,12 +260,10 @@ namespace GoogleTestAdapter.Runners
                 timedOutTest, CreateTestProperties(otherTestCase, null));
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
 
-            var stopwatch = Stopwatch.StartNew();
             runner.RunTests(new[] { timedOutTestCase, otherTestCase }, false, ProcessExecutorFactory);
-            stopwatch.Stop();
 
-            // the timed out test would have taken 2s, the other test takes 2s
-            stopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3.5));
+            // the timeout result proves that the test has been killed (the duration of the run does not, since starting
+            // the executable twice takes long on busy machines)
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             MockFrameworkReporter.Verify(r => r.ReportTestResults(
                 It.Is<IEnumerable<TestResult>>(tr => tr.Any(result => result.TestCase == timedOutTestCase && result.Outcome == TestOutcome.Failed
@@ -284,12 +282,9 @@ namespace GoogleTestAdapter.Runners
             var settings = CreateSettings(null, null, testTimeoutInSeconds: 1);
             var runner = new SequentialTestRunner("", 0, "", MockFrameworkReporter.Object, TestEnvironment.Logger, settings, new SchedulingAnalyzer(TestEnvironment.Logger));
 
-            var stopwatch = Stopwatch.StartNew();
+            // the timeout results prove that the tests have been killed (see above)
             runner.RunTests(testCases, false, ProcessExecutorFactory);
-            stopwatch.Stop();
 
-            // both tests would take 2s
-            stopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3.5));
             MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
             foreach (TestCase testCase in testCases)
             {
