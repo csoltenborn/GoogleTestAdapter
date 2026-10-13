@@ -8,8 +8,8 @@ describes the code base as it was before the fork.
 
 ## Status (October 2026)
 
-* Version **0.19.0** is complete (see `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/0.19.0.md`), but has not
-  been tagged or published yet.
+* Version **0.19.0** has been published as a pre-release on GitHub. Version **0.20.0** is complete (see
+  `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/0.20.0.md`), but has not been tagged or published yet.
 * Supported: Visual Studio 2017 to 2026, .NET Framework 4.6. Visual Studio 2013/2015 support has been dropped.
 * Known gap: the end-to-end tests (`VsPackage.Tests`, `VsPackage.Tests.Generated`, category `End to end`) compare the
   complete console output of test runs with expected files, which have not been updated for the fork's changes (e.g.
@@ -22,7 +22,10 @@ describes the code base as it was before the fork.
     already grouped automatically).
 * Deliberately not pursued: an execution wrapper (no use case left: VS's code coverage works, Dr. Memory is
   abandoned), WSL/Linux test executables (GTA only handles Windows PE executables; VS's CMake/CTest integration covers
-  WSL), upstream issues #102 (data-driven tests), #155 (tests in DLLs), and #328 (VS 2019 hang, not reproducible).
+  WSL), upstream issues #102 (data-driven tests), #155 (tests in DLLs), and #328 (VS 2019 hang, not reproducible), and
+  `ITestExecutor2.ShouldAttachToTestHost` (which would stop VS attaching its debugger to `testhost.exe`, but exists only
+  since a VS 2019 update, while the test platform's assembly version is 15.0.0.0 since VS 2017: implementing it would
+  break GTA in VS 2017 and early VS 2019).
 
 ## Repository layout
 
@@ -139,7 +142,7 @@ cd out/binaries/GoogleTestAdapter/Release
     VsPackage.GTA.Tests.Unit/GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll //Parallel
 ```
 
-* As of 0.19.0, all 701 tests pass. Run the suite more than once after changes affecting timing or files: the test
+* As of 0.20.0, all 701 tests pass. Run the suite more than once after changes affecting timing or files: the test
   assemblies run in parallel and share the sample binaries, so tests must never rename or modify sample files (one
   test renaming a sample's .pdb was flaky for exactly this reason).
 * VS 2026's `vstest.console.exe` (`.../18/Professional/...`) runs the tests as well.
@@ -158,10 +161,10 @@ cd out/binaries/GoogleTestAdapter/Release
 2. Stamp the version for the build, build, and revert the stamp:
    ```bash
    cd GoogleTestAdapter
-   powershell -NoProfile -ExecutionPolicy Bypass -File SetVersion.ps1 0.19.0.0
+   powershell -NoProfile -ExecutionPolicy Bypass -File SetVersion.ps1 0.20.0.0
    # build as above
    git checkout -- '*/Properties/AssemblyInfo.cs' Packaging.TAfGT/source.extension.vsixmanifest ProjectTemplates/Test/GoogleTest/GoogleTest.vstemplate
-   sed -i 's#Version="0.19.0.0" Language#Version="0.1.0.0" Language#' Packaging.GTA/source.extension.vsixmanifest
+   sed -i 's#Version="0.20.0.0" Language#Version="0.1.0.0" Language#' Packaging.GTA/source.extension.vsixmanifest
    ```
    The GTA vsixmanifest has intentional changes, so only its version is reverted.
 3. The VSIX and NuGet package are `out/binaries/GoogleTestAdapter/Release/Packaging.GTA/Packaging.GTA.vsix` and
