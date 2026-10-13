@@ -77,6 +77,16 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
         }
         private bool _tearDownTestSuiteTestCases = SettingsWrapper.OptionTearDownTestSuiteTestCasesDefaultValue;
 
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionAdditionalTestDiscoveryParams)]
+        [Description(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDescription)]
+        public string AdditionalTestDiscoveryParams
+        {
+            get => _additionalTestDiscoveryParams;
+            set => SetAndNotify(ref _additionalTestDiscoveryParams, value);
+        }
+        private string _additionalTestDiscoveryParams = SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue;
+
         #endregion
 
         #region Traits

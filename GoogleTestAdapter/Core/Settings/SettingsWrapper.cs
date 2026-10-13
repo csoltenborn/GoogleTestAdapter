@@ -513,7 +513,7 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
         public const string OptionAdditionalTestExecutionParamsDescription =
-            "Additional parameters for Google Test executable during test execution. " + PlaceholderReplacer.AdditionalTestExecutionParamPlaceholders;
+            "Additional parameters for Google Test executable during test execution, and during test discovery unless option '" + OptionAdditionalTestDiscoveryParams + "' is set. " + PlaceholderReplacer.AdditionalTestExecutionParamPlaceholders;
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
 
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
@@ -522,9 +522,17 @@ namespace GoogleTestAdapter.Settings
             => _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForExecution(
                 AdditionalTestExecutionParam, executable, testDirectory, threadId);
 
+        public const string OptionAdditionalTestDiscoveryParams = "Additional test discovery parameters";
+        public const string OptionAdditionalTestDiscoveryParamsDescription =
+            "Additional parameters for Google Test executable during test discovery (i.e. together with --gtest_list_tests). If empty, the parameters of option '" + OptionAdditionalTestExecutionParams + "' are used. " + PlaceholderReplacer.AdditionalTestDiscoveryParamPlaceholders;
+        public const string OptionAdditionalTestDiscoveryParamsDefaultValue = "";
+
+        public virtual string AdditionalTestDiscoveryParam => _currentSettings.AdditionalTestDiscoveryParam ?? OptionAdditionalTestDiscoveryParamsDefaultValue;
+
         public string GetUserParametersForDiscovery(string executable)
-            => _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(
-                AdditionalTestExecutionParam, executable);
+            => string.IsNullOrEmpty(AdditionalTestDiscoveryParam)
+                ? _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(AdditionalTestExecutionParam, executable)
+                : _placeholderReplacer.ReplaceAdditionalTestDiscoveryParamPlaceholders(AdditionalTestDiscoveryParam, executable);
 
 
         public const string OptionBatchForTestSetup = "Test setup batch file";

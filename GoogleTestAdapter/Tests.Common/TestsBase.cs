@@ -92,6 +92,8 @@ namespace GoogleTestAdapter.Tests.Common
                 .Returns(SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue);
             mockOptions.Setup(o => o.AdditionalTestExecutionParam)
                 .Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
+            mockOptions.Setup(o => o.AdditionalTestDiscoveryParam)
+                .Returns(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue);
             mockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);
             mockOptions.Setup(o => o.BatchForTestTeardown).Returns(SettingsWrapper.OptionBatchForTestTeardownDefaultValue);
             mockOptions.Setup(o => o.ParallelTestExecution)

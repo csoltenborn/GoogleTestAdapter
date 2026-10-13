@@ -122,6 +122,26 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetUserParametersForDiscovery_NoDiscoveryParameters_ExecutionParametersAreUsed()
+        {
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-execution " + PlaceholderReplacer.ExecutablePlaceholder + " " + PlaceholderReplacer.TestDirPlaceholder);
+
+            TheOptions.GetUserParametersForDiscovery("SomeExecutable.exe").Should().Be("-execution SomeExecutable.exe ");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetUserParametersForDiscovery_DiscoveryParameters_DiscoveryParametersAreUsed()
+        {
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-execution");
+            MockXmlOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-discovery " + PlaceholderReplacer.ExecutablePlaceholder);
+
+            TheOptions.GetUserParametersForDiscovery("SomeExecutable.exe").Should().Be("-discovery SomeExecutable.exe");
+            TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0).Should().Be("-execution");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void CatchExceptions__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.CatchExceptions).Returns((bool?)null);

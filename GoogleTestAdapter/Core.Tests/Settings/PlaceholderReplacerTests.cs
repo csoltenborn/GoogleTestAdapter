@@ -43,6 +43,7 @@ namespace GoogleTestAdapter.Settings
             nameof(PlaceholderReplacer.ReplaceAdditionalPdbsPlaceholders),
             nameof(PlaceholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery),
             nameof(PlaceholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForExecution),
+            nameof(PlaceholderReplacer.ReplaceAdditionalTestDiscoveryParamPlaceholders),
             nameof(PlaceholderReplacer.ReplaceSetupBatchPlaceholders),
             nameof(PlaceholderReplacer.ReplaceTeardownBatchPlaceholders),
             nameof(PlaceholderReplacer.ReplacePathExtensionPlaceholders),
@@ -66,11 +67,13 @@ namespace GoogleTestAdapter.Settings
         {
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceAdditionalPdbsPlaceholders), PlaceholderReplacer.TestDirPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery), PlaceholderReplacer.TestDirPlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceAdditionalTestDiscoveryParamPlaceholders), PlaceholderReplacer.TestDirPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplacePathExtensionPlaceholders), PlaceholderReplacer.TestDirPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery), PlaceholderReplacer.TestDirPlaceholder),
 
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceAdditionalPdbsPlaceholders), PlaceholderReplacer.ThreadIdPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery), PlaceholderReplacer.ThreadIdPlaceholder),
+            new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceAdditionalTestDiscoveryParamPlaceholders), PlaceholderReplacer.ThreadIdPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplacePathExtensionPlaceholders), PlaceholderReplacer.ThreadIdPlaceholder),
             new MethodnameAndPlaceholder(nameof(PlaceholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery), PlaceholderReplacer.ThreadIdPlaceholder),
 

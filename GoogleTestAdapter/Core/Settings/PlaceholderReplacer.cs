@@ -205,16 +205,34 @@ namespace GoogleTestAdapter.Settings
 
         public string ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(string additionalTestExecutionParam, string executable)
         {
-            additionalTestExecutionParam = ReplaceExecutablePlaceholders(additionalTestExecutionParam, executable);
             additionalTestExecutionParam = RemoveTestDirAndThreadIdPlaceholders(additionalTestExecutionParam);
-            additionalTestExecutionParam = ReplacePlatformAndConfigurationPlaceholders(additionalTestExecutionParam, executable);
-            additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam, executable);
-            additionalTestExecutionParam = ReplaceEnvironmentVariables(additionalTestExecutionParam);
-            additionalTestExecutionParam = ReplaceHelperFileSettings(additionalTestExecutionParam, executable);
+            return ReplaceDiscoveryParamPlaceholders(additionalTestExecutionParam, executable, SettingsWrapper.OptionAdditionalTestExecutionParams);
+        }
 
-            CheckForRemainingPlaceholders(additionalTestExecutionParam, SettingsWrapper.OptionAdditionalTestExecutionParams);
+        public const string AdditionalTestDiscoveryParamPlaceholders = "Placeholders:\n" +
+                                                                       DescriptionOfSolutionDirPlaceHolder + "\n" +
+                                                                       DescriptionOfPlatformNamePlaceholder + "\n" +
+                                                                       DescriptionOfConfigurationNamePlaceholder + "\n" +
+                                                                       DescriptionOfExecutableDirPlaceHolder + "\n" +
+                                                                       DescriptionOfExecutablePlaceHolder + "\n" +
+                                                                       DescriptionOfEnvVarPlaceholders;
 
-            return additionalTestExecutionParam;
+        public string ReplaceAdditionalTestDiscoveryParamPlaceholders(string additionalTestDiscoveryParam, string executable)
+        {
+            return ReplaceDiscoveryParamPlaceholders(additionalTestDiscoveryParam, executable, SettingsWrapper.OptionAdditionalTestDiscoveryParams);
+        }
+
+        private string ReplaceDiscoveryParamPlaceholders(string parameters, string executable, string optionName)
+        {
+            parameters = ReplaceExecutablePlaceholders(parameters, executable);
+            parameters = ReplacePlatformAndConfigurationPlaceholders(parameters, executable);
+            parameters = ReplaceSolutionDirPlaceholder(parameters, executable);
+            parameters = ReplaceEnvironmentVariables(parameters);
+            parameters = ReplaceHelperFileSettings(parameters, executable);
+
+            CheckForRemainingPlaceholders(parameters, optionName);
+
+            return parameters;
         }
 
         public string ReplaceAdditionalTestExecutionParamPlaceholdersForExecution(string additionalTestExecutionParam, string executable, string testDirectory, int threadId)
