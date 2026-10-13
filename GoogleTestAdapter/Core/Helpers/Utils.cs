@@ -33,7 +33,7 @@ namespace GoogleTestAdapter.Helpers
         {
             try
             {
-                Directory.Delete(directory, true);
+                RetryWhileInUse(() => Directory.Delete(directory, true));
                 errorMessage = null;
                 return true;
             }
@@ -41,6 +41,30 @@ namespace GoogleTestAdapter.Helpers
             {
                 errorMessage = e.Message;
                 return false;
+            }
+        }
+
+        public static void DeleteFile(string file)
+        {
+            RetryWhileInUse(() => File.Delete(file));
+        }
+
+        // Executables can not be deleted for a moment after their process has exited, e.g. if they have been run by
+        // the x86 or x64 emulation of ARM64 Windows, which translates and caches them in the background.
+        private static void RetryWhileInUse(Action action)
+        {
+            const int maxAttempts = 15;
+            for (int attempt = 1; ; attempt++)
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (Exception e) when ((e is IOException || e is UnauthorizedAccessException) && attempt < maxAttempts)
+                {
+                    Thread.Sleep(200);
+                }
             }
         }
 

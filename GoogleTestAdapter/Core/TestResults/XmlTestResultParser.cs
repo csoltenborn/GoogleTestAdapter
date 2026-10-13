@@ -139,9 +139,9 @@ namespace GoogleTestAdapter.TestResults
         }
 
         // Google Test reports failures of SetUpTestSuite() and TearDownTestSuite() as test cases without name. The tests
-        // of a suite whose SetUpTestSuite() has failed are skipped without having been started (timestamp 1970), the
-        // first nameless failure is then the one of SetUpTestSuite(); other nameless failures are the ones of
-        // TearDownTestSuite().
+        // of a suite whose SetUpTestSuite() has failed are skipped without having been started (timestamp 0, written in
+        // local time, i.e. e.g. 1969-12-31T16:00:00 west of UTC), the first nameless failure is then the one of
+        // SetUpTestSuite(); other nameless failures are the ones of TearDownTestSuite().
         private List<TestResult> WithTestSuiteFixtureResults(XmlNode testsuiteNode, XmlNodeList testcaseNodes, List<TestResult> suiteResults)
         {
             string suite = testsuiteNode.Attributes?["name"]?.InnerText;
@@ -156,8 +156,7 @@ namespace GoogleTestAdapter.TestResults
                 .ToList();
 
             bool isSetUpTestSuiteFailed = fixtureFailures.Any() && tests.Any() && tests.All(node =>
-                node.Attributes["result"]?.InnerText == "skipped" &&
-                (node.Attributes["timestamp"]?.InnerText ?? "").StartsWith("1970-", StringComparison.Ordinal));
+                node.Attributes["result"]?.InnerText == "skipped" && IsNotStarted(node));
             if (isSetUpTestSuiteFailed)
             {
                 var parser = new ErrorMessageParser(fixtureFailures[0].SelectNodes("failure"), TestSuiteFixtureResults.GetSetUpTestSuiteName(suite), _sourcePathMapper);
@@ -185,6 +184,13 @@ namespace GoogleTestAdapter.TestResults
             }
 
             return suiteResults;
+        }
+
+        private static bool IsNotStarted(XmlNode testcaseNode)
+        {
+            string timestamp = testcaseNode.Attributes?["timestamp"]?.InnerText;
+            return DateTime.TryParse(timestamp, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime time)
+                   && time.Year <= 1970;
         }
 
         private TestResult TryParseTestResult(XmlNode testcaseNode)

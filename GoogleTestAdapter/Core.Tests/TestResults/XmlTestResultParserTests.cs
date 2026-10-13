@@ -19,6 +19,56 @@ namespace GoogleTestAdapter.TestResults
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetTestResults_FailingSetUpTestSuiteWestOfUtc_TestsFailAndTearDownTestSuiteTestCasePasses()
+        {
+            // Google Test writes the timestamp of tests which have not been started (0) in local time
+            const string xml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<testsuites tests=""2"" failures=""0"" disabled=""0"" errors=""0"" time=""0."" timestamp=""2026-10-13T02:43:21.000"" name=""AllTests"">
+  <testsuite name=""FailingSetUp"" tests=""2"" failures=""0"" disabled=""0"" skipped=""2"" errors=""0"" time=""0."" timestamp=""2026-10-13T02:43:21.000"">
+    <testcase name=""First"" file=""C:\tests\fixtures.cpp"" line=""7"" status=""run"" result=""skipped"" time=""0."" timestamp=""1969-12-31T16:00:00.000"" classname=""FailingSetUp"">
+      <skipped message=""C:\tests\fixtures.cpp:7&#x0A;""><![CDATA[C:\tests\fixtures.cpp:7
+]]></skipped>
+    </testcase>
+    <testcase name=""Second"" file=""C:\tests\fixtures.cpp"" line=""8"" status=""run"" result=""skipped"" time=""0."" timestamp=""1969-12-31T16:00:00.000"" classname=""FailingSetUp"">
+      <skipped message=""C:\tests\fixtures.cpp:8&#x0A;""><![CDATA[C:\tests\fixtures.cpp:8
+]]></skipped>
+    </testcase>
+    <testcase name="""" status=""run"" result=""completed"" classname="""" time=""0."" timestamp=""1969-12-31T16:00:00.000"">
+      <failure message=""C:\tests\fixtures.cpp:5&#x0A;Failed&#x0A;setup failed&#x0A;"" type=""""><![CDATA[C:\tests\fixtures.cpp:5
+Failed
+setup failed
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>";
+            string xmlFile = Path.GetTempFileName();
+            try
+            {
+                File.WriteAllText(xmlFile, xml);
+                List<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("FailingSetUp.First", "FailingSetUp.Second").ToList();
+                Model.TestCase tearDownTestCase = TestDataCreator.ToTestCase("FailingSetUp.TearDownTestSuite");
+                tearDownTestCase.Properties.Add(new Model.TestCaseMetaDataProperty(2, 2, isTearDownTestSuite: true));
+                testCases.Add(tearDownTestCase);
+
+                List<Model.TestResult> results = new XmlTestResultParser(testCases, "someexecutable", xmlFile, TestEnvironment.Logger).GetTestResults();
+
+                results.Should().HaveCount(3);
+                foreach (string testName in new[] { "FailingSetUp.First", "FailingSetUp.Second" })
+                {
+                    Model.TestResult result = results.Single(r => r.TestCase.FullyQualifiedName == testName);
+                    result.Outcome.Should().Be(Model.TestOutcome.Failed, testName);
+                    result.ErrorMessage.Should().StartWith("SetUpTestSuite() failed:").And.Contain("setup failed");
+                }
+                results.Single(r => r.TestCase.FullyQualifiedName == "FailingSetUp.TearDownTestSuite").Outcome.Should().Be(Model.TestOutcome.Passed);
+            }
+            finally
+            {
+                File.Delete(xmlFile);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void GetTestResults_FileDoesNotExist_WarningAndEmptyResult()
         {
             IEnumerable<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("BarSuite.BazTest1", "FooSuite.BarTest",

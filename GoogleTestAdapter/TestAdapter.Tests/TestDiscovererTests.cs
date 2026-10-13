@@ -97,7 +97,7 @@ namespace GoogleTestAdapter.TestAdapter
             finally
             {
                 File.Delete(semPath);
-                File.Delete(temp2Exe);
+                Utils.DeleteFile(temp2Exe);
             }
         }
 
@@ -124,7 +124,7 @@ namespace GoogleTestAdapter.TestAdapter
             finally
             {
                 File.Delete(semPath);
-                File.Delete(temp1Exe);
+                Utils.DeleteFile(temp1Exe);
             }
 
             // Verify untrusted exe is not run
@@ -141,7 +141,7 @@ namespace GoogleTestAdapter.TestAdapter
             finally
             {
                 File.Delete(semPath);
-                File.Delete(temp2Exe);
+                Utils.DeleteFile(temp2Exe);
             }
         }
 
