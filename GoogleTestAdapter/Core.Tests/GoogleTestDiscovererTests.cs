@@ -51,7 +51,9 @@ namespace GoogleTestAdapter
             GoogleTestDiscoverer.VerifyExecutableTrust(@"\\gta-nonexisting-host\share\Tests.exe", MockOptions.Object, MockLogger.Object)
                 .Should().BeFalse();
 
-            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains(SettingsWrapper.OptionSkipOriginCheck))), Times.Once);
+            // the executable has not been downloaded, so unblocking it would not help
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains(SettingsWrapper.OptionSkipOriginCheck)
+                && s.Contains("is located on a network drive") && !s.Contains("unblock"))), Times.Once);
         }
 
         [TestMethod]

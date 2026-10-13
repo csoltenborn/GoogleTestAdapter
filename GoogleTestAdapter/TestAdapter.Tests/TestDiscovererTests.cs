@@ -134,7 +134,7 @@ namespace GoogleTestAdapter.TestAdapter
                 MarkUntrusted(temp2Exe);
                 semPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(temp2Exe,
-                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("was blocked to help protect"))),
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("came from another computer and was blocked to help protect"))),
                         Times.Once));
                 semPath.AsFileInfo().Should().NotExist("exe should not have been run");
             }

@@ -172,14 +172,36 @@ namespace GoogleTestAdapter
                 return true;
 
             var zone = Zone.CreateFromUrl(executable);
-            if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
+            if (zone.SecurityZone == System.Security.SecurityZone.MyComputer)
+                return true;
+
+            string skipOriginCheck = $"set option '{SettingsWrapper.OptionSkipOriginCheck}' (Tools/Options/Google Test Adapter/{SettingsWrapper.PageGeneralName}/{SettingsWrapper.CategorySecurityName}; can not be set via settings files)";
+            if (IsOnNetworkDrive(executable))
+            {
+                // wherever the executable has been built: others might replace it
+                logger.LogError($"Executable {executable} is located on a network drive (security zone '{zone.SecurityZone}') and was blocked to help protect this computer. " +
+                                $"If you trust the executable, {skipOriginCheck}, or build it to a local drive.");
+            }
+            else
             {
                 logger.LogError($"Executable {executable} came from another computer and was blocked to help protect this computer. " +
-                                $"If you trust the executable, set option '{SettingsWrapper.OptionSkipOriginCheck}' (Tools/Options/Google Test Adapter/{SettingsWrapper.PageGeneralName}/{SettingsWrapper.CategorySecurityName}; can not be set via settings files) " +
-                                "or, if the executable has been downloaded, unblock it via the file's properties.");
+                                $"If you trust the executable, {skipOriginCheck} or, if the executable has been downloaded, unblock it via the file's properties.");
+            }
+            return false;
+        }
+
+        // UNC paths and mapped network drives (the file itself is not accessed, which might take long for unreachable hosts)
+        private static bool IsOnNetworkDrive(string executable)
+        {
+            try
+            {
+                string root = Path.GetPathRoot(Path.GetFullPath(executable));
+                return root.StartsWith(@"\\", StringComparison.Ordinal) || new DriveInfo(root).DriveType == DriveType.Network;
+            }
+            catch (Exception)
+            {
                 return false;
             }
-            return true;
         }
 
     }
