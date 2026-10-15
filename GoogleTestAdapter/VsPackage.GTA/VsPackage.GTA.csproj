@@ -79,6 +79,7 @@
     <Compile Include="ReleaseNotes\ReleaseNotesDialog.Designer.cs">
       <DependentUpon>ReleaseNotesDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReleaseNotes\ReleaseNotesTheme.cs" />
     <Compile Include="ReleaseNotes\VersionProvider.cs" />
     <Compile Include="ReleaseNotes\History.cs" />
   </ItemGroup>

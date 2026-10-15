@@ -12,6 +12,35 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
     {
         [TestMethod]
         [TestCategory(Unit)]
+        public void CreateHtml_Theme_PageHasColorsOfTheme()
+        {
+            var theme = new ReleaseNotesTheme
+            {
+                Background = System.Drawing.Color.FromArgb(0x1F, 0x1F, 0x1F),
+                Text = System.Drawing.Color.FromArgb(0xF0, 0xF0, 0xF0),
+                Link = System.Drawing.Color.FromArgb(0x33, 0x99, 0xFF)
+            };
+
+            string html = new ReleaseNotesCreator(History.Versions.First(), History.Versions.Last()).CreateHtml(theme);
+
+            html.Should().Contain("content='IE=edge'");
+            html.Should().Contain("body { background-color: #1F1F1F; color: #F0F0F0;");
+            html.Should().Contain("a { color: #3399FF; }");
+            // code is distinguishable from the background (10% of the text color)
+            html.Should().Contain("background-color: #343434; font-family: Consolas");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void CreateHtml_NoTheme_SystemColors()
+        {
+            string html = new ReleaseNotesCreator(History.Versions.First(), History.Versions.Last()).CreateHtml();
+
+            html.Should().Contain($"background-color: {ReleaseNotesTheme.ToCss(System.Drawing.SystemColors.Window)};");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void CreateHtml_MinAndMaxVersions_AllVersionsExceptMin()
         {
             var creator = new ReleaseNotesCreator(History.Versions.First(), History.Versions.Last());

@@ -34,13 +34,17 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
             return releaseNotes;
         }
 
-        public string CreateHtml()
+        /// <param name="theme">the colors of the page, by default the system's</param>
+        public string CreateHtml(ReleaseNotesTheme theme = null)
         {
             string markDown = CreateMarkdown();
             if (string.IsNullOrEmpty(markDown))
                 return "";
 
-            string html = "<!DOCTYPE html><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'><html><body>";
+            // IE=edge: the dialog's Internet Explorer control would otherwise render the page in IE 7 mode
+            string html = "<!DOCTYPE html><html><head><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>" +
+                          "<meta http-equiv='X-UA-Compatible' content='IE=edge'>" +
+                          $"<style>{(theme ?? ReleaseNotesTheme.Default).ToCss()}</style></head><body>";
             html += CommonMarkConverter.Convert(CreateMarkdown());
             html += "</body></html>";
 
@@ -61,7 +65,7 @@ namespace GoogleTestAdapter.VsPackage.ReleaseNotes
                 header += $"The complete version history is listed below. Future updates will only list changes to the formerly installed version.{Environment.NewLine}";
             else
                 header += "The changes to your formerly installed version are listed below. "
-                    + $"A [complete revision history](https://github.com/csoltenborn/GoogleTestAdapter/releases) is available at GitHub.{Environment.NewLine}";
+                    + $"A [complete revision history](https://github.com/snargit/GoogleTestAdapter/releases) is available at GitHub.{Environment.NewLine}";
 
             return header;
         }

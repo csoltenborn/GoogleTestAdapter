@@ -79,16 +79,18 @@ namespace GoogleTestAdapter.VsPackage
 
         private void DisplayReleaseNotesIfNecessary()
         {
-            var thread = new Thread(DisplayReleaseNotesIfNecessaryProc);
+            // the colors of VS's theme are only available on the UI thread, the dialog has its own thread
+            ReleaseNotesTheme theme = ReleaseNotesTheme.FromVisualStudio();
+            var thread = new Thread(() => DisplayReleaseNotesIfNecessaryProc(theme));
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
 
-        private void DisplayReleaseNotesIfNecessaryProc()
+        private void DisplayReleaseNotesIfNecessaryProc(ReleaseNotesTheme theme)
         {
             try
             {
-                TryDisplayReleaseNotesIfNecessary();
+                TryDisplayReleaseNotesIfNecessary(theme);
             }
             catch (Exception e)
             {
@@ -105,7 +107,7 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
-        private void TryDisplayReleaseNotesIfNecessary()
+        private void TryDisplayReleaseNotesIfNecessary(ReleaseNotesTheme theme)
         {
             var versionProvider = new VersionProvider();
 
@@ -117,11 +119,11 @@ namespace GoogleTestAdapter.VsPackage
             if (formerlyInstalledVersion == null || formerlyInstalledVersion < currentVersion)
             {
                 var creator = new ReleaseNotesCreator(formerlyInstalledVersion, currentVersion);
-                DisplayReleaseNotes(creator.CreateHtml());
+                DisplayReleaseNotes(creator.CreateHtml(theme), theme);
             }
         }
 
-        private void DisplayReleaseNotes(string html)
+        private void DisplayReleaseNotes(string html, ReleaseNotesTheme theme)
         {
             string htmlFileBase = Path.GetTempFileName();
             string htmlFile = Path.ChangeExtension(htmlFileBase, "html");
@@ -129,7 +131,7 @@ namespace GoogleTestAdapter.VsPackage
 
             File.WriteAllText(htmlFile, html);
 
-            using (var dialog = new ReleaseNotesDialog
+            using (var dialog = new ReleaseNotesDialog(theme)
             {
                 HtmlFile = new Uri($"file://{htmlFile}")
             })
