@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Xml;
 using System.Xml.XPath;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter;
 using GoogleTestAdapter.TestAdapter.Settings;
@@ -27,6 +28,7 @@ namespace GoogleTestAdapter.VsPackage.Automation
         private readonly Func<RunSettingsService> _runSettingsService;
         private readonly string _name;
         private readonly Version _version;
+        private readonly TestDiscoveryJobs _testDiscoveryJobs = new TestDiscoveryJobs();
 
         /// <param name="runSettingsService">null while the package is not initialized yet</param>
         public GoogleTestAdapterAutomation(Func<RunSettingsService> runSettingsService, string name, Version version)
@@ -100,6 +102,99 @@ namespace GoogleTestAdapter.VsPackage.Automation
             });
         }
 
+        public string StartTestDiscovery(string executable)
+        {
+            return Execute((result, logger) =>
+            {
+                executable = Path.GetFullPath(executable);
+                // the run settings are created on the calling thread, since they depend on the solution's state
+                string runSettings = CreateRunSettings(null, logger);
+                TestDiscoveryJobs.Job job = _testDiscoveryJobs.Start(executable, j => DiscoverTests(j, runSettings));
+                result.Add("discoveryId", job.Id);
+                result.Add("executable", executable);
+            });
+        }
+
+        public string GetTestDiscoveryResult(string discoveryId)
+        {
+            return Execute(result =>
+            {
+                result.Add("discoveryId", discoveryId);
+                TestDiscoveryJobs.Job job = _testDiscoveryJobs.Get(discoveryId);
+                if (job == null)
+                {
+                    result.Add("status", TestDiscoveryJobs.Unknown);
+                    return;
+                }
+
+                string status = job.Status;
+                result.Add("status", status);
+                result.Add("executable", job.Executable);
+                result.Add("durationInSeconds", Math.Round(job.Stopwatch.Elapsed.TotalSeconds, 3));
+                if (status == TestDiscoveryJobs.Completed)
+                    result.Add("tests", job.Tests);
+                result.Add("discoveryMessages", job.Logger.Messages);
+            });
+        }
+
+        // runs on a background thread
+        private bool DiscoverTests(TestDiscoveryJobs.Job job, string runSettings)
+        {
+            ILogger logger = job.Logger;
+            try
+            {
+                bool succeeded = false;
+                ExecuteWithSettings(job.Executable, runSettings, logger, (settings, container) =>
+                {
+                    // the executable is only run if GTA's discovery would run it
+                    ExecutableInfo info = ExecutableInfo.Create(job.Executable, settings, logger);
+                    if (!info.WouldBeDiscovered)
+                    {
+                        logger.LogError($"{_name} would not discover the tests of '{job.Executable}' (see CheckExecutable()): " +
+                                        $"exists: {info.Exists}, is .exe: {info.IsExe}, trusted: {info.IsTrusted}, Google Test executable: {info.GoogleTestIndicator != null}");
+                        return;
+                    }
+
+                    job.Tests = GoogleTestDiscoverer.GetTestsFromExecutable(job.Executable, settings, logger)
+                        .Select(testCase => ToJson(testCase, settings.GetTestPropertySettings(job.Executable, testCase.FullyQualifiedName)))
+                        .ToList();
+                    // e.g. if the executable can not be run, GTA reports an error and no tests
+                    succeeded = !job.Logger.HasErrors;
+                });
+                return succeeded;
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"{e.GetType().Name}: {e.Message}");
+                return false;
+            }
+        }
+
+        private static JsonObject ToJson(TestCase testCase, TestPropertySettings testProperties)
+        {
+            return new JsonObject
+            {
+                { "fullyQualifiedName", testCase.FullyQualifiedName },
+                { "displayName", testCase.DisplayName },
+                { "kind", testCase.IsExitCodeTestCase ? "ExitCode" : testCase.IsTearDownTestSuiteTestCase ? "TearDownTestSuite" : "Test" },
+                { "codeFilePath", string.IsNullOrEmpty(testCase.CodeFilePath) ? null : testCase.CodeFilePath },
+                { "lineNumber", testCase.LineNumber },
+                { "namespace", testCase.Namespace },
+                { "testClass", testCase.TestClass },
+                { "testGroup", testCase.TestGroup },
+                { "traits", testCase.Traits.Select(t => new JsonObject { { "name", t.Name }, { "value", t.Value } }).ToList() },
+                { "testProperties", testProperties == null ? null : new JsonObject
+                    {
+                        { "workingDirectory", testProperties.WorkingDirectory },
+                        { "environment", testProperties.Environment },
+                        { "labels", testProperties.Labels },
+                        { "timeoutInSeconds", testProperties.Timeout?.TotalSeconds },
+                        { "disabled", testProperties.Disabled }
+                    }
+                }
+            };
+        }
+
         private string CreateRunSettings(string runSettingsFile, ILogger logger)
         {
             RunSettingsService runSettingsService = _runSettingsService();
@@ -120,8 +215,11 @@ namespace GoogleTestAdapter.VsPackage.Automation
         // the settings for the executable as the test adapter creates them from the run settings
         private void ExecuteWithSettings(string executable, ILogger logger, Action<SettingsWrapper, RunSettingsContainer> action)
         {
-            string runSettings = CreateRunSettings(null, logger);
+            ExecuteWithSettings(executable, CreateRunSettings(null, logger), logger, action);
+        }
 
+        private static void ExecuteWithSettings(string executable, string runSettings, ILogger logger, Action<SettingsWrapper, RunSettingsContainer> action)
+        {
             XPathNavigator navigator = new XPathDocument(new StringReader(runSettings)).CreateNavigator();
             RunSettingsContainer container = navigator.MoveToChild(Microsoft.VisualStudio.TestPlatform.ObjectModel.Constants.RunSettingsName, "")
                                              && navigator.MoveToChild(GoogleTestConstants.SettingsName, "")
@@ -176,27 +274,6 @@ namespace GoogleTestAdapter.VsPackage.Automation
             }
             result.Add("messages", logger.Messages);
             return Json.Write(result);
-        }
-
-        /// <summary>
-        /// Collects warnings and errors (including debug ones) as JSON objects.
-        /// </summary>
-        private class CollectingLogger : LoggerBase
-        {
-            public List<JsonObject> Messages { get; } = new List<JsonObject>();
-
-            public CollectingLogger() : base(() => OutputMode.Debug) { }
-
-            public override void Log(Severity severity, string message)
-            {
-                if (severity == Severity.Info)
-                    return;
-
-                lock (Messages)
-                {
-                    Messages.Add(new JsonObject { { "severity", severity }, { "message", message } });
-                }
-            }
         }
 
         private class TestWindowLoggerAdapter : TestWindowLogger

@@ -142,7 +142,7 @@ cd out/binaries/GoogleTestAdapter/Release
     VsPackage.GTA.Tests.Unit/GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll //Parallel
 ```
 
-* As of 0.20.0, all 712 tests pass. Run the suite more than once after changes affecting timing or files: the test
+* As of 0.20.0, all 717 tests pass. Run the suite more than once after changes affecting timing or files: the test
   assemblies run in parallel and share the sample binaries, so tests must never rename or modify sample files (one
   test renaming a sample's .pdb was flaky for exactly this reason).
 * VS 2026's `vstest.console.exe` (`.../18/Professional/...`) runs the tests as well.
@@ -224,9 +224,18 @@ cd out/binaries/GoogleTestAdapter/Release
     (`securityZone`, `isOnNetworkDrive`, `skipOriginCheck`, `isTrusted`), `googleTestIndicator` (the rule of
     `GoogleTestDiscoverer.GetGoogleTestExecutableIndicator()` which matched, or null), `testDiscoveryRegex`, `pdb`, and
     `wouldBeDiscovered`; the executable is not run.
+  * `StartTestDiscovery(executable)`: `discoveryId`, `executable`. Discovers the tests in the background
+    (`Automation/TestDiscoveryJobs.cs`): COM calls arrive on VS's UI thread, and discovery runs the executable, which
+    takes up to the discovery timeout. Only executables GTA would discover (`ExecutableInfo.WouldBeDiscovered`) are
+    run. The run settings are created on the calling thread, the settings and the discovery on the background thread
+    (`SettingsWrapper.ExecuteWithSettingsForExecutable()` is bound to its thread).
+  * `GetTestDiscoveryResult(discoveryId)`: `status` (`Running`, `Completed`, `Failed` if the discovery reported
+    errors, e.g. since the executable could not be run, or `Unknown`), `executable`, `durationInSeconds`,
+    `discoveryMessages`, and, if completed, `tests` (`fullyQualifiedName`, `displayName`, `kind` (`Test`,
+    `TearDownTestSuite`, `ExitCode`), `codeFilePath`, `lineNumber`, `namespace`, `testClass`, `testGroup`, `traits`,
+    and `testProperties`, the CTest test properties). The latest 32 discoveries are kept.
 
-  COM calls arrive on VS's UI thread, so the methods must stay quick; running executables (e.g. a planned
-  `DiscoverTests()`) needs a background thread and a timeout. When calling from PowerShell, look up `DTE.Properties`
+  COM calls arrive on VS's UI thread, so the methods must stay quick. When calling from PowerShell, look up `DTE.Properties`
   items within one call: PowerShell unrolls a returned `Properties` collection into an array.
 * **Run settings** (`VsPackage.Shared/Settings/RunSettingsService.cs`): Test Explorer calls this MEF component on
   background threads for every discovery and run; it must never wait for the UI thread.

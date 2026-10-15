@@ -42,5 +42,25 @@ namespace GoogleTestAdapter.VsPackage.Automation
         /// "GoogleTestDll", "GoogleTestFunctions", "GoogleTestMarkers", or "TestDiscoveryRegex"; null if it is not one),
         /// "testDiscoveryRegex", "pdb" (null if not found), and "wouldBeDiscovered"</returns>
         string CheckExecutable(string executable);
+
+        /// <summary>
+        /// Starts discovering the tests of an executable in the background (discovery runs the executable, which
+        /// takes up to the discovery timeout; COM calls would block Visual Studio's UI thread meanwhile). The
+        /// executable is only run if GTA would discover its tests (see CheckExecutable()).
+        /// </summary>
+        /// <returns>"discoveryId" for GetTestDiscoveryResult(), and "executable"</returns>
+        string StartTestDiscovery(string executable);
+
+        /// <summary>
+        /// The state and result of a test discovery started by StartTestDiscovery(); the results of the latest 32
+        /// discoveries are kept.
+        /// </summary>
+        /// <returns>"discoveryId", "status" ("Running", "Completed", "Failed", or "Unknown" for unknown ids),
+        /// "executable", "durationInSeconds", "discoveryMessages" (the warnings and errors of the discovery so far),
+        /// and, if completed, "tests": "fullyQualifiedName", "displayName", "kind" ("Test", "TearDownTestSuite", or
+        /// "ExitCode"), "codeFilePath" and "lineNumber" (if known), "namespace", "testClass", "testGroup", "traits"
+        /// ("name", "value"), and "testProperties" (the CTest test properties "workingDirectory", "environment",
+        /// "labels", "timeoutInSeconds", and "disabled"; null if there are none)</returns>
+        string GetTestDiscoveryResult(string discoveryId);
     }
 }

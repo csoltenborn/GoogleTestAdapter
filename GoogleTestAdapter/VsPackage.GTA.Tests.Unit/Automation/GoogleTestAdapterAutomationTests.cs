@@ -50,7 +50,8 @@ namespace GoogleTestAdapter.VsPackage.Automation
             File.Delete(_solutionSettingsFile);
         }
 
-        private GoogleTestAdapterAutomation CreateAutomation(bool initialized = true)
+        /// <param name="solutionSettings">whether the solution settings file is used (its working dir does not exist)</param>
+        private GoogleTestAdapterAutomation CreateAutomation(bool initialized = true, bool solutionSettings = true)
         {
             var globalRunSettings = new RunSettings
             {
@@ -60,7 +61,7 @@ namespace GoogleTestAdapter.VsPackage.Automation
             };
             var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();
             mockGlobalRunSettings.Setup(grs => grs.RunSettings).Returns(globalRunSettings);
-            var service = new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, _solutionSettingsFile);
+            var service = new RunSettingsServiceUnderTest(mockGlobalRunSettings.Object, solutionSettings ? _solutionSettingsFile : null);
 
             return new GoogleTestAdapterAutomation(() => initialized ? service : null, "Google Test Adapter", new Version(1, 2, 3, 4));
         }
@@ -211,6 +212,96 @@ namespace GoogleTestAdapter.VsPackage.Automation
             trust["isOnNetworkDrive"].Should().Be(true);
             trust["isTrusted"].Should().Be(false);
             result["wouldBeDiscovered"].Should().Be(false);
+        }
+
+        // polls like a client would
+        private static Dictionary<string, object> WaitForTestDiscovery(GoogleTestAdapterAutomation automation, string discoveryId)
+        {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            while (true)
+            {
+                var result = Parse(automation.GetTestDiscoveryResult(discoveryId));
+                if ((string)result["status"] != TestDiscoveryJobs.Running)
+                    return result;
+                stopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(60), "discovery should finish");
+                System.Threading.Thread.Sleep(100);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void StartTestDiscovery_FixtureTests_TestsWithMetadata()
+        {
+            var automation = CreateAutomation(solutionSettings: false);
+
+            var started = Parse(automation.StartTestDiscovery(TestResources.FixtureTests_DebugX86));
+            var result = WaitForTestDiscovery(automation, (string)started["discoveryId"]);
+
+            result["status"].Should().Be(TestDiscoveryJobs.Completed);
+            result["executable"].Should().Be(Path.GetFullPath(TestResources.FixtureTests_DebugX86));
+            var tests = ((ArrayList)result["tests"]).Cast<Dictionary<string, object>>().ToList();
+            tests.Should().HaveCount(20, new JavaScriptSerializer().Serialize(result["discoveryMessages"]));
+            var test = tests.Single(t => (string)t["fullyQualifiedName"] == "NamespacedFixture.Passes");
+            test["kind"].Should().Be("Test");
+            test["namespace"].Should().Be("fixtures");
+            test["testClass"].Should().Be("NamespacedFixture");
+            ((string)test["codeFilePath"]).Should().EndWith("FixtureTests.cpp");
+            ((int)test["lineNumber"]).Should().BeGreaterThan(0);
+            test["testProperties"].Should().BeNull();
+            tests.Single(t => (string)t["fullyQualifiedName"] == "FailingTearDown.TearDownTestSuite")["kind"].Should().Be("TearDownTestSuite");
+            ((ArrayList)result["discoveryMessages"]).Cast<Dictionary<string, object>>()
+                .Where(m => (string)m["severity"] == "Error").Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void StartTestDiscovery_ExecutableCanNotBeRun_Fails()
+        {
+            // the working dir of the solution settings does not exist
+            var automation = CreateAutomation();
+
+            var started = Parse(automation.StartTestDiscovery(TestResources.FixtureTests_DebugX86));
+            var result = WaitForTestDiscovery(automation, (string)started["discoveryId"]);
+
+            result["status"].Should().Be(TestDiscoveryJobs.Failed);
+            result.Should().NotContainKey("tests");
+            ((ArrayList)result["discoveryMessages"]).Cast<Dictionary<string, object>>()
+                .Should().Contain(m => (string)m["severity"] == "Error" && ((string)m["message"]).Contains("Failed to run test executable"));
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void StartTestDiscovery_UntrustedExecutable_FailsWithoutRunningIt()
+        {
+            var automation = CreateAutomation();
+
+            var started = Parse(automation.StartTestDiscovery(@"\\gta-nonexisting-host\share\Tests.exe"));
+            var result = WaitForTestDiscovery(automation, (string)started["discoveryId"]);
+
+            result["status"].Should().Be(TestDiscoveryJobs.Failed);
+            result.Should().NotContainKey("tests");
+            ((ArrayList)result["discoveryMessages"]).Cast<Dictionary<string, object>>()
+                .Should().Contain(m => ((string)m["message"]).Contains("would not discover"));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void StartTestDiscovery_NotInitialized_ErrorMessageAndNoId()
+        {
+            var result = Parse(CreateAutomation(initialized: false).StartTestDiscovery(TestResources.FixtureTests_DebugX86));
+
+            result.Should().NotContainKey("discoveryId");
+            Messages(result, "Error").Should().ContainSingle().Which.Should().Contain("not been initialized");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestDiscoveryResult_UnknownId_StatusUnknown()
+        {
+            var result = Parse(CreateAutomation().GetTestDiscoveryResult("no such id"));
+
+            result["status"].Should().Be(TestDiscoveryJobs.Unknown);
+            result["discoveryId"].Should().Be("no such id");
         }
 
         [TestMethod]

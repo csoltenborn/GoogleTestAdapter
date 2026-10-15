@@ -65,6 +65,21 @@ try {
         ""
         "CheckExecutable('$Executable'):"
         Invoke-Com { $gta.CheckExecutable($Executable) }
+        ""
+        # discovery runs the executable in the background; its result is polled
+        "StartTestDiscovery('$Executable'):"
+        $started = Invoke-Com { $gta.StartTestDiscovery($Executable) }
+        $started
+        $discoveryId = ($started | ConvertFrom-Json).discoveryId
+        if ($discoveryId) {
+            do {
+                Start-Sleep -Milliseconds 200
+                $result = Invoke-Com { $gta.GetTestDiscoveryResult($discoveryId) } | ConvertFrom-Json
+            } while ($result.status -eq "Running")
+            "GetTestDiscoveryResult('$discoveryId'): status $($result.status) after $($result.durationInSeconds) s, $(@($result.tests).Count) tests"
+            $result.discoveryMessages | ForEach-Object { "  $($_.severity): $($_.message)" }
+            $result.tests | Select-Object -First 3 | ForEach-Object { "  $($_.fullyQualifiedName) ($($_.kind)) at $($_.codeFilePath):$($_.lineNumber)" }
+        }
     }
 
     ""

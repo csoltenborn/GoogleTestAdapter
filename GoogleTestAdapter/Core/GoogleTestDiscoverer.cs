@@ -69,6 +69,15 @@ namespace GoogleTestAdapter
             });
         }
 
+        /// <summary>
+        /// The tests of the executable, with the settings for the executable (for callers which do not reference
+        /// GoogleTestAdapter.DiaResolver, e.g. GTA's automation object)
+        /// </summary>
+        public static IList<TestCase> GetTestsFromExecutable(string executable, SettingsWrapper settings, ILogger logger)
+        {
+            return new GoogleTestDiscoverer(logger, settings).GetTestsFromExecutable(executable);
+        }
+
         public IList<TestCase> GetTestsFromExecutable(string executable)
         {
             var factory = new TestCaseFactory(executable, _logger, _settings, _diaResolverFactory, _processExecutorFactory);
