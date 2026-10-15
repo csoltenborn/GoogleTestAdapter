@@ -63,6 +63,7 @@
     <Compile Include="ProcessExecution\ProcessExecutorFactory.cs" />
     <Compile Include="Framework\TestRunCanceledException.cs" />
     <Compile Include="GoogleTestConstants.cs" />
+    <Compile Include="ExecutableInfo.cs" />
     <Compile Include="GoogleTestDiscoverer.cs" />
     <Compile Include="GoogleTestExecutor.cs" />
     <Compile Include="Helpers\DebugUtils.cs" />

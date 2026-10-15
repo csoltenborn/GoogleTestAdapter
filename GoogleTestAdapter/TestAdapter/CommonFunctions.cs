@@ -58,20 +58,11 @@ namespace GoogleTestAdapter.TestAdapter
             var settingsProvider = SafeGetRunSettingsProvider(runSettings, messageLogger);
 
             var ourRunSettings = GetRunSettingsContainer(settingsProvider, messageLogger);
-            foreach (RunSettings projectSettings in ourRunSettings.ProjectSettings)
-            {
-                projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
-            }
+            var settingsWrapper = CreateSettings(ourRunSettings, solutionDir);
 
-            var settingsWrapper = new SettingsWrapper(ourRunSettings, solutionDir);
-
-            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode, 
+            var loggerAdapter = new VsTestFrameworkLogger(messageLogger, () => settingsWrapper.OutputMode,
                 () => settingsWrapper.TimestampMode, () => settingsWrapper.SeverityMode, () => settingsWrapper.PrefixOutputWithGta);
-            settingsWrapper.RegexTraitParser = new RegexTraitParser(loggerAdapter);
-            settingsWrapper.EnvironmentVariablesParser = new EnvironmentVariablesParser(loggerAdapter);
-            settingsWrapper.HelperFilesCache = new HelperFilesCache(loggerAdapter);
-            settingsWrapper.TestPropertySettingsContainer = TestPropertySettingsReader.Read(runSettings?.SettingsXml, loggerAdapter);
-            settingsWrapper.CTestTestPropertySettingsProvider = new CTestTestPropertySettingsProvider(loggerAdapter);
+            InitializeSettings(settingsWrapper, runSettings?.SettingsXml, loggerAdapter);
 
             LogWarningsForDeprecatedSettings(ourRunSettings, loggerAdapter);
 
@@ -79,6 +70,30 @@ namespace GoogleTestAdapter.TestAdapter
             logger = loggerAdapter;
 
             SpeedupThreadPoolHack(logger);
+        }
+
+        /// <summary>
+        /// The settings of the test adapter for run settings as provided by Visual Studio; to be initialized with
+        /// InitializeSettings() (e.g. GTA's automation object provides the settings of executables this way).
+        /// </summary>
+        public static SettingsWrapper CreateSettings(RunSettingsContainer ourRunSettings, string solutionDir = null)
+        {
+            foreach (RunSettings projectSettings in ourRunSettings.ProjectSettings)
+            {
+                projectSettings.GetUnsetValuesFrom(ourRunSettings.SolutionSettings);
+            }
+
+            return new SettingsWrapper(ourRunSettings, solutionDir);
+        }
+
+        /// <param name="settingsXml">the complete run settings, which might contain test property settings</param>
+        public static void InitializeSettings(SettingsWrapper settingsWrapper, string settingsXml, ILogger logger)
+        {
+            settingsWrapper.RegexTraitParser = new RegexTraitParser(logger);
+            settingsWrapper.EnvironmentVariablesParser = new EnvironmentVariablesParser(logger);
+            settingsWrapper.HelperFilesCache = new HelperFilesCache(logger);
+            settingsWrapper.TestPropertySettingsContainer = TestPropertySettingsReader.Read(settingsXml, logger);
+            settingsWrapper.CTestTestPropertySettingsProvider = new CTestTestPropertySettingsProvider(logger);
         }
 
         private static RunSettingsProvider SafeGetRunSettingsProvider(IRunSettings runSettings, IMessageLogger messageLogger)

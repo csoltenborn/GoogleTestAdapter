@@ -2,6 +2,7 @@
 
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
+using GoogleTestAdapter.VsPackage.Automation;
 using GoogleTestAdapter.VsPackage.Commands;
 using GoogleTestAdapter.VsPackage.Debugging;
 using GoogleTestAdapter.VsPackage.Helpers;
@@ -39,6 +40,8 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(TestExecutionOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageTestExecution, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    // DTE.GetObject("GoogleTestAdapter"), e.g. for scripts and MCP servers
+    [ProvideAutomationObject(GoogleTestAdapterAutomation.Name)]
     public sealed partial class GoogleTestExtensionOptionsPage : AsyncPackage, IGoogleTestExtensionOptionsPage, IDisposable
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
@@ -55,6 +58,7 @@ namespace GoogleTestAdapter.VsPackage
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
+        private GoogleTestAdapterAutomation _automation;
         private VisualStudioConfigurationTracker _visualStudioConfigurationTracker;
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
@@ -129,6 +133,17 @@ namespace GoogleTestAdapter.VsPackage
                 _debuggerAttacherServiceHost.Abort();
                 _debuggerAttacherServiceHost = null;
             }
+        }
+
+        protected override object GetAutomationObject(string name)
+        {
+            if (name != GoogleTestAdapterAutomation.Name)
+                return base.GetAutomationObject(name);
+
+            return _automation ?? (_automation = new GoogleTestAdapterAutomation(
+                () => _globalRunSettings?.RunSettings == null ? null : new RunSettingsService(_globalRunSettings),
+                Common.Strings.Instance.ExtensionName,
+                typeof(GoogleTestExtensionOptionsPage).Assembly.GetName().Version));
         }
 
         public IVsActivityLog GetActivityLog()

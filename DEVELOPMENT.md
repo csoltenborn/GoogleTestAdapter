@@ -142,7 +142,7 @@ cd out/binaries/GoogleTestAdapter/Release
     VsPackage.GTA.Tests.Unit/GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll //Parallel
 ```
 
-* As of 0.20.0, all 701 tests pass. Run the suite more than once after changes affecting timing or files: the test
+* As of 0.20.0, all 712 tests pass. Run the suite more than once after changes affecting timing or files: the test
   assemblies run in parallel and share the sample binaries, so tests must never rename or modify sample files (one
   test renaming a sample's .pdb was flaky for exactly this reason).
 * VS 2026's `vstest.console.exe` (`.../18/Professional/...`) runs the tests as well.
@@ -207,6 +207,27 @@ cd out/binaries/GoogleTestAdapter/Release
   `…ToggleParallelTestExecution`, and `…TogglePrintTestOutput` (`CanonicalName` in the `.vsct`), e.g. for
   `DTE.ExecuteCommand`. To check out of process, get the DTE of a running VS from PowerShell with
   `[Runtime.InteropServices.Marshal]::GetActiveObject("VisualStudio.DTE.18.0")` (retry calls VS rejects while busy).
+* **Automation object** (`VsPackage.Shared/Automation/`): `DTE.GetObject("GoogleTestAdapter")` (registered with
+  `ProvideAutomationObject`, created by the package's `GetAutomationObject()`) provides what an MCP server can not get
+  from Test Explorer; `Tools/AutomationExample.ps1` shows its use. Its methods return JSON strings (written by
+  `Automation/Json.cs`, since .NET Framework has no JSON serializer usable here) with `schemaVersion` (increment it on
+  incompatible changes) and `messages` (warnings and errors, also of failures; the methods do not throw):
+  * `GetVersion()`: `name`, `version`.
+  * `GetRunSettings(runSettingsFile)`: `runSettings`, the XML `RunSettingsService.AddRunSettings` provides to Test
+    Explorer (GTA's options, the solution settings file, and the given `.runsettings` file, if any).
+  * `GetEffectiveSettings(executable)`: `executable`, `projectSettings` (`projectRegex` of the project settings
+    matching the executable, or null), `settings` (the values of `SettingsWrapper`'s properties, as printed by
+    `SettingsPrinter`; enums by name), and `discovery` (`workingDir`, `pathExtension`, `environmentVariables`,
+    `additionalParameters`, resolved for discovery). The settings are created from the run settings like the test
+    adapter does (`CommonFunctions.CreateSettings()`, `InitializeSettings()`).
+  * `CheckExecutable(executable)`: `ExecutableInfo` (Core) as `executable`, `exists`, `isExe`, `trust`
+    (`securityZone`, `isOnNetworkDrive`, `skipOriginCheck`, `isTrusted`), `googleTestIndicator` (the rule of
+    `GoogleTestDiscoverer.GetGoogleTestExecutableIndicator()` which matched, or null), `testDiscoveryRegex`, `pdb`, and
+    `wouldBeDiscovered`; the executable is not run.
+
+  COM calls arrive on VS's UI thread, so the methods must stay quick; running executables (e.g. a planned
+  `DiscoverTests()`) needs a background thread and a timeout. When calling from PowerShell, look up `DTE.Properties`
+  items within one call: PowerShell unrolls a returned `Properties` collection into an array.
 * **Run settings** (`VsPackage.Shared/Settings/RunSettingsService.cs`): Test Explorer calls this MEF component on
   background threads for every discovery and run; it must never wait for the UI thread.
   `VisualStudioConfigurationTracker` keeps solution and configuration up to date on the UI thread. Exceptions must not

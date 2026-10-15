@@ -9,6 +9,9 @@
     <Import_RootNamespace>VsPackage.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\GoogleTestAdapterAutomation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\IGoogleTestAdapterAutomation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Json.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\AbstractSwitchBooleanOptionCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchBreakOnFailureOptionCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchCatchExceptionsOptionCommand.cs" />

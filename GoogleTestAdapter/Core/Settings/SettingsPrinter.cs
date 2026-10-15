@@ -32,6 +32,12 @@ namespace GoogleTestAdapter.Settings
             return string.Join(", ", PropertiesToPrint.Select(ToString));
         }
 
+        /// <summary>The values of the settings, by property name, in the order of ToReadableString()</summary>
+        public IEnumerable<KeyValuePair<string, object>> GetValues()
+        {
+            return PropertiesToPrint.Select(pi => new KeyValuePair<string, object>(pi.Name, pi.GetValue(_settings)));
+        }
+
         private string ToString(PropertyInfo propertyInfo)
         {
             var value = propertyInfo.GetValue(_settings);

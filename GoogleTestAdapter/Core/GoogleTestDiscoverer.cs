@@ -85,21 +85,37 @@ namespace GoogleTestAdapter
 
         public static bool IsGoogleTestExecutable(string executable, string customRegex, ILogger logger)
         {
+            return GetGoogleTestExecutableIndicator(executable, customRegex, logger) != null;
+        }
+
+        // the indicators returned by GetGoogleTestExecutableIndicator()
+        public const string IndicatorFile = "IndicatorFile";
+        public const string IndicatorGoogleTestDll = "GoogleTestDll";
+        public const string IndicatorGoogleTestFunctions = "GoogleTestFunctions";
+        public const string IndicatorGoogleTestMarkers = "GoogleTestMarkers";
+        public const string IndicatorTestDiscoveryRegex = "TestDiscoveryRegex";
+
+        /// <returns>What makes the executable a Google Test executable (one of the Indicator* constants), or null if it
+        /// is not one</returns>
+        public static string GetGoogleTestExecutableIndicator(string executable, string customRegex, ILogger logger)
+        {
             string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
             {
                 logger.DebugInfo($"Google Test indicator file found for executable {executable} ({googleTestIndicatorFile})");
-                return true;
+                return IndicatorFile;
             }
 
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                if (PeParser.ParseImports(executable, logger).Any(IsGoogleTestDll)
-                    || PeParser.FindImportedFunction(executable, IsGoogleTestFunction, logger)
-                    || Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
+                string indicator = PeParser.ParseImports(executable, logger).Any(IsGoogleTestDll) ? IndicatorGoogleTestDll
+                    : PeParser.FindImportedFunction(executable, IsGoogleTestFunction, logger) ? IndicatorGoogleTestFunctions
+                    : Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers) ? IndicatorGoogleTestMarkers
+                    : null;
+                if (indicator != null)
                 {
                     logger.DebugInfo($"Google Test indicators found in executable {executable}");
-                    return true;
+                    return indicator;
                 }
             }
             else
@@ -107,12 +123,12 @@ namespace GoogleTestAdapter
                 if (SafeMatches(executable, customRegex, logger))
                 {
                     logger.DebugInfo($"Custom regex '{customRegex}' matches executable '{executable}'");
-                    return true;
+                    return IndicatorTestDiscoveryRegex;
                 }
             }
 
             logger.DebugInfo($"File does not seem to be Google Test executable: '{executable}'");
-            return false;
+            return null;
         }
 
         public static bool IsGoogleTestDll(string import)
@@ -172,7 +188,7 @@ namespace GoogleTestAdapter
                 return true;
 
             var zone = Zone.CreateFromUrl(executable);
-            if (zone.SecurityZone == System.Security.SecurityZone.MyComputer)
+            if (IsTrustedZone(zone.SecurityZone))
                 return true;
 
             string skipOriginCheck = $"set option '{SettingsWrapper.OptionSkipOriginCheck}' (Tools/Options/Google Test Adapter/{SettingsWrapper.PageGeneralName}/{SettingsWrapper.CategorySecurityName}; can not be set via settings files)";
@@ -190,8 +206,13 @@ namespace GoogleTestAdapter
             return false;
         }
 
+        public static bool IsTrustedZone(System.Security.SecurityZone zone)
+        {
+            return zone == System.Security.SecurityZone.MyComputer;
+        }
+
         // UNC paths and mapped network drives (the file itself is not accessed, which might take long for unreachable hosts)
-        private static bool IsOnNetworkDrive(string executable)
+        public static bool IsOnNetworkDrive(string executable)
         {
             try
             {
