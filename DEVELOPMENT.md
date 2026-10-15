@@ -8,7 +8,7 @@ describes the code base as it was before the fork.
 
 ## Status (October 2026)
 
-* Versions **0.19.0**, **0.20.0**, and **0.21.0** have been published as pre-releases on GitHub (see
+* Versions **0.19.0** and **0.20.0** have been published as pre-releases on GitHub, **0.21.0** as release (see
   `GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/`).
 * Supported: Visual Studio 2017 to 2026, .NET Framework 4.6. Visual Studio 2013/2015 support has been dropped.
 * Known gap: the end-to-end tests (`VsPackage.Tests`, `VsPackage.Tests.Generated`, category `End to end`) compare the
