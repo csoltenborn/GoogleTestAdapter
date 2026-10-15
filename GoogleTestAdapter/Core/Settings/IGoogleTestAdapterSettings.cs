@@ -22,6 +22,7 @@ namespace GoogleTestAdapter.Settings
         string ProjectRegex { get; set; }
 
         string AdditionalTestExecutionParam { get; set; }
+        string AdditionalTestDiscoveryParam { get; set; }
         bool? CatchExceptions { get; set; }
         bool? BreakOnFailure { get; set; }
         int? MaxNrOfThreads { get; set; }
@@ -37,12 +38,17 @@ namespace GoogleTestAdapter.Settings
         string WorkingDir { get; set; }
         string PathExtension { get; set; }
         string EnvironmentVariables { get; set; }
+        bool? UseCTestTestProperties { get; set; }
+        int? TestTimeoutInSeconds { get; set; }
+        string SourcePathMapping { get; set; }
+        bool? MapOnlyMissingSourcePaths { get; set; }
         string BatchForTestSetup { get; set; }
         string BatchForTestTeardown { get; set; }
         string TraitsRegexesAfter { get; set; }
         string TraitsRegexesBefore { get; set; }
         string TestNameSeparator { get; set; }
         bool? ParseSymbolInformation { get; set; }
+        bool? TearDownTestSuiteTestCases { get; set; }
         bool? DebugMode { get; set; }
         OutputMode? OutputMode { get; set; }
         bool? TimestampOutput { get; set; }
@@ -71,6 +77,7 @@ namespace GoogleTestAdapter.Settings
         public static void GetUnsetValuesFrom(this IGoogleTestAdapterSettings self, IGoogleTestAdapterSettings other)
         {
             self.AdditionalTestExecutionParam = self.AdditionalTestExecutionParam ?? other.AdditionalTestExecutionParam;
+            self.AdditionalTestDiscoveryParam = self.AdditionalTestDiscoveryParam ?? other.AdditionalTestDiscoveryParam;
             self.CatchExceptions = self.CatchExceptions ?? other.CatchExceptions;
             self.BreakOnFailure = self.BreakOnFailure ?? other.BreakOnFailure;
             self.MaxNrOfThreads = self.MaxNrOfThreads ?? other.MaxNrOfThreads;
@@ -86,12 +93,17 @@ namespace GoogleTestAdapter.Settings
             self.WorkingDir = self.WorkingDir ?? other.WorkingDir;
             self.PathExtension = self.PathExtension ?? other.PathExtension;
             self.EnvironmentVariables = self.EnvironmentVariables ?? other.EnvironmentVariables;
+            self.UseCTestTestProperties = self.UseCTestTestProperties ?? other.UseCTestTestProperties;
+            self.TestTimeoutInSeconds = self.TestTimeoutInSeconds ?? other.TestTimeoutInSeconds;
+            self.SourcePathMapping = self.SourcePathMapping ?? other.SourcePathMapping;
+            self.MapOnlyMissingSourcePaths = self.MapOnlyMissingSourcePaths ?? other.MapOnlyMissingSourcePaths;
             self.BatchForTestSetup = self.BatchForTestSetup ?? other.BatchForTestSetup;
             self.BatchForTestTeardown = self.BatchForTestTeardown ?? other.BatchForTestTeardown;
             self.TraitsRegexesAfter = self.TraitsRegexesAfter ?? other.TraitsRegexesAfter;
             self.TraitsRegexesBefore = self.TraitsRegexesBefore ?? other.TraitsRegexesBefore;
             self.TestNameSeparator = self.TestNameSeparator ?? other.TestNameSeparator;
             self.ParseSymbolInformation = self.ParseSymbolInformation ?? other.ParseSymbolInformation;
+            self.TearDownTestSuiteTestCases = self.TearDownTestSuiteTestCases ?? other.TearDownTestSuiteTestCases;
             self.DebugMode = self.DebugMode ?? other.DebugMode;
             self.OutputMode = self.OutputMode ?? other.OutputMode;
             self.TimestampOutput = self.TimestampOutput ?? other.TimestampOutput;

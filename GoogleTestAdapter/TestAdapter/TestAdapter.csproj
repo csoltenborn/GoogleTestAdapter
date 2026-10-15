@@ -200,6 +200,7 @@
     <Compile Include="Settings\IGlobalRunSettingsInternal.cs" />
     <Compile Include="Settings\RunSettingsContainer.cs" />
     <Compile Include="Settings\RunSettingsProvider.cs" />
+    <Compile Include="Settings\TestPropertySettingsReader.cs" />
     <Compile Include="TestDiscoverer.cs" />
     <Compile Include="TestExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

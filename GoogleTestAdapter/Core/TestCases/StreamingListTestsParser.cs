@@ -6,10 +6,14 @@ namespace GoogleTestAdapter.TestCases
 
     public class StreamingListTestsParser
     {
-        private static readonly Regex SuiteRegex = new Regex($@"([\w\/]*(?:\.[\w\/]+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
-        private static readonly Regex NameRegex = new Regex($@"([\w\/]*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
-        private static readonly Regex IsParamRegex = new Regex(@"(\w+/)?\w+/\w+", RegexOptions.Compiled);
-        private static readonly Regex IsParamRegexPreNamedParameters = new Regex(@"(\w+/)?\w+/\d+", RegexOptions.Compiled);
+        // Suites and tests are named by C++ identifiers (and "/" for instantiations of typed and parameterized tests).
+        // Identifiers may contain characters \w does not match (e.g. spacing combining marks \p{Mc} as in Devanagari,
+        // and letter numbers \p{Nl}), so all characters but whitespace and the separators are accepted.
+        private const string NameChar = @"[^\s./]";
+        private static readonly Regex SuiteRegex = new Regex($@"((?:{NameChar}|/)*(?:\.(?:{NameChar}|/)+)*)(?:{Regex.Escape(GoogleTestConstants.TypedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex NameRegex = new Regex($@"((?:{NameChar}|/)*)(?:{Regex.Escape(GoogleTestConstants.ParameterizedTestMarker)}(.*))?", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegex = new Regex($@"({NameChar}+/)?{NameChar}+/{NameChar}+", RegexOptions.Compiled);
+        private static readonly Regex IsParamRegexPreNamedParameters = new Regex($@"({NameChar}+/)?{NameChar}+/\d+", RegexOptions.Compiled);
         private static readonly Regex StructKeywordsRegex = new Regex(@"\b(?:class|struct) ", RegexOptions.Compiled);
 
         private readonly string _testNameSeparator;
@@ -66,7 +70,38 @@ namespace GoogleTestAdapter.TestCases
             else if (string.IsNullOrWhiteSpace(param) ? IsParamRegexPreNamedParameters.IsMatch(name) : IsParamRegex.IsMatch(name))
                 testType = TestCaseDescriptor.TestTypes.Parameterized;
 
-            return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType);
+            // older versions of Google Test do not always print the type and value parameters
+            bool isTyped = !string.IsNullOrEmpty(typeParam) || testType == TestCaseDescriptor.TestTypes.TypeParameterized;
+            bool isValueParameterized = !string.IsNullOrEmpty(param) || testType == TestCaseDescriptor.TestTypes.Parameterized;
+            return new TestCaseDescriptor(suite, name, fullyQualifiedName, displayName, testType,
+                GetTestClass(suite, isTyped, isValueParameterized),
+                GetTestGroup(name, isValueParameterized));
+        }
+
+        // Instances of typed and parameterized tests are grouped by the suite as written in the code, i.e. without
+        // instantiation prefix and type index: "Prefix/Suite/0" (type-parameterized), "Suite/0" (typed) and
+        // "Prefix/Suite" (value-parameterized) => "Suite" (upstream #210)
+        public static string GetTestClass(string suite, bool isTyped, bool isValueParameterized)
+        {
+            string testClass = suite;
+            if (isTyped)
+            {
+                int indexOfTypeIndex = testClass.LastIndexOf('/');
+                if (indexOfTypeIndex > 0)
+                    testClass = testClass.Substring(0, indexOfTypeIndex);
+            }
+            if (isTyped || isValueParameterized)
+            {
+                testClass = testClass.Substring(testClass.LastIndexOf('/') + 1);
+            }
+            return testClass;
+        }
+
+        // "Test/0" and "Test/MyName" (value-parameterized) => "Test"
+        public static string GetTestGroup(string name, bool isValueParameterized)
+        {
+            int indexOfParamIndex = name.IndexOf('/');
+            return isValueParameterized && indexOfParamIndex > 0 ? name.Substring(0, indexOfParamIndex) : name;
         }
 
         private static string GetDisplayName(string fullyQalifiedName, string typeParam, string param)

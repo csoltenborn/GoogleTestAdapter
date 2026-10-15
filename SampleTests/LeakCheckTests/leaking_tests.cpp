@@ -8,7 +8,7 @@ TEST(memory_leaks, passing)
 
 TEST(memory_leaks, failing)
 {
-   std::cout << "This test does not leak, but a leak is reported due to the failed assertion...\n";
+   std::cout << "This test does not leak (older versions of Google Test reported a leak due to the failed assertion)...\n";
    ASSERT_TRUE(false);
 }
 

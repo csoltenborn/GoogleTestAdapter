@@ -36,6 +36,16 @@
       <xsd:element name="WorkingDir"                   minOccurs="0" type="xsd:string"  />
       <xsd:element name="PathExtension"                minOccurs="0" type="xsd:string"  />
       <xsd:element name="EnvironmentVariables"         minOccurs="0" type="xsd:string"  />
+      <xsd:element name="UseCTestTestProperties"       minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="SourcePathMapping"            minOccurs="0" type="xsd:string"  />
+      <xsd:element name="MapOnlyMissingSourcePaths"    minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="TestTimeoutInSeconds" minOccurs="0">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="0" />
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
       <xsd:element name="CatchExceptions"              minOccurs="0" type="xsd:boolean" />
       <xsd:element name="BreakOnFailure"               minOccurs="0" type="xsd:boolean" />
       <xsd:element name="RunDisabledTests"             minOccurs="0" type="xsd:boolean" />
@@ -111,7 +121,9 @@
 	      </xsd:annotation>
 	  </xsd:element>
       <xsd:element name="ParseSymbolInformation"       minOccurs="0" type="xsd:boolean" />
+      <xsd:element name="TearDownTestSuiteTestCases"   minOccurs="0" type="xsd:boolean" />
       <xsd:element name="AdditionalTestExecutionParam" minOccurs="0" type="xsd:string"  />
+      <xsd:element name="AdditionalTestDiscoveryParam" minOccurs="0" type="xsd:string"  />
       <xsd:element name="ParallelTestExecution"        minOccurs="0" type="xsd:boolean" />
       <xsd:element name="MaxNrOfThreads"               minOccurs="0">
         <xsd:simpleType>
@@ -134,6 +146,7 @@
 				  <xsd:enumeration value="VsTestFramework"/>
 				  <xsd:enumeration value="Native"/>
 				  <xsd:enumeration value="ManagedAndNative"/>
+				  <xsd:enumeration value="ManagedCoreAndNative"/>
 			  </xsd:restriction>
 		  </xsd:simpleType>
       </xsd:element>

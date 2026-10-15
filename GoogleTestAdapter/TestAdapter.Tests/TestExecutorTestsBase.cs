@@ -182,6 +182,89 @@ namespace GoogleTestAdapter.TestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public virtual void RunTests_Utf8Tests_CorrectTestResults()
+        {
+            RunAndVerifyTests(TestResources.Utf8Tests_DebugX86, 6, 1, 0);
+
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
+                    tr.TestCase.FullyQualifiedName == "\u4e2d\u6587.\u6d4b\u8bd5" && tr.Outcome == VsTestOutcome.Passed)),
+                Times.Once);
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
+                    tr.TestCase.FullyQualifiedName == "\u00dcmlaut\u00df.F\u00e4il\u00fcng" && tr.Outcome == VsTestOutcome.Failed &&
+                    tr.ErrorMessage.Contains("F\u00e4il\u00fcre"))),
+                Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_SomeUtf8Tests_CorrectTestResults()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            var testCases = discoverer.GetTestsFromExecutable(TestResources.Utf8Tests_DebugX86)
+                .Where(tc => tc.FullyQualifiedName == "\u4e2d\u6587.\u6d4b\u8bd5" || tc.FullyQualifiedName == "\u00dcmlaut\u00df.F\u00e4il\u00fcng")
+                .ToList();
+            testCases.Should().HaveCount(2);
+
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCases.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            CheckMockInvocations(1, 1, 0, 0, 0);
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
+                    tr.TestCase.FullyQualifiedName == "\u4e2d\u6587.\u6d4b\u8bd5" && tr.Outcome == VsTestOutcome.Passed)),
+                Times.Once);
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
+                    tr.TestCase.FullyQualifiedName == "\u00dcmlaut\u00df.F\u00e4il\u00fcng" && tr.Outcome == VsTestOutcome.Failed)),
+                Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_FixtureTests_FailuresOfSetUpAndTearDownTestSuiteAreReported()
+        {
+            RunAndVerifyTests(TestResources.FixtureTests_DebugX86, 13, 6, 0, 1);
+
+            // Google Test skips the tests of a suite whose SetUpTestSuite() fails
+            VerifyFixtureTestResult("FailingSetUp.First", VsTestOutcome.Failed, "SetUpTestSuite failure");
+            VerifyFixtureTestResult("FailingSetUp.Second", VsTestOutcome.Failed, "SetUpTestSuite() failed");
+            VerifyFixtureTestResult("SkippingSetUp.Skipped", VsTestOutcome.Skipped);
+
+            VerifyFixtureTestResult("FailingTearDown.Passes", VsTestOutcome.Passed);
+            VerifyFixtureTestResult("FailingTearDown.TearDownTestSuite", VsTestOutcome.Failed, "TearDownTestSuite failure");
+            VerifyFixtureTestResult("LegacyTearDown.TearDownTestSuite", VsTestOutcome.Failed, "TearDownTestCase failure");
+            VerifyFixtureTestResult("PassingFixture.TearDownTestSuite", VsTestOutcome.Passed);
+            VerifyFixtureTestResult("TypedFixture/1.TearDownTestSuite", VsTestOutcome.Passed);
+            VerifyFixtureTestResult("Instantiation/ParameterizedFixture.TearDownTestSuite", VsTestOutcome.Failed, "Parameterized TearDownTestSuite failure");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public virtual void RunTests_OnlyTearDownTestSuiteTestCase_SuiteIsRunAndTearDownResultIsReported()
+        {
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            var testCases = discoverer.GetTestsFromExecutable(TestResources.FixtureTests_DebugX86)
+                .Where(tc => tc.FullyQualifiedName == "FailingTearDown.TearDownTestSuite")
+                .ToList();
+            testCases.Should().ContainSingle();
+
+            TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(testCases.Select(tc => tc.ToVsTestCase()), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            CheckMockInvocations(0, 1, 0, 0, 0);
+            VerifyFixtureTestResult("FailingTearDown.TearDownTestSuite", VsTestOutcome.Failed, "TearDownTestSuite failure");
+        }
+
+        private void VerifyFixtureTestResult(string fullyQualifiedName, VsTestOutcome outcome, string errorMessagePart = null)
+        {
+            MockFrameworkHandle.Verify(h => h.RecordResult(It.Is<VsTestResult>(tr =>
+                    tr.TestCase.FullyQualifiedName == fullyQualifiedName && tr.Outcome == outcome &&
+                    (errorMessagePart == null || (tr.ErrorMessage != null && tr.ErrorMessage.Contains(errorMessagePart))))),
+                Times.Once, fullyQualifiedName);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public virtual void RunTests_HardCrashingX86Tests_CorrectTestResults()
         {
             TestExecutor executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
@@ -381,16 +464,8 @@ namespace GoogleTestAdapter.TestAdapter
         [TestCategory(Integration)]
         public virtual void MemoryLeakTests_FailingWithoutLeaks_CorrectResult()
         {
-            try
-            {
-                RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing", VsTestOutcome.Failed, VsTestOutcome.Passed,
-                    msg => msg == "");
-            }
-            catch (MockException)
-            {
-                Assert.Inconclusive("skipped until gtest's 'memory leaks' are fixed...");
-            }
-            Assert.Fail("Memory leak problem has been fixed :-) - enable test!");
+            RunMemoryLeakTest(TestResources.LeakCheckTests_DebugX86, "memory_leaks.failing", VsTestOutcome.Failed, VsTestOutcome.Passed,
+                msg => msg.Contains("No memory leaks have been found."));
         }
 
         [TestMethod]

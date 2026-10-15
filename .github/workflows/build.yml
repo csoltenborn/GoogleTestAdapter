@@ -1,0 +1,183 @@
+# Builds GTA including the sample tests, the VSIX, and the NuGet package, runs GTA's tests, and creates a draft GitHub
+# release for tags v<version> (see DEVELOPMENT.md)
+name: Build
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Builds with Visual Studio 2022 and 2026, and on ARM64 (where the tests run in an ARM64 process, and the x86 and x64
+  # sample tests are emulated). Each build provides a variant of the VSIX, whose project template installs the Google
+  # Test NuGet packages built by that job:
+  # - vs2022: GoogleTestAdapter-<version>.vsix for VS 2017 to 2026, packages built with v143 (which VS 2022 and 2026
+  #   projects can link; require-toolset makes the build fail if the v143 build tools are missing for a platform)
+  # - vs2026, vs2026-arm64: GoogleTestAdapter-<version>-vs2026[-arm64].vsix for VS 2026 only, packages built with v145
+  #   (which only VS 2026 projects can link)
+  # Releases contain the three VSIX files, GTA's NuGet package (of the vs2022 build), and the Google Test NuGet packages
+  # of each toolset as GoogleTestNuGetPackages-<Google Test version>-<toolset>.zip.
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - vs: vs2022
+          runner: windows-2022
+          require-toolset: true
+          googletest-packages: v143
+          gta-package: true
+        - vs: vs2026
+          runner: windows-2025-vs2026
+          packages-toolset: v145
+          googletest-packages: v145
+          vsix-suffix: -vs2026
+          vs2026-only: true
+        - vs: vs2026-arm64
+          runner: windows-11-vs2026-arm
+          test-platform: ARM64
+          packages-toolset: v145
+          vsix-suffix: -vs2026-arm64
+          vs2026-only: true
+    name: build (${{ matrix.vs }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    env:
+      GOOGLETEST_PACKAGES_REQUIRE_TOOLSET: ${{ matrix.require-toolset }}
+      GOOGLETEST_PACKAGES_TOOLSET: ${{ matrix.packages-toolset }}
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        submodules: true
+
+    # the version of the NuGet package is the release version; the build number is the workflow's run number
+    - name: Determine version
+      id: version
+      run: |
+        $version = ([xml](Get-Content GoogleTestAdapter\Packaging.GTA\VsPackage.nuspec)).package.metadata.version
+        if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag $env:GITHUB_REF_NAME does not match version $version of VsPackage.nuspec"
+        }
+        "version=$version" >> $env:GITHUB_OUTPUT
+        "build_version=$version.$env:GITHUB_RUN_NUMBER" >> $env:GITHUB_OUTPUT
+
+    # secret RELEASE_KEY is the base64-encoded strong name key Key_Release.snk; without it, the assemblies are signed
+    # with Keys\Key_Debug.snk
+    - name: Provide release signing key
+      if: github.ref_type == 'tag'
+      env:
+        RELEASE_KEY: ${{ secrets.RELEASE_KEY }}
+      run: |
+        if ($env:RELEASE_KEY) {
+            [IO.File]::WriteAllBytes("$env:GITHUB_WORKSPACE\GoogleTestAdapter\Keys\Key_Release.snk", [Convert]::FromBase64String($env:RELEASE_KEY))
+        } else {
+            Write-Output "::warning::Secret RELEASE_KEY is not defined, the assemblies are signed with the debug key"
+        }
+
+    - name: Stamp version
+      working-directory: GoogleTestAdapter
+      run: .\SetVersion.ps1 -version ${{ steps.version.outputs.build_version }}
+
+    # the project template of the VS 2026 variants installs packages which only VS 2026 projects can link
+    - name: Restrict VSIX to VS 2026
+      if: matrix.vs2026-only
+      run: |
+        $manifest = "GoogleTestAdapter\Packaging.GTA\source.extension.vsixmanifest"
+        $content = Get-Content $manifest -Raw
+        $content = $content -replace '(?s)\s*<InstallationTarget Version="\[15\.0,17\.0\)"[^>]*/>', ''
+        $content = $content -replace 'Version="\[17\.0,19\.0\)"', 'Version="[18.0,19.0)"'
+        if ($content -match '15\.0,17\.0|17\.0,19\.0') { throw "Could not restrict the installation targets of $manifest" }
+        Set-Content $manifest $content -NoNewline
+        Select-String -Path $manifest -Pattern 'InstallationTarget '
+
+    # measures speed-up of parallel test execution, which is unreliable on CI machines
+    - name: Ignore timing-sensitive tests
+      working-directory: GoogleTestAdapter\TestAdapter.Tests
+      run: .\IgnoreTests.ps1 -tests TestExecutorParallelTests.cs::RunTests_ParallelTestExecution_SpeedsUpTestExecution
+
+    # restores the NuGet packages and builds GTA including the sample tests and the VSIX
+    - name: Build
+      run: |
+        # the MSBuild of the machine's architecture: the x86 MSBuild (Bin\MSBuild.exe) uses the 32-bit compilers, which
+        # run out of memory for precompiled headers when emulated on ARM64 (C3859, C1076)
+        $architecture = if ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -eq 'Arm64') { 'arm64' } else { 'amd64' }
+        $msbuild = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\$architecture\MSBuild.exe" | Select-Object -First 1
+        if (!$msbuild) { throw "MSBuild for $architecture not found" }
+        Write-Output "Using $msbuild"
+        & $msbuild GoogleTestAdapter\GoogleTestAdapter.sln -restore -p:RestorePackagesConfig=true -p:Configuration=Release "-p:Platform=Any CPU" -m -verbosity:minimal -nologo
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    - name: Collect packages
+      run: |
+        $packaging = "out\binaries\GoogleTestAdapter\Release\Packaging.GTA"
+        New-Item -ItemType Directory packages | Out-Null
+        Copy-Item "$packaging\Packaging.GTA.vsix" "packages\GoogleTestAdapter-${{ steps.version.outputs.version }}${{ matrix.vsix-suffix }}.vsix"
+        if ("${{ matrix.gta-package }}") {
+            Copy-Item "$packaging\GoogleTestAdapter.${{ steps.version.outputs.version }}.nupkg" packages
+        }
+        if ("${{ matrix.googletest-packages }}") {
+            $googleTestPackages = @(Get-ChildItem GoogleTestAdapter\Packages\Microsoft.googletest.*.nupkg)
+            if ($googleTestPackages.Count -ne 3) { throw "Expected 3 Google Test NuGet packages, found $($googleTestPackages.Count)" }
+            $googleTestVersion = [regex]::Match($googleTestPackages[0].Name, '\.(\d+\.\d+\.\d+)\.nupkg$').Groups[1].Value
+            Compress-Archive -Path $googleTestPackages.FullName -DestinationPath "packages\GoogleTestNuGetPackages-$googleTestVersion-${{ matrix.googletest-packages }}.zip"
+        }
+        Get-ChildItem packages | ForEach-Object { Write-Output $_.Name }
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: packages-${{ matrix.vs }}
+        path: packages
+        if-no-files-found: error
+
+    # the end-to-end tests of VsPackage.Tests and VsPackage.Tests.Generated compare the complete output of test runs
+    # with expected files, which have not been updated for the changes of the fork yet (see DEVELOPMENT.md)
+    - name: Test
+      run: |
+        $vstest = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -find **\TestPlatform\vstest.console.exe | Select-Object -First 1
+        $binaries = "out\binaries\GoogleTestAdapter\Release"
+        $platform = if ("${{ matrix.test-platform }}") { "/Platform:${{ matrix.test-platform }}" } else { $null }
+        & $vstest "$binaries\DiaResolver.Tests\GoogleTestAdapter.DiaResolver.Tests.dll" `
+            "$binaries\Core.Tests\GoogleTestAdapter.Core.Tests.dll" `
+            "$binaries\TestAdapter.Tests\GoogleTestAdapter.TestAdapter.Tests.dll" `
+            "$binaries\VsPackage.GTA.Tests.Unit\GoogleTestAdapter.VsPackage.GTA.Tests.Unit.dll" `
+            /Parallel /Logger:trx /ResultsDirectory:TestResults $platform
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+    - uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: test-results-${{ matrix.vs }}
+        path: TestResults
+        if-no-files-found: ignore
+
+  # draft release with the packages and the release notes of the version
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/download-artifact@v8
+      with:
+        pattern: packages-*
+        merge-multiple: true
+        path: packages
+
+    - name: Create draft release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        VERSION: ${{ needs.build.outputs.version }}
+      run: >-
+        gh release create "$GITHUB_REF_NAME" packages/*
+        --draft --title "Google Test Adapter $VERSION"
+        --notes-file "GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/$VERSION.md"

@@ -29,11 +29,15 @@ namespace GoogleTestAdapter.Helpers
             return DeleteDirectory(directory, out _);
         }
 
-        public static bool DeleteDirectory(string directory, out string errorMessage)
+        /// <param name="retryWhileInUse">whether to retry for a while if files are in use (see RetryWhileInUse())</param>
+        public static bool DeleteDirectory(string directory, out string errorMessage, bool retryWhileInUse = true)
         {
             try
             {
-                Directory.Delete(directory, true);
+                if (retryWhileInUse)
+                    RetryWhileInUse(() => Directory.Delete(directory, true));
+                else
+                    Directory.Delete(directory, true);
                 errorMessage = null;
                 return true;
             }
@@ -41,6 +45,30 @@ namespace GoogleTestAdapter.Helpers
             {
                 errorMessage = e.Message;
                 return false;
+            }
+        }
+
+        public static void DeleteFile(string file)
+        {
+            RetryWhileInUse(() => File.Delete(file));
+        }
+
+        // Executables can not be deleted for a moment after their process has exited, e.g. if they have been run by
+        // the x86 or x64 emulation of ARM64 Windows, which translates and caches them in the background.
+        private static void RetryWhileInUse(Action action)
+        {
+            const int maxAttempts = 15;
+            for (int attempt = 1; ; attempt++)
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (Exception e) when ((e is IOException || e is UnauthorizedAccessException) && attempt < maxAttempts)
+                {
+                    Thread.Sleep(200);
+                }
             }
         }
 
@@ -130,6 +158,11 @@ namespace GoogleTestAdapter.Helpers
             try
             {
                 directory = Path.GetDirectoryName(pattern);
+                // .NET >= 4.6.2 path handling no longer throws on ':' outside of the drive specifier
+                if (directory != null && directory.LastIndexOf(':') > 1)
+                {
+                    directory = null;
+                }
             }
             catch (Exception)
             {

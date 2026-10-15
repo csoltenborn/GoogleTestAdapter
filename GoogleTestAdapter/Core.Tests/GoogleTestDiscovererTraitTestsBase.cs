@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
@@ -318,29 +316,14 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public virtual void GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded()
+        public virtual void GetTestsFromExecutable_RegexButNoDebugSymbols_TraitsAreAdded()
         {
-            string pdb = Path.ChangeExtension(SampleTestToUse, "pdb");
-            pdb.AsFileInfo().Should().Exist();
-            string tempFile = Path.ChangeExtension(pdb, "gtatmpext");
-            tempFile.AsFileInfo().Should().NotExist();
+            // not renaming the .pdb, since other tests use it concurrently
+            MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
+            MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "SomeNewType").Yield().ToList());
 
-            try
-            {
-                File.Move(pdb, tempFile);
-                pdb.AsFileInfo().Should().NotExist();
-
-                MockOptions.Setup(o => o.TraitsRegexesAfter).Returns(new RegexTraitPair(Regex.Escape("TestMath.AddPasses"), "Type", "SomeNewType").Yield().ToList());
-
-                var traits = new[] { new Trait("Type", "SomeNewType") };
-                AssertFindsTestWithTraits("TestMath.AddPasses", traits);
-            }
-            finally
-            {
-                File.Move(tempFile, pdb);
-                pdb.AsFileInfo().Should().Exist();
-            }
+            var traits = new[] { new Trait("Type", "SomeNewType") };
+            AssertFindsTestWithTraits("TestMath.AddPasses", traits);
         }
 
         [TestMethod]

@@ -176,6 +176,68 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             action.Should().Throw<ArgumentException>().WithMessage("MyTrait");
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void Filter_TraitWithMultipleValues_ValuesAreProvidedAsStringArray()
+        {
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar", "Foo.Baz").Select(tc => tc.ToVsTestCase()).ToList();
+            testCases[0].Traits.Add(new Trait("Label", "unit"));
+            testCases[0].Traits.Add(new Trait("Label", "slow"));
+            testCases[1].Traits.Add(new Trait("Label", "unit"));
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>()))
+                .Returns<TestCase, Func<string, object>>((tc, f) => f("Label") is string[] values && values.Contains("slow"));
+            _traitNames.Add("Label");
+
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
+            IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
+
+            AssertAreEqual(testCases.Take(1), filteredTestCases);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void Filter_ClassNameNameAndNamespace_ValuesAreDerivedFromTestCase()
+        {
+            var testCases = TestDataCreator.CreateDummyTestCases("Prefix/Suite/0.Test/1", "Foo.Bar").ToList();
+            testCases[0].Namespace = "outer::(anonymous namespace)";
+            testCases[1].Namespace = "";
+            List<TestCase> vsTestCases = testCases.Select(tc => tc.ToVsTestCase()).ToList();
+            var values = new List<(object, object, object)>();
+            _mockFilterExpression.Setup(e => e.MatchTestCase(It.IsAny<TestCase>(), It.IsAny<Func<string, object>>()))
+                .Returns<TestCase, Func<string, object>>((tc, f) =>
+                {
+                    values.Add((f("ClassName"), f("name"), f("Namespace")));
+                    return true;
+                });
+
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
+            filter.Filter(vsTestCases).ToList();
+
+            values.Should().BeEquivalentTo(new[]
+            {
+                ("Prefix/Suite/0", "Test/1", "outer::(anonymous namespace)"),
+                ("Foo", "Bar", "")
+            }, options => options.WithStrictOrdering());
+            MockRunContext.Verify(rc => rc.GetTestCaseFilter(
+                It.Is<IEnumerable<string>>(names => names.Contains("ClassName") && names.Contains("Name") && names.Contains("Namespace")),
+                It.Is<Func<string, TestProperty>>(f => f("ClassName") != null && f("Name") != null && f("Namespace") != null)));
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void Filter_TraitNamedLikeComputedProperty_TraitWins()
+        {
+            List<TestCase> testCases = TestDataCreator.CreateDummyTestCases("Foo.Bar").Select(tc => tc.ToVsTestCase()).ToList();
+            testCases[0].Traits.Add(new Trait("Name", "value1"));
+            SetupFilterToAcceptTraitForTestCase(testCases[0], "Name", "value1");
+            _traitNames.Add("Name");
+
+            TestCaseFilter filter = new TestCaseFilter(MockRunContext.Object, _traitNames, TestEnvironment.Logger);
+            IEnumerable<TestCase> filteredTestCases = filter.Filter(testCases).ToList();
+
+            AssertAreEqual(testCases, filteredTestCases);
+        }
+
         private void SetupFilterToAcceptTraitForTestCase(TestCase testCase, string traitName, string traitValue)
         {
             _mockFilterExpression.Setup(e => e.MatchTestCase(It.Is<TestCase>(tc => tc == testCase), It.Is<Func<string, object>>(f => f(traitName).ToString() == traitValue))).Returns(true);

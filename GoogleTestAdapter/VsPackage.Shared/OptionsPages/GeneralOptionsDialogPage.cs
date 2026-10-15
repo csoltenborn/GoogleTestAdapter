@@ -3,6 +3,7 @@
 using GoogleTestAdapter.Settings;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using GoogleTestAdapter.Common;
 using Microsoft.VisualStudio.Shell;
 
@@ -10,6 +11,7 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [ComVisible(true)]
     public class GeneralOptionsDialogPage : NotifyingDialogPage
     {
         #region Output

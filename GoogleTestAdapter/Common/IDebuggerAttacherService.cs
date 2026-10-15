@@ -9,7 +9,7 @@ namespace GoogleTestAdapter.Common
 {
     public enum DebuggerEngine
     {
-        Native, ManagedAndNative
+        Native, ManagedAndNative, ManagedCoreAndNative
     }
 
 

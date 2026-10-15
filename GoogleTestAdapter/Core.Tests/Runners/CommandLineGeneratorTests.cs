@@ -52,6 +52,88 @@ namespace GoogleTestAdapter.Runners
             commandLine.Should().NotContain(GoogleTestConstants.FilterOption);
         }
 
+        private Model.TestCase CreateTearDownTestSuiteTestCase(string suite, int nrOfTestCasesInSuite, int nrOfTestCasesInExecutable)
+        {
+            Model.TestCase testCase = TestDataCreator.ToTestCase($"{suite}.{GoogleTestConstants.TearDownTestSuiteTestName}");
+            testCase.Properties.Add(new Model.TestCaseMetaDataProperty(nrOfTestCasesInSuite, nrOfTestCasesInExecutable, isTearDownTestSuite: true));
+            return testCase;
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_OnlyTearDownTestSuiteTestCase_SuiteIsRun()
+        {
+            Model.TestCase tearDownTestCase = CreateTearDownTestSuiteTestCase("Suite1", 2, 3);
+
+            var commandLines = new CommandLineGenerator(tearDownTestCase.Yield(), TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().ToList();
+
+            commandLines.Should().ContainSingle();
+            commandLines[0].CommandLine.Should().Contain($"{GoogleTestConstants.FilterOption}Suite1.*:");
+            commandLines[0].TestCases.Should().BeEquivalentTo(tearDownTestCase);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_AllTestsAndTearDownTestSuiteTestCase_NoFilterAndTearDownTestSuiteTestCaseIsIncluded()
+        {
+            List<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite1.Test2", "Suite2.Test1").ToList();
+            Model.TestCase tearDownTestCase = CreateTearDownTestSuiteTestCase("Suite1", 2, 3);
+            testCases.Add(tearDownTestCase);
+
+            var commandLines = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().ToList();
+
+            commandLines.Should().ContainSingle();
+            commandLines[0].CommandLine.Should().NotContain(GoogleTestConstants.FilterOption);
+            commandLines[0].TestCases.Should().HaveCount(4).And.Contain(tearDownTestCase);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_TearDownTestSuiteTestCaseOfSuiteWithPrefixOfOtherSuite_BothSuitesAreRun()
+        {
+            List<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCasesFull(new[] { "MySuite.Test" }, new[] { "MySuite.Test", "Suite.Test" }).ToList();
+            Model.TestCase tearDownTestCase = CreateTearDownTestSuiteTestCase("Suite", 1, 2);
+            testCases.Add(tearDownTestCase);
+
+            var commandLines = new CommandLineGenerator(testCases, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options).GetCommandLines().ToList();
+
+            commandLines.Should().ContainSingle();
+            commandLines[0].CommandLine.Should().Contain($"{GoogleTestConstants.FilterOption}MySuite.*:Suite.*:");
+            commandLines[0].TestCases.Select(tc => tc.FullyQualifiedName).Should().BeEquivalentTo("MySuite.Test", "Suite.TearDownTestSuite");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void TestCaseMetaDataProperty_TearDownTestSuite_IsSerializedAndDeserialized()
+        {
+            var property = new Model.TestCaseMetaDataProperty(2, 5, isTearDownTestSuite: true);
+            var deserialized = new Model.TestCaseMetaDataProperty(property.Serialization);
+
+            deserialized.NrOfTestCasesInSuite.Should().Be(2);
+            deserialized.NrOfTestCasesInExecutable.Should().Be(5);
+            deserialized.IsTearDownTestSuite.Should().BeTrue();
+            new Model.TestCaseMetaDataProperty("2:5").IsTearDownTestSuite.Should().BeFalse();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void KeepTearDownTestSuiteTestCasesWithTheirSuites_TearDownTestSuiteTestCaseInOtherGroup_IsMovedToGroupOfSuite()
+        {
+            List<Model.TestCase> testCases = TestDataCreator.CreateDummyTestCases("Suite1.Test1", "Suite2.Test1").ToList();
+            Model.TestCase tearDownTestCase = CreateTearDownTestSuiteTestCase("Suite1", 1, 2);
+            var groups = new List<List<Model.TestCase>>
+            {
+                new List<Model.TestCase> { testCases[0] },
+                new List<Model.TestCase> { testCases[1], tearDownTestCase }
+            };
+
+            List<List<Model.TestCase>> result = ParallelTestRunner.KeepTearDownTestSuiteTestCasesWithTheirSuites(groups);
+
+            result.Should().HaveCount(2);
+            result[0].Should().BeEquivalentTo(testCases[0], tearDownTestCase);
+            result[1].Should().BeEquivalentTo(testCases[1]);
+        }
+
         [TestMethod]
         [TestCategory(Unit)]
         public void GetCommandLines_OnlyExitCodeTestCase_DummyFilter()
@@ -205,6 +287,57 @@ namespace GoogleTestAdapter.Runners
             string expectedCommandLine = $"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=FooSuite.*:";
             commandLine.Should().Be(expectedCommandLine);
             commandLineFromBackwards.Should().Be(expectedCommandLine);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_TestsOfSuitesWithDotsInName_AreCombinedViaFullSuiteName()
+        {
+            string[] testCaseNamesToRun = { "unittests.suite_1.test_1", "unittests.suite_1.test_2", "unittests.suite_2.test_1" };
+            string[] allTestCaseNames = testCaseNamesToRun.Union(new[] { "unittests.suite_2.test_2", "unittests.suite_3.test_1" }).ToArray();
+            IEnumerable<Model.TestCase> testCasesToRun = TestDataCreator.CreateDummyTestCasesFull(testCaseNamesToRun, allTestCaseNames);
+
+            string commandLine = new CommandLineGenerator(testCasesToRun, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
+                .GetCommandLines().First().CommandLine;
+
+            commandLine.Should()
+                .Be($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=unittests.suite_1.*:unittests.suite_2.test_1");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_TestsWithNonAsciiNames_FilterMatchesAnsiAndUtf8EncodedNames()
+        {
+            string[] testCaseNamesToRun = { "\u00dcmlaut\u00df.T\u00e4st", "\u00dcmlaut\u00df.Test", "Suite.\u4e2d\u6587", "Suite.\U0001F600" };
+            string[] allTestCaseNames = testCaseNamesToRun.Union(new[] { "Suite.Test" }).ToArray();
+            IEnumerable<Model.TestCase> testCasesToRun = TestDataCreator.CreateDummyTestCasesFull(testCaseNamesToRun, allTestCaseNames);
+
+            string commandLine = new CommandLineGenerator(testCasesToRun, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
+                .GetCommandLines().First().CommandLine;
+
+            commandLine.Should()
+                .Be($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=\u00dcmlaut\u00df.*:??mlaut??.*:Suite.\u4e2d\u6587:Suite.??????:Suite.\U0001F600:Suite.????");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetCommandLines_SingleTestsOfSuitesWithDotsInName_AreNotCombinedViaRootSuite()
+        {
+            // see issue #330: each suite contributes as many tests as the "unittests" root suite has suites
+            string[] testCaseNamesToRun = { "unittests.suite_1.test_3", "unittests.suite_2.test_3", "unittests.suite_3.test_3" };
+            string[] allTestCaseNames = testCaseNamesToRun.Union(new[]
+            {
+                "unittests.suite_1.test_1", "unittests.suite_1.test_2",
+                "unittests.suite_2.test_1", "unittests.suite_2.test_2",
+                "unittests.suite_3.test_1", "unittests.suite_3.test_2"
+            }).ToArray();
+            IEnumerable<Model.TestCase> testCasesToRun = TestDataCreator.CreateDummyTestCasesFull(testCaseNamesToRun, allTestCaseNames);
+
+            string commandLine = new CommandLineGenerator(testCasesToRun, TestDataCreator.DummyExecutable.Length, "", "", TestEnvironment.Options)
+                .GetCommandLines().First().CommandLine;
+
+            commandLine.Should()
+                .Be($"--gtest_output=\"xml:\"{DefaultArgs} --gtest_filter=unittests.suite_1.test_3:unittests.suite_2.test_3:unittests.suite_3.test_3");
         }
 
         [TestMethod]

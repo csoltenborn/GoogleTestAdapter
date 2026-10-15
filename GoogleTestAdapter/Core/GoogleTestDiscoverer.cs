@@ -52,6 +52,9 @@ namespace GoogleTestAdapter
                 if (!VerifyExecutableTrust(executable, settings, logger) || !IsGoogleTestExecutable(executable, settings.TestDiscoveryRegex, logger))
                     return;
 
+                // discovery of executables with many tests takes a while, and their tests are only reported at the end
+                logger.LogInfo("Discovering tests in executable " + executable);
+
                 int nrOfTestCases = 0;
                 void ReportTestCases(TestCase testCase)
                 {
@@ -64,6 +67,15 @@ namespace GoogleTestAdapter
                 factory.CreateTestCases(ReportTestCases);
                 logger.LogInfo("Found " + nrOfTestCases + " tests in executable " + executable);
             });
+        }
+
+        /// <summary>
+        /// The tests of the executable, with the settings for the executable (for callers which do not reference
+        /// GoogleTestAdapter.DiaResolver, e.g. GTA's automation object)
+        /// </summary>
+        public static IList<TestCase> GetTestsFromExecutable(string executable, SettingsWrapper settings, ILogger logger)
+        {
+            return new GoogleTestDiscoverer(logger, settings).GetTestsFromExecutable(executable);
         }
 
         public IList<TestCase> GetTestsFromExecutable(string executable)
@@ -82,20 +94,37 @@ namespace GoogleTestAdapter
 
         public static bool IsGoogleTestExecutable(string executable, string customRegex, ILogger logger)
         {
+            return GetGoogleTestExecutableIndicator(executable, customRegex, logger) != null;
+        }
+
+        // the indicators returned by GetGoogleTestExecutableIndicator()
+        public const string IndicatorFile = "IndicatorFile";
+        public const string IndicatorGoogleTestDll = "GoogleTestDll";
+        public const string IndicatorGoogleTestFunctions = "GoogleTestFunctions";
+        public const string IndicatorGoogleTestMarkers = "GoogleTestMarkers";
+        public const string IndicatorTestDiscoveryRegex = "TestDiscoveryRegex";
+
+        /// <returns>What makes the executable a Google Test executable (one of the Indicator* constants), or null if it
+        /// is not one</returns>
+        public static string GetGoogleTestExecutableIndicator(string executable, string customRegex, ILogger logger)
+        {
             string googleTestIndicatorFile = $"{executable}{GoogleTestIndicator}";
             if (File.Exists(googleTestIndicatorFile))
             {
                 logger.DebugInfo($"Google Test indicator file found for executable {executable} ({googleTestIndicatorFile})");
-                return true;
+                return IndicatorFile;
             }
 
             if (string.IsNullOrWhiteSpace(customRegex))
             {
-                if (PeParser.FindImport(executable, GoogleTestConstants.GoogleTestDllMarker, StringComparison.OrdinalIgnoreCase, logger)
-                    || Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers))
+                string indicator = PeParser.ParseImports(executable, logger).Any(IsGoogleTestDll) ? IndicatorGoogleTestDll
+                    : PeParser.FindImportedFunction(executable, IsGoogleTestFunction, logger) ? IndicatorGoogleTestFunctions
+                    : Utils.BinaryFileContainsStrings(executable, Encoding.ASCII, GoogleTestConstants.GoogleTestExecutableMarkers) ? IndicatorGoogleTestMarkers
+                    : null;
+                if (indicator != null)
                 {
                     logger.DebugInfo($"Google Test indicators found in executable {executable}");
-                    return true;
+                    return indicator;
                 }
             }
             else
@@ -103,12 +132,45 @@ namespace GoogleTestAdapter
                 if (SafeMatches(executable, customRegex, logger))
                 {
                     logger.DebugInfo($"Custom regex '{customRegex}' matches executable '{executable}'");
-                    return true;
+                    return IndicatorTestDiscoveryRegex;
                 }
             }
 
             logger.DebugInfo($"File does not seem to be Google Test executable: '{executable}'");
-            return false;
+            return null;
+        }
+
+        public static bool IsGoogleTestDll(string import)
+        {
+            return GoogleTestConstants.GoogleTestDllMarkers.Contains(import, StringComparer.OrdinalIgnoreCase);
+        }
+
+        // scopes of Google Test's core: every test executable linking Google Test as DLL uses some of them (e.g.
+        // testing::internal::MakeAndRegisterTestInfo() for TEST(), testing::UnitTest for TEST_P())
+        private static readonly string[] GoogleTestScopes = { "testing::internal::", "testing::UnitTest::", "testing::Test::" };
+
+        // fallback if a name can not be undecorated: MSVC mangles names from the innermost to the outermost scope, e.g.
+        // "?GetInstance@UnitTest@testing@@..."; constructors and destructors are mangled as "??0Test@testing@@...", "??1..."
+        private static readonly Regex MsvcGoogleTestFunctionRegex = new Regex(
+            @"@(?:internal|UnitTest|Test)@testing@@|^\?\?[0-9]Test@testing@@", RegexOptions.Compiled);
+
+        // Itanium mangling (MinGW, clang), which dbghelp can not undecorate, names the outermost scope first, e.g.
+        // "_ZN7testing8UnitTest11GetInstanceEv"; names are prefixed with their length
+        private static readonly Regex ItaniumGoogleTestFunctionRegex = new Regex(
+            @"^_?_ZNK?7testing(?:8internal|8UnitTest|4Test)(?=[0-9CDE])", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Test executables linking Google Test (or Google Mock) as DLL, whatever its name, import functions of
+        /// testing::internal, testing::UnitTest, or testing::Test.
+        /// </summary>
+        public static bool IsGoogleTestFunction(string importedFunction)
+        {
+            string qualifiedName = SymbolUndecorator.UndecorateNameOnly(importedFunction);
+            if (qualifiedName != null)
+                return GoogleTestScopes.Any(scope => qualifiedName.StartsWith(scope, StringComparison.Ordinal));
+
+            return MsvcGoogleTestFunctionRegex.IsMatch(importedFunction)
+                || ItaniumGoogleTestFunctionRegex.IsMatch(importedFunction);
         }
 
         private static bool SafeMatches(string executable, string regex, ILogger logger)
@@ -135,12 +197,41 @@ namespace GoogleTestAdapter
                 return true;
 
             var zone = Zone.CreateFromUrl(executable);
-            if (zone.SecurityZone != System.Security.SecurityZone.MyComputer)
+            if (IsTrustedZone(zone.SecurityZone))
+                return true;
+
+            string skipOriginCheck = $"set option '{SettingsWrapper.OptionSkipOriginCheck}' (Tools/Options/Google Test Adapter/{SettingsWrapper.PageGeneralName}/{SettingsWrapper.CategorySecurityName}; can not be set via settings files)";
+            if (IsOnNetworkDrive(executable))
             {
-                logger.LogError("Executable " + executable + " came from another computer and was blocked to help protect this computer.");
+                // wherever the executable has been built: others might replace it
+                logger.LogError($"Executable {executable} is located on a network drive (security zone '{zone.SecurityZone}') and was blocked to help protect this computer. " +
+                                $"If you trust the executable, {skipOriginCheck}, or build it to a local drive.");
+            }
+            else
+            {
+                logger.LogError($"Executable {executable} came from another computer and was blocked to help protect this computer. " +
+                                $"If you trust the executable, {skipOriginCheck} or, if the executable has been downloaded, unblock it via the file's properties.");
+            }
+            return false;
+        }
+
+        public static bool IsTrustedZone(System.Security.SecurityZone zone)
+        {
+            return zone == System.Security.SecurityZone.MyComputer;
+        }
+
+        // UNC paths and mapped network drives (the file itself is not accessed, which might take long for unreachable hosts)
+        public static bool IsOnNetworkDrive(string executable)
+        {
+            try
+            {
+                string root = Path.GetPathRoot(Path.GetFullPath(executable));
+                return root.StartsWith(@"\\", StringComparison.Ordinal) || new DriveInfo(root).DriveType == DriveType.Network;
+            }
+            catch (Exception)
+            {
                 return false;
             }
-            return true;
         }
 
     }

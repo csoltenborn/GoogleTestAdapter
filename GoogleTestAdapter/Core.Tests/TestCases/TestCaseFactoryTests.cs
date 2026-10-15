@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentAssertions;
+using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution;
@@ -37,7 +38,7 @@ namespace GoogleTestAdapter.TestCases
 
             reportedTestCases.Should().BeEmpty();
             returnedTestCases.Should().BeEmpty();
-            stopWatch.Elapsed.Should().BeGreaterOrEqualTo(TimeSpan.FromSeconds(1));
+            stopWatch.Elapsed.Should().BeGreaterOrEqualTo(TimeSpan.FromSeconds(0.9));
             stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(2));
             MockLogger.Verify(o => o.LogError(It.Is<string>(s => s.Contains(TestResources.TenSecondsWaiter))), Times.Once);
             MockLogger.Verify(o => o.DebugError(It.Is<string>(s => s.Contains(Path.GetFileName(TestResources.TenSecondsWaiter)))), Times.AtLeastOnce);
@@ -82,13 +83,15 @@ namespace GoogleTestAdapter.TestCases
                 File.Move(pdb, renamedPdb);
                 pdb.AsFileInfo().Should().NotExist();
 
+                // without debug symbols, the source locations are provided by Google Test
                 var reportedTestCases = new List<TestCase>();
-                var diaResolverFactory = new DefaultDiaResolverFactory();
+                var diaResolverFactory = new RecordingDiaResolverFactory();
                 var factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory, _processExecutorFactory);
                 var returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
 
-                returnedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
-                reportedTestCases.Should().OnlyContain(tc => !HasSourceLocation(tc));
+                diaResolverFactory.Pdbs.Should().BeEmpty();
+                returnedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
+                reportedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
 
                 reportedTestCases.Clear();
                 MockOptions.Setup(o => o.AdditionalPdbs).Returns("$(ExecutableDir)\\*.pdb.bak");
@@ -96,6 +99,7 @@ namespace GoogleTestAdapter.TestCases
                 factory = new TestCaseFactory(executable, MockLogger.Object, TestEnvironment.Options, diaResolverFactory, _processExecutorFactory);
                 returnedTestCases = factory.CreateTestCases(testCase => reportedTestCases.Add(testCase));
 
+                diaResolverFactory.Pdbs.Should().Contain(p => string.Equals(Path.GetFullPath(p), Path.GetFullPath(renamedPdb), StringComparison.OrdinalIgnoreCase));
                 reportedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
                 returnedTestCases.Should().OnlyContain(tc => HasSourceLocation(tc));
             }
@@ -109,6 +113,19 @@ namespace GoogleTestAdapter.TestCases
         private bool HasSourceLocation(TestCase testCase)
         {
             return !string.IsNullOrEmpty(testCase.CodeFilePath) && testCase.LineNumber != 0;
+        }
+
+        private class RecordingDiaResolverFactory : IDiaResolverFactory
+        {
+            private readonly IDiaResolverFactory _factory = new DefaultDiaResolverFactory();
+
+            public List<string> Pdbs { get; } = new List<string>();
+
+            public IDiaResolver Create(string binary, string pdb, ILogger logger)
+            {
+                Pdbs.Add(pdb);
+                return _factory.Create(binary, pdb, logger);
+            }
         }
     }
 

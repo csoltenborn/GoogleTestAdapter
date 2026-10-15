@@ -3,7 +3,7 @@
     <Name>Google Test</Name>
     <Description>A Google Test based unit testing project.</Description>
     <ProjectType>VC</ProjectType>
-    <TemplateID>Microsoft.VisualC.Project.GoogleTest</TemplateID>
+    <TemplateID>GoogleTestAdapter.VisualC.Project.GoogleTest</TemplateID>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
     <CreateInPlace>true</CreateInPlace>
@@ -25,8 +25,8 @@
     <FullClassName>Microsoft.NewProjectWizard.WizardImplementation</FullClassName>
   </WizardExtension>
   <WizardData>
-    <packages repository="extension" repositoryId="GoogleTestAdapterVSIX.8486b54e-5768-482b-b224-7d069ca509d8">
-      <package id="$nugetpackage$" version="1.8.0" />
+    <packages repository="extension" repositoryId="GoogleTestAdapterVSIX.e57b9720-dfde-4baa-bcb5-0f75772012b4">
+      <package id="$nugetpackage$" version="1.18.0" />
     </packages>
   </WizardData>
 </VSTemplate>

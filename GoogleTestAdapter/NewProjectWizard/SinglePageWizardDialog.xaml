@@ -119,10 +119,11 @@
                 <Label x:Name="projectToTestLabel" x:Uid="projectToTestLabel"  Grid.Column="0" Content="Select project to test (Optional):" Target="{Binding ElementName=projectComboBox}"/>
                 <ComboBox x:Name="projectComboBox" Grid.Column="1" Width="160" Height="23" AutomationProperties.AutomationId="projectComboBox" AutomationProperties.LabeledBy="{Binding ElementName=projectToTestLabel}"/>
             </Grid>
+            <!-- the second column takes the remaining width, so that its texts wrap if the dialog is too narrow -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="0,12,0,0">
                     <Label x:Name="consumeGTestAsLabel" x:Uid="consumeGTestAsLabel" Content="Consume Google Test as:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -134,8 +135,12 @@
                 <StackPanel Grid.Column="1" Margin="24,12,0,0">
                     <Label x:Name="runtimeLibrariesLabel" x:Uid="runtimeLibrariesLabel" Content="C++ runtime libraries:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <StackPanel Margin="12,0,0,0">
-                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" Content="Link dynamically (Recommended)" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Width="203" Margin="0,0,0,7"/>
-                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" Content="Link statically" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7"/>
+                        <RadioButton x:Name="linkDynamicRadioButton" x:Uid="linkDynamicRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True" Margin="0,0,0,7">
+                            <TextBlock Text="Link dynamically (Recommended)" TextWrapping="Wrap"/>
+                        </RadioButton>
+                        <RadioButton x:Name="linkStaticRadioButton" x:Uid="linkStaticRadioButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,7">
+                            <TextBlock Text="Link statically" TextWrapping="Wrap"/>
+                        </RadioButton>
                     </StackPanel>
                 </StackPanel>
             </Grid>

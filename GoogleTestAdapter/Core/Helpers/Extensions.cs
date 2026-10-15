@@ -34,11 +34,6 @@ namespace GoogleTestAdapter.Helpers
             return groupedTestCases;
         }
 
-        internal static string AppendIfNotEmpty(this string theString, string appendix)
-        {
-            return string.IsNullOrWhiteSpace(theString) ? theString : theString + appendix;
-        }
-
         public static void AddRange<T1, T2>(this IDictionary<T1, T2> target, IDictionary<T1, T2> source, bool replaceExisting = false)
         {
             foreach (KeyValuePair<T1, T2> keyValuePair in source)

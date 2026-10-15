@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using GoogleTestAdapter.Helpers;
 
 namespace GoogleTestAdapter.TestResults
 {
@@ -24,11 +25,14 @@ namespace GoogleTestAdapter.TestResults
             string file = $"([a-z]:{validCharRegex}*)";
             string line = "([0-9]+)";
             string fileAndLine = $@"{file}(?::{line}|\({line}\):)";
-            string error = @"(?:error: |Failure\n)";
+            // "Skipped" is printed by GTEST_SKIP()
+            string error = @"(?:error: |Failure\n|Skipped\n)";
 
-            SplitRegex = new Regex($"{fileAndLine}:? {error}", RegexOptions.IgnoreCase);
-            ParseRegex = new Regex($"^{fileAndLine}(?::? {error})?", RegexOptions.IgnoreCase);
-            // TODO make expression parse "unknown file: error: SEH exception with code 0xc0000005 thrown in the test body."
+            // failures without location, e.g. "unknown file: error: SEH exception with code 0xc0000005 thrown in the test body."
+            string unknownFile = "unknown file: ";
+
+            SplitRegex = new Regex($"(?:{fileAndLine}:? |{unknownFile}){error}", RegexOptions.IgnoreCase);
+            ParseRegex = new Regex($"^(?:{fileAndLine}(?::? {error})?|{unknownFile}{error})", RegexOptions.IgnoreCase);
             ScopedTraceRegex = new Regex($@"{file}\({line}\): (.*)", RegexOptions.IgnoreCase);
             ScopedTraceStartRegex
                 = new Regex(@"Google Test trace:\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -37,16 +41,27 @@ namespace GoogleTestAdapter.TestResults
         public string ErrorMessage { get; private set; }
         public string ErrorStackTrace { get; private set; }
 
-        private string _outputBeforeFirstFailure = "";
+        private readonly string _testName;
+        private readonly SourcePathMapper _sourcePathMapper;
         private IList<string> ErrorMessages { get; }
 
-        public ErrorMessageParser(string consoleOutput)
+        /// <param name="testName">If provided, stack trace entries of failures are labeled with the test's name
+        /// (as for .NET tests, which helps tools like Copilot to relate them to the test) rather than with file and line</param>
+        /// <param name="sourcePathMapper">Maps the source paths of the stack trace entries, see
+        /// <see cref="Settings.SettingsWrapper.OptionSourcePathMapping"/></param>
+        public ErrorMessageParser(string consoleOutput, string testName = null, SourcePathMapper sourcePathMapper = null)
         {
+            _testName = testName;
+            _sourcePathMapper = sourcePathMapper ?? SourcePathMapper.Identity;
             ErrorMessages = SplitConsoleOutput(consoleOutput);
         }
 
-        public ErrorMessageParser(XmlNodeList failureNodes)
+        /// <param name="testName">See <see cref="ErrorMessageParser(string, string, SourcePathMapper)"/></param>
+        /// <param name="sourcePathMapper">See <see cref="ErrorMessageParser(string, string, SourcePathMapper)"/></param>
+        public ErrorMessageParser(XmlNodeList failureNodes, string testName = null, SourcePathMapper sourcePathMapper = null)
         {
+            _testName = testName;
+            _sourcePathMapper = sourcePathMapper ?? SourcePathMapper.Identity;
             ErrorMessages = (from XmlNode failureNode in failureNodes select failureNode.InnerText).ToList();
         }
 
@@ -65,13 +80,6 @@ namespace GoogleTestAdapter.TestResults
                     HandleMultipleFailures();
                     break;
             }
-
-            if (_outputBeforeFirstFailure != "")
-            {
-                if (!_outputBeforeFirstFailure.EndsWith("\n") && !_outputBeforeFirstFailure.EndsWith("\r\n"))
-                    _outputBeforeFirstFailure += "\n";
-                ErrorMessage = $"{_outputBeforeFirstFailure}{ErrorMessage}";
-            }
         }
 
         public static string CreateStackTraceEntry(string label, string fullFileName, string lineNumber)
@@ -88,12 +96,10 @@ namespace GoogleTestAdapter.TestResults
             if (matches.Count == 0)
                 return new List<string>{ errorMessage };
 
+            // output before the first failure is not part of the error message (but of the test's standard output)
             var errorMessages = new List<string>();
-            int startIndex = 0;
-            int length = matches[0].Index;
-            if (length > 0)
-                _outputBeforeFirstFailure = errorMessage.Substring(startIndex, length);
-
+            int startIndex;
+            int length;
             for (int i = 0; i < matches.Count - 1; i++)
             {
                 startIndex = matches[i].Index;
@@ -151,7 +157,9 @@ namespace GoogleTestAdapter.TestResults
 
             string msgReference = msgId == 0 ? "" : $"#{msgId} - ";
 
-            stackTrace = CreateStackTraceEntry($"{msgReference}{fileName}:{lineNumber}", fullFileName, lineNumber);
+            string label = _testName ?? $"{fileName}:{lineNumber}";
+
+            stackTrace = fullFileName == "" ? "" : CreateStackTraceEntry($"{msgReference}{label}", _sourcePathMapper.Map(fullFileName), lineNumber);
             errorMessage = errorMessage.Replace(match.Value, "").Trim();
 
             match = ScopedTraceStartRegex.Match(errorMessage);
@@ -166,7 +174,7 @@ namespace GoogleTestAdapter.TestResults
                     lineNumber = traceMatch.Groups[2].Value;
                     string traceMessage = traceMatch.Groups[3].Value.Trim();
 
-                    stackTrace += CreateStackTraceEntry($"-->{traceMessage}", fullFileName, lineNumber);
+                    stackTrace += CreateStackTraceEntry($"-->{traceMessage}", _sourcePathMapper.Map(fullFileName), lineNumber);
                 }
             }
         }

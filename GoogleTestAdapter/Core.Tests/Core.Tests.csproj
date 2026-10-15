@@ -94,6 +94,7 @@
     <Compile Include="Helpers\DebugUtilsTests.cs" />
     <Compile Include="Helpers\DotNetProcessExecutorTests.cs" />
     <Compile Include="Helpers\EnvironmentVariablesParserTests.cs" />
+    <Compile Include="Helpers\JobObjectTests.cs" />
     <Compile Include="Helpers\RegexTraitParserTests.cs" />
     <Compile Include="Helpers\TestEnvironmentTests.cs" />
     <Compile Include="Helpers\ByteUtilsTests.cs" />
@@ -106,6 +107,8 @@
     <Compile Include="TestCases\TestCaseResolverTests.cs" />
     <Compile Include="TestCases\TestCaseFactoryTests.cs" />
     <Compile Include="TestCases\ListTestsParserTests.cs" />
+    <Compile Include="TestCases\XmlTestListParserTests.cs" />
+    <Compile Include="Helpers\SourcePathMapperTests.cs" />
     <Compile Include="TestResults\ExitCodeTestsReporterTests.cs" />
     <Compile Include="TestResults\StreamingStandardOutputTestResultParserTests.cs" />
     <Compile Include="TestResults\ErrorMessageParserTests.cs" />
@@ -114,6 +117,8 @@
     <Compile Include="Scheduling\DurationBasedTestsSplitterTests.cs" />
     <Compile Include="Scheduling\NumberBasedTestsSplitterTests.cs" />
     <Compile Include="Settings\SettingsWrapperTests.cs" />
+    <Compile Include="Settings\CTestTestPropertySettingsProviderTests.cs" />
+    <Compile Include="Settings\TestPropertySettingsContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\TestDurationSerializerTests.cs" />
   </ItemGroup>

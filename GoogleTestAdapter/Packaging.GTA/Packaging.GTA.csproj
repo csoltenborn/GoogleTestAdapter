@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Common.props))\Common.props" />
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.props')" />
+  <Import Project="$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.props" Condition="Exists('$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -81,7 +82,54 @@
       <Project>{e6276cad-e4c3-4b25-876a-65b265ebff1a}</Project>
       <Name>VsPackage.GTA</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NewProjectWizard\NewProjectWizard.csproj">
+      <Project>{483FE0C7-4E8D-4591-BE45-EAC6B2EA5F4F}</Project>
+      <Name>NewProjectWizard</Name>
+    </ProjectReference>
   </ItemGroup>
+  <!-- The Google Test project and item templates. The wizard of the project template adds one of the Google Test NuGet
+       packages to the new project; NuGet takes them from folder Packages of the VSIX (WizardData of the template).
+       The packages are built by GoogleTestNuGet\Build.ps1 if they are missing (which takes a few minutes). -->
+  <PropertyGroup>
+    <TemplatesIntDir>$(IntermediateOutputPath)Templates\</TemplatesIntDir>
+    <TemplateIcon>..\Resources\Icons\Icon.ico</TemplateIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectTemplateFile Include="..\ProjectTemplates\Test\GoogleTest\*" />
+    <ItemTemplateFile Include="..\ItemTemplates\Test\GoogleTest\*" />
+    <GoogleTestNuGetPackage Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.dyn.rt-dyn.1.18.0.nupkg" />
+    <GoogleTestNuGetPackage Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn.1.18.0.nupkg" />
+    <GoogleTestNuGetPackage Include="..\Packages\Microsoft.googletest.v140.windesktop.msvcstl.static.rt-static.1.18.0.nupkg" />
+    <Content Include="$(TemplatesIntDir)GoogleTestPT.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>ProjectTemplates\Test</VSIXSubPath>
+    </Content>
+    <Content Include="$(TemplatesIntDir)GoogleTestIT.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>ItemTemplates\Test</VSIXSubPath>
+    </Content>
+    <Content Include="@(GoogleTestNuGetPackage)">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Packages</VSIXSubPath>
+    </Content>
+  </ItemGroup>
+  <Target Name="BuildGoogleTestNuGetPackages" BeforeTargets="PrepareForBuild">
+    <ItemGroup>
+      <_MissingGoogleTestNuGetPackage Include="@(GoogleTestNuGetPackage)" Condition="!Exists('%(FullPath)')" />
+    </ItemGroup>
+    <Exec Condition="'@(_MissingGoogleTestNuGetPackage)' != ''"
+          Command="powershell -NoProfile -ExecutionPolicy Bypass -File Build.ps1 -VSPath &quot;$(VsInstallRoot.TrimEnd('\'))&quot;"
+          WorkingDirectory="$(EnlistmentRoot)GoogleTestNuGet" />
+  </Target>
+  <Target Name="CreateTemplateArchives" BeforeTargets="PrepareForBuild"
+          Inputs="@(ProjectTemplateFile);@(ItemTemplateFile);$(TemplateIcon)"
+          Outputs="$(TemplatesIntDir)GoogleTestPT.zip;$(TemplatesIntDir)GoogleTestIT.zip">
+    <RemoveDir Directories="$(TemplatesIntDir)ProjectTemplate;$(TemplatesIntDir)ItemTemplate" />
+    <Copy SourceFiles="@(ProjectTemplateFile);$(TemplateIcon)" DestinationFolder="$(TemplatesIntDir)ProjectTemplate" />
+    <Copy SourceFiles="@(ItemTemplateFile);$(TemplateIcon)" DestinationFolder="$(TemplatesIntDir)ItemTemplate" />
+    <ZipDirectory SourceDirectory="$(TemplatesIntDir)ProjectTemplate" DestinationFile="$(TemplatesIntDir)GoogleTestPT.zip" Overwrite="true" />
+    <ZipDirectory SourceDirectory="$(TemplatesIntDir)ItemTemplate" DestinationFile="$(TemplatesIntDir)GoogleTestIT.zip" Overwrite="true" />
+  </Target>
   <ItemGroup>
     <Content Include="LICENSE.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -111,9 +159,13 @@
   <PropertyGroup>
     <PostBuildEvent>echo At least one file is needed within the lib/native folder to convince VS that our package can be installed into native C++ projects. &gt;"$(TargetDir)_.txt"
 
-$(NuGetPackages)NuGet.CommandLine.5.4.0\tools\nuget pack VsPackage.nuspec -NonInteractive</PostBuildEvent>
+$(NuGetPackages)NuGet.CommandLine.7.9.0\tools\nuget pack VsPackage.nuspec -NonInteractive</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.targets" Condition="Exists('$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.targets')" />
+  <Target Name="EnsureVSSDKBuildTools" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(VSSDKBuildToolsDir)Microsoft.VSSDK.BuildTools.targets')" Text="NuGet package Microsoft.VSSDK.BuildTools is missing: restore the NuGet packages of the solution and build again." />
+  </Target>
   <Import Project="$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets" Condition="Exists('$(NuGetPackages)MicroBuild.Core.0.2.0\build\MicroBuild.Core.targets')" />
 </Project>

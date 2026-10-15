@@ -12,6 +12,11 @@ namespace GoogleTestAdapter.VsPackage
             // TAfGT does not display release notes.
         }
 
+        private void WarnIfTestAdapterForGoogleTestIsInstalled()
+        {
+            // TAfGT is the conflicting adapter itself.
+        }
+
         private bool ShowReleaseNotes
         {
             get { return false; }

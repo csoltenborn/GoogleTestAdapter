@@ -83,6 +83,7 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.ShuffleTests).Returns(SettingsWrapper.OptionShuffleTestsDefaultValue);
             mockOptions.Setup(o => o.ShuffleTestsSeed).Returns(SettingsWrapper.OptionShuffleTestsSeedDefaultValue);
             mockOptions.Setup(o => o.ParseSymbolInformation).Returns(SettingsWrapper.OptionParseSymbolInformationDefaultValue);
+            mockOptions.Setup(o => o.TearDownTestSuiteTestCases).Returns(SettingsWrapper.OptionTearDownTestSuiteTestCasesDefaultValue);
             mockOptions.Setup(o => o.OutputMode).Returns(SettingsWrapper.OptionOutputModeDefaultValue);
             mockOptions.Setup(o => o.TimestampMode).Returns(TimestampMode.DoNotPrintTimestamp);
             mockOptions.Setup(o => o.SeverityMode).Returns(SeverityMode.PrintSeverity);
@@ -91,6 +92,8 @@ namespace GoogleTestAdapter.Tests.Common
                 .Returns(SettingsWrapper.OptionPrefixOutputWithGtaDefaultValue);
             mockOptions.Setup(o => o.AdditionalTestExecutionParam)
                 .Returns(SettingsWrapper.OptionAdditionalTestExecutionParamsDefaultValue);
+            mockOptions.Setup(o => o.AdditionalTestDiscoveryParam)
+                .Returns(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue);
             mockOptions.Setup(o => o.BatchForTestSetup).Returns(SettingsWrapper.OptionBatchForTestSetupDefaultValue);
             mockOptions.Setup(o => o.BatchForTestTeardown).Returns(SettingsWrapper.OptionBatchForTestTeardownDefaultValue);
             mockOptions.Setup(o => o.ParallelTestExecution)
@@ -98,6 +101,10 @@ namespace GoogleTestAdapter.Tests.Common
             mockOptions.Setup(o => o.MaxNrOfThreads).Returns(SettingsWrapper.OptionMaxNrOfThreadsDefaultValue);
             mockOptions.Setup(o => o.PathExtension).Returns(SettingsWrapper.OptionPathExtensionDefaultValue);
             mockOptions.Setup(o => o.EnvironmentVariables).Returns(SettingsWrapper.OptionEnvironmentVariablesDefaultValue);
+            mockOptions.Setup(o => o.UseCTestTestProperties).Returns(SettingsWrapper.OptionUseCTestTestPropertiesDefaultValue);
+            mockOptions.Setup(o => o.TestTimeoutInSeconds).Returns(SettingsWrapper.OptionTestTimeoutInSecondsDefaultValue);
+            mockOptions.Setup(o => o.SourcePathMapping).Returns(SettingsWrapper.OptionSourcePathMappingDefaultValue);
+            mockOptions.Setup(o => o.MapOnlyMissingSourcePaths).Returns(SettingsWrapper.OptionMapOnlyMissingSourcePathsDefaultValue);
             mockOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
             mockOptions.Setup(o => o.KillProcessesOnCancel).Returns(SettingsWrapper.OptionKillProcessesOnCancelDefaultValue);
             mockOptions.Setup(o => o.SkipOriginCheck).Returns(SettingsWrapper.OptionSkipOriginCheckDefaultValue);

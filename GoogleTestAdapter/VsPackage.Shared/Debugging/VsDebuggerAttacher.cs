@@ -26,23 +26,31 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             _serviceProvider = serviceProvider;
         }
 
+        // VSConstants.DebugEnginesGuids.NativeOnly and .ManagedAndNative (the latter supporting the .NET Framework only)
+        private static readonly Guid NativeEngineGuid = new Guid("3B476D35-A401-11D2-AAD4-00C04F990171");
+        private static readonly Guid ManagedAndNativeEngineGuid = new Guid("92EF0900-2251-11D2-B72E-0000F87572EF");
+        // CoreCLR debug engine ("Managed (.NET Core, .NET 5+)"), which is not contained in the referenced VS SDK
+        private static readonly Guid ManagedCoreEngineGuid = new Guid("2E36F1D4-B23C-435D-AB41-18E608940038");
+
         public bool AttachDebugger(int processId, DebuggerEngine debuggerEngine)
         {
-            IntPtr pDebugEngine = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(Guid)));
+            Guid[] debuggerEngineGuids = GetDebuggerEngineGuids(debuggerEngine);
+            int guidSize = Marshal.SizeOf(typeof(Guid));
+            IntPtr pDebugEngines = Marshal.AllocCoTaskMem(guidSize * debuggerEngineGuids.Length);
             try
             {
-                Guid debuggerEngineGuid = debuggerEngine == DebuggerEngine.Native
-                    ? VSConstants.DebugEnginesGuids.NativeOnly
-                    : VSConstants.DebugEnginesGuids.ManagedAndNative;
-                Marshal.StructureToPtr(debuggerEngineGuid, pDebugEngine, false);
+                for (int i = 0; i < debuggerEngineGuids.Length; i++)
+                {
+                    Marshal.StructureToPtr(debuggerEngineGuids[i], pDebugEngines + i * guidSize, false);
+                }
 
                 var debugTarget = new VsDebugTargetInfo4
                 {
                     dlo = (uint) DEBUG_LAUNCH_OPERATION.DLO_AlreadyRunning
                           | (uint) _DEBUG_LAUNCH_OPERATION4.DLO_AttachToSuspendedLaunchProcess,
                     dwProcessId = (uint) processId,
-                    dwDebugEngineCount = 1,
-                    pDebugEngines = pDebugEngine,
+                    dwDebugEngineCount = (uint) debuggerEngineGuids.Length,
+                    pDebugEngines = pDebugEngines,
                 };
 
                 var debugger = (IVsDebugger4) _serviceProvider.GetService(typeof(SVsShellDebugger));
@@ -51,9 +59,26 @@ namespace GoogleTestAdapter.VsPackage.Debugging
             }
             finally
             {
-                Marshal.FreeCoTaskMem(pDebugEngine);
+                Marshal.FreeCoTaskMem(pDebugEngines);
             }
             return true;
+        }
+
+        // mixed mode debugging of .NET Core is done by the native and the CoreCLR engine together (as VS does for
+        // .NET projects with native debugging enabled), while the legacy mixed mode engine only supports the .NET Framework
+        public static Guid[] GetDebuggerEngineGuids(DebuggerEngine debuggerEngine)
+        {
+            switch (debuggerEngine)
+            {
+                case DebuggerEngine.Native:
+                    return new[] { NativeEngineGuid };
+                case DebuggerEngine.ManagedAndNative:
+                    return new[] { ManagedAndNativeEngineGuid };
+                case DebuggerEngine.ManagedCoreAndNative:
+                    return new[] { NativeEngineGuid, ManagedCoreEngineGuid };
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(debuggerEngine), debuggerEngine, "Unknown debugger engine");
+            }
         }
 
         private static void AttachDebuggerRetrying(IVsDebugger4 debugger, VsDebugTargetInfo4 debugTarget)

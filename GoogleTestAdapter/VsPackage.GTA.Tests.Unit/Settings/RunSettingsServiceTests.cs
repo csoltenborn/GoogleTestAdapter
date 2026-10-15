@@ -326,6 +326,44 @@ namespace GoogleTestAdapter.VsPackage.Settings
             CheckSkipOriginCheck(resultingContainer);
         }
 
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_VisualStudioConfigurationHasChanged_CurrentConfigurationIsUsed()
+        {
+            var xml = AddRunSettingsWithVisualStudioConfiguration(new VisualStudioConfiguration
+            {
+                SolutionDir = @"C:\NewSolution",
+                PlatformName = "x64",
+                ConfigurationName = "Release"
+            });
+
+            AssertContainsSetting(xml, nameof(RunSettings.SolutionDir), @"C:\NewSolution");
+            AssertContainsSetting(xml, nameof(RunSettings.PlatformName), "x64");
+            AssertContainsSetting(xml, nameof(RunSettings.ConfigurationName), "Release");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void AddRunSettings_VisualStudioConfigurationNotAvailable_ConfigurationOfGlobalSettingsIsUsed()
+        {
+            var xml = AddRunSettingsWithVisualStudioConfiguration(new VisualStudioConfiguration());
+
+            AssertContainsSetting(xml, nameof(RunSettings.SolutionDir), @"C:\OldSolution");
+            AssertContainsSetting(xml, nameof(RunSettings.PlatformName), "Win32");
+            AssertContainsSetting(xml, nameof(RunSettings.ConfigurationName), "Debug");
+        }
+
+        private XmlDocument AddRunSettingsWithVisualStudioConfiguration(VisualStudioConfiguration visualStudioConfiguration)
+        {
+            var service = (RunSettingsServiceUnderTest)SetupRunSettingsService(TestResources.XmlFileBroken);
+            service.VisualStudioConfiguration = visualStudioConfiguration;
+
+            var xml = new XmlDocument();
+            xml.Load(TestResources.UserTestSettings);
+            service.AddRunSettings(xml, new Mock<IRunSettingsConfigurationInfo>().Object, new Mock<ILogger>().Object);
+            return xml;
+        }
+
         private RunSettingsService SetupRunSettingsService(string solutionRunSettingsFile)
         {
             var globalRunSettings = new RunSettings
@@ -334,7 +372,10 @@ namespace GoogleTestAdapter.VsPackage.Settings
                 NrOfTestRepetitions = 1,
                 MaxNrOfThreads = 1,
                 TraitsRegexesBefore = "Global",
-                SkipOriginCheck = false
+                SkipOriginCheck = false,
+                SolutionDir = @"C:\OldSolution",
+                PlatformName = "Win32",
+                ConfigurationName = "Debug"
             };
 
             var mockGlobalRunSettings = new Mock<IGlobalRunSettings>();

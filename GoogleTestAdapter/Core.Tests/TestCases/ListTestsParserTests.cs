@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,6 +32,33 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].DisplayName.Should().Be("MySuite.MyTestCase");
             descriptors[0].FullyQualifiedName.Should().Be("MySuite.MyTestCase");
             descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Simple);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ParseListTestsOutput_NamesWithNonWordCharacters_CompleteNames()
+        {
+            // spacing combining mark (category Mc) and letter numbers (category Nl), which \w does not match
+            var consoleOutput = new List<string>
+            {
+                "सूट.",
+                "  नाम",
+                "PrefixⅠ/SuiteⅠ.",
+                "  TestⅡ/0  # GetParam() = 1",
+                "TypedⅠ/0.  # TypeParam = int",
+                "  TestⅡ"
+            };
+
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+                .ParseListTestsOutput(consoleOutput);
+
+            descriptors.Select(d => d.FullyQualifiedName).Should().Equal(
+                "सूट.नाम", "PrefixⅠ/SuiteⅠ.TestⅡ/0", "TypedⅠ/0.TestⅡ");
+            descriptors[1].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+            descriptors[1].TestClass.Should().Be("SuiteⅠ");
+            descriptors[1].TestGroup.Should().Be("TestⅡ");
+            descriptors[2].DisplayName.Should().Be("TypedⅠ/0.TestⅡ<int>");
+            descriptors[2].TestClass.Should().Be("TypedⅠ");
         }
 
         [TestMethod]
@@ -202,6 +230,53 @@ namespace GoogleTestAdapter.TestCases
             descriptors[0].FullyQualifiedName.Should().Be("InstantiationName/ParameterizedTests.Simple/0");
             descriptors[0].DisplayName.Should().Be("InstantiationName::ParameterizedTests.Simple::0");
             descriptors[0].TestType.Should().Be(TestCaseDescriptor.TestTypes.Parameterized);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void ParseListTestsOutput_TypedAndParameterizedTests_InstancesShareTestClassAndGroup()
+        {
+            var consoleOutput = new List<string>
+            {
+                "MySuite.",
+                "  MyTest",
+                "Api.Created.Tests.",
+                "  PassingTest",
+                "InstantiationName/ParameterizedTests.",
+                "  Simple/0  # GetParam() = (1,)",
+                "  Simple/1  # GetParam() = (1,!)",
+                "ParameterizedTests.",
+                "  Simple/0  # GetParam() = (0,_)",
+                "AllAllowedCharacters/CustomFunctorNamingTest.",
+                "  CustomTestNames/abcdefghijklmnopqrstuvwxyz  # GetParam() = \"abcdefghijklmnopqrstuvwxyz\"",
+                "TypedTests/0.  # TypeParam = class std::vector<int,class std::allocator<int> >",
+                "  CanIterate",
+                "TypedTests/1.  # TypeParam = class std::array<int,3>",
+                "  CanIterate",
+                "Arr/TypeParameterizedTests/1.  # TypeParam = class MyStrangeArray",
+                "  CanIterate",
+                "Vec/TypeParameterizedTests/0.  # TypeParam = class std::vector<int,class std::allocator<int> >",
+                "  CanIterate",
+                "InstantiationName/ParameterizedTests.",
+                "  Simple/2",
+            };
+
+            IList<TestCaseDescriptor> descriptors = new ListTestsParser(TestEnvironment.Options.TestNameSeparator)
+                .ParseListTestsOutput(consoleOutput);
+
+            descriptors.Select(d => $"{d.TestClass}|{d.TestGroup}").Should().Equal(
+                "MySuite|MyTest",
+                "Api.Created.Tests|PassingTest",
+                "ParameterizedTests|Simple",
+                "ParameterizedTests|Simple",
+                "ParameterizedTests|Simple",
+                "CustomFunctorNamingTest|CustomTestNames",
+                "TypedTests|CanIterate",
+                "TypedTests|CanIterate",
+                "TypeParameterizedTests|CanIterate",
+                "TypeParameterizedTests|CanIterate",
+                // older versions of Google Test do not always print the parameters
+                "ParameterizedTests|Simple");
         }
 
     }

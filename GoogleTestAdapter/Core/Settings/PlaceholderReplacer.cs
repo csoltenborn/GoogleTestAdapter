@@ -36,6 +36,7 @@ namespace GoogleTestAdapter.Settings
 
 
         private static readonly Regex PlaceholdersRegex = new Regex(@"\$\(\w+\)", RegexOptions.Compiled);
+        private static readonly Regex EnvironmentVariablesRegex = new Regex(@"%\w+%", RegexOptions.Compiled);
 
         private readonly Func<string> _getSolutionDir;
         private readonly Func<IGoogleTestAdapterSettings> _getSettings;
@@ -138,6 +139,20 @@ namespace GoogleTestAdapter.Settings
         }
 
 
+        public string ReplaceSourcePathMappingPlaceholders(string sourcePathMapping, string executable)
+        {
+            sourcePathMapping = ReplaceExecutablePlaceholders(sourcePathMapping, executable);
+            sourcePathMapping = ReplacePlatformAndConfigurationPlaceholders(sourcePathMapping, executable);
+            sourcePathMapping = ReplaceSolutionDirPlaceholder(sourcePathMapping, executable);
+            sourcePathMapping = ReplaceEnvironmentVariables(sourcePathMapping);
+            sourcePathMapping = ReplaceHelperFileSettings(sourcePathMapping, executable);
+
+            CheckForRemainingPlaceholders(sourcePathMapping, SettingsWrapper.OptionSourcePathMapping);
+
+            return sourcePathMapping;
+        }
+
+
         public const string EnvironmentPlaceholders = "Placeholders:\n" +
                                                         DescriptionOfSolutionDirPlaceHolder + "\n" +
                                                         DescriptionOfPlatformNamePlaceholder + "\n" +
@@ -190,16 +205,34 @@ namespace GoogleTestAdapter.Settings
 
         public string ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(string additionalTestExecutionParam, string executable)
         {
-            additionalTestExecutionParam = ReplaceExecutablePlaceholders(additionalTestExecutionParam, executable);
             additionalTestExecutionParam = RemoveTestDirAndThreadIdPlaceholders(additionalTestExecutionParam);
-            additionalTestExecutionParam = ReplacePlatformAndConfigurationPlaceholders(additionalTestExecutionParam, executable);
-            additionalTestExecutionParam = ReplaceSolutionDirPlaceholder(additionalTestExecutionParam, executable);
-            additionalTestExecutionParam = ReplaceEnvironmentVariables(additionalTestExecutionParam);
-            additionalTestExecutionParam = ReplaceHelperFileSettings(additionalTestExecutionParam, executable);
+            return ReplaceDiscoveryParamPlaceholders(additionalTestExecutionParam, executable, SettingsWrapper.OptionAdditionalTestExecutionParams);
+        }
 
-            CheckForRemainingPlaceholders(additionalTestExecutionParam, SettingsWrapper.OptionAdditionalTestExecutionParams);
+        public const string AdditionalTestDiscoveryParamPlaceholders = "Placeholders:\n" +
+                                                                       DescriptionOfSolutionDirPlaceHolder + "\n" +
+                                                                       DescriptionOfPlatformNamePlaceholder + "\n" +
+                                                                       DescriptionOfConfigurationNamePlaceholder + "\n" +
+                                                                       DescriptionOfExecutableDirPlaceHolder + "\n" +
+                                                                       DescriptionOfExecutablePlaceHolder + "\n" +
+                                                                       DescriptionOfEnvVarPlaceholders;
 
-            return additionalTestExecutionParam;
+        public string ReplaceAdditionalTestDiscoveryParamPlaceholders(string additionalTestDiscoveryParam, string executable)
+        {
+            return ReplaceDiscoveryParamPlaceholders(additionalTestDiscoveryParam, executable, SettingsWrapper.OptionAdditionalTestDiscoveryParams);
+        }
+
+        private string ReplaceDiscoveryParamPlaceholders(string parameters, string executable, string optionName)
+        {
+            parameters = ReplaceExecutablePlaceholders(parameters, executable);
+            parameters = ReplacePlatformAndConfigurationPlaceholders(parameters, executable);
+            parameters = ReplaceSolutionDirPlaceholder(parameters, executable);
+            parameters = ReplaceEnvironmentVariables(parameters);
+            parameters = ReplaceHelperFileSettings(parameters, executable);
+
+            CheckForRemainingPlaceholders(parameters, optionName);
+
+            return parameters;
         }
 
         public string ReplaceAdditionalTestExecutionParamPlaceholdersForExecution(string additionalTestExecutionParam, string executable, string testDirectory, int threadId)
@@ -343,6 +376,15 @@ namespace GoogleTestAdapter.Settings
 
                 var placeholders = matches.Cast<Match>().Select(m => m.Value).Distinct().OrderBy(s => s);
                 string message = $"Option '{optionName}': Apparently, the following placeholders could not be replaced. {string.Join(", ", placeholders)}";
+                _logger.LogWarning(message);
+            }
+
+            // Environment.ExpandEnvironmentVariables() leaves references to undefined variables untouched
+            matches = EnvironmentVariablesRegex.Matches(theString);
+            if (matches.Count > 0)
+            {
+                var variables = matches.Cast<Match>().Select(m => m.Value).Distinct().OrderBy(s => s);
+                string message = $"Option '{optionName}': Apparently, the following environment variables are not defined and could not be replaced. {string.Join(", ", variables)}";
                 _logger.LogWarning(message);
             }
         }

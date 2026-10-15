@@ -27,10 +27,25 @@ namespace GoogleTestAdapter
         public const string FilterOption = " --gtest_filter=";
 
         public const string TestBodySignature = "::TestBody";
+        // the test cases reporting failures of TearDownTestSuite() (see option TearDownTestSuiteTestCases) are named
+        // <suite>.TearDownTestSuite; TearDownTestCase is the deprecated name of the method
+        public const string TearDownTestSuiteTestName = "TearDownTestSuite";
+        public const string TearDownTestCaseMethodName = "TearDownTestCase";
+        // trait name of the labels of CMake tests (test property LABELS)
+        public const string CMakeLabelTraitName = "Label";
+
         public const string ParameterizedTestMarker = "  # GetParam() = ";
         public const string TypedTestMarker = ".  # TypeParam = ";
 
-        public const string GoogleTestDllMarker = "gtest.dll";
+        // gmock and gmock_main contain Google Test, i.e., executables linking gmock do not import gtest.dll;
+        // debug builds might use a postfix (e.g. CMAKE_DEBUG_POSTFIX "d")
+        public static readonly string[] GoogleTestDllMarkers =
+        {
+            "gtest.dll", "gtestd.dll",
+            "gtest_main.dll", "gtest_maind.dll",
+            "gmock.dll", "gmockd.dll",
+            "gmock_main.dll", "gmock_maind.dll"
+        };
 
         public static readonly string[] GoogleTestExecutableMarkers =
         {

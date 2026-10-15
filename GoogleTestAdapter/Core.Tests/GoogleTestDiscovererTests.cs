@@ -36,13 +36,36 @@ namespace GoogleTestAdapter
             VerifyExecutableIsTrusted(TestResources.Tests_ReleaseX64);
             VerifyExecutableIsTrusted(TestResources.Tests_DebugX64);
             VerifyExecutableIsTrusted(TestResources.Tests_ReleaseX64);
-            VerifyExecutableIsTrusted(TestResources.Tests_DebugX86_Gtest170);
             VerifyExecutableIsTrusted(TestResources.CrashingTests_ReleaseX86);
             VerifyExecutableIsTrusted(TestResources.CrashingTests_DebugX86);
             VerifyExecutableIsTrusted(TestResources.CrashingTests_ReleaseX64);
             VerifyExecutableIsTrusted(TestResources.CrashingTests_DebugX64);
             VerifyExecutableIsTrusted(TestResources.AlwaysCrashingExe);
             VerifyExecutableIsTrusted(TestResources.AlwaysFailingExe);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void VerifyExecutableTrust_ExecutableOnNetworkShare_IsNotTrustedAndErrorNamesOption()
+        {
+            GoogleTestDiscoverer.VerifyExecutableTrust(@"\\gta-nonexisting-host\share\Tests.exe", MockOptions.Object, MockLogger.Object)
+                .Should().BeFalse();
+
+            // the executable has not been downloaded, so unblocking it would not help
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains(SettingsWrapper.OptionSkipOriginCheck)
+                && s.Contains("is located on a network drive") && !s.Contains("unblock"))), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void VerifyExecutableTrust_ExecutableOnNetworkShareAndSkipOriginCheck_IsTrusted()
+        {
+            MockOptions.Setup(o => o.SkipOriginCheck).Returns(true);
+
+            GoogleTestDiscoverer.VerifyExecutableTrust(@"\\gta-nonexisting-host\share\Tests.exe", MockOptions.Object, MockLogger.Object)
+                .Should().BeTrue();
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
         }
 
         private void VerifyExecutableIsTrusted(string executable)
@@ -60,6 +83,57 @@ namespace GoogleTestAdapter
             AssertIsGoogleTestExecutable("SomeWeirdExpression", true, "Some.*Expression");
             AssertIsGoogleTestExecutable("SomeWeirdOtherThing", false, "Some.*Expression");
             AssertIsGoogleTestExecutable("MyGoogleTests.exe", false, "Some.*Expression");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestFunction_FunctionsOfGoogleTestCore_AreRecognized()
+        {
+            // imported by a test executable linking Google Test as DLL (x64, MSVC)
+            GoogleTestDiscoverer.IsGoogleTestFunction("?MakeAndRegisterTestInfo@internal@testing@@YAPEAVTestInfo@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEBD11UCodeLocation@12@PEBXP6AXXZ4PEAVTestFactoryBase@12@@Z").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("?GetInstance@UnitTest@testing@@SAPEAV12@XZ").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??0Test@testing@@IEAA@XZ").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??1Test@testing@@UEAA@XZ").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??4AssertHelper@internal@testing@@QEBAXAEBVMessage@2@@Z").Should().BeTrue();
+            // x86
+            GoogleTestDiscoverer.IsGoogleTestFunction("?GetInstance@UnitTest@testing@@SAPAV12@XZ").Should().BeTrue();
+            // MinGW, clang
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing8UnitTest11GetInstanceEv").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing8internal23MakeAndRegisterTestInfoEPKcS2_S2_S2_NS0_12CodeLocationEPKvPFvvES7_PNS0_15TestFactoryBaseE").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing4TestC2Ev").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestFunction("__ZN7testing4TestD2Ev").Should().BeTrue();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestFunction_OtherFunctions_AreNotRecognized()
+        {
+            GoogleTestDiscoverer.IsGoogleTestFunction("GetLastError").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("?ReturnZero@@YAHXZ").Should().BeFalse();
+            // classes of namespace testing which are not part of Google Test's core
+            GoogleTestDiscoverer.IsGoogleTestFunction("??0MyTest@testing@@QEAA@XZ").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("??1TestPartResult@testing@@QEAA@XZ").Should().BeFalse();
+            // namespace testing::internal within another namespace
+            GoogleTestDiscoverer.IsGoogleTestFunction("?Foo@internal@testing@mylib@@YAXXZ").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN7testing14TestPartResultC2Ev").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestFunction("_ZN5mylib7testing8internal3FooEv").Should().BeFalse();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void IsGoogleTestDll_GoogleTestAndGoogleMockDlls_AreRecognized()
+        {
+            GoogleTestDiscoverer.IsGoogleTestDll("gtest.dll").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestDll("GTEST.DLL").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestDll("gtestd.dll").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestDll("gtest_main.dll").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestDll("gmock.dll").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestDll("gmockd.dll").Should().BeTrue();
+            GoogleTestDiscoverer.IsGoogleTestDll("gmock_maind.dll").Should().BeTrue();
+
+            GoogleTestDiscoverer.IsGoogleTestDll("kernel32.dll").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestDll("gtest_helper.dll").Should().BeFalse();
+            GoogleTestDiscoverer.IsGoogleTestDll("mygtest.dll").Should().BeFalse();
         }
 
         [TestMethod]
@@ -180,13 +254,6 @@ namespace GoogleTestAdapter
         public void GetTestsFromExecutable_SampleTestsRelease_FindsTestsWithLocation()
         {
             FindTests(TestResources.Tests_ReleaseX86);
-        }
-
-        [TestMethod]
-        [TestCategory(Integration)]
-        public void GetTestsFromExecutable_SampleTests170_FindsTestsWithLocation()
-        {
-            FindTests(TestResources.Tests_DebugX86_Gtest170, TestResources.NrOfGtest170CompatibleTests);
         }
 
         [TestMethod]
@@ -316,6 +383,112 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
+        public void GetTestsFromExecutable_Utf8TestsDebugX86_FindsTestsWithCorrectNames()
+        {
+            AssertFindsUtf8Tests(TestResources.Utf8Tests_DebugX86);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_Utf8TestsReleaseX64_FindsTestsWithCorrectNames()
+        {
+            AssertFindsUtf8Tests(TestResources.Utf8Tests_ReleaseX64);
+        }
+
+        private void AssertFindsUtf8Tests(string executable)
+        {
+            executable.AsFileInfo().Should().Exist("building the SampleTests solution produces that executable");
+
+            var discoverer = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options);
+            IList<TestCase> tests = discoverer.GetTestsFromExecutable(executable);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            MockLogger.Verify(l => l.DebugError(It.IsAny<string>()), Times.Never);
+            tests.Select(t => t.FullyQualifiedName).Should().BeEquivalentTo(
+                "\u00dcmlaut\u00df.T\u00e4st", "\u00dcmlaut\u00df.F\u00e4il\u00fcng", "\u00dcmlaut\u00df.Tr\u00e4its",
+                "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac.\u0394\u03bf\u03ba\u03b9\u03bc\u03ae", "\u4e2d\u6587.\u6d4b\u8bd5",
+                "\u0938\u0942\u091f.\u0928\u093e\u092e", "Suite\u2160.Test\u2161");
+            foreach (TestCase test in tests)
+            {
+                test.CodeFilePath.Should().EndWithEquivalent("Utf8Tests.cpp", test.FullyQualifiedName);
+                test.LineNumber.Should().BeGreaterThan(0, test.FullyQualifiedName);
+            }
+            tests.Single(t => t.FullyQualifiedName == "\u00dcmlaut\u00df.Tr\u00e4its").Traits
+                .Should().ContainSingle(t => t.Name == "Type" && t.Value == "\u00dcmlaut");
+            // the namespace contains a spacing combining mark, which is not a word character for .NET's regexes
+            tests.Single(t => t.FullyQualifiedName == "\u0938\u0942\u091f.\u0928\u093e\u092e").Namespace
+                .Should().Be("\u092a\u0930\u0940\u0915\u094d\u0937\u0923");
+        }
+
+        private static readonly string[] TearDownTestSuiteTestCasesOfFixtureTests =
+        {
+            "FailingTearDown.TearDownTestSuite", "PassingFixture.TearDownTestSuite", "LegacyTearDown.TearDownTestSuite",
+            "NamespacedFixture.TearDownTestSuite", "TypedFixture/0.TearDownTestSuite", "TypedFixture/1.TearDownTestSuite",
+            "Instantiation/ParameterizedFixture.TearDownTestSuite"
+        };
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_FixtureTestsDebugX86_TearDownTestSuiteTestCasesForFixturesDefiningTearDownTestSuite()
+        {
+            AssertFindsTearDownTestSuiteTestCases(TestResources.FixtureTests_DebugX86);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_FixtureTestsReleaseX64_TearDownTestSuiteTestCasesForFixturesDefiningTearDownTestSuite()
+        {
+            AssertFindsTearDownTestSuiteTestCases(TestResources.FixtureTests_ReleaseX64);
+        }
+
+        private void AssertFindsTearDownTestSuiteTestCases(string executable)
+        {
+            executable.AsFileInfo().Should().Exist("building the SampleTests solution produces that executable");
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).GetTestsFromExecutable(executable);
+
+            MockLogger.Verify(l => l.LogError(It.IsAny<string>()), Times.Never);
+            List<TestCase> tearDownTestCases = testCases.Where(tc => tc.IsTearDownTestSuiteTestCase).ToList();
+            tearDownTestCases.Select(tc => tc.FullyQualifiedName).Should().BeEquivalentTo(TearDownTestSuiteTestCasesOfFixtureTests);
+            testCases.Where(tc => !tc.IsTearDownTestSuiteTestCase).Should().HaveCount(13);
+            foreach (TestCase testCase in tearDownTestCases)
+            {
+                testCase.CodeFilePath.Should().EndWithEquivalent("FixtureTests.cpp", testCase.FullyQualifiedName);
+                testCase.LineNumber.Should().BeGreaterThan(0, testCase.FullyQualifiedName);
+                testCase.TestGroup.Should().Be(GoogleTestConstants.TearDownTestSuiteTestName);
+                testCase.IsExitCodeTestCase.Should().BeFalse();
+            }
+            tearDownTestCases.Single(tc => tc.FullyQualifiedName == "NamespacedFixture.TearDownTestSuite").Namespace.Should().Be("fixtures");
+            tearDownTestCases.Single(tc => tc.FullyQualifiedName == "TypedFixture/1.TearDownTestSuite").TestClass
+                .Should().Be(testCases.Single(tc => tc.FullyQualifiedName == "TypedFixture/1.Passes").TestClass);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_TearDownTestSuiteTestCasesOff_NoTearDownTestSuiteTestCases()
+        {
+            MockOptions.Setup(o => o.TearDownTestSuiteTestCases).Returns(false);
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).GetTestsFromExecutable(TestResources.FixtureTests_DebugX86);
+
+            testCases.Should().HaveCount(13);
+            testCases.Should().NotContain(tc => tc.IsTearDownTestSuiteTestCase);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_DoNotParseSymbolInformation_NoTearDownTestSuiteTestCases()
+        {
+            MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options).GetTestsFromExecutable(TestResources.FixtureTests_DebugX86);
+
+            testCases.Should().HaveCount(13);
+            testCases.Should().NotContain(tc => tc.IsTearDownTestSuiteTestCase);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
         public void GetTestsFromExecutable_ParseSymbolInformation_DiaResolverIsCreated()
         {
             var mockFactory = new Mock<IDiaResolverFactory>();
@@ -330,7 +503,7 @@ namespace GoogleTestAdapter
 
         [TestMethod]
         [TestCategory(Integration)]
-        public void GetTestsFromExecutable_DoNotParseSymbolInformation_DiaIsNotInvoked()
+        public void GetTestsFromExecutable_DoNotParseSymbolInformation_DiaIsNotInvokedAndLocationsAreProvidedByGoogleTest()
         {
             var mockFactory = new Mock<IDiaResolverFactory>();
             MockOptions.Setup(o => o.ParseSymbolInformation).Returns(false);
@@ -342,12 +515,71 @@ namespace GoogleTestAdapter
             testCases.Should().HaveCount(TestResources.NrOfTests);
             foreach (TestCase testCase in testCases)
             {
-                testCase.CodeFilePath.Should().Be("");
-                testCase.LineNumber.Should().Be(0);
+                testCase.CodeFilePath.Should().NotBeNullOrEmpty();
+                testCase.LineNumber.Should().BeGreaterThan(0);
+                testCase.Traits.Should().BeEmpty();
+                testCase.Namespace.Should().BeNull();
                 testCase.Source.Should().Be(TestResources.Tests_DebugX86);
                 testCase.DisplayName.Should().NotBeNullOrEmpty();
                 testCase.FullyQualifiedName.Should().NotBeNullOrEmpty();
             }
+
+            TestCase addPasses = testCases.Single(tc => tc.FullyQualifiedName == "TestMath.AddPasses");
+            addPasses.CodeFilePath.Should().BeEquivalentTo(Path.GetFullPath(Path.Combine(TestResources.SampleTestsSolutionDir, @"Tests\BasicTests.cpp")));
+            addPasses.LineNumber.Should().Be(59);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_SourcePathMapping_LocationsAreMapped()
+        {
+            MockOptions.Setup(o => o.SourcePathMapping).Returns(@"$(SolutionDir)=>X:\mapped");
+
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .GetTestsFromExecutable(TestResources.Tests_DebugX86);
+
+            TestCase addPasses = testCases.Single(tc => tc.FullyQualifiedName == "TestMath.AddPasses");
+            addPasses.CodeFilePath.Should().BeEquivalentTo(@"X:\mapped\Tests\BasicTests.cpp");
+            MockLogger.Verify(l => l.LogWarning(It.Is<string>(s => s.Contains(SettingsWrapper.OptionSourcePathMapping))), Times.Never);
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_TypedAndParameterizedTests_InstancesShareTestClassAndGroup()
+        {
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .GetTestsFromExecutable(TestResources.Tests_DebugX86);
+
+            testCases.Where(tc => tc.FullyQualifiedName.Contains(".Simple/"))
+                .Should().HaveCount(4)
+                .And.OnlyContain(tc => tc.TestClass == "ParameterizedTests" && tc.TestGroup == "Simple");
+            testCases.Where(tc => tc.FullyQualifiedName.StartsWith("TypedTests/") && tc.FullyQualifiedName.EndsWith(".CanIterate"))
+                .Should().HaveCount(3)
+                .And.OnlyContain(tc => tc.TestClass == "TypedTests" && tc.TestGroup == "CanIterate");
+            testCases.Where(tc => tc.FullyQualifiedName.Contains("/TypeParameterizedTests/") && tc.FullyQualifiedName.EndsWith(".CanIterate"))
+                .Should().HaveCount(3)
+                .And.OnlyContain(tc => tc.TestClass == "TypeParameterizedTests" && tc.TestGroup == "CanIterate");
+
+            TestCase plainTest = testCases.Single(tc => tc.FullyQualifiedName == "TestMath.AddPasses");
+            plainTest.TestClass.Should().Be("TestMath");
+            plainTest.TestGroup.Should().Be("AddPasses");
+        }
+
+        [TestMethod]
+        [TestCategory(Integration)]
+        public void GetTestsFromExecutable_TestsRegisteredAtRuntime_LocationsAreProvidedByGoogleTest()
+        {
+            IList<TestCase> testCases = new GoogleTestDiscoverer(TestEnvironment.Logger, TestEnvironment.Options)
+                .GetTestsFromExecutable(TestResources.Tests_DebugX86);
+
+            // these tests have no TestBody symbol, their location is the one passed to MakeAndRegisterTestInfo()
+            foreach (string name in new[] { "Api.Created.Tests.PassingTest", "Api_Created_Tests.FailingTest" })
+            {
+                TestCase testCase = testCases.Single(tc => tc.FullyQualifiedName == name);
+                testCase.CodeFilePath.Should().BeEquivalentTo(Path.GetFullPath(Path.Combine(TestResources.SampleTestsSolutionDir, @"Tests\ApiCreatedTests.cpp")));
+                testCase.LineNumber.Should().Be(57);
+            }
+            MockLogger.Verify(l => l.LogWarning(It.Is<string>(s => s.Contains("Could not find source location"))), Times.Never);
         }
 
         [TestMethod]

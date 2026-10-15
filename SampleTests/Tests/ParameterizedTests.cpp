@@ -40,12 +40,12 @@ TEST_P_TRAITS(ParameterizedTests, SimpleTraits3, Type, Medium, Author, MSI, Test
 	EXPECT_EQ("", GetParam().s);
 }
 
-INSTANTIATE_TEST_CASE_P(InstantiationName,
+INSTANTIATE_TEST_SUITE_P(InstantiationName,
 	ParameterizedTests,
 	testing::Values(MyParam("", 1), MyParam("!", 1), MyParam("", -1))
 	);
 
-INSTANTIATE_TEST_CASE_P(/* no instantiation name*/,
+INSTANTIATE_TEST_SUITE_P(/* no instantiation name*/,
 	ParameterizedTests,
 	testing::Values(MyParam("_", 0))
 	);
@@ -64,7 +64,7 @@ TEST_P(PointerParameterizedTests, CheckStringLength) {
 	EXPECT_EQ(GetParam().second, strlen(GetParam().first));
 }
 
-INSTANTIATE_TEST_CASE_P(/* no instantiation name*/,
+INSTANTIATE_TEST_SUITE_P(/* no instantiation name*/,
 	PointerParameterizedTests,
 	// use _strdup to have strings on the heap and enforce a new address each test run (yes... we leak memory)
 	testing::Values(MyPointerParam(_strdup(""), 0), MyPointerParam(_strdup("Test"), 4), MyPointerParam(_strdup("ooops"), 23))
@@ -81,12 +81,12 @@ struct CustomParamNameFunctor {
 	}
 };
 
-INSTANTIATE_TEST_CASE_P(CustomParamNameFunctor,
+INSTANTIATE_TEST_SUITE_P(CustomParamNameFunctor,
 	CustomFunctorNamingTest,
 	testing::Values(std::string("FunctorName")),
 	CustomParamNameFunctor());
 
-INSTANTIATE_TEST_CASE_P(AllAllowedCharacters,
+INSTANTIATE_TEST_SUITE_P(AllAllowedCharacters,
 	CustomFunctorNamingTest,
 	testing::Values("abcdefghijklmnopqrstuvwxyz",
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ",

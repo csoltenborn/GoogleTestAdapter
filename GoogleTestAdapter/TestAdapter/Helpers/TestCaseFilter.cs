@@ -18,6 +18,17 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
         private readonly IDictionary<string, TestProperty> _testPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
         private readonly IDictionary<string, TestProperty> _traitPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, TestProperty> _computedPropertiesMap = new Dictionary<string, TestProperty>(StringComparer.OrdinalIgnoreCase);
+
+        // properties derived from the test's name and namespace, named as for MSTest (which is what users and
+        // agents tend to try)
+        private static readonly IDictionary<string, Func<TestCase, object>> ComputedProperties =
+            new Dictionary<string, Func<TestCase, object>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["ClassName"] = testCase => DataConversionExtensions.GetSuite(testCase.FullyQualifiedName),
+                ["Name"] = testCase => DataConversionExtensions.GetTestName(testCase.FullyQualifiedName),
+                ["Namespace"] = testCase => testCase.GetNamespace()
+            };
 
         private readonly ISet<string> _traitPropertyNames;
         private readonly ISet<string> _allPropertyNames;
@@ -30,7 +41,7 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
             InitProperties(traitNames);
 
             _traitPropertyNames = new HashSet<string>(_traitPropertiesMap.Keys);
-            _allPropertyNames = new HashSet<string>(_testPropertiesMap.Keys.Union(_traitPropertyNames));
+            _allPropertyNames = new HashSet<string>(_testPropertiesMap.Keys.Union(_traitPropertyNames).Union(_computedPropertiesMap.Keys));
         }
 
         public IEnumerable<TestCase> Filter(IEnumerable<TestCase> testCases)
@@ -69,6 +80,14 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                         ValidateTraitValue, TestPropertyAttributes.None, typeof(TestCase));
                 _traitPropertiesMap[traitName] = traitTestProperty;
             }
+
+            // traits win for backwards compatibility
+            foreach (string propertyName in ComputedProperties.Keys.Where(n => !_traitPropertiesMap.ContainsKey(n)))
+            {
+                string id = $"GoogleTestAdapter.{propertyName}";
+                _computedPropertiesMap[propertyName] = TestProperty.Find(id) ??
+                    TestProperty.Register(id, propertyName, typeof(string), typeof(TestCase));
+            }
         }
 
         private TestProperty PropertyProvider(string propertyName)
@@ -79,6 +98,9 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
             if (testProperty == null)
                 _traitPropertiesMap.TryGetValue(propertyName, out testProperty);
+
+            if (testProperty == null)
+                _computedPropertiesMap.TryGetValue(propertyName, out testProperty);
 
             return testProperty;
         }
@@ -94,6 +116,9 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
 
             if (_traitPropertyNames.Contains(propertyName))
                 return GetTraitValues(currentTest, propertyName);
+
+            if (_computedPropertiesMap.ContainsKey(propertyName))
+                return ComputedProperties[propertyName](currentTest);
 
             return null;
         }
@@ -125,8 +150,9 @@ namespace GoogleTestAdapter.TestAdapter.Helpers
                 .Select(t => t.Value)
                 .ToList();
 
+            // the test platform expects multiple values as string array
             if (traitValues.Count > 1)
-                return traitValues;
+                return traitValues.ToArray();
 
             return traitValues.SingleOrDefault();
         }

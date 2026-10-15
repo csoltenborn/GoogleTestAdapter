@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Settings;
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,7 @@ using Microsoft.VisualStudio.Shell;
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
+    [ComVisible(true)]
     public class TestExecutionOptionsDialogPage : NotifyingDialogPage
     {
         #region Parallelization
@@ -108,6 +110,55 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             }
         }
         private string _environmentVariables = SettingsWrapper.OptionEnvironmentVariablesDefaultValue;
+
+        [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [DisplayName(SettingsWrapper.OptionUseCTestTestProperties)]
+        [Description(SettingsWrapper.OptionUseCTestTestPropertiesDescription)]
+        public bool UseCTestTestProperties
+        {
+            get => _useCTestTestProperties;
+            set => SetAndNotify(ref _useCTestTestProperties, value);
+        }
+        private bool _useCTestTestProperties = SettingsWrapper.OptionUseCTestTestPropertiesDefaultValue;
+
+        [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [DisplayName(SettingsWrapper.OptionTestTimeoutInSeconds)]
+        [Description(SettingsWrapper.OptionTestTimeoutInSecondsDescription)]
+        public int TestTimeoutInSeconds
+        {
+            get => _testTimeoutInSeconds;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(TestTimeoutInSeconds), value, "Expected a number greater than or equal to 0.");
+                SetAndNotify(ref _testTimeoutInSeconds, value);
+            }
+        }
+        private int _testTimeoutInSeconds = SettingsWrapper.OptionTestTimeoutInSecondsDefaultValue;
+
+        [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [DisplayName(SettingsWrapper.OptionSourcePathMapping)]
+        [Description(SettingsWrapper.OptionSourcePathMappingDescription)]
+        public string SourcePathMapping
+        {
+            get => _sourcePathMapping;
+            set
+            {
+                SourcePathMapper.Parse(value);
+                SetAndNotify(ref _sourcePathMapping, value);
+            }
+        }
+        private string _sourcePathMapping = SettingsWrapper.OptionSourcePathMappingDefaultValue;
+
+        [Category(SettingsWrapper.CategoryRunConfigurationName)]
+        [DisplayName(SettingsWrapper.OptionMapOnlyMissingSourcePaths)]
+        [Description(SettingsWrapper.OptionMapOnlyMissingSourcePathsDescription)]
+        public bool MapOnlyMissingSourcePaths
+        {
+            get => _mapOnlyMissingSourcePaths;
+            set => SetAndNotify(ref _mapOnlyMissingSourcePaths, value);
+        }
+        private bool _mapOnlyMissingSourcePaths = SettingsWrapper.OptionMapOnlyMissingSourcePathsDefaultValue;
 
         [Category(SettingsWrapper.CategoryRunConfigurationName)]
         [DisplayName(SettingsWrapper.OptionAdditionalTestExecutionParams)]

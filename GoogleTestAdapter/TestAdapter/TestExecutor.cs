@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Model;
+using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.TestAdapter.Helpers;
 using GoogleTestAdapter.TestAdapter.Framework;
 using GoogleTestAdapter.TestAdapter.ProcessExecution;
@@ -150,9 +151,11 @@ namespace GoogleTestAdapter.TestAdapter
 
         private bool AbleToRun(IRunContext runContext)
         {
-            if (!IsVisualStudioProcessAvailable() && runContext.IsBeingDebugged)
+            // debugging via the VsTest framework does not need GTA's VS package for attaching the debugger
+            if (!IsVisualStudioProcessAvailable() && runContext.IsBeingDebugged && _settings.DebuggerKind != DebuggerKind.VsTestFramework)
             {
-                _logger.LogError("Debugging is only possible if GoogleTestAdapter has been installed into Visual Studio - NuGet installation does not support this (and other features such as Visual Studio Options, toolbar, and solution settings).");
+                _logger.LogError($"Debugging with debugger engine '{_settings.DebuggerKind}' is only possible if GoogleTestAdapter has been installed into Visual Studio and its package has been loaded - NuGet installation does not support this (and other features such as Visual Studio Options, toolbar, and solution settings). " +
+                                 $"Set option '{SettingsWrapper.OptionDebuggerKind}' to '{DebuggerKindConverter.VsTestFramework}' (<{nameof(IGoogleTestAdapterSettings.DebuggerKind)}>{DebuggerKind.VsTestFramework}</{nameof(IGoogleTestAdapterSettings.DebuggerKind)}>) to debug tests anyway.");
                 return false;
             }
 

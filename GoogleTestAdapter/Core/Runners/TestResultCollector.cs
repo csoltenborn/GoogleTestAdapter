@@ -60,7 +60,7 @@ namespace GoogleTestAdapter.Runners
 
         private void CollectResultsFromXmlFile(TestCase[] testCasesRun, string testExecutable, string resultXmlFile, List<TestResult> testResults)
         {
-            var xmlParser = new XmlTestResultParser(testCasesRun, testExecutable, resultXmlFile, _logger);
+            var xmlParser = new XmlTestResultParser(testCasesRun, testExecutable, resultXmlFile, _logger, _settings.GetSourcePathMapper(testExecutable, _logger));
             List<TestResult> xmlResults = xmlParser.GetTestResults();
             int nrOfCollectedTestResults = 0;
             foreach (TestResult testResult in xmlResults.Where(

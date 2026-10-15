@@ -57,6 +57,7 @@
     <Compile Include="Functional.cs" />
     <Compile Include="IDebuggerAttacherService.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="JobObject.cs" />
     <Compile Include="IStrings.cs" />
     <Compile Include="LoggerBase.cs" />
     <Compile Include="ProcessWaiter.cs" />

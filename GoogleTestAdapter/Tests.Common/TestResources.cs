@@ -36,19 +36,23 @@ namespace GoogleTestAdapter.Tests.Common
 
         public const string Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Tests_gta.exe";
         public const string Tests_ReleaseX86 = SampleTestsBuildDir + @"Release\Tests_gta.exe";
-        public const string Tests_DebugX86_Gtest170 = SampleTestsBuildDir + @"Debug\Tests_1.7.0_gta.exe";
         public const string Tests_DebugX64 = SampleTestsBuildDir + @"Debug-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Tests_gta.exe";
         public const string Tests_ReleaseX64_Output = TestdataDir + @"Tests_gta_exe_output.txt";
         public const int NrOfTests = 109;
         public const int NrOfPassingTests = 53;
         public const int NrOfFailingTests = 56;
-        public const int NrOfGtest170CompatibleTests = 105;
 
         public static readonly string LoadTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LoadTests_gta.exe");
         public const string LoadTests_Generated = TestdataDir + @"LoadTests\GeneratedLoadTests_gta.exe";
 
         public static readonly string LongRunningTests_ReleaseX86 = Path.Combine(SampleTestsBuildDir, @"Release\LongRunningTests_gta.exe");
+
+        public const string Utf8Tests_DebugX86 = SampleTestsBuildDir + @"Debug\Utf8Tests_gta.exe";
+        public const string Utf8Tests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\Utf8Tests_gta.exe";
+
+        public const string FixtureTests_DebugX86 = SampleTestsBuildDir + @"Debug\FixtureTests_gta.exe";
+        public const string FixtureTests_ReleaseX64 = SampleTestsBuildDir + @"Release-x64\FixtureTests_gta.exe";
 
         public const string CrashingTests_DebugX86 = SampleTestsBuildDir + @"Debug\CrashingTests_gta.exe";
         public const string CrashingTests_ReleaseX86 = SampleTestsBuildDir + @"Release\CrashingTests_gta.exe";

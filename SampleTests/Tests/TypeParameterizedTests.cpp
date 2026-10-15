@@ -19,7 +19,7 @@ public:
 };
 
 typedef ::testing::Types<std::vector<int>, std::array<int, 3>, MyStrangeArray> IntContainerTypes;
-TYPED_TEST_CASE(TypedTests, IntContainerTypes);
+TYPED_TEST_SUITE(TypedTests, IntContainerTypes);
 
 TYPED_TEST_TRAITS(TypedTests, CanIterate, Author, JOG) {
 	int sum = 0;
@@ -44,7 +44,7 @@ TYPED_TEST_TRAITS(TypedTests, ThreeTraits, Author, IBM, TestCategory, Integratio
 template< typename int_container_type >
 class TypeParameterizedTests : public TypedTests<int_container_type> {};
 
-TYPED_TEST_CASE_P(TypeParameterizedTests);
+TYPED_TEST_SUITE_P(TypeParameterizedTests);
 
 TYPED_TEST_P_TRAITS(TypeParameterizedTests, CanIterate, Author, CSO) {
 	int sum = 0;
@@ -65,11 +65,11 @@ TYPED_TEST_P_TRAITS(TypeParameterizedTests, ThreeTraits, Author, HAL, TestCatego
 	EXPECT_NE(this->container[0] + this->container[1], this->container[2]);
 }
 
-REGISTER_TYPED_TEST_CASE_P(TypeParameterizedTests, CanIterate, CanDefeatMath, TwoTraits, ThreeTraits);
+REGISTER_TYPED_TEST_SUITE_P(TypeParameterizedTests, CanIterate, CanDefeatMath, TwoTraits, ThreeTraits);
 
 typedef ::testing::Types<std::array<int, 3>, MyStrangeArray> IntArrayTypes;
-INSTANTIATE_TYPED_TEST_CASE_P(Vec, TypeParameterizedTests, std::vector<int>);
-INSTANTIATE_TYPED_TEST_CASE_P(Arr, TypeParameterizedTests, IntArrayTypes);
+INSTANTIATE_TYPED_TEST_SUITE_P(Vec, TypeParameterizedTests, std::vector<int>);
+INSTANTIATE_TYPED_TEST_SUITE_P(Arr, TypeParameterizedTests, IntArrayTypes);
 
 
 
@@ -81,7 +81,7 @@ public:
 };
 
 typedef ::testing::Types<signed char, int, long> IntNumberTypes;
-TYPED_TEST_CASE(PrimitivelyTypedTests, IntNumberTypes);
+TYPED_TEST_SUITE(PrimitivelyTypedTests, IntNumberTypes);
 
 TYPED_TEST(PrimitivelyTypedTests, CanHasBigNumbers) {
 	TypeParam sum = 0;

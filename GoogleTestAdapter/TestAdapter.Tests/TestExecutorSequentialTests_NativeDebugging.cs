@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.ProcessExecution;
+using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.Tests.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using TestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 
 namespace GoogleTestAdapter.TestAdapter
 {
@@ -50,6 +53,20 @@ namespace GoogleTestAdapter.TestAdapter
                         throw new Exception("WTF!");
                     return process.Id;
                 });
+        }
+
+        [TestMethod]
+        [TestCategory(TestMetadata.TestCategories.Unit)]
+        public void RunTests_PackageNotLoaded_ErrorNamingDebuggerOptionIsLoggedAndNoTestsAreRun()
+        {
+            MockOptions.Setup(o => o.DebuggingNamedPipeId).Returns((string)null);
+
+            var executor = new TestExecutor(TestEnvironment.Logger, TestEnvironment.Options, MockDebuggerAttacher.Object);
+            executor.RunTests(TestResources.Tests_ReleaseX64.Yield(), MockRunContext.Object, MockFrameworkHandle.Object);
+
+            MockLogger.Verify(l => l.LogError(It.Is<string>(s =>
+                s.Contains(SettingsWrapper.OptionDebuggerKind) && s.Contains(DebuggerKindConverter.VsTestFramework))), Times.Once);
+            MockFrameworkHandle.Verify(h => h.RecordStart(It.IsAny<TestCase>()), Times.Never);
         }
 
         [TestMethod]

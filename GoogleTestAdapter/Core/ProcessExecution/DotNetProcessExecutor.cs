@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.Helpers;
@@ -16,6 +15,12 @@ namespace GoogleTestAdapter.ProcessExecution
         private readonly ILogger _logger;
         
         private Process _process;
+        private readonly object _lock = new object();
+        // standard output and standard error are read by different threads
+        private readonly object _outputLock = new object();
+        private bool _canceled;
+        private int? _processId;
+        private JobObject _job;
 
         public static void LogStartOfOutput(ILogger logger, string command, string parameters)
         {
@@ -40,7 +45,8 @@ namespace GoogleTestAdapter.ProcessExecution
             // output reading after https://stackoverflow.com/a/7608823/1276129
             var processStartInfo = new ProcessStartInfo(command, parameters)
             {
-                StandardOutputEncoding = Encoding.Default,
+                StandardOutputEncoding = ProcessOutputEncoding.Raw,
+                StandardErrorEncoding = ProcessOutputEncoding.Raw,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -67,10 +73,14 @@ namespace GoogleTestAdapter.ProcessExecution
                     }
                     else
                     {
-                        reportOutputLine(line);
-                        if (_printTestOutput)
+                        line = ProcessOutputEncoding.DecodeLine(line);
+                        lock (_outputLock)
                         {
-                            _logger.LogInfo(line);
+                            reportOutputLine(line);
+                            if (_printTestOutput)
+                            {
+                                _logger.LogInfo(line);
+                            }
                         }
                     }
                 }
@@ -85,33 +95,58 @@ namespace GoogleTestAdapter.ProcessExecution
                     LogStartOfOutput(_logger, command, parameters);
                 }
 
-                _process.Start();
-                _process.BeginOutputReadLine();
-                _process.BeginErrorReadLine();
-
-                if (_process.WaitForExit(int.MaxValue) &&
-                    outputWaitHandle.WaitOne(int.MaxValue) &&
-                    errorWaitHandle.WaitOne(int.MaxValue))
+                JobObject job;
+                lock (_lock)
                 {
-                    if (_printTestOutput)
+                    // the executable is not started at all if execution has been canceled before
+                    if (_canceled)
                     {
-                        LogEndOfOutput(_logger);
+                        _logger.DebugInfo($"Executable {command} has not been started since execution has been canceled");
+                        return int.MaxValue;
                     }
 
-                    _logger.DebugInfo($"Executable {command} returned with exit code {_process.ExitCode}");
-                    return _process.ExitCode;
+                    _process.Start();
+                    _processId = _process.Id;
+                    _job = job = JobObject.TryCreate(_process.Handle, _process.Id, _logger);
                 }
 
-                _logger.DebugInfo($"Executable {command} did not return properly, using return code {int.MaxValue}");
-                return int.MaxValue;
+                using (job)
+                {
+                    _process.BeginOutputReadLine();
+                    _process.BeginErrorReadLine();
+
+                    if (_process.WaitForExit(int.MaxValue) &&
+                        outputWaitHandle.WaitOne(int.MaxValue) &&
+                        errorWaitHandle.WaitOne(int.MaxValue))
+                    {
+                        if (_printTestOutput)
+                        {
+                            LogEndOfOutput(_logger);
+                        }
+
+                        _logger.DebugInfo($"Executable {command} returned with exit code {_process.ExitCode}");
+                        return _process.ExitCode;
+                    }
+
+                    _logger.DebugInfo($"Executable {command} did not return properly, using return code {int.MaxValue}");
+                    return int.MaxValue;
+                }
             }
         }
 
         public void Cancel()
         {
-            if (_process != null)
+            lock (_lock)
             {
-                ProcessUtils.KillProcess(_process.Id, _logger);
+                _canceled = true;
+                if (_job != null)
+                {
+                    _job.Terminate();
+                }
+                else if (_processId.HasValue)
+                {
+                    ProcessUtils.KillProcess(_processId.Value, _logger);
+                }
             }
         }
 

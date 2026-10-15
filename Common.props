@@ -4,6 +4,19 @@
     <PropertyGroup>
         <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
         <NuGetPackages>$(EnlistmentRoot)NuGetPackages\</NuGetPackages>
+        <!-- The VSIX projects use the VS SDK build tools from NuGet rather than those of the Visual Studio
+             installation building them: builds do not depend on the version of Visual Studio, and VS 2026's
+             installation lacks a dependency of CreatePkgDef.exe (System.Numerics.Vectors). -->
+        <VSSDKBuildToolsDir>$(NuGetPackages)Microsoft.VSSDK.BuildTools.18.5.40034\build\</VSSDKBuildToolsDir>
+
+        <!-- Test Explorer treats the outputs of all projects as test containers unless IsTestProject is false: in
+             GoogleTestAdapter.sln, only GTA's test projects are, not GTA itself and the helpers of its tests (the
+             sample tests, which are not in folder GoogleTestAdapter, remain test containers) -->
+        <IsTestProject Condition="'$(IsTestProject)' == ''
+                                  And $(MSBuildProjectDirectory.StartsWith('$(EnlistmentRoot)GoogleTestAdapter\'))
+                                  And !$(MSBuildProjectName.EndsWith('.Tests'))
+                                  And !$(MSBuildProjectName.EndsWith('.Tests.Unit'))
+                                  And !$(MSBuildProjectName.EndsWith('.Tests.Generated'))">false</IsTestProject>
 
         <OutDir>$(EnlistmentRoot)out\binaries\$(SolutionName)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
         <OutputPath>$(OutDir)</OutputPath>
@@ -15,7 +28,7 @@
 
     <!-- Commonly used test adapter-flavored properties. -->
     <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'GTA'">
-        <FlavoredTargetFrameworkVersion>v4.5</FlavoredTargetFrameworkVersion>
+        <FlavoredTargetFrameworkVersion>v4.6</FlavoredTargetFrameworkVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(TestAdapterFlavor)' == 'TAfGT'">
         <FlavoredTargetFrameworkVersion>v4.6</FlavoredTargetFrameworkVersion>

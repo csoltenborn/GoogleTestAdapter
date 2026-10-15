@@ -1,7 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
-using EnvDTE;
 using GoogleTestAdapter.Settings;
+using GoogleTestAdapter.TestAdapter.Framework;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
@@ -61,13 +61,31 @@ namespace GoogleTestAdapter.TestAdapter.Settings
                 projectSettings.GetUnsetValuesFrom(settingsContainer.SolutionSettings);
             }
 
-            GetValuesFromGlobalSettings(settingsContainer);
+            GetValuesFromGlobalSettings(settingsContainer, logger);
 
             runSettingsNavigator.MoveToChild(Constants.RunSettingsName, "");
             runSettingsNavigator.AppendChild(settingsContainer.ToXml().CreateNavigator());
 
+            ConfigureCodeCoverage(runSettingDocument, logger);
+
             runSettingsNavigator.MoveToRoot();
             return runSettingsNavigator;
+        }
+
+        // an exception would make Test Explorer drop all settings provided by GTA
+        private static void ConfigureCodeCoverage(IXPathNavigable runSettingDocument, ILogger logger)
+        {
+            try
+            {
+                // the code coverage of VS 2022 and later knows dynamic native instrumentation
+                bool enableDynamicNativeInstrumentation = VsVersionUtils.VsVersion >= VsVersion.VS2022;
+                if (CodeCoverageRunSettings.Configure(runSettingDocument, enableDynamicNativeInstrumentation))
+                    logger.Log(MessageLevel.Informational, "Google Test Adapter: adjusted code coverage settings to Google Test executables");
+            }
+            catch (Exception e)
+            {
+                logger.Log(MessageLevel.Warning, $"Google Test Adapter: could not adjust code coverage settings: {e.Message}");
+            }
         }
 
         private void GetValuesFromSolutionSettingsFile(RunSettingsContainer settingsContainer, ILogger logger)
@@ -75,7 +93,7 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             string solutionRunSettingsFile = GetSolutionSettingsXmlFile();
             try
             {
-                if (File.Exists(solutionRunSettingsFile))
+                if (solutionRunSettingsFile != null && File.Exists(solutionRunSettingsFile))
                 {
                     if (!settingsContainer.GetUnsetValuesFrom(solutionRunSettingsFile))
                     {
@@ -96,16 +114,20 @@ namespace GoogleTestAdapter.TestAdapter.Settings
             }
         }
 
-        private void GetValuesFromGlobalSettings(RunSettingsContainer settingsContainer)
+        private void GetValuesFromGlobalSettings(RunSettingsContainer settingsContainer, ILogger logger)
         {
-            GetValuesFromGlobalSettings(settingsContainer.SolutionSettings);
+            // the global settings are only updated if GTA's options change, but the solution
+            // and its active configuration might have changed in the meantime
+            var visualStudioConfiguration = GetVisualStudioConfiguration(logger);
+
+            GetValuesFromGlobalSettings(settingsContainer.SolutionSettings, visualStudioConfiguration);
             foreach (RunSettings projectSettings in settingsContainer.ProjectSettings)
             {
-                GetValuesFromGlobalSettings(projectSettings);
+                GetValuesFromGlobalSettings(projectSettings, visualStudioConfiguration);
             }
         }
 
-        private void GetValuesFromGlobalSettings(RunSettings settings)
+        private void GetValuesFromGlobalSettings(RunSettings settings, VisualStudioConfiguration visualStudioConfiguration)
         {
             // these settings must not be provided through runsettings files. If they still
             // are, the following makes sure that they are ignored
@@ -113,19 +135,26 @@ namespace GoogleTestAdapter.TestAdapter.Settings
 
             // internal
             settings.DebuggingNamedPipeId = null;
-            settings.SolutionDir = null;
-            settings.PlatformName = null;
-            settings.ConfigurationName = null;
+            settings.SolutionDir = visualStudioConfiguration?.SolutionDir;
+            settings.PlatformName = visualStudioConfiguration?.PlatformName;
+            settings.ConfigurationName = visualStudioConfiguration?.ConfigurationName;
 
             settings.GetUnsetValuesFrom(_globalRunSettings.RunSettings);
+        }
+
+        // This is called on background threads and must not wait for the UI thread, which might be busy (e.g. loading
+        // the solution) or even be waiting for the caller; the configuration is thus taken as of the last change.
+        // protected for testing
+        protected virtual VisualStudioConfiguration GetVisualStudioConfiguration(ILogger logger)
+        {
+            VisualStudioConfigurationTracker.RequestUpdate();
+            return VisualStudioConfigurationTracker.Current;
         }
 
         // protected for testing
         protected virtual string GetSolutionSettingsXmlFile()
         {
-            DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            Debug.Assert(dte != null, "dte == null!");
-            return Path.ChangeExtension(dte.Solution.FullName, GoogleTestConstants.SettingsExtension);
+            return SolutionPaths.GetSolutionSettingsFile(VisualStudioConfigurationTracker.Current?.SolutionFullName);
         }
 
     }

@@ -2,6 +2,7 @@
 
 using GoogleTestAdapter.Settings;
 using GoogleTestAdapter.TestAdapter.Settings;
+using GoogleTestAdapter.VsPackage.Automation;
 using GoogleTestAdapter.VsPackage.Commands;
 using GoogleTestAdapter.VsPackage.Debugging;
 using GoogleTestAdapter.VsPackage.Helpers;
@@ -16,19 +17,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceModel;
-using EnvDTE;
+using System.Threading;
+using Task = System.Threading.Tasks.Task;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.VsPackage.GTA.Helpers;
-using Microsoft.VisualStudio.AsyncPackageHelpers;
 using VsPackage.Shared.Settings;
 using TestDiscoveryOptionsDialogPage = GoogleTestAdapter.VsPackage.OptionsPages.TestDiscoveryOptionsDialogPage;
 
 namespace GoogleTestAdapter.VsPackage
 {
 
-    [AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [Microsoft.VisualStudio.AsyncPackageHelpers.ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    // the package must also be loaded if VS is started with a solution or folder, since e.g. debugging tests depends on it
+    [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideAutoLoad(FolderOpenedUIContextString, PackageAutoLoadFlags.BackgroundLoad)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
@@ -37,9 +40,13 @@ namespace GoogleTestAdapter.VsPackage
     [ProvideOptionPage(typeof(TestExecutionOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageTestExecution, 0, 0, true)]
     [ProvideOptionPage(typeof(GoogleTestOptionsDialogPage), OptionsCategoryName, SettingsWrapper.PageGoogleTestName, 0, 0, true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed partial class GoogleTestExtensionOptionsPage : Package, IGoogleTestExtensionOptionsPage, IAsyncLoadablePackageInitialize, IDisposable
+    // DTE.GetObject("GoogleTestAdapter"), e.g. for scripts and MCP servers
+    [ProvideAutomationObject(GoogleTestAdapterAutomation.Name)]
+    public sealed partial class GoogleTestExtensionOptionsPage : AsyncPackage, IGoogleTestExtensionOptionsPage, IDisposable
     {
         private const string PackageGuidString = "e7c90fcb-0943-4908-9ae8-3b6a9d22ec9e";
+        // VSConstants.UICONTEXT.FolderOpened_string, which is not available in the referenced VS SDK
+        private const string FolderOpenedUIContextString = "4646B819-1AE0-4E79-97F4-8A8176FDD664";
 
         private readonly string _debuggingNamedPipeId = Guid.NewGuid().ToString();
 
@@ -51,54 +58,32 @@ namespace GoogleTestAdapter.VsPackage
         private GoogleTestOptionsDialogPage _googleTestOptions;
 
         private DebuggerAttacherServiceHost _debuggerAttacherServiceHost;
+        private GoogleTestAdapterAutomation _automation;
+        private VisualStudioConfigurationTracker _visualStudioConfigurationTracker;
 
-        private bool _isAsyncLoadSupported;
-
-        protected override void Initialize()
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
+            await base.InitializeAsync(cancellationToken, progress);
 
-            _isAsyncLoadSupported = this.IsAsyncPackageSupported();
-            if (!_isAsyncLoadSupported)
-            {
-                var componentModel = (IComponentModel) GetGlobalService(typeof(SComponentModel));
-                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
+            var componentModel = (IComponentModel) await GetServiceAsync(typeof(SComponentModel));
+            _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
 
-                VsSettingsStorage.Init(this);
+            VsSettingsStorage.Init(this);
 
-                DoInitialize();
-            }
-        }
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-        IVsTask IAsyncLoadablePackageInitialize.Initialize(IAsyncServiceProvider serviceProvider, IProfferAsyncService profferService,
-            IAsyncProgressCallback progressCallback)
-        {
-            if (!_isAsyncLoadSupported)
-            {
-                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
-            }
-
-            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
-            {
-                var componentModel = await serviceProvider.GetServiceAsync<IComponentModel>(typeof(SComponentModel));
-                _globalRunSettings = componentModel.GetService<IGlobalRunSettingsInternal>();
-
-                VsSettingsStorage.Init(this);
-
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                
-                DoInitialize();
-
-                return null;
-            }).AsVsTask();
+            DoInitialize();
         }
 
         private void DoInitialize()
         {
+            _visualStudioConfigurationTracker = new VisualStudioConfigurationTracker(this,
+                new ActivityLogLogger(this, () => OutputMode.Verbose).LogError);
             InitializeOptions();
             InitializeCommands();
             InitializeDebuggerAttacherService();
             DisplayReleaseNotesIfNecessary();
+            WarnIfTestAdapterForGoogleTestIsInstalled();
         }
 
         private void InitializeOptions()
@@ -150,6 +135,17 @@ namespace GoogleTestAdapter.VsPackage
             }
         }
 
+        protected override object GetAutomationObject(string name)
+        {
+            if (name != GoogleTestAdapterAutomation.Name)
+                return base.GetAutomationObject(name);
+
+            return _automation ?? (_automation = new GoogleTestAdapterAutomation(
+                () => _globalRunSettings?.RunSettings == null ? null : new RunSettingsService(_globalRunSettings),
+                Common.Strings.Instance.ExtensionName,
+                typeof(GoogleTestExtensionOptionsPage).Assembly.GetName().Version));
+        }
+
         public IVsActivityLog GetActivityLog()
         {
             return GetService(typeof(SVsActivityLog)) as IVsActivityLog;
@@ -171,6 +167,7 @@ namespace GoogleTestAdapter.VsPackage
                 _testDiscoveryOptions?.Dispose();
                 _testExecutionOptions?.Dispose();
                 _googleTestOptions?.Dispose();
+                _visualStudioConfigurationTracker?.Dispose();
 
                 try
                 {
@@ -241,7 +238,8 @@ namespace GoogleTestAdapter.VsPackage
 
         private RunSettings GetRunSettingsFromOptionPages()
         {
-            GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName);
+            var logger = new ActivityLogLogger(this, () => OutputMode.Verbose);
+            var visualStudioConfiguration = VisualStudioConfiguration.FromServiceProvider(this, logger.LogError);
 
             return new RunSettings
             {
@@ -266,11 +264,17 @@ namespace GoogleTestAdapter.VsPackage
                 TraitsRegexesAfter = _testDiscoveryOptions.TraitsRegexesAfter,
                 TestNameSeparator = _testDiscoveryOptions.TestNameSeparator,
                 ParseSymbolInformation = _testDiscoveryOptions.ParseSymbolInformation,
+                TearDownTestSuiteTestCases = _testDiscoveryOptions.TearDownTestSuiteTestCases,
+                AdditionalTestDiscoveryParam = _testDiscoveryOptions.AdditionalTestDiscoveryParams,
 
                 AdditionalPdbs = _testExecutionOptions.AdditionalPdbs,
                 WorkingDir = _testExecutionOptions.WorkingDir,
                 PathExtension = _testExecutionOptions.PathExtension,
                 EnvironmentVariables = _testExecutionOptions.EnvironmentVariables,
+                UseCTestTestProperties = _testExecutionOptions.UseCTestTestProperties,
+                TestTimeoutInSeconds = _testExecutionOptions.TestTimeoutInSeconds,
+                SourcePathMapping = _testExecutionOptions.SourcePathMapping,
+                MapOnlyMissingSourcePaths = _testExecutionOptions.MapOnlyMissingSourcePaths,
                 AdditionalTestExecutionParam = _testExecutionOptions.AdditionalTestExecutionParams,
                 BatchForTestSetup = _testExecutionOptions.BatchForTestSetup,
                 BatchForTestTeardown = _testExecutionOptions.BatchForTestTeardown,
@@ -282,45 +286,12 @@ namespace GoogleTestAdapter.VsPackage
                 MissingTestsReportMode = _testExecutionOptions.MissingTestsReportMode,
 
                 DebuggingNamedPipeId = _debuggingNamedPipeId,
-                SolutionDir = solutionDir,
-                PlatformName = platformName,
-                ConfigurationName = configurationName
+                SolutionDir = visualStudioConfiguration.SolutionDir,
+                PlatformName = visualStudioConfiguration.PlatformName,
+                ConfigurationName = visualStudioConfiguration.ConfigurationName
             };
         }
 
-        private void GetVisualStudioConfiguration(out string solutionDir, out string platformName, out string configurationName)
-        {
-            var logger = new ActivityLogLogger(this, () => OutputMode.Verbose);
-
-            solutionDir = platformName = configurationName = null;
-            try
-            {
-                if (GetService(typeof(DTE)) is DTE dte)
-                {
-                    try
-                    {
-                        solutionDir = Path.GetDirectoryName(dte.Solution.FullName);
-                    }
-                    catch (Exception e)
-                    {
-                        logger.LogError($"Exception caught while receiving solution dir from VS instance. dte.Solution.FullName: {dte.Solution.FullName}. Exception:{Environment.NewLine}{e}");
-                    }
-
-                    if (dte.Solution.Projects.Count > 0)
-                    {  
-                        var configurationManager = dte.Solution.Projects.Item(1).ConfigurationManager;  
-                        var activeConfiguration = configurationManager.ActiveConfiguration;
-
-                        platformName = activeConfiguration.PlatformName;
-                        configurationName = activeConfiguration.ConfigurationName;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"Exception while receiving configuration info from Visual Studio.{Environment.NewLine}{e}");
-            }
-        }
     }
 
 }

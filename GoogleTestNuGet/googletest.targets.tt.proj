@@ -11,6 +11,7 @@
     <T4ParameterValues Include="PackageNameDashes"><Value>$(PackageNameDashes)</Value></T4ParameterValues>
     <T4ParameterValues Include="PathToBinaries"><Value>$(PathToBinaries)</Value></T4ParameterValues>
     <T4ParameterValues Include="ConfigurationType"><Value>$(ConfigurationType)</Value></T4ParameterValues>
+    <T4ParameterValues Include="SupportsV143"><Value>$(SupportsV143)</Value></T4ParameterValues>
   </ItemGroup>
   <Target Name="Build" DependsOnTargets="TransformAll" />
 </Project>

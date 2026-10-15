@@ -40,6 +40,18 @@ namespace GoogleTestAdapter.Settings
         public virtual string EnvironmentVariables { get; set; }
         public bool ShouldSerializeEnvironmentVariables() { return EnvironmentVariables != null; }
 
+        public virtual bool? UseCTestTestProperties { get; set; }
+        public bool ShouldSerializeUseCTestTestProperties() { return UseCTestTestProperties != null; }
+
+        public virtual int? TestTimeoutInSeconds { get; set; }
+        public bool ShouldSerializeTestTimeoutInSeconds() { return TestTimeoutInSeconds != null; }
+
+        public virtual string SourcePathMapping { get; set; }
+        public bool ShouldSerializeSourcePathMapping() { return SourcePathMapping != null; }
+
+        public virtual bool? MapOnlyMissingSourcePaths { get; set; }
+        public bool ShouldSerializeMapOnlyMissingSourcePaths() { return MapOnlyMissingSourcePaths != null; }
+
         public virtual bool? CatchExceptions { get; set; }
         public bool ShouldSerializeCatchExceptions() { return CatchExceptions != null; }
 
@@ -94,8 +106,14 @@ namespace GoogleTestAdapter.Settings
         public virtual bool? ParseSymbolInformation { get; set; }
         public bool ShouldSerializeParseSymbolInformation() { return ParseSymbolInformation != null; }
 
+        public virtual bool? TearDownTestSuiteTestCases { get; set; }
+        public bool ShouldSerializeTearDownTestSuiteTestCases() { return TearDownTestSuiteTestCases != null; }
+
         public virtual string AdditionalTestExecutionParam { get; set; }
         public bool ShouldSerializeAdditionalTestExecutionParam() { return AdditionalTestExecutionParam != null; }
+
+        public virtual string AdditionalTestDiscoveryParam { get; set; }
+        public bool ShouldSerializeAdditionalTestDiscoveryParam() { return AdditionalTestDiscoveryParam != null; }
 
         public virtual bool? ParallelTestExecution { get; set; }
         public bool ShouldSerializeParallelTestExecution() { return ParallelTestExecution != null; }

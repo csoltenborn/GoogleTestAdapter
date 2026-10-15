@@ -72,111 +72,103 @@ namespace Microsoft.NewProjectWizard
             Dictionary<string, string> replacementsDictionary,
             WizardRunKind runKind, object[] customParams)
         {
+            DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
+            // late bound: since VS 2022, the members of DTE are declared by interface DTE rather than by _DTE, so
+            // calls compiled against EnvDTE 8.0 fail with "Method not found: 'EnvDTE.Solution EnvDTE._DTE.get_Solution()'"
+            Projects dteProjects = ((dynamic)dte).Solution.Projects;
+            List<string> projectNames = new List<string>();
+            bool isPlatformSet = false;
+
+            foreach (Project project in dteProjects)
+            {
+                // TODO: Filter out projects not applicable
+                projects.Add(project);
+                projectNames.Add(project.Name);
+            }
+
+            ConfigurationData configurationData = new ConfigurationData(dte, projectNames.ToArray());
+
+            SinglePageWizardDialog wiz = new SinglePageWizardDialog(Resources.WizardTitle, configurationData);
+            bool? success = wiz.ShowModal();
+
+            if (success == false)
+            {
+                throw new WizardCancelledException();
+            }
+
+            selectedProjectIndex = configurationData.ProjectIndex;
+
+            if (selectedProjectIndex >= 0)
+            {
+                foreach (Property prop in projects[selectedProjectIndex].Properties)
+                {
+                    if (prop.Name.Equals("WindowsTargetPlatformVersion"))
+                    {
+                        replacementsDictionary[TargetPlatformVersion] = (string)prop.Value;
+                        isPlatformSet = true;
+                    }
+                }
+            }
+
+            string consumeGTestAs = configurationData.IsGTestStatic ? "static" : "dyn";
+            string runtimeLibs = configurationData.IsRuntimeStatic ? "static" : "dyn";
+            string nugetPackage = "Microsoft.googletest.v140.windesktop.msvcstl." + consumeGTestAs + ".rt-" + runtimeLibs;
+
+            // Work around so we can choose the package for the nuget wizard
+            string tmpWizardData = Path.GetTempFileName();
+            File.AppendAllText(tmpWizardData, "<VSTemplate Version=\"3.0.0\" xmlns=\"http://schemas.microsoft.com/developer/vstemplate/2005\" Type=\"Project\"><WizardData>");
+            File.AppendAllText(tmpWizardData, replacementsDictionary[WizardData].Replace("$nugetpackage$", nugetPackage));
+            File.AppendAllText(tmpWizardData, "</WizardData></VSTemplate>");
+            customParams[0] = tmpWizardData;
+
             try
             {
-                DTE dte = (DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SDTE));
-                Projects dteProjects = dte.Solution.Projects;
-                List<string> projectNames = new List<string>();
-                bool isPlatformSet = false;
-
-                foreach (Project project in dteProjects)
-                {
-                    // TODO: Filter out projects not applicable
-                    projects.Add(project);
-                    projectNames.Add(project.Name);
-                }
-
-                ConfigurationData configurationData = new ConfigurationData(dte, projectNames.ToArray());
-
-                SinglePageWizardDialog wiz = new SinglePageWizardDialog(Resources.WizardTitle, configurationData);
-                bool? success = wiz.ShowModal();
-
-                if (success == false)
-                {
-                    throw new WizardCancelledException();
-                }
-
-                selectedProjectIndex = configurationData.ProjectIndex;
-
-                if (selectedProjectIndex >= 0)
-                {
-                    foreach (Property prop in projects[selectedProjectIndex].Properties)
-                    {
-                        if (prop.Name.Equals("WindowsTargetPlatformVersion"))
-                        {
-                            replacementsDictionary[TargetPlatformVersion] = (string)prop.Value;
-                            isPlatformSet = true;
-                        }
-                    }
-                }
-
-                string consumeGTestAs = configurationData.IsGTestStatic ? "static" : "dyn";
-                string runtimeLibs = configurationData.IsRuntimeStatic ? "static" : "dyn";
-                string nugetPackage = "Microsoft.googletest.v140.windesktop.msvcstl." + consumeGTestAs + ".rt-" + runtimeLibs;
-
-                // Work around so we can choose the package for the nuget wizard
-                string tmpWizardData = Path.GetTempFileName();
-                File.AppendAllText(tmpWizardData, "<VSTemplate Version=\"3.0.0\" xmlns=\"http://schemas.microsoft.com/developer/vstemplate/2005\" Type=\"Project\"><WizardData>");
-                File.AppendAllText(tmpWizardData, replacementsDictionary[WizardData].Replace("$nugetpackage$", nugetPackage));
-                File.AppendAllText(tmpWizardData, "</WizardData></VSTemplate>");
-                customParams[0] = tmpWizardData;
-
-                try
-                {
-                    Assembly nugetAssembly = Assembly.Load("NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-                    nugetWizard = (IWizard)nugetAssembly.CreateInstance("NuGet.VisualStudio.TemplateWizard");
-                    nugetWizard.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show(Resources.NuGetInteropNotFound);
-                    throw;
-                }
-
-                if (configurationData.IsRuntimeStatic)
-                {
-                    replacementsDictionary[RuntimeRelease] = "MultiThreaded";
-                    replacementsDictionary[RuntimeDebug] = "MultiThreadedDebug";
-                }
-                else
-                {
-                    replacementsDictionary[RuntimeRelease] = "MultiThreadedDLL";
-                    replacementsDictionary[RuntimeDebug] = "MultiThreadedDebugDLL";
-                }
-
-                if (!isPlatformSet)
-                {
-                    IEnumerable<TargetPlatformSDK> platformSdks = ToolLocationHelper.GetTargetPlatformSdks();
-                    IEnumerable<TargetPlatformSDK> allSdks = WizardImplementation.GetAllPlatformSdks();
-                    TargetPlatformSDK latestSdk = allSdks.FirstOrDefault();
-
-                    if (latestSdk == null)
-                    {
-                        throw new WizardCancelledException(Resources.WinSDKNotFound);
-                    }
-
-                    List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
-                        .Select(moniker => TryParsePlatformVersion(moniker))
-                        .Where(name => name != null)
-                        .OrderByDescending(p => p.Version).ToList();
-                    Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
-
-                    if (latestPlatform == null)
-                    {
-                        throw new WizardCancelledException(Resources.WinSDKNotFound);
-                    }
-
-                    string versionString = latestPlatform.Version.ToString();
-
-                    replacementsDictionary[TargetPlatformVersion] = versionString;
-                }
-
-                Telemetry.LogProjectCreated(nugetPackage);
+                Assembly nugetAssembly = Assembly.Load("NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+                nugetWizard = (IWizard)nugetAssembly.CreateInstance("NuGet.VisualStudio.TemplateWizard");
+                nugetWizard.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
             }
-            catch (WizardCancelledException ex)
+            catch (Exception)
             {
-                Telemetry.LogProjectCancelled(ex.Message);
+                MessageBox.Show(Resources.NuGetInteropNotFound);
                 throw;
+            }
+
+            if (configurationData.IsRuntimeStatic)
+            {
+                replacementsDictionary[RuntimeRelease] = "MultiThreaded";
+                replacementsDictionary[RuntimeDebug] = "MultiThreadedDebug";
+            }
+            else
+            {
+                replacementsDictionary[RuntimeRelease] = "MultiThreadedDLL";
+                replacementsDictionary[RuntimeDebug] = "MultiThreadedDebugDLL";
+            }
+
+            if (!isPlatformSet)
+            {
+                IEnumerable<TargetPlatformSDK> platformSdks = ToolLocationHelper.GetTargetPlatformSdks();
+                IEnumerable<TargetPlatformSDK> allSdks = WizardImplementation.GetAllPlatformSdks();
+                TargetPlatformSDK latestSdk = allSdks.FirstOrDefault();
+
+                if (latestSdk == null)
+                {
+                    throw new WizardCancelledException(Resources.WinSDKNotFound);
+                }
+
+                List<Platform> allPlatformsForLatestSdk = ToolLocationHelper.GetPlatformsForSDK("Windows", latestSdk.TargetPlatformVersion)
+                    .Select(moniker => TryParsePlatformVersion(moniker))
+                    .Where(name => name != null)
+                    .OrderByDescending(p => p.Version).ToList();
+                Platform latestPlatform = allPlatformsForLatestSdk.FirstOrDefault();
+
+                if (latestPlatform == null)
+                {
+                    throw new WizardCancelledException(Resources.WinSDKNotFound);
+                }
+
+                string versionString = latestPlatform.Version.ToString();
+
+                replacementsDictionary[TargetPlatformVersion] = versionString;
             }
         }
 

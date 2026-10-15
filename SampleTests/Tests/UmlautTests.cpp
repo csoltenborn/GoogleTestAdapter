@@ -58,7 +58,7 @@ TEST_P_TRAITS(ParameterizedTästs, Träits, Träit1, Völue1a, Träit1, Völue1b, Träi
 	EXPECT_EQ("äöüßÄÖÜ", GetParam().s);
 }
 
-INSTANTIATE_TEST_CASE_P(ÜnstanceName,
+INSTANTIATE_TEST_SUITE_P(ÜnstanceName,
 	ParameterizedTästs,
 	testing::Values(MyPäräm("ÄÖÜäöüß", 1))
 );
@@ -87,7 +87,7 @@ class ÜmlautTypedTests : public ::testing::Test {
 };
 
 typedef ::testing::Types<ImplementationA, ImplementationB> ImplementationTypes;
-TYPED_TEST_CASE(ÜmlautTypedTests, ImplementationTypes);
+TYPED_TEST_SUITE(ÜmlautTypedTests, ImplementationTypes);
 
 TYPED_TEST(ÜmlautTypedTests, Täst) {
 	TypeParam theInstance;

@@ -163,3 +163,4 @@ OpenCover/
 *.VC.opendb
 *.VC.db-shm
 *.VC.db-wal
+/.vs

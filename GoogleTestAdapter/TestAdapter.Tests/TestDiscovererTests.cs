@@ -97,7 +97,7 @@ namespace GoogleTestAdapter.TestAdapter
             finally
             {
                 File.Delete(semPath);
-                File.Delete(temp2Exe);
+                Utils.DeleteFile(temp2Exe);
             }
         }
 
@@ -124,7 +124,7 @@ namespace GoogleTestAdapter.TestAdapter
             finally
             {
                 File.Delete(semPath);
-                File.Delete(temp1Exe);
+                Utils.DeleteFile(temp1Exe);
             }
 
             // Verify untrusted exe is not run
@@ -134,14 +134,14 @@ namespace GoogleTestAdapter.TestAdapter
                 MarkUntrusted(temp2Exe);
                 semPath.AsFileInfo().Should().NotExist();
                 RunExecutableAndCheckLogging(temp2Exe,
-                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("was blocked to help protect"))),
+                    () => MockLogger.Verify(l => l.LogError(It.Is<string>(s => s.Contains("came from another computer and was blocked to help protect"))),
                         Times.Once));
                 semPath.AsFileInfo().Should().NotExist("exe should not have been run");
             }
             finally
             {
                 File.Delete(semPath);
-                File.Delete(temp2Exe);
+                Utils.DeleteFile(temp2Exe);
             }
         }
 

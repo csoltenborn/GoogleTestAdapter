@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GoogleTestAdapter.Common;
 using GoogleTestAdapter.DiaResolver;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution.Contracts;
 using GoogleTestAdapter.Runners;
@@ -27,6 +28,7 @@ namespace GoogleTestAdapter.TestCases
         private readonly IDiaResolverFactory _diaResolverFactory;
         private readonly IProcessExecutorFactory _processExecutorFactory;
         private readonly MethodSignatureCreator _signatureCreator = new MethodSignatureCreator();
+        private SourcePathMapper _sourcePathMapper = SourcePathMapper.Identity;
 
         public TestCaseFactory(string executable, ILogger logger, SettingsWrapper settings,
             IDiaResolverFactory diaResolverFactory, IProcessExecutorFactory processExecutorFactory)
@@ -44,44 +46,29 @@ namespace GoogleTestAdapter.TestCases
             var testCases = new List<TestCase>();
 
             var resolver = new TestCaseResolver(_executable, _diaResolverFactory, _settings, _logger);
+            _sourcePathMapper = _settings.GetSourcePathMapper(_executable, _logger);
 
-            var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
+            var descriptors = new List<TestCaseDescriptor>();
             var parser = new StreamingListTestsParser(_settings.TestNameSeparator);
-            parser.TestCaseDescriptorCreated += (sender, args) =>
-            {
-                TestCase testCase;
-                if (_settings.ParseSymbolInformation)
-                {
-                    TestCaseLocation testCaseLocation =
-                        resolver.FindTestCaseLocation(
-                            _signatureCreator.GetTestMethodSignatures(args.TestCaseDescriptor).ToList());
-                    testCase = CreateTestCase(args.TestCaseDescriptor, testCaseLocation);
-                }
-                else
-                {
-                    testCase = CreateTestCase(args.TestCaseDescriptor);
-                }
-                testCases.Add(testCase);
+            parser.TestCaseDescriptorCreated += (sender, args) => descriptors.Add(args.TestCaseDescriptor);
 
-                if (!suite2TestCases.TryGetValue(args.TestCaseDescriptor.Suite, out var testCasesOfSuite))
-                {
-                    suite2TestCases.Add(args.TestCaseDescriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
-                }
-                testCasesOfSuite.Add(testCase);
-            };
-
+            string testListFile = Path.GetTempFileName();
             string workingDir = _settings.GetWorkingDirForDiscovery(_executable);
-            var finalParams = GetDiscoveryParams();
+            var finalParams = GetDiscoveryParams(testListFile);
             var environmentVariables = _settings.GetEnvironmentVariablesForDiscovery(_executable);
             try
             {
                 int processExitCode = ExecutionFailed;
                 IProcessExecutor executor = null;
 
+                // on a timeout, the output is logged while the executable might still be producing it
                 void OnReportOutputLine(string line)
                 {
-                    standardOutput.Add(line);
-                    parser.ReportLine(line);
+                    lock (standardOutput)
+                    {
+                        standardOutput.Add(line);
+                        parser.ReportLine(line);
+                    }
                 }
 
                 var listAndParseTestsTask = Task.Run(() =>
@@ -102,22 +89,55 @@ namespace GoogleTestAdapter.TestCases
                 if (!listAndParseTestsTask.Wait(TimeSpan.FromSeconds(_settings.TestDiscoveryTimeoutInSeconds)))
                 {
                     executor?.Cancel();
-                    LogTimeoutError(workingDir, finalParams, standardOutput);
+                    List<string> outputSoFar;
+                    lock (standardOutput)
+                    {
+                        outputSoFar = standardOutput.ToList();
+                    }
+                    LogTimeoutError(workingDir, finalParams, outputSoFar);
                     return new List<TestCase>();
                 }
 
+                var suite2TestCases = new Dictionary<string, ISet<TestCase>>();
+                var xmlLocations = new XmlTestListParser(_executable, _logger).ParseTestLocations(testListFile);
+                foreach (var descriptor in descriptors)
+                {
+                    TestCase testCase = CreateTestCase(descriptor, resolver, xmlLocations);
+                    testCases.Add(testCase);
+
+                    if (!suite2TestCases.TryGetValue(descriptor.Suite, out var testCasesOfSuite))
+                    {
+                        suite2TestCases.Add(descriptor.Suite, testCasesOfSuite = new HashSet<TestCase>());
+                    }
+                    testCasesOfSuite.Add(testCase);
+                }
+
+                int nrOfTestCases = testCases.Count;
                 foreach (var suiteTestCasesPair in suite2TestCases)
                 {
                     foreach (var testCase in suiteTestCasesPair.Value)
                     {
-                        testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, testCases.Count));
+                        testCase.Properties.Add(new TestCaseMetaDataProperty(suiteTestCasesPair.Value.Count, nrOfTestCases));
                         reportTestCase?.Invoke(testCase);
+                    }
+                }
+
+                if (_settings.TearDownTestSuiteTestCases && _settings.ParseSymbolInformation)
+                {
+                    foreach (var suiteTestCasesPair in suite2TestCases)
+                    {
+                        TestCase tearDownTestCase = CreateTearDownTestSuiteTestCase(suiteTestCasesPair.Key, suiteTestCasesPair.Value, nrOfTestCases, resolver);
+                        if (tearDownTestCase != null)
+                        {
+                            testCases.Add(tearDownTestCase);
+                            reportTestCase?.Invoke(tearDownTestCase);
+                        }
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(_settings.ExitCodeTestCase))
                 {
-                    var exitCodeTestCase = ExitCodeTestsReporter.CreateExitCodeTestCase(_settings, _executable, resolver.MainMethodLocation);
+                    var exitCodeTestCase = ExitCodeTestsReporter.CreateExitCodeTestCase(_settings, _executable, MapSourcePath(resolver.MainMethodLocation));
                     testCases.Add(exitCodeTestCase);
                     reportTestCase?.Invoke(exitCodeTestCase);
                     _logger.DebugInfo($"Exit code of executable '{_executable}' is ignored for test discovery because option '{SettingsWrapper.OptionExitCodeTestCase}' is set");
@@ -132,10 +152,15 @@ namespace GoogleTestAdapter.TestCases
                 SequentialTestRunner.LogExecutionError(_logger, _executable, workingDir, finalParams, e);
                 return new List<TestCase>();
             }
+            finally
+            {
+                TryDelete(testListFile);
+            }
             return testCases;
         }
 
-        private string GetDiscoveryParams()
+        // Google Test >= 1.8.1 writes the tests including their source locations to the result XML file (upstream #309)
+        private string GetDiscoveryParams(string testListFile)
         {
             string finalParams = GoogleTestConstants.ListTestsOption;
             string userParams = _settings.GetUserParametersForDiscovery(_executable);
@@ -144,7 +169,20 @@ namespace GoogleTestAdapter.TestCases
                 finalParams += $" {userParams}";
             }
 
-            return finalParams;
+            // last, since the last --gtest_output option wins
+            return $"{finalParams} {GoogleTestConstants.GetResultXmlFileOption(testListFile)}";
+        }
+
+        private void TryDelete(string file)
+        {
+            try
+            {
+                File.Delete(file);
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+            {
+                _logger.DebugWarning($"Could not delete test list file {file}: {e.Message}");
+            }
         }
 
         private void LogTimeoutError(string workingDir, string finalParams, IList<string> outputSoFar)
@@ -192,7 +230,31 @@ namespace GoogleTestAdapter.TestCases
         {
             var testCase = new TestCase(
                 descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, "", 0);
-            testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, new List<Trait>()));
+            testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, WithLabelTraits(descriptor, new List<Trait>())));
+            return testCase;
+        }
+
+        // Locations from debug symbols come with traits and namespace; the location written by Google Test is used
+        // if there are no debug symbols, if symbols are not parsed, or for tests without TestBody symbol (e.g. tests
+        // registered with ::testing::RegisterTest())
+        private TestCase CreateTestCase(TestCaseDescriptor descriptor, TestCaseResolver resolver,
+            IDictionary<string, TestCaseLocation> xmlLocations)
+        {
+            TestCaseLocation location = null;
+            if (_settings.ParseSymbolInformation)
+            {
+                location = resolver.FindTestCaseLocation(_signatureCreator.GetTestMethodSignatures(descriptor).ToList());
+            }
+            if (location == null)
+            {
+                xmlLocations.TryGetValue(descriptor.FullyQualifiedName, out location);
+            }
+
+            TestCase testCase = location == null && !_settings.ParseSymbolInformation
+                ? CreateTestCase(descriptor)
+                : CreateTestCase(descriptor, location);
+            testCase.TestClass = descriptor.TestClass;
+            testCase.TestGroup = descriptor.TestGroup;
             return testCase;
         }
 
@@ -201,13 +263,66 @@ namespace GoogleTestAdapter.TestCases
             if (location != null)
             {
                 var testCase = new TestCase(
-                    descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, location.Sourcefile, (int)location.Line);
-                testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, location.Traits));
+                    descriptor.FullyQualifiedName, _executable, descriptor.DisplayName, _sourcePathMapper.Map(location.Sourcefile), (int)location.Line)
+                {
+                    Namespace = location.Namespace
+                };
+                testCase.Traits.AddRange(GetFinalTraits(descriptor.DisplayName, WithLabelTraits(descriptor, location.Traits)));
                 return testCase;
             }
 
             _logger.LogWarning($"Could not find source location for test {descriptor.FullyQualifiedName}, executable: {_executable}");
             return CreateTestCase(descriptor);
+        }
+
+        // the test case reporting failures of TearDownTestSuite() of the suite's fixture (see option
+        // TearDownTestSuiteTestCases), placed with the suite's tests in Test Explorer; null if the fixture does not
+        // define the method
+        private TestCase CreateTearDownTestSuiteTestCase(string suite, ICollection<TestCase> testCasesOfSuite, int nrOfTestCases, TestCaseResolver resolver)
+        {
+            TestCase anyTestCase = testCasesOfSuite.First();
+            TestCaseLocation location = MapSourcePath(resolver.FindTearDownTestSuiteLocation(suite, anyTestCase.Namespace));
+            if (location == null)
+                return null;
+
+            // an empty method folded by the linker has the location of Google Test's default implementation
+            bool hasLocation = !string.IsNullOrEmpty(location.Sourcefile);
+            string name = $"{suite}.{GoogleTestConstants.TearDownTestSuiteTestName}";
+            var testCase = new TestCase(name, _executable, name,
+                hasLocation ? location.Sourcefile : anyTestCase.CodeFilePath,
+                hasLocation ? (int)location.Line : anyTestCase.LineNumber)
+            {
+                Namespace = location.Namespace,
+                TestClass = anyTestCase.TestClass,
+                TestGroup = GoogleTestConstants.TearDownTestSuiteTestName
+            };
+            testCase.Properties.Add(new TestCaseMetaDataProperty(testCasesOfSuite.Count, nrOfTestCases, isTearDownTestSuite: true));
+            return testCase;
+        }
+
+        private TestCaseLocation MapSourcePath(TestCaseLocation location)
+        {
+            if (location == null || _sourcePathMapper.IsIdentity)
+                return location;
+
+            var mappedLocation = new TestCaseLocation(location.Symbol, _sourcePathMapper.Map(location.Sourcefile), location.Line)
+            {
+                Namespace = location.Namespace
+            };
+            mappedLocation.Traits.AddRange(location.Traits);
+            return mappedLocation;
+        }
+
+        // labels of CMake tests (test property LABELS) are treated like traits defined in the test's code
+        private List<Trait> WithLabelTraits(TestCaseDescriptor descriptor, List<Trait> traits)
+        {
+            var labels = _settings.GetTestPropertySettings(_executable, descriptor.FullyQualifiedName)?.Labels;
+            if (labels == null || labels.Count == 0)
+                return traits;
+
+            return traits
+                .Concat(labels.Select(label => new Trait(GoogleTestConstants.CMakeLabelTraitName, label)))
+                .ToList();
         }
 
         private IList<Trait> GetFinalTraits(string displayName, List<Trait> traits)

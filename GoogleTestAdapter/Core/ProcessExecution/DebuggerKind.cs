@@ -7,7 +7,7 @@ using GoogleTestAdapter.Common;
 namespace GoogleTestAdapter.ProcessExecution
 {
     [TypeConverter(typeof(DebuggerKindConverter))]
-    public enum DebuggerKind { VsTestFramework, Native, ManagedAndNative }
+    public enum DebuggerKind { VsTestFramework, Native, ManagedAndNative, ManagedCoreAndNative }
 
     public static class DebuggerKindExtensions
     {
@@ -24,12 +24,14 @@ namespace GoogleTestAdapter.ProcessExecution
         public const string VsTestFramework = "VsTest framework";
         public const string Native = "Native";
         public const string ManagedAndNative = "Managed and native";
+        public const string ManagedCoreAndNative = "Managed (.NET Core, .NET 5+) and native";
 
         public DebuggerKindConverter() : base(new Dictionary<DebuggerKind, string>
         {
             { DebuggerKind.VsTestFramework, VsTestFramework},
             { DebuggerKind.Native, Native},
             { DebuggerKind.ManagedAndNative, ManagedAndNative},
+            { DebuggerKind.ManagedCoreAndNative, ManagedCoreAndNative},
         }) {}
 
     }

@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 7/2017.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,6 +21,14 @@ namespace GoogleTestAdapter.Settings
 
         public RegexTraitParser RegexTraitParser { private get; set; }
         public EnvironmentVariablesParser EnvironmentVariablesParser { private get; set; }
+        public TestPropertySettingsContainer TestPropertySettingsContainer { private get; set; }
+        public CTestTestPropertySettingsProvider CTestTestPropertySettingsProvider { private get; set; }
+
+        // the test properties are needed for every test, but determining them involves searching the file system for
+        // the executable's CMake build tree; settings only live for one test discovery or execution, so changes of the
+        // build tree are still noticed by the next discovery or execution
+        private readonly ConcurrentDictionary<string, TestPropertySettingsContainer> _cTestTestPropertySettingsContainers =
+            new ConcurrentDictionary<string, TestPropertySettingsContainer>(StringComparer.OrdinalIgnoreCase);
 
         private HelperFilesCache _cache;
         public HelperFilesCache HelperFilesCache
@@ -57,7 +66,9 @@ namespace GoogleTestAdapter.Settings
             {
                 RegexTraitParser = RegexTraitParser,
                 HelperFilesCache = HelperFilesCache,
-                EnvironmentVariablesParser = EnvironmentVariablesParser
+                EnvironmentVariablesParser = EnvironmentVariablesParser,
+                TestPropertySettingsContainer = TestPropertySettingsContainer,
+                CTestTestPropertySettingsProvider = CTestTestPropertySettingsProvider
             };
         }
 
@@ -191,7 +202,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionTimestampOutput = "Timestamp output";
         public const string OptionTimestampOutputDescription =
             "Controls whether a timestamp is added to the output.\n" + 
-            TimestampModeConverter.Automatic + ": add timestamp on VS2013, VS2015\n" +
+            TimestampModeConverter.Automatic + ": add timestamp only if the test host does not add one itself (e.g. if the version of Visual Studio can not be determined)\n" +
             TimestampModeConverter.PrintTimeStamp + ": always add timestamp\n" + 
             TimestampModeConverter.DoNotPrintTimeStamp + ": never add timestamp";
         public const TimestampMode OptionTimestampOutputDefaultValue = TimestampMode.Automatic;
@@ -202,7 +213,7 @@ namespace GoogleTestAdapter.Settings
         public const string OptionSeverityMode = "Print severity";
         public const string OptionSeverityModeDescription =
             "Controls whether the messages' severity is added to the output.\n" + 
-            SeverityModeConverter.Automatic + ": print severity on VS2013, VS2015\n" +
+            SeverityModeConverter.Automatic + ": print severity only if the test host does not print it itself (e.g. if the version of Visual Studio can not be determined)\n" +
             SeverityModeConverter.PrintSeverity + ": always print severity\n" +
             SeverityModeConverter.DoNotPrintSeverity + ": never print severity";
         public const SeverityMode OptionSeverityModeDefaultValue = SeverityMode.Automatic;
@@ -324,7 +335,8 @@ namespace GoogleTestAdapter.Settings
         public const string OptionDebuggerKindDescription =
                 DebuggerKindConverter.VsTestFramework + ": Debugger engine as provided by the VsTest framework; no test crash detection, no test output printing, less interactive UI\n" +
                 DebuggerKindConverter.Native + ": Debugger engine as provided by VS native API; no restrictions (default)\n" + 
-                DebuggerKindConverter.ManagedAndNative + ": Same as '" + DebuggerKindConverter.Native + "', but allows to also debug into managed code";
+                DebuggerKindConverter.ManagedAndNative + ": Same as '" + DebuggerKindConverter.Native + "', but allows to also debug into managed code of the .NET Framework\n" +
+                DebuggerKindConverter.ManagedCoreAndNative + ": Same as '" + DebuggerKindConverter.Native + "', but allows to also debug into managed code of .NET Core and .NET 5 or later";
         public const DebuggerKind OptionDebuggerKindDefaultValue = DebuggerKind.Native;
 
         public virtual DebuggerKind DebuggerKind => _currentSettings.DebuggerKind ?? OptionDebuggerKindDefaultValue;
@@ -351,14 +363,22 @@ namespace GoogleTestAdapter.Settings
             ? OptionWorkingDirDefaultValue 
             : _currentSettings.WorkingDir;
 
-        public string GetWorkingDirForExecution(string executable, string testDirectory, int threadId)
+        public string GetWorkingDirForExecution(string executable, string testDirectory, int threadId, TestPropertySettings testPropertySettings = null)
         {
-            return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForExecution(WorkingDir, executable, testDirectory, threadId);
+            return GetWorkingDirFromTestPropertySettings(testPropertySettings)
+                   ?? _placeholderReplacer.ReplaceWorkingDirPlaceholdersForExecution(WorkingDir, executable, testDirectory, threadId);
         }
 
         public string GetWorkingDirForDiscovery(string executable)
         {
-            return _placeholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery(WorkingDir, executable);
+            return GetWorkingDirFromTestPropertySettings(GetTestPropertySettingsForExecutable(executable))
+                   ?? _placeholderReplacer.ReplaceWorkingDirPlaceholdersForDiscovery(WorkingDir, executable);
+        }
+
+        // a working directory configured for GTA takes precedence over the one provided by CMake
+        private string GetWorkingDirFromTestPropertySettings(TestPropertySettings testPropertySettings)
+        {
+            return WorkingDir == OptionWorkingDirDefaultValue ? testPropertySettings?.WorkingDirectory : null;
         }
 
         public const string OptionPathExtension = "PATH extension";
@@ -383,17 +403,117 @@ namespace GoogleTestAdapter.Settings
             _currentSettings.EnvironmentVariables ?? OptionEnvironmentVariablesDefaultValue;
 
         public IDictionary<string, string> GetEnvironmentVariablesForDiscovery(string executable)
-            => EnvironmentVariablesParser.ParseEnvironmentVariablesString(
-                _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForDiscovery(EnvironmentVariables, executable));
+            => MergeWithTestPropertySettings(
+                EnvironmentVariablesParser.ParseEnvironmentVariablesString(
+                    _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForDiscovery(EnvironmentVariables, executable)),
+                GetTestPropertySettingsForExecutable(executable));
 
-        public IDictionary<string, string> GetEnvironmentVariablesForExecution(string executable, string testDirectory, int threadId) 
-            => EnvironmentVariablesParser.ParseEnvironmentVariablesString(
-                _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForExecution(EnvironmentVariables, executable, testDirectory, threadId));
+        public IDictionary<string, string> GetEnvironmentVariablesForExecution(string executable, string testDirectory, int threadId, TestPropertySettings testPropertySettings = null) 
+            => MergeWithTestPropertySettings(
+                EnvironmentVariablesParser.ParseEnvironmentVariablesString(
+                    _placeholderReplacer.ReplaceEnvironmentVariablesPlaceholdersForExecution(EnvironmentVariables, executable, testDirectory, threadId)),
+                testPropertySettings);
+
+        // environment variables configured for GTA take precedence over the ones provided by CMake
+        private static IDictionary<string, string> MergeWithTestPropertySettings(IDictionary<string, string> environmentVariables, TestPropertySettings testPropertySettings)
+        {
+            if (testPropertySettings == null || testPropertySettings.Environment.Count == 0)
+                return environmentVariables;
+
+            var result = new Dictionary<string, string>(testPropertySettings.Environment, StringComparer.OrdinalIgnoreCase);
+            foreach (var environmentVariable in environmentVariables)
+                result[environmentVariable.Key] = environmentVariable.Value;
+            return result;
+        }
+
+        /// <summary>
+        /// Properties of a test as configured in CMake, null if not available.
+        /// </summary>
+        public TestPropertySettings GetTestPropertySettings(string executable, string fullyQualifiedName)
+            => GetTestPropertySettingsContainer(executable)?.GetSettingsForTest(executable, fullyQualifiedName);
+
+        private TestPropertySettings GetTestPropertySettingsForExecutable(string executable)
+            => GetTestPropertySettingsContainer(executable)?.GetSettingsForExecutable(executable);
+
+        // CTest knows all test properties, while Visual Studio only provides working directory and environment
+        private TestPropertySettingsContainer GetTestPropertySettingsContainer(string executable)
+            => (UseCTestTestProperties ? GetCTestTestPropertySettingsContainer(executable) : null)
+               ?? TestPropertySettingsContainer;
+
+        private TestPropertySettingsContainer GetCTestTestPropertySettingsContainer(string executable)
+            => CTestTestPropertySettingsProvider == null
+                ? null
+                : _cTestTestPropertySettingsContainers.GetOrAdd(executable, CTestTestPropertySettingsProvider.GetContainer);
+
+
+        public const string OptionUseCTestTestProperties = "Use CTest test properties";
+        public const string OptionUseCTestTestPropertiesDescription =
+            "If true, the test properties of test executables built by CMake (i.e., executables with a CMakeCache.txt in their folder or one of its parent folders) are obtained from CTest " +
+            "(ctest --show-only=json-v1): LABELS are assigned as traits 'Label', DISABLED tests are reported as skipped, tests exceeding their TIMEOUT are killed, " +
+            "and tests are run with the WORKING_DIRECTORY and ENVIRONMENT CTest would use. If false, only the working directory and environment provided by Visual Studio are used.";
+        public const bool OptionUseCTestTestPropertiesDefaultValue = true;
+
+        public virtual bool UseCTestTestProperties => _currentSettings.UseCTestTestProperties ?? OptionUseCTestTestPropertiesDefaultValue;
+
+
+        public const string OptionSourcePathMapping = "Source path mapping";
+        public const string OptionSourcePathMappingDescription =
+            "Maps source paths of test executables built elsewhere (e.g. by CI or within a container) to local paths, making test locations and failure stack traces navigable. " +
+            "Syntax: " + SourcePathMapper.MappingSeparator + " separates the build path from the local path replacing it, pairs are separated by " + SourcePathMapper.PairSeparator +
+            ". A path is mapped if it starts with the build path (case-insensitive, \\ and / are equivalent); the first matching pair wins.\n" +
+            "Example: C:\\agent\\_work\\1\\s" + SourcePathMapper.MappingSeparator + "$(SolutionDir)" + SourcePathMapper.PairSeparator + "D:\\build\\deps" + SourcePathMapper.MappingSeparator + "C:\\deps\n" +
+            PlaceholderReplacer.PathExtensionPlaceholders;
+        public const string OptionSourcePathMappingDefaultValue = "";
+
+        public virtual string SourcePathMapping => _currentSettings.SourcePathMapping ?? OptionSourcePathMappingDefaultValue;
+
+
+        public const string OptionMapOnlyMissingSourcePaths = "Map only missing source paths";
+        public const string OptionMapOnlyMissingSourcePathsDescription =
+            "If true, option '" + OptionSourcePathMapping + "' is only applied to paths of files which do not exist (e.g. to map paths of executables built elsewhere, but not those of executables built locally). " +
+            "If false, all matching paths are mapped.";
+        public const bool OptionMapOnlyMissingSourcePathsDefaultValue = false;
+
+        public virtual bool MapOnlyMissingSourcePaths => _currentSettings.MapOnlyMissingSourcePaths ?? OptionMapOnlyMissingSourcePathsDefaultValue;
+
+        public SourcePathMapper GetSourcePathMapper(string executable, ILogger logger)
+        {
+            string sourcePathMapping = SourcePathMapping;
+            if (string.IsNullOrWhiteSpace(sourcePathMapping))
+                return SourcePathMapper.Identity;
+
+            try
+            {
+                sourcePathMapping = _placeholderReplacer.ReplaceSourcePathMappingPlaceholders(sourcePathMapping, executable);
+                return new SourcePathMapper(SourcePathMapper.Parse(sourcePathMapping), MapOnlyMissingSourcePaths);
+            }
+            catch (ArgumentException e)
+            {
+                logger.LogWarning($"Option '{OptionSourcePathMapping}' is ignored: {e.Message}");
+                return SourcePathMapper.Identity;
+            }
+        }
+
+
+        public const string OptionTestTimeoutInSeconds = "Test timeout in s";
+        public const string OptionTestTimeoutInSecondsDescription =
+            "Number of seconds after which a running test is assumed to hang: the test executable is killed, the test is reported as failed, and the remaining tests are run. " +
+            "The TIMEOUT of tests built by CMake (see option '" + OptionUseCTestTestProperties + "') takes precedence. Not applied while debugging. 0: no timeout";
+        public const int OptionTestTimeoutInSecondsDefaultValue = 0;
+
+        public virtual int TestTimeoutInSeconds
+        {
+            get
+            {
+                int timeout = _currentSettings.TestTimeoutInSeconds ?? OptionTestTimeoutInSecondsDefaultValue;
+                return timeout < 0 ? OptionTestTimeoutInSecondsDefaultValue : timeout;
+            }
+        }
         
 
         public const string OptionAdditionalTestExecutionParams = "Additional test execution parameters";
         public const string OptionAdditionalTestExecutionParamsDescription =
-            "Additional parameters for Google Test executable during test execution. " + PlaceholderReplacer.AdditionalTestExecutionParamPlaceholders;
+            "Additional parameters for Google Test executable during test execution, and during test discovery unless option '" + OptionAdditionalTestDiscoveryParams + "' is set. " + PlaceholderReplacer.AdditionalTestExecutionParamPlaceholders;
         public const string OptionAdditionalTestExecutionParamsDefaultValue = "";
 
         public virtual string AdditionalTestExecutionParam => _currentSettings.AdditionalTestExecutionParam ?? OptionAdditionalTestExecutionParamsDefaultValue;
@@ -402,9 +522,17 @@ namespace GoogleTestAdapter.Settings
             => _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForExecution(
                 AdditionalTestExecutionParam, executable, testDirectory, threadId);
 
+        public const string OptionAdditionalTestDiscoveryParams = "Additional test discovery parameters";
+        public const string OptionAdditionalTestDiscoveryParamsDescription =
+            "Additional parameters for Google Test executable during test discovery (i.e. together with --gtest_list_tests). If empty, the parameters of option '" + OptionAdditionalTestExecutionParams + "' are used. " + PlaceholderReplacer.AdditionalTestDiscoveryParamPlaceholders;
+        public const string OptionAdditionalTestDiscoveryParamsDefaultValue = "";
+
+        public virtual string AdditionalTestDiscoveryParam => _currentSettings.AdditionalTestDiscoveryParam ?? OptionAdditionalTestDiscoveryParamsDefaultValue;
+
         public string GetUserParametersForDiscovery(string executable)
-            => _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(
-                AdditionalTestExecutionParam, executable);
+            => string.IsNullOrEmpty(AdditionalTestDiscoveryParam)
+                ? _placeholderReplacer.ReplaceAdditionalTestExecutionParamPlaceholdersForDiscovery(AdditionalTestExecutionParam, executable)
+                : _placeholderReplacer.ReplaceAdditionalTestDiscoveryParamPlaceholders(AdditionalTestDiscoveryParam, executable);
 
 
         public const string OptionBatchForTestSetup = "Test setup batch file";
@@ -562,10 +690,19 @@ namespace GoogleTestAdapter.Settings
 
         public const string OptionParseSymbolInformation = "Parse symbol information";
         public const string OptionParseSymbolInformationDescription =
-            "Parse debug symbol information for test executables. Setting this to false will speed up test discovery, but tests will not have source location information, and traits defined via the macros in GTA_Traits.h will not be available.";
+            "Parse debug symbol information for test executables. Setting this to false will speed up test discovery, but traits defined via the macros in GTA_Traits.h and namespaces of tests will not be available, and tests will only have source locations if they are provided by Google Test (1.8.1 or later).";
         public const bool OptionParseSymbolInformationDefaultValue = true;
 
         public virtual bool ParseSymbolInformation => _currentSettings.ParseSymbolInformation ?? OptionParseSymbolInformationDefaultValue;
+
+
+        public const string OptionTearDownTestSuiteTestCases = "TearDownTestSuite test cases";
+        public const string OptionTearDownTestSuiteTestCasesDescription =
+            "Adds a test case named " + GoogleTestConstants.TearDownTestSuiteTestName + " to each test suite whose fixture defines TearDownTestSuite() (or the deprecated TearDownTestCase()). The test case fails if TearDownTestSuite() fails, which is not reported by any of the suite's tests, and passes otherwise; it is run whenever tests of its suite are run. Requires option '" + OptionParseSymbolInformation + "'.\n" +
+            "Failures of SetUpTestSuite() are reported by the tests of the suite, independent of this option.";
+        public const bool OptionTearDownTestSuiteTestCasesDefaultValue = true;
+
+        public virtual bool TearDownTestSuiteTestCases => _currentSettings.TearDownTestSuiteTestCases ?? OptionTearDownTestSuiteTestCasesDefaultValue;
 
 
         #endregion

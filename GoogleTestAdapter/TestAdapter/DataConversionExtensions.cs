@@ -9,7 +9,9 @@ using TestResult = GoogleTestAdapter.Model.TestResult;
 using Trait = GoogleTestAdapter.Model.Trait;
 using VsTestCase = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestCase;
 using VsTestProperty = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestProperty;
+using VsTestPropertyAttributes = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestPropertyAttributes;
 using VsTestResult = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult;
+using VsTestResultMessage = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResultMessage;
 using VsTestOutcome = Microsoft.VisualStudio.TestPlatform.ObjectModel.TestOutcome;
 using VsTrait = Microsoft.VisualStudio.TestPlatform.ObjectModel.Trait;
 
@@ -20,9 +22,18 @@ namespace GoogleTestAdapter.TestAdapter
     {
         private static readonly VsTestProperty TestMetaDataProperty;
 
+        // Test Explorer groups tests by project, namespace and class; without this property, it guesses namespace
+        // and class from the fully qualified name (i.e., the namespace is always empty for Google Test names)
+        private static readonly VsTestProperty HierarchyProperty;
+        private const int HierarchyIndexNamespace = 1;
+        private const int HierarchyIndexClass = 2;
+        private const int HierarchyIndexTestGroup = 3;
+
         static DataConversionExtensions()
         {
             TestMetaDataProperty = VsTestProperty.Register(TestCaseMetaDataProperty.Id, TestCaseMetaDataProperty.Label, typeof(string), typeof(VsTestCase));
+            // same registration as Test Explorer and MSTest
+            HierarchyProperty = VsTestProperty.Register("TestCase.Hierarchy", "Hierarchy", typeof(string[]), VsTestPropertyAttributes.Immutable, typeof(VsTestCase));
         }
 
 
@@ -36,7 +47,35 @@ namespace GoogleTestAdapter.TestAdapter
             if (metaDataSerialization != null)
                 testCase.Properties.Add(new TestCaseMetaDataProperty((string)metaDataSerialization));
 
+            if (vsTestCase.GetPropertyValue(HierarchyProperty) is string[] hierarchy && hierarchy.Length == 4)
+            {
+                testCase.Namespace = hierarchy[HierarchyIndexNamespace];
+                testCase.TestClass = hierarchy[HierarchyIndexClass];
+                testCase.TestGroup = hierarchy[HierarchyIndexTestGroup];
+            }
+
             return testCase;
+        }
+
+        /// <returns>The C++ namespace of the test (see <see cref="TestCase.Namespace"/>)</returns>
+        public static string GetNamespace(this VsTestCase vsTestCase)
+        {
+            return vsTestCase.GetPropertyValue(HierarchyProperty) is string[] hierarchy && hierarchy.Length == 4
+                ? hierarchy[HierarchyIndexNamespace]
+                : null;
+        }
+
+        // e.g. "Prefix/Suite/0" for "Prefix/Suite/0.Test/1" (suites may contain dots, test names may not)
+        public static string GetSuite(string fullyQualifiedName)
+        {
+            int indexOfTestName = fullyQualifiedName.LastIndexOf('.');
+            return indexOfTestName > 0 ? fullyQualifiedName.Substring(0, indexOfTestName) : fullyQualifiedName;
+        }
+
+        // e.g. "Test/1" for "Prefix/Suite/0.Test/1"
+        public static string GetTestName(string fullyQualifiedName)
+        {
+            return fullyQualifiedName.Substring(fullyQualifiedName.LastIndexOf('.') + 1);
         }
 
         public static VsTestCase ToVsTestCase(this TestCase testCase)
@@ -54,7 +93,24 @@ namespace GoogleTestAdapter.TestAdapter
             if (property != null)
                 vsTestCase.SetPropertyValue(TestMetaDataProperty, property.Serialization);
 
+            vsTestCase.SetPropertyValue(HierarchyProperty, GetHierarchy(testCase));
+
             return vsTestCase;
+        }
+
+        // project (filled in by VS if null), namespace (empty if unknown), class (i.e., the test suite), test group
+        // (i.e., the test's name); instances of typed and parameterized tests share class and test group, which makes
+        // Test Explorer show them below a common node (upstream #210)
+        private static string[] GetHierarchy(TestCase testCase)
+        {
+            string fullyQualifiedName = testCase.FullyQualifiedName;
+            return new[]
+            {
+                null,
+                testCase.Namespace ?? "",
+                testCase.TestClass ?? GetSuite(fullyQualifiedName),
+                testCase.TestGroup ?? GetTestName(fullyQualifiedName)
+            };
         }
 
 
@@ -71,7 +127,7 @@ namespace GoogleTestAdapter.TestAdapter
 
         public static VsTestResult ToVsTestResult(this TestResult testResult)
         {
-            return new VsTestResult(ToVsTestCase(testResult.TestCase))
+            var vsTestResult = new VsTestResult(ToVsTestCase(testResult.TestCase))
             {
                 Outcome = testResult.Outcome.ToVsTestOutcome(),
                 ComputerName = testResult.ComputerName,
@@ -80,6 +136,9 @@ namespace GoogleTestAdapter.TestAdapter
                 ErrorMessage = testResult.ErrorMessage,
                 ErrorStackTrace = testResult.ErrorStackTrace
             };
+            if (!string.IsNullOrEmpty(testResult.StandardOutput))
+                vsTestResult.Messages.Add(new VsTestResultMessage(VsTestResultMessage.StandardOutCategory, testResult.StandardOutput));
+            return vsTestResult;
         }
 
 

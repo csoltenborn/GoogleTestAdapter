@@ -16,6 +16,8 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
         private readonly bool _printTestOutput;
         private readonly ILogger _logger;
         
+        private readonly object _lock = new object();
+        private bool _canceled;
         private int? _processId;
 
         public FrameworkDebuggedProcessExecutor(IFrameworkHandle handle, bool printTestOutput, ILogger logger)
@@ -47,7 +49,16 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
                     $"Note that due to restrictions of the VsTest framework, the test executable's output can not be displayed in the test console when debugging tests. Use '{SettingsWrapper.OptionDebuggerKind}' option to overcome this problem.'");
             }
 
-            _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, environmentVariables);
+            lock (_lock)
+            {
+                // the executable is not started at all if execution has been canceled before
+                if (_canceled)
+                {
+                    _logger.DebugInfo($"Executable {command} has not been started since execution has been canceled");
+                    return int.MaxValue;
+                }
+                _processId = _frameworkHandle.LaunchProcessWithDebuggerAttached(command, workingDir, parameters, environmentVariables);
+            }
 
             ProcessWaiter waiter;
             using (var process = Process.GetProcessById(_processId.Value))
@@ -62,9 +73,13 @@ namespace GoogleTestAdapter.TestAdapter.ProcessExecution
 
         public void Cancel()
         {
-            if (_processId.HasValue)
+            lock (_lock)
             {
-                ProcessUtils.KillProcess(_processId.Value, _logger);
+                _canceled = true;
+                if (_processId.HasValue)
+                {
+                    ProcessUtils.KillProcess(_processId.Value, _logger);
+                }
             }
         }
 

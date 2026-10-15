@@ -10,6 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -77,11 +80,54 @@ namespace GoogleTestAdapter.Scheduling
             IDictionary<string, List<TestResult>> groupedTestcases = GroupTestResultsByExecutable(testResults);
             foreach (string executable in groupedTestcases.Keys)
             {
-                lock (Lock)
+                WithFileLock(GetDurationsFile(executable), () => UpdateTestDurations(executable, groupedTestcases[executable]));
+            }
+        }
+
+        private static readonly TimeSpan FileLockTimeout = TimeSpan.FromSeconds(30);
+
+        /// <summary>
+        /// The durations file of an executable might be read and updated by several processes at once (e.g. test hosts
+        /// running in parallel), which would lose the durations written by one of them, so the file is locked across
+        /// processes (if the lock can not be acquired in time, the file is accessed anyway).
+        /// </summary>
+        private static void WithFileLock(string durationsFile, Action action)
+        {
+            using (var mutex = new Mutex(false, GetMutexName(durationsFile)))
+            {
+                bool acquired;
+                try
                 {
-                    // TODO lock on file base
-                    UpdateTestDurations(executable, groupedTestcases[executable]);
+                    acquired = mutex.WaitOne(FileLockTimeout);
                 }
+                catch (AbandonedMutexException)
+                {
+                    // a process holding the lock has died
+                    acquired = true;
+                }
+
+                try
+                {
+                    lock (Lock)
+                    {
+                        action();
+                    }
+                }
+                finally
+                {
+                    if (acquired)
+                        mutex.ReleaseMutex();
+                }
+            }
+        }
+
+        // mutex names must not contain backslashes
+        private static string GetMutexName(string durationsFile)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(durationsFile).ToUpperInvariant()));
+                return @"Local\GoogleTestAdapter.TestDurations." + string.Concat(hash.Select(b => b.ToString("x2")));
             }
         }
 
@@ -90,15 +136,16 @@ namespace GoogleTestAdapter.Scheduling
         {
             var durations = new Dictionary<TestCase, int>();
             string durationsFile = GetDurationsFile(executable);
-            if (!File.Exists(durationsFile))
+
+            GtaTestDurations container = null;
+            WithFileLock(durationsFile, () =>
+            {
+                if (File.Exists(durationsFile))
+                    container = LoadTestDurations(durationsFile);
+            });
+            if (container == null)
             {
                 return durations;
-            }
-
-            GtaTestDurations container;
-            lock (Lock)
-            {
-                container = LoadTestDurations(durationsFile);
             }
 
             IDictionary<string, TestDuration> durationsMap = container.TestDurations.ToDictionary(x => x.Test, x => x);

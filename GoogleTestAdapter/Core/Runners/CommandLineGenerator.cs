@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.Settings;
@@ -59,26 +60,52 @@ namespace GoogleTestAdapter.Runners
 
         private IEnumerable<Args> GetFinalCommandLines(string baseCommandLine)
         {
+            // TearDownTestSuite() is executed whenever tests of its suite are executed, so the TearDownTestSuite test
+            // cases are added to the command lines executing their suites; a suite none of whose tests are to be run
+            // is run completely
+            List<TestCase> tearDownTestCases = _testCasesToRun.Where(tc => tc.IsTearDownTestSuiteTestCase).ToList();
+            foreach (TestCase tearDownTestCase in tearDownTestCases)
+                _testCasesToRun.Remove(tearDownTestCase);
+            List<string> suitesOnlyRunForTearDown = tearDownTestCases
+                .Select(GetTestsuiteName)
+                .Where(suite => !_testCasesToRun.Any(tc => GetTestsuiteName(tc) == suite))
+                .ToList();
+
             var exitCodeTest =
                 _testCasesToRun.SingleOrDefault(tc => tc.IsExitCodeTestCase);
             if (exitCodeTest != null)
             {
                 _testCasesToRun.Remove(exitCodeTest);
-                if (!_testCasesToRun.Any())
+                if (!_testCasesToRun.Any() && !tearDownTestCases.Any())
                 {
                     return CreateDummyCommandLineArgs(baseCommandLine, exitCodeTest).Yield();
                 }
             }
 
+            List<Args> commandLines = GetFinalCommandLines(baseCommandLine, suitesOnlyRunForTearDown);
+            foreach (TestCase tearDownTestCase in tearDownTestCases)
+            {
+                string suite = GetTestsuiteName(tearDownTestCase);
+                string suiteFilter = GetFilterForSuite(suite);
+                Args args = commandLines.FirstOrDefault(a => a.TestCases.Any(tc => GetTestsuiteName(tc) == suite))
+                            ?? commandLines.First(a => a.CommandLine.Contains("=" + suiteFilter) || a.CommandLine.Contains(":" + suiteFilter));
+                args.TestCases.Add(tearDownTestCase);
+            }
+            return commandLines;
+        }
+
+        private List<Args> GetFinalCommandLines(string baseCommandLine, List<string> suitesOnlyRunForTearDown)
+        {
             var commandLines = new List<Args>();
             string userParam = GetAdditionalUserParameter();
-            if (AllTestCasesOfExecutableAreRun())
+            // (if only TearDownTestSuite test cases are to be run, their suites are run)
+            if ((_testCasesToRun.Any() || !suitesOnlyRunForTearDown.Any()) && AllTestCasesOfExecutableAreRun())
             {
                 commandLines.Add(new Args(_testCasesToRun, baseCommandLine + userParam));
                 return commandLines;
             }
 
-            List<string> suitesRunningAllTests = GetSuitesRunningAllTests();
+            List<string> suitesRunningAllTests = GetSuitesRunningAllTests().Concat(suitesOnlyRunForTearDown).ToList();
             int maxSuiteLength = MaxCommandLength - _lengthOfExecutableString - userParam.Length - 1;
 
             List<List<string>> suiteLists = GetSuiteListsForCommandLines(suitesRunningAllTests, maxSuiteLength);
@@ -144,16 +171,16 @@ namespace GoogleTestAdapter.Runners
         {
             int suiteLengthAggregate = 0;
             int groupIdxCounter = 0;
-            int suiteDelimLen = _suiteDelimiter.Length;
 
             var suiteGroups = suitesRunningAllTests
                     .Select(suite =>
                     {
-                        suiteLengthAggregate += suite.Length + suiteDelimLen;
+                        int suiteFilterLength = GetFilterForSuite(suite).Length;
+                        suiteLengthAggregate += suiteFilterLength;
                         if (suiteLengthAggregate > maxSuiteLength)
                         {
                             ++groupIdxCounter;
-                            suiteLengthAggregate = suite.Length + suiteDelimLen;
+                            suiteLengthAggregate = suiteFilterLength;
                         }
                         return new { groupIdx = groupIdxCounter, suiteName = suite };
                     })
@@ -174,7 +201,7 @@ namespace GoogleTestAdapter.Runners
             }
 
             string result = "";
-            string nextTest = testCases[0].FullyQualifiedName;
+            string nextTest = GetFilterForTest(testCases[0]);
             if (nextTest.Length > maxLength)
             {
                 throw new Exception("CommandLineGenerator: I can not deal with this case :-( - maxLength=" + maxLength +
@@ -188,7 +215,7 @@ namespace GoogleTestAdapter.Runners
                 testCases.RemoveAt(0);
                 if (testCases.Count > 0)
                 {
-                    nextTest = ":" + testCases[0].FullyQualifiedName;
+                    nextTest = ":" + GetFilterForTest(testCases[0]);
                 }
             }
             return result;
@@ -251,7 +278,43 @@ namespace GoogleTestAdapter.Runners
 
         private string GetFilterForSuitesRunningAllTests(List<string> suitesRunningAllTests)
         {
-            return string.Join(_suiteDelimiter, suitesRunningAllTests).AppendIfNotEmpty(_suiteDelimiter);
+            return string.Concat(suitesRunningAllTests.Select(GetFilterForSuite));
+        }
+
+        private static string GetFilterForSuite(string suite)
+        {
+            return string.Concat(GetFilterPatterns(suite).Select(pattern => pattern + _suiteDelimiter));
+        }
+
+        private static string GetFilterForTest(TestCase testCase)
+        {
+            return string.Join(":", GetFilterPatterns(testCase.FullyQualifiedName));
+        }
+
+        // The filter is passed to main() in the system's ANSI code page, which only matches names containing non-ASCII
+        // characters if the tests have not been compiled with /utf-8. For tests compiled with /utf-8, an additional
+        // pattern matches each byte of the UTF-8 encoding of a non-ASCII character with '?'.
+        private static IEnumerable<string> GetFilterPatterns(string name)
+        {
+            yield return name;
+
+            if (name.All(c => c <= 127))
+                yield break;
+
+            var utf8Pattern = new StringBuilder();
+            for (int i = 0; i < name.Length; i++)
+            {
+                if (name[i] <= 127)
+                {
+                    utf8Pattern.Append(name[i]);
+                    continue;
+                }
+
+                int nrOfChars = char.IsHighSurrogate(name[i]) && i + 1 < name.Length ? 2 : 1;
+                utf8Pattern.Append('?', Encoding.UTF8.GetByteCount(name.ToCharArray(i, nrOfChars)));
+                i += nrOfChars - 1;
+            }
+            yield return utf8Pattern.ToString();
         }
 
         private bool AllTestCasesOfExecutableAreRun()
@@ -310,7 +373,9 @@ namespace GoogleTestAdapter.Runners
 
         private string GetTestsuiteName(TestCase testCase)
         {
-            return testCase.FullyQualifiedName.Split('.')[0];
+            // suite names may contain dots (e.g. "Namespace.Suite"), test names may not
+            string fullyQualifiedName = testCase.FullyQualifiedName;
+            return fullyQualifiedName.Substring(0, fullyQualifiedName.LastIndexOf('.'));
         }
 
     }

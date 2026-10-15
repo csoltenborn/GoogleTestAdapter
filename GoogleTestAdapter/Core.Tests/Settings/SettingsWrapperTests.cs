@@ -122,6 +122,26 @@ namespace GoogleTestAdapter.Settings
 
         [TestMethod]
         [TestCategory(Unit)]
+        public void GetUserParametersForDiscovery_NoDiscoveryParameters_ExecutionParametersAreUsed()
+        {
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-execution " + PlaceholderReplacer.ExecutablePlaceholder + " " + PlaceholderReplacer.TestDirPlaceholder);
+
+            TheOptions.GetUserParametersForDiscovery("SomeExecutable.exe").Should().Be("-execution SomeExecutable.exe ");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetUserParametersForDiscovery_DiscoveryParameters_DiscoveryParametersAreUsed()
+        {
+            MockXmlOptions.Setup(o => o.AdditionalTestExecutionParam).Returns("-execution");
+            MockXmlOptions.Setup(o => o.AdditionalTestDiscoveryParam).Returns("-discovery " + PlaceholderReplacer.ExecutablePlaceholder);
+
+            TheOptions.GetUserParametersForDiscovery("SomeExecutable.exe").Should().Be("-discovery SomeExecutable.exe");
+            TheOptions.GetUserParametersForExecution("SomeExecutable.exe", "mydir", 0).Should().Be("-execution");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
         public void CatchExceptions__ReturnsValueOrDefault()
         {
             MockXmlOptions.Setup(o => o.CatchExceptions).Returns((bool?)null);
@@ -429,6 +449,152 @@ namespace GoogleTestAdapter.Settings
             var expectedDir = new FileInfo(TestResources.Tests_DebugX86).Directory?.FullName;
             result.Should().NotBeNullOrEmpty();
             result.Should().BeEquivalentTo(expectedDir);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForExecution_DefaultWorkingDirAndTestPropertySettings_CMakeWorkingDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns(SettingsWrapper.OptionWorkingDirDefaultValue);
+            var testPropertySettings = new TestPropertySettings(@"C:\cmake\dir", null);
+
+            TheOptions.GetWorkingDirForExecution(TestResources.Tests_DebugX86, "", 0, testPropertySettings)
+                .Should().Be(@"C:\cmake\dir");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForExecution_ConfiguredWorkingDirAndTestPropertySettings_ConfiguredWorkingDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns(@"C:\gta\dir");
+            var testPropertySettings = new TestPropertySettings(@"C:\cmake\dir", null);
+
+            TheOptions.GetWorkingDirForExecution(TestResources.Tests_DebugX86, "", 0, testPropertySettings)
+                .Should().Be(@"C:\gta\dir");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetWorkingDirForDiscovery_TestPropertySettingsOfExecutable_CMakeWorkingDirIsReturned()
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns((string)null);
+            TheOptions.TestPropertySettingsContainer = CreateTestPropertySettingsContainer(TestResources.Tests_DebugX86,
+                @"C:\cmake\dir", new Dictionary<string, string>());
+
+            TheOptions.GetWorkingDirForDiscovery(TestResources.Tests_DebugX86).Should().Be(@"C:\cmake\dir");
+            TheOptions.GetWorkingDirForDiscovery(TestResources.LoadTests_ReleaseX86)
+                .Should().BeEquivalentTo(new FileInfo(TestResources.LoadTests_ReleaseX86).Directory?.FullName);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetEnvironmentVariablesForExecution_TestPropertySettings_AreMergedAndConfiguredVariablesWin()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns("MYVAR=gta//||//GTAONLY=gta");
+            var testPropertySettings = new TestPropertySettings(null, new Dictionary<string, string>
+            {
+                { "myvar", "cmake" },
+                { "CMAKEONLY", "cmake" }
+            });
+
+            var result = TheOptions.GetEnvironmentVariablesForExecution(TestResources.Tests_DebugX86, "", 0, testPropertySettings);
+
+            result.Should().HaveCount(3);
+            result["MYVAR"].Should().Be("gta");
+            result["GTAONLY"].Should().Be("gta");
+            result["CMAKEONLY"].Should().Be("cmake");
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetEnvironmentVariablesForDiscovery_TestPropertySettingsOfExecutable_AreMerged()
+        {
+            MockXmlOptions.Setup(o => o.EnvironmentVariables).Returns((string)null);
+            TheOptions.TestPropertySettingsContainer = CreateTestPropertySettingsContainer(TestResources.Tests_DebugX86,
+                null, new Dictionary<string, string> { { "CMAKEONLY", "cmake" } });
+
+            TheOptions.GetEnvironmentVariablesForDiscovery(TestResources.Tests_DebugX86)
+                ["CMAKEONLY"].Should().Be("cmake");
+            TheOptions.GetEnvironmentVariablesForDiscovery(TestResources.LoadTests_ReleaseX86).Should().BeEmpty();
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void UseCTestTestProperties__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.UseCTestTestProperties).Returns((bool?)null);
+            bool result = TheOptions.UseCTestTestProperties;
+            result.Should().Be(SettingsWrapper.OptionUseCTestTestPropertiesDefaultValue);
+
+            MockXmlOptions.Setup(o => o.UseCTestTestProperties).Returns(!SettingsWrapper.OptionUseCTestTestPropertiesDefaultValue);
+            result = TheOptions.UseCTestTestProperties;
+            result.Should().Be(!SettingsWrapper.OptionUseCTestTestPropertiesDefaultValue);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void TestTimeoutInSeconds__ReturnsValueOrDefault()
+        {
+            MockXmlOptions.Setup(o => o.TestTimeoutInSeconds).Returns((int?)null);
+            TheOptions.TestTimeoutInSeconds.Should().Be(SettingsWrapper.OptionTestTimeoutInSecondsDefaultValue);
+
+            MockXmlOptions.Setup(o => o.TestTimeoutInSeconds).Returns(42);
+            TheOptions.TestTimeoutInSeconds.Should().Be(42);
+
+            MockXmlOptions.Setup(o => o.TestTimeoutInSeconds).Returns(-1);
+            TheOptions.TestTimeoutInSeconds.Should().Be(SettingsWrapper.OptionTestTimeoutInSecondsDefaultValue);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestPropertySettings_UseCTestTestProperties_CTestPropertiesWinOverThoseOfVisualStudio()
+        {
+            var mockProvider = SetupCTestTestPropertySettingsProvider(true);
+
+            TheOptions.GetTestPropertySettings(TestResources.Tests_DebugX86, "Suite.Test")
+                .WorkingDirectory.Should().Be(@"C:\ctest\dir");
+            mockProvider.Verify(p => p.GetContainer(TestResources.Tests_DebugX86), Times.Once);
+        }
+
+        [TestMethod]
+        [TestCategory(Unit)]
+        public void GetTestPropertySettings_DoNotUseCTestTestProperties_CTestIsNotAskedAndPropertiesOfVisualStudioAreUsed()
+        {
+            var mockProvider = SetupCTestTestPropertySettingsProvider(false);
+
+            TheOptions.GetTestPropertySettings(TestResources.Tests_DebugX86, "Suite.Test")
+                .WorkingDirectory.Should().Be(@"C:\vs\dir");
+            TheOptions.GetWorkingDirForDiscovery(TestResources.Tests_DebugX86).Should().Be(@"C:\vs\dir");
+            mockProvider.Verify(p => p.GetContainer(It.IsAny<string>()), Times.Never);
+        }
+
+        private Mock<CTestTestPropertySettingsProvider> SetupCTestTestPropertySettingsProvider(bool useCTestTestProperties)
+        {
+            MockXmlOptions.Setup(o => o.WorkingDir).Returns((string)null);
+            MockXmlOptions.Setup(o => o.UseCTestTestProperties).Returns(useCTestTestProperties);
+            TheOptions.TestPropertySettingsContainer = CreateTestPropertySettingsContainer(TestResources.Tests_DebugX86,
+                @"C:\vs\dir", new Dictionary<string, string>());
+
+            var mockProvider = new Mock<CTestTestPropertySettingsProvider>(MockLogger.Object);
+            mockProvider.Setup(p => p.GetContainer(TestResources.Tests_DebugX86)).Returns(
+                CreateTestPropertySettingsContainer(TestResources.Tests_DebugX86, @"C:\ctest\dir", new Dictionary<string, string>()));
+            TheOptions.CTestTestPropertySettingsProvider = mockProvider.Object;
+            return mockProvider;
+        }
+
+        private static TestPropertySettingsContainer CreateTestPropertySettingsContainer(string executable,
+            string workingDirectory, IDictionary<string, string> environment)
+        {
+            return new TestPropertySettingsContainer(new[]
+            {
+                new TestPropertySettingsContainer.TestProperties
+                {
+                    Name = "Suite.Test",
+                    Command = executable,
+                    WorkingDirectory = workingDirectory,
+                    Environment = environment
+                }
+            });
         }
 
         [TestMethod]

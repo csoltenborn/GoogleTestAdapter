@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Settings;
+using System.Runtime.InteropServices;
 using System;
 using System.ComponentModel;
 using GoogleTestAdapter.Helpers;
@@ -9,6 +10,7 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
+    [ComVisible(true)]
     public class TestDiscoveryOptionsDialogPage : NotifyingDialogPage
     {
         #region Misc
@@ -66,6 +68,26 @@ namespace GoogleTestAdapter.VsPackage.OptionsPages
             set => SetAndNotify(ref _parseSymbolInformation, value);
         }
         private bool _parseSymbolInformation = SettingsWrapper.OptionParseSymbolInformationDefaultValue;
+
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionTearDownTestSuiteTestCases)]
+        [Description(SettingsWrapper.OptionTearDownTestSuiteTestCasesDescription)]
+        public bool TearDownTestSuiteTestCases
+        {
+            get => _tearDownTestSuiteTestCases;
+            set => SetAndNotify(ref _tearDownTestSuiteTestCases, value);
+        }
+        private bool _tearDownTestSuiteTestCases = SettingsWrapper.OptionTearDownTestSuiteTestCasesDefaultValue;
+
+        [Category(SettingsWrapper.CategoryMiscName)]
+        [DisplayName(SettingsWrapper.OptionAdditionalTestDiscoveryParams)]
+        [Description(SettingsWrapper.OptionAdditionalTestDiscoveryParamsDescription)]
+        public string AdditionalTestDiscoveryParams
+        {
+            get => _additionalTestDiscoveryParams;
+            set => SetAndNotify(ref _additionalTestDiscoveryParams, value);
+        }
+        private string _additionalTestDiscoveryParams = SettingsWrapper.OptionAdditionalTestDiscoveryParamsDefaultValue;
 
         #endregion
 

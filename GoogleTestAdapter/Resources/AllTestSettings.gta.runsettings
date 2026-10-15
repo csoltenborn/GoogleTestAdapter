@@ -26,6 +26,7 @@
 				<WorkingDir>$(SolutionDir)</WorkingDir>
 				<PathExtension>C:\fooDir;C:\barDir</PathExtension>
 				<EnvironmentVariables>MyEnvVar=MyValue</EnvironmentVariables>
+				<UseCTestTestProperties>true</UseCTestTestProperties>
 				<TraitsRegexesAfter />
 				<TraitsRegexesBefore />
 				<TestNameSeparator />

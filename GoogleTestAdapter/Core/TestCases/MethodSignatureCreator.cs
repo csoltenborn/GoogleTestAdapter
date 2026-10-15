@@ -54,9 +54,14 @@ namespace GoogleTestAdapter.TestCases
             // <testcase name>_<test name>_Test<type param value>::TestBody
             result.Add(GetTestMethodSignature(suite, descriptor.Name, typeParam));
 
-            // gtest_case_<testcase name>_::<test name><type param value>::TestBody
+            // gtest_case_<testcase name>_::<test name><type param value>::TestBody (gtest < 1.10)
             string signature =
                 $"gtest_case_{suite}_::{descriptor.Name}{typeParam}{GoogleTestConstants.TestBodySignature}";
+            result.Add(new MethodSignature(signature, true));
+
+            // gtest_suite_<testsuite name>_::<test name><type param value>::TestBody (gtest >= 1.10)
+            signature =
+                $"gtest_suite_{suite}_::{descriptor.Name}{typeParam}{GoogleTestConstants.TestBodySignature}";
             result.Add(new MethodSignature(signature, true));
 
             return result;

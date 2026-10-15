@@ -2,6 +2,7 @@
 
 using System;
 using GoogleTestAdapter.Common;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace GoogleTestAdapter.VsPackage.Helpers
@@ -18,12 +19,14 @@ namespace GoogleTestAdapter.VsPackage.Helpers
         public override void Log(Severity severity, string message)
         {
             var activityLog = _package.GetActivityLog();
-            if (activityLog == null)
+            if (activityLog == null || ErrorHandler.Failed(WriteToActivityLog(activityLog, severity, message)))
             {
                 Console.WriteLine($"{Strings.Instance.ExtensionName}: {severity} - {message}");
-                return;
             }
+        }
 
+        private static int WriteToActivityLog(IVsActivityLog activityLog, Severity severity, string message)
+        {
             __ACTIVITYLOG_ENTRYTYPE activitylogEntrytype;
             switch (severity)
             {
@@ -37,10 +40,10 @@ namespace GoogleTestAdapter.VsPackage.Helpers
                     activitylogEntrytype = __ACTIVITYLOG_ENTRYTYPE.ALE_ERROR;
                     break;
                 default:
-                    throw new Exception($"Unknown enum literal: {severity}");
+                    throw new ArgumentOutOfRangeException(nameof(severity), severity, "Unknown enum literal");
             }
 
-            activityLog.LogEntry((uint)activitylogEntrytype, Strings.Instance.ExtensionName, message);
+            return activityLog.LogEntry((uint)activitylogEntrytype, Strings.Instance.ExtensionName, message);
         }
     }
 

@@ -6,9 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using GoogleTestAdapter.Common;
+using GoogleTestAdapter.Helpers;
 using GoogleTestAdapter.Model;
 using GoogleTestAdapter.ProcessExecution;
 using GoogleTestAdapter.Settings;
@@ -31,9 +33,13 @@ namespace GoogleTestAdapter.TestResults
         private readonly Lazy<IDictionary<string, TestCase>> _workaroundMapLazy;
 
 
-        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string testExecutable, string xmlResultFile, ILogger logger)
+        private readonly SourcePathMapper _sourcePathMapper;
+
+        public XmlTestResultParser(IEnumerable<TestCase> testCasesRun, string testExecutable, string xmlResultFile, ILogger logger,
+            SourcePathMapper sourcePathMapper = null)
         {
             _logger = logger;
+            _sourcePathMapper = sourcePathMapper ?? SourcePathMapper.Identity;
             _testExecutable = testExecutable;
             _xmlResultFile = xmlResultFile;
             _testCasesMap = testCasesRun.ToDictionary(tc => tc.FullyQualifiedName, tc => tc);
@@ -104,7 +110,7 @@ namespace GoogleTestAdapter.TestResults
                 var settings = new XmlReaderSettings(); // Don't use an object initializer for FxCop to understand.
 #pragma warning restore IDE0017 // Simplify object initialization
                 settings.XmlResolver = null;
-                using (var reader = XmlReader.Create(_xmlResultFile, settings))
+                using (var reader = XmlReader.Create(new StringReader(GoogleTestXmlFile.ReadAllText(_xmlResultFile, _logger)), settings))
                 {
                     var xmlDocument = new XmlDocument();
                     xmlDocument.Load(reader);
@@ -113,11 +119,13 @@ namespace GoogleTestAdapter.TestResults
                     foreach (XmlNode testsuiteNode in testsuiteNodes)
                     {
                         XmlNodeList testcaseNodes = testsuiteNode.SelectNodes("testcase");
-                        testResults.AddRange(testcaseNodes
+                        List<TestResult> suiteResults = testcaseNodes
                                                 .AsParallel()
                                                 .Cast<XmlNode>()
                                                 .Select(TryParseTestResult)
-                                                .Where(tr => tr != null));
+                                                .Where(tr => tr != null)
+                                                .ToList();
+                        testResults.AddRange(WithTestSuiteFixtureResults(testsuiteNode, testcaseNodes, suiteResults));
                     }
                 }
             }
@@ -128,6 +136,61 @@ namespace GoogleTestAdapter.TestResults
             }
 
             return testResults;
+        }
+
+        // Google Test reports failures of SetUpTestSuite() and TearDownTestSuite() as test cases without name. The tests
+        // of a suite whose SetUpTestSuite() has failed are skipped without having been started (timestamp 0, written in
+        // local time, i.e. e.g. 1969-12-31T16:00:00 west of UTC), the first nameless failure is then the one of
+        // SetUpTestSuite(); other nameless failures are the ones of TearDownTestSuite().
+        private List<TestResult> WithTestSuiteFixtureResults(XmlNode testsuiteNode, XmlNodeList testcaseNodes, List<TestResult> suiteResults)
+        {
+            string suite = testsuiteNode.Attributes?["name"]?.InnerText;
+            if (string.IsNullOrEmpty(suite))
+                return suiteResults;
+
+            List<XmlNode> fixtureFailures = testcaseNodes.Cast<XmlNode>()
+                .Where(node => node.Attributes?["name"]?.InnerText == "" && node.SelectNodes("failure")?.Count > 0)
+                .ToList();
+            List<XmlNode> tests = testcaseNodes.Cast<XmlNode>()
+                .Where(node => !string.IsNullOrEmpty(node.Attributes?["name"]?.InnerText))
+                .ToList();
+
+            bool isSetUpTestSuiteFailed = fixtureFailures.Any() && tests.Any() && tests.All(node =>
+                node.Attributes["result"]?.InnerText == "skipped" && IsNotStarted(node));
+            if (isSetUpTestSuiteFailed)
+            {
+                var parser = new ErrorMessageParser(fixtureFailures[0].SelectNodes("failure"), TestSuiteFixtureResults.GetSetUpTestSuiteName(suite), _sourcePathMapper);
+                parser.Parse();
+                suiteResults = suiteResults
+                    .Select(result => result.Outcome == TestOutcome.Skipped
+                        ? TestSuiteFixtureResults.CreateSetUpTestSuiteFailedResult(result, parser.ErrorMessage, parser.ErrorStackTrace)
+                        : result)
+                    .ToList();
+                fixtureFailures.RemoveAt(0);
+            }
+
+            TestCase tearDownTestCase = TestSuiteFixtureResults.FindTearDownTestSuiteTestCase(suite, _testCasesMap.Values);
+            if (tearDownTestCase != null)
+            {
+                string errorMessage = null, errorStackTrace = null;
+                if (fixtureFailures.Any())
+                {
+                    var parser = new ErrorMessageParser(fixtureFailures[0].SelectNodes("failure"), tearDownTestCase.FullyQualifiedName, _sourcePathMapper);
+                    parser.Parse();
+                    errorMessage = parser.ErrorMessage;
+                    errorStackTrace = parser.ErrorStackTrace;
+                }
+                suiteResults.Add(TestSuiteFixtureResults.CreateTearDownTestSuiteResult(tearDownTestCase, errorMessage, errorStackTrace, null));
+            }
+
+            return suiteResults;
+        }
+
+        private static bool IsNotStarted(XmlNode testcaseNode)
+        {
+            string timestamp = testcaseNode.Attributes?["timestamp"]?.InnerText;
+            return DateTime.TryParse(timestamp, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime time)
+                   && time.Year <= 1970;
         }
 
         private TestResult TryParseTestResult(XmlNode testcaseNode)
@@ -168,6 +231,17 @@ namespace GoogleTestAdapter.TestResults
             switch (testCaseStatus)
             {
                 case "run":
+                    // tests skipped with GTEST_SKIP() have status "run" (Google Test >= 1.10)
+                    if (testcaseNode.Attributes["result"]?.InnerText == "skipped")
+                    {
+                        var skipParser = new ErrorMessageParser(testcaseNode.SelectNodes("skipped"), testCase.FullyQualifiedName, _sourcePathMapper);
+                        skipParser.Parse();
+                        testResult.Outcome = TestOutcome.Skipped;
+                        testResult.ErrorMessage = skipParser.ErrorMessage == "" ? null : skipParser.ErrorMessage;
+                        testResult.ErrorStackTrace = skipParser.ErrorStackTrace == "" ? null : skipParser.ErrorStackTrace;
+                        break;
+                    }
+
                     XmlNodeList failureNodes = testcaseNode.SelectNodes("failure");
                     if (failureNodes.Count == 0)
                     {
@@ -175,7 +249,7 @@ namespace GoogleTestAdapter.TestResults
                     }
                     else
                     {
-                        var parser = new ErrorMessageParser(failureNodes);
+                        var parser = new ErrorMessageParser(failureNodes, testCase.FullyQualifiedName, _sourcePathMapper);
                         parser.Parse();
                         testResult.Outcome = TestOutcome.Failed;
                         testResult.ErrorMessage = parser.ErrorMessage;

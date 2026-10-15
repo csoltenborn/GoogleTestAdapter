@@ -1,9 +1,11 @@
 @echo off
  
-set VS_LOCATION=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community
-set DIA_SDK="%VS_LOCATION%\DIA SDK\bin"
-set VC_VARS_BAT="%VS_LOCATION%\VC\Auxiliary\Build\vcvars32.bat"
-set MS_BUILD="%VS_LOCATION%\MSBuild\15.0\Bin\MSBuild.exe"
+set VSWHERE="%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+for /f "usebackq tokens=*" %%i in (`%VSWHERE% -latest -prerelease -products * -requires Microsoft.VisualStudio.Component.VSSDK -property installationPath`) do set VS_LOCATION=%%i
+if not defined VS_LOCATION set VS_LOCATION=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community
+echo Using Visual Studio at %VS_LOCATION%
+
+set MS_BUILD="%VS_LOCATION%\MSBuild\Current\Bin\MSBuild.exe"
 
 
 if defined APPVEYOR goto Build
@@ -39,22 +41,7 @@ echo Restoring NuGet packages
 pushd GoogleTestAdapter
 nuget restore
 
-echo Setting up VS Developer Prompt environment
-pushd .
-call %VC_VARS_BAT%
-popd
-
-echo Copying DIA dlls
-pushd DiaResolver
-copy %DIA_SDK%\msdia140.dll x86
-copy %DIA_SDK%\amd64\msdia140.dll x64
-
-echo Generating dia2.dll
-pushd dia2
-powershell -ExecutionPolicy Bypass .\compile_typelib.ps1
-
-popd
-popd
+rem msdia140.dll and the DIA interop assembly dia2.dll are prepared by DiaResolver.csproj during the build
 popd
 
 echo NOT building Google Test NuGet packages

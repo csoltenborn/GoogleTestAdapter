@@ -17,9 +17,9 @@ namespace GoogleTestAdapter
         }
 
         [TestMethod]
-        public override void GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded()
+        public override void GetTestsFromExecutable_RegexButNoDebugSymbols_TraitsAreAdded()
         {
-            base.GetTestsFromExecutable_RegexButNoSourceLocation_TraitsAreAdded();
+            base.GetTestsFromExecutable_RegexButNoDebugSymbols_TraitsAreAdded();
         }
 
         [TestMethod]
