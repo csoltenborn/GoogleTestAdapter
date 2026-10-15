@@ -249,6 +249,9 @@
     <Content Include="Resources\ReleaseNotes\0.20.0.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\ReleaseNotes\0.21.0.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="GoogleTestExtensionOptionsPage.vsct">
