@@ -199,6 +199,14 @@ cd out/binaries/GoogleTestAdapter/Release
   assemblies in the VSIX, VS 2026 redirects them to its own versions). It does not use DTE: VS 2026's managed DTE
   implementation is incompatible with both the old EnvDTE interop assemblies and embedded interop types. Solution and
   configuration are determined with `IVsSolution`/`IVsSolutionBuildManager`.
+* **Automation (DTE):** the options pages are `DTE.Properties("Google Test Adapter", "<page>")` (pages `General`,
+  `Test Discovery`, `Test Execution`, `Google Test`; properties are named like the C# properties of the
+  `OptionsPages/*DialogPage.cs` classes, e.g. `EnableParallelTestExecution`; enums are returned as numbers). This
+  requires the page classes to be `[ComVisible(true)]`, since the package assembly is not; without, VS fails with
+  `InvalidCastException`. The toolbar commands are `GoogleTestAdapter.ToggleCatchExceptions`, `…ToggleBreakOnFailure`,
+  `…ToggleParallelTestExecution`, and `…TogglePrintTestOutput` (`CanonicalName` in the `.vsct`), e.g. for
+  `DTE.ExecuteCommand`. To check out of process, get the DTE of a running VS from PowerShell with
+  `[Runtime.InteropServices.Marshal]::GetActiveObject("VisualStudio.DTE.18.0")` (retry calls VS rejects while busy).
 * **Run settings** (`VsPackage.Shared/Settings/RunSettingsService.cs`): Test Explorer calls this MEF component on
   background threads for every discovery and run; it must never wait for the UI thread.
   `VisualStudioConfigurationTracker` keeps solution and configuration up to date on the UI thread. Exceptions must not

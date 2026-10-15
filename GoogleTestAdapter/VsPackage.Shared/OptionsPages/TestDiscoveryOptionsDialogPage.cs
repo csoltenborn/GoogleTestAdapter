@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Settings;
+using System.Runtime.InteropServices;
 using System;
 using System.ComponentModel;
 using GoogleTestAdapter.Helpers;
@@ -9,6 +10,7 @@ using GoogleTestAdapter.Helpers;
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
+    [ComVisible(true)]
     public class TestDiscoveryOptionsDialogPage : NotifyingDialogPage
     {
         #region Misc

@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Settings;
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,7 @@ using Microsoft.VisualStudio.Shell;
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
+    [ComVisible(true)]
     public class TestExecutionOptionsDialogPage : NotifyingDialogPage
     {
         #region Parallelization

@@ -1,6 +1,7 @@
 ﻿// This file has been modified by Microsoft on 6/2017.
 
 using GoogleTestAdapter.Settings;
+using System.Runtime.InteropServices;
 using System;
 using System.ComponentModel;
 // ReSharper disable LocalizableElement
@@ -8,6 +9,7 @@ using System.ComponentModel;
 namespace GoogleTestAdapter.VsPackage.OptionsPages
 {
 
+    [ComVisible(true)]
     public class GoogleTestOptionsDialogPage : NotifyingDialogPage
     {
         #region Runtime behavior
