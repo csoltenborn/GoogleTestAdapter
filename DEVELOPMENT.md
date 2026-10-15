@@ -120,8 +120,8 @@ including the `ThirdParty/googletest` submodule, stamps the version `<version of
 artifact `packages-<vs2022|vs2026>`, and runs the tests of `DiaResolver.Tests`, `Core.Tests`, `TestAdapter.Tests`, and
 `VsPackage.GTA.Tests.Unit` (ignoring a timing-sensitive test with `IgnoreTests.ps1`; the TRX results are artifact
 `test-results-<vs2022|vs2026>`). For a tag `v<version>`, which must match the version of `VsPackage.nuspec`, it creates
-a draft prerelease with the packages built with VS 2022 and the release notes `<version>.md`, using the workflow's own
-token. On the command line, call batch files with an explicit path (`call .\SetVersion.bat`): some machines do not
+a draft release (to be published by the maintainer, as pre-release if appropriate) with the packages of all jobs and
+the release notes `<version>.md`, using the workflow's own token. On the command line, call batch files with an explicit path (`call .\SetVersion.bat`): some machines do not
 search the current directory for commands.
 
 **Strong name keys:** the assemblies are signed with `Keys/Key_Release.snk` if it exists (pre-build events of the

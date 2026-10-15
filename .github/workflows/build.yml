@@ -179,5 +179,5 @@ jobs:
         VERSION: ${{ needs.build.outputs.version }}
       run: >-
         gh release create "$GITHUB_REF_NAME" packages/*
-        --draft --prerelease --title "Google Test Adapter $VERSION"
+        --draft --title "Google Test Adapter $VERSION"
         --notes-file "GoogleTestAdapter/VsPackage.GTA/Resources/ReleaseNotes/$VERSION.md"
