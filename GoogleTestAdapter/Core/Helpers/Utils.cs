@@ -29,11 +29,15 @@ namespace GoogleTestAdapter.Helpers
             return DeleteDirectory(directory, out _);
         }
 
-        public static bool DeleteDirectory(string directory, out string errorMessage)
+        /// <param name="retryWhileInUse">whether to retry for a while if files are in use (see RetryWhileInUse())</param>
+        public static bool DeleteDirectory(string directory, out string errorMessage, bool retryWhileInUse = true)
         {
             try
             {
-                RetryWhileInUse(() => Directory.Delete(directory, true));
+                if (retryWhileInUse)
+                    RetryWhileInUse(() => Directory.Delete(directory, true));
+                else
+                    Directory.Delete(directory, true);
                 errorMessage = null;
                 return true;
             }

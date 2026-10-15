@@ -23,6 +23,7 @@ namespace GoogleTestAdapter.Runners
         private readonly int _threadId;
         private readonly string _threadName;
         private readonly string _testDirectory;
+        private volatile bool _canceled;
 
 
         public PreparingTestRunner(int threadId, ITestFrameworkReporter reporter, ILogger logger, SettingsWrapper settings, SchedulingAnalyzer schedulingAnalyzer)
@@ -60,7 +61,8 @@ namespace GoogleTestAdapter.Runners
                 stopwatch.Stop();
                 _logger.DebugInfo($"{_threadName}Execution took {stopwatch.Elapsed}");
 
-                if (!Utils.DeleteDirectory(_testDirectory, out var errorMessage))
+                // after a cancellation, the executables are being killed, and waiting for them would delay the cancellation
+                if (!Utils.DeleteDirectory(_testDirectory, out var errorMessage, retryWhileInUse: !_canceled))
                 {
                     _logger.DebugWarning(
                         $"{_threadName}Could not delete test directory '" + _testDirectory + "': " + errorMessage);
@@ -76,6 +78,7 @@ namespace GoogleTestAdapter.Runners
 
         public void Cancel()
         {
+            _canceled = true;
             _innerTestRunner.Cancel();
         }
 
